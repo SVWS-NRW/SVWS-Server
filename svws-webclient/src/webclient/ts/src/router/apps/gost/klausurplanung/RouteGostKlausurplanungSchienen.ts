@@ -35,8 +35,8 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<RouteDataGostKlau
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		const listKursklausuren = await App.api.getKursklausurenJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
-		const listKlausurtermine = await App.api.getKlausurtermineJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
+		const listKursklausuren = await App.api.getGostKlausurenKursklausurenJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
+		const listKlausurtermine = await App.api.getGostKlausurenKlausurtermineJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
 		this.data._manager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 	}
 

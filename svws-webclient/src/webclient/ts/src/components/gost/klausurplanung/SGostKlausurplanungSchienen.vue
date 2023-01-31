@@ -2,8 +2,8 @@
 	<div class="flex">
 		<div class="flex flex-row flex-wrap gap-4">
 			Hier kommt die Klausurschienen-Ansicht der Klausurplanung hin.
-			<template v-for="kursklausur of kursklausuren" key="kursklausur.id">
-				{{ kursklausur.id }}
+			<template v-for="kursklausur of kursklausuren" :key="kursklausur.id">
+				<p>{{ kursklausur.id }} {{ kursklausur.kursartAllg }} </p>
 			</template>
 		</div>
 	</div>
