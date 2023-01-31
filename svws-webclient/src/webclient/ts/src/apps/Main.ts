@@ -95,6 +95,15 @@ export class Main {
 	};
 
 	/**
+	 * Gibt den Namen des angemeldeten Benutzers zurück.
+	 *
+	 * @returns der Name des angemeldeten Benutzers
+	 */
+	public getUsername() {
+		return this.username;
+	}
+
+	/**
 	 * Diese Methode überprüft, ob die aktuelle Verbindung zum SVWS-Server vorhanden ist.
 	 *
 	 * @returns {boolean}
