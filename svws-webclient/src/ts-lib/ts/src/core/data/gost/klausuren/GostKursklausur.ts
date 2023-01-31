@@ -77,6 +77,11 @@ export class GostKursklausur extends JavaObject {
 	public idKurs : number = -1;
 
 	/**
+	 * Die Schiene des Kurses. 
+	 */
+	public kursSchiene : number = -1;
+
+	/**
 	 * Die ID des Klausurtermins, sofern schon gesetzt. 
 	 */
 	public idTermin : number | null = null;
@@ -143,6 +148,9 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.idKurs === "undefined")
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
+		if (typeof obj.kursSchiene === "undefined")
+			 throw new Error('invalid json format, missing attribute kursSchiene');
+		result.kursSchiene = obj.kursSchiene;
 		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
 		if (!!obj.schuelerIds) {
@@ -169,6 +177,7 @@ export class GostKursklausur extends JavaObject {
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		result += '"bemerkungenVorgabe" : ' + ((!obj.bemerkungenVorgabe) ? 'null' : '"' + obj.bemerkungenVorgabe + '"') + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
+		result += '"kursSchiene" : ' + obj.kursSchiene + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
 		if (!obj.schuelerIds) {
@@ -231,6 +240,9 @@ export class GostKursklausur extends JavaObject {
 		}
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';
+		}
+		if (typeof obj.kursSchiene !== "undefined") {
+			result += '"kursSchiene" : ' + obj.kursSchiene + ',';
 		}
 		if (typeof obj.idTermin !== "undefined") {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';

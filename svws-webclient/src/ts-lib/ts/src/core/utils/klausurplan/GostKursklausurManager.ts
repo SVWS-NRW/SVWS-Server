@@ -92,14 +92,14 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public getKursklausuren(idTermin : number | null) : List<GostKursklausur | null> | null;
+	public getKursklausuren(idTermin : number | null) : List<GostKursklausur>;
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten des Halbjahres
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public getKursklausuren() : List<GostKursklausur | null> | null;
+	public getKursklausuren() : List<GostKursklausur>;
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal
@@ -108,12 +108,12 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public getKursklausuren(quartal : number) : List<GostKursklausur | null> | null;
+	public getKursklausuren(quartal : number) : List<GostKursklausur> | null;
 
 	/**
 	 * Implementation for method overloads of 'getKursklausuren'
 	 */
-	public getKursklausuren(__param0? : null | number) : List<GostKursklausur | null> | null {
+	public getKursklausuren(__param0? : null | number) : List<GostKursklausur> | null {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
 			let idTermin : number | null = __param0;
 			return this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
@@ -131,7 +131,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public getKursklausurenOhneTermin() : List<GostKursklausur | null> | null;
+	public getKursklausurenOhneTermin() : List<GostKursklausur>;
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
@@ -141,12 +141,12 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public getKursklausurenOhneTermin(quartal : number) : List<GostKursklausur | null> | null;
+	public getKursklausurenOhneTermin(quartal : number) : List<GostKursklausur> | null;
 
 	/**
 	 * Implementation for method overloads of 'getKursklausurenOhneTermin'
 	 */
-	public getKursklausurenOhneTermin(__param0? : number) : List<GostKursklausur | null> | null {
+	public getKursklausurenOhneTermin(__param0? : number) : List<GostKursklausur> | null {
 		if ((typeof __param0 === "undefined")) {
 			return this.getKursklausuren(-1);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
@@ -216,7 +216,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (klausur === null) {
 			return new Vector();
 		}
-		let konflikte : List<number> | null = new Vector(schuelerIds);
+		let konflikte : List<number> = new Vector(schuelerIds);
 		konflikte.retainAll(klausur.schuelerIds);
 		return konflikte;
 	}

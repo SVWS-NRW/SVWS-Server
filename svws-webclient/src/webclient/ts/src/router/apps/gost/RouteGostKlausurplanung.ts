@@ -1,4 +1,4 @@
-import { RouteLocationRaw, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
@@ -6,20 +6,24 @@ import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlaus
 import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
-import { computed, WritableComputedRef } from "vue";
+import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
+import { GostHalbjahr, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+import { App } from "~/apps/BaseApp";
 
+export class RouteDataGostKlausurplanung  {
+	halbjahr: ShallowRef<GostHalbjahr> = shallowRef(GostHalbjahr.EF1);
+}
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
+const SGostKlausurplanungAuswahl = () => import("~/components/gost/klausurplanung/SGostKlausurplanungAuswahl.vue");
 
-export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
+export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanung, RouteGost> {
 
 	public constructor() {
-		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
-		super.propHandler = (route) => routeGost.getProps(route);
+		super("gost_klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
+		super.propHandler = (route) => this.getProps(route);
+		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getProps(route));
 		super.text = "Klausurplanung";
-		this.isHidden = (params?: RouteParams) => {
-			return this.checkHidden(params);
-		}
 		super.children = [
 			routeGostKlausurplanungKlausurdaten,
 			routeGostKlausurplanungSchienen,
@@ -28,6 +32,9 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 			routeGostKlausurplanungKonflikte
 		];
 		super.defaultChild = routeGostKlausurplanungKlausurdaten;
+		this.isHidden = (params?: RouteParams) => {
+			return this.checkHidden(params);
+		}
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -36,14 +43,65 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		if (to.name === this.name) {
-			if (to_params.abiturjahr === undefined)
-				return false;
-			const jahrgang = routeGost.liste.liste.find(elem => elem.abiturjahr.toString() === to_params.abiturjahr);
-			if (this.checkHidden({ abiturjahr: "" + jahrgang?.abiturjahr }))
-				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: routeGost.liste.liste.at(0)?.abiturjahr }};
-		}
+		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
+		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
+			return routeGost.defaultChild!.getRoute(-1);
 		return true;
+	}
+
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	}
+
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+		// Prüfe das Abiturjahr
+		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter Abiturjahr und Halbjahr dürfen keine Arrays sein");
+		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		if (abiturjahr === undefined)
+			throw new Error("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
+		// Aktualisiere das Halbjahr
+		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
+		if (halbjahr === undefined) {
+			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt); // TODO getAktuellesHalbjahr in GostHalbjahr ergänzen
+			if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.
+				hj = (abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+			this.data.halbjahr.value = hj;
+			return this.getRoute(abiturjahr, hj.id);
+		}
+		this.data.halbjahr.value = halbjahr;
+		if (to.name === this.name) {
+			const child = this.selectedChild === undefined ? this.defaultChild! : this.selectedChild;
+			return child.getRoute(abiturjahr, halbjahr.id);
+		}
+	}
+
+	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
+		if (halbjahr === undefined)
+			return { name: this.name, params: { abiturjahr: abiturjahr }};
+		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...routeGost.getProps(to),
+			halbjahr: this.data.halbjahr
+		}
+	}
+
+	public getSelector() : WritableComputedRef<GostHalbjahr> {
+		const router = useRouter();
+		return computed({
+			get: () => {
+				return this.data.halbjahr.value;
+			},
+			set: (value) => {
+				this.data.halbjahr.value = value;
+				const id_value = "" + value.id;
+				const params = { abiturjahr: routeGost.data.item.value!.abiturjahr, halbjahr: id_value };
+				const child = this.parent!.selectedChild === undefined ? this.parent!.defaultChild! : this.parent!.selectedChild;
+				void router.push({ name: child.name, params: params });
+			}
+		});
 	}
 
 	/**
@@ -58,14 +116,10 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 			set: (value) => {
 				this.selectedChildRecord = value;
 				const abiturjahr = (routeGost.data.item.value === undefined) ? undefined : "" + routeGost.data.item.value.abiturjahr;
-				void router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+				void router.push({ name: value.name, params: { abiturjahr: abiturjahr, halbjahr: this.data.halbjahr.value.id } });
 			}
 		});
 		return selectedRoute;
-	}
-
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { abiturjahr }};
 	}
 
 }

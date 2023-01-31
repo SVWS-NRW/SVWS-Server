@@ -18,7 +18,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public constructor() {
 		super("gost_kursplanung", "kursplanung/:halbjahr([0-5])?", SGostKursplanungEmpty, new RouteDataGostKursplanung());
 		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_kursplanung_auswahl", SGostKursplanungAuswahl, (route) => this.getProps(route));
+		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getProps(route));
 		super.text = "Kursplanung";
 		super.children = [
 			routeGostKursplanungHalbjahr

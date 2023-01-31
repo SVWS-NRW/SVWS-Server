@@ -27,7 +27,7 @@
 						</svws-ui-dropdown>
 					</template>
 				</svws-ui-table>
-				<router-view name="gost_kursplanung_auswahl" />
+				<router-view name="gost_child_auswahl" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

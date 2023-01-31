@@ -15,6 +15,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
+import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -86,6 +87,9 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 			// TODO Errorhandling nötig?
 			return daten;
 		}
+		
+		List<Long> kursIDs = kursklausuren.stream().map(k -> k.Kurs_ID).distinct().toList();
+		Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 
 		kursklausuren.stream().forEach(k -> {
 			GostKursklausur kk = new GostKursklausur();
@@ -101,6 +105,7 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 			kk.quartal = v.Quartal;
 			kk.halbjahr = v.Halbjahr.id;
 			kk.idKurs = k.Kurs_ID;
+			kk.kursSchiene = Integer.parseInt(mapKurse.get(k.Kurs_ID).Schienen);
 			kk.idTermin = k.Termin_ID;
 			kk.istAudioNotwendig = v.IstAudioNotwendig;
 			kk.istMdlPruefung = v.IstMdlPruefung;

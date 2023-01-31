@@ -72,6 +72,10 @@ public class GostKursklausur {
 	/** Die ID des Klausurkurses. */
 	@Schema(required = true, description = "die ID des Klausurkurses", example="9876")
 	public long idKurs = -1;
+
+	/** Die Schiene des Kurses. */
+	@Schema(required = true, description = "die Schiene des Kurses", example="8")
+	public int kursSchiene = -1;
 	
 	/** Die ID des Klausurtermins, sofern schon gesetzt. */
 	@Schema(required = true, description = "die ID des Klausurtermins, sofern schon gesetzt", example="5555")

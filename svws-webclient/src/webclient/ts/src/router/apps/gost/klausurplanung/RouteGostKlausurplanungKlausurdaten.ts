@@ -13,8 +13,8 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 		super.text = "Klausurdaten";
 	}
 
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { abiturjahr }};
+	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
+		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 }

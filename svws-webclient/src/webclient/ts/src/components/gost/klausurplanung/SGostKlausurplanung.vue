@@ -27,7 +27,7 @@
 	const children_hidden = routeGostKlausurplanung.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeGostKlausurplanung.hidden());
+		return true;
 	});
 
 </script>
