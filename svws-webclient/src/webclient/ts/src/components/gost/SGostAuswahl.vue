@@ -45,17 +45,18 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
+		listJahrgaenge: ListJahrgaenge;
 	}>();
 
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
 	const main: Main = injectMainApp();
-	const appJahrgaenge = main.apps.jahrgaenge;
 
 	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
@@ -72,7 +73,7 @@
 	const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
 		computed( () => {
 			const set = new Set(routeGost.liste.liste.map(r=>r.jahrgang))
-			return appJahrgaenge.auswahl.liste.filter(j=>!set.has(j.kuerzel))
+			return props.listJahrgaenge.liste.filter(j=>!set.has(j.kuerzel))
 		});
 
 	const pending: ComputedRef<boolean> = computed(() => routeGostKursplanungHalbjahr.data.dataKursblockung.pending);

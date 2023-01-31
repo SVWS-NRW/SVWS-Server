@@ -4,6 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw,
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
+import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -19,6 +20,7 @@ export class RouteDataGost {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
 	dataFaecher: DataGostFaecher = new DataGostFaecher();
+	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 }
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
@@ -56,6 +58,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		await this.data.listJahrgaenge.update_list();
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
@@ -97,6 +100,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		prop.schule = this.data.schule;
 		prop.jahrgangsdaten = this.data.jahrgangsdaten;
 		prop.dataFaecher = this.data.dataFaecher;
+		prop.listJahrgaenge = this.data.listJahrgaenge;
 		return prop;
 	}
 
