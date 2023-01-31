@@ -21,8 +21,12 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { Schule } from "~/apps/schule/Schule";
 	import { routeKataloge } from "~/router/apps/RouteKataloge";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+
+	const props = defineProps<{
+		schule: DataSchuleStammdaten;
+	}>();
 
 	const menu_items = [
 		{ title: "Fächer", value: "faecher" },
@@ -35,7 +39,7 @@
 	const main: Main = injectMainApp();
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		const liste = props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
@@ -46,10 +50,6 @@
 		set(abschnitt: Schuljahresabschnitt) {
 			main.config.akt_abschnitt = abschnitt;
 		}
-	});
-
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
 	});
 
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {

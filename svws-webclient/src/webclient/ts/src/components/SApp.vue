@@ -42,15 +42,13 @@
 
 <script setup lang="ts">
 
-	import type { Schule } from "~/apps/schule/Schule";
 	import { version } from '../../version';
-
 	import { computed, ComputedRef, onErrorCaptured, ref, Ref, watch } from "vue";
 	import { useRoute } from "vue-router";
-	import { injectMainApp } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
+	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 
 	onErrorCaptured((e)=>{
 		error_message.value = e.message;
@@ -63,22 +61,20 @@
 		}, 10_000);
 	})
 
+	const props = defineProps<{
+		schule: DataSchuleStammdaten;
+	}>();
+
 	const route = useRoute();
 
-	const main = injectMainApp();
-
-	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
-
 	const schulname: ComputedRef<string> = computed(() => {
-		const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
+		const name = props.schule.daten?.bezeichnung1;
 		return name ? name : "fehlende Bezeichnung";
 	});
 
 	const minDelayReached = ref(false);
 	const minDurationReached = ref(false);
 	const showOverlay = ref(false);
-
-	const initializing: ComputedRef<boolean> = computed( () => main.config.apiLoadingStatus.initializing);
 
 	setTimeout(() => (minDelayReached.value = true), 100); // Minimum Delay bevor das Overlay eingeblendet wird. Soll flackern des Bildschirms vermeiden.
 	setTimeout(() => (minDurationReached.value = true), 400); // Minimum Dauer bevor das Overlay ausgeblendet wird. Soll flackern des Bildschirms vermeiden.
@@ -106,7 +102,6 @@
 	}
 
 	async function logout() {
-		await main.logout();
 		document.title = "SVWS NRW";
 		await router.push("/login");
 	}

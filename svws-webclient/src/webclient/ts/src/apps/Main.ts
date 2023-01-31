@@ -10,10 +10,7 @@ import {
 	OrtKatalogEintrag,
 	OrtsteilKatalogEintrag,
 } from "@svws-nrw/svws-core-ts";
-
-import { type Apps, App } from "./BaseApp";
-import { Schule } from "./schule/Schule";
-
+import { App } from "./BaseApp";
 import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
@@ -29,15 +26,12 @@ export type Kataloge = {
 };
 
 export class MainConfig {
-	selected_app = "Schueler";
 	dbSchema: DBSchemaListeEintrag | undefined = undefined;
 	dbSchemata: DBSchemaListeEintrag[] = [];
 	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
 	pending: ComputedRef<boolean> = this.apiLoadingStatus.api_pending;
 	isAuthenticated: boolean | undefined = undefined;
 	isConnected = false;
-	blockung_aktiv = false;
-	hasGost = false;
 	user_config: Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]> = new Map();
 
 	/** Das aktuelle Drag & Drop - Objekt */
@@ -216,11 +210,6 @@ export class Main {
 			password: this.password,
 			schema: this.config.schemaname
 		});
-		App.apps = {
-			schule: new Schule(),
-		};
-		await App.apps.schule.init();
-		this.config.hasGost = !!App.apps.schule.schuleStammdaten.schulform.value?.daten.hatGymOb;
 		const o = App.schema;
 		this._pending.push(App.api.getOrte(o).then(r => this.kataloge.orte = r));
 		this._pending.push(App.api.getOrtsteile(o).then(r => this.kataloge.ortsteile = r));
@@ -228,21 +217,12 @@ export class Main {
 		this._pending.push(App.api.getHaltestellen(o).then(r => this.kataloge.haltestellen = r));
 		this._pending.push(App.api.getKatalogBeschaeftigungsart(o).then(r => this.kataloge.beschaeftigungsarten = r));
 
-		const prom = Promise.all(this._pending).finally(() => (this.config.selected_app = "Schueler"));
+		const prom = Promise.all(this._pending);
 		this.config.apiLoadingStatus.addStatusByPromise(prom, {
 			caller: 'Main',
 			message: 'Anwendung wird aktualisiert.',
 			categories: [MAIN_LOADING_SYMBOL]
 		});
-	}
-
-	/**
-	 * Gibt alle Apps als Objekt zurück
-	 *
-	 * @returns {Apps}
-	 */
-	get apps(): Apps {
-		return App.apps;
 	}
 
 	/**
@@ -252,7 +232,6 @@ export class Main {
 	 * @returns {Promise<void>}
 	 */
 	public async logout(): Promise<void> {
-		this.config.selected_app = "Schueler";
 		await this.connectTo(this.hostname);
 	}
 }

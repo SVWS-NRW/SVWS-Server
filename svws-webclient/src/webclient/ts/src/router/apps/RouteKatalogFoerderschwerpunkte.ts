@@ -6,15 +6,19 @@ import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwe
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 
 const SFoerderschwerpunkteAuswahl = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue")
 const SFoerderschwerpunkteApp = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteApp.vue")
 
-export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerderschwerpunkte, FoerderschwerpunktEintrag, unknown, RouteApp> {
+export class RouteDataFoerderschwerpunkte {
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+}
+export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerderschwerpunkte, FoerderschwerpunktEintrag, RouteDataFoerderschwerpunkte, RouteApp> {
 
 	public constructor() {
-		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new ListFoerderschwerpunkte(), 'id');
+		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new ListFoerderschwerpunkte(), 'id', new RouteDataFoerderschwerpunkte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
 		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getProps(route));
@@ -66,7 +70,8 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to)
+			...super.getProps(to),
+			schule: this.data.schule,
 		};
 	}
 

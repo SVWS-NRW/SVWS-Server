@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-header>Datenaustausch</svws-ui-header>
-		<svws-ui-tab-bar v-model="app.selectedTab.value">
+		<svws-ui-tab-bar>
 			<template #tabs>
 				<svws-ui-tab-button>Laufbahnplanung</svws-ui-tab-button>
 			</template>
@@ -15,8 +15,4 @@
 </template>
 
 <script setup lang="ts">
-	import { injectMainApp, Main } from "~/apps/Main";
-
-	const main: Main = injectMainApp();
-	const app = main.apps.schule;
 </script>

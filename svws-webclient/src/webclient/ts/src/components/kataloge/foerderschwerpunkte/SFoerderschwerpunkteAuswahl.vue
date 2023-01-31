@@ -25,13 +25,14 @@
 	import {computed, ComputedRef, ShallowRef, WritableComputedRef} from "vue";
 	import { router } from "~/router";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
-	import {Schule} from "~/apps/schule/Schule";
 	import {injectMainApp, Main} from "~/apps/Main";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const main: Main = injectMainApp();
 
 	const props = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
+		schule: DataSchuleStammdaten;
 	}>();
 
 	const selected = routeKatalogFoerderschwerpunkte.auswahl;
@@ -44,7 +45,7 @@
 	const rows: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => routeKatalogFoerderschwerpunkte.liste.liste || []);
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		const liste = props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
@@ -52,8 +53,6 @@
 		get: () => main.config.akt_abschnitt,
 		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
 	});
-
-	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
 
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
 		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);

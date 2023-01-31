@@ -5,14 +5,18 @@ import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 import { ListNone } from "~/apps/ListNone";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
-export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
+export class RouteDataSchule {
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+}
+export class RouteSchule extends RouteNodeListView<ListNone, unknown, RouteDataSchule, RouteApp> {
 
 	public constructor() {
-		super("schule", "/schule", SSchuleAuswahl, SSchuleApp);
+		super("schule", "/schule", SSchuleAuswahl, SSchuleApp, undefined, undefined, new RouteDataSchule());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getNoProps(route));
@@ -43,7 +47,10 @@ export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, R
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		// TODO
-		return { };
+		return {
+			...super.getProps(to),
+			schule: this.data.schule,
+		};
 	}
 
 }

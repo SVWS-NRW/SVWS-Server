@@ -104,7 +104,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 *   gymnasialen Oberstufe
 	 */
 	get abiturjahr(): number | undefined {
-		if (!this.selected_list_item || !mainApp.config.hasGost)
+		if (!this.selected_list_item)
 			return undefined;
 		const gliederung: Schulgliederung | null = Schulgliederung.getByKuerzel(
 			this.selected_list_item.schulgliederung
@@ -127,7 +127,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	private hasGostlaufbahn(): boolean {
 		const schulform = this._dataSchule?.schulform.value || null;
-		return (!!schulform && mainApp.config.hasGost && this.abiturjahr !== undefined && this.abiturjahr !== -1);
+		return (!!schulform && this.abiturjahr !== undefined && this.abiturjahr !== -1);
 	}
 
 	/**

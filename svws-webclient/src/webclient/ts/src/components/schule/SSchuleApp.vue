@@ -3,10 +3,10 @@
 		<div class="flex w-full flex-col">
 			<svws-ui-header>
 				<span>{{
-					app.schuleStammdaten.daten?.bezeichnung1
+					schule.daten?.bezeichnung1
 				}}</span>
 			</svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab.value">
+			<svws-ui-tab-bar>
 				<template #tabs>
 					<svws-ui-tab-button>Daten</svws-ui-tab-button>
 				</template>
@@ -21,8 +21,10 @@
 </template>
 
 <script setup lang="ts">
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schule;
+	const props = defineProps<{
+		schule: DataSchuleStammdaten;
+	}>();
+
 </script>

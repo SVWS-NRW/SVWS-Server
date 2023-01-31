@@ -8,17 +8,17 @@
 					<div>
 						<svws-ui-popover placement="bottom">
 							<template #trigger>
-							<span class="inline-flex items-center">
-								Bewertungen
-								<svws-ui-icon class="ml-1">
-									<i-ri-information-line/>
-								</svws-ui-icon>
-							</span>
+								<span class="inline-flex items-center">
+									Bewertungen
+									<svws-ui-icon class="ml-1">
+										<i-ri-information-line />
+									</svws-ui-icon>
+								</span>
 							</template>
 							<template #content>
-							<span class="normal-case text-base font-normal">
-								Regelverletzungen, Wahlkonflikte, maximale Kursdifferenz, Fächerparallelität<br/>
-							</span>
+								<span class="normal-case text-base font-normal">
+									Regelverletzungen, Wahlkonflikte, maximale Kursdifferenz, Fächerparallelität<br>
+								</span>
 							</template>
 						</svws-ui-popover>
 					</div>

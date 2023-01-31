@@ -1,11 +1,5 @@
 import { ApiServer, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { ref } from "vue";
-import type { Schule } from "./schule/Schule";
-
-/** Der Typ mit allen Apps als App */
-export type Apps = {
-	schule: Schule;
-};
 
 /**
  * Die abstrakte Basisklasse für alle Apps mit den vorgegebenen Methoden und
@@ -26,8 +20,6 @@ export abstract class App {
 	// static connection_config: Configuration;
 	/** Das zu verwendende Schema für die aktuelle DB-Verbindung */
 	static schema: string;
-	/** Ein Objekt mit allen Apps */
-	static apps: Apps;
 	/** Der aktuell ausgewählte Schuljahresabschnitt */
 	static akt_abschnitt: Schuljahresabschnitt;
 	/** Das aktuell gewählte Tab in der App */

@@ -15,13 +15,18 @@ import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
-import { RouteLocationRaw } from "vue-router";
+import { RouteLocationRaw, RouteParams } from "vue-router";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+import { App } from "~/apps/BaseApp";
 
 
 export class RouteApp extends RouteNode<unknown, any> {
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 
 	public constructor() {
 		super("app", "/", SApp);
+		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		super.children = [
 			routeSchule,
@@ -52,10 +57,25 @@ export class RouteApp extends RouteNode<unknown, any> {
 		super.defaultChild = routeSchueler;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.schule.select(true);
+		const id = this.schule.daten?.idSchuljahresabschnitt;
+		const a = this.schule.daten?.abschnitte
+			.toArray(new Array<Schuljahresabschnitt>())
+			.find(e => e.id === id);
+		if (a) App.akt_abschnitt = a;
+	}
+
 	public getRoute(): RouteLocationRaw {
 		return { name: this.defaultChild!.name };
 	}
 
+	public getProps(): Record<string, any> {
+		// TODO
+		return {
+			schule: this.schule,
+		};
+	}
 }
 
 export const routeApp = new RouteApp();

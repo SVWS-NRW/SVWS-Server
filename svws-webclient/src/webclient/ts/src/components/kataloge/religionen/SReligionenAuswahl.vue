@@ -50,11 +50,12 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { Schule } from "~/apps/schule/Schule";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const props = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
+		schule: DataSchuleStammdaten;
 	}>();
 
 	const selected = routeKatalogReligion.auswahl;
@@ -92,10 +93,8 @@
 		reli_neu.textZeugnis = null;
 	}
 
-	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
-
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		const liste =props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 

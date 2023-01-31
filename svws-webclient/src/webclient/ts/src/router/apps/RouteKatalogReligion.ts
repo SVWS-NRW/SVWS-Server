@@ -6,15 +6,19 @@ import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogRe
 import { ListReligionen } from "~/apps/kataloge/religionen/ListReligionen";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 const SReligionenApp = () => import("~/components/kataloge/religionen/SReligionenApp.vue")
 
-export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, ReligionEintrag, unknown, RouteApp> {
+export class RouteDataReligionen {
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+}
+export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, ReligionEintrag, RouteDataReligionen, RouteApp> {
 
 	public constructor() {
-		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new ListReligionen(), 'id');
+		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new ListReligionen(), 'id', new RouteDataReligionen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";
 		super.setView("liste", SReligionenAuswahl, (route) => this.getProps(route));
@@ -66,7 +70,8 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to)
+			...super.getProps(to),
+			schule: this.data.schule,
 		};
 	}
 
