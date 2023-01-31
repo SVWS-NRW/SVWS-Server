@@ -28,7 +28,7 @@
 			const tmp = GostBelegpruefungsArt.fromKuerzel(value);
 			if (tmp === null)
 				throw new Error("Unerwarteter Fehler in Komponente: Ungültige Option ausgewählt: " + value);
-			emit('update:modelValue', GostBelegpruefungsArt.fromKuerzel(value) || GostBelegpruefungsArt.GESAMT);
+			emit('update:modelValue', tmp);
 		}
 	});
 

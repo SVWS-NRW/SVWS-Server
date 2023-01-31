@@ -2,7 +2,7 @@
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen"
-				:jahrgangsdaten="jahrgangsdaten" :item="item.value" :stammdaten="stammdaten" :data-laufbahn="dataLaufbahn" />
+				:jahrgangsdaten="jahrgangsdaten" :item="item.value" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" />
 		</div>
 		<div class="flex-auto">
 			<s-laufbahnplanung-card-status v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen"
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 
-	import { GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, GostJahrgangsdaten, JahrgangsListeEintrag,
+	import { GostBelegpruefungErgebnisFehler, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
@@ -27,6 +27,8 @@
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
 	const props = defineProps<{
+		setWahl: (fach: GostFach, wahl: GostSchuelerFachwahl) => Promise<void>;
+		getPdfWahlbogen: () => Promise<Blob>;
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;

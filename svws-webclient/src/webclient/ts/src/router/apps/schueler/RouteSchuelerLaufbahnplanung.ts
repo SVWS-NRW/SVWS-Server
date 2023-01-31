@@ -1,4 +1,4 @@
-import { GostJahrgang, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostFach, GostJahrgang, GostSchuelerFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
@@ -6,6 +6,7 @@ import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbah
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+import { App } from "~/apps/BaseApp";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -14,6 +15,17 @@ export class RouteDataSchuelerLaufbahnplanung {
 	dataJahrgang: DataGostJahrgang = new DataGostJahrgang();
 	dataFaecher: DataGostFaecher = new DataGostFaecher();
 	dataFachkombinationen: DataGostFachkombinationen = new DataGostFachkombinationen();
+
+	setWahl = async (fach: GostFach, wahl: GostSchuelerFachwahl) => {
+		await this.dataLaufbahn.setWahl(fach, wahl);
+	}
+
+	getPdfWahlbogen = async() => {
+		if (this.item == undefined)
+			throw Error("Keine Schülerauswahl zur Bestimmung des PDF-Wahlbogens vorhanden.");
+		return await App.api.getGostSchuelerPDFWahlbogen(App.schema, this.item.id);
+	}
+
 }
 
 const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
@@ -90,6 +102,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeSchueler.getProps(to),
+			setWahl: this.data.setWahl,
+			getPdfWahlbogen: this.data.getPdfWahlbogen,
 			jahrgangsdaten: this.data.dataJahrgang.daten,
 			dataLaufbahn: this.data.dataLaufbahn,
 			dataFaecher: this.data.dataFaecher,

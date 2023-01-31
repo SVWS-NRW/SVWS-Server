@@ -29,8 +29,7 @@
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
 							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten"
-								:fach="row" :fachkombinationen="fachkombinationen" :data-laufbahn="dataLaufbahn" :manueller-modus="istManuellerModus"
-								@update:wahl="onUpdateWahl" />
+								:fach="row" :fachkombinationen="fachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
 						</tr>
 						<thead class="bg-slate-100">
 							<tr>
@@ -125,26 +124,24 @@
 
 	import { computed, ComputedRef, ref } from "vue";
 
-	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostHalbjahr, AbiturFachbelegung, GostSchuelerFachwahl, GostKursart, AbiturFachbelegungHalbjahr, GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
-	import { App } from "~/apps/BaseApp";
-	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination,
+		GostHalbjahr, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		fachkombinationen: List<GostJahrgangFachkombination>;
-		item?: SchuelerListeEintrag;
-		stammdaten: DataSchuelerStammdaten;
 		jahrgangsdaten: GostJahrgangsdaten;
-		dataLaufbahn: DataSchuelerLaufbahnplanung;
+		setWahl: (fach: GostFach, wahl: GostSchuelerFachwahl) => Promise<void>;
+		getPdfWahlbogen: () => Promise<Blob>;
+		item?: SchuelerListeEintrag;
 	}>();
 
-	function onUpdateWahl(fach: GostFach, wahl: GostSchuelerFachwahl) {
-		props.dataLaufbahn.setWahl(fach, wahl);
+	async function onUpdateWahl(fach: GostFach, wahl: GostSchuelerFachwahl) {
+		await props.setWahl(fach, wahl);
 	}
 
-	function reset_fachwahlen() {
+	async function reset_fachwahlen() {
 		for (const fachbelegung of props.abiturmanager.getFachbelegungen()) {
 			const fach = props.abiturmanager.getFach(fachbelegung);
 			if (fach) {
@@ -154,7 +151,7 @@
 						fachwahl[hj.toString() as 'EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22'] = null;
 				}
 				fachwahl.abiturFach = null;
-				onUpdateWahl(fach, fachwahl);
+				await onUpdateWahl(fach, fachwahl);
 			}
 		}
 	}
@@ -183,18 +180,14 @@
 		istManuellerModus.value = istManuellerModus.value ? false : true;
 	}
 
-	function download_file() {
-		const id = props.stammdaten.daten?.id;
-		if (!id)
-			return;
-		App.api.getGostSchuelerPDFWahlbogen(App.schema, id).then(blob => {
-			const link = document.createElement("a");
-			link.href = URL.createObjectURL(blob);
-			link.download = "Wahlbogen.pdf";
-			link.target = "_blank";
-			link.click();
-			URL.revokeObjectURL(link.href);
-		}).catch(console.error);
+	async function download_file() {
+		const pdf = await props.getPdfWahlbogen();
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(pdf);
+		link.download = "Wahlbogen.pdf";
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
 	}
 
 </script>
