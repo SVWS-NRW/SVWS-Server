@@ -1,6 +1,6 @@
 import { App } from "../BaseApp";
 
-import { SchuleStammdaten, Schulform, Schulgliederung, UnsupportedOperationException } from "@svws-nrw/svws-core-ts";
+import { SchuleStammdaten, Schulform, Schulgliederung, Schuljahresabschnitt, UnsupportedOperationException } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { computed, WritableComputedRef } from "vue";
 
@@ -19,7 +19,7 @@ export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
 		set: (value) => {}
 	});
 
-	protected on_update(daten: Partial<SchuleStammdaten>): void {
+	protected on_update(daten: Partial<SchuleStammdaten>) {
 		return void daten;
 	}
 
@@ -30,7 +30,15 @@ export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
 	 * @returns {Promise<SchuleStammdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<SchuleStammdaten | undefined> {
-		return await super._select(() => App.api.getSchuleStammdaten(App.schema));
+		const res = await super._select(() => App.api.getSchuleStammdaten(App.schema));
+		if (App.akt_abschnitt === undefined) {
+			const id = this.daten?.idSchuljahresabschnitt;
+			const a = this.daten?.abschnitte
+				.toArray(new Array<Schuljahresabschnitt>())
+				.find(e => e.id === id);
+			if (a) App.akt_abschnitt = a;
+		}
+		return res
 	}
 
 	/**
