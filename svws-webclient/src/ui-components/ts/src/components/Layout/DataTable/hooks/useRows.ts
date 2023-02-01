@@ -8,7 +8,7 @@ import type {
 } from '../types'
 
 type UseRowsProps = {
-	items: DataTableItem[];
+	items: Iterable<DataTableItem>;
 }
 
 const buildTableCell = (
@@ -40,8 +40,15 @@ export default function useRows (
 	columns: Ref<DataTableColumnInternal[]>,
 	props: UseRowsProps
 ) {
-	const rowsComputed = computed(() => props.items
-		.map((rawItem, index) => buildTableRow(rawItem, index, columns.value)))
+	const rowsComputed = computed(() => {
+		const arr: DataTableRow[] = [];
+		let index = 0;
+		for (const rawItem of props.items) {
+			arr.push(buildTableRow(rawItem, index, columns.value))
+			index++
+		}
+		return arr;
+	})
 
 	return {
 		rowsComputed,

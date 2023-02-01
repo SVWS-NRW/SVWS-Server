@@ -10,7 +10,7 @@ import type {
 
 type UseColumnProps = {
 	columns: DataTableColumnSource[];
-	items: DataTableItem[];
+	items: Iterable<DataTableItem>;
 }
 
 export const buildTableColumn = (

@@ -147,7 +147,7 @@
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
-			items?: DataTableItem[];
+			items?: Iterable<DataTableItem>;
 			modelValue?: DataTableItem[];
 			sortingOrder?: DataTableSortingOrder | undefined;
 			sortBy?: string | undefined;
@@ -198,7 +198,13 @@
 
 	const { isRowClicked, toggleRowClick } = useClickable(sortedRows, props);
 
-	const showNoDataHtml = computed(() => props.items.length === 0);
+	const showNoDataHtml = computed(() => {
+		if (Array.isArray(props.items))
+			return props.items.length === 0;
+		const iterator = props.items[Symbol.iterator]();
+		const res = iterator.next();
+		return res.done === true && res.value === undefined
+	});
 
 	const computedTableAttributes = computed(
 		() =>

@@ -1,4 +1,4 @@
-import { Ref, computed, watch, ref } from 'vue'
+import { Ref } from 'vue'
 
 import type { DataTableRow, DataTableItem } from '../types'
 import useSafeVModel from './useSafeVModel'

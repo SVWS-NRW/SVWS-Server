@@ -26,6 +26,9 @@
 			isActive: true,
 		},
 	]);
+	const set = new Set<DataTableItem>();
+	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
+	set.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
 	const columns = ref([
 		{
 			key: "name",
@@ -95,6 +98,9 @@
 	<Story title="SVWS UI/Layout/DataTable">
 		<Variant title="Basic">
 			<DataTable :items="data" />
+		</Variant>
+		<Variant title="Basic Iterable">
+			<DataTable :items="set" />
 		</Variant>
 		<Variant title="Simple Row Click Selection">
 			<DataTable v-model:clicked="clickedRow" :items="data" clickable />

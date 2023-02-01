@@ -43,7 +43,7 @@ export default function useSelectable(
 	}
 
 	function selectRow(row: DataTableRow) {
-		selectedItems.value = [...selectedItems.value, row.source]
+		selectedItems.value.push(row.source);
 	}
 
 	function unselectRow(row: DataTableRow) {
