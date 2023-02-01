@@ -20,12 +20,13 @@ import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { App } from "~/apps/BaseApp";
 
-
-export class RouteApp extends RouteNode<unknown, any> {
+export class RouteDataApp {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+}
+export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public constructor() {
-		super("app", "/", SApp);
+		super("app", "/", SApp, new RouteDataApp());
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		super.children = [
@@ -58,9 +59,9 @@ export class RouteApp extends RouteNode<unknown, any> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.schule.select(true);
-		const id = this.schule.daten?.idSchuljahresabschnitt;
-		const a = this.schule.daten?.abschnitte
+		await this.data.schule.select(true);
+		const id = this.data.schule.daten?.idSchuljahresabschnitt;
+		const a = this.data.schule.daten?.abschnitte
 			.toArray(new Array<Schuljahresabschnitt>())
 			.find(e => e.id === id);
 		if (a) App.akt_abschnitt = a;
@@ -71,9 +72,8 @@ export class RouteApp extends RouteNode<unknown, any> {
 	}
 
 	public getProps(): Record<string, any> {
-		// TODO
 		return {
-			schule: this.schule,
+			schule: this.data.schule,
 		};
 	}
 }

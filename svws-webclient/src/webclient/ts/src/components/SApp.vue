@@ -49,6 +49,9 @@
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
+	import { injectMainApp, Main } from "~/apps/Main";
+
+	const main: Main = injectMainApp();
 
 	onErrorCaptured((e)=>{
 		error_message.value = e.message;
