@@ -1,27 +1,28 @@
 {
-    "DisableDBRootAccess": false,
-    "DisableAutoUpdates" : false,
-    "DisableTLS" : false,
-    "PortHTTP" : 80,
-	"UseHTTPDefaultv11": false,
-	"PortHTTPS": 443,
-	"UseCORSHeader": true,
-	"ClientPath": "webclient/build",
-	"LoggingEnabled": true,
-	"LoggingPath": "logs",
-	"TempPath": "tmp",
-	"TLSKeystorePath": ".",
-	"TLSKeystorePassword": "svwskeystore",
-	"DBKonfiguration": {
-		"dbms": "MARIA_DB",
-		"location": "localhost",
-		"SchemaKonfiguration": [
-			{
-				"name": "schildtest",
-				"svwslogin": false,
-				"username": "schildadmin",
-				"password": "schildadmin"
-			}
-		]
-	}
+  "EnableClientProtection" : false,
+  "DisableDBRootAccess" : false,
+  "DisableAutoUpdates" : null,
+  "DisableTLS" : null,
+  "PortHTTP" : null,
+  "UseHTTPDefaultv11" : false,
+  "PortHTTPS" : null,
+  "UseCORSHeader" : true,
+  "TempPath" : "./Temp",
+  "TLSKeyAlias" : null,
+  "TLSKeystorePath" : ".",
+  "TLSKeystorePassword" : "svwskeystore",
+  "ClientPath" : "./SVWS-Server/svws-webclient/build/output",
+  "LoggingEnabled" : true,
+  "LoggingPath" : "logs",
+  "DBKonfiguration" : {
+    "dbms" : "MARIA_DB",
+    "location" : "localhost",
+    "defaultschema" : "svwsdb",
+    "SchemaKonfiguration" : [ {
+      "name" : "svwsdb",
+      "svwslogin" : false,
+      "username" : "svwsuser",
+      "password" : "svwspassword"
+    } ]
+  }
 }
