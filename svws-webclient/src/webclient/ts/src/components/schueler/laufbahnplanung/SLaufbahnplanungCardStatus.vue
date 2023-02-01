@@ -19,7 +19,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten } from "@svws-nrw/svws-core-ts";
+	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
@@ -45,7 +45,6 @@
 	});
 
 	// TODO Kommentar (siehe Komponente oben)
-
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturmanager.getSprachendaten());
 
 </script>

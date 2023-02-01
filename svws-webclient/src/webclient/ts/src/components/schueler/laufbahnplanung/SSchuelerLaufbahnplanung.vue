@@ -6,16 +6,16 @@
 		</div>
 		<div class="flex-auto">
 			<s-laufbahnplanung-card-status v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen"
-				:fehlerliste="fehlerliste" :belegpruefungsart="props.dataLaufbahn.gostAktuelleBelegpruefungsart" />
+				:fehlerliste="fehlerliste" :belegpruefungsart="props.belegpruefungsart" @update:belegpruefungsart="setBelegpruefungsart" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostBelegpruefungErgebnisFehler, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, JahrgangsListeEintrag,
+	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
@@ -28,6 +28,7 @@
 
 	const props = defineProps<{
 		setWahl: (fach: GostFach, wahl: GostSchuelerFachwahl) => Promise<void>;
+		setBelegpruefungsart: (value: GostBelegpruefungsArt) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
@@ -39,6 +40,7 @@
 		listKurse: ListKurse;
 		mapKurs: Map<Number, KursListeEintrag>;
 		jahrgangsdaten: GostJahrgangsdaten;
+		belegpruefungsart: GostBelegpruefungsArt;
 		dataLaufbahn: DataSchuelerLaufbahnplanung;
 		dataFaecher: DataGostFaecher;
 		dataFachkombinationen: DataGostFachkombinationen;
@@ -56,7 +58,7 @@
 		return props.dataFaecher.manager
 	});
 
-	const fachkombinationen: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
+	const fachkombinationen: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const list = new Vector<GostJahrgangFachkombination>();
 		if (props.dataFachkombinationen.daten === undefined)
 			return list;
