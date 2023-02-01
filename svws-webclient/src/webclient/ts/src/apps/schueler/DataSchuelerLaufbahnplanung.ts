@@ -1,13 +1,12 @@
 import { App } from "../BaseApp";
-import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulgliederung,
+import { List, Vector, GostKursart, Fachgruppe, Schulgliederung,
 	Abiturdaten, AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr,
 	GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
-	ZulaessigesFach, GostFach, GostFachbereich,
+	ZulaessigesFach, GostFach,
 	SchuelerListeEintrag,
 	Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
-import { mainApp } from "../Main";
 import { DataGostFaecher } from "../gost/DataGostFaecher";
 import { DataGostJahrgang } from "../gost/DataGostJahrgang";
 import { DataSchuleStammdaten } from "../schule/DataSchuleStammdaten";

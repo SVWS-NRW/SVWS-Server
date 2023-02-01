@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 
-	import { AbiturdatenManager, Fachgruppe, GostAbiturFach, GostFach, GostFachbereich, GostFaecherManager, GostHalbjahr, GostJahrgang,
+	import { AbiturdatenManager, Fachgruppe, GostAbiturFach, GostFach, GostFachbereich, GostFaecherManager, GostHalbjahr,
 		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostSchuelerFachwahl, Jahrgaenge, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 

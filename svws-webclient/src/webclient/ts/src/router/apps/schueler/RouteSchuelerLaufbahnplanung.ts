@@ -1,4 +1,4 @@
-import { GostBelegpruefungsArt, GostFach, GostJahrgang, GostSchuelerFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { AbiturdatenManager, GostBelegpruefungsArt, GostFach, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
@@ -15,6 +15,28 @@ export class RouteDataSchuelerLaufbahnplanung {
 	dataJahrgang: DataGostJahrgang = new DataGostJahrgang();
 	dataFaecher: DataGostFaecher = new DataGostFaecher();
 	dataFachkombinationen: DataGostFachkombinationen = new DataGostFachkombinationen();
+
+	get faechermanager(): GostFaecherManager {
+		if (this.dataFaecher.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
+		return this.dataFaecher.manager;
+	}
+
+	get fachkombinationen(): List<GostJahrgangFachkombination> {
+		const list = new Vector<GostJahrgangFachkombination>();
+		if ((this.item === undefined) || (this.dataFachkombinationen.daten === undefined))
+			return list;
+		for (const regel of	this.dataFachkombinationen.daten)
+			if (regel.abiturjahr === this.item.abiturjahrgang)
+				list.add(regel)
+		return list;
+	}
+
+	get abiturmanager(): AbiturdatenManager {
+		if (this.dataLaufbahn.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+		return this.dataLaufbahn.manager;
+	}
 
 	setBelegpruefungsart = async (value: GostBelegpruefungsArt) => {
 		this.dataLaufbahn.gostAktuelleBelegpruefungsart = value;
@@ -105,15 +127,16 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
 			setWahl: this.data.setWahl,
 			setBelegpruefungsart: this.data.setBelegpruefungsart,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,
+			schueler: this.data.item,
 			jahrgangsdaten: this.data.dataJahrgang.daten,
 			belegpruefungsart: this.data.dataLaufbahn.gostAktuelleBelegpruefungsart,
-			dataLaufbahn: this.data.dataLaufbahn,
-			dataFaecher: this.data.dataFaecher,
-			dataFachkombinationen: this.data.dataFachkombinationen
+			belegpruefungsergebnis: this.data.dataLaufbahn.gostBelegpruefungsErgebnis,
+			abiturmanager: this.data.abiturmanager,
+			faechermanager: this.data.faechermanager,
+			fachkombinationen: this.data.fachkombinationen
 		};
 	}
 
