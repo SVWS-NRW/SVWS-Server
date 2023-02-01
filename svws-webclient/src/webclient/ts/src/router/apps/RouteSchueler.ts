@@ -56,15 +56,19 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		if ((to.name === this.name) && (to_params.id === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			await this.liste.update_list();
-			return { name: redirect_name, params: { id: this.liste.gefiltert.at(0)?.id }};
-		}
 		return true;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+		if (to_params.id === undefined) {
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
+			await this.liste.update_list();
+			let id = this.liste.gefiltert[0]?.id;
+			// TODO Handhabung bei neuer Schule -> Schülerliste leer
+			if (id === undefined)
+				id = -1;
+			return this.getRoute(id);
+		}
 		await this.data.listeAbiturjahrgaenge.update_list();
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listKlassen.update_list();

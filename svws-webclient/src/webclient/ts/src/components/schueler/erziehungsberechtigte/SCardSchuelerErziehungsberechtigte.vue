@@ -32,9 +32,9 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerZusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="orte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil"
+					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="ortsteile"
 						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 				</div>
 			</div>
@@ -52,15 +52,21 @@
 
 <script setup lang="ts">
 
-	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
+	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, List } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort,
 		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	const props = defineProps<{ data: DataSchuelerErzieherStammdaten, erzieher: ErzieherStammdaten, erzieherarten: DataKatalogErzieherarten }>();
+	const props = defineProps<{
+		data: DataSchuelerErzieherStammdaten;
+		erzieher: ErzieherStammdaten;
+		erzieherarten: DataKatalogErzieherarten;
+		orte: List<OrtKatalogEintrag>;
+		ortsteile: List<OrtsteilKatalogEintrag>;
+	}>();
 
 	const main: Main = injectMainApp();
 
@@ -89,17 +95,23 @@
 		set: (value) => void props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
 	});
 
-	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
-	const inputKatalogOrte: Ref<OrtKatalogEintrag[]> = ref(main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => inputKatalogOrte.value.find(ort => ort.id == props.erzieher.wohnortID),
+		get: () => {
+			for (const ort of props.orte)
+				if (ort.id == props.erzieher.wohnortID)
+					return ort;
+			return undefined
+		},
 		set: (value) => void props.data.patch({ wohnortID: value?.id }, props.erzieher)
 	});
 
-	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
-	const inputKatalogOrtsteil: Ref<OrtsteilKatalogEintrag[]> = ref(main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == props.erzieher.ortsteilID),
+		get: () => {
+			for (const ortsteil of props.ortsteile)
+				if (ortsteil.id == props.erzieher.ortsteilID)
+					return ortsteil;
+			return undefined
+		},
 		set: (value) => void props.data.patch({ ortsteilID: value?.id }, props.erzieher)
 	});
 

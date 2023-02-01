@@ -5,7 +5,7 @@
 		</div>
 		<div v-if="sb_vorhanden" class="col-span-3">
 			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" />
-			<s-card-schueler-adresse :list-schuelerbetriebe="listSchuelerbetriebe" :betriebs-stammdaten="betriebsStammdaten" />
+			<s-card-schueler-adresse :list-schuelerbetriebe="listSchuelerbetriebe" :betriebs-stammdaten="betriebsStammdaten" :orte="orte" />
 		</div>
 		<div v-else>
 			<h1>
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { List, OrtKatalogEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
@@ -27,6 +27,7 @@
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
+		orte: List<OrtKatalogEintrag>;
 	}>();
 
 	const sb_vorhanden : ComputedRef<boolean> = computed(() => {

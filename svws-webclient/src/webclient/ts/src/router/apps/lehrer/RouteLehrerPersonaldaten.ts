@@ -48,7 +48,6 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeLehrer.getProps(to),
 			personaldaten: this.data.personaldaten
 		};
 	}

@@ -28,7 +28,7 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 		super("lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerAuswahl, SLehrerApp, new ListLehrer(), 'id', new RouteDataLehrer());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lehrkräfte";
-		super.setView("liste", SLehrerAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SLehrerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeLehrerIndividualdaten,
 			routeLehrerPersonaldaten,
@@ -80,9 +80,15 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
+			stammdaten: this.data.stammdaten,
+			schule: this.data.schule
+		};
+	}
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
 			stammdaten: this.data.stammdaten,
 			schule: this.data.schule
 		};

@@ -44,7 +44,7 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerzusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="orte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 					<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
 					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
@@ -106,7 +106,6 @@
 
 <script setup lang="ts">
 
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { BetriebAnsprechpartner, LehrerListeEintrag, List, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { orte_filter, orte_sort, } from "~/helfer";
@@ -117,9 +116,9 @@
 	const props = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
+		orte: List<OrtKatalogEintrag>;
 	}>();
 
-	const main: Main = injectMainApp();
 	const modalEdit = ref();
 	const modalAdd = ref();
 
@@ -132,14 +131,9 @@
 		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
 	})
 
-	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
-		return main.kataloge.orte;
-	});
-
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		return props.listSchuelerbetriebe.lehrer.liste;
 	});
-
 
 	/** Basisdaten */
 
@@ -223,7 +217,7 @@
 			if (props.betriebsStammdaten.daten?.ort_id) {
 				const id = props.betriebsStammdaten.daten?.ort_id;
 				let o;
-				for (const r of inputKatalogOrte.value) {
+				for (const r of props.orte) {
 					if (r.id === id) {
 						o = r;
 						break;

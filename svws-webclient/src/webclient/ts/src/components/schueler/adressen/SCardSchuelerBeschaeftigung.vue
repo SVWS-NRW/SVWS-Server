@@ -17,7 +17,7 @@
 
 								<tbody>
 									<tr v-for="(ds, id) in betriebe" :key="id" @click="select(ds)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
-										<s-card-schueler-beschaeftigungs-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" />
+										<s-card-schueler-beschaeftigung-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" />
 									</tr>
 								</tbody>
 							</table>

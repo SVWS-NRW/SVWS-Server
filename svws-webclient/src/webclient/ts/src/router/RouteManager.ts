@@ -5,6 +5,7 @@ import { routeApp } from "~/router/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
 
 import { mainApp } from "~/apps/Main";
+import { LogConsumerConsole } from "@svws-nrw/svws-core-ts";
 
 export class RouteManager {
 

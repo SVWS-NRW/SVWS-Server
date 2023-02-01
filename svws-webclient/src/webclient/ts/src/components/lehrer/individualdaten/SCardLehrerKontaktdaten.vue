@@ -4,9 +4,9 @@
 			<div class="col-span-2">
 				<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required :valid="eingabeStrasseOk" />
 			</div>
-			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="inputKatalogOrte" :item-filter="orte_filter" :item-sort="orte_sort"
+			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="orte" :item-filter="orte_filter" :item-sort="orte_sort"
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="inputKatalogOrtsteil" :item-sort="ortsteilSort"
+			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="ortsteile" :item-sort="ortsteilSort"
 				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
 			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
@@ -21,25 +21,19 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { AdressenUtils, LehrerStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
 	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
 	const eingabeStrasseOk: Ref<boolean> = ref(true);
 
-	const main: Main = injectMainApp();
 
-	const props = defineProps<{ stammdaten: DataLehrerStammdaten }>();
+	const props = defineProps<{
+		stammdaten: DataLehrerStammdaten;
+		orte: List<OrtKatalogEintrag>;
+		ortsteile: List<OrtsteilKatalogEintrag>;
+	}>();
 
 	const daten: ComputedRef<LehrerStammdaten> = computed(() => props.stammdaten.daten || new LehrerStammdaten());
-
-	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
-		return main.kataloge.orte;
-	});
-
-	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> = computed(() => {
-		return main.kataloge.ortsteile;
-	});
 
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get(): string {
@@ -60,7 +54,7 @@
 		get(): OrtKatalogEintrag | undefined {
 			const id = daten.value.wohnortID;
 			let o;
-			for (const r of inputKatalogOrte.value) {
+			for (const r of props.orte) {
 				if (r.id === id) {
 					o = r;
 					break;
@@ -77,7 +71,7 @@
 		get(): OrtsteilKatalogEintrag | undefined {
 			const id = daten.value.ortsteilID;
 			let o;
-			for (const r of inputKatalogOrtsteil.value) {
+			for (const r of props.ortsteile) {
 				if (r.id === id) {
 					o = r;
 					break;

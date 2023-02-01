@@ -4,9 +4,9 @@
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" :valid="eingabeStrasseOk" />
 			</div>
-			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
+			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="orte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
+			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="ortsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-text-input placeholder="Telefon" v-model="inputTelefon" type="tel" />
 			<svws-ui-text-input placeholder="Mobil oder Fax" v-model="inputTelefonMobil" type="tel" />
@@ -21,15 +21,16 @@
 	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	import { AdressenUtils, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { AdressenUtils, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten, List } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{
+		stammdaten: DataSchuelerStammdaten;
+		orte: List<OrtKatalogEintrag>;
+		ortsteile: List<OrtsteilKatalogEintrag>;
+	}>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
-
-	const main: Main = injectMainApp();
 
 	const eingabeStrasseOk = ref(true);
 
@@ -46,16 +47,23 @@
 			}
 		}
 	});
-
-	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => inputKatalogOrte.value.find(ort => ort.id == daten.value.wohnortID),
+		get: () => {
+			for (const ort of props.orte)
+				if (ort.id == daten.value.wohnortID)
+					return ort;
+			return undefined
+		},
 		set: (value) => void props.stammdaten.patch({ wohnortID: value?.id })
 	});
 
-	const inputKatalogOrtsteil: ComputedRef<OrtsteilKatalogEintrag[]> = computed(() => main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == daten.value.ortsteilID),
+		get: () => {
+			for (const ortsteil of props.ortsteile)
+				if (ortsteil.id == daten.value.ortsteilID)
+					return ortsteil;
+			return undefined
+		},
 		set: (value) => void props.stammdaten.patch({ ortsteilID: value?.id })
 	});
 

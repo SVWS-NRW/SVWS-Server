@@ -4,6 +4,7 @@ import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrsch
 import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteSchueler, routeSchueler } from "../RouteSchueler";
+import { routeApp } from "~/router/RouteApp";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -52,7 +53,9 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
+			stammdaten: routeSchueler.data.stammdaten,
+			orte: routeApp.data.orte,
+			ortsteile: routeApp.data.ortsteile,
 			fachschuelerarten: this.data.fachschuelerarten,
 			foerderschwerpunkte: this.data.foerderschwerpunkte
 		};

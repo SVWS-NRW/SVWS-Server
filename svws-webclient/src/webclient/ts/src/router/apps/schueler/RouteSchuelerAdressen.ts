@@ -4,6 +4,7 @@ import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeApp } from "~/router/RouteApp";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 
@@ -50,6 +51,8 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeSchueler.getProps(to),
+			orte: routeApp.data.orte,
+			ortsteile: routeApp.data.ortsteile,
 			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
 			betriebsStammdaten: this.data.betriebsStammdaten
 		};

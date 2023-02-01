@@ -1,15 +1,4 @@
-import {
-	ApiSchema,
-	ApiServer,
-	List,
-	ReligionEintrag,
-	Vector,
-	DBSchemaListeEintrag,
-	Schuljahresabschnitt,
-	KatalogEintrag,
-	OrtKatalogEintrag,
-	OrtsteilKatalogEintrag,
-} from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, List, ReligionEintrag, Vector, DBSchemaListeEintrag, Schuljahresabschnitt, KatalogEintrag, } from "@svws-nrw/svws-core-ts";
 import { App } from "./BaseApp";
 import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
@@ -18,8 +7,6 @@ import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
 
 export type Kataloge = {
-	orte: List<OrtKatalogEintrag>;
-	ortsteile: List<OrtsteilKatalogEintrag>;
 	religionen: List<ReligionEintrag>;
 	haltestellen: List<KatalogEintrag>;
 	beschaeftigungsarten: List<KatalogEintrag>;
@@ -77,14 +64,11 @@ export class Main {
 	private api_schema!: ApiSchema;
 	private _pending: Promise<unknown>[] = [];
 
-	// public connection = new Connection();
 	public config = reactive(new MainConfig());
 
 	public kataloge: Kataloge = {
-		ortsteile: new Vector<OrtsteilKatalogEintrag>(),
 		haltestellen: new Vector<KatalogEintrag>(),
 		religionen: new Vector<ReligionEintrag>(),
-		orte: new Vector<OrtKatalogEintrag>(),
 		beschaeftigungsarten: new Vector<KatalogEintrag>(),
 	};
 
@@ -124,13 +108,9 @@ export class Main {
 		this.hostname = `https://${url || this.hostname}`;
 		this.api = new ApiServer(this.hostname, this.username, this.password);
 		console.log(`Connecting to ${this.hostname}`, url, this.api);
-		// this.connection.server = url;
-		// this.connection.initApi();
-		// this.api_config = new ApiServer(this.connection.config);
 		try {
 			const result = await this.api.getConfigDBSchemata();
 			console.log(`DB-Revision: ${result}`);
-			//this.connection.setDBSchemata(true, result);
 			this.config.dbSchemata = result.toArray(
 				new Array<DBSchemaListeEintrag>()
 			);
@@ -149,17 +129,10 @@ export class Main {
 			return true
 		} catch (error) {
 			{
-				//this.connection.setDBSchemata(false, []);
 				console.log(
 					`Verbindung zum SVWS-Server unter https://${this.hostname} fehlgeschlagen.`
 				);
 				return false
-				// switch (this.connection.connectionStep) {
-				// 	case 1:
-				// 		this.connection.connectionStep++;
-				// 		this.connectTo(hostname);
-				// 		break;
-				// }
 			}
 		}
 	}
@@ -175,9 +148,6 @@ export class Main {
 		username: string,
 		password: string
 	): Promise<void> {
-		// this.connection.username = username;
-		// this.connection.password = password;
-		// this.connection.initApi();
 		try {
 			this.api_schema = new ApiSchema(this.hostname, username, password);
 			// const result = await this.api.isAlive();
@@ -193,7 +163,6 @@ export class Main {
 			// TODO error z.B. loggen
 			console.log(error)
 			this.config.isAuthenticated = false;
-			//this.schemaRevision = -1;
 		}
 	}
 
@@ -211,8 +180,6 @@ export class Main {
 			schema: this.config.schemaname
 		});
 		const o = App.schema;
-		this._pending.push(App.api.getOrte(o).then(r => this.kataloge.orte = r));
-		this._pending.push(App.api.getOrtsteile(o).then(r => this.kataloge.ortsteile = r));
 		this._pending.push(App.api.getReligionen(o).then(r => this.kataloge.religionen = r));
 		this._pending.push(App.api.getHaltestellen(o).then(r => this.kataloge.haltestellen = r));
 		this._pending.push(App.api.getKatalogBeschaeftigungsart(o).then(r => this.kataloge.beschaeftigungsarten = r));

@@ -4,6 +4,7 @@ import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherart
 import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeApp } from "~/router/RouteApp";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
@@ -51,6 +52,8 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeSchueler.getProps(to),
+			orte: routeApp.data.orte,
+			ortsteile: routeApp.data.ortsteile,
 			data: this.data.daten,
 			erzieherarten: this.data.erzieherarten
 		};

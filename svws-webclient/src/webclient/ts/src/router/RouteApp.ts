@@ -15,11 +15,15 @@ import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
-import { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { App } from "~/apps/BaseApp";
 
 export class RouteDataApp {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+	orte: List<OrtKatalogEintrag> = new Vector();
+	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
 }
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
@@ -56,9 +60,19 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.defaultChild = routeSchueler;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.data.schule.select(true);    // TODO Kein Data-Objekt, sondern Handhabung des aktuellen Abschnitts, etc. in dieser Route (RouteDataApp-Objekt)
+		this.data.orte = await App.api.getOrte(App.schema);
+		this.data.ortsteile = await App.api.getOrtsteile(App.schema);
+	}
+
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (this.data.schule.daten === undefined)
-			await this.data.schule.select(true);
+	}
+
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await this.data.schule.unselect();
+		this.data.orte = new Vector<OrtKatalogEintrag>();
+		this.data.ortsteile = new Vector<OrtsteilKatalogEintrag>();
 	}
 
 	public getRoute(): RouteLocationRaw {
@@ -68,6 +82,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public getProps(): Record<string, any> {
 		return {
 			schule: this.data.schule,
+			orte: this.data.orte,
+			ortsteile: this.data.ortsteile
 		};
 	}
 }
