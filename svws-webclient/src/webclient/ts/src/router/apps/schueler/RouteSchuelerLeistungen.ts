@@ -67,6 +67,12 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 				return false;
 			this.data.idSchueler = id;
 			this.data.listAbschnitte = liste;
+			if (to_params.idLernabschnitt !== undefined) {
+				const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
+				const lernabschnitt = this.data.getEntry(idLernabschnitt);
+				if (lernabschnitt !== undefined)
+					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.id)
+			}
 			const lernabschnitt = this.data.getEntryDefault();
 			if (lernabschnitt === undefined)
 				return false;

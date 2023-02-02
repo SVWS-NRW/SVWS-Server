@@ -1,10 +1,9 @@
 import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
-import { RouteLocationRaw, RouteParams } from "vue-router";
+import { RouteLocationRaw } from "vue-router";
 import { App } from "~/apps/BaseApp";
 import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "./RouteApp";
 import { RouteManager } from "./RouteManager";
 
 export class RouteDataLogin {
