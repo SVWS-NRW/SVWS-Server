@@ -310,6 +310,35 @@ public class APISchueler {
     
 
     /**
+     * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abschnitt  die id des Schülerlernabschnitts  
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Lernabschnittsdaten des Schülers
+     */
+    @GET
+    @Path("/lernabschnittsdaten/{abschnitt : \\d+}")
+    @Operation(summary = "Liefert zu der ID des Schülerlernabschnittes die zugehörigen Lernabschnittsdaten.",
+    description = "Liest die Schüler-Lernabschnittsdaten zu der angegebenen ID aus der Datenbank "
+    		    + "und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Lernabschnittsdaten des Schülers",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
+    public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, 
+    		                                        @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+    		return (new DataSchuelerLernabschnittsdaten(conn).get(abschnitt));
+    	}
+    }
+    
+
+    /**
      * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fahrschülerarten.
      *  
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

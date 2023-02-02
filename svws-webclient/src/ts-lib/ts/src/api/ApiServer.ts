@@ -5621,6 +5621,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerLernabschnittsdatenByID für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}
+	 *
+	 * Liest die Schüler-Lernabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lernabschnittsdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerLernabschnittsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 *
+	 * @returns Die Lernabschnittsdaten des Schülers
+	 */
+	public async getSchuelerLernabschnittsdatenByID(schema : string, abschnitt : number) : Promise<SchuelerLernabschnittsdaten> {
+		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogAbgangsartenAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/abgangsarten/allgemeinbildend
 	 *
 	 * Gibt den Katalog der Abgangsarten für allgemeinbildende Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

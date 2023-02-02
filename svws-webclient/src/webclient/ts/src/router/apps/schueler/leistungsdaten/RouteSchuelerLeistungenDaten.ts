@@ -22,7 +22,7 @@ export class RouteDataSchuelerLeistungenDaten {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
 			return;
 		this.auswahl = item;
-		this.daten.value = (item?.id === undefined) ? undefined : await App.api.getSchuelerLernabschnittsdaten(App.schema, item.schuelerID, item.schuljahresabschnitt);
+		this.daten.value = (item?.id === undefined) ? undefined : await App.api.getSchuelerLernabschnittsdatenByID(App.schema, item.id);
 	}
 
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
