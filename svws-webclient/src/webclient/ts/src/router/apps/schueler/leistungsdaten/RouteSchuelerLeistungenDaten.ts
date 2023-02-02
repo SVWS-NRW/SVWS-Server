@@ -1,8 +1,7 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
 import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
@@ -10,15 +9,21 @@ import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
+import { RouteManager } from "~/router/RouteManager";
+import { routeApp } from "~/router/RouteApp";
 
 export class RouteDataSchuelerLeistungenDaten {
 	auswahl: ListAbschnitte = new ListAbschnitte();
-	item: SchuelerLernabschnittListeEintrag | undefined = undefined;
 	daten: DataSchuelerAbschnittsdaten = new DataSchuelerAbschnittsdaten();
 	listFaecher: ListFaecher = new ListFaecher();
 	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+
+	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
+		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, idLernabschnitt: value?.id } });
+	}
+
 }
 
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
@@ -30,7 +35,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new ListAbschnitte(), 'id', new RouteDataSchuelerLeistungenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
-		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route));
+		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 		];
 	}
@@ -49,8 +54,17 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 		}
 		if ((to.name !== from?.name) || (from_params.id === undefined) || (parseInt(from_params.id as string) != id))
 			await this.data.auswahl.update_list(id);
-		if ((to.name === this.name) && (to_params.idLernabschnitt === undefined))
-			return { name: this.name, params: { id: to_params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
+		if ((to.name === this.name) && (to_params.idLernabschnitt === undefined)) {
+			if (routeApp.data.schule.daten === undefined)
+				throw new Error("Keine Daten für die Schule geladen!");
+			const akt_schuljahresabschnitt = routeApp.data.schule.daten.idSchuljahresabschnitt;
+			let lernabschnitt = this.data.auswahl.liste.find(l => l.schuljahresabschnitt === akt_schuljahresabschnitt);
+			if (lernabschnitt === undefined)
+				lernabschnitt = this.data.auswahl.liste[0];
+			if (lernabschnitt === undefined)
+				return false;
+			return { name: this.name, params: { id: to_params.id, idLernabschnitt: lernabschnitt.id }};
+		}
 		return true;
 	}
 
@@ -64,40 +78,21 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 	}
 
 	protected async onSelect(item?: SchuelerLernabschnittListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.data.auswahl.ausgewaehlt)
 			return;
+		this.data.auswahl.ausgewaehlt = item;
 		if (item === undefined) {
-			this.data.item = undefined;
 			await this.data.daten.unselect();
 		} else {
-			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			await this.data.daten.select(this.data.auswahl.ausgewaehlt);
 		}
 	}
 
+	// TODO deprecated
 	protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> {
-		const router = useRouter();
-		const route = useRoute();
 		return computed({
-			get: () => {
-				if (route.params.id === undefined)
-					return undefined;
-				let tmp = this.data.auswahl.ausgewaehlt;
-				if ((tmp === undefined) || (tmp.id === undefined) || (tmp.id.toString() !== route.params.idLernabschnitt))
-					tmp = this.data.auswahl.liste.find(s => s.id.toString() === route.params.idLernabschnitt);
-				return tmp;
-			},
-			set: (value) => {
-				this.data.auswahl.ausgewaehlt = value;
-				const from_name = route.name?.toString() || "";
-				if ((from_name !== this.name) && from_name?.startsWith(this.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
-					const params = {...route.params};
-					params.idLernabschnitt = "" + value?.id;
-					void router.push({ name: from_name, params: params });
-				} else {
-					void router.push({ name: this.name, params: { id: route.params.id, idLernabschnitt: value?.id } });
-				}
-			}
+			get: () => undefined,
+			set: (value) => {}
 		});
 	}
 
@@ -105,10 +100,17 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 		return { name: this.name, params: { id, idLernabschnitt }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			lernabschnitt: this.data.auswahl.ausgewaehlt,
+			lernabschnitte: this.data.auswahl.liste,
+			setLernabschnitt: this.data.setLernabschnitt
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
-			lernabschnitt: this.data.item,
+			lernabschnitt: this.data.auswahl.ausgewaehlt,
 			data: this.data.daten,
 			mapFaecher: this.data.mapFaecher,
 			mapLehrer: this.data.mapLehrer

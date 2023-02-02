@@ -19,14 +19,10 @@
 
 	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
 	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten;
 		lernabschnitt?: SchuelerLernabschnittListeEintrag;
 		data: DataSchuelerAbschnittsdaten;
 		mapFaecher: Map<number, FaecherListeEintrag>;
@@ -47,7 +43,7 @@
 	];
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return (!routeSchuelerLeistungenDaten.hidden()) && (props.lernabschnitt !== undefined);
+		return (props.lernabschnitt !== undefined);
 	});
 
 </script>

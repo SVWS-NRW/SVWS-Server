@@ -1,11 +1,10 @@
-import { RouteLocationNormalized, Router } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
 
 import { mainApp } from "~/apps/Main";
-import { LogConsumerConsole } from "@svws-nrw/svws-core-ts";
 
 export class RouteManager {
 
@@ -30,6 +29,18 @@ export class RouteManager {
 		// Füge die Haupt-Routen hinzu
 		this.router.addRoute(routeLogin.record);
 		this.router.addRoute(routeApp.record);
+	}
+
+	/**
+	 * Setzt die Route auf das angegebene Ziel
+	 *
+	 * @param to   die Ziel-Route
+	 */
+	public static async doRoute(to: RouteLocationRaw) {
+		const manager = RouteManager._instance;
+		if (manager === undefined)
+			throw new Error("Unzulässiger Zugriff auf den RouteManager bevor eine Instanz erzeugt wurde.");
+		await manager.router.push(to);
 	}
 
 	/**

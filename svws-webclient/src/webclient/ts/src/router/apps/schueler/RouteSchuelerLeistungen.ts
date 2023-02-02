@@ -1,6 +1,6 @@
 import { RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
 
@@ -10,7 +10,7 @@ export class RouteSchuelerLeistungen extends RouteNode<unknown, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_leistungen", "leistungsdaten", SSchuelerLeistungen);
-		super.propHandler = (route) => routeSchueler.getProps(route);
+		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [
 			routeSchuelerLeistungenDaten

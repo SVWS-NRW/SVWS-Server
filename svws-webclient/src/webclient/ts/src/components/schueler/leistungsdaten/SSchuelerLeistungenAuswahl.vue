@@ -1,40 +1,29 @@
 <template>
-	<template v-if="visible">
-		<svws-ui-table v-model="selected" :columns="cols" :data="liste" :footer="false">
-			<template #cell-schuljahresabschnitt="{row}">
-				{{ row.schuljahr + "." + row.abschnitt + (row.wechselNr === null ? "" : " (alt)") }}
-			</template>
-		</svws-ui-table>
-	</template>
+	<svws-ui-table :model-value="lernabschnitt" @update:model-value="setLernabschnitt" :columns="cols" :data="lernabschnitte" :footer="false">
+		<template #cell-schuljahresabschnitt="{row}">
+			{{ row.schuljahr + "." + row.abschnitt + (row.wechselNr === null ? "" : " (alt)") }}
+		</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
+	import { SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { DataTableItem } from "@svws-nrw/svws-ui";
+	import { ref } from "vue";
 
 	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten,
-		lernabschnitt?: SchuelerLernabschnittListeEintrag,
-		data: DataSchuelerAbschnittsdaten,
-		mapFaecher: Map<number, FaecherListeEintrag>,
-		mapLehrer: Map<number, LehrerListeEintrag>,
+		lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;
+		lernabschnitte: SchuelerLernabschnittListeEintrag[];
+		setLernabschnitt: (value: SchuelerLernabschnittListeEintrag | undefined) => Promise<void>;
 	}>();
 
-	const liste: ComputedRef<SchuelerLernabschnittListeEintrag[]> = computed(() => routeSchuelerLeistungenDaten.data.auswahl.liste);
-
-	const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;
+	async function setLernabschnitt(value: DataTableItem) {
+		return await props.setLernabschnitt(value as SchuelerLernabschnittListeEintrag | undefined);
+	}
 
 	const cols = ref([
 		{ key: "schuljahresabschnitt", label: "Abschnitt" },
 	]);
-
-	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return !(routeSchuelerLeistungenDaten.hidden());
-	});
 
 </script>
