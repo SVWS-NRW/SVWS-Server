@@ -4,7 +4,7 @@
 			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
 			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="inputKatalogFahrschuelerarten" />
-			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="inputKatalogHaltestellen" />
+			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="haltestellen" />
 			<svws-ui-text-input placeholder="Anmeldedatum" v-model="inputAnmeldedatum" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" />
 			<svws-ui-checkbox v-model="inputIstVolljaehrig"> Volljährig </svws-ui-checkbox>
@@ -20,14 +20,15 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { KatalogEintrag, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
+	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const props = defineProps<{
-		stammdaten: DataSchuelerStammdaten,
-		fachschuelerarten: DataKatalogFahrschuelerarten
+		stammdaten: DataSchuelerStammdaten;
+		fachschuelerarten: DataKatalogFahrschuelerarten;
+		haltestellen: List<KatalogEintrag>
 	}>();
 
 	const main: Main = injectMainApp();
@@ -45,9 +46,13 @@
 		set: (value) => void props.stammdaten.patch({ fahrschuelerArtID: value?.id })
 	});
 
-	const inputKatalogHaltestellen: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.haltestellen.toArray() as KatalogEintrag[]);
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => inputKatalogHaltestellen.value.find(n => n.id === daten.value.haltestelleID),
+		get: () => {
+			for (const haltestelle of props.haltestellen)
+				if (haltestelle.id === daten.value.haltestelleID)
+					return haltestelle;
+			return undefined;
+		},
 		set: (value) => void props.stammdaten.patch({ haltestelleID: value?.id })
 	});
 

@@ -3,7 +3,7 @@
 		<template #sidebar>
 			<svws-ui-sidebar-menu>
 				<template #header>
-					<svws-ui-sidebar-menu-header> {{ main.getUsername() }} </svws-ui-sidebar-menu-header>
+					<svws-ui-sidebar-menu-header> {{ username }} </svws-ui-sidebar-menu-header>
 				</template>
 				<template #default>
 					<svws-ui-sidebar-menu-item v-for="item in routeApp.menu" :key="item.name" :active="is_active(item)" @click="select(item)">
@@ -66,6 +66,7 @@
 
 	const props = defineProps<{
 		schule: DataSchuleStammdaten;
+		username: string;
 	}>();
 
 	const route = useRoute();

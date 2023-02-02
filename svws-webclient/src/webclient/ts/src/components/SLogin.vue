@@ -21,8 +21,8 @@
 									</svws-ui-button>
 								</div>
 								<Transition>
-									<div v-if="inputDBSchema" class="flex flex-col gap-3 items-center mt-16">
-										<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
+									<div v-if="inputDBSchemata.size() > 0" class="flex flex-col gap-3 items-center mt-16">
+										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
 										<svws-ui-text-input v-model="password"
 											type="password"
@@ -57,7 +57,7 @@
 							</div>
 						</div>
 					</div>
-					<svws-ui-notification v-if="main.config.isAuthenticated === false" type="error">
+					<svws-ui-notification v-if="props.authenticated === false" type="error">
 						<div class="flex items-center space-x-4">
 							<i-ri-lock-2-line class="text-headline" />
 							<div>
@@ -66,7 +66,7 @@
 							</div>
 						</div>
 					</svws-ui-notification>
-					<svws-ui-notification v-if="!connection_ok" type="error">
+					<svws-ui-notification v-if="connection_failed" type="error">
 						<div class="flex items-center space-x-4">
 							<i-ri-alert-line class="text-headline" />
 							<div>
@@ -83,64 +83,63 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
-	import { DBSchemaListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { Ref, ref } from "vue";
+	import { DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { router } from "~/router";
-	import { useRoute } from "vue-router";
 	import { version } from '../../version';
-	import { routeSchueler } from "~/router/apps/RouteSchueler";
 
-	const route = useRoute();
+	const props = defineProps<{
+		authenticated: boolean;
+		login: (schema: string, username: string, password: string) => Promise<void>;
+		connectTo: (url: string) => Promise<List<DBSchemaListeEintrag>>;
+	}>();
 
-	const serverAddress = ref("localhost");
+	const serverAddress = ref(window.location.hostname + ":" + window.location.port);
+	const schema: Ref<DBSchemaListeEintrag | undefined> = ref(undefined);
 	const username = ref("Admin");
 	const password = ref("");
-	const defaultRoute = routeSchueler;
 
-	const connection_ok: Ref<boolean> = ref(true)
+	const connection_failed: Ref<boolean> = ref(false);
 
 	const main: Main = injectMainApp();
 
-	const inputDBSchemata: ComputedRef<DBSchemaListeEintrag[] | undefined> = computed(() => {
-		return main.config.dbSchemata;
-	});
+	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new Vector());
 
-	watch(() => main.config.pending, (pending: boolean) => {
-		const guards = ['/', '/login']
-		const redirect = route.query.redirect as string | undefined
-		if (!pending) {
-			if (redirect && !guards.includes(redirect))
-				void router.push(redirect);
-			else
-				void router.push({ name: defaultRoute.name });
-		}
-	})
-
-	void main.connectTo(window.location.hostname + ":" + window.location.port)
-
-	const inputDBSchema: WritableComputedRef<DBSchemaListeEintrag | undefined> = computed({
-		set(val: DBSchemaListeEintrag | undefined) {
-			if (main.config) {
-				main.config.dbSchema = val;
-			}
-		},
-		get(): DBSchemaListeEintrag | undefined {
-			return main.config.dbSchema;
-		}
-	});
+	void connectClicked();
 
 	function get_name(i: DBSchemaListeEintrag): string {
 		return i?.name ?? '';
 	}
 
 	async function connectClicked() {
-		connection_ok.value = true;
-		connection_ok.value = await main.connectTo(serverAddress.value);
+		try {
+			inputDBSchemata.value = await props.connectTo(serverAddress.value);
+		} catch (error) {
+			connection_failed.value = true;
+			return;
+		}
+		if (inputDBSchemata.value.size() <= 0) {
+			connection_failed.value = true;
+			return;
+		}
+		let hasDefault = false;
+		for (const s of inputDBSchemata.value) {
+			if (s.isDefault) {
+				schema.value = s;
+				hasDefault = true;
+				break;
+			}
+		}
+		if (!hasDefault) {
+			schema.value = inputDBSchemata.value.get(0);
+		}
+		connection_failed.value = false;
 	}
 
 	async function login() {
-		await main.authenticate(username.value, password.value);
+		if ((schema.value === undefined) || (schema.value.name === null))
+			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
+		await props.login(schema.value.name, username.value, password.value);
 	}
 
 </script>

@@ -1,10 +1,10 @@
 <template>
 	<div v-if="visible" class="app-container relative">
 		<div class="svws-ui-bg-white sticky top-0 z-50 col-span-3 flex justify-end py-4">
-			<s-card-schueler-add-adresse :item="item.value" :list-schuelerbetriebe="listSchuelerbetriebe" />
+			<s-card-schueler-add-adresse :item="item.value" :list-schuelerbetriebe="listSchuelerbetriebe" :beschaeftigungsarten="beschaeftigungsarten" />
 		</div>
 		<div v-if="sb_vorhanden" class="col-span-3">
-			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" />
+			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" :beschaeftigungsarten="beschaeftigungsarten" />
 			<s-card-schueler-adresse :list-schuelerbetriebe="listSchuelerbetriebe" :betriebs-stammdaten="betriebsStammdaten" :orte="orte" />
 		</div>
 		<div v-else>
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { List, OrtKatalogEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { KatalogEintrag, List, OrtKatalogEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
@@ -28,6 +28,7 @@
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
 		orte: List<OrtKatalogEintrag>;
+		beschaeftigungsarten: List<KatalogEintrag>;
 	}>();
 
 	const sb_vorhanden : ComputedRef<boolean> = computed(() => {

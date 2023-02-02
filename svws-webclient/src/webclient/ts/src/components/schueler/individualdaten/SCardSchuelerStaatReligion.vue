@@ -8,7 +8,7 @@
 			<svws-ui-multi-select v-model="inputStaatsangehoerigkeit2" title="2. Staatsangehörigkeit"
 				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-			<svws-ui-multi-select v-model="inputReligionID" title="Konfession" :items="inputKatalogReligionen" required />
+			<svws-ui-multi-select v-model="inputReligionID" title="Konfession" :items="religionen" required />
 			<svws-ui-checkbox v-model="inputDruckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
 			<svws-ui-text-input v-model="inputReligionabmeldung" type="date"
 				placeholder="Abmeldung vom Religionsunterricht" />
@@ -21,17 +21,16 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { Nationalitaeten, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { List, Nationalitaeten, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{
+		stammdaten: DataSchuelerStammdaten;
+		religionen: List<ReligionEintrag>;
+	}>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
-
-
-	const main: Main = injectMainApp();
 
 	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
@@ -43,9 +42,13 @@
 		set: (value) => void props.stammdaten.patch({ staatsangehoerigkeit2ID: value.daten.iso3 })
 	});
 
-	const inputKatalogReligionen: ComputedRef<ReligionEintrag[]> = computed(() => main.kataloge.religionen.toArray() as ReligionEintrag[]);
 	const inputReligionID: WritableComputedRef<ReligionEintrag | undefined> = computed({
-		get: () => inputKatalogReligionen.value.find(n => n.id === daten.value.religionID),
+		get: () => {
+			for (const religion of props.religionen)
+				if (religion.id === daten.value.religionID)
+					return religion;
+			return undefined;
+		},
 		set: (value) => void props.stammdaten.patch({ religionID: value?.id })
 	});
 

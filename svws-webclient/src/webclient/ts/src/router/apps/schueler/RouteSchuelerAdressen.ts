@@ -1,10 +1,11 @@
-import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { KatalogEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
+import { App } from "~/apps/BaseApp";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 
@@ -12,6 +13,7 @@ export class RouteDataSchuelerAdressen {
 	item: SchuelerListeEintrag | undefined = undefined;
 	listSchuelerbetriebe : ListSchuelerBetriebsdaten = new ListSchuelerBetriebsdaten();
 	betriebsStammdaten: DataBetriebsstammdaten = new DataBetriebsstammdaten();
+	beschaeftigungsarten: List<KatalogEintrag> = new Vector();
 }
 
 export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
@@ -29,6 +31,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 			const tmp = parseInt(to_params.id as string);
 			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
 		}
+		this.data.beschaeftigungsarten = await App.api.getKatalogBeschaeftigungsart(App.schema);
 	}
 
 	protected async onSelect(item?: SchuelerListeEintrag) {
@@ -54,7 +57,8 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 			orte: routeApp.data.orte,
 			ortsteile: routeApp.data.ortsteile,
 			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
-			betriebsStammdaten: this.data.betriebsStammdaten
+			betriebsStammdaten: this.data.betriebsStammdaten,
+			beschaeftigungsarten: this.data.beschaeftigungsarten
 		};
 	}
 

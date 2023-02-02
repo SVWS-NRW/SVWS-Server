@@ -17,7 +17,7 @@
 
 								<tbody>
 									<tr v-for="(ds, id) in betriebe" :key="id" @click="select(ds)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
-										<s-card-schueler-beschaeftigung-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" />
+										<s-card-schueler-beschaeftigung-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" :beschaeftigungsarten="beschaeftigungsarten" />
 									</tr>
 								</tbody>
 							</table>
@@ -32,11 +32,12 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { KatalogEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
 	const props = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+		beschaeftigungsarten: List<KatalogEintrag>;
 	}>();
 
 	const headerTags : ComputedRef<Array<string>> = computed(() => {

@@ -5,7 +5,7 @@
 			<div class="input-wrapper">
 				<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 				<svws-ui-text-input placeholder="Ausbilder" v-model="s_betrieb.ausbilder" type="text" />
-				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="beschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="s_betrieb.vertragsbeginn" type="date" />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="s_betrieb.vertragsende" type="date" />
 				<svws-ui-checkbox v-model="s_betrieb.praktikum"> Praktikum </svws-ui-checkbox>
@@ -27,18 +27,16 @@
 	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
 	const props = defineProps<{
 		item?: SchuelerListeEintrag;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+		beschaeftigungsarten: List<KatalogEintrag>;
 	}>();
-	const main: Main = injectMainApp();
 
 	const modalAddBetrieb = ref();
 	const s_betrieb : SchuelerBetriebsdaten = reactive(new SchuelerBetriebsdaten());
-	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		return props.listSchuelerbetriebe.lehrer.liste || [];
@@ -79,7 +77,7 @@
 		get(): KatalogEintrag | undefined {
 			const id = s_betrieb.beschaeftigungsart_id;
 			let o;
-			for (const r of inputBeschaeftigungsarten.value) {
+			for (const r of props.beschaeftigungsarten) {
 				if (r.id === id) {
 					o = r;
 					break;

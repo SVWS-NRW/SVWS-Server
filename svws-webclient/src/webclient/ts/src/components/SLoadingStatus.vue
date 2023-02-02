@@ -3,15 +3,10 @@
 		<p>
 			<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation">
 		</p>
-		<p>{{ loading_message }}</p>
 	</div>
 </template>
 <script setup lang="ts">
-	import { computed, ComputedRef } from "vue";
-	import { injectMainApp } from "~/apps/Main";
 
-	const app = injectMainApp();
-	const loading_message: ComputedRef<string> = computed(() => app.config.apiLoadingStatus.loading_message);
 </script>
 <style>
 	.loading-status {

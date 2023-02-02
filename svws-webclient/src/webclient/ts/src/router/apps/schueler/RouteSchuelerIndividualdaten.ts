@@ -1,10 +1,11 @@
 import { RouteNode } from "~/router/RouteNode";
-import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { KatalogEintrag, List, ReligionEintrag, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteSchueler, routeSchueler } from "../RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
+import { App } from "~/apps/BaseApp";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -12,6 +13,8 @@ export class RouteDataSchuelerIndividualdaten {
 	item: SchuelerListeEintrag | undefined = undefined;
 	fachschuelerarten: DataKatalogFahrschuelerarten = new DataKatalogFahrschuelerarten();
 	foerderschwerpunkte: DataKatalogFoerderschwerpunkte = new DataKatalogFoerderschwerpunkte();
+	haltestellen: List<KatalogEintrag> = new Vector();
+	religionen: List<ReligionEintrag> = new Vector();
 }
 
 export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
@@ -29,6 +32,8 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			const tmp = parseInt(to_params.id as string);
 			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
 		}
+		this.data.haltestellen = await App.api.getHaltestellen(App.schema);
+		this.data.religionen = await App.api.getReligionen(App.schema)
 	}
 
 	protected async onSelect(item?: SchuelerListeEintrag) {
@@ -57,7 +62,9 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			orte: routeApp.data.orte,
 			ortsteile: routeApp.data.ortsteile,
 			fachschuelerarten: this.data.fachschuelerarten,
-			foerderschwerpunkte: this.data.foerderschwerpunkte
+			foerderschwerpunkte: this.data.foerderschwerpunkte,
+			haltestellen: this.data.haltestellen,
+			religionen: this.data.religionen
 		};
 	}
 

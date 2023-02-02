@@ -60,6 +60,7 @@
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { useRouter } from 'vue-router';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
+	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -103,7 +104,7 @@
 		if (!id)
 			return;
 		const apiCall = do_create_blockungsergebnisse(id, halbjahresHashCode);
-		main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
+		routeApp.data.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
 	};
 
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {

@@ -19,11 +19,14 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "~/apps/BaseApp";
+import { routeLogin } from "./RouteLogin";
+import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 
 export class RouteDataApp {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	orte: List<OrtKatalogEintrag> = new Vector();
 	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
+	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
 }
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
@@ -81,6 +84,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public getProps(): Record<string, any> {
 		return {
+			username: routeLogin.data.username,
 			schule: this.data.schule,
 			orte: this.data.orte,
 			ortsteile: this.data.ortsteile

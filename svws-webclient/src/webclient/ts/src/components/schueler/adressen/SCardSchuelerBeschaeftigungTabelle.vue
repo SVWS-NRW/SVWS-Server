@@ -6,7 +6,7 @@
 		<svws-ui-text-input placeholder="Ausbilder" v-model="ausbilder" type="text" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="beschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Vertragsbeginn" v-model="vertragsbeginn" type="date" />
@@ -36,18 +36,14 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { App } from "~/apps/BaseApp";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
 	const props = defineProps<{
 		betrieb: SchuelerBetriebsdaten;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+		beschaeftigungsarten: List<KatalogEintrag>;
 	}>();
-
-	const main: Main = injectMainApp();
-
-	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		return props.listSchuelerbetriebe.lehrer.liste || [];
@@ -111,7 +107,7 @@
 		get(): KatalogEintrag | undefined {
 			const id = props.betrieb.beschaeftigungsart_id;
 			let o;
-			for (const r of inputBeschaeftigungsarten.value) {
+			for (const r of props.beschaeftigungsarten) {
 				if (r.id === id) {
 					o = r;
 					break;

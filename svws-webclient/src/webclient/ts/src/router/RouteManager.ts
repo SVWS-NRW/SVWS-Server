@@ -76,7 +76,7 @@ export class RouteManager {
 
 	protected async beforeEachHandler(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
-		if (!mainApp.authenticated && to.name !== "login")
+		if (!routeLogin.data.authenticated && to.name !== "login")
 			return { name: "login", query: { redirect: to.fullPath } }; // TODO
 		// Bestimme die Knoten, für die Quelle und das Ziel der Route
 		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());

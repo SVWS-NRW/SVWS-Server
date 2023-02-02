@@ -1,33 +1,15 @@
-import { ApiSchema, ApiServer, List, ReligionEintrag, Vector, DBSchemaListeEintrag, Schuljahresabschnitt, KatalogEintrag, } from "@svws-nrw/svws-core-ts";
+import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { App } from "./BaseApp";
 import { BaseList } from "./BaseList";
-import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
-import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
-import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
+import { inject, InjectionKey, provide, reactive } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
 
-export type Kataloge = {
-	religionen: List<ReligionEintrag>;
-	haltestellen: List<KatalogEintrag>;
-	beschaeftigungsarten: List<KatalogEintrag>;
-};
-
 export class MainConfig {
-	dbSchema: DBSchemaListeEintrag | undefined = undefined;
-	dbSchemata: DBSchemaListeEintrag[] = [];
-	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
-	pending: ComputedRef<boolean> = this.apiLoadingStatus.api_pending;
-	isAuthenticated: boolean | undefined = undefined;
-	isConnected = false;
 	user_config: Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]> = new Map();
 
 	/** Das aktuelle Drag & Drop - Objekt */
 	drag_and_drop_data: any;
 
-	get schemaname(): string {
-		if (!this.dbSchema || !this.dbSchema.name) return "";
-		return this.dbSchema.name;
-	}
 	/**
 	 * Der aktuell ausgewählte Abschnitt
 	 *
@@ -56,151 +38,7 @@ export class MainConfig {
  * anderen Apps notwendig sind. Beispielsweise der aktuelle Abschnitt.
  */
 export class Main {
-	/** Die OpenAPI-Schnittstelle für den Zugriff auf die Konfiguration des SVWS-Servers */
-	private hostname = "localhost";
-	private username = "";
-	private password = "";
-	private api!: ApiServer;
-	private api_schema!: ApiSchema;
-	private _pending: Promise<unknown>[] = [];
-
 	public config = reactive(new MainConfig());
-
-	public kataloge: Kataloge = {
-		haltestellen: new Vector<KatalogEintrag>(),
-		religionen: new Vector<ReligionEintrag>(),
-		beschaeftigungsarten: new Vector<KatalogEintrag>(),
-	};
-
-	/**
-	 * Gibt den Namen des angemeldeten Benutzers zurück.
-	 *
-	 * @returns der Name des angemeldeten Benutzers
-	 */
-	public getUsername() {
-		return this.username;
-	}
-
-	/**
-	 * Diese Methode überprüft, ob die aktuelle Verbindung zum SVWS-Server vorhanden ist.
-	 *
-	 * @returns {boolean}
-	 */
-	public get connected(): boolean {
-		return this.config.isConnected;
-	}
-	/**
-	 * Diese Methode prüft, ob der Benutzer angemeldet ist
-	 *
-	 * @returns {boolean}
-	 */
-	public get authenticated(): boolean | undefined {
-		return this.config.isAuthenticated;
-	}
-
-	/**
-	 * Versucht eine Verbindung zu dem SVWS-Server unter der angegebenen URL aufzubauen.
-	 *
-	 * @param {string} url Die URL unter der der SVWS-Server erreichbar sein soll
-	 * @returns {Promise<void>}
-	 */
-	public async connectTo(url: string): Promise<boolean> {
-		this.hostname = `https://${url || this.hostname}`;
-		this.api = new ApiServer(this.hostname, this.username, this.password);
-		console.log(`Connecting to ${this.hostname}`, url, this.api);
-		try {
-			const result = await this.api.getConfigDBSchemata();
-			console.log(`DB-Revision: ${result}`);
-			this.config.dbSchemata = result.toArray(
-				new Array<DBSchemaListeEintrag>()
-			);
-			if (result.size() <= 0) {
-				this.config.dbSchema = undefined;
-			} else {
-				let tmp = undefined;
-				for (const s of result) {
-					if (s.isDefault) tmp = s;
-				}
-				if (!tmp) tmp = result.get(0);
-				this.config.dbSchema = tmp;
-			}
-			console.log(`Verbunden mit DB-Schema: ${this.config.dbSchema?.name}`);
-			this.config.isConnected = true;
-			return true
-		} catch (error) {
-			{
-				console.log(
-					`Verbindung zum SVWS-Server unter https://${this.hostname} fehlgeschlagen.`
-				);
-				return false
-			}
-		}
-	}
-
-	/**
-	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
-	 *
-	 * @param {string} username Der Benutzername
-	 * @param {string} password Das Kennwort
-	 * @returns {Promise<void>}
-	 */
-	public async authenticate(
-		username: string,
-		password: string
-	): Promise<void> {
-		try {
-			this.api_schema = new ApiSchema(this.hostname, username, password);
-			// const result = await this.api.isAlive();
-			if (this.config.dbSchema?.name == undefined) return
-			const result = await this.api_schema.revision(this.config.dbSchema.name)
-			// TODO verwende revision für Client Check
-			console.log(`DB-Revision: ${result}`);
-			this.username = username;
-			this.password = password;
-			await this.start_apps(); //returns Promise<boolean>
-			this.config.isAuthenticated = true;
-		} catch (error) {
-			// TODO error z.B. loggen
-			console.log(error)
-			this.config.isAuthenticated = false;
-		}
-	}
-
-	/**
-	 * Diese Methode startet alle Apps, die in dieser App enthalten sind. Holt mit
-	 * einem Worker die größeren Kataloge ab.
-	 *
-	 * @returns {Promise<void>}
-	 */
-	private async start_apps(): Promise<void> {
-		App.setup({
-			url: this.hostname,
-			username: this.username,
-			password: this.password,
-			schema: this.config.schemaname
-		});
-		const o = App.schema;
-		this._pending.push(App.api.getReligionen(o).then(r => this.kataloge.religionen = r));
-		this._pending.push(App.api.getHaltestellen(o).then(r => this.kataloge.haltestellen = r));
-		this._pending.push(App.api.getKatalogBeschaeftigungsart(o).then(r => this.kataloge.beschaeftigungsarten = r));
-
-		const prom = Promise.all(this._pending);
-		this.config.apiLoadingStatus.addStatusByPromise(prom, {
-			caller: 'Main',
-			message: 'Anwendung wird aktualisiert.',
-			categories: [MAIN_LOADING_SYMBOL]
-		});
-	}
-
-	/**
-	 * Diese Methode loggt den aktuellen Benutzer aus und beendet die aktuell
-	 * authentifizierte Verbindung zum SVWS-Server.
-	 *
-	 * @returns {Promise<void>}
-	 */
-	public async logout(): Promise<void> {
-		await this.connectTo(this.hostname);
-	}
 }
 
 export const mainApp = new Main();
