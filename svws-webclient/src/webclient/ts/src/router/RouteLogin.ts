@@ -1,4 +1,5 @@
 import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { ref, Ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
 import { App } from "~/apps/BaseApp";
 import SLogin from "~/components/SLogin.vue";
@@ -12,7 +13,10 @@ export class RouteDataLogin {
 	protected _authenticated = false;
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname = "localhost";
+	protected _hostname: Ref<string> = ref("localhost");
+
+	// Die URL mit welcher der Server verbunden ist
+	protected _url: string | undefined = undefined;
 
 	// Der Benutzername für den Login
 	protected _username = "";
@@ -26,6 +30,11 @@ export class RouteDataLogin {
 	// Das Schema für die API-Zugriffe
 	protected _schema_api: ApiSchema | undefined = undefined;
 
+	// Gibt den Hostname zurück
+	get hostname() : string {
+		return this._hostname.value;
+	}
+
 	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
 	get authenticated() : boolean {
 		return this._authenticated;
@@ -36,29 +45,43 @@ export class RouteDataLogin {
 		return this._username;
 	}
 
+	private async connect(hostname : string): Promise<List<DBSchemaListeEintrag>> {
+		const url = `https://${hostname}`;
+		const api = new ApiServer(url, "", "");
+		const schemata = await api.getConfigDBSchemata();
+		this._hostname.value = hostname;
+		this._url = url;
+		return schemata;
+	}
+
+	setHostname = (hostname: string) => {
+		this._hostname.value = hostname;
+	}
+
 	/**
-	 * Versucht eine Verbindung zu dem SVWS-Server unter der angegebenen URL aufzubauen.
+	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
 	 *
-	 * @param {string} url Die URL unter der der SVWS-Server erreichbar sein soll
-	 * @returns {Promise<void>}
+	 * @param {string} hostname Der Hostname unter der der SVWS-Server erreichbar sein soll
+	 *
+	 * @returns {Promise<DBSchemaListeEintrag>}
 	 */
-	connectTo: (url: string) => Promise<List<DBSchemaListeEintrag>> = async (url: string) => {
-		const api_url = new ApiServer(`https://${url}`, "", "");
-		let schemata: List<DBSchemaListeEintrag> = new Vector();
+	connectTo: (hostname: string) => Promise<List<DBSchemaListeEintrag>> = async (hostname: string) => {
+		console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
 		try {
-			schemata = await api_url.getConfigDBSchemata();
-			this._hostname = `https://${url}`;
+			return await this.connect(hostname);
 		} catch (error) {
+			console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
+		}
+		const hostname2 = hostname.split(":")[0];
+		if (hostname2 !== hostname) {
+			console.log(`Verbinde zum SVWS-Server unter https://${hostname2}...`);
 			try {
-				console.log(`Verbindung zum SVWS-Server unter https://${url} fehlgeschlagen.`);
-				const api_localhost = new ApiServer(`https://localhost`, "", "");
-				schemata = await api_localhost.getConfigDBSchemata();
-				this._hostname = `https://localhost`;
+				return await this.connect(hostname2)
 			} catch (error) {
-				console.log(`Verbindung zum SVWS-Server unter https://localhost fehlgeschlagen.`);
+				console.log(`Verbindung zum SVWS-Server unter https://${hostname2} fehlgeschlagen.`);
 			}
 		}
-		return schemata;
+		return new Vector<DBSchemaListeEintrag>();
 	}
 
 	/**
@@ -72,7 +95,9 @@ export class RouteDataLogin {
 	 */
 	login: (schema: string, username: string, password: string) => Promise<void> = async (schema: string, username: string, password: string) => {
 		try {
-			this._schema_api = new ApiSchema(this._hostname, username, password);
+			if (this._url === undefined)
+				throw new Error("Keine gültige URL für einen Login verfügbar.");
+			this._schema_api = new ApiSchema(this._url, username, password);
 			const result = await this._schema_api.revision(schema);
 			// TODO verwende revision für Client Check
 			console.log(`DB-Revision: ${result}`);
@@ -80,7 +105,7 @@ export class RouteDataLogin {
 			this._username = username;
 			this._password = password;
 			App.setup({
-				url: this._hostname,
+				url: this._url,
 				username: this._username,
 				password: this._password,
 				schema: this._schema
@@ -121,9 +146,11 @@ export class RouteLogin extends RouteNode<RouteDataLogin, any> {
 
 	public getProps() {
 		return {
+			setHostname: this.data.setHostname,
 			login: this.data.login,
 			connectTo: this.data.connectTo,
-			authenticated: this.data.authenticated
+			authenticated: this.data.authenticated,
+			hostname: this.data.hostname
 		}
 	}
 

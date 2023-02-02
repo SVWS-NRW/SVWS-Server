@@ -63,6 +63,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.defaultChild = routeSchueler;
 	}
 
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<any> {
+		return this.getRoute();
+	}
+
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);    // TODO Kein Data-Objekt, sondern Handhabung des aktuellen Abschnitts, etc. in dieser Route (RouteDataApp-Objekt)
 		this.data.orte = await App.api.getOrte(App.schema);

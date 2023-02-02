@@ -15,8 +15,8 @@
 									</h1>
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-3 items-center">
-									<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
-									<svws-ui-button type="secondary" @click="connectClicked">
+									<svws-ui-text-input v-model="inputHostname" type="text" placeholder="Server Addresse" />
+									<svws-ui-button type="secondary" @click="connect">
 										Verbinden
 									</svws-ui-button>
 								</div>
@@ -57,7 +57,7 @@
 							</div>
 						</div>
 					</div>
-					<svws-ui-notification v-if="props.authenticated === false" type="error">
+					<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error">
 						<div class="flex items-center space-x-4">
 							<i-ri-lock-2-line class="text-headline" />
 							<div>
@@ -83,37 +83,43 @@
 
 <script setup lang="ts">
 
-	import { Ref, ref } from "vue";
+	import { computed, Ref, ref, WritableComputedRef } from "vue";
 	import { DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { version } from '../../version';
 
 	const props = defineProps<{
 		authenticated: boolean;
+		hostname: string;
+		setHostname: (hostname: string) => void;
 		login: (schema: string, username: string, password: string) => Promise<void>;
 		connectTo: (url: string) => Promise<List<DBSchemaListeEintrag>>;
 	}>();
 
-	const serverAddress = ref(window.location.hostname + ":" + window.location.port);
+	const firstauth: Ref<boolean> = ref(true);
 	const schema: Ref<DBSchemaListeEintrag | undefined> = ref(undefined);
 	const username = ref("Admin");
 	const password = ref("");
 
 	const connection_failed: Ref<boolean> = ref(false);
 
-	const main: Main = injectMainApp();
-
 	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new Vector());
 
-	void connectClicked();
+	const inputHostname: WritableComputedRef<string> = computed({
+		get: () => props.hostname,
+		set: (value) => props.setHostname(value)
+	});
+
+	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
+	inputHostname.value = window.location.hostname + ":" + window.location.port;
+	void connect();
 
 	function get_name(i: DBSchemaListeEintrag): string {
 		return i?.name ?? '';
 	}
 
-	async function connectClicked() {
+	async function connect() {
 		try {
-			inputDBSchemata.value = await props.connectTo(serverAddress.value);
+			inputDBSchemata.value = await props.connectTo(props.hostname);
 		} catch (error) {
 			connection_failed.value = true;
 			return;
@@ -139,6 +145,7 @@
 	async function login() {
 		if ((schema.value === undefined) || (schema.value.name === null))
 			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
+		firstauth.value = false;
 		await props.login(schema.value.name, username.value, password.value);
 	}
 
