@@ -31,8 +31,8 @@
 
 	async function add() {
 		props.spalteLinks
-			? await props.data.addBenutzergruppeBenutzer(props.benutzer)
-			: await props.data.removeBenutzergruppeBenutzer(props.benutzer)
+			? await props.data.removeBenutzergruppeBenutzer(props.benutzer)
+			: await props.data.addBenutzergruppeBenutzer(props.benutzer)
 	}
 
 	function doRoute() {
