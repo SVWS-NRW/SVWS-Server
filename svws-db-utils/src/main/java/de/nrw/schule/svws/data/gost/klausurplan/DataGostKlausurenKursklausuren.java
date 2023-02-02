@@ -14,6 +14,7 @@ import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
+import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.utils.OperationError;
@@ -151,7 +152,13 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 						if ((patch_kursid != kursklausur.Kurs_ID))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "idTermin" -> kursklausur.Termin_ID = JSONMapper.convertToLong(value, true);
+					case "idTermin" -> {
+						DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, kursklausur.Termin_ID);
+						DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
+						if (termin.Quartal != vorgabe.Quartal)
+							throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
+						kursklausur.Termin_ID = JSONMapper.convertToLong(value, true);
+					}
 					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToString(value, true, false);
 
 					// TODO Was ist mit anderen Attributen, falls sie im InputStream vorkommen?
