@@ -1,9 +1,8 @@
-import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
-import { WritableComputedRef } from "vue";
+import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
+import { Ref, ref, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { computed } from "vue";
-import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
 import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
@@ -11,17 +10,37 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/RouteApp";
+import { App } from "~/apps/BaseApp";
 
 export class RouteDataSchuelerLeistungenDaten {
 	auswahl: ListAbschnitte = new ListAbschnitte();
-	daten: DataSchuelerAbschnittsdaten = new DataSchuelerAbschnittsdaten();
+	_daten: Ref<SchuelerLernabschnittsdaten | undefined> = ref(undefined);
 	listFaecher: ListFaecher = new ListFaecher();
 	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 
+	public get daten(): SchuelerLernabschnittsdaten {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		return this._daten.value;
+	}
+
+	public async onSelect(item?: SchuelerLernabschnittListeEintrag) {
+		if (((item === undefined) && (this._daten.value === undefined)) || ((this._daten.value !== undefined) && (this.daten.id === item?.id)))
+			return;
+		this.auswahl.ausgewaehlt = item;
+		this._daten.value = (item?.id === undefined) ? undefined : await App.api.getSchuelerLernabschnittsdaten(App.schema, item.schuelerID, item.schuljahresabschnitt);
+	}
+
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
 		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, idLernabschnitt: value?.id } });
+	}
+
+	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO await App.api.patchSchuelerLeistungsdaten(data, App.schema, id);
 	}
 
 }
@@ -70,21 +89,10 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idLernabschnitt === undefined) {
-			await this.onSelect(undefined);
+			await this.data.onSelect(undefined);
 		} else {
 			const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
-			await this.onSelect(this.data.auswahl.liste.find(s => s.id === idLernabschnitt));
-		}
-	}
-
-	protected async onSelect(item?: SchuelerLernabschnittListeEintrag) {
-		if (item === this.data.auswahl.ausgewaehlt)
-			return;
-		this.data.auswahl.ausgewaehlt = item;
-		if (item === undefined) {
-			await this.data.daten.unselect();
-		} else {
-			await this.data.daten.select(this.data.auswahl.ausgewaehlt);
+			await this.data.onSelect(this.data.auswahl.liste.find(s => s.id === idLernabschnitt));
 		}
 	}
 
@@ -113,7 +121,8 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 			lernabschnitt: this.data.auswahl.ausgewaehlt,
 			data: this.data.daten,
 			mapFaecher: this.data.mapFaecher,
-			mapLehrer: this.data.mapLehrer
+			mapLehrer: this.data.mapLehrer,
+			patchLeistung: this.data.patchLeistung
 		};
 	}
 

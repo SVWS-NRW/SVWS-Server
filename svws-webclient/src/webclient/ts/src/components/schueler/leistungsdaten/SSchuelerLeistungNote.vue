@@ -6,18 +6,18 @@
 
 <script setup lang="ts">
 
-	import { Note, SchuelerLeistungsdaten } from "@svws-nrw/svws-core-ts";
+	import { Note, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 
 	const props = defineProps<{
-		data: DataSchuelerAbschnittsdaten,
+		data: SchuelerLernabschnittsdaten;
 		leistungsdaten: SchuelerLeistungsdaten
+		patchLeistung: (data : Partial<SchuelerLeistungsdaten>, id : number) => Promise<void>;
 	}>();
 
 	const inputNote: WritableComputedRef<Note | undefined> = computed({
 		get: () => Note.fromKuerzel(props.leistungsdaten.note),
-		set: (value) => void props.data.patchLeistung({ note: value?.kuerzel }, props.leistungsdaten.id)
+		set: (value) => void props.patchLeistung({ note: value?.kuerzel }, props.leistungsdaten.id)
 	});
 
 </script>

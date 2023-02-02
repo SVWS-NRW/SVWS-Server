@@ -9,7 +9,7 @@
 				<s-schueler-leistung-fachlehrer :data="props.data" :leistungsdaten="row" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell-note="{row}">
-				<s-schueler-leistung-note :data="props.data" :leistungsdaten="row" />
+				<s-schueler-leistung-note :data="props.data" :leistungsdaten="row" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-table>
 	</div>
@@ -17,21 +17,20 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef } from "vue";
-	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 
 	const props = defineProps<{
 		lernabschnitt?: SchuelerLernabschnittListeEintrag;
-		data: DataSchuelerAbschnittsdaten;
+		data: SchuelerLernabschnittsdaten;
 		mapFaecher: Map<number, FaecherListeEintrag>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		patchLeistung: (data : Partial<SchuelerLeistungsdaten>, id : number) => Promise<void>;
 	}>();
 
-	const lernabschnittsdaten: ComputedRef<SchuelerLernabschnittsdaten> = computed(() => props.data.daten || new SchuelerLernabschnittsdaten());
 	const liste: ComputedRef<SchuelerLeistungsdaten[]> = computed(() =>
-		lernabschnittsdaten.value.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
+		props.data.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
 	);
 
 	// TODO const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;

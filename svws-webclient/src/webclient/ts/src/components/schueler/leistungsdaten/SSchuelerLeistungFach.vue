@@ -6,12 +6,11 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, SchuelerLeistungsdaten, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { FaecherListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 
 	const props = defineProps<{
-		data: DataSchuelerAbschnittsdaten,
+		data: SchuelerLernabschnittsdaten;
 		leistungsdaten: SchuelerLeistungsdaten,
 		mapFaecher: Map<number, FaecherListeEintrag>
 	}>();
