@@ -1,6 +1,6 @@
 import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
-import { RouteLocationRaw } from "vue-router";
+import { RouteLocationRaw, RouteParams } from "vue-router";
 import { App } from "~/apps/BaseApp";
 import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
@@ -8,6 +8,9 @@ import { routeApp } from "./RouteApp";
 import { RouteManager } from "./RouteManager";
 
 export class RouteDataLogin {
+
+	// Der Pfad, zu welchem weitergeleitet wird
+	public routepath = "/";
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	protected _authenticated = false;
@@ -111,7 +114,7 @@ export class RouteDataLogin {
 				schema: this._schema
 			});
 			this._authenticated = true;
-			await RouteManager.doRoute({ name: routeApp.name });
+			await RouteManager.doRoute(this.routepath);
 		} catch (error) {
 			// TODO error z.B. loggen
 			console.log(error)
@@ -124,6 +127,7 @@ export class RouteDataLogin {
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;
+		this.routepath = "/";
 		// TODO BaseApp Api-Server entfernen
 		await RouteManager.doRoute({ name: routeLogin.name });
 	}

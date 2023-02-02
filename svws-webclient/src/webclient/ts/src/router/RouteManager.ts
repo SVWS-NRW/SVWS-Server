@@ -4,8 +4,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
 
-import { mainApp } from "~/apps/Main";
-
 export class RouteManager {
 
 	/** Die Instanz des Route-Managers */
@@ -76,8 +74,10 @@ export class RouteManager {
 
 	protected async beforeEachHandler(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
-		if (!routeLogin.data.authenticated && to.name !== "login")
-			return { name: "login", query: { redirect: to.fullPath } }; // TODO
+		if (!routeLogin.data.authenticated && to.name !== "login") {
+			routeLogin.data.routepath = to.fullPath;
+			return { name: "login" };
+		}
 		// Bestimme die Knoten, für die Quelle und das Ziel der Route
 		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
