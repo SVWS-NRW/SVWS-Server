@@ -3,13 +3,13 @@
 		<!-- TODO v-model="selected" - siehe auch unten-->
 		<svws-ui-table :columns="cols" :data="liste" :footer="false">
 			<template #cell-fach="{row}">
-				<s-schueler-leistung-fach :data="props.data" :leistungsdaten="row" :map-faecher="props.mapFaecher" />
+				<s-schueler-leistung-fach :data="props.data!" :leistungsdaten="row" :map-faecher="props.mapFaecher" />
 			</template>
 			<template #cell-lehrer="{row}">
-				<s-schueler-leistung-fachlehrer :data="props.data" :leistungsdaten="row" :map-lehrer="props.mapLehrer" />
+				<s-schueler-leistung-fachlehrer :data="props.data!" :leistungsdaten="row" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell-note="{row}">
-				<s-schueler-leistung-note :data="props.data" :leistungsdaten="row" :patch-leistung="patchLeistung" />
+				<s-schueler-leistung-note :data="props.data!" :leistungsdaten="row" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-table>
 	</div>
@@ -17,20 +17,19 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
+	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{
-		lernabschnitt?: SchuelerLernabschnittListeEintrag;
-		data: SchuelerLernabschnittsdaten;
+		data: SchuelerLernabschnittsdaten | undefined;
 		mapFaecher: Map<number, FaecherListeEintrag>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		patchLeistung: (data : Partial<SchuelerLeistungsdaten>, id : number) => Promise<void>;
 	}>();
 
 	const liste: ComputedRef<SchuelerLeistungsdaten[]> = computed(() =>
-		props.data.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
+		props.data?.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
 	);
 
 	// TODO const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;
@@ -42,7 +41,7 @@
 	];
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return (props.lernabschnitt !== undefined);
+		return (props.data !== undefined);
 	});
 
 </script>
