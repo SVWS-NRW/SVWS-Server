@@ -60,11 +60,16 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 			this.data.idSchueler = id;
 			this.data.listAbschnitte = liste;
 			if (to_params.abschnitt !== undefined) {
-				const abschnitt = parseInt(to_params.nabschnitt as string);
+				const abschnitt = parseInt(to_params.abschnitt as string);
 				const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr as string);
 				const lernabschnitt = this.data.getEntry(abschnitt, wechselNr);
 				if (lernabschnitt !== undefined)
 					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
+				if (wechselNr !== null) {
+					const lernabschnitt = this.data.getEntry(abschnitt, null);
+					if (lernabschnitt !== undefined)
+						return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
+				}
 			}
 			const lernabschnitt = this.data.getEntryDefault();
 			if (lernabschnitt === undefined)
