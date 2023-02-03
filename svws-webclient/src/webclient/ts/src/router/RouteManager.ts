@@ -80,7 +80,7 @@ export class RouteManager {
 		}
 		// Aktualisiere ggf. den redirect-Parameter
 		if (!routeLogin.data.authenticated && to.name === "login") {
-			const redirect = to.query.redirect;
+			const redirect = to.query.redirect === undefined ? "/" : to.query.redirect;
 			if ((redirect !== null) && (redirect.toString() !== routeLogin.data.routepath)) {
 				routeLogin.data.routepath = redirect.toString();
 				return { name: "login", query: { redirect: redirect } };

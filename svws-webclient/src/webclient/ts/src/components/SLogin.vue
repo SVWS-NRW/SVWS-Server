@@ -145,8 +145,8 @@
 	async function login() {
 		if ((schema.value === undefined) || (schema.value.name === null))
 			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
-		firstauth.value = false;
 		await props.login(schema.value.name, username.value, password.value);
+		firstauth.value = false;
 	}
 
 </script>

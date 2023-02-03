@@ -12,7 +12,7 @@ export class RouteDataLogin {
 	public routepath = "/";
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
-	protected _authenticated = false;
+	protected _authenticated: Ref<boolean> = ref(false);
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
 	protected _hostname: Ref<string> = ref("localhost");
@@ -39,7 +39,7 @@ export class RouteDataLogin {
 
 	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
 	get authenticated() : boolean {
-		return this._authenticated;
+		return this._authenticated.value;
 	}
 
 	// Gibt den Benutzernamen zurück
@@ -112,17 +112,16 @@ export class RouteDataLogin {
 				password: this._password,
 				schema: this._schema
 			});
-			this._authenticated = true;
+			this._authenticated.value = true;
 			await RouteManager.doRoute(this.routepath);
 		} catch (error) {
-			// TODO error z.B. loggen
-			console.log(error)
-			this._authenticated = false;
+			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
+			this._authenticated.value = false;
 		}
 	}
 
 	public async logout() {
-		this._authenticated = false;
+		this._authenticated.value = false;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;
