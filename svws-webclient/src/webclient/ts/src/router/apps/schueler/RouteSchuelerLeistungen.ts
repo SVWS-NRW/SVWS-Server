@@ -11,16 +11,9 @@ export class RouteDataSchuelerLeistungenDaten {
 	idSchueler: number | undefined;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag> = new Vector<SchuelerLernabschnittListeEintrag>();
 
-	public getEntry(idSchuljahresabschnitt: number) : SchuelerLernabschnittListeEintrag | undefined {
+	public getEntry(idSchuljahresabschnitt: number, wechselNr: number | null) : SchuelerLernabschnittListeEintrag | undefined {
 		for (const current of this.listAbschnitte)
-			if (current.id === idSchuljahresabschnitt)
-				return current;
-		return undefined;
-	}
-
-	public getEntryBySchuljahreabschnitt(idSchuljahresabschnitt: number) : SchuelerLernabschnittListeEintrag | undefined {
-		for (const current of this.listAbschnitte)
-			if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === null))
+			if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === wechselNr))
 				return current;
 		return undefined;
 	}
@@ -28,7 +21,7 @@ export class RouteDataSchuelerLeistungenDaten {
 	public getEntryDefault() : SchuelerLernabschnittListeEintrag | undefined {
 		if (routeApp.data.schule.daten === undefined)
 			throw new Error("Keine Daten für die Schule geladen!");
-		const entry = this.getEntryBySchuljahreabschnitt(routeApp.data.schule.daten.idSchuljahresabschnitt);
+		const entry = this.getEntry(routeApp.data.schule.daten.idSchuljahresabschnitt, null);
 		if (entry !== undefined)
 			return entry;
 		if (this.listAbschnitte.size() > 0)
@@ -60,23 +53,23 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 		if (to_params.id === undefined)
 			return false;
 		const id = parseInt(to_params.id as string);
-		const schueler_neu = (this.data.idSchueler !== id);
-		if (schueler_neu) {
+		if ((this.data.idSchueler !== id) || (to_params.abschnitt === undefined)) {
 			const liste = await App.api.getSchuelerLernabschnittsliste(App.schema, id);
 			if (liste.size() <= 0)
 				return false;
 			this.data.idSchueler = id;
 			this.data.listAbschnitte = liste;
-			if (to_params.idLernabschnitt !== undefined) {
-				const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
-				const lernabschnitt = this.data.getEntry(idLernabschnitt);
+			if (to_params.abschnitt !== undefined) {
+				const abschnitt = parseInt(to_params.nabschnitt as string);
+				const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr as string);
+				const lernabschnitt = this.data.getEntry(abschnitt, wechselNr);
 				if (lernabschnitt !== undefined)
-					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.id)
+					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
 			}
 			const lernabschnitt = this.data.getEntryDefault();
 			if (lernabschnitt === undefined)
 				return false;
-			return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.id);
+			return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
 		}
 	}
 

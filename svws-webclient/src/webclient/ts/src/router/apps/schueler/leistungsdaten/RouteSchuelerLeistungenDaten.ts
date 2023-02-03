@@ -1,11 +1,10 @@
-import { FaecherListeEintrag, LehrerListeEintrag, List, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLeistungen, RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "~/router/RouteApp";
 import { App } from "~/apps/BaseApp";
 import { ref, Ref } from "vue";
 
@@ -26,7 +25,7 @@ export class RouteDataSchuelerLeistungenDaten {
 	}
 
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, idLernabschnitt: value?.id } });
+		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, abschnitt: value?.schuljahresabschnitt, wechselNr: value?.wechselNr || undefined } });
 	}
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
@@ -43,7 +42,7 @@ const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungs
 export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
 
 	public constructor() {
-		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
+		super("schueler_leistungen_daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
 		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getAuswahlProps(route));
@@ -70,18 +69,19 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 		if (to_params.id === undefined)
 			return false;
 		const id = parseInt(to_params.id as string);
-		if (to_params.idLernabschnitt === undefined) {
+		if (to_params.abschnitt === undefined) {
 			await this.data.onSelect(undefined);
 			return routeSchuelerLeistungen.getRoute(id);
 		} else {
-			const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
-			const entry = routeSchuelerLeistungen.data.getEntry(idLernabschnitt);
+			const abschnitt = parseInt(to_params.abschnitt as string);
+			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr as string);
+			const entry = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
 			await this.data.onSelect(entry);
 		}
 	}
 
-	public getRoute(id: number, idLernabschnitt: number | undefined) : RouteLocationRaw {
-		return { name: this.name, params: { id: id, idLernabschnitt: idLernabschnitt }};
+	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
+		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
