@@ -28,5 +28,9 @@
 		<Variant title="Statistics">
 			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid statistics @input="onInput" />
 		</Variant>
+
+		<Variant title="Prefix">
+			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid url @input="onInput" />
+		</Variant>
 	</Story>
 </template>

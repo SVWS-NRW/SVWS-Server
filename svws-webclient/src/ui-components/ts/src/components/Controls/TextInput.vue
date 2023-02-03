@@ -18,7 +18,8 @@
 		readonly = false,
 		headless = false,
 		focus = false,
-		rounded = false
+		rounded = false,
+		url = false,
 	} = defineProps<{
 		type?: InputType;
 		modelValue?: string | number;
@@ -31,6 +32,7 @@
 		headless?: boolean;
 		focus?: boolean;
 		rounded?: boolean;
+		url?: boolean;
 	}>();
 
 	const emit = defineEmits<{
@@ -91,12 +93,14 @@
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
 		}">
+		<span v-if="url" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-80" :class="`before:content-['https://']`" />
 		<input ref="input"
 			v-focus
 			:class="{
 				'text-input--control': !headless,
 				'text-input--headless': headless,
-				'text-input--rounded': rounded
+				'text-input--rounded': rounded,
+				'text-input--prefix': url,
 			}"
 			v-bind="{ ...$attrs }"
 			:type="type"
@@ -110,7 +114,8 @@
 			:id="labelId"
 			class="text-input--placeholder"
 			:class="{
-				'text-input--placeholder--required': required
+				'text-input--placeholder--required': required,
+				'text-input--placeholder--prefix': url
 			}">
 			{{ placeholder }}
 			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
@@ -165,6 +170,9 @@
 		padding: 0.5em 0.7em;
 	}
 
+	.text-input--prefix {
+		padding: 0.2em 4.3em;
+	}
 	.text-input--rounded {
 		@apply rounded-full;
 	}
@@ -234,6 +242,11 @@
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
+	}
+
+	.text-input--placeholder--prefix {
+		left: 4.5em;
+		top: 0.5em;
 	}
 
 	.multiselect-input-component .text-input--placeholder {
