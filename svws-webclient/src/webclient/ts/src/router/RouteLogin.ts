@@ -15,7 +15,7 @@ export class RouteDataLogin {
 	protected _authenticated: Ref<boolean> = ref(false);
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname: Ref<string> = ref("localhost");
+	protected _hostname: Ref<string> = ref(window.location.hostname + ":" + window.location.port);
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -57,6 +57,7 @@ export class RouteDataLogin {
 	}
 
 	setHostname = (hostname: string) => {
+		console.log(hostname)
 		this._hostname.value = hostname;
 	}
 
@@ -67,20 +68,22 @@ export class RouteDataLogin {
 	 *
 	 * @returns {Promise<DBSchemaListeEintrag>}
 	 */
-	connectTo: (hostname: string) => Promise<List<DBSchemaListeEintrag>> = async (hostname: string) => {
-		console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
+	connectTo: (name: string) => Promise<List<DBSchemaListeEintrag>> = async (name: string) => {
+		const url = new URL('https://' + name);
+		const host = url.host;
+		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {
-			return await this.connect(hostname);
+			return await this.connect(host);
 		} catch (error) {
-			console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
+			console.log(`Verbindung zum SVWS-Server unter https://${host}`);
 		}
-		const hostname2 = hostname.split(":")[0];
-		if (hostname2 !== hostname) {
-			console.log(`Verbinde zum SVWS-Server unter https://${hostname2}...`);
+		const hostname = url.hostname;
+		if (host !== hostname) {
+			console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
 			try {
-				return await this.connect(hostname2)
+				return await this.connect(hostname)
 			} catch (error) {
-				console.log(`Verbindung zum SVWS-Server unter https://${hostname2} fehlgeschlagen.`);
+				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 			}
 		}
 		return new Vector<DBSchemaListeEintrag>();

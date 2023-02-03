@@ -15,7 +15,7 @@
 									</h1>
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-3 items-center">
-									<svws-ui-text-input v-model="inputHostname" type="text" placeholder="Server Addresse" />
+									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" />
 									<svws-ui-button type="secondary" @click="connect">
 										Verbinden
 									</svws-ui-button>
@@ -110,7 +110,6 @@
 	});
 
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
-	inputHostname.value = window.location.hostname + ":" + window.location.port;
 	void connect();
 
 	function get_name(i: DBSchemaListeEintrag): string {

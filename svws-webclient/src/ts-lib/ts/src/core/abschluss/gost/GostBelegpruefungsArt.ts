@@ -55,7 +55,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 * Gibt die Art der Belegprüfung anhand des übergebenen Kürzels zurück.
 	 *
 	 * @param kuerzel    das Kürzel der Art der Belegprüfung
-	 *  
+	 *
 	 * @return die Art der Belegprüfung
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBelegpruefungsArt | null {
