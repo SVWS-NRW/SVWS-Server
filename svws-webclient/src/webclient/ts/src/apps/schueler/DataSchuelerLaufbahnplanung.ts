@@ -6,7 +6,7 @@ import { List, Vector, GostKursart, Fachgruppe, Schulgliederung,
 	SchuelerListeEintrag,
 	Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
-import { reactive } from "vue";
+import { reactive, ShallowRef, shallowRef } from "vue";
 import { DataGostFaecher } from "../gost/DataGostFaecher";
 import { DataGostJahrgang } from "../gost/DataGostJahrgang";
 import { DataSchuleStammdaten } from "../schule/DataSchuleStammdaten";
@@ -39,21 +39,24 @@ class DataSchuelerLaufbahnplanungReactiveState {
 	gostBelegpruefungsErgebnis: GostBelegpruefungErgebnis =
 		new GostBelegpruefungErgebnis();
 
-	/** Die Art der Belegprüfung: Nur EF1 oder Gesamt */
-	gostBelegpruefungsart: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
-
 	_kurszahlen = [0, 0, 0, 0, 0, 0];
 	_wochenstunden = [0, 0, 0, 0, 0, 0];
 	_anrechenbare_kurse = [0, 0, 0, 0, 0, 0];
 }
 
-export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerListeEintrag, AbiturdatenManager> {
+export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerListeEintrag, unknown> {
 
 	protected _data = reactive(new DataSchuelerLaufbahnplanungReactiveState());
 
 	protected _dataGostFaecher: DataGostFaecher | undefined;
 	protected _dataGostJahrgang: DataGostJahrgang | undefined;
 	protected _dataSchule: DataSchuleStammdaten | undefined;
+
+	public abimanager: ShallowRef<AbiturdatenManager | undefined> = shallowRef(undefined);
+
+	/** Die Art der Belegprüfung: Nur EF1 oder Gesamt */
+	protected _gostBelegpruefungsart: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
+
 
 	public constructor() {
 		super();
@@ -135,7 +138,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {GostBelegpruefungsArt} Die aktuelle Belegprüfungsart
 	 */
 	get gostAktuelleBelegpruefungsart(): GostBelegpruefungsArt {
-		return this._data.gostBelegpruefungsart;
+		return this._gostBelegpruefungsart;
 	}
 
 	/**
@@ -144,7 +147,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @param {GostBelegpruefungsArt} value Die neue aktuelle Belegprüfungsart
 	 */
 	set gostAktuelleBelegpruefungsart(value: GostBelegpruefungsArt) {
-		this._data.gostBelegpruefungsart = value;
+		this._gostBelegpruefungsart = value;
 		this.set_manager();
 		this.gostBelegpruefung();
 	}
@@ -163,20 +166,21 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {void}
 	 */
 	private gostBelegpruefung(): void {
-		if (this._daten === undefined || this.manager === undefined) return;
-		this._data.gostBelegpruefungsErgebnis = this.manager.getBelegpruefungErgebnis();
-		this._data._wochenstunden = this.manager.getWochenstunden();
-		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse();
+		if (this._daten === undefined || this.abimanager.value === undefined)
+			return;
+		this._data.gostBelegpruefungsErgebnis = this.abimanager.value.getBelegpruefungErgebnis();
+		this._data._wochenstunden = this.abimanager.value.getWochenstunden();
+		this._data._anrechenbare_kurse = this.abimanager.value.getAnrechenbareKurse();
 	}
 
 	/** aktualisiert den Abiturdatenmanager, z.B. wenn sich die Belegprüfungsart ändert */
 	private set_manager() {
 		if (this._daten === undefined)
 			return;
-		const art = (this._data.gostBelegpruefungsart.kuerzel === GostBelegpruefungsArt.GESAMT.kuerzel)
+		const art = (this._gostBelegpruefungsart.kuerzel === GostBelegpruefungsArt.GESAMT.kuerzel)
 			? GostBelegpruefungsArt.GESAMT
 			: GostBelegpruefungsArt.EF1;
-		this.manager = new AbiturdatenManager(this._daten, this.gostFaecher, art);
+		this.abimanager.value = new AbiturdatenManager(this._daten, this.gostFaecher, art);
 	}
 
 	/**

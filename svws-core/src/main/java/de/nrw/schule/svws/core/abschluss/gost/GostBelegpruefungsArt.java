@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotNull;
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
-public class GostBelegpruefungsArt {
+public enum GostBelegpruefungsArt {
 	
 	/** Prüfung nur der EF.1 */
-	public static final @NotNull GostBelegpruefungsArt EF1 = new GostBelegpruefungsArt("EF.1", "nur EF.1");
+	EF1("EF.1", "nur EF.1"),
 	
 	/** Gesamtprüfung über die gesamte Oberstufe */
-	public static final @NotNull GostBelegpruefungsArt GESAMT = new GostBelegpruefungsArt("Gesamt", "die gesamte Oberstufe");
+	GESAMT("Gesamt", "die gesamte Oberstufe");
 	
 	
 	/** Das Kürzel für die Belegprüfungsart */
@@ -40,7 +40,7 @@ public class GostBelegpruefungsArt {
      * Gibt die Art der Belegprüfung anhand des übergebenen Kürzels zurück.
      *
      * @param kuerzel    das Kürzel der Art der Belegprüfung
-     *  
+     *
      * @return die Art der Belegprüfung
      */
 	public static GostBelegpruefungsArt fromKuerzel(String kuerzel) {

@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Eine Aufzählung zur Unterscheidung der Fehlerarten (Belegungsfehler, Schriftlichkeit und Hinweis).
  */
-public class GostBelegungsfehlerArt {
+public enum GostBelegungsfehlerArt {
 
 	/** Belegungsfehler */
-	public static final @NotNull GostBelegungsfehlerArt BELEGUNG = new GostBelegungsfehlerArt("BELEGUNG");
+	BELEGUNG("BELEGUNG"),
 	
 	/** Fehler bei der Schriftlichkeit */
-	public static final @NotNull GostBelegungsfehlerArt SCHRIFTLICHKEIT = new GostBelegungsfehlerArt("SCHRIFTLICHKEIT");
+	SCHRIFTLICHKEIT("SCHRIFTLICHKEIT"),
 	
 	/** Information, aber kein Fehler */ 
-	public static final @NotNull GostBelegungsfehlerArt HINWEIS = new GostBelegungsfehlerArt("HINWEIS");
+	HINWEIS("HINWEIS");
 	
 	
 	/** Das Kürzel für die Belegungsfehlerart */

@@ -33,9 +33,9 @@ export class RouteDataSchuelerLaufbahnplanung {
 	}
 
 	get abiturmanager(): AbiturdatenManager {
-		if (this.dataLaufbahn.manager === undefined)
+		if (this.dataLaufbahn.abimanager.value === undefined)
 			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
-		return this.dataLaufbahn.manager;
+		return this.dataLaufbahn.abimanager.value;
 	}
 
 	setBelegpruefungsart = async (value: GostBelegpruefungsArt) => {
