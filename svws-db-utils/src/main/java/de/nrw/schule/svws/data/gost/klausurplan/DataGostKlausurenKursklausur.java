@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link GostKursklausur}.
  */
-public class DataGostKlausurenKursklausuren extends DataManager<Long> {
+public class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 	private int _abiturjahr;
 
@@ -38,7 +38,7 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 */
-	public DataGostKlausurenKursklausuren(DBEntityManager conn, int abiturjahr) {
+	public DataGostKlausurenKursklausur(DBEntityManager conn, int abiturjahr) {
 		super(conn);
 		_abiturjahr = abiturjahr;
 	}
@@ -93,7 +93,7 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 			kk.idVorgabe = k.Vorgabe_ID;
 			kk.abijahr = v.Abi_Jahrgang;
 			kk.auswahlzeit = v.Auswahlzeit;
-			kk.bemerkungenVorgabe = v.Bemerkungen;
+			kk.bemerkungVorgabe = v.Bemerkungen;
 			kk.dauer = v.Dauer;
 			kk.kursartAllg = v.KursartAllg;
 			kk.idFach = v.Fach_ID;

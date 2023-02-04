@@ -4,10 +4,12 @@ import java.io.InputStream;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
+import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenKursklausuren;
-import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenTermine;
+import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenKursklausur;
+import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenTermin;
+import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenVorgabe;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -52,8 +54,36 @@ public class APIGostKlausuren {
 	 * @return die Liste der Gost-Kursklausuren
 	 */
 	@GET
+	@Path("/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
+	@Operation(summary = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurvorgaben.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
+	public Response getGostKlausurenVorgabenJahrgangHalbjahr(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("halbjahr") long halbjahr,
+			@Context HttpServletRequest request) {
+		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
+		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)) {
+			return (new DataGostKlausurenVorgabe(conn, abiturjahr)).get(halbjahr);
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Klausuren eines Abiturjahrgangs in
+	 * einem bestimmten Halbjahr der Gymnasialen Oberstufe.
+	 * 
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * 
+	 * @return die Liste der Gost-Kursklausuren
+	 */
+	@GET
 	@Path("/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
-	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "List eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
+	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
@@ -63,7 +93,7 @@ public class APIGostKlausuren {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)) {
-			return (new DataGostKlausurenKursklausuren(conn, abiturjahr)).get(halbjahr);
+			return (new DataGostKlausurenKursklausur(conn, abiturjahr)).get(halbjahr);
 		}
 	}
 
@@ -81,7 +111,7 @@ public class APIGostKlausuren {
 	 */
 	@GET
 	@Path("/termine/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
-	@Operation(summary = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "List eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
+	@Operation(summary = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurtermine.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurtermin.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.")
@@ -91,7 +121,7 @@ public class APIGostKlausuren {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)) {
-			return (new DataGostKlausurenTermine(conn, abiturjahr)).get(halbjahr);
+			return (new DataGostKlausurenTermin(conn, abiturjahr)).get(halbjahr);
 		}
 	}
 
@@ -118,7 +148,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) InputStream is,
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
-			return (new DataGostKlausurenTermine(conn, abiturjahr)).create(halbjahr, quartal, is);
+			return (new DataGostKlausurenTermin(conn, abiturjahr)).create(halbjahr, quartal, is);
 		}
 	}
 
@@ -147,7 +177,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Patch für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) InputStream is,
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return (new DataGostKlausurenTermine(conn, -1).patch(id, is));
+			return (new DataGostKlausurenTermin(conn, -1).patch(id, is));
 		}
 	}
 	
@@ -176,7 +206,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKursklausur.class))) InputStream is,
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return (new DataGostKlausurenKursklausuren(conn, -1).patch(id, is));
+			return (new DataGostKlausurenKursklausur(conn, -1).patch(id, is));
 		}
 	}
 

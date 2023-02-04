@@ -11,6 +11,7 @@
 				<p>{{ termin.id }} {{ termin.datum }} </p>
 			</template>
 			Konflikte: {{ props.manager.value.gibKonfliktTerminKursklausur(7,2029).toString() }}
+			{{ props.dataFaecher.manager!.get(193)?.bezeichnung }}
 		</div>
 	</div>
 </template>

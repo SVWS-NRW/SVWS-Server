@@ -142,6 +142,8 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
+	 * 
+	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public updateKursklausur(klausur : GostKursklausur) : void {
 		let terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin === null ? -1 : klausur.idTermin);
@@ -180,15 +182,17 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
+	 * 
+	 * @param termin das GostKlausurtermin-Objekt
 	 */
-	public addTermin(t : GostKlausurtermin) : void {
-		this._mapIdKlausurtermin.put(t.id, t);
-		let listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(t.quartal);
+	public addTermin(termin : GostKlausurtermin) : void {
+		this._mapIdKlausurtermin.put(termin.id, termin);
+		let listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
 		if (listKlausurtermineMapQuartalKlausurtermine === null) {
 			listKlausurtermineMapQuartalKlausurtermine = new Vector();
-			this._mapQuartalKlausurtermine.put(t.quartal, listKlausurtermineMapQuartalKlausurtermine);
+			this._mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
-		listKlausurtermineMapQuartalKlausurtermine.add(t);
+		listKlausurtermineMapQuartalKlausurtermine.add(termin);
 	}
 
 	/**

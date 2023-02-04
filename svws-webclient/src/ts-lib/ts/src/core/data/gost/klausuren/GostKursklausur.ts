@@ -47,7 +47,7 @@ export class GostKursklausur extends JavaObject {
 	public dauer : number = -1;
 
 	/**
-	 * Die Auswahlzeit, sofern vorhanden. 
+	 * Die Auswahlzeit in Minuten, sofern vorhanden. 
 	 */
 	public auswahlzeit : number = -1;
 
@@ -69,7 +69,7 @@ export class GostKursklausur extends JavaObject {
 	/**
 	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden. 
 	 */
-	public bemerkungenVorgabe : string | null = null;
+	public bemerkungVorgabe : string | null = null;
 
 	/**
 	 * Die ID des Klausurkurses. 
@@ -144,7 +144,7 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.istVideoNotwendig === "undefined")
 			 throw new Error('invalid json format, missing attribute istVideoNotwendig');
 		result.istVideoNotwendig = obj.istVideoNotwendig;
-		result.bemerkungenVorgabe = typeof obj.bemerkungenVorgabe === "undefined" ? null : obj.bemerkungenVorgabe === null ? null : obj.bemerkungenVorgabe;
+		result.bemerkungVorgabe = typeof obj.bemerkungVorgabe === "undefined" ? null : obj.bemerkungVorgabe === null ? null : obj.bemerkungVorgabe;
 		if (typeof obj.idKurs === "undefined")
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
@@ -175,7 +175,7 @@ export class GostKursklausur extends JavaObject {
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
 		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
-		result += '"bemerkungenVorgabe" : ' + ((!obj.bemerkungenVorgabe) ? 'null' : '"' + obj.bemerkungenVorgabe + '"') + ',';
+		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
 		result += '"kursSchiene" : ' + obj.kursSchiene + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
@@ -235,8 +235,8 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.istVideoNotwendig !== "undefined") {
 			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		}
-		if (typeof obj.bemerkungenVorgabe !== "undefined") {
-			result += '"bemerkungenVorgabe" : ' + ((!obj.bemerkungenVorgabe) ? 'null' : '"' + obj.bemerkungenVorgabe + '"') + ',';
+		if (typeof obj.bemerkungVorgabe !== "undefined") {
+			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
 		}
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';

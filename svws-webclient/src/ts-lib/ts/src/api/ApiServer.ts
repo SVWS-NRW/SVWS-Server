@@ -43,6 +43,7 @@ import { GostJahrgang, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang } fro
 import { GostJahrgangFachkombination, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
 import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../core/data/gost/klausuren/GostKlausurtermin';
+import { GostKlausurvorgabe, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurvorgabe } from '../core/data/gost/klausuren/GostKlausurvorgabe';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../core/data/gost/klausuren/GostKursklausur';
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
@@ -3487,7 +3488,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
 	 *
-	 * List eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Kursklausuren.
@@ -3544,7 +3545,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostKlausurenKlausurtermineJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
 	 *
-	 * List eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Klausurtermine.
@@ -3602,6 +3603,37 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurtermin.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenVorgabenJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Klausurvorgaben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Klausurvorgaben.
+	 */
+	public async getGostKlausurenVorgabenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurvorgabe>> {
+		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new Vector<GostKlausurvorgabe>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

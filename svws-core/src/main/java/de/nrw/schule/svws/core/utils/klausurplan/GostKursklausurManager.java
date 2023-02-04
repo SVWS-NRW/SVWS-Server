@@ -130,6 +130,8 @@ public class GostKursklausurManager {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
+	 * 
+	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public void updateKursklausur(@NotNull GostKursklausur klausur) {
 
@@ -181,18 +183,20 @@ public class GostKursklausurManager {
 
 	/**
 	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
+	 * 
+	 * @param termin das GostKlausurtermin-Objekt
 	 */
-	public void addTermin(@NotNull GostKlausurtermin t) {
+	public void addTermin(@NotNull GostKlausurtermin termin) {
 		// Füllen von _mapIdKlausurtermin
-		_mapIdKlausurtermin.put(t.id, t);
+		_mapIdKlausurtermin.put(termin.id, termin);
 
 		// Füllen von _mapQuartalKlausurtermine
-		Vector<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(t.quartal);
+		Vector<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(termin.quartal);
 		if (listKlausurtermineMapQuartalKlausurtermine == null) {
 			listKlausurtermineMapQuartalKlausurtermine = new Vector<>();
-			_mapQuartalKlausurtermine.put(t.quartal, listKlausurtermineMapQuartalKlausurtermine);
+			_mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
-		listKlausurtermineMapQuartalKlausurtermine.add(t);
+		listKlausurtermineMapQuartalKlausurtermine.add(termin);
 	}
 
 	/**

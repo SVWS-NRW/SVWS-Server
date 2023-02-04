@@ -8,13 +8,11 @@ import java.util.Vector;
 import java.util.function.Function;
 
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
-import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -26,7 +24,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link GostKlausurtermin}.
  */
-public class DataGostKlausurenTermine extends DataManager<Long> {
+public class DataGostKlausurenTermin extends DataManager<Long> {
 
 	private int _abiturjahr;
 
@@ -37,7 +35,7 @@ public class DataGostKlausurenTermine extends DataManager<Long> {
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 */
-	public DataGostKlausurenTermine(DBEntityManager conn, int abiturjahr) {
+	public DataGostKlausurenTermin(DBEntityManager conn, int abiturjahr) {
 		super(conn);
 		_abiturjahr = abiturjahr;
 	}
@@ -48,8 +46,8 @@ public class DataGostKlausurenTermine extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOEigeneSchule} in
-	 * einen Core-DTO {@link SchuleStammdaten}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostKlausurenTermine} in
+	 * einen Core-DTO {@link GostKlausurtermin}.
 	 */
 	private Function<DTOGostKlausurenTermine, GostKlausurtermin> dtoMapper = (DTOGostKlausurenTermine z) -> {
 		GostKlausurtermin daten = new GostKlausurtermin();
