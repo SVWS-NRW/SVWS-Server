@@ -45,7 +45,7 @@
 
 	import { GostBlockungKurs, GostBlockungsergebnisManager, GostFach, GostHalbjahr, GostJahrgang, GostKursart, GostStatistikFachwahl, LehrerListeEintrag,
 		List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, onErrorCaptured, ShallowRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
@@ -72,11 +72,6 @@
 		listSchueler: ListAbiturjahrgangSchueler;
 		dataSchueler: DataSchuelerLaufbahndaten;
 	}>();
-
-	onErrorCaptured((e)=>{
-		alert("Es ist ein Fehler aufgetreten: " + e.message);
-		// return false;
-	})
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		// löse ein erneutes Filtern aus, wenn der Manager sich ändert (z.B. bei Blockungs- oder -Ergebniswechsel)

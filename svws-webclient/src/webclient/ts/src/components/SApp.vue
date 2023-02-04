@@ -34,7 +34,17 @@
 				<main class="relative h-full">
 					<router-view :key="$route.hash" />
 				</main>
-				<s-app-status :error="error_message" />
+				<template v-for="error of errors" :key="error.message">
+					<svws-ui-notification type="error">
+						<div class="flex items-center space-x-4">
+							<i-ri-alert-line class="text-headline" />
+							<div>
+								<div class="font-bold">{{ error.name }}</div>
+								<div class="font-normal">{{ error.message }}</div>
+							</div>
+						</div>
+					</svws-ui-notification>
+				</template>
 			</div>
 		</template>
 	</svws-ui-app-layout>
@@ -53,16 +63,17 @@
 
 	const main: Main = injectMainApp();
 
+	const errors: Ref<Error[]> = ref([]);
 	onErrorCaptured((e)=>{
-		error_message.value = e.message;
+		errors.value.push(e);
 	});
 
-	const error_message: Ref<undefined|string> = ref(undefined);
-	watch(error_message, (new_val)=> {
-		setTimeout(()=> {
-			if (new_val !== undefined) error_message.value = undefined;
-		}, 10_000);
-	})
+	// const error: Ref<undefined|Error> = ref(undefined);
+	// watch(error_message, (new_val)=> {
+	// 	setTimeout(()=> {
+	// 		if (new_val !== undefined) error_message.value = undefined;
+	// 	}, 10_000);
+	// })
 
 	const props = defineProps<{
 		schule: DataSchuleStammdaten;
