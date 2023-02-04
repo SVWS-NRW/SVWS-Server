@@ -115,6 +115,10 @@
 					<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
 					<svws-ui-button :type="istManuellerModus ? 'error' : 'primary'" @click="switchManuellerModus">Manuellen Modus {{ istManuellerModus ? "de" : "" }}aktivieren</svws-ui-button>
 				</div>
+				<div class="flex justify-evenly mt-4">
+					<svws-ui-button>Plaung exportieren</svws-ui-button>
+					<svws-ui-button>Planung importieren</svws-ui-button>
+				</div>
 			</div>
 		</div>
 	</svws-ui-content-card>

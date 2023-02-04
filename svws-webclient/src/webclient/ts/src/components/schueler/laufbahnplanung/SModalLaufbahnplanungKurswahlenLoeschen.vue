@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal">Reset</svws-ui-button>
+		<svws-ui-button @click="toggle_modal">Zurücksetzen</svws-ui-button>
 		<svws-ui-modal ref="modal" size="small">
 			<template #modalTitle>Alle Kurswahlen löschen</template>
 			<template #modalDescription>
