@@ -1,17 +1,48 @@
-import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { Erzieherart, ErzieherStammdaten, List } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
-import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
+import { App } from "~/apps/BaseApp";
+import { ref, Ref } from "vue";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
 export class RouteDataSchuelerErziehungsberechtigte {
-	item: SchuelerListeEintrag | undefined = undefined;
-	daten: DataSchuelerErzieherStammdaten = new DataSchuelerErzieherStammdaten();
-	erzieherarten: DataKatalogErzieherarten = new DataKatalogErzieherarten();
+
+	idSchueler: number | undefined = undefined;
+	_daten: Ref<List<ErzieherStammdaten> | undefined> = ref(undefined);
+	_erzieherarten: Ref<List<Erzieherart> | undefined> = ref(undefined);
+
+	public get erzieherarten() : List<Erzieherart> {
+		if (this._erzieherarten.value === undefined)
+			throw new Error("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte. ");
+		return this._erzieherarten.value;
+	}
+
+	public get daten(): List<ErzieherStammdaten> {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		return this._daten.value;
+	}
+
+	public get visible(): boolean {
+		return !(routeSchuelerErziehungsberechtigte.hidden()) && (this._daten.value !== undefined);
+	}
+
+	public async onSelect(idSchueler?: number) {
+		if (((idSchueler === undefined) && (this.idSchueler === undefined)) || ((this.idSchueler !== undefined) && (this.idSchueler === idSchueler)))
+			return;
+		this.idSchueler = idSchueler;
+		this._daten.value = (idSchueler === undefined) ? undefined : await App.api.getSchuelerErzieher(App.schema, idSchueler);
+	}
+
+	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		await App.api.patchErzieherStammdaten(data, App.schema, id);
+	}
+
 }
 
 export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchuelerErziehungsberechtigte, RouteSchueler> {
@@ -22,26 +53,16 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 		super.text = "Erziehungsberechtigte";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (to_params.id === undefined) {
-			await this.onSelect(undefined);
-		} else {
-			const tmp = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
-		}
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		this.data._erzieherarten.value = await App.api.getErzieherArten(App.schema);
 	}
 
-	protected async onSelect(item?: SchuelerListeEintrag) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-			await this.data.daten.unselect();
-			await this.data.erzieherarten.unselect();
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.data.onSelect(undefined);
 		} else {
-			this.data.item = item;
-			await this.data.daten.select(this.data.item);
-			await this.data.erzieherarten.select(undefined);
+			const tmp = parseInt(to_params.id as string);
+			await this.data.onSelect(this.parent!.liste.liste.find(s => s.id === tmp)?.id);
 		}
 	}
 
@@ -51,11 +72,11 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
-			orte: routeApp.data.orte,
-			ortsteile: routeApp.data.ortsteile,
+			patch: this.data.patch,
 			data: this.data.daten,
-			erzieherarten: this.data.erzieherarten
+			erzieherarten: this.data.erzieherarten,
+			orte: routeApp.data.orte,
+			ortsteile: routeApp.data.ortsteile
 		};
 	}
 

@@ -13,11 +13,18 @@
 				<div class="entry-content">
 					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="katalogErzieherarten"
 						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
-					<svws-ui-checkbox v-model="erhaeltAnschreiben"> erhält Anschreiben </svws-ui-checkbox>
-					<svws-ui-text-input placeholder="Name" v-model="nachname" type="text" />
-					<svws-ui-text-input placeholder="Zusatz zum Nachnamen" v-model="zusatzNachname" type="text" />
-					<svws-ui-text-input placeholder="Vorname" v-model="vorname" type="text" />
-					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="email" type="email" verify-email />
+					<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
+						@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)">
+						erhält Anschreiben
+					</svws-ui-checkbox>
+					<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname || undefined"
+						@update:model-value="doPatch({ nachname: String($event) }, erzieher.id)" type="text" />
+					<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname || undefined"
+						@update:model-value="doPatch({ zusatzNachname: String($event) }, erzieher.id)" type="text" />
+					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname || undefined"
+						@update:model-value="doPatch({ vorname: String($event) }, erzieher.id)" type="text" />
+					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail || undefined"
+						@update:model-value="doPatch({ eMail: String($event) }, erzieher.id)" type="email" verify-email />
 					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
 						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 						:item-filter="staatsangehoerigkeitKatalogEintragFilter" />
@@ -32,9 +39,9 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerZusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="orte" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="orte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="ortsteile"
+					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="ortsteile"
 						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 				</div>
 			</div>
@@ -54,91 +61,68 @@
 
 	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, List } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
-	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
-	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort,
 		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
 	const props = defineProps<{
-		data: DataSchuelerErzieherStammdaten;
 		erzieher: ErzieherStammdaten;
-		erzieherarten: DataKatalogErzieherarten;
+		erzieherarten: List<Erzieherart>;
 		orte: List<OrtKatalogEintrag>;
 		ortsteile: List<OrtsteilKatalogEintrag>;
 	}>();
 
-	const main: Main = injectMainApp();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<ErzieherStammdaten>, id: number) : void;
+	}>()
 
-	const nachname: WritableComputedRef<string> = computed({
-		get: () => props.erzieher.nachname ?? "",
-		set: (value) => void props.data.patch({ nachname: value }, props.erzieher)
-	});
+	function doPatch(data: Partial<ErzieherStammdaten>, id: number) {
+		emit('patch', data, id);
+	}
 
-	const zusatzNachname: WritableComputedRef<string> = computed({
-		get: () => props.erzieher.zusatzNachname ?? "",
-		set: (value) => void props.data.patch({ zusatzNachname: value }, props.erzieher)
-	});
-
-	const vorname: WritableComputedRef<string> = computed({
-		get: () => props.erzieher.vorname ?? "",
-		set: (value) => void props.data.patch({ vorname: value }, props.erzieher)
-	});
-
-	const email: WritableComputedRef<string> = computed({
-		get: () => props.erzieher.eMail ?? "",
-		set: (value) => void props.data.patch({ eMail: value }, props.erzieher)
-	});
-
-	const erhaeltAnschreiben: WritableComputedRef<boolean> = computed({
-		get: () => (props.erzieher.erhaeltAnschreiben === null) ? true : props.erzieher.erhaeltAnschreiben,
-		set: (value) => void props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
-	});
-
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
+	const wohnort: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => {
 			for (const ort of props.orte)
 				if (ort.id == props.erzieher.wohnortID)
 					return ort;
 			return undefined
 		},
-		set: (value) => void props.data.patch({ wohnortID: value?.id }, props.erzieher)
+		set: (value) => void doPatch({ wohnortID: value === undefined ? null : value?.id }, props.erzieher.id)
 	});
 
-	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
+	const ortsteil: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
 		get: () => {
 			for (const ortsteil of props.ortsteile)
 				if (ortsteil.id == props.erzieher.ortsteilID)
 					return ortsteil;
 			return undefined
 		},
-		set: (value) => void props.data.patch({ ortsteilID: value?.id }, props.erzieher)
+		set: (value) => void doPatch({ ortsteilID: value === undefined ? null : value?.id }, props.erzieher.id)
 	});
 
 	const staatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(props.erzieher.staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => void props.data.patch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher)
+		set: (value) => void doPatch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher.id)
 	});
 
-	const katalogErzieherarten: ComputedRef<Erzieherart[]> = computed(() => props.erzieherarten.daten?.toArray() as Erzieherart[] || []);
+	const katalogErzieherarten: ComputedRef<Erzieherart[]> = computed(() => props.erzieherarten.toArray() as Erzieherart[]);
 	const idErzieherArt: WritableComputedRef<Erzieherart | undefined> = computed({
 		get: () => katalogErzieherarten.value.find(n => n.id === props.erzieher.idErzieherArt),
-		set: (value) => void props.data.patch({ idErzieherArt: value?.id }, props.erzieher)
+		set: (value) => void doPatch({ idErzieherArt: value?.id }, props.erzieher.id)
 	});
 
 	const strassenname: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.strassenname ?? "",
-		set: (value) => void props.data.patch({ strassenname: value }, props.erzieher)
+		set: (value) => void doPatch({ strassenname: value }, props.erzieher.id)
 	});
 
 	const hausnummerZusatz: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.hausnummerZusatz ?? "",
-		set: (value) => void props.data.patch({ hausnummerZusatz: value }, props.erzieher)
+		set: (value) => void doPatch({ hausnummerZusatz: value }, props.erzieher.id)
 	});
 
 	const bemerkungen: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.bemerkungen ?? "",
-		set: (value) => void props.data.patch({ bemerkungen: value }, props.erzieher)
+		set: (value) => void doPatch({ bemerkungen: value }, props.erzieher.id)
 	});
 
 </script>

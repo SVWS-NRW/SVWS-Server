@@ -1,7 +1,7 @@
 <template>
-	<div v-if="visible" class="app-container relative">
-		<div v-for="(e, i) in erzieher" :key="i" class="col-span-full">
-			<s-card-schueler-erziehungsberechtigte :data="data" :erzieher="e" :erzieherarten="erzieherarten" :orte="orte" :ortsteile="ortsteile" />
+	<div class="app-container relative">
+		<div v-for="(e, i) in data" :key="i" class="col-span-full">
+			<s-card-schueler-erziehungsberechtigte :erzieher="e" @patch="patch" :erzieherarten="erzieherarten" :orte="orte" :ortsteile="ortsteile" />
 		</div>
 		<div class="flex justify-start">
 			<svws-ui-button>Erziehungsberechtigten hinzufügen</svws-ui-button>
@@ -11,23 +11,17 @@
 
 <script setup lang="ts">
 
-	import { ErzieherStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
-	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
+	import { Erzieherart, ErzieherStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
+	// TODO import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
 
 	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		data: DataSchuelerErzieherStammdaten;
-		erzieherarten: DataKatalogErzieherarten;
+		data: List<ErzieherStammdaten>;
+		patch: (data : Partial<ErzieherStammdaten>, id: number) => Promise<void>;
+		erzieherarten: List<Erzieherart>;
 		orte: List<OrtKatalogEintrag>;
 		ortsteile: List<OrtsteilKatalogEintrag>;
 	}>();
 
-	const erzieher: ComputedRef<List<ErzieherStammdaten> | undefined> = computed(() => props.data.daten);
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return true;
-	});
+	// TODO debouncing... const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>
