@@ -55,10 +55,6 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		super.defaultChild = routeSchuelerIndividualdaten;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		return true;
-	}
-
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		if (to_params.id === undefined) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
@@ -108,7 +104,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		return this.getSelector();
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
+	public getRoute(id?: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 

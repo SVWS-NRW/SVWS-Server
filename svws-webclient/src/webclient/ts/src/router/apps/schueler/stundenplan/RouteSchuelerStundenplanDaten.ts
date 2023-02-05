@@ -1,100 +1,103 @@
-import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
-import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRoute, useRouter } from "vue-router";
-import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
-import { ListStundenplaene } from "~/apps/schueler/ListStundenplaene";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { List, SchuelerStundenplanManager, StundenplanListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ref, Ref } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { computed } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
+import { App } from "~/apps/BaseApp";
+import { RouteManager } from "~/router/RouteManager";
+import { routeApp } from "~/router/RouteApp";
 
 export class RouteDataSchuelerStundenplan {
-	auswahl: ListStundenplaene = new ListStundenplaene();
-	item: StundenplanListeEintrag | undefined = undefined;
-	daten: DataStundenplan = new DataStundenplan();
+
+	auswahl: Ref<StundenplanListeEintrag | undefined> = ref(undefined);
+	listAuswahl: Ref<List<StundenplanListeEintrag>> = ref(new Vector());
+	manager: Ref<SchuelerStundenplanManager | undefined> = ref(undefined);
+
+	public async onSelect(idSchueler: number, idStundenplan?: number) {
+		if (((idStundenplan === undefined) && (this.manager.value === undefined)) ||
+			((this.manager.value !== undefined) && (this.manager.value.getSchuelerID() === idSchueler) && (this.manager.value.getStundenplanID() === idStundenplan)))
+			return;
+		const item = this.getEintrag(idStundenplan);
+		this.auswahl.value = item;
+		if (item === undefined) {
+			this.manager.value = undefined;
+		} else {
+			const daten = await App.api.getSchuelerStundenplan(App.schema, item.id, idSchueler);
+			this.manager.value = new SchuelerStundenplanManager(daten);
+		}
+	}
+
+	public getEintrag(id?: number) : StundenplanListeEintrag | undefined {
+		if ((id === undefined) || (this.listAuswahl.value === undefined) || (this.listAuswahl.value?.size() === 0))
+			return undefined;
+		for (const e of this.listAuswahl.value)
+			if (e.id === id)
+				return e;
+		return undefined;
+	}
+
+	setStundenplan = async (value: StundenplanListeEintrag | undefined) => {
+		await RouteManager.doRoute({ name: routeSchuelerStundenplanDaten.name, params: { id: routeSchueler.data.stammdaten.daten?.id, idStundenplan: value?.id } });
+	}
+
 }
 
 const SSchuelerStundenplanDaten = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanDaten.vue");
 const SSchuelerStundenplanAuswahl = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanAuswahl.vue")
 
-export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStundenplaene, StundenplanListeEintrag, RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
+export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new ListStundenplaene(), 'id', new RouteDataSchuelerStundenplan());
+		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
-		super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route));
+		super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 		];
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		await this.data.auswahl.update_list();
-		if ((to.name === this.name) && (to_params.idStundenplan === undefined))
-			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
-		return true;
+		return (to_params.id !== undefined);
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		if (to_params.id === undefined)
+			return routeSchueler.getRoute(undefined);
+		const abschnitt = routeApp.data.schule.daten?.idSchuljahresabschnitt;
+		if (abschnitt === undefined)
+			return false;
+		this.data.listAuswahl.value = await App.api.getStundenplanlisteFuerAbschnitt(App.schema, abschnitt);
+	}
+
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+		if (to_params.id === undefined)
+			return routeSchueler.getRoute(undefined);
+		const idSchueler = parseInt(to_params.id as string);
 		if (to_params.idStundenplan === undefined) {
-			await this.onSelect(undefined);
-		} else {
-			const idStundenplan = parseInt(to_params.idStundenplan as string);
-			await this.onSelect(this.data.auswahl.liste.find(s => s.id === idStundenplan));
+			if ((this.data.listAuswahl.value === undefined) || (this.data.listAuswahl.value.size() === 0))
+				return false;
+			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.listAuswahl.value.get(0)?.id }};
 		}
-	}
-
-	protected async onSelect(item?: StundenplanListeEintrag) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-			await this.data.daten.unselect();
-		} else {
-			this.data.item = item;
-			await this.data.daten.select(this.data.item);
-		}
-	}
-
-	protected getAuswahlComputedProperty(): WritableComputedRef<StundenplanListeEintrag | undefined> {
-		const router = useRouter();
-		const route = useRoute();
-		const self = this;
-
-		const selected = computed({
-			get(): StundenplanListeEintrag | undefined {
-				if (route.params.id === undefined)
-					return undefined;
-				let tmp = self.data.auswahl.ausgewaehlt;
-				if ((tmp === undefined) || (tmp.id.toString() !== route.params.idStundenplan))
-					tmp = self.data.auswahl.liste.find(s => s.id.toString() === route.params.idStundenplan);
-				return tmp;
-			},
-			set(value: StundenplanListeEintrag | undefined) {
-				self.data.auswahl.ausgewaehlt = value;
-				const from_name = route.name?.toString() || "";
-				if ((from_name !== self.name) && from_name?.startsWith(self.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
-					const params = {...route.params};
-					params.idStundenplan = "" + value?.id;
-					void router.push({ name: from_name, params: params });
-				} else {
-					void router.push({ name: self.name, params: { id: route.params.id, idStundenplan: value?.id } });
-				}
-			}
-		});
-		return selected;
+		const idStundenplan = parseInt(to_params.idStundenplan as string);
+		await this.data.onSelect(idSchueler, idStundenplan);
 	}
 
 	public getRoute(id: number, idStundenplan: number) : RouteLocationRaw {
 		return { name: this.name, params: { id, idStundenplan }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			stundenplan: this.data.auswahl.value,
+			stundenplaene: this.data.listAuswahl.value,
+			setStundenplan: this.data.setStundenplan
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
-			stundenplan: this.data.item,
-			data: this.data.daten,
+			manager: this.data.manager.value
 		};
 	}
 

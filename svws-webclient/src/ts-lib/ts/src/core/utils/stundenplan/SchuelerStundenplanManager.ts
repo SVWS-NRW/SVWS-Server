@@ -137,6 +137,24 @@ export class SchuelerStundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die ID des Stundenplans
+	 * 
+	 * @return die ID des Stundenplans
+	 */
+	public getStundenplanID() : number {
+		return this._daten.idStundenplan;
+	}
+
+	/**
+	 * Liefert die ID des Schülers
+	 * 
+	 * @return die ID des Schülers
+	 */
+	public getSchuelerID() : number {
+		return this._daten.idSchueler;
+	}
+
+	/**
 	 * Liefert den minimalen Wochentag als int, z.B. 1 für Montag
 	 * 
 	 * @return den minimalen Wochentag

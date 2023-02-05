@@ -1,5 +1,5 @@
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 import { RouteLocationRaw, RouteParams } from "vue-router";
 
@@ -9,7 +9,7 @@ export class RouteSchuelerStundenplan extends RouteNode<unknown, RouteSchueler> 
 
 	public constructor() {
 		super("schueler_stundenplan", "stundenplan", SSchuelerStundenplan);
-		super.propHandler = (route) => routeSchueler.getProps(route);
+		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Stundenplan";
 		super.children = [
 			routeSchuelerStundenplanDaten
@@ -24,7 +24,6 @@ export class RouteSchuelerStundenplan extends RouteNode<unknown, RouteSchueler> 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
-
 
 }
 

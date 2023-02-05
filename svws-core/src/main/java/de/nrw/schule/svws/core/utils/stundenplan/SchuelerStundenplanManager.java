@@ -64,6 +64,24 @@ public class SchuelerStundenplanManager {
 	private int maxStunde = Integer.MIN_VALUE;
 
 	/**
+	 * Liefert die ID des Stundenplans
+	 * 
+	 * @return die ID des Stundenplans
+	 */
+	public long getStundenplanID() {
+		return this._daten.idStundenplan;
+	}
+
+	/**
+	 * Liefert die ID des Schülers
+	 * 
+	 * @return die ID des Schülers
+	 */
+	public long getSchuelerID() {
+		return this._daten.idSchueler;
+	}
+
+	/**
 	 * Liefert den minimalen Wochentag als int, z.B. 1 für Montag
 	 * 
 	 * @return den minimalen Wochentag
@@ -339,7 +357,6 @@ public class SchuelerStundenplanManager {
 			return retVec;
 		}
 		retVec.sort(new IntegerComparator());
-		;
 		retVec.remove(0);
 		return retVec;
 	}

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-row gap-4">
+	<div v-if="visible()" class="flex flex-row gap-4">
 		<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 			<div class="w-full inline-block py-2 align-middle sm:px-6 lg:px-8">
 				<div v-for="wochentyp in manager?.getWochentypen()" class="w-full rounded-lg shadow" :key="wochentyp">
@@ -36,31 +36,24 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ShallowRef } from "vue";
-
-	import { SchuelerListeEintrag, SchuelerStundenplanManager, StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { SchuelerStundenplanManager } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten;
-		stundenplan?: StundenplanListeEintrag;
-		data: DataStundenplan;
+		manager: SchuelerStundenplanManager | undefined
 	}>();
 
-	const manager: ComputedRef<SchuelerStundenplanManager | undefined> = computed(() =>
-		props.data.daten === undefined ? undefined : new SchuelerStundenplanManager(props.data.daten)
-	);
-
 	function unterrichtsdaten(wochentyp: number, wochentag: number, stunde: number) {
-		if (manager.value === undefined)
+		if (props.manager === undefined)
 			return undefined;
-		const zeitraster = manager.value.getZeitrasterByWochentagStunde(wochentag, stunde);
+		const zeitraster = props.manager.getZeitrasterByWochentagStunde(wochentag, stunde);
 		if (zeitraster === null)
 			return undefined;
-		const unterricht = manager.value.getUnterrichtByWocheZeitrasterId(wochentyp, zeitraster.id, true);
+		const unterricht = props.manager.getUnterrichtByWocheZeitrasterId(wochentyp, zeitraster.id, true);
 		return (unterricht === null) ? undefined : unterricht;
+	}
+
+	function visible() : boolean {
+		return props.manager !== undefined;
 	}
 
 </script>
