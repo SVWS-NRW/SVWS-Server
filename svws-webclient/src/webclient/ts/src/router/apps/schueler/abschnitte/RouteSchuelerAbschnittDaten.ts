@@ -1,4 +1,4 @@
-import { SchuelerLeistungsdaten, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -10,12 +10,25 @@ export class RouteDataSchuelerAbschnittDaten {
 
 	auswahl: SchuelerLernabschnittListeEintrag | undefined = undefined;
 	daten: Ref<SchuelerLernabschnittsdaten | undefined> = ref(undefined);
+	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+	mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map();
+	mapKlassen: Ref<Map<number, KlassenListeEintrag>> = ref(new Map());
 
 	public async onSelect(item?: SchuelerLernabschnittListeEintrag) {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
 			return;
 		this.auswahl = item;
 		this.daten.value = (item?.id === undefined) ? undefined : await App.api.getSchuelerLernabschnittsdatenByID(App.schema, item.id);
+		// Lade die Liste der Klassen als Katalog, der nur lesend genutzt wird
+		if (item === undefined) {
+			this.mapKlassen.value = new Map();
+		} else {
+			const klassen = await App.api.getKlassenFuerAbschnitt(App.schema, item.schuljahresabschnitt);
+			const mapKlassen = new Map<number, KlassenListeEintrag>();
+			for (const k of klassen)
+				mapKlassen.set(k.id, k);
+			this.mapKlassen.value = mapKlassen;
+		}
 	}
 
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
@@ -57,6 +70,18 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id === undefined)
 			return false;
+		// Lade die Liste der Lehrer als Katalog, der nur lesend genutzt wird
+		const lehrer = await App.api.getLehrer(App.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of lehrer)
+			mapLehrer.set(l.id, l);
+		this.data.mapLehrer = mapLehrer;
+		// Lade die Liste der Jahrgaenge als Katalog, der nur lesend genutzt wird
+		const jahrgaenge = await App.api.getJahrgaenge(App.schema);
+		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
+		for (const j of jahrgaenge)
+			mapJahrgaenge.set(j.id, j);
+		this.data.mapJahrgaenge = mapJahrgaenge;
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -89,6 +114,9 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			data: this.data.daten.value,
+			mapLehrer: this.data.mapLehrer,
+			mapJahrgaenge: this.data.mapJahrgaenge,
+			mapKlassen: this.data.mapKlassen.value,
 			patch: this.data.patch,
 			patchBemerkungen: this.data.patchBemerkungen
 		};

@@ -1,15 +1,8 @@
 <template>
 	<svws-ui-content-card title="Allgemeine Angaben">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Schuljahr" v-model="inputSchuljahr" :items="inputSchuljahre" :item-filter="schuljahr_filter"
-				:item-sort="schuljahr_sort" :item-text="i => `${i.schuljahr}`" autocomplete />
-			<svws-ui-multi-select title="Abschnitt" v-model="inputAbschnitt" :items="inputAbschnitte" :item-filter="abschnitt_filter"
-				:item-sort="abschnitt_sort" :item-text="i => `${i.abschnitt}`" autocomplete />
-
-			<svws-ui-multi-select title="Klasse" v-model="inputKlasse" :items="inputKlasse" :item-filter="klasse_filter"
-				:item-sort="klasse_sort" :item-text="i => `${i.klasse}`" autocomplete />
-			<svws-ui-multi-select title="Jahrgang" v-model="inputJahrgang" :items="inputJahrgange" :item-filter="jahrgang_filter"
-				:item-sort="jahrgang_sort" :item-text="i => `${i.jahrgang}`" autocomplete />
+			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="props.mapKlassen.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="props.mapJahrgaenge.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
 
 			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined"
 				@update:model-value="doPatch({ datumAnfang: String($event) })" type="date" />
@@ -17,12 +10,12 @@
 				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
-				<svws-ui-multi-select title="Klassenlehrer / Tutor" v-model="inputKlassenlehrer" :items="inputKlassenlehrer" :item-filter="klassenlehrer_filter"
-					:item-sort="klassenlehrer_sort" :item-text="i => `${i.klassenlehrer}`" autocomplete />
-				<svws-ui-multi-select title="Stellvertreter" v-model="inputStellvertreter" :items="inputStellvertreter" :item-filter="stellvertreter_filter"
-					:item-sort="stellvertreter_sort" :item-text="i => `${i.stellvertreter}`" autocomplete />
-				<svws-ui-multi-select title="Sonderpädagoge" v-model="inputPaedagoge" :items="inputPaedagogee" :item-filter="paedagoge_filter"
-					:item-sort="paedagoge_sort" :item-text="i => `${i.paedagoge}`" autocomplete />
+				<svws-ui-multi-select title="Klassenlehrer / Tutor" v-model="inputKlassenlehrer" :items="props.mapLehrer.values()"
+					:item-text="i => `${i.klassenlehrer}`" autocomplete />
+				<svws-ui-multi-select title="Stellvertreter" v-model="inputStellvertreter" :items="props.mapLehrer.values()"
+					:item-text="i => `${i.stellvertreter}`" autocomplete />
+				<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="props.mapLehrer.values()"
+					:item-text="getLehrerText" autocomplete />
 				<svws-ui-text-input placeholder="Maximale Fehlstunden" :model-value="data.fehlstundenGrenzwert || undefined"
 					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Fehlstunden Gesamt" :model-value="data.fehlstundenGesamt || undefined"
@@ -60,10 +53,14 @@
 
 <script setup lang="ts">
 
-	import { SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+	import { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+	import { computed, WritableComputedRef } from 'vue';
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+		mapKlassen: Map<number, KlassenListeEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -73,5 +70,30 @@
 	function doPatch(data: Partial<SchuelerLernabschnittsdaten>) {
 		emit('patch', data);
 	}
+
+	function getLehrerText(lehrer: LehrerListeEintrag) : string {
+		return lehrer.nachname + ", " + lehrer.vorname + " (" + lehrer.kuerzel + ")";
+	}
+
+	const sonderpaedagoge: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+		get: () => props.data.sonderpaedagogeID === null ? undefined : props.mapLehrer.get(props.data.sonderpaedagogeID),
+		set: (value) => emit('patch', { sonderpaedagogeID: value === undefined ? null : value.id })
+	});
+
+	const jahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
+		get: () => props.mapJahrgaenge.get(props.data.jahrgangID),
+		set: (value) => {
+			if (value !== undefined)
+				emit('patch', { jahrgangID: value.id });
+		}
+	});
+
+	const klasse: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
+		get: () => props.mapKlassen.get(props.data.klassenID),
+		set: (value) => {
+			if (value !== undefined)
+				emit('patch', { klassenID: value.id });
+		}
+	});
 
 </script>
