@@ -1,10 +1,11 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { App } from "~/apps/BaseApp";
 import { ref, Ref } from "vue";
 import { routeSchuelerAbschnitt, RouteSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
+import { routeApp } from "~/router/RouteApp";
 
 export class RouteDataSchuelerAbschnittDaten {
 
@@ -13,6 +14,7 @@ export class RouteDataSchuelerAbschnittDaten {
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map();
 	mapKlassen: Ref<Map<number, KlassenListeEintrag>> = ref(new Map());
+	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag> = new Map();
 
 	public async onSelect(item?: SchuelerLernabschnittListeEintrag) {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
@@ -82,6 +84,12 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 		for (const j of jahrgaenge)
 			mapJahrgaenge.set(j.id, j);
 		this.data.mapJahrgaenge = mapJahrgaenge;
+		// Lade die Liste der Förderschwerpunkte als Katalog, der nur lesend genutzt wird
+		const forderschwerpunkte = await App.api.getSchuelerFoerderschwerpunkte(App.schema);
+		const mapFoerderschwerpunkte = new Map<number, FoerderschwerpunktEintrag>();
+		for (const fs of forderschwerpunkte)
+			mapFoerderschwerpunkte.set(fs.id, fs);
+		this.data.mapFoerderschwerpunkte = mapFoerderschwerpunkte;
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -113,10 +121,12 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			schule: routeApp.data.schule.daten!,
 			data: this.data.daten.value,
 			mapLehrer: this.data.mapLehrer,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapKlassen: this.data.mapKlassen.value,
+			mapFoerderschwerpunkte: this.data.mapFoerderschwerpunkte,
 			patch: this.data.patch,
 			patchBemerkungen: this.data.patchBemerkungen
 		};

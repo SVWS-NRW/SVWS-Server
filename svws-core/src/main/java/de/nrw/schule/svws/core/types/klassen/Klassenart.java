@@ -137,10 +137,10 @@ public enum Klassenart {
 	public final @NotNull KlassenartKatalogEintrag@NotNull[] historie;	
 
 	/** Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID */ 
-	private static final @NotNull HashMap<@NotNull Long, Klassenart> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull Long, @NotNull Klassenart> _mapID = new HashMap<>();
 
 	/** Eine HashMap mit zulässigen Klassenarten. Der Zugriff erfolgt dabei über das Kürzel */ 
-	private static final @NotNull HashMap<@NotNull String, Klassenart> _mapKuerzel = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
 	private @NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>>@NotNull[] zulaessig;
@@ -176,7 +176,7 @@ public enum Klassenart {
 	 *    
 	 * @return die Map von den IDs auf die zugehörigen Klassenarten
 	 */
-	private static @NotNull HashMap<@NotNull Long, Klassenart> getMapByID() {
+	private static @NotNull HashMap<@NotNull Long, @NotNull Klassenart> getMapByID() {
 		if (_mapID.size() == 0)
 			for (Klassenart s : Klassenart.values())
 				if (s.daten != null)
@@ -191,7 +191,7 @@ public enum Klassenart {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Klassenarten
 	 */
-	private static @NotNull HashMap<@NotNull String, Klassenart> getMapByKuerzel() {
+	private static @NotNull HashMap<@NotNull String, @NotNull Klassenart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (Klassenart s : Klassenart.values())
 				if (s.daten != null)
@@ -227,11 +227,11 @@ public enum Klassenart {
 	 * 
 	 * @return die zulässigen Klassenarten in der angegebenen Schulform
 	 */
-	public static @NotNull List<Klassenart> get(Schulform schulform) {
-		@NotNull Vector<Klassenart> kursarten = new Vector<>();
+	public static @NotNull List<@NotNull Klassenart> get(Schulform schulform) {
+		@NotNull Vector<@NotNull Klassenart> kursarten = new Vector<>();
 		if (schulform == null)
 			return kursarten;
-		for (Klassenart kursart : Klassenart.values())
+		for (@NotNull Klassenart kursart : Klassenart.values())
 			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;

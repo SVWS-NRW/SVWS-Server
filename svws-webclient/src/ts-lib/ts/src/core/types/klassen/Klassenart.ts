@@ -88,12 +88,12 @@ export class Klassenart extends JavaObject {
 	/**
 	 * Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID 
 	 */
-	private static readonly _mapID : HashMap<number, Klassenart | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, Klassenart> = new HashMap();
 
 	/**
 	 * Eine HashMap mit zulässigen Klassenarten. Der Zugriff erfolgt dabei über das Kürzel 
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Klassenart | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Klassenart> = new HashMap();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist 
@@ -132,7 +132,7 @@ export class Klassenart extends JavaObject {
 	 *    
 	 * @return die Map von den IDs auf die zugehörigen Klassenarten
 	 */
-	private static getMapByID() : HashMap<number, Klassenart | null> {
+	private static getMapByID() : HashMap<number, Klassenart> {
 		if (Klassenart._mapID.size() === 0) 
 			for (let s of Klassenart.values()) 
 				if (s.daten !== null) 
@@ -146,7 +146,7 @@ export class Klassenart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Klassenarten
 	 */
-	private static getMapByKuerzel() : HashMap<string, Klassenart | null> {
+	private static getMapByKuerzel() : HashMap<string, Klassenart> {
 		if (Klassenart._mapKuerzel.size() === 0) 
 			for (let s of Klassenart.values()) 
 				if (s.daten !== null) 
@@ -180,8 +180,8 @@ export class Klassenart extends JavaObject {
 	 * 
 	 * @return die zulässigen Klassenarten in der angegebenen Schulform
 	 */
-	public static get(schulform : Schulform | null) : List<Klassenart | null> {
-		let kursarten : Vector<Klassenart | null> = new Vector();
+	public static get(schulform : Schulform | null) : List<Klassenart> {
+		let kursarten : Vector<Klassenart> = new Vector();
 		if (schulform === null) 
 			return kursarten;
 		for (let kursart of Klassenart.values()) 

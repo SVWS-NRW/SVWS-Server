@@ -24,26 +24,25 @@
 					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</div>
 
-			<svws-ui-multi-select title="Schulgliederung" v-model="inputSchulgliederung" :items="inputSchulgliederung" :item-filter="schulgliederung_filter"
-				:item-sort="schulgliederung_sort" :item-text="i => `${i.schulgliederung}`" autocomplete />
+			<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
 			<svws-ui-multi-select title="Prüfungsordnung" v-model="inputPruefungsordnung" :items="inputPruefungsordnung" :item-filter="pruefungsordnung_filter"
 				:item-sort="pruefungsordnung_sort" :item-text="i => `${i.pruefungsordnung}`" autocomplete />
-			<svws-ui-multi-select title="Organisationsform" v-model="inputOrganisationsform" :items="inputOrganisationsform" :item-filter="organisationsform_filter"
-				:item-sort="organisationsform_sort" :item-text="i => `${i.organisationsform}`" autocomplete />
-			<svws-ui-multi-select title="Prüfungsordnung" v-model="inputKlassenart" :items="inputKlassenart" :item-filter="klassenart_filter"
-				:item-sort="klassenart_sort" :item-text="i => `${i.klassenart}`" autocomplete />
+			<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => `${i.beschreibung}`" autocomplete />
+			<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
 
-			<svws-ui-multi-select title="Förderschwerpunkt" v-model="inputFoerderschwerpunkt" :items="inputFoerderschwerpunkt" :item-filter="foerderschwerpunkt_filter"
-				:item-sort="foerderschwerpunkt_sort" :item-text="i => `${i.foerderschwerpunkt}`" autocomplete />
-			<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="inputWeitererFoerderschwerpunkt" :items="inputWeitererFoerderschwerpunkte" :item-filter="weitererFoerderschwerpunkt_filter"
-				:item-sort="weitererFoerderschwerpunkt_sort" :item-text="i => `${i.weitererFoerderschwerpunkt}`" autocomplete />
+			<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="props.mapFoerderschwerpunkte.values()"
+				:item-text="i => `${i.text}`" autocomplete />
+			<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="props.mapFoerderschwerpunkte.values()"
+				:item-text="i => `${i.text}`" autocomplete />
 
 			<div class="col-span-2">
-				<svws-ui-checkbox v-model="inputSchwerstbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.hatSchwerbehinderungsNachweis" @update:model-value="setSchwerbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
 			</div>
 
-			<svws-ui-text-input placeholder="Lernbereichsnote Gesellschaftswissenschaft" v-model="inputLernbereichsnoteGesellschaftswissenschaft" type="text" />
-			<svws-ui-text-input placeholder="Lernbereichsnote Naturwissenschaft" v-model="inputLernbereichsnoteNaturwissenschaft" type="text" />
+			<svws-ui-multi-select title="Lernbereichsnote Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
+				:item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-multi-select title="Lernbereichsnote Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
+				:item-text="i => `${i.kuerzel}`" autocomplete />
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="mögliche Nachprüfungsfächer" v-model="inputNachpruefungsfaecher" type="text" />
 			</div>
@@ -53,14 +52,18 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
-	import { computed, WritableComputedRef } from 'vue';
+	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, FoerderschwerpunktEintrag, JahrgangsListeEintrag,
+		Klassenart, KlassenListeEintrag, LehrerListeEintrag, List, Note, OrganisationsformKatalogEintrag,
+		SchuelerLernabschnittsdaten, SchuleStammdaten, Schulform, Schulgliederung, Vector, WeiterbildungskollegOrganisationsformen } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, WritableComputedRef } from 'vue';
 
 	const props = defineProps<{
+		schule: SchuleStammdaten;
 		data: SchuelerLernabschnittsdaten;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 		mapKlassen: Map<number, KlassenListeEintrag>;
+		mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -93,6 +96,110 @@
 		set: (value) => {
 			if (value !== undefined)
 				emit('patch', { klassenID: value.id });
+		}
+	});
+
+	const foerderschwerpunkt: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
+		get: () => props.data.foerderschwerpunkt1ID === null ? undefined : props.mapFoerderschwerpunkte.get(props.data.foerderschwerpunkt1ID),
+		set: (value) => emit('patch', { foerderschwerpunkt1ID: value === undefined ? null : value.id })
+	});
+
+	const foerderschwerpunkt2: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
+		get: () => props.data.foerderschwerpunkt2ID === null ? undefined : props.mapFoerderschwerpunkte.get(props.data.foerderschwerpunkt2ID),
+		set: (value) => emit('patch', { foerderschwerpunkt2ID: value === undefined ? null : value.id })
+	});
+
+	function setSchwerbehinderung(value : boolean) {
+		doPatch({ hatSchwerbehinderungsNachweis: value });
+	}
+
+	function getLernbereichsnoten() : Note[] {
+		return [ Note.KEINE, Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND ];
+	}
+
+	const lernbereichsnoteGSbzwAL: WritableComputedRef<Note | undefined> = computed({
+		get: () => {
+			const note = Note.fromNoteSekI(props.data.noteLernbereichGSbzwAL);
+			return note === null ? undefined : note;
+		},
+		set: (value) => emit('patch', { noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+	});
+
+	const lernbereichsnoteNW: WritableComputedRef<Note | undefined> = computed({
+		get: () => {
+			const note = Note.fromNoteSekI(props.data.noteLernbereichNW);
+			return note === null ? undefined : note;
+		},
+		set: (value) => emit('patch', { noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+	});
+
+	const klassenarten: ComputedRef<List<Klassenart>> = computed(() => {
+		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		if (schulform === null)
+			throw new Error("Keine gültige Schulform festgelegt");
+		return Klassenart.get(schulform);
+	});
+
+	const klassenart: WritableComputedRef<Klassenart | null> = computed({
+		get: () => Klassenart.getByASDKursart(props.data.Klassenart),
+		set: (value) => emit('patch', { Klassenart: value === null ? null : value.daten.kuerzel })
+	});
+
+	const gliederungen: ComputedRef<List<Schulgliederung>> = computed(() => {
+		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		if (schulform === null)
+			throw new Error("Keine gültige Schulform festgelegt");
+		return Schulgliederung.get(schulform);
+	});
+
+	const gliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
+		get: () => {
+			if (props.data.schulgliederung === null)
+				return undefined;
+			const gliederung = Schulgliederung.getByKuerzel(props.data.schulgliederung);
+			return gliederung === null ? undefined : gliederung;
+		},
+		set: (value) => emit('patch', { schulgliederung: value === undefined || value === null ? null : value.daten.kuerzel })
+	});
+
+	const organisationsformen: ComputedRef<List<OrganisationsformKatalogEintrag>> = computed(() => {
+		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		if (schulform === null)
+			throw new Error("Keine gültige Schulform festgelegt");
+		const result = new Vector<OrganisationsformKatalogEintrag>();
+		if (schulform === Schulform.WB) {
+			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
+				result.add(orgform.daten);
+		} else if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
+			for (const orgform of BerufskollegOrganisationsformen.values())
+				result.add(orgform.daten);
+		} else {
+			for (const orgform of AllgemeinbildendOrganisationsformen.values())
+				result.add(orgform.daten);
+		}
+		return result;
+	});
+
+	const organisationsform: WritableComputedRef<OrganisationsformKatalogEintrag | undefined> = computed({
+		get: () => {
+			if (props.data.organisationsform === null)
+				return undefined;
+			const schulform = Schulform.getByKuerzel(props.schule.schulform);
+			if (schulform === null)
+				throw new Error("Keine gültige Schulform festgelegt");
+			if (schulform === Schulform.WB) {
+				const orgform = WeiterbildungskollegOrganisationsformen.getByKuerzel(props.data.organisationsform);
+				return orgform === null ? undefined : orgform.daten;
+			}
+			if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
+				const orgform = BerufskollegOrganisationsformen.getByKuerzel(props.data.organisationsform);
+				return orgform === null ? undefined : orgform.daten;
+			}
+			const orgform = AllgemeinbildendOrganisationsformen.getByKuerzel(props.data.organisationsform);
+			return orgform === null ? undefined : orgform.daten;
+		},
+		set: (value) => {
+			emit('patch', { organisationsform: value === undefined ? null : value.kuerzel });
 		}
 	});
 
