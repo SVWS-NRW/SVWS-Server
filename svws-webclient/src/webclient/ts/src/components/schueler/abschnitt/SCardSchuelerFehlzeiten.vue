@@ -4,6 +4,18 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import { SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+
+	const props = defineProps<{
+		data: SchuelerLernabschnittsdaten;
+	}>();
+
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerLernabschnittsdaten>) : void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerLernabschnittsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

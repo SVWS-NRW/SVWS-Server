@@ -1,18 +1,10 @@
 <template>
-	<div v-if="visible" class="app-container">
-		<s-card-schueler-halbjahr />
-		<s-card-schueler-zeugnis-abschluss />
-		<s-card-schueler-abschluss-berechnung />
+	<div class="flex flex-row">
+		<div class="w-32 mr-2"> <router-view :key="$route.hash" name="lernabschnittauswahl" /> </div>
+		<div class="grow"> <router-view :key="$route.hash" /> </div>
 	</div>
 </template>
 
 <script setup lang="ts">
-
-	import { computed, ComputedRef } from "vue";
-	import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerAbschnitt.hidden());
-	});
 
 </script>

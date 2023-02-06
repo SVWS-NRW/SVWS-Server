@@ -6,7 +6,7 @@ import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-
 import { routeApp } from "~/router/RouteApp";
 import { App } from "~/apps/BaseApp";
 
-export class RouteDataSchuelerLeistungenDaten {
+export class RouteDataSchuelerLeistungen {
 
 	idSchueler: number | undefined;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag> = new Vector<SchuelerLernabschnittListeEintrag>();
@@ -33,10 +33,10 @@ export class RouteDataSchuelerLeistungenDaten {
 
 const SSchuelerLeistungen = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungen.vue");
 
-export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistungenDaten, RouteSchueler> {
+export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistungen, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungenDaten());
+		super("schueler_leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [

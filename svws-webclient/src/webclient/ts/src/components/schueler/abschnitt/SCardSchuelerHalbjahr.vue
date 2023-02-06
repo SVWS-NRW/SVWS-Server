@@ -11,8 +11,10 @@
 			<svws-ui-multi-select title="Jahrgang" v-model="inputJahrgang" :items="inputJahrgange" :item-filter="jahrgang_filter"
 				:item-sort="jahrgang_sort" :item-text="i => `${i.jahrgang}`" autocomplete />
 
-			<svws-ui-text-input placeholder="Datum von" v-model="inputDatumVon" type="date" />
-			<svws-ui-text-input placeholder="Datum bis" v-model="inputDatumBis" type="date" />
+			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined"
+				@update:model-value="doPatch({ datumAnfang: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined"
+				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
 				<svws-ui-multi-select title="Klassenlehrer / Tutor" v-model="inputKlassenlehrer" :items="inputKlassenlehrer" :item-filter="klassenlehrer_filter"
@@ -21,9 +23,12 @@
 					:item-sort="stellvertreter_sort" :item-text="i => `${i.stellvertreter}`" autocomplete />
 				<svws-ui-multi-select title="Sonderpädagoge" v-model="inputPaedagoge" :items="inputPaedagogee" :item-filter="paedagoge_filter"
 					:item-sort="paedagoge_sort" :item-text="i => `${i.paedagoge}`" autocomplete />
-				<svws-ui-text-input placeholder="Maximale Fehlstunden" v-model="inputFehlstundenMax" type="number" />
-				<svws-ui-text-input placeholder="Fehlstunden Gesamt" v-model="inputFehlstundenGesamt" type="number" />
-				<svws-ui-text-input placeholder="Fehlstunden Gesamt" v-model="inputFehlstundenUnentschuldigt" type="number" />
+				<svws-ui-text-input placeholder="Maximale Fehlstunden" :model-value="data.fehlstundenGrenzwert || undefined"
+					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Fehlstunden Gesamt" :model-value="data.fehlstundenGesamt || undefined"
+					@update:model-value="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Fehlstunden Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined"
+					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</div>
 
 			<svws-ui-multi-select title="Schulgliederung" v-model="inputSchulgliederung" :items="inputSchulgliederung" :item-filter="schulgliederung_filter"
@@ -54,5 +59,19 @@
 </template>
 
 <script setup lang="ts">
+
+	import { SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+
+	const props = defineProps<{
+		data: SchuelerLernabschnittsdaten;
+	}>();
+
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerLernabschnittsdaten>) : void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerLernabschnittsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

@@ -347,7 +347,6 @@ export class SchuelerStundenplanManager extends JavaObject {
 			return retVec;
 		}
 		retVec.sort(new IntegerComparator());
-		
 		retVec.remove(0);
 		return retVec;
 	}

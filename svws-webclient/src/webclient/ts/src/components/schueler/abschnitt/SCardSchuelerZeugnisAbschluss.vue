@@ -1,8 +1,10 @@
 <template>
 	<svws-ui-content-card title="Zeugnis / Abschluss">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Konferenz-Datum" v-model="inputDatumKonferenz" type="date" />
-			<svws-ui-text-input placeholder="Zeugnis-Datum" v-model="inputDatumZeugnis" type="date" />
+			<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="data.datumKonferenz || undefined"
+				@update:model-value="doPatch({ datumKonferenz: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="data.datumZeugnis || undefined"
+				@update:model-value="doPatch({ datumZeugnis: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
 				<svws-ui-multi-select title="Vers.-Vermerk" v-model="inputVersetzungsVermerk" :items="inputVersetzungsVermerke" :item-filter="versetzungsVermerk_filter"
@@ -24,21 +26,44 @@
 			</div>
 
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" v-model="inputZeugnisbemerkungen" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein || undefined"
+					@update:model-value="doPatchBemerkungen({ zeugnisAllgemein : String($event) })" resizeable="vertical" />
 			</div>
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" v-model="inputArbeitsUndSozialverhalten" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV || undefined"
+					@update:model-value="doPatchBemerkungen({ zeugnisASV : String($event) })" resizeable="vertical" />
 			</div>
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" v-model="inputAusserunterrichtlichesEngagement" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE || undefined"
+					@update:model-value="doPatchBemerkungen({ zeugnisAUE : String($event) })" resizeable="vertical" />
 			</div>
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" v-model="inputBemerkungVersetzung" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung || undefined"
+					@update:model-value="doPatchBemerkungen({ versetzungsentscheidung : String($event) })" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
+	import { SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+
+	const props = defineProps<{
+		data: SchuelerLernabschnittsdaten;
+	}>();
+
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerLernabschnittsdaten>) : void;
+		(e: 'patchBemerkungen', data: Partial<SchuelerLernabschnittBemerkungen>) : void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerLernabschnittsdaten>) {
+		emit('patch', data);
+	}
+
+	function doPatchBemerkungen(data: Partial<SchuelerLernabschnittBemerkungen>) {
+		emit('patchBemerkungen', data);
+	}
 
 </script>
