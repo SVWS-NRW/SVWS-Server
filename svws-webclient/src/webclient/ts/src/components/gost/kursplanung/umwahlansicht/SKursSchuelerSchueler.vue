@@ -13,7 +13,7 @@
 							'color--error': kollision,
 							'color--dark': !kollision,
 						}">
-						<svws-ui-popover v-if="kollision && !nichtwahl" class="popper--danger">
+						<svws-ui-popover v-if="kollision && !nichtwahl" class="popper--dark">
 							<template #trigger>
 								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
 							</template>
