@@ -10,10 +10,8 @@
 				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
-				<svws-ui-multi-select title="Klassenlehrer / Tutor" v-model="inputKlassenlehrer" :items="props.mapLehrer.values()"
-					:item-text="i => `${i.klassenlehrer}`" autocomplete />
-				<svws-ui-multi-select title="Stellvertreter" v-model="inputStellvertreter" :items="props.mapLehrer.values()"
-					:item-text="i => `${i.stellvertreter}`" autocomplete />
+				<div> TODO: Klassenlehrer / Tutor </div>
+				<div> TODO: Stellvertretender Klassenlehrer / Tutor </div>
 				<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="props.mapLehrer.values()"
 					:item-text="getLehrerText" autocomplete />
 				<svws-ui-text-input placeholder="Maximale Fehlstunden" :model-value="data.fehlstundenGrenzwert || undefined"
@@ -25,8 +23,7 @@
 			</div>
 
 			<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
-			<svws-ui-multi-select title="Prüfungsordnung" v-model="inputPruefungsordnung" :items="inputPruefungsordnung" :item-filter="pruefungsordnung_filter"
-				:item-sort="pruefungsordnung_sort" :item-text="i => `${i.pruefungsordnung}`" autocomplete />
+			<div> TODO: Prüfungsordnung </div>
 			<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => `${i.beschreibung}`" autocomplete />
 			<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
 
@@ -36,15 +33,23 @@
 				:item-text="i => `${i.text}`" autocomplete />
 
 			<div class="col-span-2">
-				<svws-ui-checkbox :model-value="data.hatSchwerbehinderungsNachweis" @update:model-value="setSchwerbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="schwerbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
 			</div>
 
 			<svws-ui-multi-select title="Lernbereichsnote Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
 				:item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-multi-select title="Lernbereichsnote Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
 				:item-text="i => `${i.kuerzel}`" autocomplete />
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="mögliche Nachprüfungsfächer" v-model="inputNachpruefungsfaecher" type="text" />
+			<div class="col-span-2"> TODO Nachprüfungen </div>
+			<div class="col-span-2" v-if="data.nachpruefungen !== null">
+				<div>mögliche Nachprüfungsfächer</div>
+				<div v-for="fach in data.nachpruefungen.moegliche" :key="fach">
+					{{ fach }}
+				</div>
+				<div>Nachprüfungen</div>
+				<div v-for="pruefung in data.nachpruefungen.pruefungen" :key="pruefung.fachID">
+					{{ `${pruefung.grund} ${pruefung.datum} ${pruefung.fachID} ${pruefung.note}` }}
+				</div>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -109,9 +114,10 @@
 		set: (value) => emit('patch', { foerderschwerpunkt2ID: value === undefined ? null : value.id })
 	});
 
-	function setSchwerbehinderung(value : boolean) {
-		doPatch({ hatSchwerbehinderungsNachweis: value });
-	}
+	const schwerbehinderung: WritableComputedRef<boolean> = computed({
+		get: () => props.data.hatSchwerbehinderungsNachweis,
+		set: (value) => doPatch({ hatSchwerbehinderungsNachweis: value })
+	});
 
 	function getLernbereichsnoten() : Note[] {
 		return [ Note.KEINE, Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND ];
@@ -140,9 +146,12 @@
 		return Klassenart.get(schulform);
 	});
 
-	const klassenart: WritableComputedRef<Klassenart | null> = computed({
-		get: () => Klassenart.getByASDKursart(props.data.Klassenart),
-		set: (value) => emit('patch', { Klassenart: value === null ? null : value.daten.kuerzel })
+	const klassenart: WritableComputedRef<Klassenart | undefined> = computed({
+		get: () => {
+			const art = Klassenart.getByASDKursart(props.data.Klassenart);
+			return (art === null) ? undefined : art;
+		},
+		set: (value) => emit('patch', { Klassenart: value === undefined ? null : value.daten.kuerzel })
 	});
 
 	const gliederungen: ComputedRef<List<Schulgliederung>> = computed(() => {

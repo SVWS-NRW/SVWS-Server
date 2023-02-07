@@ -40,12 +40,14 @@ export class RouteDataSchuelerAbschnittDaten {
 	patch = async (data : Partial<SchuelerLernabschnittsdaten>) => {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patch", data);
 		// TODO await App.api.patchSchuelerLernabschnittsdaten(data, App.schema, this.daten.value.id);
 	}
 
 	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) => {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchBemerkungen", data);
 		// TODO await App.api.patchSchuelerLernabschnittsdatenBemerkungen(data, App.schema, this.daten.value.id);
 	}
 

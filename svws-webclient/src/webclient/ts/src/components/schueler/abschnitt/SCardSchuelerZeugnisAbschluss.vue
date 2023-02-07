@@ -7,18 +7,14 @@
 				@update:model-value="doPatch({ datumZeugnis: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
-				<svws-ui-multi-select title="Vers.-Vermerk" v-model="inputVersetzungsVermerk" :items="inputVersetzungsVermerke" :item-filter="versetzungsVermerk_filter"
-					:item-sort="versetzungsVermerk_sort" :item-text="i => `${i.versetzungsVermerk}`" autocomplete />
-				<svws-ui-multi-select title="Abschluss-Art" v-model="inputAbschlussArt" :items="inputAbschlussArt" :item-filter="abschlussArt_filter"
-					:item-sort="abschlussArt_sort" :item-text="i => `${i.abschlussArt}`" autocomplete />
-				<svws-ui-multi-select title="Folgeklasse" v-model="inputFolgeklasse" :items="inputFolgeklassen" :item-filter="folgeklasse_filter"
-					:item-sort="folgeklasse_sort" :item-text="i => `${i.folgeklasse}`" autocomplete />
+				<div> TODO: istAbschlussPrognose </div>
+				<div> TODO: versetzungsvermerk </div>
+				<div> TODO: abschlussart </div>
+				<svws-ui-multi-select title="Folgeklasse" v-model="folgeklasse" :items="mapKlassen.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
 			</div>
-
-			<svws-ui-multi-select title="Abschluss" v-model="inputAbschluss" :items="inputAbschluss" :item-filter="abschluss_filter"
-				:item-sort="abschluss_sort" :item-text="i => `${i.abschluss}`" autocomplete />
-			<svws-ui-multi-select title="Zeugnis-Art" v-model="inputZeugnisArt" :items="inputZeugnisArte" :item-filter="zeugnisArt_filter"
-				:item-sort="zeugnisArt_sort" :item-text="i => `${i.zeugnisArt}`" autocomplete />
+			<div> TODO: abschluss </div>
+			<div> TODO: abschlussBerufsbildend </div>
+			<div> TODO: zeugnisart </div>
 
 			<div class="col-span-2 flex gap-4">
 				<svws-ui-button type="primary"> Versetzungs-/Abschluss-Berechnung </svws-ui-button>
@@ -47,10 +43,12 @@
 
 <script setup lang="ts">
 
-	import { SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+	import { KlassenListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten } from '@svws-nrw/svws-core-ts';
+	import { computed, WritableComputedRef } from 'vue';
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;
+		mapKlassen: Map<number, KlassenListeEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -65,5 +63,10 @@
 	function doPatchBemerkungen(data: Partial<SchuelerLernabschnittBemerkungen>) {
 		emit('patchBemerkungen', data);
 	}
+
+	const folgeklasse: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
+		get: () => props.data.folgeklassenID === null ? undefined : props.mapKlassen.get(props.data.folgeklassenID),
+		set: (value) => emit('patch', { folgeklassenID: (value === undefined) ? null : value.id })
+	});
 
 </script>
