@@ -35,7 +35,7 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:wahl', wahl: GostSchuelerFachwahl): void,
+		(e: 'update:wahl', wahl: GostSchuelerFachwahl, fachID?: number): void,
 	}>();
 
 	const istFachkombiErforderlich: ComputedRef<boolean> = computed(() => {
@@ -104,7 +104,7 @@
 		const wahl = props.abiturmanager.getSchuelerFachwahl(props.fach.id);
 		if (props.halbjahr === undefined)
 			setAbiturWahl(wahl);
-		else  if (props.halbjahr === GostHalbjahr.EF1)
+		else if (props.halbjahr === GostHalbjahr.EF1)
 			setEF1Wahl(wahl);
 		else if (props.halbjahr === GostHalbjahr.EF2)
 			setEF2Wahl(wahl);
@@ -117,6 +117,34 @@
 		else if (props.halbjahr === GostHalbjahr.Q22)
 			setQ22Wahl(wahl);
 		emit('update:wahl', wahl);
+		loescheDoppelbelegung(wahl);
+	}
+
+	/**
+	 * Doppelbelegungen, welche nach einem Klick bei Fächern mit dem gleichen Statistikkürzel
+	 * entstehen, werden mit Hilfe dieser Methode bei dem jeweils anderen Fach automatisch
+	 * entfernt.
+	 *
+	 * @param {GostSchuelerFachwahl} wahl die neue Fachwahl des Schülers
+	 */
+	function loescheDoppelbelegung(wahl: GostSchuelerFachwahl) {
+		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+			return;
+		const fachbelegungen = props.abiturmanager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
+		if (fachbelegungen.size() > 1) {
+			for (const fachbelegung of fachbelegungen) {
+				const other_wahl = props.abiturmanager.getSchuelerFachwahl(fachbelegung.fachID);
+				GostHalbjahr.values().forEach((hj) => {
+					if (props.abiturmanager.pruefeBelegung(fachbelegung, hj)) {
+						if ((fachbelegung.fachID !== props.fach.id) && (wahl[hj.toString() as keyof GostSchuelerFachwahl] !== null)) {
+							(other_wahl[hj.toString() as keyof GostSchuelerFachwahl] as string | null) = null;
+						}
+					}
+				})
+				emit('update:wahl', other_wahl, fachbelegung.fachID);
+			}
+		}
 	}
 
 

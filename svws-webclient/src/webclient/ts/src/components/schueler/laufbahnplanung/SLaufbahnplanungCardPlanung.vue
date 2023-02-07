@@ -136,13 +136,13 @@
 		faechermanager: GostFaecherManager;
 		fachkombinationen: List<GostJahrgangFachkombination>;
 		jahrgangsdaten: GostJahrgangsdaten;
-		setWahl: (fach: GostFach, wahl: GostSchuelerFachwahl) => Promise<void>;
+		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		item?: SchuelerListeEintrag;
 	}>();
 
-	async function onUpdateWahl(fach: GostFach, wahl: GostSchuelerFachwahl) {
-		await props.setWahl(fach, wahl);
+	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
+		await props.setWahl(fachID, wahl);
 	}
 
 	async function reset_fachwahlen() {
@@ -155,7 +155,7 @@
 						fachwahl[hj.toString() as 'EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22'] = null;
 				}
 				fachwahl.abiturFach = null;
-				await onUpdateWahl(fach, fachwahl);
+				await onUpdateWahl(fach.id, fachwahl);
 			}
 		}
 	}

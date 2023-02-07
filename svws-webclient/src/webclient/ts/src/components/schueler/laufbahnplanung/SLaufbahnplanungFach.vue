@@ -40,7 +40,7 @@
 	}>();
 
 	const emit = defineEmits<{
-		(e: 'update:wahl', fach: GostFach, wahl: GostSchuelerFachwahl): void,
+		(e: 'update:wahl', fachID: number, wahl: GostSchuelerFachwahl): void,
 	}>();
 
 
@@ -107,8 +107,8 @@
 	})
 
 
-	function onUpdateWahl(wahl: GostSchuelerFachwahl) {
-		emit('update:wahl', props.fach, wahl);
+	function onUpdateWahl(wahl: GostSchuelerFachwahl, fachID?: number) {
+		emit('update:wahl', fachID || props.fach.id, wahl);
 	}
 
 

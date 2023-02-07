@@ -42,8 +42,8 @@ export class RouteDataSchuelerLaufbahnplanung {
 		this.dataLaufbahn.gostAktuelleBelegpruefungsart = value;
 	}
 
-	setWahl = async (fach: GostFach, wahl: GostSchuelerFachwahl) => {
-		await this.dataLaufbahn.setWahl(fach, wahl);
+	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
+		await this.dataLaufbahn.setWahl(fachID, wahl);
 	}
 
 	getPdfWahlbogen = async() => {

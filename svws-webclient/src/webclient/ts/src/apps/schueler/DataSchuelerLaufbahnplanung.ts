@@ -337,11 +337,11 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @param {GostSchuelerFachwahl} wahl
 	 * @returns {void}
 	 */
-	public async setWahl(row: GostFach, wahl: GostSchuelerFachwahl): Promise<void> {
+	public async setWahl(fachID: number, wahl: GostSchuelerFachwahl): Promise<void> {
 		const eintrag = this.selected_list_item;
 		if (!eintrag)
 			return;
-		await this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, row.id).then(async () => { await this.on_select() }));
+		await this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, fachID).then(async () => { await this.on_select() }));
 	}
 
 }
