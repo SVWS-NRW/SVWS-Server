@@ -20,7 +20,7 @@ public class BetriebStammdaten {
 
     /** ID der weiteren Adresse (Betriebe) */
 	@Schema(required = true, description = "die ID des Betriebes", example="4711")
-	public Long id;
+	public long id;
 
 	/** Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart */
 	@Schema(required = false, description = " Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart", example="4711")

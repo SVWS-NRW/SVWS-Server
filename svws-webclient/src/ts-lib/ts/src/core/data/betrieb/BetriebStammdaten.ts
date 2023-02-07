@@ -11,7 +11,7 @@ export class BetriebStammdaten extends JavaObject {
 	/**
 	 * ID der weiteren Adresse (Betriebe) 
 	 */
-	public id : number | null = null;
+	public id : number = 0;
 
 	/**
 	 * Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart 
@@ -160,7 +160,9 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebStammdaten {
 		const obj = JSON.parse(json);
 		const result = new BetriebStammdaten();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		result.adressArt = typeof obj.adressArt === "undefined" ? null : obj.adressArt === null ? null : obj.adressArt;
 		result.name1 = typeof obj.name1 === "undefined" ? null : obj.name1 === null ? null : obj.name1;
 		result.name2 = typeof obj.name2 === "undefined" ? null : obj.name2 === null ? null : obj.name2;
@@ -197,7 +199,7 @@ export class BetriebStammdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebStammdaten) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"id" : ' + obj.id + ',';
 		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
 		result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1 + '"') + ',';
 		result += '"name2" : ' + ((!obj.name2) ? 'null' : '"' + obj.name2 + '"') + ',';
@@ -244,7 +246,7 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebStammdaten>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.adressArt !== "undefined") {
 			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';

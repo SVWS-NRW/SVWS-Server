@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class BetriebAnsprechpartner extends JavaObject {
@@ -7,12 +6,12 @@ export class BetriebAnsprechpartner extends JavaObject {
 	/**
 	 * ID des Ansprechpartners 
 	 */
-	public id : number | null = null;
+	public id : number = 0;
 
 	/**
 	 * ID des Betriebs, dem der Ansprechpartner zugeordnet ist 
 	 */
-	public betrieb_id : number | null = null;
+	public betrieb_id : number = 0;
 
 	/**
 	 * Name des Ansprechpartners im Betrieb 
@@ -66,8 +65,12 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebAnsprechpartner {
 		const obj = JSON.parse(json);
 		const result = new BetriebAnsprechpartner();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id === null ? null : obj.betrieb_id;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (typeof obj.betrieb_id === "undefined")
+			 throw new Error('invalid json format, missing attribute betrieb_id');
+		result.betrieb_id = obj.betrieb_id;
 		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
 		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
 		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
@@ -81,8 +84,8 @@ export class BetriebAnsprechpartner extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebAnsprechpartner) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
-		result += '"betrieb_id" : ' + ((!obj.betrieb_id) ? 'null' : obj.betrieb_id) + ',';
+		result += '"id" : ' + obj.id + ',';
+		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
 		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
@@ -99,10 +102,10 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebAnsprechpartner>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.betrieb_id !== "undefined") {
-			result += '"betrieb_id" : ' + ((!obj.betrieb_id) ? 'null' : obj.betrieb_id) + ',';
+			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
 			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';

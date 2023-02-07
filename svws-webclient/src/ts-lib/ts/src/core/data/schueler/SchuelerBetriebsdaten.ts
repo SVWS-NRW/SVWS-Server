@@ -9,17 +9,17 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	/**
 	 * ID des Datensatzes 
 	 */
-	public id : number | null = null;
+	public id : number = 0;
 
 	/**
 	 * ID des Schülers 
 	 */
-	public schueler_id : number | null = null;
+	public schueler_id : number = 0;
 
 	/**
 	 * AdressID des Betriebeeintrags beim Schüler 
 	 */
-	public betrieb_id : number | null = null;
+	public betrieb_id : number = 0;
 
 	/**
 	 * ID der Beschäftigungsart des Schülers 
@@ -78,9 +78,15 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerBetriebsdaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerBetriebsdaten();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
-		result.schueler_id = typeof obj.schueler_id === "undefined" ? null : obj.schueler_id === null ? null : obj.schueler_id;
-		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id === null ? null : obj.betrieb_id;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (typeof obj.schueler_id === "undefined")
+			 throw new Error('invalid json format, missing attribute schueler_id');
+		result.schueler_id = obj.schueler_id;
+		if (typeof obj.betrieb_id === "undefined")
+			 throw new Error('invalid json format, missing attribute betrieb_id');
+		result.betrieb_id = obj.betrieb_id;
 		result.beschaeftigungsart_id = typeof obj.beschaeftigungsart_id === "undefined" ? null : obj.beschaeftigungsart_id === null ? null : obj.beschaeftigungsart_id;
 		result.vertragsbeginn = typeof obj.vertragsbeginn === "undefined" ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
 		result.vertragsende = typeof obj.vertragsende === "undefined" ? null : obj.vertragsende === null ? null : obj.vertragsende;
@@ -95,9 +101,9 @@ export class SchuelerBetriebsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerBetriebsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
-		result += '"schueler_id" : ' + ((!obj.schueler_id) ? 'null' : obj.schueler_id) + ',';
-		result += '"betrieb_id" : ' + ((!obj.betrieb_id) ? 'null' : obj.betrieb_id) + ',';
+		result += '"id" : ' + obj.id + ',';
+		result += '"schueler_id" : ' + obj.schueler_id + ',';
+		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
 		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : '"' + obj.vertragsbeginn + '"') + ',';
 		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : '"' + obj.vertragsende + '"') + ',';
@@ -115,13 +121,13 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerBetriebsdaten>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.schueler_id !== "undefined") {
-			result += '"schueler_id" : ' + ((!obj.schueler_id) ? 'null' : obj.schueler_id) + ',';
+			result += '"schueler_id" : ' + obj.schueler_id + ',';
 		}
 		if (typeof obj.betrieb_id !== "undefined") {
-			result += '"betrieb_id" : ' + ((!obj.betrieb_id) ? 'null' : obj.betrieb_id) + ',';
+			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		}
 		if (typeof obj.beschaeftigungsart_id !== "undefined") {
 			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';

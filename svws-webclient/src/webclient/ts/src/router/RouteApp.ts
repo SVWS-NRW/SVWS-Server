@@ -25,7 +25,9 @@ import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 export class RouteDataApp {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	orte: List<OrtKatalogEintrag> = new Vector();
+	mapOrte: Map<number, OrtKatalogEintrag> = new Map();
 	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
+	mapOrtsteile: Map<number, OrtsteilKatalogEintrag> = new Map();
 	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
 }
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -69,8 +71,16 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);    // TODO Kein Data-Objekt, sondern Handhabung des aktuellen Abschnitts, etc. in dieser Route (RouteDataApp-Objekt)
+		// Lade den Katalog der Orte
 		this.data.orte = await App.api.getOrte(App.schema);
+		this.data.mapOrte = new Map();
+		for (const o of this.data.orte)
+			this.data.mapOrte.set(o.id, o);
+		// Lade den Katalog der Ortsteile
 		this.data.ortsteile = await App.api.getOrtsteile(App.schema);
+		this.data.mapOrtsteile = new Map();
+		for (const o of this.data.ortsteile)
+			this.data.mapOrtsteile.set(o.id, o);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -79,7 +89,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
 		await this.data.schule.unselect();
 		this.data.orte = new Vector<OrtKatalogEintrag>();
+		this.data.mapOrte = new Map();
 		this.data.ortsteile = new Vector<OrtsteilKatalogEintrag>();
+		this.data.mapOrtsteile = new Map();
 	}
 
 	public getRoute(): RouteLocationRaw {

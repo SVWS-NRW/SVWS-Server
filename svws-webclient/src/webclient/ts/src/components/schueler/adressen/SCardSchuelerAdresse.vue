@@ -19,20 +19,16 @@
 					<svws-ui-text-input placeholder="Branche" v-model="branche" title="Branche" type="text" />
 					<div class="flex w-full flex-row items-center space-x-4">
 						<div class="flex-grow">
-							<svws-ui-multi-select v-if="inputBetriebAnsprechpartner.length > 0" title="Ansprechpartner" v-model="ansprechpartner"
-								:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
+							<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
+								:items="mapAnsprechpartner.values()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
 							<p v-else>Kein Ansprechpartner</p>
 						</div>
 						<div class="flex flex-row space-x-4">
-							<svws-ui-button v-if="inputBetriebAnsprechpartner.length > 0" type="secondary" @click="modalEdit.openModal()">
-								<svws-ui-icon> <i-ri-draft-line /> </svws-ui-icon>
-							</svws-ui-button>
-							<svws-ui-button type="secondary" @click="modalAdd.openModal()">
-								<svws-ui-icon> <i-ri-user-add-line /> </svws-ui-icon>
-							</svws-ui-button>
+							<s-schueler-adresse-modal-ansprechpartner v-if="ansprechpartner !== undefined" :ansprechpartner="ansprechpartner" :patch-ansprechpartner="patchAnsprechpartner" />
+							<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
 						</div>
 					</div>
-					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer.values()" :item-text="(i:LehrerListeEintrag) => i.nachname" />
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -44,7 +40,7 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerzusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="orte" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte.values()" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 					<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
 					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
@@ -63,294 +59,99 @@
 			</div>
 		</div>
 	</svws-ui-content-card>
-
-	<!--   MODALFENSTER-ANSPRECHPARTNER-EDITIEREN -->
-	<svws-ui-modal ref="modalEdit" size="medium">
-		<template #modalTitle>Ansprechpartner Editieren</template>
-		<template #modalContent>
-			<div class="input-wrapper">
-				<svws-ui-text-input placeholder="Name" v-model="ap_name" type="text" />
-				<svws-ui-text-input placeholder="Vorname" v-model="ap_vorname" type="text" />
-				<svws-ui-text-input placeholder="Anrede" v-model="ap_anrede" type="text" />
-				<svws-ui-text-input placeholder="Titel" v-model="ap_titel" type="text" />
-				<svws-ui-text-input placeholder="Abteilung" v-model="ap_abteilung" type="text" />
-				<svws-ui-text-input placeholder="Telefon-Nr." v-model="ap_telefonnr" type="tel" />
-				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ap_email" type="email" verify-email />
-			</div>
-		</template>
-		<template #modalActions>
-			<!-- <svws-ui-button type="secondary" @click="$refs.modalEdit.closeModal"> Abbrechen </svws-ui-button> -->
-			<svws-ui-button type="primary" @click="modalEdit.closeModal"> Schließen </svws-ui-button>
-		</template>
-	</svws-ui-modal>
-
-	<svws-ui-modal ref="modalAdd" size="medium">
-		<template #modalTitle>Ansprechpartner Hinzufügen</template>
-		<template #modalContent>
-			<div class="input-wrapper">
-				<svws-ui-text-input placeholder="Name" v-model="ap_neu.name" type="text" />
-				<svws-ui-text-input placeholder="Vorname" v-model="ap_neu.vorname" type="text" />
-				<svws-ui-text-input placeholder="Anrede" v-model="ap_neu.anrede" type="text" />
-				<svws-ui-text-input placeholder="Titel" v-model="ap_neu.titel" type="text" />
-				<svws-ui-text-input placeholder="Abteilung" v-model="ap_neu.abteilung" type="text" />
-				<svws-ui-text-input placeholder="Telefon-Nr." v-model="ap_neu.telefon" type="tel" />
-				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ap_neu.email" type="email" verify-email />
-			</div>
-		</template>
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modalAdd.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="primary" @click="saveEntries()"> Speichern </svws-ui-button>
-		</template>
-	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
-	import { BetriebAnsprechpartner, LehrerListeEintrag, List, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
-	import { orte_filter, orte_sort, } from "~/helfer";
-	import { App } from "~/apps/BaseApp";
-	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
-	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
+	import { computed, WritableComputedRef } from "vue";
+	import { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { orte_filter, orte_sort } from "~/helfer";
 
 	const props = defineProps<{
-		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
-		betriebsStammdaten: DataBetriebsstammdaten;
-		orte: List<OrtKatalogEintrag>;
+		patchBetrieb: (data : Partial<BetriebStammdaten>, id : number) => Promise<void>;
+		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
+		patchAnsprechpartner: (data : Partial<BetriebAnsprechpartner>, id : number) => Promise<void>;
+		createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
+		betrieb: SchuelerBetriebsdaten;
+		betriebsStammdaten: BetriebStammdaten;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
+		mapOrte: Map<number, OrtKatalogEintrag>;
 	}>();
 
-	const modalEdit = ref();
-	const modalAdd = ref();
-
-	/** Kataloge */
-
-	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		if (props.listSchuelerbetriebe.ausgewaehlt === undefined)
-			return []
-		const id = props.listSchuelerbetriebe.ausgewaehlt.betrieb_id;
-		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
-	})
-
-	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return props.listSchuelerbetriebe.lehrer.liste;
-	});
-
-	/** Basisdaten */
-
 	const name : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.name1 ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ name1 : value })
+		get: () => props.betriebsStammdaten.name1 === null ? undefined : props.betriebsStammdaten.name1,
+		set: (value) => void props.patchBetrieb({ name1: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const namezusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.name2 ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ name2 : value })
+		get: () => props.betriebsStammdaten.name2 === null ? undefined : props.betriebsStammdaten.name2,
+		set: (value) => void props.patchBetrieb({ name2: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const telefon1 : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.telefon1 ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ telefon1 : value })
+		get: () => props.betriebsStammdaten.telefon1 === null ? undefined : props.betriebsStammdaten.telefon1,
+		set: (value) => void props.patchBetrieb({ telefon1: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const telefon2 : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.telefon2 ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ telefon2 : value })
+		get: () => props.betriebsStammdaten.telefon2 === null ? undefined : props.betriebsStammdaten.telefon2,
+		set: (value) => void props.patchBetrieb({ telefon2: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const fax : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.fax ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ fax : value })
+		get: () => props.betriebsStammdaten.fax === null ? undefined : props.betriebsStammdaten.fax,
+		set: (value) => void props.patchBetrieb({ fax: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const email : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.email ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ email : value })
+		get: () => props.betriebsStammdaten.email === null ? undefined : props.betriebsStammdaten.email,
+		set: (value) => void props.patchBetrieb({ email: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const branche : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.branche ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ branche : value })
+		get: () => props.betriebsStammdaten.branche === null ? undefined : props.betriebsStammdaten.branche,
+		set: (value) => void props.patchBetrieb({ branche: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
-		get: () => props.listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
-			: inputBetriebAnsprechpartner.value.find(l => l.id === props.listSchuelerbetriebe.ausgewaehlt?.ansprechpartner_id),
-		set: (value) => {
-			if (props.listSchuelerbetriebe.ausgewaehlt === undefined)
-				return;
-			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.ansprechpartner_id = value?.id ?? null;
-			if (data.id === null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
+		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
-		get: () => props.listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
-			: inputLehrerListe.value.find(l => l.id === props.listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
-		set: (value) => {
-			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if ((!data) || (!data.id) || (!value))
-				return;
-			data.betreuungslehrer_id = value?.id ?? null;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
+		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
 
 	/** Adresse */
 
 	const strassenname : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.strassenname ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ strassenname : value })
+		get: () => props.betriebsStammdaten.strassenname === null ? undefined : props.betriebsStammdaten.strassenname,
+		set: (value) => void props.patchBetrieb({ strassenname: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const hausnummerzusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.hausnrzusatz ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ hausnrzusatz : value })
+		get: () => props.betriebsStammdaten.hausnrzusatz === null ? undefined : props.betriebsStammdaten.hausnrzusatz,
+		set: (value) => void props.patchBetrieb({ hausnrzusatz: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => {
-			// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
-			if (props.betriebsStammdaten.daten?.ort_id) {
-				const id = props.betriebsStammdaten.daten?.ort_id;
-				let o;
-				for (const r of props.orte) {
-					if (r.id === id) {
-						o = r;
-						break;
-					}
-				}
-				return o;
-			}
-			return undefined;
-		},
-		set: (value) => void props.betriebsStammdaten.patch({ ort_id: value?.id })
+		get: () => props.betriebsStammdaten.ort_id === null ? undefined : props.mapOrte.get(props.betriebsStammdaten.ort_id),
+		set: (value) => void props.patchBetrieb({ ort_id: value === undefined ? null : value.id }, props.betriebsStammdaten.id)
 	});
 
 
-	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
-		get: () => {
-			if (props.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = props.listSchuelerbetriebe.ausgewaehlt;
-				return data.allgadranschreiben ?? undefined;
-			}
-			return undefined;
-		},
-		set: (value) => {
-			if (props.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-				data.allgadranschreiben = value ?? null;
-				if ((!data) || (!data.id))
-					return;
-				void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-			}
-			return;
-		}
+	const anschreiben: WritableComputedRef<boolean> = computed({
+		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 
 	const bemerkungen : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.bemerkungen ?? undefined,
-		set: (value) => void props.betriebsStammdaten.patch({ bemerkungen : value })
+		get: () => props.betriebsStammdaten.bemerkungen === null ? undefined : props.betriebsStammdaten.bemerkungen,
+		set: (value) => void props.patchBetrieb({ bemerkungen: value === undefined ? null : value }, props.betriebsStammdaten.id)
 	})
-
-	/**
-	 * Modal-Fenster-Edit-Anpsprechpartner
-	 */
-
-	const ap_name : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.name ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.name = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_vorname : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.vorname ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.vorname = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_anrede : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.anrede ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.anrede = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_telefonnr : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.telefon ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.telefon = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_email : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.email ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.email = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_abteilung : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.abteilung ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.abteilung = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-	const ap_titel : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.titel ?? undefined,
-		set: (value) => {
-			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.titel = value ?? null;
-			if ((!data) || (!data.id))
-				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
-		}
-	})
-
-
-	/** Modalfenster-Neu-Anpsrechpartner */
-
-	const ap_neu : BetriebAnsprechpartner = reactive(new BetriebAnsprechpartner())
-
-	async function saveEntries(){
-		const id = props.betriebsStammdaten.daten?.id ?? undefined;
-		if (id === undefined)
-			return;
-		ap_neu.betrieb_id = props.betriebsStammdaten.daten?.id || null;
-		await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
-		void props.listSchuelerbetriebe.betriebansprechpartner.update_list();
-		modalAdd.value.closeModal();
-	}
 
 </script>
 

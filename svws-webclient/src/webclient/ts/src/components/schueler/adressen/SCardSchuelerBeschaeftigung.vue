@@ -14,10 +14,11 @@
 										</th>
 									</tr>
 								</thead>
-
 								<tbody>
-									<tr v-for="(ds, id) in betriebe" :key="id" @click="select(ds)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
-										<s-card-schueler-beschaeftigung-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" :beschaeftigungsarten="beschaeftigungsarten" />
+									<tr v-for="betrieb in listSchuelerbetriebe" :key="betrieb.id" @click="select(betrieb)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
+										<s-card-schueler-beschaeftigung-tabelle :betrieb="betrieb" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
+											:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"
+											:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" />
 									</tr>
 								</tbody>
 							</table>
@@ -32,24 +33,24 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { KatalogEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
-	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
+	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
-		beschaeftigungsarten: List<KatalogEintrag>;
+		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
+		setSchuelerBetrieb: (betrieb : SchuelerBetriebsdaten | undefined) => Promise<void>;
+		listSchuelerbetriebe : List<SchuelerBetriebsdaten>;
+		mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+		mapBetriebe: Map<number, BetriebListeEintrag>;
+		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
 	const headerTags : ComputedRef<Array<string>> = computed(() => {
 		return [ "Betrieb", "Ausbilder","Beschäftigungsart", "Beginn", "Ende", "Praktikum"];
 	});
 
-	const betriebe : ComputedRef<SchuelerBetriebsdaten[] | undefined> = computed(() => {
-		return props.listSchuelerbetriebe.liste;
-	});
-
-	function select(ds : SchuelerBetriebsdaten){
-		props.listSchuelerbetriebe.ausgewaehlt = ds;
+	async function select(betrieb : SchuelerBetriebsdaten) {
+		await props.setSchuelerBetrieb(betrieb);
 	}
 
 </script>

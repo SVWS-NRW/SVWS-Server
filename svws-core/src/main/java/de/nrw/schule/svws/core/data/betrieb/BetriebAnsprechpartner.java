@@ -16,11 +16,11 @@ public class BetriebAnsprechpartner {
 	
     /** ID des Ansprechpartners */
 	@Schema(required = true, description = "die ID des Ansprechpartners", example="4711")
-	public Long id;
+	public long id;
 
     /** ID des Betriebs, dem der Ansprechpartner zugeordnet ist */
 	@Schema(required = true, description = "die ID des Betriebs, dem der Ansprechpartner zugeorndet ist", example="4712")
-	public Long betrieb_id;
+	public long betrieb_id;
 	
 	/** Name des Ansprechpartners im Betrieb */
 	@Schema(required = true, description = "Name des Ansprechpartners", example="Bergmann")

@@ -16,15 +16,15 @@ public class SchuelerBetriebsdaten {
 
     /** ID des Datensatzes */
 	@Schema(required = true, description = "die ID des Datensatzes", example="4711")
-	public Long id;
+	public long id;
 
     /** ID des Schülers */
 	@Schema(required = true, description = "die ID des Schülers", example="4713")
-	public Long schueler_id;
+	public long schueler_id;
 
 	/** AdressID des Betriebeeintrags beim Schüler */
 	@Schema(required = true, description = "AdressID des Betriebeeintrags beim Schüler", example="4")
-	public Long betrieb_id;
+	public long betrieb_id;
 
 	/** ID der Beschäftigungsart des Schülers */
 	@Schema(required = true, description = "die ID des Schülers", example="2")

@@ -339,7 +339,7 @@ public class APIBetrieb {
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) InputStream is, 
     		@Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
-    		return (new DataBetriebAnsprechpartner(conn)).create(betrieb_id,is);
+    		return (new DataBetriebAnsprechpartner(conn)).create(betrieb_id, is);
     	}
     }
     

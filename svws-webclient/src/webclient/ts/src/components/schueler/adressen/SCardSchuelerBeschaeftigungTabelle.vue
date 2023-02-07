@@ -1,12 +1,12 @@
 <template>
 	<td>
-		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="mapBetriebe.values()" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Ausbilder" v-model="ausbilder" type="text" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="beschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten.values()" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Vertragsbeginn" v-model="vertragsbeginn" type="date" />
@@ -17,180 +17,81 @@
 	<td>
 		<svws-ui-checkbox v-model="praktikum" />
 	</td>
-	<!--
 	<td>
-		<svws-ui-multi-select title="Betreuungslehrer" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i: LehrerListeEintrag) => i.nachname" />
+		<svws-ui-multi-select title="Betreuungslehrer" v-model="inputBetreuungslehrer" :items="mapLehrer.values()" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 	</td>
 	<td>
-		<svws-ui-multi-select v-if="inputBetriebAnsprechpartner.length > 0" title="Ansprechpartner" v-model="ansprechpartner"
-			:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name" />
-		<p v-else> Kein BetriebAnsprechpartner </p>
+		<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner.values()" :item-text="(i: BetriebAnsprechpartner) => i.name || ''" />
 	</td>
 	<td>
 		<svws-ui-checkbox v-model="anschreiben" />
 	</td>
-	-->
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
-	import { App } from "~/apps/BaseApp";
-	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
+	import { computed, WritableComputedRef } from "vue";
+	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
+		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
 		betrieb: SchuelerBetriebsdaten;
-		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
-		beschaeftigungsarten: List<KatalogEintrag>;
+		mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+		mapBetriebe: Map<number, BetriebListeEintrag>;
+		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
-	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return props.listSchuelerbetriebe.lehrer.liste || [];
-	});
-
-	const inputBetriebListe: ComputedRef<BetriebListeEintrag[]> = computed(() => {
-		return props.listSchuelerbetriebe.betriebe.liste || [];
-	})
-
-	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === props.betrieb.betrieb_id) || [];
-	})
-
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
-		get(): LehrerListeEintrag | undefined {
-			if (!inputLehrerListe.value)
-				return undefined;
-			return inputLehrerListe.value.find(l => l.id === props.betrieb.betreuungslehrer_id);
-		},
-		set(val: LehrerListeEintrag | undefined) {
-			const data = props.listSchuelerbetriebe.ausgewaehlt;
-			if (data?.id == null || val === undefined)
-				return;
-			data.betreuungslehrer_id = val.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
+		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
 	const ausbilder: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.betrieb.ausbilder ?? undefined;
-		},
-		set(val: string | undefined) {
-			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.ausbilder = val ?? null;
-			if (data?.id == null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
-	})
+		get: () => props.betrieb.ausbilder === null ? undefined : props.betrieb.ausbilder,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ ausbilder: value === undefined ? null : value }, props.betrieb.id)
+	});
 
 	const inputBetrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
-		get(): BetriebListeEintrag | undefined {
-			// TODO ISAK BÜYÜK  : Nach Betriebsauswahl sollte als Defaultanpsrechpartner der erste gezeigt werden.
-			if (!inputBetriebListe.value)
-				return undefined;
-			return inputBetriebListe.value.find(l => { return l.id === props.betrieb.betrieb_id });
-		},
-		set(val: BetriebListeEintrag | undefined) {
-			// Nach Auswahl des Betriebs werden die Ansprechpartner vom Server neugeladen.
-			void props.listSchuelerbetriebe.betriebansprechpartner.update_list();
-			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if (data?.id == null || val === undefined)
-				return;
-			data.betrieb_id = val.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
+		get: () => props.mapBetriebe.get(props.betrieb.betrieb_id),
+		set: (value) => {
+			if (value !== undefined)
+				void props.patchSchuelerBetriebsdaten({ betrieb_id: value.id }, props.betrieb.id);
 		}
 	});
 
 	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get(): KatalogEintrag | undefined {
-			const id = props.betrieb.beschaeftigungsart_id;
-			let o;
-			for (const r of props.beschaeftigungsarten) {
-				if (r.id === id) {
-					o = r;
-					break;
-				}
-			}
-			return o;
-		},
-		set(val: KatalogEintrag | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if (data?.id == null || val === undefined)
-				return;
-			data.beschaeftigungsart_id = val.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
-	})
+		get: () => (props.betrieb.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(props.betrieb.beschaeftigungsart_id),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ beschaeftigungsart_id: value === undefined ? null : value.id }, props.betrieb.id)
+	});
 
-	const praktikum: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			return props.betrieb.praktikum ?? undefined;
-		},
-		set(val: boolean | undefined) {
-			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.praktikum = val ?? null;
-			if (data?.id == null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
+	const praktikum: WritableComputedRef<boolean> = computed({
+		get: () => props.betrieb.praktikum === null ? false : props.betrieb.praktikum,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ praktikum: value }, props.betrieb.id)
 	});
 
 	const vertragsbeginn: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.betrieb.vertragsbeginn ?? undefined;
-		},
-		set(val: string | undefined) {
-			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-			data.vertragsbeginn = val ?? null;
-			if (data?.id == null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
-	})
+		get: () => props.betrieb.vertragsbeginn === null ? undefined : props.betrieb.vertragsbeginn,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ vertragsbeginn: value === undefined ? null : value }, props.betrieb.id)
+	});
 
 	const vertragsende: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.betrieb.vertragsende ?? undefined;
-		},
-		set(val: string | undefined) {
-			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-			if (val)
-				data.vertragsende = val;
-			if (data?.id == null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
-	})
+		get: () => props.betrieb.vertragsende === null ? undefined : props.betrieb.vertragsende,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ vertragsende: value === undefined ? null : value }, props.betrieb.id)
+	});
 
-	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			return props.betrieb.allgadranschreiben ?? undefined;
-		},
-		set(val: boolean | undefined) {
-			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-			data.allgadranschreiben = val ?? null;
-			if (data?.id == null)
-				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
-		}
+	const anschreiben: WritableComputedRef<boolean> = computed({
+		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
-		get(): BetriebAnsprechpartner | undefined {
-			if (!inputBetriebAnsprechpartner.value)
-				return;
-			return inputBetriebAnsprechpartner.value.find(l => (l.id === props.betrieb.ansprechpartner_id));
-		},
-		set(val: BetriebAnsprechpartner | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe?.ausgewaehlt;
-			if (data?.id == null || val === undefined)
-				return;
-			data.ansprechpartner_id = val.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
+		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
+		set: (value) => {
+			void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id);
 		}
 	});
+
 </script>
 
 <style scoped>
