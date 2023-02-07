@@ -4,7 +4,10 @@
 			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
 			:style="{ 'background-color': belegung === undefined ? bgColor : false }"
 			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended">
-			{{ get_kurs_name() }}
+			<div class="flex justify-between">
+				<span> {{ get_kurs_name() }} </span>
+				<svws-ui-icon v-if="!belegung"> <i-ri-forbid-2-line /> </svws-ui-icon>
+			</div>
 		</svws-ui-drag-data>
 	</tr>
 </template>
