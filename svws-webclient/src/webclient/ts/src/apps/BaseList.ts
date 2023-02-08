@@ -32,9 +32,6 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	/** Die zur App gehörenden Daten wie z.B. Stammdaten, Schulbesuchsdaten etc */
 	public daten: BaseData<unknown, ListenEintragTyp>[] = reactive([]);
 
-	/** Der Status der aktuellen Auswahl. Ein Array mit Promises der Daten bzw. deren Ladezustand */
-	private _pending: Promise<unknown | Array<unknown>>[] = [];
-
 	/** Array mit allen Listen, die bei Bedarf dann z.B. aktualisiert werden können bei Abschnittsauswahl */
 	static all: BaseList<unknown, unknown>[] = [];
 
@@ -66,24 +63,6 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	 */
 	public async on_select(): Promise<void> {
 		return
-	}
-
-	/**
-	 * Liste aller Daten-Instanzen, die bei einem Select aktualisiert werden sollen
-	 *
-	 * @param {BaseData<unknown, ListenEintragTyp> | BaseData<unknown, ListenEintragTyp>[]} daten Dateninstanzen entweder
-	 *   alleine oder als Array
-	 */
-	public add_data(
-		daten:
-			| BaseData<unknown, ListenEintragTyp>
-			| BaseData<unknown, ListenEintragTyp>[]
-	): void {
-		if (Array.isArray(daten)) {
-			this.daten = this.daten.concat(daten);
-		} else {
-			this.daten.push(daten);
-		}
 	}
 
 	/**
@@ -161,16 +140,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		} catch (e) {
 			return;
 		}
-		this._state.pending = true;
 		this._state.ausgewaehlt = eintrag;
-		this._pending = [];
-		if (eintrag)
-			this._pending.concat(this.daten.map(d => { return d.select(eintrag); }));
-		else
-			this._pending.concat(this.daten.map(d => d.unselect()));
-		Promise.allSettled(this._pending).then(()=> this.on_select())
-			.then(() => this._state.pending = false)
-			.catch(error => { throw error });
 	}
 
 	/** Getter für den Schnellfilter */

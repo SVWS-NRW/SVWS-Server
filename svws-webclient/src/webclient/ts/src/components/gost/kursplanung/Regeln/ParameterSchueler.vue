@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="listSchueler"
+	<svws-ui-multi-select v-model="selected" :items="mapSchueler.values()"
 		:item-text="(i: SchuelerListeEintrag) => `${i.nachname}, ${i.vorname}`"
 		:item-filter="filter" :item-sort="sort" autocomplete />
 </template>
@@ -10,7 +10,7 @@
 
 	const props = defineProps<{
 		modelValue: SchuelerListeEintrag;
-		listSchueler: SchuelerListeEintrag[];
+		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 
 	const emit = defineEmits(['update:modelValue'])

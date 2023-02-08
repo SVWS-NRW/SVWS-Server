@@ -180,7 +180,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { lehrer_filter } from "~/helfer";
-	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
+	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		kurs: GostBlockungKurs
@@ -189,6 +189,7 @@
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		allow_regeln: boolean;
 	}>();
 
@@ -307,9 +308,10 @@
 
 	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(() => manager.value?.getKursE(props.kurs.id));
 
-	const selected_kurs: ComputedRef<boolean> = computed(() =>
-		(kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === routeGostKursplanungSchueler.data.listSchueler.filter.kurs?.id)
-	);
+	const selected_kurs: ComputedRef<boolean> = computed(() => {
+		const filter_kurs_id = props.schuelerFilter?.kurs?.value?.id;
+		return (kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === filter_kurs_id)
+	});
 
 	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
 		const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
@@ -478,13 +480,12 @@
 	}
 
 	function toggle_active_kurs() {
-		const filterValue = routeGostKursplanungSchueler.data.listSchueler.filter;
-		if (filterValue.kurs !== props.kurs) {
-			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
-			filterValue.kurs = props.kurs;
-		} else
-			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
-		routeGostKursplanungSchueler.data.listSchueler.filter = filterValue;
+		if (props.schuelerFilter === undefined)
+			return;
+		if (props.schuelerFilter.kurs.value?.id !== props.kurs.id)
+			props.schuelerFilter.kurs.value = props.kurs;
+		else
+			props.schuelerFilter.reset();
 	}
 
 	function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {

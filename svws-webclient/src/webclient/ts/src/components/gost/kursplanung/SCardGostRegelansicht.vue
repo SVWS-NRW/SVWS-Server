@@ -20,10 +20,10 @@
 			<Blockungsregel_8 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_4 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :list-schueler="listSchueler.liste" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_4 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :list-schueler="listSchueler.liste" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
 			<Blockungsregel_9 v-model="regel" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
@@ -33,16 +33,15 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from 'vue';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
-	import { ListAbiturjahrgangSchueler } from '~/apps/gost/ListAbiturjahrgangSchueler';
 
 	const props = defineProps<{
 		dataFaecher: DataGostFaecher;
 		blockung: DataGostKursblockung;
-		listSchueler: ListAbiturjahrgangSchueler;
+		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 
 	const mapFaecher: ComputedRef<Map<number, GostFach>> = computed(() => {

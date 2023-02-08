@@ -5,7 +5,7 @@
 			{{ name(r.parameter.get(0)) }} in {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} verboten
 		</template>
 		Verbiete
-		<parameter-schueler v-model="schueler" :list-schueler="listSchueler" />
+		<parameter-schueler v-model="schueler" :map-schueler="mapSchueler" />
 		in
 		<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" />
 	</BlockungsregelBase>
@@ -20,7 +20,7 @@
 		modelValue: GostBlockungRegel | undefined;
 		mapFaecher: Map<number, GostFach>;
 		kurse: GostBlockungKurs[];
-		listSchueler: SchuelerListeEintrag[];
+		mapSchueler: Map<number, SchuelerListeEintrag>;
 		regeln: GostBlockungRegel[];
 	}>();
 
@@ -36,17 +36,17 @@
 	});
 	const regel_typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS
 
-	const schueler = useRegelParameterSchueler(props.listSchueler, regel, 0)
+	const schueler = useRegelParameterSchueler(props.mapSchueler, regel, 0)
 	const kurs = useRegelParameterKurs(props.kurse, regel, 1)
 
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
-		r.parameter.add(props.listSchueler[0].id);
+		r.parameter.add(props.mapSchueler.values().next().value.id);
 		r.parameter.add(props.kurse[0].id);
 		regel.value = r;
 	}
 
 	const name = (id: number) => {
-		const schueler = props.listSchueler.find(s => s.id === id);
+		const schueler = props.mapSchueler.get(id);
 		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 	}
 

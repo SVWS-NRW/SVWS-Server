@@ -42,9 +42,16 @@ export function useRegelParameterSchiene(schienen: GostBlockungSchiene[], regel:
 	})
 }
 
-export function useRegelParameterSchueler (schueler: SchuelerListeEintrag[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<SchuelerListeEintrag> {
+export function useRegelParameterSchueler (mapSchueler: Map<number, SchuelerListeEintrag>, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<SchuelerListeEintrag> {
 	return computed({
-		get: () => schueler.find(s => s.id === regel.value?.parameter.get(parameter)) || new SchuelerListeEintrag(),
-		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
+		get: () => {
+			if (regel.value === undefined)
+				return new SchuelerListeEintrag();
+			return mapSchueler.get(regel.value.parameter.get(parameter)) || new SchuelerListeEintrag();
+		},
+		set: (value) => {
+			if (regel.value)
+				regel.value.parameter.set(parameter, value.id)
+		}
 	})
 }

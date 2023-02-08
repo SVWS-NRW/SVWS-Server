@@ -14,7 +14,7 @@
 	</template>
 	<template v-else>
 		<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
-			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" />
+			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" :schueler-filter="schuelerFilter" />
 	</template>
 </template>
 
@@ -28,8 +28,10 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
+	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		fach: GostStatistikFachwahl;
 		kursart: GostKursart;
 		dataFaecher: DataGostFaecher;

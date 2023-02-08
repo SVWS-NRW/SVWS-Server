@@ -1,5 +1,5 @@
 <template>
-	<tr v-if="visible" class="cursor-pointer" :class="{ 'bg-red-400': (belegung === undefined) }">
+	<tr class="cursor-pointer" :class="{ 'bg-red-400': (belegung === undefined) }">
 		<svws-ui-drag-data :key="kursid" tag="td" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
 			:style="{ 'background-color': belegung === undefined ? bgColor : false }"
@@ -85,7 +85,5 @@
 	function drag_ended() {
 		drag_data.value = undefined;
 	}
-
-	const visible: ComputedRef<boolean> = computed( () => true);
 
 </script>

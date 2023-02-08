@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
-import { GostHalbjahr, GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams,  RouteParamValue,  useRouter } from "vue-router";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { routeGostKursplanungHalbjahr } from "./kursplanung/RouteGostKursplanungHalbjahr";

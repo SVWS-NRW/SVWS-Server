@@ -27,7 +27,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr_ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanungBlockung());
 		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";
 		super.children = [
 			routeGostKursplanungSchueler
@@ -131,8 +131,20 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...routeGostKursplanungHalbjahr.getProps(to),
+			ergebnis: this.data.dataKursblockungsergebnis,
+			listLehrer: this.data.listLehrer,
+			mapLehrer: this.data.mapLehrer,
+			fachwahlen: this.data.fachwahlen
+		}
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value,
+			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
 			...routeGostKursplanungHalbjahr.getProps(to),
 			ergebnis: this.data.dataKursblockungsergebnis,
 			listLehrer: this.data.listLehrer,
@@ -147,7 +159,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			get: () => this.data.ergebnis.value,
 			set: (value) => {
 				if ((value?.id !== this.data.ergebnis.value?.id) && (!RouteManager.isActive())) {
-					const idSchueler = routeGostKursplanungSchueler.data.listSchueler.ausgewaehlt?.id;
+					const idSchueler = routeGostKursplanungSchueler.data.schueler.value?.id;
 					if (idSchueler === undefined)
 						void router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id));
 					else

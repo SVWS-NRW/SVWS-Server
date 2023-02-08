@@ -50,13 +50,13 @@
 	import { GostBlockungsergebnisManager, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { ComputedRef, computed } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
+	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		schueler: SchuelerListeEintrag;
+		schuelerFilter: GostKursplanungSchuelerFilter;
 		selected: boolean;
 		blockung: DataGostKursblockung;
-		listSchueler: ListAbiturjahrgangSchueler;
 	}>();
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
@@ -64,7 +64,7 @@
 	const kollision: ComputedRef<boolean> = computed(()=> {
 		if (manager.value === undefined)
 			return false;
-		const kursid = props.listSchueler.filter.kurs?.id;
+		const kursid = props.schuelerFilter.kurs.value?.id;
 		if (kursid === undefined)
 			return manager.value.getOfSchuelerHatKollision(props.schueler.id);
 		return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(props.schueler.id);

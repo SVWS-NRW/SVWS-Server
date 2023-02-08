@@ -1,11 +1,5 @@
 <template>
-	<component :is="tag"
-		:draggable="draggable"
-		@drag="drag"
-		@dragstart="start"
-		@dragenter="enter"
-		@dragleave="leave"
-		@dragend="end">
+	<component :is="tag" :draggable="draggable" @drag="drag" @dragstart="start" @dragenter="enter" @dragleave="leave" @dragend="end">
 		<slot :dragging="dragging" />
 	</component>
 </template>
@@ -13,19 +7,22 @@
 <script setup lang="ts">
 	import { ref } from "vue";
 
-	const props = defineProps({
-		tag: { type: String, default: "div" },
-		draggable: { type: Boolean, default: true },
-		data: { type: Object, required: true }
+	const props = withDefaults(defineProps<{
+		tag?: string;
+		draggable?: boolean;
+		data: Object;
+	}>(), {
+		tag: 'div',
+		draggable: true,
 	});
 
-	const emits = defineEmits([
-		"dragStart",
-		"dragDrag",
-		"dragEnter",
-		"dragLeave",
-		"dragEnd"
-	]);
+	const emit = defineEmits<{
+		(e: 'dragStart', data: DragEvent): void;
+		(e: 'dragDrag', data: DragEvent): void;
+		(e: 'dragEnter', data: DragEvent): void;
+		(e: 'dragLeave', data: DragEvent): void;
+		(e: 'dragEnd', data: DragEvent): void;
+	}>()
 
 	const dragging = ref(false);
 
@@ -36,31 +33,36 @@
 		dragging.value = true;
 		transfer.clearData();
 		transfer.setData('text/plain', JSON.stringify(props.data));
-		emits("dragStart", e);
+		emit("dragStart", e);
 	}
 
 	function drag(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		if (!transfer) return;
-		emits("dragDrag", e);
+		if (!transfer)
+			return;
+		emit("dragDrag", e);
 	}
 
 	function enter(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		if (!transfer) return;
-		emits("dragEnter", e);
+		if (!transfer)
+			return;
+		emit("dragEnter", e);
 	}
 
 	function leave(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		if (!transfer) return;
-		emits("dragLeave", e);
+		if (!transfer)
+			return;
+		emit("dragLeave", e);
 	}
 
 	function end(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		if (!transfer) return;
-		dragging.value = false
-		emits("dragEnd", e);
+		if (!transfer)
+			return;
+		dragging.value = false;
+		emit("dragEnd", e);
 	}
+
 </script>

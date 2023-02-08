@@ -76,7 +76,7 @@
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter" />
 							</template>
 						</template>
 					</template>
@@ -84,7 +84,7 @@
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
 								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter" />
 							</template>
 						</template>
 					</template>
@@ -132,8 +132,10 @@
 	import { router } from "~/router";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
+	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
 		halbjahr: GostHalbjahr;

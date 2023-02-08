@@ -1,17 +1,38 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostHalbjahr, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
+import { GostHalbjahr, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { RouteGostKursplanungBlockung, routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
-import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
-import { DataSchuelerLaufbahndaten } from "~/apps/gost/DataSchuelerLaufbahnplanung";
-import { computed, WritableComputedRef } from "vue";
+import { Ref, ref, ShallowRef, shallowRef } from "vue";
+import { RouteManager } from "~/router/RouteManager";
+import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
+import { App } from "~/apps/BaseApp";
+import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 
 export class RouteDataGostKursplanungSchueler {
-	listSchueler: ListAbiturjahrgangSchueler = new ListAbiturjahrgangSchueler();
-	dataSchueler: DataSchuelerLaufbahndaten = new DataSchuelerLaufbahndaten();
+
+	idErgebnis: number | undefined = undefined;
+	schueler: ShallowRef<SchuelerListeEintrag | undefined> = shallowRef(undefined);
+	mapSchueler: Ref<Map<number, SchuelerListeEintrag>> = ref(new Map());
+	schuelerFilter: ShallowRef<GostKursplanungSchuelerFilter | undefined> = shallowRef(undefined);
+
+	setSchueler = async (schueler: SchuelerListeEintrag) => {
+		if (schueler.id !== this.schueler.value?.id)
+			void RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
+				routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnis.value?.id, schueler.id));
+	}
+
+	gotoSchueler = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerIndividualdaten.getRoute(idSchueler));
+	}
+
+	gotoLaufbahnplanung = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+	}
+
 }
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
@@ -22,7 +43,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr_ergebnis_schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht, new RouteDataGostKursplanungSchueler());
 		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
@@ -59,10 +80,12 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idBlockung === undefined) || (idErgebnis === undefined))
 			throw new Error("Fehler: Abiturjahr, Halbjahr und ID der Blockung und des Ergebnisses müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		// notwendig, damit der Filter für die Schülerliste genutzt werden kann
-		this.data.listSchueler.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 		// Lade die Schülerliste
-		await this.data.listSchueler.update_list(abiturjahr);
+		const listSchueler = await App.api.getGostAbiturjahrgangSchueler(App.schema, abiturjahr);
+		const mapSchueler = new Map<number, SchuelerListeEintrag>();
+		for (const s of listSchueler)
+			mapSchueler.set(s.id, s);
+		this.data.mapSchueler.value = mapSchueler;
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -84,26 +107,25 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		const idSchueler = to_params.idschueler === undefined ? undefined : parseInt(to_params.idschueler);
 		// ... wurde die ID des Schülers auf undefined setzt, so prüfe, ob die Schülerliste leer ist und wähle ggf. das erste Element aus
 		if (idSchueler === undefined) {
-			if (this.data.listSchueler.liste.length > 0) {
-				const schueler = this.data.listSchueler.liste.at(0);
+			if (this.data.mapSchueler.value.size > 0) {
+				const schueler = this.data.mapSchueler.value.values().next().value;
 				return this.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis, schueler?.id);
 			}
-			if (this.data.dataSchueler.daten !== undefined)
-				await this.data.dataSchueler.unselect();
 			return;
 		}
-		// ... wurde die ID des Schülers verändert, so lade die Laufbahn-Daten des Schülers aus der Datenbank
-		if (this.data.listSchueler.ausgewaehlt?.id !== idSchueler) {
+		// ... wurde das Blockungsergebnis verändert, so muss der Schüler-Filter neu initialisier werden
+		if (this.data.idErgebnis !== idErgebnis) {
+			this.data.schuelerFilter.value = new GostKursplanungSchuelerFilter(routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
+				routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager, routeGost.data.dataFaecher.daten || new Vector(), this.data.mapSchueler.value);
+			this.data.idErgebnis = idErgebnis;
+		}
+		// ... wurde die ID des Schülers verändert, merke diesen Schüler
+		if (this.data.schueler.value?.id !== idSchueler) {
 			// Setze den neu ausgewählten Schüler-Eintrag
-			const schuelerEintrag = this.data.listSchueler.liste.find(s => s.id === idSchueler);
+			const schuelerEintrag = this.data.mapSchueler.value.get(idSchueler);
 			if (schuelerEintrag === undefined)
 				throw new Error("Programmierfehler: Ein Eintrag für die Schüler-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
-			this.data.listSchueler.ausgewaehlt = schuelerEintrag;
-			// Lade die neuen Laufbahndaten
-			await this.data.dataSchueler.select(schuelerEintrag);
-			const schueler = this.data.dataSchueler.daten;
-			if (schueler === undefined)
-				throw new Error("Fehler beim Laden der Schüler-Laufbahndaten für die Schüler-ID als Parameter der Route.");
+			this.data.schueler.value = schuelerEintrag;
 		}
 	}
 
@@ -115,24 +137,23 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			setSchueler: this.data.setSchueler,
 			...routeGostKursplanungBlockung.getProps(to),
-			listSchueler: this.data.listSchueler,
-			dataSchueler: this.data.dataSchueler,
+			mapSchueler: this.data.mapSchueler.value,
+			schueler: this.data.schueler.value,
+			schuelerFilter: this.data.schuelerFilter.value!
 		}
 	}
 
-	public getSelector() : WritableComputedRef<SchuelerListeEintrag | undefined> {
-		const router = useRouter();
-		return computed({
-			get: () => this.data.listSchueler.ausgewaehlt,
-			set: (value) => {
-				if (this.data.listSchueler.ausgewaehlt !== value)
-					void router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
-						routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnis.value?.id, value?.id));
-			}
-		});
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			gotoSchueler: this.data.gotoSchueler,
+			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
+			...routeGostKursplanungBlockung.getProps(to),
+			schueler: this.data.schueler.value,
+		}
 	}
 
 }
