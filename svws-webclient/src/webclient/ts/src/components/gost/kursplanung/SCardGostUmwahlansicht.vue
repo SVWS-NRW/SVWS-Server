@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-content-card class="mt-4">
-		<template #title v-if="schueler">
+	<svws-ui-content-card v-if="schueler" class="mt-4">
+		<template #title>
 			<div class="content-card--header content-card--header--has-actions flex justify-between">
 				<h3 class="content-card--headline">
 					<span>Kurszuordnungen für</span>
@@ -18,7 +18,7 @@
 			</div>
 		</template>
 		<div class="flex gap-4">
-			<svws-ui-drop-data v-if="schueler" v-slot="{ active }" class="w-1/6" @drop="drop_entferne_kurszuordnung">
+			<svws-ui-drop-data v-slot="{ active }" class="w-1/6" @drop="drop_entferne_kurszuordnung">
 				<div :class="{ 'border-2 border-dashed border-red-700': active }">
 					<div class="">
 						<table class="v-table--complex table-fixed">
@@ -36,7 +36,7 @@
 					</div>
 				</div>
 			</svws-ui-drop-data>
-			<div v-if="schueler" class="flex-grow">
+			<div class="flex-grow">
 				<div class="v-table--container">
 					<table class="v-table--complex">
 						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"

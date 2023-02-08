@@ -1,9 +1,9 @@
 <template>
 	<tr class="cursor-pointer" :class="{ 'bg-red-400': (belegung === undefined) }">
 		<svws-ui-drag-data :key="kursid" tag="td" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
+			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
 			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
-			:style="{ 'background-color': belegung === undefined ? bgColor : false }"
-			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended">
+			:style="style">
 			<div class="flex justify-between">
 				<span> {{ get_kurs_name() }} </span>
 				<svws-ui-icon v-if="!belegung"> <i-ri-forbid-2-line /> </svws-ui-icon>
@@ -47,12 +47,18 @@
 	const gostfach: ComputedRef<GostFach | undefined> = computed(() => manager.value?.getFach(props.fach.fachID));
 
 	const bgColor: ComputedRef<string> = computed(() => {
-		if (belegung.value)
+		if (belegung.value !== undefined)
 			return "gray"
 		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
 		if (!zulfach)
 			return "#ffffff";
 		return zulfach.getHMTLFarbeRGB();
+	});
+
+	const style: ComputedRef = computed(() => {
+		if (belegung.value !== undefined)
+			return {};
+		return { 'background-color': bgColor };
 	});
 
 	const drag_data: WritableComputedRef<{ id: number, fachID: number, kursart: number } | undefined> = computed({

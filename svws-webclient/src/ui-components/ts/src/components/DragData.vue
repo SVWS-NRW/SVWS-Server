@@ -28,7 +28,8 @@
 
 	function start(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		if (!transfer) return;
+		if (!transfer)
+			return;
 		transfer.dropEffect = "move";
 		dragging.value = true;
 		transfer.clearData();
