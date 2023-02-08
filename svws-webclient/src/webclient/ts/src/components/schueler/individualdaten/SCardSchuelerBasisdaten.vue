@@ -2,14 +2,20 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input placeholder="Nachname" v-model="nachname" type="text" />
-				<svws-ui-text-input placeholder="Zusatz" v-model="zusatzNachname" type="text" />
-				<svws-ui-text-input placeholder="Rufname" v-model="vorname" type="text" />
-				<svws-ui-text-input placeholder="Alle Vornamen" v-model="alleVornamen" type="text" />
+				<svws-ui-text-input placeholder="Nachname" :model-value="data.nachname ?? undefined"
+					@update:model-value="doPatch({ nachname: String($event) })" type="text" />
+				<svws-ui-text-input placeholder="Zusatz" type="text" />
+				<svws-ui-text-input placeholder="Rufname" :model-value="data.vorname ?? undefined"
+					@update:model-value="doPatch({ vorname: String($event) })" type="text" />
+				<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data.alleVornamen ?? undefined"
+					@update:model-value="doPatch({ alleVornamen: String($event) })" type="text" />
 				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics />
-				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required statistics />
-				<svws-ui-text-input placeholder="Geburtsort" v-model="inputGeburtsort" type="text" statistics />
-				<svws-ui-text-input placeholder="Geburtsname" v-model="inputGeburtsname" type="text" />
+				<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data.geburtsdatum ?? undefined"
+					@update:model-value="doPatch({ geburtsdatum: String($event) })" type="date" required statistics />
+				<svws-ui-text-input placeholder="Geburtsort" :model-value="data.geburtsort ?? undefined"
+					@update:model-value="doPatch({ geburtsort: String($event) })" type="text" statistics />
+				<svws-ui-text-input placeholder="Geburtsname" :model-value="data.geburtsname ?? undefined"
+					@update:model-value="doPatch({ geburtsname: String($event) })" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -17,33 +23,24 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-
+	import { computed, WritableComputedRef } from "vue";
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { UseSchuelerStammdaten } from "../composables"
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{
+		data: SchuelerStammdaten;
+	}>();
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerStammdaten>): void;
+	}>()
 
-	const use = new UseSchuelerStammdaten(props.stammdaten)
+	function doPatch(data: Partial<SchuelerStammdaten>) {
+		emit('patch', data);
+	}
 
-	const { vorname, alleVornamen, nachname, zusatzNachname, geschlecht } = use;
-
-	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsdatum ?? undefined,
-		set: (value) => void props.stammdaten.patch({ geburtsdatum: value })
-	});
-
-	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsort ?? undefined,
-		set: (value) => void props.stammdaten.patch({ geburtsort: value })
-	});
-
-	const inputGeburtsname: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsname ?? undefined,
-		set: (value) => void props.stammdaten.patch({ geburtsname: value })
+	const geschlecht: WritableComputedRef<Geschlecht> = computed({
+		get: () => Geschlecht.fromValue(props.data.geschlecht) ?? Geschlecht.X,
+		set: (value) => doPatch({ geschlecht: value.id })
 	});
 
 </script>

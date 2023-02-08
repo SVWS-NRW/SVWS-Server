@@ -1,35 +1,31 @@
 <template>
-	<div v-if="visible" class="app-container">
-		<s-card-schueler-basisdaten :stammdaten="stammdaten" />
-		<s-card-schueler-kontaktdaten :stammdaten="stammdaten" :orte="orte" :ortsteile="ortsteile" />
-		<s-card-schueler-staat-religion :stammdaten="stammdaten" :religionen="religionen" />
-		<s-card-schueler-migrationshintergrund :stammdaten="stammdaten" />
-		<s-card-schueler-foerderbedarf :stammdaten="stammdaten" :foerderschwerpunkte="foerderschwerpunkte" />
-		<s-card-schueler-statusdaten :stammdaten="stammdaten" :fachschuelerarten="fachschuelerarten" :haltestellen="haltestellen" />
-		<s-card-schueler-bemerkungen :stammdaten="stammdaten" />
+	<div class="app-container">
+		<s-card-schueler-basisdaten :data="data" @patch="doPatch" />
+		<s-card-schueler-kontaktdaten :data="data" @patch="doPatch" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
+		<s-card-schueler-staat-religion :data="data" @patch="doPatch" :map-religionen="mapReligionen" />
+		<s-card-schueler-migrationshintergrund :data="data" @patch="doPatch" />
+		<s-card-schueler-foerderbedarf :data="data" @patch="doPatch" :map-foerderschwerpunkte="mapFoerderschwerpunkte" />
+		<s-card-schueler-statusdaten :data="data" @patch="doPatch" :map-fahrschuelerarten="mapFahrschuelerarten" :map-haltestellen="mapHaltestellen" />
+		<s-card-schueler-bemerkungen :data="data" @patch="doPatch" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { KatalogEintrag, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
-	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
-	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { FoerderschwerpunktEintrag, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { computed } from "vue";
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
-		stammdaten: DataSchuelerStammdaten;
-		orte: List<OrtKatalogEintrag>;
-		ortsteile: List<OrtsteilKatalogEintrag>;
-		fachschuelerarten: DataKatalogFahrschuelerarten;
-		foerderschwerpunkte: DataKatalogFoerderschwerpunkte;
-		haltestellen: List<KatalogEintrag>
-		religionen: List<ReligionEintrag>;
+		patch: (data : Partial<SchuelerStammdaten>) => Promise<void>;
+		data: SchuelerStammdaten;
+		mapOrte: Map<number, OrtKatalogEintrag>;
+		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+		mapFahrschuelerarten: Map<number, KatalogEintrag>;
+		mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
+		mapHaltestellen: Map<number, KatalogEintrag>
+		mapReligionen: Map<number, ReligionEintrag>;
 	}>();
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return props.stammdaten.daten?.id !== undefined;
-	});
+	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

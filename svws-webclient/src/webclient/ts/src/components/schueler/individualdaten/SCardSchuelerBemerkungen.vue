@@ -2,7 +2,8 @@
 	<svws-ui-content-card class="lg:col-span-2 4xl:col-span-3 mt-auto pt-8">
 		<div class="input-wrapper">
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Bemerkungen" v-model="inputBemerkungen" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data.bemerkungen ?? undefined"
+					@update:model-value="doPatch({ bemerkungen: String($event) })" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -11,16 +12,17 @@
 <script setup lang="ts">
 
 	import { SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{
+		data: SchuelerStammdaten;
+	}>();
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerStammdaten>): void;
+	}>()
 
-	const inputBemerkungen: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.bemerkungen ?? undefined,
-		set: (value) => void props.stammdaten.patch({ bemerkungen: value })
-	});
+	function doPatch(data: Partial<SchuelerStammdaten>) {
+		emit('patch', data);
+	}
 
 </script>

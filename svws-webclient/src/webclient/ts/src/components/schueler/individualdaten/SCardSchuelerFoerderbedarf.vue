@@ -1,48 +1,40 @@
 <template>
 	<svws-ui-content-card title="Sonderpädagogische Förderung">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Haupt-Förderschwerpunkt" v-model="inputFoerderschwerpunktID" :items="inputKatalogFoerderschwerpunkte" />
-			<svws-ui-multi-select title="Weiterer-Förderschwerpunkt" v-model="inputFoerderschwerpunkt2ID" :items="inputKatalogFoerderschwerpunkte" />
-			<svws-ui-checkbox v-model="inputIstAOSF">AOSF</svws-ui-checkbox>
-			<svws-ui-checkbox v-model="inputIstLernenZieldifferent">Zieldifferntes Lernen</svws-ui-checkbox>
+			<svws-ui-multi-select title="Haupt-Förderschwerpunkt" v-model="inputFoerderschwerpunktID" :items="mapFoerderschwerpunkte.values()" />
+			<svws-ui-multi-select title="Weiterer-Förderschwerpunkt" v-model="inputFoerderschwerpunkt2ID" :items="mapFoerderschwerpunkte.values()" />
+			<svws-ui-checkbox :model-value="data.istAOSF ?? undefined" @update:model-value="doPatch({ istAOSF: Boolean($event) })">AOSF</svws-ui-checkbox>
+			<svws-ui-checkbox :model-value="data.istLernenZieldifferent ?? undefined" @update:model-value="doPatch({ istLernenZieldifferent: Boolean($event) })">Zieldifferntes Lernen</svws-ui-checkbox>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, WritableComputedRef } from "vue";
 	import { FoerderschwerpunktEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 
 	const props = defineProps<{
-		stammdaten: DataSchuelerStammdaten,
-		foerderschwerpunkte: DataKatalogFoerderschwerpunkte
+		data: SchuelerStammdaten;
+		mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
 	}>();
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerStammdaten>): void;
+	}>()
 
-	const inputKatalogFoerderschwerpunkte: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => props.foerderschwerpunkte.daten?.toArray() as FoerderschwerpunktEintrag[] || []);
+	function doPatch(data: Partial<SchuelerStammdaten>) {
+		emit('patch', data);
+	}
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
-		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunktID),
-		set: (value) => void props.stammdaten.patch({ foerderschwerpunktID: value?.id })
+		get: () => props.data.foerderschwerpunktID === null ? undefined : props.mapFoerderschwerpunkte.get(props.data.foerderschwerpunktID),
+		set: (value) => doPatch({ foerderschwerpunktID: value === undefined ? null : value.id })
 	});
 
 	const inputFoerderschwerpunkt2ID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
-		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunkt2ID),
-		set: (value) => void props.stammdaten.patch({ foerderschwerpunkt2ID: value?.id })
-	});
-
-	const inputIstAOSF: WritableComputedRef<boolean | undefined> = computed({
-		get: () => !!daten.value.istAOSF,
-		set: (value) => void props.stammdaten.patch({ istAOSF: value })
-	});
-
-	const inputIstLernenZieldifferent: WritableComputedRef<boolean | undefined> = computed({
-		get: () => !!daten.value.istLernenZieldifferent,
-		set: (value) => void props.stammdaten.patch({ istLernenZieldifferent: value })
+		get: () => props.data.foerderschwerpunkt2ID === null ? undefined : props.mapFoerderschwerpunkte.get(props.data.foerderschwerpunkt2ID),
+		set: (value) => doPatch({ foerderschwerpunkt2ID: value === undefined ? null : value.id })
 	});
 
 </script>

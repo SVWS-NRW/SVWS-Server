@@ -3,8 +3,8 @@
 		<div class="input-wrapper">
 			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
-			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="inputKatalogFahrschuelerarten" />
-			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="haltestellen" />
+			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten.values()" />
+			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen.values()" />
 			<svws-ui-text-input placeholder="Anmeldedatum" v-model="inputAnmeldedatum" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" />
 			<svws-ui-checkbox v-model="inputIstVolljaehrig"> Volljährig </svws-ui-checkbox>
@@ -19,86 +19,81 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, WritableComputedRef } from "vue";
+	import { KatalogEintrag, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		stammdaten: DataSchuelerStammdaten;
-		fachschuelerarten: DataKatalogFahrschuelerarten;
-		haltestellen: List<KatalogEintrag>
+		data: SchuelerStammdaten;
+		mapFahrschuelerarten: Map<number, KatalogEintrag>;
+		mapHaltestellen: Map<number, KatalogEintrag>
 	}>();
 
-	const main: Main = injectMainApp();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerStammdaten>): void;
+	}>()
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+	function doPatch(data: Partial<SchuelerStammdaten>) {
+		emit('patch', data);
+	}
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-		get: () => (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined),
-		set: (value) => void props.stammdaten.patch({ status: value?.bezeichnung })
+		get: () => (SchuelerStatus.fromBezeichnung(props.data.status) || undefined),
+		set: (value) => doPatch({ status: value?.bezeichnung })
 	});
 
-	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() => props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || []);
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => inputKatalogFahrschuelerarten.value.find(n => n.id === daten.value.fahrschuelerArtID),
-		set: (value) => void props.stammdaten.patch({ fahrschuelerArtID: value?.id })
+		get: () => props.data.fahrschuelerArtID === null ? undefined : props.mapFahrschuelerarten.get(props.data.fahrschuelerArtID),
+		set: (value) => doPatch({ fahrschuelerArtID: value === undefined ? null : value.id })
 	});
 
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => {
-			for (const haltestelle of props.haltestellen)
-				if (haltestelle.id === daten.value.haltestelleID)
-					return haltestelle;
-			return undefined;
-		},
-		set: (value) => void props.stammdaten.patch({ haltestelleID: value?.id })
+		get: () => props.data.haltestelleID === null ? undefined : props.mapHaltestellen.get(props.data.haltestelleID),
+		set: (value) => doPatch({ haltestelleID: value === undefined ? null : value.id })
 	});
 
 	const inputAnmeldedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.anmeldedatum ?? undefined,
-		set: (value) => void props.stammdaten.patch({ anmeldedatum: value })
+		get: () => props.data.anmeldedatum ?? undefined,
+		set: (value) => doPatch({ anmeldedatum: value })
 	});
 
 	const inputAufnahmedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.aufnahmedatum ?? undefined,
-		set: (value) => void props.stammdaten.patch({ aufnahmedatum: value })
+		get: () => props.data.aufnahmedatum ?? undefined,
+		set: (value) => doPatch({ aufnahmedatum: value })
 	});
 
 	const inputIstDuplikat: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istDuplikat,
-		set: (value) => void props.stammdaten.patch({ istDuplikat: value })
+		get: () => props.data.istDuplikat,
+		set: (value) => doPatch({ istDuplikat: value })
 	});
 
 	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istSchulpflichtErfuellt === null ? false : daten.value.istSchulpflichtErfuellt,
-		set: (value) => void props.stammdaten.patch({ istSchulpflichtErfuellt: value })
+		get: () => props.data.istSchulpflichtErfuellt === null ? false : props.data.istSchulpflichtErfuellt,
+		set: (value) => doPatch({ istSchulpflichtErfuellt: value })
 	});
 
 	const inputHatMasernimpfnachweis: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.hatMasernimpfnachweis,
-		set: (value) => void props.stammdaten.patch({ hatMasernimpfnachweis: value })
+		get: () => props.data.hatMasernimpfnachweis,
+		set: (value) => doPatch({ hatMasernimpfnachweis: value })
 	});
 
 	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.keineAuskunftAnDritte,
-		set: (value) => void props.stammdaten.patch({ keineAuskunftAnDritte: value })
+		get: () => props.data.keineAuskunftAnDritte,
+		set: (value) => doPatch({ keineAuskunftAnDritte: value })
 	});
 
 	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.erhaeltSchuelerBAFOEG,
-		set: (value) => void props.stammdaten.patch({ erhaeltSchuelerBAFOEG: value })
+		get: () => props.data.erhaeltSchuelerBAFOEG,
+		set: (value) => doPatch({ erhaeltSchuelerBAFOEG: value })
 	});
 
 	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istBerufsschulpflichtErfuellt === null ? false : daten.value.istBerufsschulpflichtErfuellt,
-		set: (value) => void props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
+		get: () => props.data.istBerufsschulpflichtErfuellt === null ? false : props.data.istBerufsschulpflichtErfuellt,
+		set: (value) => doPatch({ istBerufsschulpflichtErfuellt: value })
 	});
 
 	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istVolljaehrig === null ? false : daten.value.istVolljaehrig,
-		set: (value) => void props.stammdaten.patch({ istVolljaehrig: value })
+		get: () => props.data.istVolljaehrig === null ? false : props.data.istVolljaehrig,
+		set: (value) => doPatch({ istVolljaehrig: value })
 	});
 
 </script>
