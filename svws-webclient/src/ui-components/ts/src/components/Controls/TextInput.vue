@@ -22,7 +22,7 @@
 		url = false,
 	} = defineProps<{
 		type?: InputType;
-		modelValue?: string | number;
+		modelValue?: string | number | null;
 		placeholder?: string;
 		statistics?: boolean;
 		valid?: boolean;
