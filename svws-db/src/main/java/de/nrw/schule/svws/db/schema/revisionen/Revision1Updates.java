@@ -1816,50 +1816,43 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 		);
 		add("Tabelle KlassenLehrer: Erstellung Einträge für die übrigen Schuljahresabschnitte basierend auf den Schüler-Abschnittsdaten",
 			"""
-			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
+ 			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
 			SELECT
 				Klassen_ID,
 				Lehrer_ID,
-				min(Reihenfolge) AS Reihenfolge
-			FROM (
-				SELECT DISTINCT
-					Klassen_ID,
-					Lehrer_ID,
-					Reihenfolge
-				FROM 
-					((
-						SELECT DISTINCT
-  							Klassen.ID AS Klassen_ID,
-  							K_Lehrer.ID AS Lehrer_ID,
-  							1 AS Reihenfolge
-						FROM
-  							SchuelerLernabschnittsdaten
-    							JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
-    								AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
-    							JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel  
-						WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
-							SELECT Schuljahresabschnitts_ID 
-							FROM EigeneSchule
-						)
-					) UNION (
-						SELECT DISTINCT
-							Klassen.ID AS Klassen_ID,
-							SchuelerLernabschnittsdaten.StvKlassenlehrer_ID AS Lehrer_ID,
-							2 AS Reihenfolge 
-						FROM
-							SchuelerLernabschnittsdaten
-								JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
-									AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
-						WHERE
-							SchuelerLernabschnittsdaten.StvKlassenlehrer_ID IS NOT NULL AND
-							SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
-								SELECT Schuljahresabschnitts_ID 
-								FROM EigeneSchule
-							)
-					)) a   
-				) ges
+				ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) AS Reihenfolge
+			FROM 
+				((
+					SELECT
+  						Klassen.ID AS Klassen_ID,
+  						K_Lehrer.ID AS Lehrer_ID,
+  						count(*)*2 AS Anzahl
+					FROM SchuelerLernabschnittsdaten
+   						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
+   							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
+   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel  
+					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
+						SELECT Schuljahresabschnitts_ID 
+						FROM EigeneSchule
+					)
+					GROUP BY Klassen.ID, K_Lehrer.ID
+				) UNION (
+					SELECT
+						Klassen.ID AS Klassen_ID,
+						K_Lehrer.ID AS Lehrer_ID,
+						count(*) AS Anzahl 
+					FROM SchuelerLernabschnittsdaten
+						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
+							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
+   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID  
+					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
+						SELECT Schuljahresabschnitts_ID 
+						FROM EigeneSchule
+					)
+					GROUP BY Klassen.ID, K_Lehrer.ID
+				)) a   
 			GROUP BY Klassen_ID, Lehrer_ID
-			HAVING count(*) > 1
+			ORDER BY Klassen_ID, Anzahl DESC, Lehrer_ID
 			""",
 			Schema.tab_KlassenLehrer, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen, Schema.tab_EigeneSchule, Schema.tab_K_Lehrer
 		);
