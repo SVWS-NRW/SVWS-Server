@@ -62,9 +62,9 @@
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<void>;
-		removeRegel: (id: number) => Promise<void>;
-		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
+		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 		blockungAktiv: boolean;
 		allowRegeln: boolean;
 		kurs: GostBlockungKurs;

@@ -19,7 +19,7 @@
 	import { Ref, ref, ShallowRef, shallowRef, watch } from "vue";
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		modelValue: boolean;
 		von: GostBlockungSchiene;
 		bis: GostBlockungSchiene;

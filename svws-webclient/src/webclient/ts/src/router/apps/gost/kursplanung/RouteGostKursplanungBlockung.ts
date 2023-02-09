@@ -19,7 +19,7 @@ export class RouteDataGostKursplanungBlockung {
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
 
 	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => {
-		await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
+		return await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
 	}
 
 }

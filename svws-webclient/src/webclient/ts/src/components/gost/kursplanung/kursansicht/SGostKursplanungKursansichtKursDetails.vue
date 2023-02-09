@@ -52,7 +52,7 @@
 	import { computed, ComputedRef } from 'vue';
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;

@@ -20,7 +20,7 @@
 	import { Ref, ref, watch } from 'vue';
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		modelValue: boolean;
 		manager: GostBlockungsdatenManager;
 		kurs1Id?: number;

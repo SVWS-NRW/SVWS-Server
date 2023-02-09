@@ -25,11 +25,11 @@ export class RouteDataGostKursplanungHalbjahr  {
 	}
 
 	addRegel = async (regel: GostBlockungRegel) => {
-		await this.dataKursblockung.add_blockung_regel(regel);
+		return await this.dataKursblockung.add_blockung_regel(regel);
 	}
 
 	removeRegel = async (id: number) => {
-		await this.dataKursblockung.del_blockung_regel(id);
+		return await this.dataKursblockung.del_blockung_regel(id);
 	}
 
 	patchKurs = async(data: Partial<GostBlockungKurs>, kurs_id: number) => {
@@ -37,11 +37,11 @@ export class RouteDataGostKursplanungHalbjahr  {
 	}
 
 	addKurs = async (fach_id : number, kursart_id : number) => {
-		await this.dataKursblockung.add_blockung_kurse(fach_id, kursart_id);
+		return await this.dataKursblockung.add_blockung_kurse(fach_id, kursart_id);
 	}
 
 	removeKurs = async (fach_id : number, kursart_id : number) => {
-		await this.dataKursblockung.del_blockung_kurse(fach_id, kursart_id);
+		return await this.dataKursblockung.del_blockung_kurse(fach_id, kursart_id);
 	}
 
 	addKursLehrer = async(kurs_id: number, lehrer_id: number) => {
@@ -49,7 +49,7 @@ export class RouteDataGostKursplanungHalbjahr  {
 	}
 
 	removeKursLehrer = async(kurs_id: number, lehrer_id: number) => {
-		return await this.dataKursblockung.del_blockung_lehrer(kurs_id, lehrer_id);
+		await this.dataKursblockung.del_blockung_lehrer(kurs_id, lehrer_id);
 	}
 
 }

@@ -25,7 +25,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		schiene:  GostBlockungSchiene;
 	}>();
 
