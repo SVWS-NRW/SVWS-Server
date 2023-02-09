@@ -22,7 +22,7 @@
 	const props = defineProps<{
 		modelValue: boolean;
 		manager: GostBlockungsdatenManager;
-		kurs1Id: number | undefined;
+		kurs1Id?: number;
 		kurs2Id: number;
 	}>();
 
