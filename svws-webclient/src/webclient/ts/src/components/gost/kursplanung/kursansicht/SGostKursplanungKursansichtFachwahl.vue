@@ -25,8 +25,6 @@
 	import { List, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
 		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer, GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
@@ -44,11 +42,9 @@
 		fach: GostStatistikFachwahl;
 		faecherManager: GostFaecherManager;
 		kursart: GostKursart;
-		dataFaecher: DataGostFaecher;
 		halbjahr: number;
 		datenmanager: GostBlockungsdatenManager;
 		ergebnismanager: GostBlockungsergebnisManager;
-		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
 	}>();
@@ -91,8 +87,8 @@
 
 	const wahlen: ComputedRef<Map<number, number>> = computed(() => {
 		const wahlen : Map<number, number> = new Map();
-		const gostfach : GostFach | undefined = props.dataFaecher.manager?.get(props.fach.id) || undefined;
-		if (gostfach === undefined)
+		const gostfach : GostFach | null = props.faecherManager.get(props.fach.id);
+		if (gostfach === null)
 			return wahlen;
 		const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
 		wahlen.set(GostKursart.LK.id, fach_halbjahr.value.wahlenLK);

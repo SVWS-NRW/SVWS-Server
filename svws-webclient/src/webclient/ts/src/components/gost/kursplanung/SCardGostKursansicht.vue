@@ -76,9 +76,9 @@
 					<template v-if="sort_by==='fach_id'">
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id"
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 									:remove-kurs-lehrer="removeKursLehrer" />
@@ -88,9 +88,9 @@
 					<template v-else>
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id"
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 									:remove-kurs-lehrer="removeKursLehrer" />
