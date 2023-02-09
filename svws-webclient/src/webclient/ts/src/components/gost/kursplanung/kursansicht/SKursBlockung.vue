@@ -144,20 +144,8 @@
 			</div>
 		</td>
 	</tr>
-	<!--Modal-->
-	<svws-ui-modal ref="kurs_und_kurs_modal" size="small">
-		<template #modalTitle>Regel erstellen für Kurse</template>
-		<template #modalDescription>
-			<div class="">
-				Sollen die Kurse {{ get_kursbezeichnung(kurs1?.id) }} und {{ get_kursbezeichnung(kurs.id) }} immer oder nie zusammen auf einer Schiene liegen?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_kurs_und_kurs_modal">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="create_regel_immer">Immer</svws-ui-button>
-				<svws-ui-button @click="create_regel_nie">Nie</svws-ui-button>
-			</div>
-		</template>
-	</svws-ui-modal>
+	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :manager="props.blockung.datenmanager!"
+		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" @regel-hinzufuegen="regelHinzufuegen" />
 </template>
 
 <script setup lang="ts">
@@ -446,7 +434,7 @@
 			return
 		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id && kurs_schiene_zugeordnet(schiene)) {
 			kurs1 = drag_data.kurs;
-			toggle_kurs_und_kurs_modal();
+			isModalOpen_KurseZusammen.value = true;
 			return;
 		}
 		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
@@ -482,30 +470,10 @@
 
 	const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
 
-	const kurs_und_kurs_modal: Ref<any> = ref(null);
-	function toggle_kurs_und_kurs_modal() {
-		kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
-	}
+	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
 
-	async function create_regel_immer() {
-		kurs_und_kurs_modal.value.closeModal();
-		if (!kurs1)
-			return;
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
-		regel.parameter.add(kurs1.id)
-		regel.parameter.add(props.kurs.id);
-		await props.blockung.add_blockung_regel(regel)
-	}
-	async function create_regel_nie() {
-		kurs_und_kurs_modal.value.closeModal();
-		if (!kurs1)
-			return;
-		const regel = new GostBlockungRegel();
-		regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
-		regel.parameter.add(kurs1.id)
-		regel.parameter.add(props.kurs.id);
-		await props.blockung.add_blockung_regel(regel)
+	async function regelHinzufuegen(regel: GostBlockungRegel) {
+		await props.blockung.add_blockung_regel(regel);
 	}
 
 </script>
