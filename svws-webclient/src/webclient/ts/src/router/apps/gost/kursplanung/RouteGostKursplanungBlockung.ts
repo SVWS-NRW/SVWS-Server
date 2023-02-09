@@ -147,6 +147,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		const faecherManager = routeGost.data.dataFaecher.manager;
 		return {
 			addRegel: routeGostKursplanungHalbjahr.data.addRegel,
 			removeRegel: routeGostKursplanungHalbjahr.data.removeRegel,

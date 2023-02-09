@@ -77,6 +77,7 @@
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:faecher-manager="faecherManager"
 									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 							</template>
@@ -86,6 +87,7 @@
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:faecher-manager="faecherManager"
 									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 							</template>
@@ -121,7 +123,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
@@ -144,6 +146,7 @@
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
+		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;

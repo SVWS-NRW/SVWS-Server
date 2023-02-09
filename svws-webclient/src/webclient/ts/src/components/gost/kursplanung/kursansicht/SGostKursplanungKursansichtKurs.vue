@@ -56,11 +56,9 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostFach, GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+		GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { lehrer_filter } from "~/helfer";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
@@ -70,35 +68,16 @@
 		removeRegel: (id: number) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
 		kurs: GostBlockungKurs;
-		dataFaecher: DataGostFaecher;
+		bgColor: string;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		allowRegeln: boolean;
 	}>();
 
-	const art = GostKursart.fromID(props.kurs.kursart)
-
 	const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
 	const kursdetail_anzeige: Ref<boolean> = ref(false)
-
-	const gostFach: ComputedRef<GostFach | null> = computed(() => {
-		let fach: GostFach | null = null;
-		if (!props.dataFaecher.manager)
-			return null;
-		for (const f of props.dataFaecher.manager.values())
-			if (f.id === props.kurs.fach_id) {
-				fach = f
-				break
-			}
-		return fach;
-	});
-
-	const fach: ComputedRef<ZulaessigesFach> = computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
-
-	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB() : "#ffffff");
 
 	const koop: WritableComputedRef<boolean> = computed({
 		get: () => props.kurs.istKoopKurs,
@@ -198,7 +177,7 @@
 		if (!kurse)
 			return [];
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-		return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
+		return arr.filter(k => k.kursart === props.kurs.kursart).sort((a,b)=>{
 			const a_name: string | undefined = ergebnismanager.value?.getOfKursName(a.id)
 			const b_name = ergebnismanager.value?.getOfKursName(b.id)
 			return a_name?.localeCompare(b_name ?? '', "de-DE") || 0

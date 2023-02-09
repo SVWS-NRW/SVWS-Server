@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
-			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
+			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis" :faecher-manager="dataFaecher.manager!"
 			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 		<section class="content-card--wrapper flex gap-16" style="flex: 2 1 60%;">
@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungRegel, GostFaecherManager, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
