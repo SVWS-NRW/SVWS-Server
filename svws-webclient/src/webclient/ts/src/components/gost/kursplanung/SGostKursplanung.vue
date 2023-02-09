@@ -2,7 +2,8 @@
 	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
 			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
-			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" />
+			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
+			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 		<section class="content-card--wrapper flex gap-16" style="flex: 2 1 60%;">
 			<!--rounded-xl px-4 shadow-dark-20 shadow-sm border border-dark-20 border-opacity-60-->
 			<div class="w-1/4">
@@ -38,7 +39,7 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungRegel, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
@@ -50,6 +51,9 @@
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		removeRegel: (id: number) => Promise<void>;
+		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;

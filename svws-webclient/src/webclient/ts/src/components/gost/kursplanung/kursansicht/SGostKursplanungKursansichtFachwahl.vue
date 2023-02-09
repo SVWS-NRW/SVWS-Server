@@ -13,14 +13,16 @@
 		</tr>
 	</template>
 	<template v-else>
-		<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
-			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" />
+		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
+			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
+			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 	</template>
 </template>
 
 <script setup lang="ts">
 
-	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, ZulaessigesFach, GostFach, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
+		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
@@ -31,6 +33,9 @@
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		removeRegel: (id: number) => Promise<void>;
+		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		fach: GostStatistikFachwahl;
 		kursart: GostKursart;

@@ -17,6 +17,11 @@ export class RouteDataGostKursplanungBlockung {
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
+
+	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => {
+		await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
+	}
+
 }
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -143,6 +148,9 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			addRegel: routeGostKursplanungHalbjahr.data.addRegel,
+			removeRegel: routeGostKursplanungHalbjahr.data.removeRegel,
+			updateKursSchienenZuordnung: this.data.updateKursSchienenZuordnung,
 			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value,
 			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
 			...routeGostKursplanungHalbjahr.getProps(to),

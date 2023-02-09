@@ -20,6 +20,7 @@
 	import { Ref, ref, watch } from 'vue';
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
 		modelValue: boolean;
 		manager: GostBlockungsdatenManager;
 		kurs1Id?: number;
@@ -28,7 +29,6 @@
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: boolean): void;
-		(e: 'regelHinzufuegen', v: GostBlockungRegel): void;
 	}>()
 
 	const kurs_und_kurs_modal: Ref<any> = ref(null);
@@ -46,14 +46,14 @@
 		emit('update:modelValue', false);
 	}
 
-	function regelImmerZusammen() {
+	async function regelImmerZusammen() {
 		if (props.kurs1Id === undefined)
 			return;
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
 		regel.parameter.add(props.kurs1Id)
 		regel.parameter.add(props.kurs2Id);
-		emit('regelHinzufuegen', regel);
+		await props.addRegel(regel);
 		close();
 	}
 
@@ -64,7 +64,7 @@
 		regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
 		regel.parameter.add(props.kurs1Id)
 		regel.parameter.add(props.kurs2Id);
-		emit('regelHinzufuegen', regel);
+		await props.addRegel(regel);
 		close();
 	}
 

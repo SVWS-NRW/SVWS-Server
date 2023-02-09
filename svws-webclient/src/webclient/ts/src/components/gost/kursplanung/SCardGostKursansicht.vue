@@ -66,8 +66,9 @@
 						<th class="text-center">FW</th>
 						<th class="text-center">Diff</th>
 						<!--Schienen-->
-						<!--eslint-disable-next-line vue/no-use-v-if-with-v-for-->
-						<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
+						<template v-if="allow_regeln">
+							<s-drag-schiene v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
+						</template>
 						<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
 					</tr>
 				</thead>
@@ -75,16 +76,18 @@
 					<template v-if="sort_by==='fach_id'">
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter" />
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 							</template>
 						</template>
 					</template>
 					<template v-else>
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
-								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter" />
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 							</template>
 						</template>
 					</template>
@@ -118,7 +121,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
@@ -135,6 +138,9 @@
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		removeRegel: (id: number) => Promise<void>;
+		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;

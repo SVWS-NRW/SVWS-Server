@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostBlockungListeneintrag, GostHalbjahr } from "@svws-nrw/svws-core-ts";
+import { GostBlockungListeneintrag, GostBlockungRegel, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
 import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
@@ -23,6 +23,15 @@ export class RouteDataGostKursplanungHalbjahr  {
 		await this.listBlockungen.update_list(abiturjahr, halbjahr);
 		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined));
 	}
+
+	addRegel = async (regel: GostBlockungRegel) => {
+		await this.dataKursblockung.add_blockung_regel(regel);
+	}
+
+	removeRegel = async (id: number) => {
+		await this.dataKursblockung.del_blockung_regel(id);
+	}
+
 }
 
 const SGostKursplanungEmptyErgebnis = () => import("~/components/gost/kursplanung/SGostKursplanungEmptyErgebnis.vue");
