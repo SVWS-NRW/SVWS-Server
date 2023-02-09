@@ -102,49 +102,9 @@
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
-	<tr v-if="kursdetail_anzeige" :style="{ 'background-color': bgColor }" class="table--row-kursdetail relative z-10">
-		<td :colspan="6+schienen.size()" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
-			<div class="flex justify-between items-center gap-2">
-				<div class="flex items-center gap-12">
-					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :manager="props.blockung.datenmanager!" :blockung="blockung" />
-					<div class="flex items-center text-base">
-						<div class="mr-2">Schienen</div>
-						<button class="group">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
-						<button class="group">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-					</div>
-					<div class="flex items-center text-sm font-bold">
-						<div class="mr-2 text-base">Kurse</div>
-						<button @click="del_kurs" class="group">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-						<span class="mx-0.5" />
-						<button @click="add_kurs" class="group">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-					</div>
-				</div>
-				<div class="flex items-center gap-2">
-					<svws-ui-dropdown type="icon" v-if="filtered_by_kursart.length>1">
-						<template #dropdownButton>Zusammenlegen</template>
-						<template #dropdownItems>
-							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2"> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>
-						</template>
-					</svws-ui-dropdown>
-					<svws-ui-button size="small" type="secondary">Aufteilen…</svws-ui-button>
-				</div>
-			</div>
-		</td>
-	</tr>
-	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :manager="props.blockung.datenmanager!"
+	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + schienen.size()"
+		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :manager="blockung.datenmanager!" :map-lehrer="mapLehrer" :blockung="blockung" />
+	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :manager="blockung.datenmanager!"
 		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" @regel-hinzufuegen="regelHinzufuegen" />
 </template>
 
@@ -289,8 +249,13 @@
 		return (kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === filter_kurs_id)
 	});
 
+	const kurseMitKursart: ComputedRef<Vector<GostBlockungsergebnisKurs>> = computed(() => {
+		const fachart = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
+		return manager.value?.getOfFachartKursmenge(fachart) || new Vector();
+	});
+
 	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
-		const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
+		const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id);
 		if (!kurse)
 			return [];
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
@@ -441,18 +406,6 @@
 			if (fixier_regeln.value) fixieren_regel_entfernen()
 			void props.ergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
 		}
-	}
-
-	async function add_kurs() {
-		if (props.blockung.pending)
-			return;
-		await props.blockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
-	}
-
-	async function del_kurs() {
-		if (props.blockung.pending)
-			return;
-		await props.blockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart);
 	}
 
 	function toggle_active_kurs() {
