@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostBlockungKurs, GostBlockungListeneintrag, GostBlockungRegel, GostHalbjahr } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
 import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
@@ -50,6 +50,18 @@ export class RouteDataGostKursplanungHalbjahr  {
 
 	removeKursLehrer = async(kurs_id: number, lehrer_id: number) => {
 		await this.dataKursblockung.del_blockung_lehrer(kurs_id, lehrer_id);
+	}
+
+	patchSchiene = async (data: Partial<GostBlockungSchiene>, id : number) => {
+		await this.dataKursblockung.patch_schiene(data, id);
+	}
+
+	addSchiene = async () => {
+		return await this.dataKursblockung.add_blockung_schiene();
+	}
+
+	removeSchiene = async (s: GostBlockungSchiene) => {
+		return await this.dataKursblockung.del_blockung_schiene(s);
 	}
 
 }

@@ -51,28 +51,19 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
-		GostFachwahl, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+		GostFachwahl, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
-	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const props = defineProps<{
 		gotoSchueler: (idSchueler: number) => Promise<void>;
 		gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
-		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
 		halbjahr: ShallowRef<GostHalbjahr>;
-		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
-		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 		schueler: SchuelerListeEintrag;

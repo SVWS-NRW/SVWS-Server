@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card style="flex: 1 0 40%;">
 		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline">{{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
+			<h3 class="text-headline">{{ blockungsname }}</h3>
 			<div class="flex items-center gap-2">
 				<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 				<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
@@ -105,7 +105,7 @@
 		<svws-ui-modal ref="modal_aktivieren" size="small">
 			<template #modalTitle>Blockungsergebnis aktivieren</template>
 			<template #modalDescription>
-				Soll {{ blockung.daten?.name ? blockung.daten?.name : 'das Blockungsergebnis' }} aktiviert werden?
+				Soll {{ blockungsname }} aktiviert werden?
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
@@ -127,19 +127,12 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel, GostFaecherManager, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector,
+		GostKursart, GostBlockungRegel, GostFaecherManager, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main, mainApp } from "~/apps/Main";
+	import { injectMainApp, Main } from "~/apps/Main";
 	import { SvwsUiContentCard, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal } from "@svws-nrw/svws-ui";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
-	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
-	import { router } from "~/router";
-	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
@@ -147,22 +140,21 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
+		patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
+		addSchiene: () => Promise<GostBlockungSchiene | undefined>;
+		removeSchiene: (s: GostBlockungSchiene) => Promise<GostBlockungSchiene | undefined>;
 		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		ergebnisHochschreiben: () => Promise<void>;
+		ergebnisAktivieren: () => Promise<boolean>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
-		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
 		faecherManager: GostFaecherManager;
 		datenmanager: GostBlockungsdatenManager;
 		ergebnismanager: GostBlockungsergebnisManager;
 		halbjahr: GostHalbjahr;
-		listBlockungen: ListKursblockungen;
-		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
-		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
@@ -181,19 +173,19 @@
 				if (value === undefined)
 					value = 'kursart'
 				void App.api.setClientConfigUserKey(value, App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
-				mainApp.config.user_config.set('gost.kursansicht.sortierung', value)
+				main.config.user_config.set('gost.kursansicht.sortierung', value)
 			}
 		});
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() =>
-		props.blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
-	);
+	const blockungsname: ComputedRef<string> = computed(() => props.datenmanager.daten().name);
+
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.datenmanager.getMengeOfSchienen());
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => (props.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1));
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.blockung.daten?.istAktiv || false)
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.datenmanager.daten().istAktiv);
 
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnis.daten?.istVorlage || false)
+	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnismanager.getErgebnis().istVorlage || false);
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.ergebnismanager.getOfSchieneAnzahlSchueler(idSchiene) || 0;
@@ -208,16 +200,15 @@
 	}
 
 	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {
-		schiene.bezeichnung = bezeichnung;
-		await props.blockung.patch_schiene(schiene);
+		await props.patchSchiene({ bezeichnung: bezeichnung }, schiene.id);
 	}
 
 	async function add_schiene() {
-		await props.blockung.add_blockung_schiene();
+		return await props.addSchiene();
 	}
 
-	async function del_schiene(s: GostBlockungSchiene) {
-		await props.blockung.del_blockung_schiene(s);
+	async function del_schiene(schiene: GostBlockungSchiene) {
+		return await props.removeSchiene(schiene);
 	}
 
 	const modal_aktivieren: Ref<any> = ref(null);
@@ -232,31 +223,12 @@
 
 	async function activate_ergebnis() {
 		modal_aktivieren.value.closeModal();
-		if (props.jahrgangsdaten.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Daten zum Abiturjahrgang nicht vorhanden.");
-		if ((props.listBlockungen.ausgewaehlt === undefined))
-			throw new Error("Unerwarteter Fehler: Aktuell ist keine Blockung ausgewählt.");
-		if (props.ergebnis.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
-		const res = await props.ergebnis.activate_blockungsergebnis();
-		if (!res)
-			return;
-		props.jahrgangsdaten.daten.istBlockungFestgelegt[props.halbjahr.id] = true;
-		props.listBlockungen.ausgewaehlt.istAktiv = true;
-		props.datenmanager.daten().istAktiv = true;
-		props.ergebnismanager.getErgebnis().istVorlage = true;
-		props.ergebnis.daten.istVorlage = true;
+		await props.ergebnisAktivieren();
 	}
 
 	async function hochschreiben_ergebnis() {
 		modal_hochschreiben.value.closeModal();
-		if (!props.ergebnis.daten)
-			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
-		const abiturjahr = props.blockung.daten?.abijahrgang;
-		if (abiturjahr === undefined)
-			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
-		const result = await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, props.ergebnis.daten.id);
-		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.next()?.id || props.halbjahr.id, idblockung: result.id } });
+		await props.ergebnisHochschreiben();
 	}
 
 </script>

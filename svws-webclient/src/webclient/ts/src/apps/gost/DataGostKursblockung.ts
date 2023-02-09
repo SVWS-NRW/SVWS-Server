@@ -235,8 +235,8 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 	}
 
 	/** passt eine Schiene an */
-	public async patch_schiene(data: GostBlockungSchiene): Promise<void> {
-		await App.api.patchGostBlockungSchiene(data, App.schema, data.id);
+	public async patch_schiene(data: Partial<GostBlockungSchiene>, id : number): Promise<void> {
+		await App.api.patchGostBlockungSchiene(data, App.schema, id);
 		//TODO, der Manager sollte was tun..
 	}
 

@@ -22,6 +22,35 @@ export class RouteDataGostKursplanungBlockung {
 		return await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
 	}
 
+	ergebnisHochschreiben = async () => {
+		if (!this.ergebnis.value)
+			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
+		const abiturjahr = routeGost.data.jahrgangsdaten.daten?.abiturjahr;
+		if (abiturjahr === undefined)
+			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
+		const halbjahr = routeGostKursplanung.data.halbjahr.value.next()?.id || routeGostKursplanung.data.halbjahr.value.id;
+		const result = await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, this.ergebnis.value.id);
+		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr, result.id));
+	}
+
+	ergebnisAktivieren = async () => {
+		if ((routeGost.data.jahrgangsdaten.daten === undefined) ||
+			(routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt === undefined) ||
+			(routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager === undefined) ||
+			(routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager === undefined) ||
+			(this.ergebnis.value === undefined))
+			return false;
+		const res = await this.dataKursblockungsergebnis.activate_blockungsergebnis();
+		if (!res)
+			return false;
+		routeGost.data.jahrgangsdaten.daten.istBlockungFestgelegt[routeGostKursplanung.data.halbjahr.value.id] = true;
+		routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt.istAktiv = true;
+		routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager.daten().istAktiv = true;
+		routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager.getErgebnis().istVorlage = true;
+		this.ergebnis.value.istVorlage = true;
+		return true;
+	}
+
 }
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -151,18 +180,24 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			addRegel: routeGostKursplanungHalbjahr.data.addRegel,
 			removeRegel: routeGostKursplanungHalbjahr.data.removeRegel,
 			updateKursSchienenZuordnung: this.data.updateKursSchienenZuordnung,
+			patchSchiene: routeGostKursplanungHalbjahr.data.patchSchiene,
+			addSchiene: routeGostKursplanungHalbjahr.data.addSchiene,
+			removeSchiene: routeGostKursplanungHalbjahr.data.removeSchiene,
 			patchKurs: routeGostKursplanungHalbjahr.data.patchKurs,
 			addKurs: routeGostKursplanungHalbjahr.data.addKurs,
 			removeKurs: routeGostKursplanungHalbjahr.data.removeKurs,
 			addKursLehrer: routeGostKursplanungHalbjahr.data.addKursLehrer,
 			removeKursLehrer: routeGostKursplanungHalbjahr.data.removeKursLehrer,
-			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value,
+			ergebnisHochschreiben: this.data.ergebnisHochschreiben,
+			ergebnisAktivieren: this.data.ergebnisAktivieren,
 			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
-			...routeGostKursplanungHalbjahr.getProps(to),
+			dataFaecher: routeGost.data.dataFaecher,
+			halbjahr: routeGostKursplanung.data.halbjahr.value,
+			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
 			ergebnis: this.data.dataKursblockungsergebnis,
-			listLehrer: this.data.listLehrer,
 			mapLehrer: this.data.mapLehrer,
-			fachwahlen: this.data.fachwahlen
+			fachwahlen: this.data.fachwahlen,
+			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value
 		}
 	}
 
