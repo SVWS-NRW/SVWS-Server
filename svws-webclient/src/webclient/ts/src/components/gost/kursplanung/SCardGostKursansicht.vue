@@ -67,7 +67,7 @@
 						<th class="text-center">Diff</th>
 						<!--Schienen-->
 						<template v-if="allow_regeln">
-							<s-drag-schiene v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
+							<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" />
 						</template>
 						<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
 					</tr>
