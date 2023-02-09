@@ -1,9 +1,8 @@
 <template>
-	<tr v-if="setze_kursdifferenz" class="row--kursdifferenz" />
 	<tr :style="{ 'background-color': bgColor }">
-		<td :class="{'cell--kursdifferenz': setze_kursdifferenz}">
+		<td>
 			<div class="flex gap-1">
-				<template v-if=" kurs === edit_name">
+				<template v-if="kurs === edit_name">
 					{{ kursbezeichnung }}-
 					<svws-ui-text-input v-model="suffix" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="edit_name=undefined" />
 				</template>
@@ -13,7 +12,7 @@
 				</template>
 			</div>
 		</td>
-		<td class="text-center cell--has-multiselect" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
+		<td class="text-center cell--has-multiselect">
 			<template v-if="allowRegeln">
 				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="listLehrer.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
@@ -22,7 +21,7 @@
 				{{ kurslehrer?.kuerzel }}
 			</template>
 		</td>
-		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
+		<td class="text-center">
 			<svws-ui-checkbox headless v-if="allowRegeln" v-model="koop" />
 			<template v-else>{{ koop ? "&#x2713;" : "&#x2717;" }}</template>
 		</td>
@@ -41,7 +40,7 @@
 			v-slot="{ active }"
 			:key="schiene.id"
 			class="text-center"
-			:class="{'cell--kursdifferenz': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
+			:class="{'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene)">
 			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
@@ -74,7 +73,7 @@
 			</template>
 		</svws-ui-drop-data>
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }">
+			<td class="text-center leading-5 select-none">
 				<svws-ui-badge v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :type="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
@@ -89,17 +88,13 @@
 			</td>
 		</template>
 		<template v-if="allowRegeln">
-			<td class="cursor-pointer text-center hover:opacity-100" :class="{'cell--kursdifferenz': setze_kursdifferenz, 'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
+			<td class="cursor-pointer text-center hover:opacity-100" :class="{'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
 				<div class="inline-block">
 					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
 					<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
 				</div>
 			</td>
 		</template>
-		<!-- <template v-else>
-			<td class="bg-white" :class="{'cell--kursdifferenz': setze_kursdifferenz}"></td>
-		</template> -->
-		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
 	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + schienen.size()"
