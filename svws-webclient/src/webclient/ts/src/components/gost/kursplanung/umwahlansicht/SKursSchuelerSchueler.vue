@@ -15,7 +15,7 @@
 						}">
 						<svws-ui-popover v-if="kollision && !nichtwahl" class="popper--dark">
 							<template #trigger>
-								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
+								<svws-ui-icon> <i-ri-alert-line /> </svws-ui-icon>
 							</template>
 							<template #content>
 								<span>Kollision</span>
@@ -31,7 +31,7 @@
 						</svws-ui-popover>
 						<svws-ui-popover v-else-if="kollision && nichtwahl" class="popper--danger">
 							<template #trigger>
-								<svws-ui-icon> <i-ri-alert-line /> </svws-ui-icon>
+								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
 							</template>
 							<template #content>
 								<span>Kollision und Nichtwahl</span>
