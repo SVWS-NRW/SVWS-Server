@@ -106,7 +106,7 @@
 		<td :colspan="6+schienen.size()" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
-					<s-gost-kursblockung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :manager="props.blockung.datenmanager!" :blockung="blockung" />
+					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :manager="props.blockung.datenmanager!" :blockung="blockung" />
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
 						<button class="group">

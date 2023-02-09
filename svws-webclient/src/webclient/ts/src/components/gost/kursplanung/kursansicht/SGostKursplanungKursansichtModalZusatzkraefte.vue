@@ -2,7 +2,7 @@
 	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
 		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
 		<template #modalContent>
-			<s-gost-kursblockung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :manager="manager" :blockung="blockung" />
+			<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :manager="manager" :blockung="blockung" />
 		</template>
 		<template #modalActions>
 			<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
