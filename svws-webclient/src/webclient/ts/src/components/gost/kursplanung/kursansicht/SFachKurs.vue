@@ -14,7 +14,7 @@
 	</template>
 	<template v-else>
 		<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
-			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" :schueler-filter="schuelerFilter" />
+			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" />
 	</template>
 </template>
 

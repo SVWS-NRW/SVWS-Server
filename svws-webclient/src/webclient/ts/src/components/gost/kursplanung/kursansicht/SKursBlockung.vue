@@ -14,7 +14,7 @@
 			</div>
 		</td>
 		<td class="text-center cell--has-multiselect" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
-			<template v-if="allow_regeln">
+			<template v-if="allowRegeln">
 				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="listLehrer.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
 			</template>
@@ -23,7 +23,7 @@
 			</template>
 		</td>
 		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
-			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop" />
+			<svws-ui-checkbox headless v-if="allowRegeln" v-model="koop" />
 			<template v-else>{{ koop ? "&#x2713;" : "&#x2717;" }}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
@@ -58,7 +58,7 @@
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle">
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block" />
-						<i-ri-pushpin-line v-if="!fixier_regeln.length && allow_regeln" class="inline-block" />
+						<i-ri-pushpin-line v-if="!fixier_regeln.length && allowRegeln" class="inline-block" />
 					</svws-ui-icon>
 				</svws-ui-badge>
 			</svws-ui-drag-data>
@@ -68,7 +68,7 @@
 						'schiene-gesperrt': schiene_gesperrt(schiene)}">
 					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
-						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
+						<i-ri-forbid-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
 					</svws-ui-icon>
 				</div>
 			</template>
@@ -88,7 +88,7 @@
 				</svws-ui-badge>
 			</td>
 		</template>
-		<template v-if="allow_regeln">
+		<template v-if="allowRegeln">
 			<td class="cursor-pointer text-center hover:opacity-100" :class="{'cell--kursdifferenz': setze_kursdifferenz, 'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
 				<div class="inline-block">
 					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
@@ -106,7 +106,7 @@
 		<td :colspan="6+schienen.size()" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
-					<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen<i-ri-briefcase-line class="ml-1 my-0.5" /></svws-ui-button>
+					<s-gost-kursblockung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :manager="props.blockung.datenmanager!" :blockung="blockung" />
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
 						<button class="group">
@@ -158,15 +158,6 @@
 			</div>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
-		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
-		<template #modalContent>
-			<s-kurslehrer-select :kurs="kurs" :blockung="blockung" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :data-faecher="dataFaecher" />
-		</template>
-		<template #modalActions>
-			<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
-		</template>
-	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -178,7 +169,6 @@
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { lehrer_filter } from "~/helfer";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
@@ -190,12 +180,10 @@
 		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
-		allow_regeln: boolean;
+		allowRegeln: boolean;
 	}>();
 
 	const art = GostKursart.fromID(props.kurs.kursart)
-
-	const main: Main = injectMainApp();
 
 	const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
 	const kursdetail_anzeige: Ref<boolean> = ref(false)
@@ -397,7 +385,7 @@
 	}
 
 	const fixieren_regel_toggle = () => {
-		if (props.blockung.pending || !props.allow_regeln)
+		if (props.blockung.pending || !props.allowRegeln)
 			return;
 		fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 	}
@@ -428,7 +416,7 @@
 	}
 
 	const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
-		if (props.blockung.pending || !props.allow_regeln)
+		if (props.blockung.pending || !props.allowRegeln)
 			return;
 		const { nummer } = ermittel_parent_schiene(schiene);
 		return sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
@@ -493,11 +481,6 @@
 	}
 
 	const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
-
-	const zusatzkraefte_modal: Ref<any> = ref(null);
-	function toggle_zusatzkraefte_modal() {
-		zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
-	}
 
 	const kurs_und_kurs_modal: Ref<any> = ref(null);
 	function toggle_kurs_und_kurs_modal() {
