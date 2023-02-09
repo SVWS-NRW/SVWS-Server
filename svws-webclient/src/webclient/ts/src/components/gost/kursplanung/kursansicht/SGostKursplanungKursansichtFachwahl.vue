@@ -13,20 +13,19 @@
 		</tr>
 	</template>
 	<template v-else>
-		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :blockung="blockung" :bg-color="bgColor"
-			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter"
-			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
+		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
+			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
+			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 	</template>
 </template>
 
 <script setup lang="ts">
 
-	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
-		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager } from "@svws-nrw/svws-core-ts";
+	import { List, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
+		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer, GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
@@ -36,14 +35,19 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<void>;
 		removeRegel: (id: number) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
+		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
+		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		fach: GostStatistikFachwahl;
 		faecherManager: GostFaecherManager;
 		kursart: GostKursart;
 		dataFaecher: DataGostFaecher;
 		halbjahr: number;
-		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
+		datenmanager: GostBlockungsdatenManager;
+		ergebnismanager: GostBlockungsergebnisManager;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
@@ -76,14 +80,12 @@
 	const sort_by: ComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> = computed(() => main.config.user_config.get('gost.kursansicht.sortierung') || 'kursart');
 
 	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
-		if (props.blockung.datenmanager === undefined)
-			return new Vector<GostBlockungKurs>();
 		if (sort_by.value === 'kursart')
-			return props.blockung.datenmanager.getKursmengeSortiertNachKursartFachNummer()
-		else return props.blockung.datenmanager.getKursmengeSortiertNachFachKursartNummer()
+			return props.datenmanager.getKursmengeSortiertNachKursartFachNummer()
+		else return props.datenmanager.getKursmengeSortiertNachFachKursartNummer()
 	})
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(()=> props.blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.datenmanager.getMengeOfSchienen())
 
 	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
 
@@ -103,8 +105,8 @@
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
-	function add_kurs(art: GostKursart) {
-		void props.blockung.add_blockung_kurse(props.fach.id, art.id);
+	async function add_kurs(art: GostKursart) {
+		await props.addKurs(props.fach.id, art.id);
 	}
 
 </script>

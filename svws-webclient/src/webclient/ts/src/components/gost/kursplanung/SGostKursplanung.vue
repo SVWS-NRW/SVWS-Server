@@ -1,9 +1,13 @@
 <template>
-	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
+	<div v-if="visible && (blockung.datenmanager !== undefined) && (blockung.ergebnismanager !== undefined) && (dataFaecher.manager !== undefined)"
+		class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
-			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis" :faecher-manager="dataFaecher.manager!"
+			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis" :faecher-manager="dataFaecher.manager"
+			:datenmanager="blockung.datenmanager" :ergebnismanager="blockung.ergebnismanager"
 			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
-			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
+			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+			:remove-kurs-lehrer="removeKursLehrer" />
 		<section class="content-card--wrapper flex gap-16" style="flex: 2 1 60%;">
 			<!--rounded-xl px-4 shadow-dark-20 shadow-sm border border-dark-20 border-opacity-60-->
 			<div class="w-1/4">
@@ -39,7 +43,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostFaecherManager, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
@@ -54,6 +58,11 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<void>;
 		removeRegel: (id: number) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
+		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
+		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;

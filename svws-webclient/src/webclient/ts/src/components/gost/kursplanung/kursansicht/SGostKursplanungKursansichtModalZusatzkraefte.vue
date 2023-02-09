@@ -2,7 +2,8 @@
 	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
 		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
 		<template #modalContent>
-			<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :manager="manager" :blockung="blockung" />
+			<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :datenmanager="datenmanager"
+				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 		</template>
 		<template #modalActions>
 			<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
@@ -13,18 +14,19 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsdatenManager, LehrerListeEintrag } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, LehrerListeEintrag } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 
 	const props = defineProps<{
-		kurs: GostBlockungKurs
-		manager: GostBlockungsdatenManager;
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		kurs: GostBlockungKurs;
+		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		blockung: DataGostKursblockung;
 	}>();
 
-	const kursbezeichnung: ComputedRef<String> = computed(() => props.manager.getNameOfKurs(props.kurs.id));
+	const kursbezeichnung: ComputedRef<String> = computed(() => props.datenmanager.getNameOfKurs(props.kurs.id));
 
 	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {

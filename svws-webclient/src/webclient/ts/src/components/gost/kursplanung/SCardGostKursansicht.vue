@@ -76,20 +76,24 @@
 					<template v-if="sort_by==='fach_id'">
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:faecher-manager="faecherManager"
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id"
+									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
 									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
-									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
+									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+									:remove-kurs-lehrer="removeKursLehrer" />
 							</template>
 						</template>
 					</template>
 					<template v-else>
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:faecher-manager="faecherManager"
+								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id"
+									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
 									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
-									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
+									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+									:remove-kurs-lehrer="removeKursLehrer" />
 							</template>
 						</template>
 					</template>
@@ -111,7 +115,7 @@
 		<svws-ui-modal ref="modal_hochschreiben" size="small">
 			<template #modalTitle>Blockungsergebnis hochschreiben</template>
 			<template #modalContent>
-				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ blockung.datenmanager?.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
+				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ datenmanager.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
@@ -123,7 +127,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel, GostFaecherManager } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart, GostBlockungRegel, GostFaecherManager, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
@@ -143,10 +147,17 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<void>;
 		removeRegel: (id: number) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<void>;
+		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
+		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
 		faecherManager: GostFaecherManager;
+		datenmanager: GostBlockungsdatenManager;
+		ergebnismanager: GostBlockungsergebnisManager;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
@@ -178,28 +189,22 @@
 		props.blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
 	);
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
-
-	const allow_regeln: ComputedRef<boolean> = computed(() =>
-		(props.blockung.datenmanager !== undefined) && (props.blockung.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1)
-	);
+	const allow_regeln: ComputedRef<boolean> = computed(() => (props.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1));
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.blockung.daten?.istAktiv || false)
 
 	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnis.daten?.istVorlage || false)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
+		return props.ergebnismanager.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
-		if ((props.blockung.datenmanager === undefined) || (manager.value === undefined))
-			return false;
-		return props.blockung.datenmanager.removeSchieneAllowed(schiene.id) && manager.value.getOfSchieneRemoveAllowed(schiene.id);
+		return props.datenmanager.removeSchieneAllowed(schiene.id) && props.ergebnismanager.getOfSchieneRemoveAllowed(schiene.id);
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
+		return props.ergebnismanager.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	}
 
 	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {
@@ -229,10 +234,8 @@
 		modal_aktivieren.value.closeModal();
 		if (props.jahrgangsdaten.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Daten zum Abiturjahrgang nicht vorhanden.");
-		if ((props.listBlockungen.ausgewaehlt === undefined) || (props.blockung.daten === undefined))
+		if ((props.listBlockungen.ausgewaehlt === undefined))
 			throw new Error("Unerwarteter Fehler: Aktuell ist keine Blockung ausgewählt.");
-		if (props.blockung.ergebnismanager === undefined)
-			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnismanager vorhanden.");
 		if (props.ergebnis.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
 		const res = await props.ergebnis.activate_blockungsergebnis();
@@ -240,8 +243,8 @@
 			return;
 		props.jahrgangsdaten.daten.istBlockungFestgelegt[props.halbjahr.id] = true;
 		props.listBlockungen.ausgewaehlt.istAktiv = true;
-		props.blockung.daten.istAktiv = true;
-		props.blockung.ergebnismanager.getErgebnis().istVorlage = true;
+		props.datenmanager.daten().istAktiv = true;
+		props.ergebnismanager.getErgebnis().istVorlage = true;
 		props.ergebnis.daten.istVorlage = true;
 	}
 

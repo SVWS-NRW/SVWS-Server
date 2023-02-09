@@ -3,8 +3,8 @@
 		<td :colspan="anzahlSpalten" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
-					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer"
-						:manager="props.blockung.datenmanager!" :blockung="blockung" />
+					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :datenmanager="datenmanager"
+						:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
 						<button class="group">
@@ -48,18 +48,21 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, Vector } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, Vector } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		bgColor: string;
 		anzahlSpalten: number;
 		kurs: GostBlockungKurs;
 		kurseMitKursart: Vector<GostBlockungsergebnisKurs>;
-		manager: GostBlockungsdatenManager;
+		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		blockung: DataGostKursblockung;
 	}>();
 
 	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {
@@ -71,19 +74,15 @@
 	});
 
 	function get_kursbezeichnung(kurs_id: number): string {
-		return props.manager.getNameOfKurs(kurs_id);
+		return props.datenmanager.getNameOfKurs(kurs_id);
 	}
 
 	async function add_kurs() {
-		if (props.blockung.pending)
-			return;
-		await props.blockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+		await props.addKurs(props.kurs.fach_id, props.kurs.kursart)
 	}
 
 	async function del_kurs() {
-		if (props.blockung.pending)
-			return;
-		await props.blockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart);
+		await props.removeKurs(props.kurs.fach_id, props.kurs.kursart);
 	}
 
 </script>

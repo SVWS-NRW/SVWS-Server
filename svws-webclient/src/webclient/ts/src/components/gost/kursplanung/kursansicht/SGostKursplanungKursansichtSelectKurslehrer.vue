@@ -17,22 +17,23 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostKursblockungRegelTyp, LehrerListeEintrag } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostKursblockungRegelTyp, LehrerListeEintrag } from '@svws-nrw/svws-core-ts';
 	import { ComputedRef, computed, Ref, ref } from 'vue';
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { lehrer_filter } from '~/helfer';
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<void>;
+		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
+		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		kurs: GostBlockungKurs;
-		manager: GostBlockungsdatenManager;
+		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		blockung: DataGostKursblockung;
 	}>();
 
 	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		const liste = props.manager.getOfKursLehrkraefteSortiert(props.kurs.id);
+		const liste = props.datenmanager.getOfKursLehrkraefteSortiert(props.kurs.id);
 		const lehrer = new Set();
 		for (const l of liste)
 			lehrer.add(l.id)
@@ -55,8 +56,8 @@
 	})
 
 	async function remove_kurslehrer(lehrer: LehrerListeEintrag) {
-		await props.blockung.del_blockung_lehrer(props.kurs.id, lehrer.id);
-		props.manager.patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
+		await props.removeKursLehrer(props.kurs.id, lehrer.id);
+		props.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
 	}
 
 	async function update_kurslehrer(lehrer: unknown, lehrer_alt?: LehrerListeEintrag) {
@@ -65,18 +66,18 @@
 			return;
 		}
 		if (lehrer instanceof LehrerListeEintrag) {
-			const kurslehrer = await props.blockung.add_blockung_lehrer(props.kurs.id, lehrer.id);
+			const kurslehrer = await props.addKursLehrer(props.kurs.id, lehrer.id);
 			if (!kurslehrer)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
 			await add_lehrer_regel();
-			props.manager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
+			props.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
 			new_kurs_lehrer.value = false;
 		}
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN;
-		const regeln = props.manager.getMengeOfRegeln();
+		const regeln = props.datenmanager.getMengeOfRegeln();
 		if (!regeln)
 			return undefined;
 		for (const r of regeln)
@@ -92,7 +93,7 @@
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
 		r.typ = regel_typ.typ;
 		r.parameter.add(1);
-		await props.blockung.add_blockung_regel(r);
+		await props.addRegel(r);
 	}
 
 </script>
