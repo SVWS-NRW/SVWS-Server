@@ -7,10 +7,22 @@ import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplan
 import { routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
 import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 import { computed, WritableComputedRef } from "vue";
+import { App } from "~/apps/BaseApp";
+import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKursplanungHalbjahr  {
 	listBlockungen: ListKursblockungen = new ListKursblockungen();
 	dataKursblockung: DataGostKursblockung = new DataGostKursblockung();
+
+	removeBlockung = async () => {
+		if ((routeGost.data.jahrgangsdaten.daten === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
+			return;
+		await App.api.deleteGostBlockung(App.schema, this.listBlockungen.ausgewaehlt.id);
+		const abiturjahr = routeGost.data.jahrgangsdaten.daten.abiturjahr;
+		const halbjahr = routeGostKursplanung.data.halbjahr.value;
+		await this.listBlockungen.update_list(abiturjahr, halbjahr);
+		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined));
+	}
 }
 
 const SGostKursplanungEmptyErgebnis = () => import("~/components/gost/kursplanung/SGostKursplanungEmptyErgebnis.vue");
@@ -21,7 +33,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr", "blockung/:idblockung(\\d+)?", SGostKursplanungEmptyErgebnis, new RouteDataGostKursplanungHalbjahr());
 		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_kursplanung_blockung_auswahl", SGostKursplanungBlockungAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_blockung_auswahl", SGostKursplanungBlockungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung Halbjahresauswahl";
 		super.children = [
 			routeGostKursplanungBlockung
@@ -74,7 +86,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		}
 		// Prüfe die ID der Blockung
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
-		// ... wurde die ID der Blockung auf undefined setzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
+		// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
 		if (idBlockung === undefined) {
 			if ((idBlockung === undefined) && (this.data.listBlockungen.liste.length > 0)) {
 				const blockungsEintrag = this.data.listBlockungen.liste[0];
@@ -120,6 +132,15 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		if (idblockung === undefined)
 			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			removeBlockung: this.data.removeBlockung,
+			...routeGostKursplanung.getProps(to),
+			listBlockungen: this.data.listBlockungen,
+			blockung: this.data.dataKursblockung
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

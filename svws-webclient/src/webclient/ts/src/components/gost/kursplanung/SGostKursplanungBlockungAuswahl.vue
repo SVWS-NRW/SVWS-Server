@@ -62,6 +62,7 @@
 	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
+		removeBlockung: () => Promise<void>;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -125,13 +126,7 @@
 
 	async function remove_blockung() {
 		modal_remove_blockung.value.closeModal()
-		if (selected_blockungauswahl.value === undefined)
-			return;
-		await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr;
-		if (abiturjahr === undefined)
-			return;
-		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
+		await props.removeBlockung();
 	}
 
 	const modal_remove_blockung: Ref<any> = ref(null);
