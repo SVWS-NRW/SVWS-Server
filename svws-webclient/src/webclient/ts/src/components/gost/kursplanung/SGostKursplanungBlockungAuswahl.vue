@@ -51,7 +51,6 @@
 	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-	import { injectMainApp, Main } from '~/apps/Main';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { App } from '~/apps/BaseApp';
@@ -74,15 +73,11 @@
 
 	const router = useRouter();
 
-	const main: Main = injectMainApp();
-
 	const edit_blockungsname: Ref<boolean> = ref(false);
 
 	const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> = computed(() => props.listBlockungen.liste);
 
-	const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = routeGostKursplanungHalbjahr.getSelector(
-		(value) => edit_blockungsname.value = false
-	);
+	const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = routeGostKursplanungHalbjahr.getSelector();
 
 	const pending: ComputedRef<boolean> = computed(()=> props.blockung.pending);
 
