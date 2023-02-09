@@ -436,8 +436,4 @@
 		background-image: url("/images/table-cell--stripes.svg");
 		background-size: auto 100%;
 	}
-	.table--row-kursdetail {
-		box-shadow: inset 0 -2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 1px 4px 0 rgba(0, 0, 0, 0.1);
-	}
-
 </style>
