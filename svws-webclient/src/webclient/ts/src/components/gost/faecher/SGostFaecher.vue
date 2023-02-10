@@ -5,10 +5,14 @@
 		</div>
 		<div>
 			<s-card-gost-zusatzkurse :jahrgangsdaten="jahrgangsdaten" />
-			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :data-faecher="dataFaecher"
-				:data-fachkombinationen="dataFachkombinationen" />
-			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :data-faecher="dataFaecher"
-				:data-fachkombinationen="dataFachkombinationen" />
+			<template v-if="dataFaecher.manager !== undefined && dataFachkombinationen.daten !== undefined">
+				<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager="dataFaecher.manager"
+					:fachkombinationen="dataFachkombinationen.daten" :patch-fachkombination="patchFachkombination"
+					:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
+				<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :faecher-manager="dataFaecher.manager"
+					:fachkombinationen="dataFachkombinationen.daten" :patch-fachkombination="patchFachkombination"
+					:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
+			</template>
 		</div>
 	</div>
 </template>
@@ -16,7 +20,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { GostJahrgang, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+	import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
@@ -24,6 +28,9 @@
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
 	const props = defineProps<{
+		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
+		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;

@@ -42,43 +42,6 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 
 
 	/**
-	 * Fügt eine neue Regel für eine Fachkombination von dem angegebenen Typ hinzu
-	 *
-	 * @param {GostLaufbahnplanungFachkombinationTyp} typ
-	 *
-	 * @returns {Promise<GostJahrgangFachkombination | undefined>} Ein Kursobjekt bei Erfolg
-	 */
-	 public async add(typ: GostLaufbahnplanungFachkombinationTyp): Promise<GostJahrgangFachkombination | undefined> {
-		//TODO App.apps.gost existiert nicht mehr...
-		throw new Error("App.apps.gost existiert nicht mehr...")
-		const abijahr = -1 //App.apps.gost.auswahl.ausgewaehlt?.abiturjahr;
-		if (abijahr === undefined)
-			return undefined;
-		const result = await App.api.addGostAbiturjahrgangFachkombination(App.schema, abijahr, typ.getValue());
-		if (result !== undefined)
-			this._daten?.add(result);
-		return result;
-	}
-
-
-	/**
-	 * Entfernt die Regel für eine Fachkombination mit der angegebenen ID.
-	 *
-	 * @param {number} id
-	 *
-	 * @returns {Promise<GostJahrgangFachkombination | undefined>} Ein Kursobjekt bei Erfolg
-	 */
-	 public async delete(id: number): Promise<GostJahrgangFachkombination | undefined> {
-		const result = await App.api.deleteGostFachkombination(App.schema, id);
-		if ((result !== undefined) && (this._daten !== undefined))
-			for (let i : number = this._daten.size() - 1; i >= 0; i--)
-				if (this._daten.get(i).id === id)
-					this._daten.remove(i);
-		return result;
-	}
-
-
-	/**
 	 * Gibt den Farbcode für das Fach zurück
 	 *
 	 * @param {GostFach} fach

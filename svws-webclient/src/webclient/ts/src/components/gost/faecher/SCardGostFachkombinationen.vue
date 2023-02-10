@@ -23,7 +23,7 @@
 						</tr>
 					</thead>
 					<tr v-for="row in rows" :key="row.id">
-						<s-row-gost-fachkombination :kombination="row" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+						<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 					</tr>
 				</table>
 				<svws-ui-button class="pl-2 pt-2" @click="add_kurskombi">Hinzufügen</svws-ui-button>
@@ -35,14 +35,15 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
+		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
+		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
+		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
-		dataFaecher: DataGostFaecher;
-		dataFachkombinationen: DataGostFachkombinationen;
+		faecherManager: GostFaecherManager;
+		fachkombinationen: List<GostJahrgangFachkombination>;
 	}>();
 
 	const title: ComputedRef<string> = computed(() => {
@@ -58,15 +59,14 @@
 
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
-		if (props.dataFachkombinationen.daten)
-			for (const kombi of props.dataFachkombinationen.daten)
-				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
-					result.add(kombi);
+		for (const kombi of props.fachkombinationen)
+			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
+				result.add(kombi);
 		return result;
 	});
 
-	const add_kurskombi = () => {
-		void props.dataFachkombinationen.add(props.typ);
+	async function add_kurskombi() {
+		void props.addFachkombination(props.typ);
 	}
 
 </script>
