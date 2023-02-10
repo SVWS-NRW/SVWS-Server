@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.5.3-SNAPSHOT",
+	"version": "0.5.3",
   "scripts": {
     "format": "prettier --write ./src/main/ts ./*.config.js",
     "build": "npm run build-lib && npm run build-dts",
