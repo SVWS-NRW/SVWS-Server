@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	type CheckboxValue = string | number | boolean;
+	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined;
 
 	const {
@@ -11,7 +11,7 @@
 		headless = false
 	} = defineProps<{
 		value?: CheckboxValue;
-		modelValue: ModelValue;
+		modelValue: ModelValue | null;
 		statistics?: boolean;
 		disabled?: boolean;
 		circle?: boolean;
@@ -24,7 +24,7 @@
 
 	const model = computed({
 		get(): ModelValue {
-			return modelValue;
+			return modelValue ?? undefined;
 		},
 		set(value: ModelValue) {
 			emit("update:modelValue", value);
@@ -40,7 +40,7 @@
 			'checkbox--checked': modelValue,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': modelValue === undefined
+			'checkbox--indeterminate': modelValue === undefined || modelValue === null
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
 		<Icon v-if="modelValue === undefined">

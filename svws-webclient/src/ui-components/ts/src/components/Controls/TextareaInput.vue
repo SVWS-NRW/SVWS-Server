@@ -13,7 +13,7 @@
 		cols = 80,
 		rows = 6
 	} = defineProps<{
-		modelValue?: string;
+		modelValue?: string | null;
 		placeholder?: string;
 		valid?: boolean;
 		statistics?: boolean;

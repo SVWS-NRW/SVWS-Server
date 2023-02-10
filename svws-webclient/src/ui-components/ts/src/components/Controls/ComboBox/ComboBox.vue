@@ -35,7 +35,7 @@
 		itemText: {
 			type: Function as PropType<(item: any) => string>,
 			default(item: Item) {
-				return item.text || "";
+				return item.text ?? "";
 			}
 		},
 		itemSort: {type: Function as PropType<(a: any, b: any) => number>, default: null},
