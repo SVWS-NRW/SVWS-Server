@@ -18,22 +18,17 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr, GostJahrgang } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
+	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, WritableComputedRef } from 'vue';
 	import { RouterView, useRouter } from 'vue-router';
 	import { App } from '~/apps/BaseApp';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		halbjahr: GostHalbjahr;
 	}>();
 
 	const router = useRouter();
@@ -56,7 +51,7 @@
 			return;
 		const result = await App.api.createGostAbiturjahrgangBlockung(App.schema, props.jahrgangsdaten.daten.abiturjahr, selected_hj.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr;
-		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value.id, idblockung: result.id } });
+		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {

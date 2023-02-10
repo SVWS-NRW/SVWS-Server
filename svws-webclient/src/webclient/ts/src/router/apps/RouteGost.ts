@@ -120,11 +120,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.data.item,
-			schule: this.data.schule,
-			jahrgangsdaten: this.data.jahrgangsdaten,
-			dataFaecher: this.data.dataFaecher,
-			listJahrgaenge: this.data.listJahrgaenge
+			item: this.data.item.value
 		};
 	}
 

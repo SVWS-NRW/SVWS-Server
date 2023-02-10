@@ -17,7 +17,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public constructor() {
 		super("gost_kursplanung", "kursplanung/:halbjahr([0-5])?", SGostKursplanungEmpty, new RouteDataGostKursplanung());
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = (route) => this.getNoProps(route);
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";
 		super.children = [
@@ -73,23 +73,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: routeGost.data.item,
-			schule: routeGost.data.schule,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
-			listJahrgaenge: routeGost.data.listJahrgaenge,
-			halbjahr: this.data.halbjahr
-		}
-	}
-
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		return {
-			item: routeGost.data.item,
-			schule: routeGost.data.schule,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
-			listJahrgaenge: routeGost.data.listJahrgaenge,
-			halbjahr: this.data.halbjahr
+			halbjahr: this.data.halbjahr.value
 		}
 	}
 
