@@ -8,13 +8,13 @@
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile.values()" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
-			<svws-ui-text-input placeholder="Telefon" :model-value="data.telefon ?? undefined"
+			<svws-ui-text-input placeholder="Telefon" :model-value="data.telefon"
 				@update:model-value="doPatch({ telefon: String($event) })" type="tel" />
-			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data.telefonMobil ?? undefined"
+			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data.telefonMobil"
 				@update:model-value="doPatch({ telefonMobil: String($event) })" type="tel" />
-			<svws-ui-text-input placeholder="private E-Mail-Adresse" :model-value="data.emailPrivat ?? undefined"
+			<svws-ui-text-input placeholder="private E-Mail-Adresse" :model-value="data.emailPrivat"
 				@update:model-value="doPatch({ emailPrivat: String($event) })" type="email" verify-email />
-			<svws-ui-text-input placeholder="schulische E-Mail-Adresse" :model-value="data.emailSchule ?? undefined"
+			<svws-ui-text-input placeholder="schulische E-Mail-Adresse" :model-value="data.emailSchule"
 				@update:model-value="doPatch({ emailSchule: String($event) })" type="email" verify-email />
 		</div>
 	</svws-ui-content-card>
