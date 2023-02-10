@@ -45,7 +45,6 @@
 
 	import { GostFach, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { routeGost } from "~/router/apps/RouteGost";
 
 	const props = defineProps<{
 		dataFaecher: DataGostFaecher;

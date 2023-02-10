@@ -77,7 +77,12 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteG
 			patchFachkombination: this.data.patchFachkombination,
 			addFachkombination: this.data.addFachkombination,
 			removeFachkombination: this.data.removeFachkombination,
-			...routeGost.getProps(to),
+			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
 			dataFachkombinationen: this.data.dataFachkombinationen
 		};
 	}

@@ -4,7 +4,7 @@
 			<s-card-gost-faecher :data-faecher="dataFaecher" />
 		</div>
 		<div>
-			<s-card-gost-zusatzkurse :jahrgangsdaten="jahrgangsdaten" />
+			<s-card-gost-zusatzkurse v-if="jahrgangsdaten.daten !== undefined" :jahrgangsdaten="jahrgangsdaten.daten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
 			<template v-if="dataFaecher.manager !== undefined && dataFachkombinationen.daten !== undefined">
 				<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager="dataFaecher.manager"
 					:fachkombinationen="dataFachkombinationen.daten" :patch-fachkombination="patchFachkombination"
@@ -20,7 +20,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+	import { GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
@@ -31,6 +31,7 @@
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
+		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;

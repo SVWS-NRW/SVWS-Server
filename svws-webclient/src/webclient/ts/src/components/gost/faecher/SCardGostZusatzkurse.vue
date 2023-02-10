@@ -15,47 +15,35 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
-	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { GostHalbjahr, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		jahrgangsdaten: DataGostJahrgang;
+		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
+		jahrgangsdaten: GostJahrgangsdaten;
 	}>();
 
 	const inputBeginnZusatzkurs: ComputedRef<Array<GostHalbjahr>> = computed(
 		() => { return [ GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21] }
 	);
 
-	const inputHatZusatzkursGE: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursGE; },
-		set(val: boolean | undefined) { void props.jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
+	const inputHatZusatzkursGE: WritableComputedRef<boolean> = computed({
+		get: () => props.jahrgangsdaten.hatZusatzkursGE,
+		set: (value) => { void props.patchJahrgangsdaten({ hatZusatzkursGE: value }, props.jahrgangsdaten.abiturjahr); }
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
-		get(): GostHalbjahr {
-			if (props.jahrgangsdaten.daten === undefined)
-				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21;
-		},
-		set(val: GostHalbjahr) {
-			void props.jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
-		}
+		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten.beginnZusatzkursGE) || GostHalbjahr.Q21,
+		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursGE: value.kuerzel }, props.jahrgangsdaten.abiturjahr)
 	});
 
-	const inputHatZusatzkursSW: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursSW; },
-		set(val: boolean | undefined) { void props.jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
+	const inputHatZusatzkursSW: WritableComputedRef<boolean> = computed({
+		get: () => props.jahrgangsdaten.hatZusatzkursSW,
+		set: (value) => void props.patchJahrgangsdaten({ hatZusatzkursSW: value }, props.jahrgangsdaten.abiturjahr)
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
-		get(): GostHalbjahr {
-			if (props.jahrgangsdaten.daten === undefined)
-				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21;
-		},
-		set(val: GostHalbjahr) {
-			void props.jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
-		}
+		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten.beginnZusatzkursSW) || GostHalbjahr.Q21,
+		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursSW: value.kuerzel }, props.jahrgangsdaten.abiturjahr)
 	});
 
 </script>

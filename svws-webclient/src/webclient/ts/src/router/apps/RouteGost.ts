@@ -1,6 +1,7 @@
-import { GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { App } from "~/apps/BaseApp";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
@@ -21,6 +22,14 @@ export class RouteDataGost {
 	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
 	dataFaecher: DataGostFaecher = new DataGostFaecher();
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
+
+	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
+		if (this.jahrgangsdaten.daten === undefined)
+			return false;
+		await App.api.patchGostAbiturjahrgang(data, App.schema, abiturjahr);
+		return true;
+	}
+
 }
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
