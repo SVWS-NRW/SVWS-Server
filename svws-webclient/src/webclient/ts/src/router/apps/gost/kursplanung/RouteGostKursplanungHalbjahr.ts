@@ -178,7 +178,12 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			removeBlockung: this.data.removeBlockung,
-			...routeGostKursplanung.getProps(to),
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
+			halbjahr: routeGostKursplanung.data.halbjahr,
 			listBlockungen: this.data.listBlockungen,
 			blockung: this.data.dataKursblockung
 		}
@@ -186,7 +191,12 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeGostKursplanung.getProps(to),
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
+			halbjahr: routeGostKursplanung.data.halbjahr,
 			listBlockungen: this.data.listBlockungen,
 			blockung: this.data.dataKursblockung
 		}

@@ -1,7 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
-import { RouteLocationRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -9,12 +9,18 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 
 	public constructor() {
 		super("gost_klausurplanung_kalender", "kalender", SGostKlausurplanungKalender);
-		super.propHandler = (route) => routeGost.getProps(route);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			jahrgangsdaten: routeGost.data.jahrgangsdaten
+		}
 	}
 
 }

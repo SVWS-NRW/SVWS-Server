@@ -1,7 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
-import { RouteLocationRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 const SGostKlausurplanungKonflikte = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKonflikte.vue");
 
@@ -9,7 +9,7 @@ export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGo
 
 	public constructor() {
 		super("gost_klausurplanung_konflikte", "konflikte", SGostKlausurplanungKonflikte);
-		super.propHandler = (route) => routeGost.getProps(route);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konflikte";
 	}
 
@@ -17,6 +17,11 @@ export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGo
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			jahrgangsdaten: routeGost.data.jahrgangsdaten
+		}
+	}
 }
 
 export const routeGostKlausurplanungKonflikte = new RouteGostKlausurplanungKonflikte();

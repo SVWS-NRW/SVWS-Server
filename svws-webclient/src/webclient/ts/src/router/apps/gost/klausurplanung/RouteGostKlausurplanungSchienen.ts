@@ -3,7 +3,8 @@ import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKl
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostHalbjahr, GostKursklausurManager } from "@svws-nrw/svws-core-ts";
 import { App } from "~/apps/BaseApp";
-import { ref, Ref, ShallowRef, shallowRef } from "vue";
+import { ShallowRef, shallowRef } from "vue";
+import { routeGost } from "../../RouteGost";
 
 export class RouteDataGostKlausurplanungSchienen {
 
@@ -46,7 +47,12 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<RouteDataGostKlau
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeGostKlausurplanung.getProps(to),
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
+			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			manager: this.data.manager
 		}
 	}

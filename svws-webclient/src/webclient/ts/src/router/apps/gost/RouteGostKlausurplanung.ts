@@ -7,7 +7,7 @@ import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlaus
 import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
-import { GostHalbjahr, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { App } from "~/apps/BaseApp";
 
 export class RouteDataGostKlausurplanung  {
@@ -22,7 +22,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public constructor() {
 		super("gost_klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getProps(route));
+		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Klausurplanung";
 		super.children = [
 			routeGostKlausurplanungKlausurdaten,
@@ -81,9 +81,23 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
+			halbjahr: this.data.halbjahr
+		}
+	}
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeGost.getProps(to),
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
 			halbjahr: this.data.halbjahr
 		}
 	}

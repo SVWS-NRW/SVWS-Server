@@ -64,7 +64,11 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeGost.getProps(to),
+			item: routeGost.data.item,
+			schule: routeGost.data.schule,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			dataFaecher: routeGost.data.dataFaecher,
+			listJahrgaenge: routeGost.data.listJahrgaenge,
 			fachwahlen: this.data.fachwahlen
 		};
 	}
