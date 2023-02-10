@@ -1,26 +1,23 @@
 <template>
-	<div v-if="item.value !== undefined" class="app-container">
+	<div v-if="jahrgangsdaten !== undefined" class="app-container">
 		<s-card-gost-beratungslehrer v-if="istAbiturjahrgang" :jahrgangsdaten="jahrgangsdaten" />
 		<div>
-			<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" />
-			<s-card-gost-text-mailversand :jahrgangsdaten="jahrgangsdaten" />
+			<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
+			<s-card-gost-text-mailversand :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
-		jahrgangsdaten: DataGostJahrgang;
+		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
+		jahrgangsdaten: GostJahrgangsdaten;
 	}>();
 
-	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.item.value !== undefined) && (props.item.value?.abiturjahr > 0));
+	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten.abiturjahr > 0));
 
 </script>

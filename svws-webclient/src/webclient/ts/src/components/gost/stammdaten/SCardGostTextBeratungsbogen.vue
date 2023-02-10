@@ -2,7 +2,8 @@
 	<svws-ui-content-card title="Texte für die Laufbahnplanung">
 		<div class="input-wrapper">
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Beratungsbögen" v-model="inputTextBeratungsbogen" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="props.jahrgangsdaten.textBeratungsbogen ?? undefined"
+					@update:model-value="doPatch({ textBeratungsbogen: String($event) })" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -10,17 +11,15 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 
-	const props = defineProps<{ jahrgangsdaten: DataGostJahrgang }>();
+	const props = defineProps<{
+		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
+		jahrgangsdaten: GostJahrgangsdaten;
+	}>();
 
-	const daten: ComputedRef<GostJahrgangsdaten> = computed(() => props.jahrgangsdaten.daten || new GostJahrgangsdaten());
-
-	const inputTextBeratungsbogen: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.textBeratungsbogen ?? undefined,
-		set: (value) => void props.jahrgangsdaten.patch({ textBeratungsbogen: value })
-	});
+	async function doPatch(data: Partial<GostJahrgangsdaten>) {
+		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten.abiturjahr);
+	}
 
 </script>
