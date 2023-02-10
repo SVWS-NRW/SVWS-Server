@@ -10,6 +10,7 @@ import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { RouteManager } from "../RouteManager";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
 import { routeGostFaecher } from "./gost/RouteGostFaecher";
 import { routeGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
@@ -30,6 +31,12 @@ export class RouteDataGost {
 		return true;
 	}
 
+	addAbiturjahrgang = async (idJahrgang: number) => {
+		const abiturjahr = await App.api.createGostAbiturjahrgang(App.schema, idJahrgang);
+		await routeGost.liste.update_list();
+		await RouteManager.doRoute(routeGost.getRoute(abiturjahr));
+	}
+
 }
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
@@ -42,7 +49,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
-		super.setView("liste", SGostAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeGostJahrgangsdaten,
 			routeGostFaecher,
@@ -54,15 +61,14 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		if (to_params.abiturjahr === undefined) {
-			const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		if (to_params.abiturjahr === undefined)
 			await this.liste.update_list();
-			const abiturjahr = (this.data.item.value !== undefined) ? this.data.item.value.abiturjahr : -1;
-			if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
-				return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
-			return { name: redirect.name, params: { abiturjahr: abiturjahr }};
-		}
-		return true;
+		const abiturjahr = (to_params.abiturjahr !== undefined) ? parseInt(to_params.abiturjahr as string)
+			: ((this.data.item.value !== undefined) ? this.data.item.value.abiturjahr : -1);
+		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
+			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		return { name: redirect.name, params: { abiturjahr: abiturjahr }};
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -99,18 +105,27 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		return this.getSelectorByAbiturjahr(this.liste);
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { abiturjahr: -1 }};
+	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr ?? -1 }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			addAbiturjahrgang: this.data.addAbiturjahrgang,
+			item: this.data.item.value,
+			schule: this.data.schule,
+			listJahrgaenge: this.data.listJahrgaenge
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = {};
-		prop.item = this.data.item;
-		prop.schule = this.data.schule;
-		prop.jahrgangsdaten = this.data.jahrgangsdaten;
-		prop.dataFaecher = this.data.dataFaecher;
-		prop.listJahrgaenge = this.data.listJahrgaenge;
-		return prop;
+		return {
+			item: this.data.item,
+			schule: this.data.schule,
+			jahrgangsdaten: this.data.jahrgangsdaten,
+			dataFaecher: this.data.dataFaecher,
+			listJahrgaenge: this.data.listJahrgaenge
+		};
 	}
 
 

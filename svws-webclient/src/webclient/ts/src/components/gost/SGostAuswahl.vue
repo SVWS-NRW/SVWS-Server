@@ -36,22 +36,19 @@
 <script setup lang="ts">
 
 	import { GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeGost } from "~/router/apps/RouteGost";
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
+		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
+		item: GostJahrgang | undefined;
 		schule: DataSchuleStammdaten;
-		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
 		listJahrgaenge: ListJahrgaenge;
 	}>();
 
@@ -79,14 +76,7 @@
 	const pending: ComputedRef<boolean> = computed(() => routeGostKursplanungHalbjahr.data.dataKursblockung.pending);
 
 	async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
-		try {
-			const abiturjahr = await props.jahrgangsdaten.post_jahrgang(jahrgang.id);
-			await routeGost.liste.update_list();
-			const jahr = routeGost.liste.liste?.find(j => j.abiturjahr === abiturjahr);
-			selected.value = jahr;
-		} catch (e) {
-			console.log("Fehler: ", e);
-		}
+		await props.addAbiturjahrgang(jahrgang.id);
 	}
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() =>
