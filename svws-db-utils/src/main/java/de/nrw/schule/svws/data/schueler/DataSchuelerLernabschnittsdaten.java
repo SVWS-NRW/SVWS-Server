@@ -98,6 +98,7 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	daten.istGewertet = aktuell.SemesterWertung == null ? true : aktuell.SemesterWertung;
     	daten.istWiederholung = aktuell.Wiederholung == null ? false : aktuell.Wiederholung;
     	daten.pruefungsOrdnung = aktuell.PruefOrdnung;
+    	daten.tutorID = aktuell.Tutor_ID;
     	daten.klassenID = aktuell.Klassen_ID;
     	daten.folgeklassenID = aktuell.Folgeklasse_ID;
     	daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel; 

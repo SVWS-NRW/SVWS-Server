@@ -71,6 +71,10 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(required = true, description = "die ID der Klasse des Schülers", example="46")
 	public long klassenID = -1;
 
+	/** Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist */
+	@Schema(required = false, description = "die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist", example="null")
+	public Long tutorID = null;
+	
 	/** Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht. */
 	@Schema(required = true, description = "die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht", example="59")
 	public Long folgeklassenID = null;

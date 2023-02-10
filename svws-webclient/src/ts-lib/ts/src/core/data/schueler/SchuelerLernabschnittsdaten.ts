@@ -75,6 +75,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public klassenID : number = -1;
 
 	/**
+	 * Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist 
+	 */
+	public tutorID : number | null = null;
+
+	/**
 	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht. 
 	 */
 	public folgeklassenID : number | null = null;
@@ -273,6 +278,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.klassenID === "undefined")
 			 throw new Error('invalid json format, missing attribute klassenID');
 		result.klassenID = obj.klassenID;
+		result.tutorID = typeof obj.tutorID === "undefined" ? null : obj.tutorID === null ? null : obj.tutorID;
 		result.folgeklassenID = typeof obj.folgeklassenID === "undefined" ? null : obj.folgeklassenID === null ? null : obj.folgeklassenID;
 		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
 		if (typeof obj.jahrgangID === "undefined")
@@ -347,6 +353,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		result += '"pruefungsOrdnung" : ' + '"' + obj.pruefungsOrdnung! + '"' + ',';
 		result += '"klassenID" : ' + obj.klassenID + ',';
+		result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
 		result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID) + ',';
 		result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : '"' + obj.schulgliederung + '"') + ',';
 		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
@@ -435,6 +442,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		}
 		if (typeof obj.klassenID !== "undefined") {
 			result += '"klassenID" : ' + obj.klassenID + ',';
+		}
+		if (typeof obj.tutorID !== "undefined") {
+			result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
 		}
 		if (typeof obj.folgeklassenID !== "undefined") {
 			result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID) + ',';

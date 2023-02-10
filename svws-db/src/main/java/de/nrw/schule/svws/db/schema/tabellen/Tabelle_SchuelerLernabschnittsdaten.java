@@ -61,6 +61,10 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Klassen_ID = add("Klassen_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("Klassen_ID des Schülers für den Lernabschnitt");
 
+	/** Die Definition der Tabellenspalte Tutor_ID */
+	public SchemaTabelleSpalte col_Tutor_ID = add("Tutor_ID", SchemaDatentypen.BIGINT, false)
+		.setJavaComment("Die Lehrer-ID des Tutors, der dem Schüler zugeordnet ist, oder null falls keine Zuordnung vorgenommen wurde");
+
 	/** Die Definition der Tabellenspalte Verspaetet */
 	public SchemaTabelleSpalte col_Verspaetet = add("Verspaetet", SchemaDatentypen.SMALLINT, false)
 		.setJavaComment("ID des Nachprüfungsfaches");
@@ -470,7 +474,14 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
-
+	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Tutor_FK */
+	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Tutor_FK = addForeignKey(
+			"SchuelerLernabschnittsdaten_Tutor_FK", 
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			new Pair<>(col_Tutor_ID, Schema.tab_K_Lehrer.col_ID)
+		);
+ 
 	/** Die Definition des Unique-Index SchuelerLernabschnittsdaten_UC1 */
 	public SchemaTabelleUniqueIndex unique_SchuelerLernabschnittsdaten_UC1 = addUniqueIndex("SchuelerLernabschnittsdaten_UC1", 
 			col_Schueler_ID, 

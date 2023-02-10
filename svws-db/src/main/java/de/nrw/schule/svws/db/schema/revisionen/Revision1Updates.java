@@ -1856,6 +1856,48 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_KlassenLehrer, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen, Schema.tab_EigeneSchule, Schema.tab_K_Lehrer
 		);
+		add("Tabelle KlassenLehrer: Erstellung Einträge für die übrigen Schuljahresabschnitte basierend auf den Schüler-Abschnittsdaten",
+			"""
+ 			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
+			SELECT
+				Klassen_ID,
+				Lehrer_ID,
+				ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) + 2 AS Reihenfolge
+			FROM 
+				((
+					SELECT
+  						Klassen.ID AS Klassen_ID,
+  						K_Lehrer.ID AS Lehrer_ID,
+  						count(*)*2 AS Anzahl
+					FROM SchuelerLernabschnittsdaten
+   						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
+   							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
+   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel  
+					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
+						SELECT Schuljahresabschnitts_ID 
+						FROM EigeneSchule
+					) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
+					GROUP BY Klassen.ID, K_Lehrer.ID
+				) UNION (
+					SELECT
+						Klassen.ID AS Klassen_ID,
+						K_Lehrer.ID AS Lehrer_ID,
+						count(*) AS Anzahl 
+					FROM SchuelerLernabschnittsdaten
+						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID 
+							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse 
+   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID  
+					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
+						SELECT Schuljahresabschnitts_ID 
+						FROM EigeneSchule
+					) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
+					GROUP BY Klassen.ID, K_Lehrer.ID
+				)) a   
+			GROUP BY Klassen_ID, Lehrer_ID
+			ORDER BY Klassen_ID, Anzahl DESC, Lehrer_ID
+			""",
+			Schema.tab_KlassenLehrer, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen, Schema.tab_EigeneSchule, Schema.tab_K_Lehrer
+		);
 	}
 
 	private void passeLehrerTabelleAn() {
