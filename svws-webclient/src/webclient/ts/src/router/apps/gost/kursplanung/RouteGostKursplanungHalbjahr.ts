@@ -72,7 +72,7 @@ const SGostKursplanungBlockungAuswahl = () => import("~/components/gost/kursplan
 export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKursplanungHalbjahr, RouteGostKursplanung> {
 
 	public constructor() {
-		super("gost_kursplanung_halbjahr", "blockung/:idblockung(\\d+)?", SGostKursplanungEmptyErgebnis, new RouteDataGostKursplanungHalbjahr());
+		super("gost.kursplanung.halbjahr", "blockung/:idblockung(\\d+)?", SGostKursplanungEmptyErgebnis, new RouteDataGostKursplanungHalbjahr());
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_blockung_auswahl", SGostKursplanungBlockungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung Halbjahresauswahl";

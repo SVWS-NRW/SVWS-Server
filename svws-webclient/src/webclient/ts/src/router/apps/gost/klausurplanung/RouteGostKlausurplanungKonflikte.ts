@@ -8,7 +8,7 @@ const SGostKlausurplanungKonflikte = () => import("~/components/gost/klausurplan
 export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super("gost_klausurplanung_konflikte", "konflikte", SGostKlausurplanungKonflikte);
+		super("gost.klausurplanung.konflikte", "konflikte", SGostKlausurplanungKonflikte);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konflikte";
 	}

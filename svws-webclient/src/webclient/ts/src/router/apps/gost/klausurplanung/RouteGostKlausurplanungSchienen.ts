@@ -23,7 +23,7 @@ const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungSchienen extends RouteNode<RouteDataGostKlausurplanungSchienen, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super("gost_klausurplanung_schienen", "schienen", SGostKlausurplanungSchienen, new RouteDataGostKlausurplanungSchienen());
+		super("gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen, new RouteDataGostKlausurplanungSchienen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}

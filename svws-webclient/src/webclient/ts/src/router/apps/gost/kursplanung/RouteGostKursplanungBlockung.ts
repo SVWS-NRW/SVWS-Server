@@ -59,7 +59,7 @@ const SGostKursplanungErgebnisAuswahl = () => import("~/components/gost/kursplan
 export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKursplanungBlockung, RouteGostKursplanungHalbjahr> {
 
 	public constructor() {
-		super("gost_kursplanung_halbjahr_ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanungBlockung());
+		super("gost.kursplanung.halbjahr.ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanungBlockung());
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";

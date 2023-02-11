@@ -7,7 +7,7 @@ const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdat
 export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
-		super("gost_jahrgangsdaten", "daten", SGostStammdaten);
+		super("gost.jahrgangsdaten", "daten", SGostStammdaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Allgemein";
 	}

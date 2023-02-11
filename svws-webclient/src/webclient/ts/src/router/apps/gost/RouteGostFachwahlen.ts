@@ -14,7 +14,7 @@ const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahl
 export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, RouteGost> {
 
 	public constructor() {
-		super("gost_fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostKursplanung());
+		super("gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostKursplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {
