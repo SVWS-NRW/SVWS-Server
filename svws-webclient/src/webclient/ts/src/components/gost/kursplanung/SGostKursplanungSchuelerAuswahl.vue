@@ -10,33 +10,42 @@
 			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
 		</div>
 		<div class="mb-3">
-			<svws-ui-radio-group>
-				<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" />
-				<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen" />
-				<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtwahlen" />
-				<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="Kollisionen und Nichtwahlen" />
+			<svws-ui-radio-group class="radio--row">
+				<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
+				<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
+					<i-ri-alert-line />
+				</svws-ui-radio-option>
+				<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtwahlen">
+					<i-ri-forbid-2-line />
+				</svws-ui-radio-option>
+				<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
+					<i-ri-alert-fill />
+				</svws-ui-radio-option>
 			</svws-ui-radio-group>
 		</div>
-		<div class="mb-2">
+		<div class="mb-2 relative z-20">
 			<svws-ui-text-input v-model="schuelerFilter.name.value" type="search" placeholder="Suche nach Namen">
 				<i-ri-search-line />
 			</svws-ui-text-input>
 		</div>
-		<div class="h-full overflow-hidden mb-[-1px]">
-			<!---ml-4 -mr-4, table--container: -ml-px-->
-			<div class="v-table--container v-table--rows-white">
-				<table class="v-table--complex">
-					<thead>
-						<tr>
-							<th class="table--th-padding">Schülerauswahl</th>
-						</tr>
-					</thead>
-					<tbody>
-						<s-kurs-schueler-schueler v-for="s in filtered.values()" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
-							:blockung="blockung" :schueler-filter="schuelerFilter" />
-					</tbody>
-				</table>
-			</div>
+		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10"/>
+		<div class="v-table--container v-table--rows-white">
+			<table class="v-table--complex">
+				<thead>
+					<tr>
+						<th class="table--th-padding">
+							Schülerauswahl
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<s-kurs-schueler-schueler v-for="s in filtered.values()" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
+						:blockung="blockung" :schueler-filter="schuelerFilter" />
+					<tr v-if="!filtered.size">
+						<td class="opacity-50 text-sm">Keine Schüler zu diesem Filter gefunden.</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</svws-ui-content-card>
 </template>

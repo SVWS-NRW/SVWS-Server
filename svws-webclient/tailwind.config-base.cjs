@@ -52,7 +52,7 @@ module.exports = {
 				lineHeight: '1.33',
 				fontWeight: '500',
 			}],
-			'headline-sm': ['1rem', {
+			'headline-sm': ['1.125rem', {
 				lineHeight: '1.33',
 				fontWeight: '700',
 			}],
@@ -92,8 +92,8 @@ module.exports = {
 		},
 		extend: {
 			screens: {
-				"3xl": "1920px",
-				"4xl": "2160px"
+				"3xl": "1800px",
+				"4xl": "2000px"
 			},
 			colors: {
 				transparent: "transparent",

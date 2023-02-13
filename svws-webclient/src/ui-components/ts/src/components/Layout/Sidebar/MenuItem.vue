@@ -80,12 +80,6 @@
 	}
 }
 
-@media (min-width: 2000px) {
-	.sidebar--menu .sidebar--menu-item--label {
-		font-size: 1rem;
-	}
-}
-
 .secondary-menu--content .sidebar--menu-item {
 	@apply text-dark px-3 inline-block my-1;
 }

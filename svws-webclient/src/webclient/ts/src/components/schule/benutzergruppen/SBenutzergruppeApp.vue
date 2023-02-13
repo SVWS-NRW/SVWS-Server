@@ -3,7 +3,10 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ bezeichnung }}</span>
-				<svws-ui-badge title="ID" variant="light">{{ id }}</svws-ui-badge>
+				<svws-ui-badge title="ID" variant="light">
+					<i-ri-fingerprint-line/>
+					{{ id }}
+				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">

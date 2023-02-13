@@ -6,7 +6,7 @@
 					<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
 						<td>
 							{{ row.kuerzel }}
-							<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+							<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 						</td>
 					</tr>
 				</template>

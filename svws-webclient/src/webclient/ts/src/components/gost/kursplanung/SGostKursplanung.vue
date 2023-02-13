@@ -1,6 +1,6 @@
 <template>
 	<div v-if="visible && (blockung.datenmanager !== undefined) && (blockung.ergebnismanager !== undefined) && (dataFaecher.manager !== undefined)"
-		class="content-card--blockungsuebersicht flex h-full content-start">
+		class="content-card--blockungsuebersicht flex content-start">
 		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="dataFaecher.manager"
 			:datenmanager="blockung.datenmanager" :ergebnismanager="blockung.ergebnismanager"
 			:fachwahlen="fachwahlen" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"

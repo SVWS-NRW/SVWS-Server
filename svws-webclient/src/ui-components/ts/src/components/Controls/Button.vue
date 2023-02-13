@@ -10,7 +10,7 @@
 		type?: ButtonType;
 		disabled?: boolean;
 		dropdownAction?: boolean;
-		size?: Extract<Size, 'small' | 'normal'>;
+		size?: Extract<Size, 'small' | 'normal' | 'big'>;
 	}>();
 
 	const emit = defineEmits<{
@@ -28,15 +28,14 @@
 	<button class="button" :class="{
 		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
-		'button--error': type === 'error',
+		'button--danger': type === 'error' || type === 'danger',
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
 		'button--trash': type === 'trash',
+		'button--big': size === 'big',
 		'button--dropdown-action': dropdownAction === true,
-		'button--normal': size === 'normal',
-		'button--small': size === 'small',
 	}" :disabled="disabled" @click="onClick">
-		<slot />
+		<slot v-if="type !== 'trash'" />
 		<Icon v-if="type === 'trash'" class="button--trash-icon">
 			<i-ri-delete-bin-line class="icon--line" />
 			<i-ri-delete-bin-fill class="icon--fill" />
@@ -46,64 +45,78 @@
 
 <style lang="postcss">
 .button {
-	@apply rounded-full border-2;
+	@apply rounded-md border;
 	@apply select-none;
 	@apply text-button font-bold;
 	@apply flex items-center;
 	gap: 0.25em;
-}
+	padding: 0.45em 0.75em;
 
-.button svg {
-	margin-top: -0.1em;
-	margin-bottom: -0.1em;
-}
+	svg {
+		margin-top: -0.1em;
+		margin-bottom: -0.1em;
+	}
 
-.button:focus {
-	@apply outline-none ring;
+	&:hover {
+		@apply brightness-110;
+	}
+
+	&:focus {
+		@apply outline-none ring;
+	}
+
+	&:active {
+		@apply ring-0 brightness-100;
+	}
 }
 
 .button--primary {
-	@apply bg-primary;
-	@apply border-primary;
-	@apply text-white;
-}
+	@apply bg-primary text-white border-primary;
 
-.button--primary:hover {
-	@apply bg-light text-primary;
-}
-
-.button--primary:focus {
-	@apply ring-primary ring-opacity-50;
+	&:focus {
+		@apply ring-primary ring-opacity-50;
+	}
 }
 
 .button--secondary {
-	@apply bg-transparent;
-	@apply border-black;
-	@apply text-black;
+	@apply bg-transparent text-black border-dark;
+
+	&:hover {
+		@apply border-primary text-primary;
+	}
+
+	&:focus {
+		@apply ring-primary ring-opacity-25 border-primary;
+	}
+
+	&:active {
+		@apply bg-primary bg-opacity-5 brightness-100;
+	}
 }
 
-.button--secondary:hover {
-	@apply bg-black text-white;
+.button--transparent {
+	@apply bg-transparent border-transparent;
+
+	&:hover {
+		@apply bg-light brightness-95;
+	}
+
+	&:focus {
+		@apply bg-light ring-dark-20 ring-opacity-75;
+	}
 }
 
-.button--secondary:focus {
-	@apply ring-primary ring-opacity-50;
-}
+.button--danger {
+	@apply bg-transparent text-error border-error;
 
-.button--error {
-	@apply bg-transparent;
-	@apply border-error;
-	@apply text-error;
-}
+	&:hover,
+	&:focus {
+		@apply bg-error text-white;
+	}
 
-.button--error:hover {
-	@apply bg-error text-white;
-}
-
-.button--error:focus {
-	@apply bg-error;
-	@apply ring-error ring-opacity-50;
-	@apply text-white;
+	&:focus {
+		@apply ring-error ring-opacity-50;
+	}
 }
 
 .button--trash {
@@ -138,41 +151,14 @@
 	}
 }
 
-.button--transparent {
-	@apply bg-transparent;
-	@apply border-transparent;
-	@apply rounded;
-}
-
-.button--transparent:hover {
-	@apply bg-dark-20 bg-opacity-50;
-}
-
-.button--transparent:focus {
-	@apply ring-primary;
-}
-
-.button--normal {
-	@apply px-5 py-2;
-}
-
-.button:disabled {
-	@apply bg-disabled;
-	@apply border-disabled-medium;
-	@apply cursor-not-allowed;
-	@apply text-disabled-dark;
-}
-
-.button--dropdown-action {
-	@apply pr-3;
-	@apply relative z-20;
-	@apply rounded-r-none;
-}
-
-.button--transparent,
 .button--icon {
-	@apply rounded border-0 justify-center items-center;
-	@apply p-2;
+	@apply p-2 justify-center border-0 items-center;
+	@apply w-8 h-8;
+
+	svg {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
 
 	&:hover, &:focus {
 		@apply bg-dark-20 bg-opacity-50 rounded;
@@ -183,22 +169,34 @@
 	}
 }
 
-.button--icon {
-	@apply w-8 h-8;
-
-	svg {
-		width: 1.2rem;
-		height: 1.2rem;
+.button:disabled {
+	&,
+	&:hover,
+	&:focus {
+		@apply bg-black bg-opacity-25 border-black border-opacity-50 text-black;
+		@apply opacity-20;
+		@apply cursor-not-allowed pointer-events-none;
 	}
 }
 
-.hover--error:hover {
+.button--dropdown-action {
+	@apply relative z-20;
+	@apply rounded-r-none;
+	padding-right: 0.5em;
+}
+
+.hover--danger:hover {
 	@apply text-error;
 }
 
 .button--small {
-	border-width: thin;
+	@apply rounded;
 	font-size: .833rem;
-	padding: .1em .5em .15em;
+	padding: 0.2em 0.6em;
+}
+
+.button--big {
+	padding-top: 0.64em;
+	padding-bottom: 0.64em;
 }
 </style>

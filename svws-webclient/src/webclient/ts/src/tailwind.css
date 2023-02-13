@@ -31,7 +31,9 @@
 }
 
 .app-container {
-	@apply grid grid-cols-1 gap-x-[3vw] gap-y-12 lg:gap-y-8 lg:grid-cols-2 4xl:grid-cols-3;
+	@apply grid grid-cols-1 lg:grid-cols-2 4xl:grid-cols-3;
+	@apply gap-12 lg:gap-16;
+	@apply min-h-full;
 	grid-template-rows: min-content;
 }
 

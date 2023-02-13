@@ -24,7 +24,10 @@
 			</td>
 			<td class="text-center">
 				<svws-ui-checkbox headless v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
-				<template v-else>{{ kurs.istKoopKurs ? "&#x2713;" : "&#x2717;" }}</template>
+				<svws-ui-icon v-else class="inline-block opacity-50">
+					<i-ri-check-line v-if="kurs.istKoopKurs" />
+					<i-ri-close-line v-else />
+				</svws-ui-icon>
 			</td>
 			<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
 				<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">

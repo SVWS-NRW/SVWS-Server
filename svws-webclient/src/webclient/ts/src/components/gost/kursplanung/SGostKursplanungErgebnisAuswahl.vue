@@ -25,7 +25,7 @@
 				</th>
 			</template>
 			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
-				<span class="flex gap-1 cell--bewertung items-center">
+				<span class="flex gap-1 cell--bewertung items-center text-sm">
 					<span :style="{'background-color': color1(row)}">{{ manager?.getOfBewertung1Wert(row.id) }}</span>
 					<span :style="{'background-color': color2(row)}">{{ manager?.getOfBewertung2Wert(row.id) }}</span>
 					<span :style="{'background-color': color3(row)}">{{ manager?.getOfBewertung3Wert(row.id) }}</span>
@@ -42,7 +42,7 @@
 					<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Es muss mindestens ein Ergebnis behalten werden.</span>
 					<span v-else>{{ selected_ergebnisse.length }}/{{ rows_ergebnisse.size() }} ausgewählt</span>
 				</span>
-				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="overflow-y-hidden flex items-center justify-end pr-1 h-full">
+				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="overflow-hidden flex items-center justify-end pr-1 h-full">
 					<svws-ui-popover class="popper--danger" :open-delay="200">
 						<template #trigger>
 							<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
@@ -221,7 +221,7 @@
 	.cell--bewertung span {
 		@apply inline-block text-center text-black rounded font-normal;
 		min-width: 3em;
-		padding: 0.05em 0.2em;
+		padding: 0.1em 0.2em;
 	}
 
 	.bewertung--letter {
@@ -232,7 +232,7 @@
 	}
 
 	.vt-clicked .cell--bewertung span {
-		@apply font-bold;
+		@apply font-bold saturate-200;
 	}
 
 	.v-table tr {

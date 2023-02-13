@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import {ref} from "vue";
+import {h, ref} from "vue";
 	import {hstEvent} from 'histoire/client';
 
 	import SvwsUiAppLayout from "./AppLayout.vue";
@@ -13,6 +13,25 @@
 	import SvwsUiTabBar from "../../Controls/TabBar.vue";
 	import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
 	import SvwsUiNotification from "../Modal/Notification.vue";
+	import SvwsUiTabButton from "../../Controls/TabButton.vue";
+
+	const routes = [
+		{ path: "/", name: "home", component: { render: () => h("h1", "Home") }, meta: { text: "Home" } },
+		{ path: "/about", name: "about", component: { render: () => h("h1", "About") }, meta: { text: "About" } },
+		{
+			path: "/settings",
+			name: "settings",
+			component: { render: () => h("h1", "Settings") },
+			meta: { text: "Settings" }
+		},
+		{ path: "/hidden", name: "hidden", component: { render: () => h("h1", "Hidden") }, meta: { text: "Hidden" } },
+		{ path: "/link1", name: "link1", component: { render: () => h("h1", "link1") }, meta: { text: "Link mit einem sehr langen Titel" } },
+		{ path: "/link2", name: "link2", component: { render: () => h("h1", "link2") }, meta: { text: "Link mit einem sehr langen Titel 2" } },
+		{ path: "/link3", name: "link3", component: { render: () => h("h1", "link3") }, meta: { text: "Link mit einem sehr langen Titel 3" } }
+	];
+
+	const hidden = ref([false, false, false, true]);
+	const selectedRoute = ref(routes[0]);
 
 </script>
 
@@ -92,58 +111,22 @@
 				<!--<div class="app-layout--main--placeholder">
 					<i-ri-archive-line/>
 				</div>-->
-				<svws-ui-overlay class="hidden" />
 				<svws-ui-header>
 					<span>Title</span><br>
 					<span class="opacity-50">Subline</span>
 				</svws-ui-header>
-				<svws-ui-tab-bar>
-					<template #tabs>
-						<svws-ui-tab-button>Individualdaten</svws-ui-tab-button>
-						<svws-ui-tab-button>Erziehungsberechtigte</svws-ui-tab-button>
-						<svws-ui-tab-button>Adressen / Betriebe</svws-ui-tab-button>
-						<svws-ui-tab-button>Schulbesuch</svws-ui-tab-button>
-						<svws-ui-tab-button>Aktuelles Halbjahr</svws-ui-tab-button>
-						<svws-ui-tab-button>Leistungsdaten</svws-ui-tab-button>
-						<svws-ui-tab-button hidden>Laufbahnplanung</svws-ui-tab-button>
-						<svws-ui-tab-button>Stundenplan</svws-ui-tab-button>
-					</template>
-					<template #panels>
-						<svws-ui-tab-panel>
-							<s-schueler-individualdaten />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-erziehungsberechtigte />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-adressen />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-schulbesuch />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-halbjahr />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-leistungsdaten />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel hidden>
-							<s-schueler-laufbahnplanung />
-						</svws-ui-tab-panel>
-						<svws-ui-tab-panel>
-							<s-schueler-stundenplan />
-						</svws-ui-tab-panel>
-					</template>
-				</svws-ui-tab-bar>
+				<RouterTabBar :routes="routes" :hidden="hidden" v-model="selectedRoute">
+					<component :is="selectedRoute.component" />
+				</RouterTabBar>
 				<!--TODO bzw. WIP, das muss noch aufgeräumt werden-->
 				<Notification>Test</Notification>
-				<Notification type="success">Success!</Notification>
+				<!--<Notification type="success">Success!</Notification>
 				<Notification type="highlight">Hinweis</Notification>
 				<Notification type="error">
 					<div class="py-1 mb-1">Error Notification</div>
 					<div class="font-normal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab at commodi cumque, esse eum fugit hic inventore magnam, minus nihil possimus praesentium ratione repellendus soluta temporibus vitae voluptatibus. Aspernatur, itaque!</div>
 					<Button type="transparent" class="inline-flex items-center -ml-2 my-2"><i-ri-bug-line/>Fehler melden</Button>
-				</Notification>
+				</Notification>-->
 			</template>
 		</svws-ui-app-layout>
 	</Story>

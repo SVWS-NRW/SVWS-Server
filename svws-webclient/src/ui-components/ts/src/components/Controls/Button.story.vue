@@ -6,12 +6,11 @@
 	const propsVariants = {
 		Primary: { type: "primary" },
 		Secondary: { type: "secondary" },
-		Error: { type: "error" },
+		Danger: { type: "danger" },
 		Transparent: { type: "transparent" },
 		'Dropdown Action': { type: "primary", dropdownAction: true },
 		Disabled: { type: "primary", disabled: true },
-		Normal: { type: "primary", size: 'normal' },
-		Small: { type: "primary", size: 'small' },
+		Trash: { type: "trash" },
 	} as const;
 
 	function onClick(event: Event) {

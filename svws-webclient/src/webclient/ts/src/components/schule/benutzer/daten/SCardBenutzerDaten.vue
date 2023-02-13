@@ -10,7 +10,9 @@
 				<svws-ui-text-input class="mb-5" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
 				<svws-ui-text-input class="mb-5" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
 			</div>
-			<svws-ui-button type="secondary" @click="setPassword()"> Kennwort ändern </svws-ui-button>
+			<div>
+			<svws-ui-button @click="setPassword()"> Kennwort ändern </svws-ui-button>
+			</div>
 		</div>
 	</svws-ui-content-card>
 </template>

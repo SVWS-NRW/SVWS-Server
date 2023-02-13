@@ -399,6 +399,11 @@
 	@apply flex;
 	@apply inset-y-0 right-0;
 	@apply items-center justify-center cursor-pointer text-base;
+	@apply opacity-50;
+
+	&:hover {
+		@apply opacity-100;
+	}
 
 	.icon {
 		@apply py-0.5;
@@ -407,6 +412,13 @@
 
 	&:hover .icon {
 		@apply bg-black text-white rounded;
+	}
+}
+
+.multiselect-input-component.with-open-list,
+.multiselect-input-component.with-value {
+	.dropdown-icon {
+		@apply opacity-100;
 	}
 }
 

@@ -274,9 +274,14 @@
 				@apply justify-between;
 
 				.button {
-					@apply border;
+					@apply h-auto;
+					@apply rounded;
 					font-size: 0.833rem;
-					padding: 0.1em 0.7em;
+					padding: 0.2em 0.6em;
+
+					&.button--secondary {
+						@apply border-dark border-opacity-50;
+					}
 				}
 
 				&.column--key-id {
@@ -358,11 +363,6 @@
 		}
 	}
 
-	.v-table--container {
-		@apply relative overflow-y-auto;
-		-webkit-overflow-scrolling: touch;
-	}
-
 	.v-table--rows-white {
 		tr {
 			@apply bg-white;
@@ -411,6 +411,7 @@
 
 			th {
 				@apply bg-white;
+				@apply sticky top-0;
 				padding: 0.15rem 0.5rem 0.1rem;
 				background-clip: padding-box;
 

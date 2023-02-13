@@ -6,7 +6,7 @@
 				<br>
 				<span class="opacity-50">{{ jahrgang ? jahrgang : '–' }}</span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeGost.children_records" :hidden="children_hidden" v-model="selectedRoute">
+			<svws-ui-router-tab-bar :routes="routeGost.children_records" :hidden="children_hidden" v-model="selectedRoute" class="router--gost-kursplanung">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>
@@ -41,3 +41,9 @@
 	});
 
 </script>
+
+<style lang="postcss">
+.router--gost-kursplanung .content-card--blockungsuebersicht {
+	@apply gap-x-16;
+}
+</style>

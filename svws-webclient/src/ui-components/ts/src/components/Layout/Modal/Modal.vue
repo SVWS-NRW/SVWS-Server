@@ -121,6 +121,12 @@
 .modal--title {
 	@apply flex-grow px-2;
 	@apply text-sm-bold uppercase;
+
+	.button {
+		&:focus {
+			@apply bg-transparent outline-none ring-0 border-0;
+		}
+	}
 }
 
 .modal--content-wrapper {
@@ -129,7 +135,7 @@
 }
 
 .modal--description {
-	@apply p-4 text-base;
+	@apply p-4 pt-2 text-headline-sm text-center;
 }
 
 .modal--wrapper {
@@ -138,7 +144,7 @@
 }
 
 .modal--content {
-	@apply w-full text-base p-4 text-center;
+	@apply w-full text-base px-4 py-2 text-center;
 }
 
 .modal--actions {

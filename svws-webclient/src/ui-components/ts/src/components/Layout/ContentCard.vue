@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<slot name="title" />
-		<div class="mt-4">
+		<div :class="{'mt-4': title}">
 			<slot />
 		</div>
 	</div>
@@ -28,6 +28,10 @@
 <style lang="postcss">
 	.content-card--wrapper {
 		@apply h-fit;
+
+		&:not(:last-child) {
+			@apply max-lg:pb-12;
+		}
 	}
 
 	.content-card--headline {
@@ -36,7 +40,7 @@
 	}
 
 	.content-card--header {
-		@apply inline-flex items-center justify-between px-3 py-1 rounded bg-light mt-6 mb-2 w-auto;
+		@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
 	}
 
 	.content-card--wrapper--light-bg .content-card--header {
@@ -44,7 +48,7 @@
 	}
 
 	.content-card--header--has-actions {
-		@apply flex w-full pr-1;
+		@apply flex w-full items-start;
 	}
 
 	.content-card--actions {
@@ -53,26 +57,5 @@
 
 	.page-wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .router-tab-bar--panel {
 		@apply overflow-hidden;
-	}
-
-	.content-card--blockungsuebersicht {
-		@apply gap-x-16;
-
-		.content-card--wrapper {
-			@apply h-full;
-
-			> .mt-4 {
-				@apply pt-4 mt-0 h-full flex flex-col;
-			}
-
-			.v-table--container {
-				@apply h-full overflow-y-scroll;
-			}
-		}
-
-		.content-card--header {
-			@apply mt-0 mb-0;
-		}
-
 	}
 </style>

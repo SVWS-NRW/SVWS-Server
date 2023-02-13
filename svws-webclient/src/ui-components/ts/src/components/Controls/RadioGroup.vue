@@ -7,8 +7,10 @@
 </script>
 <style>
 	.radio {
-		@apply inline-flex flex-col;
-		@apply py-1;
-		@apply space-y-2;
+		@apply flex flex-col items-start gap-1;
+	}
+
+	.radio--row {
+		@apply flex-row flex-wrap gap-0.5;
 	}
 </style>

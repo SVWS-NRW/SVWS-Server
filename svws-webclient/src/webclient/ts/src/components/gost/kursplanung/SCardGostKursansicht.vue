@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-content-card style="flex: 1 0 40%;">
+	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
+		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10"/>
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline">{{ blockungsname }}</h3>
 			<div class="flex items-center gap-2">
@@ -69,7 +70,7 @@
 						<template v-if="allow_regeln">
 							<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" />
 						</template>
-						<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
+						<th v-else :colspan="schienen.size()" class="text-center normal-case font-normal text-black/50">Regeln können nicht in Ergebnissen erstellt werden</th>
 					</tr>
 				</thead>
 				<tbody>

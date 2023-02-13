@@ -37,6 +37,16 @@
 		color: var(--popper-theme-text-color);
 	}
 
+	.popper--small .popper {
+		@apply text-sm;
+	}
+
+	.popper--no-arrow .popper {
+		#arrow {
+			@apply hidden;
+		}
+	}
+
 	.popper--danger {
 		--popper-theme-background-color: theme("colors.error");
 		--popper-theme-background-color-hover: theme("colors.error");
@@ -53,5 +63,11 @@
 		--popper-theme-background-color: theme("colors.light");
 		--popper-theme-background-color-hover: theme("colors.light");
 		--popper-theme-text-color: theme("colors.black");
+	}
+
+	.popper--statistics {
+		--popper-theme-background-color: theme("colors.purple");
+		--popper-theme-background-color-hover: theme("colors.purple");
+		--popper-theme-text-color: theme("colors.white");
 	}
 </style>

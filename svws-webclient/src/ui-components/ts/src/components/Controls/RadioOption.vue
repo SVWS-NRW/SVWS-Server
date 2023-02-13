@@ -5,6 +5,7 @@
 		value = '',
 		disabled = false,
 		statistics = false,
+		icon = true,
 		modelValue = '',
 	} = defineProps<{
 		name?: string;
@@ -12,6 +13,7 @@
 		value?: string;
 		disabled?: boolean;
 		statistics?: boolean;
+		icon?: boolean;
 		modelValue?: string;
 	}>();
 
@@ -38,11 +40,19 @@
 <template>
 	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
-		'radio--statistics': statistics
+		'radio--statistics': statistics,
+		'radio--label--checked': modelValue === value,
+		'radio--label--no-icon': !icon,
 	}">
 		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator"
 			@input="onInput">
-		<span class="radio--label">{{ label }}
+		<span v-if="icon" class="radio--indicator-icon">
+			<slot />
+			<i-ri-checkbox-blank-circle-line v-if="!$slots.default" class="radio--indicator-icon--blank"/>
+			<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked"/>
+		</span>
+		<span class="radio--label--text">
+			{{ label }}
 			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
 		</span>
 	</label>
@@ -50,54 +60,79 @@
 
 <style>
 .radio--label {
-	@apply cursor-pointer;
-	@apply flex flex-row items-center;
+	@apply cursor-pointer relative;
 	@apply select-none;
+	@apply text-button;
+}
+
+.radio--label--text {
+	@apply flex items-center rounded-md;
 	@apply space-x-2;
-	@apply text-input;
+	min-height: 1.4em;
+	padding: 0.45em 0.75em 0.45em 2em;
+
+	.radio--row .radio--label--no-icon & {
+		padding-left: 0.75em;
+	}
+
+	&:focus {
+		@apply ring-primary ring-opacity-50;
+	}
 }
 
-.radio--label.radio--statistics {
-	@apply text-purple;
-}
+.radio--label:hover {
+	.radio--label--text {
+		@apply bg-transparent;
+	}
 
-.radio--statistics .radio--indicator {
-	@apply border-purple;
-}
-
-.radio--statistics .radio--indicator:checked::before {
-	@apply bg-purple;
+	.radio--indicator ~ .radio--indicator-icon {
+		@apply opacity-100 text-primary;
+	}
 }
 
 .radio--indicator {
-	@apply appearance-none;
-	@apply rounded-full border-2 border-black;
-	@apply cursor-pointer;
-	@apply flex flex-shrink-0 items-center justify-center;
-	@apply h-5 w-5;
+	@apply appearance-none absolute inset-0 w-full h-full pointer-events-none;
+
+	&:focus {
+		@apply ring-0;
+	}
 }
 
-.radio--indicator:focus {
-	@apply outline-none ring-2 ring-primary ring-opacity-50;
+.radio--indicator:checked ~ .radio--label--text {
+	@apply bg-primary bg-opacity-5 text-primary;
 }
 
-.radio--indicator:checked::before {
-	@apply bg-black;
-	@apply block;
-	@apply rounded-full;
-	@apply h-3 w-3;
-	content: "";
+.radio--indicator ~ .radio--indicator-icon {
+	@apply absolute inset-0 opacity-25 pointer-events-none;
+	height: 1.2em;
+	width: 1.2em;
+	top: 0.35em;
+	left: 0.5em;
 }
 
-.radio--indicator:disabled {
-	@apply bg-disabled;
-	@apply border-disabled-medium;
-	@apply cursor-not-allowed;
-	@apply text-disabled-dark;
+.radio--indicator:not(:checked) ~ .radio--indicator-icon .radio--indicator-icon--checked {
+	@apply hidden;
+}
+
+.radio--indicator:checked ~ .radio--indicator-icon {
+	@apply opacity-100 text-primary;
+}
+
+.radio--indicator:checked ~ .radio--indicator-icon .radio--indicator-icon--blank {
+	@apply hidden;
 }
 
 .radio--label--disabled {
-	@apply cursor-not-allowed;
-	@apply text-disabled-dark;
+	&,
+	&:hover,
+	&:focus {
+		@apply opacity-20;
+		@apply cursor-not-allowed pointer-events-none;
+
+		.radio--label--text {
+			@apply bg-black bg-opacity-25 text-black;
+			@apply bg-black bg-opacity-25 text-black;
+		}
+	}
 }
 </style>

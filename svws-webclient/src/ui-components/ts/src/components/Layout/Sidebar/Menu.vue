@@ -26,7 +26,7 @@
 				</button>
 			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center mb-3">
-				<div class="opacity-25 text-sm mt-3 mb-1">Powered by SVWS NRW</div>
+				<div class="opacity-25 text-sm mt-3 mb-1 text-center">Powered by SVWS NRW</div>
 				<Popover :hover="false">
 					<template #trigger>
 						<div class="inline-flex justify-center items-center cursor-pointer opacity-50 hover:opacity-100 focus:opacity-100">Info</div>
@@ -84,6 +84,12 @@
 @media (min-width: 1280px) {
 	.sidebar--menu {
 		@apply w-20;
+	}
+}
+
+@media (min-width: 2000px) {
+	.sidebar--menu {
+		@apply w-24;
 	}
 }
 

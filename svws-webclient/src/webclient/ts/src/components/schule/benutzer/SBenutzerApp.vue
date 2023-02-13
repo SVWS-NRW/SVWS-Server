@@ -3,7 +3,10 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ anzeigename }}</span>
-				<svws-ui-badge title="ID" variant="light">{{ id }}</svws-ui-badge>
+				<svws-ui-badge title="ID" variant="light">
+					<i-ri-fingerprint-line/>
+					{{ id }}
+				</svws-ui-badge>
 			</div>
 			<div>
 				<span class="opacity-50">{{ name }}</span>

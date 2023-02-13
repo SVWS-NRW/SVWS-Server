@@ -56,7 +56,7 @@
 		@apply h-screen;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply bg-white lg:pl-3;
+		@apply bg-white;
 	}
 
 	.app-layout--wrapper {
@@ -90,7 +90,6 @@
 		@apply overflow-hidden;
 	}
 
-	.app-layout--main-container:not(.fullwidth-content),
 	.secondary-menu--headline,
 	.secondary-menu--header,
 	.secondary-menu--content .text-headline {
@@ -112,10 +111,6 @@
 	}
 
 	@media (min-width: 2000px) {
-		.app-layout--main-container:not(.fullwidth-content) {
-			@apply px-[1vw];
-		}
-
 		.secondary-menu--headline,
 		.secondary-menu--header,
 		.secondary-menu--content .text-headline {

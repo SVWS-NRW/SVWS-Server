@@ -1,21 +1,9 @@
 <template>
-	<svws-ui-content-card v-if="schueler" class="mt-4">
-		<template #title>
-			<div class="content-card--header content-card--header--has-actions flex justify-between">
-				<h3 class="content-card--headline">
-					<span>Kurszuordnungen für</span>
-					<span @click="routeSchueler()" class="inline-flex items-center align-text-bottom gap-1 font-bold link-hover--primary leading-tight cursor-pointer ml-1"
-						:title="'Zur Seite von ' + schueler?.vorname + ' ' + schueler?.nachname + ' wechseln'">
-						<svws-ui-icon class="icon--1-em"> <i-ri-group-line /> </svws-ui-icon>
-						{{ schueler?.vorname }}
-						{{ schueler?.nachname }}
-					</span>
-				</h3>
-				<span @click="routeLaufbahnplanung()" class="font-bold link-hover--primary cursor-pointer pr-2"
-					:title="'Zur Laufbahnplanung von ' + schueler?.vorname + ' ' + schueler?.nachname + ' wechseln'">
-					Laufbahnplanung
-				</span>
-			</div>
+	<svws-ui-content-card v-if="schueler" :title="'Kurszuordnungen für ' + schueler?.vorname + ' ' + schueler?.nachname" class="sticky top-0">
+		<template #actions>
+			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()">
+				Zur Laufbahnplanung
+			</svws-ui-button>
 		</template>
 		<div class="flex gap-4">
 			<svws-ui-drop-data v-slot="{ active }" class="w-1/6" @drop="drop_entferne_kurszuordnung">

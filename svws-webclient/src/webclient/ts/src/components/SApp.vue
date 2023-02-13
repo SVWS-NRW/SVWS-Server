@@ -102,7 +102,7 @@
 	}
 
 	function is_active(current : RouteNode<unknown, any>): boolean {
-		const routename = route.name?.toString().split('_')[0];
+		const routename = route.name?.toString().split('.')[0];
 		if (routename === undefined)
 			return false;
 		if (routename === current.name) {

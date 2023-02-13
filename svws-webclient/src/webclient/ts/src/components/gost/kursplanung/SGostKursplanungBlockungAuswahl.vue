@@ -33,13 +33,11 @@
 		<svws-ui-modal ref="modal_remove_blockung" size="small">
 			<template #modalTitle>Blockung löschen</template>
 			<template #modalDescription>
-				<div class="flex gap-1 mb-2">
-					Soll die Blockung mit allen Ergebnissen gelöscht werden?
-				</div>
-				<div class="flex gap-1">
-					<svws-ui-button @click="toggle_remove_blockung_modal()">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="remove_blockung">Ja</svws-ui-button>
-				</div>
+				Soll die Blockung mit allen Ergebnissen gelöscht werden?
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="secondary" @click="toggle_remove_blockung_modal()">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="remove_blockung">Ja</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 	</div>

@@ -2,7 +2,7 @@
 	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<div class="w-16 mr-4 -ml-2">
+				<div class="w-16 mr-4">
 					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten.daten?.foto" :alt="stammdaten.daten?.foto ? 'Foto ' + stammdaten.daten?.vorname + ' ' + stammdaten.daten?.nachname : ''" />
 				</div>
 				<div>
