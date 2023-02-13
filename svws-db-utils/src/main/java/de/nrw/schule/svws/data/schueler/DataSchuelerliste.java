@@ -98,6 +98,8 @@ public class DataSchuelerliste extends DataManager<Long> {
 		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		eintrag.idKlasse = (aktAbschnitt == null) ? null : aktAbschnitt.Klassen_ID;
 		eintrag.jahrgang = (aktAbschnitt == null) ? null : aktAbschnitt.ASDJahrgang;
+		if ((aktAbschnitt != null) && (aktAbschnitt.Schulgliederung == null))
+			throw new NullPointerException("Cannot read field \"daten\" because \"aktAbschnitt.Schulgliederung\" is null - Schüler-Lernabschnitts-ID: " + aktAbschnitt.ID);
 		eintrag.schulgliederung = (aktAbschnitt == null) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;
 		eintrag.status = schueler.Status.bezeichnung;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
