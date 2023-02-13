@@ -113,7 +113,7 @@
     }
 
     .router-tab-bar--panel {
-        @apply h-px;
+        @apply h-full;
         @apply flex-grow overflow-auto flex-auto w-full;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
 		@apply py-4 lg:py-6 3xl:py-8;

@@ -43,6 +43,10 @@
 </script>
 
 <style lang="postcss">
+.router--gost-kursplanung .router-tab-bar--panel {
+	@apply h-px;
+}
+
 .router--gost-kursplanung .content-card--blockungsuebersicht {
 	@apply gap-x-16;
 }
