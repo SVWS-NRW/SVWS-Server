@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { FoerderschwerpunktEintrag, List } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -12,7 +12,7 @@ export class DataKatalogFoerderschwerpunkte extends BaseData<List<Foerderschwerp
 	 */
 	public async on_select(): Promise<List<FoerderschwerpunktEintrag> | undefined> {
 		try {
-			this._daten = await App.api.getSchuelerFoerderschwerpunkte(App.schema);
+			this._daten = await routeLogin.data.api.getSchuelerFoerderschwerpunkte(routeLogin.data.schema);
 			return this._daten;
 		} catch (error) {
 			console.log(`Fehler: ${error}`);

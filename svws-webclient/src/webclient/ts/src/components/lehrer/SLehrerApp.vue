@@ -8,7 +8,7 @@
 				<div>
 					<span class="inline-block mr-3">{{ stammdaten.daten?.titel }} {{ stammdaten.daten?.vorname }} {{ stammdaten.daten?.nachname }}</span>
 					<svws-ui-badge type="light" title="ID">
-						<i-ri-fingerprint-line/>
+						<i-ri-fingerprint-line />
 						{{ stammdaten.daten?.id }}
 					</svws-ui-badge>
 					<br>
@@ -29,12 +29,10 @@
 
 	import { computed, ComputedRef } from "vue";
 	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 
 	const props = defineProps<{
 		stammdaten: DataLehrerStammdaten;
-		schule: DataSchuleStammdaten;
 	}>();
 
 	const selectedRoute = routeLehrer.childRouteSelector;

@@ -1,13 +1,13 @@
-import { GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
+import { GostJahrgang, GostJahrgangsdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { RouteManager } from "../RouteManager";
@@ -27,12 +27,12 @@ export class RouteDataGost {
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten.daten === undefined)
 			return false;
-		await App.api.patchGostAbiturjahrgang(data, App.schema, abiturjahr);
+		await routeLogin.data.api.patchGostAbiturjahrgang(data, routeLogin.data.schema, abiturjahr);
 		return true;
 	}
 
 	addAbiturjahrgang = async (idJahrgang: number) => {
-		const abiturjahr = await App.api.createGostAbiturjahrgang(App.schema, idJahrgang);
+		const abiturjahr = await routeLogin.data.api.createGostAbiturjahrgang(routeLogin.data.schema, idJahrgang);
 		await routeGost.liste.update_list();
 		await RouteManager.doRoute(routeGost.getRoute(abiturjahr));
 	}
@@ -113,8 +113,10 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		return {
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			item: this.data.item.value,
-			schule: this.data.schule,
-			listJahrgaenge: this.data.listJahrgaenge
+			listJahrgaenge: this.data.listJahrgaenge,
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}
 

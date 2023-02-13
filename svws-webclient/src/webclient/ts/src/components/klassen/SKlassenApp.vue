@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item.value?.kuerzel ?? '' }}</span>
 				<svws-ui-badge type="light" title="ID">
-					<i-ri-fingerprint-line/>
+					<i-ri-fingerprint-line />
 					{{ item.value?.id }}
 				</svws-ui-badge>
 			</div>
@@ -27,14 +27,10 @@
 
 	import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 
 	const props = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>,
-		schule: DataSchuleStammdaten;
-		listLehrer: ListLehrer,
 		mapLehrer: Map<number, LehrerListeEintrag>,
 	}>();
 

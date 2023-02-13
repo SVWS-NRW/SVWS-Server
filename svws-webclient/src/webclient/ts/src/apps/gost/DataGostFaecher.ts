@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { List, GostFach, Fachgruppe, ZulaessigesFach, GostJahrgang, GostFaecherManager, Jahrgaenge } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -87,7 +87,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	public async on_select(): Promise<List<GostFach> | undefined> {
 		const getter = (eintrag: GostJahrgang | undefined) => {
 			const abiturjahr = eintrag?.abiturjahr || -1;
-			return App.api.getGostAbiturjahrgangFaecher(App.schema, abiturjahr);
+			return routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, abiturjahr);
 		};
 		const res = await super._select(getter);
 		const daten = this._daten;
@@ -117,7 +117,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 		const daten = this._daten;
 		if ((!daten) || (abiturjahr === undefined))
 			return false;
-		return this._patchElement(data, () => App.api.patchGostAbiturjahrgangFach(data, App.schema, abiturjahr, fach.id), daten.indexOf(fach));
+		return this._patchElement(data, () => routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, abiturjahr, fach.id), daten.indexOf(fach));
 	}
 
 	/**

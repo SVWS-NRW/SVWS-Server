@@ -9,7 +9,7 @@ import { Ref, ref, ShallowRef, shallowRef } from "vue";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 
 export class RouteDataGostKursplanungSchueler {
@@ -81,7 +81,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idBlockung === undefined) || (idErgebnis === undefined))
 			throw new Error("Fehler: Abiturjahr, Halbjahr und ID der Blockung und des Ergebnisses müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		// Lade die Schülerliste
-		const listSchueler = await App.api.getGostAbiturjahrgangSchueler(App.schema, abiturjahr);
+		const listSchueler = await routeLogin.data.api.getGostAbiturjahrgangSchueler(routeLogin.data.schema, abiturjahr);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler)
 			mapSchueler.set(s.id, s);

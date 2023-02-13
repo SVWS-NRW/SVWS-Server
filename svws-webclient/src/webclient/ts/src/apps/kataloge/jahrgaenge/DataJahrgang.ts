@@ -1,4 +1,4 @@
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../../BaseData";
@@ -22,7 +22,7 @@ export class DataJahrgang extends BaseData<
 	 */
 	public async on_select(): Promise<JahrgangsDaten | undefined> {
 		return super._select((eintrag: JahrgangsListeEintrag) =>
-			App.api.getJahrgang(App.schema, eintrag.id)
+			routeLogin.data.api.getJahrgang(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -38,9 +38,9 @@ export class DataJahrgang extends BaseData<
 	public async patch(data: Partial<JahrgangsDaten>): Promise<boolean> {
 		return !!data;
 		// return this._patch(data, () =>
-		// 	App.api.setJahrgang(
+		// 	routeLogin.data.api.setJahrgang(
 		// 		data,
-		// 		App.schema,
+		// 		routeLogin.data.schema,
 		// 		this._daten?.id
 		// 	)
 		// );

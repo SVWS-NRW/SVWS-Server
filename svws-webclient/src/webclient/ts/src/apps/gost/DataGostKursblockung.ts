@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten,
 	GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, List, Vector } from "@svws-nrw/svws-core-ts";
@@ -55,7 +55,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 			return super.unselect();
 		this.pending = true;
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
-			App.api.getGostBlockung(App.schema, eintrag.id));
+			routeLogin.data.api.getGostBlockung(routeLogin.data.schema, eintrag.id));
 		if (blockungsdaten && routeGost.data.dataFaecher.manager){
 			this.ergebnismanager = undefined;
 			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, routeGost.data.dataFaecher.manager);
@@ -97,7 +97,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!daten || daten.id === null) return false;
 		const id = daten.id;
 		console.log("patch", data, id);
-		return this._patch(data, () => App.api.patchGostBlockung(data, App.schema, id));
+		return this._patch(data, () => routeLogin.data.api.patchGostBlockung(data, routeLogin.data.schema, id));
 	}
 
 	/**Ergänzt einen Kurs in der Blockung für das angegebene fach_id
@@ -109,7 +109,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const kurs = await App.api.addGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
+		const kurs = await routeLogin.data.api.addGostBlockungKurs(routeLogin.data.schema, this.daten.id, fach_id, kursart_id);
 		if (!kurs) {
 			this.pending = false;
 			return
@@ -130,7 +130,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const kurs = await App.api.deleteGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
+		const kurs = await routeLogin.data.api.deleteGostBlockungKurs(routeLogin.data.schema, this.daten.id, fach_id, kursart_id);
 		if (!kurs) {
 			this.pending = false;
 			return
@@ -144,7 +144,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 
 	/** passt einen Kurs an */
 	public async patch_kurs(kurs_id: number, data: Partial<GostBlockungKurs>): Promise<void> {
-		await App.api.patchGostBlockungKurs(data, App.schema, kurs_id);
+		await routeLogin.data.api.patchGostBlockungKurs(data, routeLogin.data.schema, kurs_id);
 		if (data.suffix !== undefined)
 			this.datenmanager?.setSuffixOfKurs(kurs_id, data.suffix);
 	}
@@ -157,7 +157,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const regel = await App.api.addGostBlockungRegel(r.parameter, App.schema, this.daten.id, r.typ);
+		const regel = await routeLogin.data.api.addGostBlockungRegel(r.parameter, routeLogin.data.schema, this.daten.id, r.typ);
 		if (!regel) {
 			this.pending = false;
 			return;
@@ -177,7 +177,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const regel = await App.api.deleteGostBlockungRegelByID(App.schema, regel_id);
+		const regel = await routeLogin.data.api.deleteGostBlockungRegelByID(routeLogin.data.schema, regel_id);
 		if (!regel) {
 			this.pending = false;
 			return
@@ -194,7 +194,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 	 */
 	public async patch_blockung_regel(data: GostBlockungRegel) {
 		this.pending = true;
-		await App.api.patchGostBlockungRegel(data, App.schema, data.id);
+		await routeLogin.data.api.patchGostBlockungRegel(data, routeLogin.data.schema, data.id);
 		this.pending = false;
 	}
 
@@ -205,7 +205,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const schiene = await App.api.addGostBlockungSchiene(App.schema, this.daten.id);
+		const schiene = await routeLogin.data.api.addGostBlockungSchiene(routeLogin.data.schema, this.daten.id);
 		if (!schiene) {
 			this.pending = false;
 			return
@@ -222,7 +222,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const s = await App.api.deleteGostBlockungSchieneByID(App.schema, schiene.id);
+		const s = await routeLogin.data.api.deleteGostBlockungSchieneByID(routeLogin.data.schema, schiene.id);
 		if (!s) {
 			this.pending = false;
 			return
@@ -236,7 +236,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 
 	/** passt eine Schiene an */
 	public async patch_schiene(data: Partial<GostBlockungSchiene>, id : number): Promise<void> {
-		await App.api.patchGostBlockungSchiene(data, App.schema, id);
+		await routeLogin.data.api.patchGostBlockungSchiene(data, routeLogin.data.schema, id);
 		//TODO, der Manager sollte was tun..
 	}
 
@@ -247,7 +247,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const lehrer = await App.api.addGostBlockungKurslehrer(App.schema, kursid, lehrerid);
+		const lehrer = await routeLogin.data.api.addGostBlockungKurslehrer(routeLogin.data.schema, kursid, lehrerid);
 		if (!lehrer) {
 			this.pending = false;
 			return
@@ -264,7 +264,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		await App.api.deleteGostBlockungKurslehrer(App.schema, kursid, lehrerid)
+		await routeLogin.data.api.deleteGostBlockungKurslehrer(routeLogin.data.schema, kursid, lehrerid)
 		this.pending = false;
 	}
 

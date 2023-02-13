@@ -1,11 +1,11 @@
-import { BenutzerListeEintrag, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+import { BenutzerListeEintrag, LogConsumerConsole, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
 import { WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
@@ -16,7 +16,7 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
-		super.setView("liste", SBenutzerAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleBenutzerDaten
 		];
@@ -61,6 +61,12 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

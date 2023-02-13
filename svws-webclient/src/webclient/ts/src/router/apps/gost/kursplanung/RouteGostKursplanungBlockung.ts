@@ -9,7 +9,7 @@ import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
 import { RouteManager } from "~/router/RouteManager";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataGostKursplanungBlockung {
 	ergebnis: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
@@ -29,7 +29,7 @@ export class RouteDataGostKursplanungBlockung {
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
 		const halbjahr = routeGostKursplanung.data.halbjahr.value.next()?.id || routeGostKursplanung.data.halbjahr.value.id;
-		const result = await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, this.ergebnis.value.id);
+		const result = await routeLogin.data.api.schreibeGostBlockungsErgebnisHoch(routeLogin.data.schema, this.ergebnis.value.id);
 		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr, result.id));
 	}
 
@@ -101,7 +101,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-		this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, abiturjahr);
+		this.data.fachwahlen = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, abiturjahr);
 		// notwendig, damit der Ergebnis-Manager initialisiert werden kann
 		this.data.dataKursblockungsergebnis.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 	}

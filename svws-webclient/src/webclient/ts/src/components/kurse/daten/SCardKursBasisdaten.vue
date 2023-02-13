@@ -17,14 +17,13 @@
 
 <script setup lang="ts">
 
-	import { computed, ShallowRef, WritableComputedRef } from "vue";
-	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { computed, WritableComputedRef } from "vue";
+	import { JahrgangsListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
-		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;

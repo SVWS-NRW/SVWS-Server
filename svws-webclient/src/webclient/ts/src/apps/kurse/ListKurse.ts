@@ -1,5 +1,6 @@
 import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
-import { App } from "../BaseApp";
+import { routeApp } from "~/router/RouteApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../BaseList";
 
 export class ListKurse extends BaseList<KursListeEintrag> {
@@ -12,7 +13,7 @@ export class ListKurse extends BaseList<KursListeEintrag> {
 	 */
 	public async update_list(): Promise<void> {
 		await super._update_list(() =>
-			App.api.getKurseFuerAbschnitt(App.schema, App.akt_abschnitt.id)
+			routeLogin.data.api.getKurseFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id)
 		);
 	}
 }

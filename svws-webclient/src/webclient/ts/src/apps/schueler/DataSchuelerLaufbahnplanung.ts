@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { List, Vector, GostKursart, Fachgruppe, Schulgliederung,
 	Abiturdaten, AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr,
 	GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
@@ -10,6 +10,7 @@ import { reactive, ShallowRef, shallowRef } from "vue";
 import { DataGostFaecher } from "../gost/DataGostFaecher";
 import { DataGostJahrgang } from "../gost/DataGostJahrgang";
 import { DataSchuleStammdaten } from "../schule/DataSchuleStammdaten";
+import { routeApp } from "~/router/RouteApp";
 
 /** Signatur für die Sprachbelegungen */
 interface GostSprachbelegungen {
@@ -114,7 +115,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const schulform = this._dataSchule?.schulform.value || null;
 		if (gliederung === null || schulform === null)
 			return undefined;
-		const schuljahr = App.akt_abschnitt;
+		const schuljahr = routeApp.data.aktAbschnitt;
 		const result = GostAbiturjahrUtils.getGostAbiturjahr(
 			schulform, gliederung, schuljahr?.schuljahr || 0, this.selected_list_item.jahrgang
 		);
@@ -191,7 +192,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public async on_select(): Promise<Abiturdaten | undefined> {
 		try {
-			await super._select((eintrag: SchuelerListeEintrag) => App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id));
+			await super._select((eintrag: SchuelerListeEintrag) => routeLogin.data.api.getGostSchuelerLaufbahnplanung(routeLogin.data.schema, eintrag.id));
 		} catch(e) {
 			return undefined;
 		}
@@ -341,7 +342,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const eintrag = this.selected_list_item;
 		if (!eintrag)
 			return;
-		await this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, fachID).then(async () => { await this.on_select() }));
+		await this._patch(wahl, () => routeLogin.data.api.patchGostSchuelerFachwahl(wahl, routeLogin.data.schema, eintrag.id, fachID).then(async () => { await this.on_select() }));
 	}
 
 }

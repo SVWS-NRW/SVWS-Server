@@ -1,14 +1,14 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-kurs-basisdaten :item="item" :data="data" :list-jahrgaenge="listJahrgaenge" :map-jahrgaenge="mapJahrgaenge"
+		<s-card-kurs-basisdaten :data="data" :list-jahrgaenge="listJahrgaenge" :map-jahrgaenge="mapJahrgaenge"
 			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { JahrgangsListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
@@ -16,7 +16,6 @@
 	import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 
 	const props = defineProps<{
-		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
@@ -27,7 +26,7 @@
 
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKurseDaten.hidden()) && (props.item.value !== undefined);
+		return (!routeKurseDaten.hidden());
 	});
 
 </script>

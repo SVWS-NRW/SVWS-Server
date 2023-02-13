@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import {
 	SchuelerListeEintrag,
@@ -26,7 +26,7 @@ export class DataSchuelerStammdaten extends BaseData<
 	 */
 	public async on_select(): Promise<SchuelerStammdaten | undefined> {
 		return super._select((eintrag: SchuelerListeEintrag) =>
-			App.api.getSchuelerStammdaten(App.schema, eintrag.id)
+			routeLogin.data.api.getSchuelerStammdaten(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -43,7 +43,7 @@ export class DataSchuelerStammdaten extends BaseData<
 		const daten = this._daten;
 		if (!daten) return false;
 		return this._patch(data, () =>
-			App.api.patchSchuelerStammdaten(data, App.schema, daten.id)
+			routeLogin.data.api.patchSchuelerStammdaten(data, routeLogin.data.schema, daten.id)
 		);
 	}
 }

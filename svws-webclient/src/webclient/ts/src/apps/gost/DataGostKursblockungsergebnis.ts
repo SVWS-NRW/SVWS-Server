@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { GostBlockungsergebnis, GostBlockungsergebnisKurs, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -36,7 +36,7 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 			return super.unselect();
 		this.pending = true;
 		const ergebnis: GostBlockungsergebnis | undefined = await super._select(
-			(eintrag: GostBlockungsergebnisListeneintrag) => App.api.getGostBlockungsergebnis(App.schema, eintrag.id));
+			(eintrag: GostBlockungsergebnisListeneintrag) => routeLogin.data.api.getGostBlockungsergebnis(routeLogin.data.schema, eintrag.id));
 		if (ergebnis === undefined) {
 			this.pending = false;
 			return ergebnis;
@@ -66,7 +66,7 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 		const id = daten.id;
 		console.log("patch", data, id);
 		// TODO
-		//return this._patch(data, () => App.api.patchGostBlockungsergebnis(data as GostBlockungsergebnis, App.schema, id));
+		//return this._patch(data, () => routeLogin.data.api.patchGostBlockungsergebnis(data as GostBlockungsergebnis, routeLogin.data.schema, id));
 		return false;
 	}
 
@@ -74,7 +74,7 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 		if (!this._daten?.id)
 			return false;
 		this.pending = true;
-		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(App.schema, this._daten.id, schienenid, kursid, schienenidneu);
+		await routeLogin.data.api.updateGostBlockungsergebnisKursSchieneZuordnung(routeLogin.data.schema, this._daten.id, schienenid, kursid, schienenidneu);
 		this.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenid, false);
 		this.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenidneu, true);
 		this.dataKursblockung.commit();
@@ -87,7 +87,7 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 		if (ergebnisid === undefined || this.dataKursblockung.ergebnismanager === undefined)
 			return false;
 		this.pending = true;
-		await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid);
+		await routeLogin.data.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursid);
 		this.dataKursblockung.ergebnismanager.setSchuelerKurs(schuelerid, kursid, false);
 		this.dataKursblockung.commit();
 		this.pending = false;
@@ -100,11 +100,11 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 			return false;
 		this.pending = true;
 		if (kursid_alt) {
-			await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_alt);
-			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
+			await routeLogin.data.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursid_alt);
+			await routeLogin.data.api.createGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursid_neu);
 			this.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_alt, false);
 		} else {
-			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
+			await routeLogin.data.api.createGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursid_neu);
 		}
 		this.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_neu, true);
 		this.dataKursblockung.commit();
@@ -124,11 +124,11 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 			const kursN = z.kursID < 0 ? null : ergebnismanager.getKursE(z.kursID);
 			if (kursV !== kursN) {
 				if (kursV !== null) {
-					await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursV.id);
+					await routeLogin.data.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursV.id);
 					ergebnismanager.setSchuelerKurs(schuelerid, kursV.id, false);
 				}
 				if (kursN !== null) {
-					await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursN.id);
+					await routeLogin.data.api.createGostBlockungsergebnisKursSchuelerZuordnung(routeLogin.data.schema, ergebnisid, schuelerid, kursN.id);
 					ergebnismanager.setSchuelerKurs(schuelerid, kursN.id, true);
 				}
 			}
@@ -140,7 +140,7 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 	public async activate_blockungsergebnis(): Promise<boolean> {
 		if (!this.selected_list_item)
 			return false;
-		await App.api.activateGostBlockungsergebnis(App.schema, this.selected_list_item.id);
+		await routeLogin.data.api.activateGostBlockungsergebnis(routeLogin.data.schema, this.selected_list_item.id);
 		return true;
 	}
 

@@ -4,7 +4,7 @@
 			<span>Schüler</span>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
+			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" />
 		</template>
 		<template #header>
 			<div class="mt-1">
@@ -13,7 +13,7 @@
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="inputJahrgaenge" :item-text="text_jahrgang" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="inputKurse" :item-text="text_kurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schule.schulgliederungen" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" />
 				</div>
 			</div>
 			<div>
@@ -60,16 +60,12 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-
-	import { injectMainApp, Main } from "~/apps/Main";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
 	import { ListSchueler } from "~/apps/schueler/ListSchueler";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
@@ -84,14 +80,16 @@
 
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten;
-		schule: DataSchuleStammdaten;
 		listKlassen: ListKlassen;
 		mapKlassen: Map<Number, KlassenListeEintrag>;
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listKurse: ListKurse;
 		mapKurs: Map<Number, KursListeEintrag>;
+		schulgliederungen: List<Schulgliederung>;
+		abschnitte: List<Schuljahresabschnitt>;
+		aktAbschnitt: Schuljahresabschnitt;
+		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 
 	const selected = routeSchueler.auswahl;
@@ -104,8 +102,6 @@
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
-	const main: Main = injectMainApp();
-
 	const listSchueler: ComputedRef<ListSchueler> = computed(() => routeSchueler.liste);
 
 	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
@@ -292,27 +288,4 @@
 			filtered.value = false;
 		}
 	}
-	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		return props.schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
-
-	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
-	});
-
-	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
-	}
-
-	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr
-			? `${item.schuljahr}, ${item.abschnitt}. HJ`
-			: "Abschnitt";
-	}
-
 </script>

@@ -30,23 +30,13 @@
 	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
-	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { KlassenListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { ListKurse } from "~/apps/kurse/ListKurse";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
-		schule: DataSchuleStammdaten;
-		listKlassen: ListKlassen;
 		mapKlassen: Map<Number, KlassenListeEintrag>;
-		listJahrgaenge: ListJahrgaenge;
-		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
-		listKurse: ListKurse;
-		mapKurs: Map<Number, KursListeEintrag>;
 	}>();
 
 	const selectedRoute = routeSchueler.childRouteSelector;

@@ -1,6 +1,6 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
-import { SchuleStammdaten, Schulform, Schulgliederung, Schuljahresabschnitt, UnsupportedOperationException } from "@svws-nrw/svws-core-ts";
+import { List, SchuleStammdaten, Schulform, Schulgliederung, Schuljahresabschnitt, UnsupportedOperationException, Vector } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { computed, WritableComputedRef } from "vue";
 
@@ -11,10 +11,10 @@ export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
 		set: (value) => { throw new UnsupportedOperationException("TODO implement DataSchuleStammdaten: set schulform"); }
 	});
 
-	public schulgliederungen: WritableComputedRef<Schulgliederung[] | undefined> = computed({
+	public schulgliederungen: WritableComputedRef<List<Schulgliederung>> = computed({
 		get: () => {
 			const sf = this.schulform.value;
-			return sf === undefined ? [] : Schulgliederung.get(sf).toArray() as Schulgliederung[] || [];
+			return sf === undefined ? new Vector() as List<Schulgliederung> : Schulgliederung.get(sf);
 		},
 		set: (value) => {}
 	});
@@ -30,14 +30,8 @@ export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
 	 * @returns {Promise<SchuleStammdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<SchuleStammdaten | undefined> {
-		const res = await super._select(() => App.api.getSchuleStammdaten(App.schema));
-		if (App.akt_abschnitt === undefined) {
-			const id = this.daten?.idSchuljahresabschnitt;
-			const a = this.daten?.abschnitte
-				.toArray(new Array<Schuljahresabschnitt>())
-				.find(e => e.id === id);
-			if (a) App.akt_abschnitt = a;
-		}
+		const res = await super._select(() => routeLogin.data.api.getSchuleStammdaten(routeLogin.data.schema));
+
 		return res
 	}
 
@@ -52,7 +46,7 @@ export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
 	 */
 	public async patch(data: Partial<SchuleStammdaten>): Promise<boolean> {
 		return this._patch(data, () =>
-			App.api.patchSchuleStammdaten(data, App.schema)
+			routeLogin.data.api.patchSchuleStammdaten(data, routeLogin.data.schema)
 		);
 	}
 }

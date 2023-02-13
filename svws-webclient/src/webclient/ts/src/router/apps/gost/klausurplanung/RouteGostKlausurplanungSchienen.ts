@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostHalbjahr, GostKursklausurManager } from "@svws-nrw/svws-core-ts";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { ShallowRef, shallowRef } from "vue";
 import { routeGost } from "../../RouteGost";
 
@@ -36,8 +36,8 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<RouteDataGostKlau
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		const listKursklausuren = await App.api.getGostKlausurenKursklausurenJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
-		const listKlausurtermine = await App.api.getGostKlausurenKlausurtermineJahrgangHalbjahr(App.schema, abiturjahr, halbjahr.id);
+		const listKursklausuren = await routeLogin.data.api.getGostKlausurenKursklausurenJahrgangHalbjahr(routeLogin.data.schema, abiturjahr, halbjahr.id);
+		const listKlausurtermine = await routeLogin.data.api.getGostKlausurenKlausurtermineJahrgangHalbjahr(routeLogin.data.schema, abiturjahr, halbjahr.id);
 		this.data._manager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 	}
 

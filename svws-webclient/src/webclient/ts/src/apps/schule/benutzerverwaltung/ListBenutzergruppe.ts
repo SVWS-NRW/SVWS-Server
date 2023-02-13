@@ -1,4 +1,4 @@
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "~/apps/BaseList";
 
 import { BenutzergruppeListeEintrag} from "@svws-nrw/svws-core-ts";
@@ -14,7 +14,7 @@ export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, und
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() => App.api.getBenutzergruppenliste(App.schema));
+		await super._update_list(() => routeLogin.data.api.getBenutzergruppenliste(routeLogin.data.schema));
 	}
 
 }

@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -17,7 +17,7 @@ import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { ListGost } from "~/apps/gost/ListGost";
 
 export class RouteDataSchueler {
@@ -41,7 +41,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new ListSchueler(), 'id', new RouteDataSchueler());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
-		super.setView("liste", SSchuelerAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuelerIndividualdaten,
 			routeSchuelerErziehungsberechtigte,
@@ -65,8 +65,13 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 				id = -1;
 			return this.getRoute(id);
 		}
-		await this.data.listeAbiturjahrgaenge.update_list();
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		// TODO Code für Schulform mit Fehlerhandling in die zukünftige API-Klasse auslagern
+		const schulform : Schulform | undefined = this.data.schule.schulform.value;
+		if (schulform === undefined)
+			throw new Error("Schulform unbekannt.");
+		if (schulform?.daten.hatGymOb)
+			await this.data.listeAbiturjahrgaenge.update_list();
 		await this.data.listKlassen.update_list();
 		this.data.mapKlassen.clear();
 		this.data.listKlassen.liste.forEach(k => this.data.mapKlassen.set(k.id, k));
@@ -108,17 +113,27 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			stammdaten: this.data.stammdaten,
-			schule: this.data.schule,
 			listKlassen: this.data.listKlassen,
 			mapKlassen: this.data.mapKlassen,
 			listJahrgaenge: this.data.listJahrgaenge,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			listKurse: this.data.listKurse,
-			mapKurs: this.data.mapKurs
+			mapKurs: this.data.mapKurs,
+			schulgliederungen: this.data.schule.schulgliederungen,
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			stammdaten: this.data.stammdaten,
+			mapKlassen: this.data.mapKlassen,
 		};
 	}
 

@@ -3,7 +3,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -28,13 +28,13 @@ class RouteDataSchuelerSchulbesuch {
 	public async onSelect(id?: number) {
 		if (((id === undefined) && (this._daten.value === undefined)) || ((this._daten.value !== undefined) && (this.daten.id === id)))
 			return;
-		this._daten.value = (id === undefined) ? undefined : await App.api.getSchuelerSchulbesuch(App.schema, id);
+		this._daten.value = (id === undefined) ? undefined : await routeLogin.data.api.getSchuelerSchulbesuch(routeLogin.data.schema, id);
 	}
 
 	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) => {
 		if (this._daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await App.api.patchSchuelerSchulbesuch(data, App.schema, this.daten.id);
+		await routeLogin.data.api.patchSchuelerSchulbesuch(data, routeLogin.data.schema, this.daten.id);
 	}
 }
 

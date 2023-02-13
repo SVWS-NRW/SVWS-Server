@@ -1,4 +1,4 @@
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import {ReligionEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../../BaseData";
@@ -20,7 +20,7 @@ export class DataReligion extends BaseData<ReligionEintrag , ReligionEintrag> {
 	 */
 	public async on_select(): Promise<ReligionEintrag | undefined> {
 		return super._select((eintrag: ReligionEintrag) =>
-			App.api.getReligion(App.schema, eintrag.id)
+			routeLogin.data.api.getReligion(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -38,6 +38,6 @@ export class DataReligion extends BaseData<ReligionEintrag , ReligionEintrag> {
 		const daten = this._daten;
 		if (!daten)
 			return false;
-		return this._patch(data, () => App.api.patchReligion(data, App.schema, daten.id));
+		return this._patch(data, () => routeLogin.data.api.patchReligion(data, routeLogin.data.schema, daten.id));
 	}
 }

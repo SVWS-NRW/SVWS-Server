@@ -1,4 +1,4 @@
-import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { KlassenListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -7,7 +7,7 @@ import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 
 export class RouteDataKlassen {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
@@ -24,7 +24,7 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new ListKlassen(), 'id', new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
-		super.setView("liste", SKlassenAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKlassenDaten
 		];
@@ -75,11 +75,18 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			schule: this.data.schule,
-			listLehrer: this.data.listLehrer,
 			mapLehrer: this.data.mapLehrer
 		};
 	}

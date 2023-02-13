@@ -1,11 +1,11 @@
-import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKatalogJahrgaenge {
@@ -21,7 +21,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id', new RouteDataKatalogJahrgaenge());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
-		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogJahrgaengeDaten
 		];
@@ -67,6 +67,15 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

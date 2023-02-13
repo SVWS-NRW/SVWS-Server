@@ -4,7 +4,8 @@ import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams,  RouteParamValue,  useRouter } from "vue-router";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { routeGostKursplanungHalbjahr } from "./kursplanung/RouteGostKursplanungHalbjahr";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
+import { routeApp } from "~/router/RouteApp";
 
 export class RouteDataGostKursplanung  {
 	halbjahr: ShallowRef<GostHalbjahr> = shallowRef(GostHalbjahr.EF1);
@@ -54,9 +55,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		// Aktualisiere das Halbjahr
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if (halbjahr === undefined) {
-			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt);
+			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
 			if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.
-				hj = (abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+				hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 			this.data.halbjahr.value = hj;
 			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, hj.id, undefined);
 		}

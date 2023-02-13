@@ -12,13 +12,11 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 
 	const props = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>,
 		data: DataKlasse,
-		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
 		mapLehrer: Map<number, LehrerListeEintrag>,
 		listJahrgaenge: ListJahrgaenge,

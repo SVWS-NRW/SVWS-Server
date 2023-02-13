@@ -1,4 +1,4 @@
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseData } from "~/apps/BaseData";
 
 import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
@@ -24,7 +24,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return super.unselect();
 		}
 		const gruppendaten = await super._select((eintrag: BenutzergruppeListeEintrag) =>
-			App.api.getBenutzergruppeDaten(App.schema, eintrag.id)
+			routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, eintrag.id)
 		);
 		if (gruppendaten)
 			this.manager = new BenutzergruppenManager(gruppendaten);
@@ -66,7 +66,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 public async setBezeichnung(bezeichnung: string): Promise<void> {
 		if (!this.manager)
 			return;
-		await App.api.setBenutzergruppeBezeichnung(bezeichnung, App.schema, this.manager.getID());
+		await routeLogin.data.api.setBenutzergruppeBezeichnung(bezeichnung, routeLogin.data.schema, this.manager.getID());
 		this.manager.setBezeichnung(bezeichnung);
 		for(const index in App.apps.benutzergruppe.auswahl.liste){
 			if(App.apps.benutzergruppe.auswahl.liste[index].id === App.apps.benutzergruppe.dataBenutzergruppe.daten?.id)
@@ -85,9 +85,9 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager)
 			return;
 		if(istAdmin)
-			await App.api.addBenutzergruppeAdmin(App.schema, this.manager.getID());
+			await routeLogin.data.api.addBenutzergruppeAdmin(routeLogin.data.schema, this.manager.getID());
 		else
-			await App.api.removeBenutzergruppeAdmin(App.schema, this.manager.getID());
+			await routeLogin.data.api.removeBenutzergruppeAdmin(routeLogin.data.schema, this.manager.getID());
 		this.manager.setAdmin(istAdmin);
 	}
 
@@ -104,7 +104,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return false;
 		if (this.manager.hatKompetenz(kompetenz))
 			return false;
-		await App.api.addBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
+		await routeLogin.data.api.addBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.manager.getID());
 		this.manager.addKompetenz(kompetenz);
 		return true;
 	}
@@ -121,7 +121,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return false;
 		if (!this.manager.hatKompetenz(kompetenz))
 			return false;
-		await App.api.removeBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
+		await routeLogin.data.api.removeBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.manager.getID());
 		this.manager.removeKompetenz(kompetenz);
 		return true;
 	}
@@ -139,8 +139,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
 			}
-			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
-			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
+			await routeLogin.data.api.addBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.manager.getID());
+			const benutzergruppendaten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, this.manager.getID())
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (!this.manager?.hatKompetenz(komp))
 					this.manager?.addKompetenz(komp);
@@ -161,7 +161,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(komp.daten.id);
-			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
+			await routeLogin.data.api.removeBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.manager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.manager?.hatKompetenz(komp))
 					this.manager?.removeKompetenz(komp);
@@ -179,7 +179,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		const bg = new BenutzergruppeDaten();
 		bg.bezeichnung = bezeichnung;
 		bg.istAdmin = istAdmin;
-		const result = await App.api.createBenutzergruppe(bg,App.schema);
+		const result = await routeLogin.data.api.createBenutzergruppe(bg,routeLogin.data.schema);
 		const bgle = new BenutzergruppeListeEintrag();
 		bgle.id = result.id;
 		bgle.bezeichnung = result.bezeichnung;
@@ -200,7 +200,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			bids.add(b.id)
 		}
 		console.log(bids);
-		await App.api.removeBenutzerGruppe(bids,App.schema);
+		await routeLogin.data.api.removeBenutzerGruppe(bids,routeLogin.data.schema);
 		App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe = [];
 		for(const b of benutzer) {
 			App.apps.benutzergruppe.auswahl.liste = App.apps.benutzergruppe.auswahl.liste.filter(item => item.id !== b.id);
@@ -221,7 +221,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return;
 		const b_ids = new Vector<number>();
 		b_ids.add(benutzer.id);
-		await App.api.addBenutzergruppeBenutzer(b_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
+		await routeLogin.data.api.addBenutzergruppeBenutzer(b_ids, routeLogin.data.schema,this.manager.getID()) as BenutzergruppeDaten;
 		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.push(benutzer);
 
 	}
@@ -238,7 +238,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return;
 		const bg_ids = new Vector<number>();
 		bg_ids.add(benutzer.id);
-		const result = await App.api.removeBenutzergruppeBenutzer(bg_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
+		const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,this.manager.getID()) as BenutzergruppeDaten;
 		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste = App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.filter(item => item.id !== benutzer.id);
 	}
 

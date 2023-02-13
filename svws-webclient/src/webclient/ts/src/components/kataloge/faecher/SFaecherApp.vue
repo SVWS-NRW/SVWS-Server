@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item.value?.bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID">
-					<i-ri-fingerprint-line/>
+					<i-ri-fingerprint-line />
 					{{ item.value?.id }}
 				</svws-ui-badge>
 			</div>
@@ -26,12 +26,10 @@
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { RouterView } from "vue-router";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 
 	const props = defineProps<{
 		item: ShallowRef<FaecherListeEintrag | undefined>;
-		schule: DataSchuleStammdaten;
 	}>();
 
 	const selectedRoute = routeKatalogFaecher.childRouteSelector;

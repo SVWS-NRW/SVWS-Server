@@ -59,9 +59,6 @@
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { injectMainApp, Main } from "~/apps/Main";
-
-	const main: Main = injectMainApp();
 
 	const errors: Ref<Error[]> = ref([]);
 	onErrorCaptured((e)=>{

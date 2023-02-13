@@ -62,7 +62,7 @@
 
 	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
-	import { App } from '~/apps/BaseApp';
+	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
@@ -106,7 +106,7 @@
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
 			for (const ergebnis of selected_ergebnisse.value) {
-				await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
+				await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
 			}
 			selected_ergebnisse.value = [];
 			await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value);
@@ -116,7 +116,7 @@
 	async function remove_ergebnis() {
 		if (!selected_ergebnis.value)
 			return;
-		await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
+		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, selected_ergebnis.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value)
 	}
@@ -124,7 +124,7 @@
 	async function derive_blockung() {
 		if (!selected_ergebnis.value)
 			return;
-		await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
+		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, selected_ergebnis.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value);
 	}

@@ -1,4 +1,4 @@
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { FachDaten, FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../../BaseData";
@@ -19,7 +19,7 @@ export class DataFach extends BaseData<FachDaten, FaecherListeEintrag> {
 	 */
 	public async on_select(): Promise<FachDaten | undefined> {
 		return super._select((eintrag: FaecherListeEintrag) =>
-			App.api.getFach(App.schema, eintrag.id)
+			routeLogin.data.api.getFach(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -35,9 +35,9 @@ export class DataFach extends BaseData<FachDaten, FaecherListeEintrag> {
 	public async patch(data: Partial<FachDaten>): Promise<boolean> {
 		return !!data;
 		// return this._patch(data, () =>
-		// 	App.api.setFach(
+		// 	routeLogin.data.api.setFach(
 		// 		data,
-		// 		App.schema,
+		// 		routeLogin.data.schema,
 		// 		this._daten?.id
 		// 	)
 		// );

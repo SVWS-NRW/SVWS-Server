@@ -1,11 +1,11 @@
-import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
+import { FoerderschwerpunktEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 
@@ -21,7 +21,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new ListFoerderschwerpunkte(), 'id', new RouteDataFoerderschwerpunkte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
-		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogFoerderschwerpunkteDaten
 		];
@@ -68,10 +68,18 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			schule: this.data.schule,
 		};
 	}
 

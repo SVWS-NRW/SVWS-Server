@@ -4,7 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler, RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { Ref, ref } from "vue";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
@@ -28,14 +28,14 @@ export class RouteDataSchuelerAdressen {
 			this._daten.value = undefined;
 		} else {
 			this.item = item;
-			this.listSchuelerbetriebe.value = await App.api.getSchuelerBetriebe(App.schema, item.id);
+			this.listSchuelerbetriebe.value = await routeLogin.data.api.getSchuelerBetriebe(routeLogin.data.schema, item.id);
 			await this.setSchuelerBetrieb((this.listSchuelerbetriebe.value.size() > 0) ? this.listSchuelerbetriebe.value.get(0) : undefined);
 		}
 	}
 
 	public async ladeAnsprechpartner(betrieb_id : number) {
 		// Lade die Liste der Ansprechpartner eines Betriebs als Katalog, der nur lesend genutzt wird
-		const ansprechpartner = await App.api.getBetriebAnsprechpartner(App.schema);
+		const ansprechpartner = await routeLogin.data.api.getBetriebAnsprechpartner(routeLogin.data.schema);
 		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
 		for (const a of ansprechpartner)
 			if (a.betrieb_id === betrieb_id) // TODO API-Aufruf mit Betriebs-ID, so dass nur die Ansprechpartner des konkreten Betriebs geladen werden und hier nicht gefiltert werden muss
@@ -48,7 +48,7 @@ export class RouteDataSchuelerAdressen {
 			this._daten.value = undefined;
 			this.mapAnsprechpartner.value = new Map();
 		} else {
-			this._daten.value = await App.api.getBetriebStammdaten(App.schema, betrieb.betrieb_id);
+			this._daten.value = await routeLogin.data.api.getBetriebStammdaten(routeLogin.data.schema, betrieb.betrieb_id);
 			await this.ladeAnsprechpartner(betrieb.betrieb_id);
 		}
 		this.betrieb.value = betrieb;
@@ -57,7 +57,7 @@ export class RouteDataSchuelerAdressen {
 	patchBetrieb = async (data : Partial<BetriebStammdaten>, id : number) => {
 		if (this._daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await App.api.patchBetriebStammdaten(data, App.schema, id);
+		await routeLogin.data.api.patchBetriebStammdaten(data, routeLogin.data.schema, id);
 	}
 
 	patchSchuelerBetriebsdaten = async (data : Partial<SchuelerBetriebsdaten>, id : number) => {
@@ -66,28 +66,28 @@ export class RouteDataSchuelerAdressen {
 		if (data.betrieb_id !== undefined) {
 			// TODO neuladen der Ansprechpartner
 		}
-		await App.api.patchSchuelerBetriebsdaten(data, App.schema, id);
+		await routeLogin.data.api.patchSchuelerBetriebsdaten(data, routeLogin.data.schema, id);
 	}
 
 	patchAnsprechpartner = async (data : Partial<BetriebAnsprechpartner>, id : number) => {
 		if ((this.mapAnsprechpartner.value.size === 0) || (this.mapAnsprechpartner.value.get(id) === undefined))
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, id);
+		await routeLogin.data.api.patchBetriebanpsrechpartnerdaten(data, routeLogin.data.schema, id);
 	}
 
 	createAnsprechpartner = async (data: BetriebAnsprechpartner) => {
 		if ((this._daten.value === undefined) || (this._daten.value.id !== data.betrieb_id))
 			throw new Exception("Für das Erstellen eines Ansprechpartners von einem Betrieb muss eine gültige ID des Betriebes angegeben sein.");
-		await App.api.createBetriebansprechpartner(data, App.schema, this._daten.value.id);
+		await routeLogin.data.api.createBetriebansprechpartner(data, routeLogin.data.schema, this._daten.value.id);
 		await this.ladeAnsprechpartner(data.betrieb_id);
 	}
 
 	createSchuelerBetriebsdaten = async (data: SchuelerBetriebsdaten) => {
 		if ((data.schueler_id === undefined) || (data.betrieb_id === undefined))
 			throw new Exception("Für das Zuweisen eines Betriebs zu einem Schüler müssen die Schüler- und die Betriebs-ID angegeben werden.");
-		await App.api.createSchuelerbetrieb(data, App.schema, data.schueler_id, data.betrieb_id);
+		await routeLogin.data.api.createSchuelerbetrieb(data, routeLogin.data.schema, data.schueler_id, data.betrieb_id);
 		// Lade die Liste der Schülerbetriebe neu
-		this.listSchuelerbetriebe.value = await App.api.getSchuelerBetriebe(App.schema, data.schueler_id);
+		this.listSchuelerbetriebe.value = await routeLogin.data.api.getSchuelerBetriebe(routeLogin.data.schema, data.schueler_id);
 		await this.setSchuelerBetrieb((this.listSchuelerbetriebe.value.size() > 0) ? this.listSchuelerbetriebe.value.get(0) : undefined);
 	}
 
@@ -105,19 +105,19 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 		if (to_params.id === undefined)
 			return false;
 		// Lade den Katalog der Beschäftigungsarten
-		const beschaeftigungsarten = await App.api.getKatalogBeschaeftigungsart(App.schema);
+		const beschaeftigungsarten = await routeLogin.data.api.getKatalogBeschaeftigungsart(routeLogin.data.schema);
 		const mapBeschaeftigungsarten = new Map<number, KatalogEintrag>();
 		for (const ba of beschaeftigungsarten)
 			mapBeschaeftigungsarten.set(ba.id, ba);
 		this.data.mapBeschaeftigungsarten = mapBeschaeftigungsarten;
 		// Lade die Liste der Lehrer als Katalog, der nur lesend genutzt wird
-		const lehrer = await App.api.getLehrer(App.schema);
+		const lehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of lehrer)
 			mapLehrer.set(l.id, l);
 		this.data.mapLehrer = mapLehrer;
 		// Lade die Liste der Betriebe als Katalog, der nur lesend genutzt wird
-		const betriebe = await App.api.getBetriebe(App.schema);
+		const betriebe = await routeLogin.data.api.getBetriebe(routeLogin.data.schema);
 		const mapBetriebe = new Map<number, BetriebListeEintrag>();
 		for (const b of betriebe)
 			mapBetriebe.set(b.id, b);

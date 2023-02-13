@@ -1,5 +1,5 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../../BaseList";
 
 export class ListReligionen extends BaseList<ReligionEintrag, undefined> {
@@ -11,6 +11,6 @@ export class ListReligionen extends BaseList<ReligionEintrag, undefined> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() => App.api.getReligionen(App.schema));
+		await super._update_list(() => routeLogin.data.api.getReligionen(routeLogin.data.schema));
 	}
 }

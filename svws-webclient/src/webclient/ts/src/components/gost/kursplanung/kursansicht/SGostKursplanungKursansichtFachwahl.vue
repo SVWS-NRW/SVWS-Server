@@ -25,7 +25,7 @@
 	import { List, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
 		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer, GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeApp } from "~/router/RouteApp";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
@@ -49,8 +49,6 @@
 		allowRegeln: boolean;
 	}>();
 
-	const main: Main = injectMainApp();
-
 	const kurszahlen: ComputedRef<Map<number, number>> = computed(() => {
 		const kurszahlen : Map<number, number> = new Map();
 		for (const kursart of GostKursart.values())
@@ -73,7 +71,7 @@
 		return liste;
 	}
 
-	const sort_by: ComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> = computed(() => main.config.user_config.get('gost.kursansicht.sortierung') || 'kursart');
+	const sort_by: ComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> = computed(() => (routeApp.data.user_config.value.get('gost.kursansicht.sortierung') || 'kursart') as UserConfigKeys['gost.kursansicht.sortierung']);
 
 	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		if (sort_by.value === 'kursart')

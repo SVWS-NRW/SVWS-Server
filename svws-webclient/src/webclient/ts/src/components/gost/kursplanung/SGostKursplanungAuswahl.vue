@@ -21,7 +21,7 @@
 	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, WritableComputedRef } from 'vue';
 	import { RouterView, useRouter } from 'vue-router';
-	import { App } from '~/apps/BaseApp';
+	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
@@ -49,7 +49,7 @@
 	async function blockung_hinzufuegen() {
 		if (props.jahrgangsdaten.daten?.abiturjahr === undefined || !selected_hj.value)
 			return;
-		const result = await App.api.createGostAbiturjahrgangBlockung(App.schema, props.jahrgangsdaten.daten.abiturjahr, selected_hj.value.id);
+		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.daten.abiturjahr, selected_hj.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr;
 		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}

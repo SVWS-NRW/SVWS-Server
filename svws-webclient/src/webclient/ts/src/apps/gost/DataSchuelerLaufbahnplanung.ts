@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { Abiturdaten, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -20,7 +20,7 @@ export class DataSchuelerLaufbahndaten extends BaseData<
 	public async on_select(): Promise<Abiturdaten | undefined> {
 		if (!this.selected_list_item) return super.unselect();
 		return await super._select((eintrag: SchuelerListeEintrag) =>
-			App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id)
+			routeLogin.data.api.getGostSchuelerLaufbahnplanung(routeLogin.data.schema, eintrag.id)
 		);
 	}
 

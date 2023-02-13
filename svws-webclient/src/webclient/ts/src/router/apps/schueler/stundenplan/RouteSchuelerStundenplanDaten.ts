@@ -4,7 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/RouteApp";
 
@@ -23,7 +23,7 @@ export class RouteDataSchuelerStundenplan {
 		if (item === undefined) {
 			this.manager.value = undefined;
 		} else {
-			const daten = await App.api.getSchuelerStundenplan(App.schema, item.id, idSchueler);
+			const daten = await routeLogin.data.api.getSchuelerStundenplan(routeLogin.data.schema, item.id, idSchueler);
 			this.manager.value = new SchuelerStundenplanManager(daten);
 		}
 	}
@@ -67,7 +67,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 		const abschnitt = routeApp.data.schule.daten?.idSchuljahresabschnitt;
 		if (abschnitt === undefined)
 			return false;
-		this.data.listAuswahl.value = await App.api.getStundenplanlisteFuerAbschnitt(App.schema, abschnitt);
+		this.data.listAuswahl.value = await routeLogin.data.api.getStundenplanlisteFuerAbschnitt(routeLogin.data.schema, abschnitt);
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {

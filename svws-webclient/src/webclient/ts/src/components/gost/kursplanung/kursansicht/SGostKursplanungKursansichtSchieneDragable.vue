@@ -22,14 +22,12 @@
 
 	import { GostBlockungRegel, GostBlockungSchiene } from "@svws-nrw/svws-core-ts";
 	import { computed, ref, Ref } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		schiene:  GostBlockungSchiene;
 	}>();
-
-	const main: Main = injectMainApp();
 
 	const isModalOpen_RegelSchienen: Ref<boolean> = ref(false);
 
@@ -38,10 +36,10 @@
 
 	const drag_data = computed({
 		get(): { schiene: GostBlockungSchiene | undefined; kurs?: undefined } {
-			return main.config.drag_and_drop_data || {schiene: undefined} as { schiene: GostBlockungSchiene | undefined };
+			return routeApp.data.drag_and_drop_data.value || {schiene: undefined} as { schiene: GostBlockungSchiene | undefined };
 		},
 		set(value: {schiene: GostBlockungSchiene|undefined; kurs?: undefined}) {
-			main.config.drag_and_drop_data = value
+			routeApp.data.drag_and_drop_data.value = value
 		}
 	});
 

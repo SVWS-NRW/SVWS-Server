@@ -46,7 +46,12 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeKurse.getProps(to),
+			item: routeKurse.item,
+			schule: routeKurse.data.schule,
+			listJahrgaenge: routeKurse.data.listJahrgaenge,
+			mapJahrgaenge: routeKurse.data.mapJahrgaenge,
+			listLehrer: routeKurse.data.listLehrer,
+			mapLehrer: routeKurse.data.mapLehrer,
 			data: this.data.daten
 		};
 	}

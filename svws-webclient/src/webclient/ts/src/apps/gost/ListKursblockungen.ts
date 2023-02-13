@@ -1,6 +1,6 @@
 import { GostBlockungListeneintrag, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { reactive } from "vue";
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../BaseList";
 import { ApiStatus, FeedbackValues } from "./userfeedback";
 
@@ -22,7 +22,7 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 	public async update_list(abiturjahr: number, halbjahr: GostHalbjahr): Promise<void> {
 		this._abiturjahr = abiturjahr;
 		this._halbjahr = halbjahr;
-		await super._update_list(async () => App.api.getGostAbiturjahrgangBlockungsliste(App.schema, abiturjahr, halbjahr.id));
+		await super._update_list(async () => routeLogin.data.api.getGostAbiturjahrgangBlockungsliste(routeLogin.data.schema, abiturjahr, halbjahr.id));
 	}
 
 	/**

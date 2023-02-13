@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import { SvwsUiPlugin } from "@svws-nrw/svws-ui";
-import { mainApp, mainInjectKey } from "~/apps/Main";
 import { router } from "./router";
 
 import "./tailwind.css";
@@ -10,8 +9,6 @@ import SWrapper from "~/components/SWrapper.vue";
 const app = createApp(SWrapper);
 app.use(SvwsUiPlugin);
 app.use(router);
-// to access app with composition API/ script-setup (use injectMainApp() in components)
-app.provide(mainInjectKey, mainApp);
 
 app.mixin({
 	created() {

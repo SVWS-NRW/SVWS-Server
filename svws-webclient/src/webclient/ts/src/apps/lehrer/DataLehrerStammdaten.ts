@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { LehrerListeEintrag, LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -23,7 +23,7 @@ export class DataLehrerStammdaten extends BaseData<
 	 */
 	public async on_select(): Promise<LehrerStammdaten | undefined> {
 		return super._select((eintrag: LehrerListeEintrag) =>
-			App.api.getLehrerStammdaten(App.schema, eintrag.id)
+			routeLogin.data.api.getLehrerStammdaten(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -40,7 +40,7 @@ export class DataLehrerStammdaten extends BaseData<
 		const daten = this._daten;
 		if (!daten) return false;
 		return this._patch(data, () =>
-			App.api.patchLehrerStammdaten(data, App.schema, daten.id)
+			routeLogin.data.api.patchLehrerStammdaten(data, routeLogin.data.schema, daten.id)
 		);
 	}
 }

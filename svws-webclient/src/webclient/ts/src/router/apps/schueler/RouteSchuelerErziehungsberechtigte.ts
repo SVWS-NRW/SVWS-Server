@@ -3,7 +3,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { ref, Ref } from "vue";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
@@ -34,13 +34,13 @@ export class RouteDataSchuelerErziehungsberechtigte {
 		if (((idSchueler === undefined) && (this.idSchueler === undefined)) || ((this.idSchueler !== undefined) && (this.idSchueler === idSchueler)))
 			return;
 		this.idSchueler = idSchueler;
-		this._daten.value = (idSchueler === undefined) ? undefined : await App.api.getSchuelerErzieher(App.schema, idSchueler);
+		this._daten.value = (idSchueler === undefined) ? undefined : await routeLogin.data.api.getSchuelerErzieher(routeLogin.data.schema, idSchueler);
 	}
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
 		if (this._daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await App.api.patchErzieherStammdaten(data, App.schema, id);
+		await routeLogin.data.api.patchErzieherStammdaten(data, routeLogin.data.schema, id);
 	}
 
 }
@@ -54,7 +54,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		this.data._erzieherarten.value = await App.api.getErzieherArten(App.schema);
+		this.data._erzieherarten.value = await routeLogin.data.api.getErzieherArten(routeLogin.data.schema);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {

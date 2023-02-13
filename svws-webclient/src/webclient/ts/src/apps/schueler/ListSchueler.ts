@@ -6,9 +6,10 @@ import {
 	SchuelerStatus,
 	Schulgliederung
 } from "@svws-nrw/svws-core-ts";
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../BaseList";
 import { reactive } from "vue";
+import { routeApp } from "~/router/RouteApp";
 
 /**
  * Das Interface für die Schülerfilterfunktion. Alle hier gesetzten Werte
@@ -49,7 +50,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() => App.api.getSchuelerFuerAbschnitt(App.schema, App.akt_abschnitt.id));
+		await super._update_list(() => routeLogin.data.api.getSchuelerFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id));
 		this.reset_filter();
 		if (!this.ausgewaehlt)
 			this.ausgewaehlt = this.gefiltert[0];

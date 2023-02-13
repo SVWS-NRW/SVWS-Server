@@ -7,7 +7,7 @@
 			</nav>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
+			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" />
 		</template>
 		<template #header />
 		<template #content>
@@ -43,19 +43,18 @@
 
 <script setup lang="ts">
 
-	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { App } from "~/apps/BaseApp";
+	import { Religion, ReligionEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, reactive, ref, ShallowRef } from "vue";
+	import { routeLogin } from "~/router/RouteLogin";
 	import { router } from "~/router";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
-	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const props = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
-		schule: DataSchuleStammdaten;
+		abschnitte: List<Schuljahresabschnitt>;
+		aktAbschnitt: Schuljahresabschnitt;
+		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 
 	const selected = routeKatalogReligion.auswahl;
@@ -65,7 +64,6 @@
 		{ key: "text", label: "Bezeichnung", sortable: true, span: 2 }
 	];
 
-	const main: Main = injectMainApp();
 	const modalAdd = ref();
 
 	const rows: ComputedRef<ReligionEintrag[]> = computed(() => routeKatalogReligion.liste.liste);
@@ -78,7 +76,7 @@
 	async function saveEntries() {
 		//TODO  Den Attributswert von reli_neu.id von 0 auf null setzen.
 		if (reli_neu.kuerzel) {
-			await App.api.createReligion(reli_neu, App.schema);
+			await routeLogin.data.api.createReligion(reli_neu, routeLogin.data.schema);
 			modalAdd.value.closeModal();
 			await routeKatalogReligion.liste.update_list();
 		} else {
@@ -92,19 +90,5 @@
 		reli_neu.text = null;
 		reli_neu.textZeugnis = null;
 	}
-
-	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste =props.schule.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
-
-	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get: () => main.config.akt_abschnitt,
-		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
-	});
-
-	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => (b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1));
-
-	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 
 </script>

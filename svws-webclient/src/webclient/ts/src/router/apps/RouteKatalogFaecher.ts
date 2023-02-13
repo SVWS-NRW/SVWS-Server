@@ -1,11 +1,11 @@
-import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
+import { FaecherListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKatalogFaecher {
@@ -22,7 +22,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherAuswahl, SFaecherApp, new ListFaecher(), 'id', new RouteDataKatalogFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
-		super.setView("liste", SFaecherAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeFaecherDaten
 		];
@@ -70,10 +70,18 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			schule: this.data.schule
 		};
 	}
 

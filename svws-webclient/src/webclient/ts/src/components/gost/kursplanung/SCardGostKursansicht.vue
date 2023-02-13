@@ -130,12 +130,12 @@
 
 	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector,
 		GostKursart, GostBlockungRegel, GostFaecherManager, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
-	import { App } from "~/apps/BaseApp";
+	import { routeLogin } from "~/router/RouteLogin";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { SvwsUiContentCard, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal } from "@svws-nrw/svws-ui";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -160,21 +160,19 @@
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
-	const main: Main = injectMainApp();
-
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
 	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
 		computed({
 			get(): UserConfigKeys['gost.kursansicht.sortierung'] {
-				return main.config.user_config.get('gost.kursansicht.sortierung')
-					|| 'kursart'
+				return (routeApp.data.user_config.value.get('gost.kursansicht.sortierung')
+					|| 'kursart') as UserConfigKeys['gost.kursansicht.sortierung'];
 			},
 			set(value: UserConfigKeys['gost.kursansicht.sortierung']) {
 				if (value === undefined)
 					value = 'kursart'
-				void App.api.setClientConfigUserKey(value, App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
-				main.config.user_config.set('gost.kursansicht.sortierung', value)
+				void routeLogin.data.api.setClientConfigUserKey(value, routeLogin.data.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
+				routeApp.data.user_config.value.set('gost.kursansicht.sortierung', value)
 			}
 		});
 

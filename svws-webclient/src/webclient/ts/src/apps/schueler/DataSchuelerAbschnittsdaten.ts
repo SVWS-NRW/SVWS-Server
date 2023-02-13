@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import {
 	SchuelerLeistungsdaten,
@@ -24,8 +24,8 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 	public async on_select(): Promise<SchuelerLernabschnittsdaten | undefined> {
 		if (!this.selected_list_item?.schuelerID) return super.unselect();
 		return super._select((eintrag: SchuelerLernabschnittListeEintrag) =>
-			App.api.getSchuelerLernabschnittsdaten(
-				App.schema,
+			routeLogin.data.api.getSchuelerLernabschnittsdaten(
+				routeLogin.data.schema,
 				eintrag.schuelerID,
 				eintrag.schuljahresabschnitt
 			)
@@ -47,7 +47,7 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 		if (!daten)
 			return false;
 		// TODO richtige Patch-Methode suchen
-		// return this._patch(data, () => App.api.patchSchuelerLernabschnittsdaten(data as SchuelerLernabschnittsdaten, App.schema, daten.id));
+		// return this._patch(data, () => routeLogin.data.api.patchSchuelerLernabschnittsdaten(data as SchuelerLernabschnittsdaten, routeLogin.data.schema, daten.id));
 		return true;
 	}
 
@@ -56,7 +56,7 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 		const daten = this._daten;
 		if (!daten)
 			return false;
-		// TODO Patch-Methode aufrufen: await App.api.patchSchuelerLeistungsdaten(data, App.schema, idLeistung)
+		// TODO Patch-Methode aufrufen: await routeLogin.data.api.patchSchuelerLeistungsdaten(data, routeLogin.data.schema, idLeistung)
 		// TODO Daten anpassen
 		return true;
 	}

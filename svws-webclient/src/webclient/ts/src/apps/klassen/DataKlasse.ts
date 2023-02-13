@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { KlassenDaten, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -17,7 +17,7 @@ export class DataKlasse extends BaseData<KlassenDaten, KlassenListeEintrag> {
 	 */
 	public async on_select(): Promise<KlassenDaten | undefined> {
 		return super._select((eintrag: KlassenListeEintrag) =>
-			App.api.getKlasse(App.schema, eintrag.id)
+			routeLogin.data.api.getKlasse(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -33,8 +33,8 @@ export class DataKlasse extends BaseData<KlassenDaten, KlassenListeEintrag> {
 	public async patch(data: Partial<KlassenDaten>): Promise<boolean> {
 		return !!data;
 		// return this._patch(data, () =>
-		// 	App.api.setKlasse(
-		// 		App.schema,
+		// 	routeLogin.data.api.setKlasse(
+		// 		routeLogin.data.schema,
 		// 		data,
 		// 		this._daten?.id
 		// 	)

@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -20,7 +20,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 			return await super.unselect();
 		try {
 			this.pending = true;
-			const res = await super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr));
+			const res = await super._select((eintrag: GostJahrgang) => routeLogin.data.api.getGostAbiturjahrgang(routeLogin.data.schema, eintrag.abiturjahr));
 			this.pending = false;
 			return res;
 		} catch (e) {
@@ -42,7 +42,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 		if (!daten || daten.abiturjahr === null)
 			return false;
 		const abijahr = daten.abiturjahr;
-		return await this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));
+		return await this._patch(data, () => routeLogin.data.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, routeLogin.data.schema, abijahr));
 	}
 
 	/** Erstellt einen neuen Abiturjahrgang für die Gost mittels übergebener Jahrgang-ID
@@ -50,7 +50,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 	 * @returns {Promise<number>} Gibt das Abiturjahr zurück als Promise
 	 */
 	public async post_jahrgang(id: number): Promise<number> {
-		const abiturjahr = await App.api.createGostAbiturjahrgang(App.schema, id);
+		const abiturjahr = await routeLogin.data.api.createGostAbiturjahrgang(routeLogin.data.schema, id);
 		return abiturjahr || -1;
 	}
 

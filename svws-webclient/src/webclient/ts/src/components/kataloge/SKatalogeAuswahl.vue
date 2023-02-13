@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Kataloge</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
+			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" />
 		</template>
 		<template #header />
 		<template #content>
@@ -17,15 +17,14 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
-	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { routeKataloge } from "~/router/apps/RouteKataloge";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		schule: DataSchuleStammdaten;
+		abschnitte: List<Schuljahresabschnitt>;
+		aktAbschnitt: Schuljahresabschnitt;
+		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 
 	const menu_items = [
@@ -36,30 +35,5 @@
 		{ title: "Haltestellen", value: "haltestellen" },
 		{ title: "Betriebe", value: "betriebe" }
 	];
-	const main: Main = injectMainApp();
-
-	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = props.schule.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
-
-	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
-	});
-
-	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
-	}
-
-	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
-	}
 
 </script>

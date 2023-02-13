@@ -1,4 +1,4 @@
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "~/apps/BaseList";
 
 import { BenutzerListeEintrag} from "@svws-nrw/svws-core-ts";
@@ -18,7 +18,7 @@ export class ListBenutzergruppenBenutzer extends BaseList<BenutzerListeEintrag> 
 			this.liste = [];
 			return;
 		}
-		await super._update_list(() => App.api.getBenutzerMitGruppenID(App.schema, gruppen_id));
+		await super._update_list(() => routeLogin.data.api.getBenutzerMitGruppenID(routeLogin.data.schema, gruppen_id));
 		this.ausgewaehlt = this.liste[0];
 	}
 

@@ -1,5 +1,5 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../../BaseList";
 
 export class ListFaecher extends BaseList<FaecherListeEintrag, undefined> {
@@ -12,7 +12,7 @@ export class ListFaecher extends BaseList<FaecherListeEintrag, undefined> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() => App.api.getFaecher(App.schema));
+		await super._update_list(() => routeLogin.data.api.getFaecher(routeLogin.data.schema));
 	}
 
 }

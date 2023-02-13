@@ -16,7 +16,7 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergru
 		super("benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeAuswahl, SBenutzergruppeApp, new ListBenutzergruppe(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
-		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleBenutzergruppeDaten
 		];
@@ -61,6 +61,12 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergru
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

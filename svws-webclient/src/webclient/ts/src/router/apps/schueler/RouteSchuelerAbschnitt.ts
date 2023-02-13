@@ -4,7 +4,7 @@ import { RouteLocationRaw, RouteParams } from "vue-router";
 import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { routeApp } from "~/router/RouteApp";
 import { routeSchuelerAbschnittDaten } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnittDaten";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataSchuelerAbschnitt {
 
@@ -54,7 +54,7 @@ export class RouteSchuelerAbschnitt extends RouteNode<RouteDataSchuelerAbschnitt
 			return false;
 		const id = parseInt(to_params.id as string);
 		if ((this.data.idSchueler !== id) || (to_params.abschnitt === undefined)) {
-			const liste = await App.api.getSchuelerLernabschnittsliste(App.schema, id);
+			const liste = await routeLogin.data.api.getSchuelerLernabschnittsliste(routeLogin.data.schema, id);
 			if (liste.size() <= 0)
 				return false;
 			this.data.idSchueler = id;

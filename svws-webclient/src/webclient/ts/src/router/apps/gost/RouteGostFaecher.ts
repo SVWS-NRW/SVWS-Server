@@ -3,7 +3,7 @@ import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataGostKursplanung  {
 
@@ -13,21 +13,21 @@ export class RouteDataGostKursplanung  {
 	patchFachkombination = async (data: Partial<GostJahrgangFachkombination>, id : number) => {
 		if (this.dataFachkombinationen.daten === undefined)
 			return false;
-		await App.api.patchGostFachkombination(data, App.schema, id);
+		await routeLogin.data.api.patchGostFachkombination(data, routeLogin.data.schema, id);
 		return true;
 	}
 
 	addFachkombination = async (typ: GostLaufbahnplanungFachkombinationTyp) => {
 		if ((this.item === undefined) || (this.dataFachkombinationen.daten === undefined))
 			return undefined;
-		const result = await App.api.addGostAbiturjahrgangFachkombination(App.schema, this.item.abiturjahr, typ.getValue());
+		const result = await routeLogin.data.api.addGostAbiturjahrgangFachkombination(routeLogin.data.schema, this.item.abiturjahr, typ.getValue());
 		if (result !== undefined)
 			this.dataFachkombinationen.daten.add(result);
 		return result;
 	}
 
 	removeFachkombination = async (id: number) => {
-		const result = await App.api.deleteGostFachkombination(App.schema, id);
+		const result = await routeLogin.data.api.deleteGostFachkombination(routeLogin.data.schema, id);
 		if ((result !== undefined) && (this.dataFachkombinationen.daten !== undefined))
 			for (let i : number = this.dataFachkombinationen.daten.size() - 1; i >= 0; i--)
 				if (this.dataFachkombinationen.daten.get(i).id === id)

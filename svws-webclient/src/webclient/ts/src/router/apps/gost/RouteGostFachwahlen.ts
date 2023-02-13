@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataGostKursplanung  {
 	item: GostJahrgang | undefined = undefined;
@@ -54,7 +54,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 			this.data.fachwahlen = new Vector<GostStatistikFachwahl>();
 		} else {
 			this.data.item = item;
-			this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, this.data.item.abiturjahr || -1);
+			this.data.fachwahlen = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, this.data.item.abiturjahr || -1);
 		}
 	}
 

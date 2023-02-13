@@ -1,5 +1,5 @@
 import { SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "../BaseList";
 
 export class ListAbschnitte extends BaseList<SchuelerLernabschnittListeEintrag> {
@@ -14,7 +14,7 @@ export class ListAbschnitte extends BaseList<SchuelerLernabschnittListeEintrag> 
 		if (!id)
 			return;
 		await super._update_list(() =>
-			App.api.getSchuelerLernabschnittsliste(App.schema, id)
+			routeLogin.data.api.getSchuelerLernabschnittsliste(routeLogin.data.schema, id)
 		);
 	}
 }

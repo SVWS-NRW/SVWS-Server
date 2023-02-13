@@ -2,8 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Klassen</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte"
-				:item-sort="item_sort" :item-text="item_text" />
+			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" />
 		</template>
 		<template #header />
 		<template #content>
@@ -16,23 +15,18 @@
 
 <script setup lang="ts">
 
-	import { Schuljahresabschnitt, KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { KlassenListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>;
-		schule: DataSchuleStammdaten;
-		listLehrer: ListLehrer;
-		mapLehrer: Map<number, LehrerListeEintrag>;
+		abschnitte: List<Schuljahresabschnitt>;
+		aktAbschnitt: Schuljahresabschnitt;
+		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 	const selected = routeKlassen.auswahl;
-
-	const main: Main = injectMainApp();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -40,18 +34,4 @@
 	];
 
 	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.liste.liste);
-
-	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() =>
-		props.schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
-	);
-
-	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get: () => main.config.akt_abschnitt,
-		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
-	});
-
-	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
-
-	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
-
 </script>

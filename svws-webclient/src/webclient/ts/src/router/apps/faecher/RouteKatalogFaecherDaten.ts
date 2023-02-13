@@ -46,7 +46,7 @@ export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKat
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeKatalogFaecher.getProps(to),
+			item: this.data.item,
 			data: this.data.daten
 		};
 	}

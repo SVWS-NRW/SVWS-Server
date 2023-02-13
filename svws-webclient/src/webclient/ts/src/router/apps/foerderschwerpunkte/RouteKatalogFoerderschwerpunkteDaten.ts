@@ -46,7 +46,7 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeKatalogFoerderschwerpunkte.getProps(to),
+			item: this.data.item,
 			data: this.data.daten
 		};
 	}

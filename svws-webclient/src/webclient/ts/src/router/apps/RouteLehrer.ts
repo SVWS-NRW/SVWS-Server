@@ -1,4 +1,4 @@
-import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
@@ -9,7 +9,7 @@ import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataLehrer {
@@ -83,14 +83,14 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			stammdaten: this.data.stammdaten,
-			schule: this.data.schule
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			stammdaten: this.data.stammdaten,
-			schule: this.data.schule
 		};
 	}
 

@@ -5,7 +5,7 @@ import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLeistungen, RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { ref, Ref } from "vue";
 
 export class RouteDataSchuelerLeistungenDaten {
@@ -21,7 +21,7 @@ export class RouteDataSchuelerLeistungenDaten {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
 			return;
 		this.auswahl = item;
-		this.daten.value = (item?.id === undefined) ? undefined : await App.api.getSchuelerLernabschnittsdatenByID(App.schema, item.id);
+		this.daten.value = (item?.id === undefined) ? undefined : await routeLogin.data.api.getSchuelerLernabschnittsdatenByID(routeLogin.data.schema, item.id);
 	}
 
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
@@ -31,7 +31,7 @@ export class RouteDataSchuelerLeistungenDaten {
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO await App.api.patchSchuelerLeistungsdaten(data, App.schema, id);
+		// TODO await routeLogin.data.api.patchSchuelerLeistungsdaten(data, routeLogin.data.schema, id);
 	}
 
 }

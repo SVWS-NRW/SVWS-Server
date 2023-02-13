@@ -6,7 +6,7 @@ import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbah
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -49,7 +49,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 	getPdfWahlbogen = async() => {
 		if (this.item == undefined)
 			throw Error("Keine Schülerauswahl zur Bestimmung des PDF-Wahlbogens vorhanden.");
-		return await App.api.getGostSchuelerPDFWahlbogen(App.schema, this.item.id);
+		return await routeLogin.data.api.getGostSchuelerPDFWahlbogen(routeLogin.data.schema, this.item.id);
 	}
 
 }

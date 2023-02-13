@@ -1,4 +1,4 @@
-import { App } from "../../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../../BaseData";
@@ -20,7 +20,7 @@ export class DataFoerderschwerpunkt extends BaseData<FoerderschwerpunktEintrag, 
 	 */
 	public async on_select(): Promise<FoerderschwerpunktEintrag | undefined> {
 		return super._select((eintrag: FoerderschwerpunktEintrag) =>
-			App.api.getSchuelerFoerderschwerpunkt(App.schema, eintrag.id)
+			routeLogin.data.api.getSchuelerFoerderschwerpunkt(routeLogin.data.schema, eintrag.id)
 		);
 	}
 
@@ -37,9 +37,9 @@ export class DataFoerderschwerpunkt extends BaseData<FoerderschwerpunktEintrag, 
 		return !!data;
 		// TODO
 		// return this._patch(data, () =>
-		// 	App.api.patchSchuelerFoerderschwerpunkt(
+		// 	routeLogin.data.api.patchSchuelerFoerderschwerpunkt(
 		// 		data,
-		// 		App.schema,
+		// 		routeLogin.data.schema,
 		// 		this._daten?.id
 		// 	)
 		// );

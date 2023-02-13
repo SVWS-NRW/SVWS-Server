@@ -1,4 +1,4 @@
-import { App } from "../BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { Erzieherart, List } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
@@ -12,7 +12,7 @@ export class DataKatalogErzieherarten extends BaseData<List<Erzieherart>, unknow
 	 */
 	public async on_select(): Promise<List<Erzieherart> | undefined> {
 		try {
-			this._daten = await App.api.getErzieherArten(App.schema);
+			this._daten = await routeLogin.data.api.getErzieherArten(routeLogin.data.schema);
 			return this._daten;
 		} catch (error) {
 			console.log(`Fehler: ${error}`);

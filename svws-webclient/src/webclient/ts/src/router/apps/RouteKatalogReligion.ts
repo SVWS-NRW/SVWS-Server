@@ -1,11 +1,11 @@
-import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
+import { ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 import { ListReligionen } from "~/apps/kataloge/religionen/ListReligionen";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 
@@ -21,7 +21,7 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new ListReligionen(), 'id', new RouteDataReligionen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";
-		super.setView("liste", SReligionenAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten
 		];
@@ -66,6 +66,15 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

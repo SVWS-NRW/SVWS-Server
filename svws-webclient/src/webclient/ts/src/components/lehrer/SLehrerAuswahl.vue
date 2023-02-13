@@ -4,7 +4,7 @@
 			<span>Lehrkräfte</span>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
+			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" />
 		</template>
 		<template #header>
 			<div>
@@ -40,13 +40,9 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import type { LehrerListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
-	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const cols: DataTableColumn[] = [
@@ -62,12 +58,11 @@
 
 	const search: Ref<string> = ref("");
 
-	const main: Main = injectMainApp();
-
 	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
-		stammdaten: DataLehrerStammdaten;
-		schule: DataSchuleStammdaten;
+		abschnitte: List<Schuljahresabschnitt>;
+		aktAbschnitt: Schuljahresabschnitt;
+		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 
 	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => routeLehrer.liste.liste);
@@ -90,21 +85,6 @@
 	function onAction(action: string, item: LehrerListeEintrag) {
 		console.log(action, item);
 	}
-
-	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = props.schule.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
-
-	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get: () => main.config.akt_abschnitt,
-		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
-	});
-
-	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
-
-	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
-
 </script>
 
 

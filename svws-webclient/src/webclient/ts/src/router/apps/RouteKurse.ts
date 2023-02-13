@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListKurse } from "~/apps/kurse/ListKurse";
@@ -8,7 +8,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteApp } from "../RouteApp";
+import { routeApp, RouteApp } from "../RouteApp";
 
 export class RouteDataKurse {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
@@ -27,7 +27,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new ListKurse(), 'id', new RouteDataKurse());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
-		super.setView("liste", SKurseAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SKurseAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKurseDaten
 		];
@@ -81,13 +81,20 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
+	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...super.getProps(to),
+			listJahrgaenge: this.data.listJahrgaenge,
+			listLehrer: this.data.listLehrer,
+			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			aktAbschnitt: routeApp.data.aktAbschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt
+		};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			schule: this.data.schule,
-			listJahrgaenge: this.data.listJahrgaenge,
-			mapJahrgaenge: this.data.mapJahrgaenge,
-			listLehrer: this.data.listLehrer,
 			mapLehrer: this.data.mapLehrer
 		};
 	}

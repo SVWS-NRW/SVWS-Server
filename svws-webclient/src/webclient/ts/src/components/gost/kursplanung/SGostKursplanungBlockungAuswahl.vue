@@ -51,7 +51,7 @@
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
-	import { App } from '~/apps/BaseApp';
+	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
@@ -105,7 +105,7 @@
 		props.listBlockungen.addIdToApiStatus(hjId);
 		props.listBlockungen.setApiStatusIdle(hjId);
 		try {
-			const res = await App.api.rechneGostBlockung(App.schema, id, 5000)
+			const res = await routeLogin.data.api.rechneGostBlockung(routeLogin.data.schema, id, 5000)
 			props.listBlockungen.removeApiStatusId(hjId)
 			return res
 		} catch (e) {

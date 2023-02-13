@@ -25,12 +25,10 @@
 
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 
 	const props = defineProps<{
 		item: ShallowRef<JahrgangsListeEintrag | undefined>;
-		schule: DataSchuleStammdaten;
 	}>();
 
 	const selectedRoute = routeKatalogJahrgaenge.childRouteSelector;

@@ -19,7 +19,7 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
 		fach: GostFachwahl;
@@ -28,8 +28,6 @@
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 	}>();
-
-	const main: Main = injectMainApp();
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
 
@@ -63,10 +61,10 @@
 
 	const drag_data: WritableComputedRef<{ id: number, fachID: number, kursart: number } | undefined> = computed({
 		get(): { id: number, fachID: number, kursart: number } {
-			return main.config.drag_and_drop_data;
+			return routeApp.data.drag_and_drop_data.value;
 		},
 		set(value: { id: number, fachID: number, kursart: number } | undefined) {
-			main.config.drag_and_drop_data = value
+			routeApp.data.drag_and_drop_data.value = value
 		}
 	});
 

@@ -46,7 +46,7 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeKatalogReligion.getProps(to),
+			item: this.data.item,
 			data: this.data.daten
 		};
 	}

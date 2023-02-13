@@ -1,7 +1,6 @@
 import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
 import { RouteLocationRaw } from "vue-router";
-import { App } from "~/apps/BaseApp";
 import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "./RouteManager";
@@ -31,6 +30,21 @@ export class RouteDataLogin {
 
 	// Das Schema für die API-Zugriffe
 	protected _schema_api: ApiSchema | undefined = undefined;
+
+	// Die Api selbst
+	protected _api: ApiServer | undefined;
+
+	get api(): ApiServer {
+		if (this._api === undefined)
+			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
+		return this._api;
+	}
+
+	get schema(): string {
+		if (this._schema === undefined)
+			throw new Error("Es liegt kein DB-Schema für die Api vor")
+		return this._schema;
+	}
 
 	// Gibt den Hostname zurück
 	get hostname() : string {
@@ -109,12 +123,7 @@ export class RouteDataLogin {
 			this._schema = schema;
 			this._username = username;
 			this._password = password;
-			App.setup({
-				url: this._url,
-				username: this._username,
-				password: this._password,
-				schema: this._schema
-			});
+			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
 			await RouteManager.doRoute(this.routepath);
 		} catch (error) {

@@ -7,7 +7,7 @@ import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplan
 import { routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
 import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 import { computed, WritableComputedRef } from "vue";
-import { App } from "~/apps/BaseApp";
+import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKursplanungHalbjahr  {
@@ -17,7 +17,7 @@ export class RouteDataGostKursplanungHalbjahr  {
 	removeBlockung = async () => {
 		if ((routeGost.data.jahrgangsdaten.daten === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
 			return;
-		await App.api.deleteGostBlockung(App.schema, this.listBlockungen.ausgewaehlt.id);
+		await routeLogin.data.api.deleteGostBlockung(routeLogin.data.schema, this.listBlockungen.ausgewaehlt.id);
 		const abiturjahr = routeGost.data.jahrgangsdaten.daten.abiturjahr;
 		const halbjahr = routeGostKursplanung.data.halbjahr.value;
 		await this.listBlockungen.update_list(abiturjahr, halbjahr);
@@ -191,14 +191,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: routeGost.data.item,
-			schule: routeGost.data.schule,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
-			listJahrgaenge: routeGost.data.listJahrgaenge,
-			halbjahr: routeGostKursplanung.data.halbjahr,
-			listBlockungen: this.data.listBlockungen,
-			blockung: this.data.dataKursblockung
+			listBlockungen: this.data.listBlockungen
 		}
 	}
 

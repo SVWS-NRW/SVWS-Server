@@ -46,7 +46,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeKatalogJahrgaenge.getProps(to),
+			item: this.data.item,
 			data: this.data.daten,
 			listJahrgaenge: routeKatalogJahrgaenge.liste.liste
 		};
