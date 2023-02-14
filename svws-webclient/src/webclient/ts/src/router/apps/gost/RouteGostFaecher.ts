@@ -31,8 +31,10 @@ export class RouteDataGostKursplanung  {
 		if ((result !== undefined) && (this.dataFachkombinationen.daten !== undefined))
 			for (let i : number = this.dataFachkombinationen.daten.size() - 1; i >= 0; i--) {
 				const element = this.dataFachkombinationen.daten.get(i);
-				if (element.id === id)
-				  this.dataFachkombinationen.daten.remove(element);
+				if (element.id === id) {
+					this.dataFachkombinationen.daten.remove(element);
+					break;
+				}
 			}
 		return result;
 	}
