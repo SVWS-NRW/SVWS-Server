@@ -1,21 +1,17 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLeistungen, RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLogin } from "~/router/RouteLogin";
-import { ref, Ref } from "vue";
+import { ref, Ref, ShallowRef, shallowRef } from "vue";
 
 export class RouteDataSchuelerLeistungenDaten {
 
 	auswahl: SchuelerLernabschnittListeEintrag | undefined = undefined;
 	daten: Ref<SchuelerLernabschnittsdaten | undefined> = ref(undefined);
-	listFaecher: ListFaecher = new ListFaecher();
-	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
-	listLehrer: ListLehrer = new ListLehrer();
-	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+	mapFaecher: ShallowRef<Map<number, FaecherListeEintrag>> = shallowRef(new Map());
+	mapLehrer: ShallowRef<Map<number, LehrerListeEintrag>> = shallowRef(new Map());
 
 	public async onSelect(item?: SchuelerLernabschnittListeEintrag) {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
@@ -57,12 +53,18 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id === undefined)
 			return false;
-		await this.data.listFaecher.update_list();
-		this.data.mapFaecher.clear();
-		this.data.listFaecher.liste.forEach(f => this.data.mapFaecher.set(f.id, f));
-		await this.data.listLehrer.update_list();
-		this.data.mapLehrer.clear();
-		this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
+		// Laden des Fächerkatalogs
+		const listFaecher = await	routeLogin.data.api.getFaecher(routeLogin.data.schema);
+		const mapFaecher = new Map<number, FaecherListeEintrag>();
+		for (const f of listFaecher)
+			mapFaecher.set(f.id, f);
+		this.data.mapFaecher.value = mapFaecher;
+		// Laden des LehrerKatalogs
+		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		this.data.mapLehrer.value = mapLehrer;
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -95,8 +97,8 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			data: this.data.daten.value,
-			mapFaecher: this.data.mapFaecher,
-			mapLehrer: this.data.mapLehrer,
+			mapFaecher: this.data.mapFaecher.value,
+			mapLehrer: this.data.mapLehrer.value,
 			patchLeistung: this.data.patchLeistung
 		};
 	}
