@@ -83,10 +83,10 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteG
 			addFachkombination: this.data.addFachkombination,
 			removeFachkombination: this.data.removeFachkombination,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
-			item: routeGost.data.item,
+			item: routeGost.data.item.value,
 			schule: routeGost.data.schule,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
+			faecherManager: routeGost.data.faecherManager.value,
 			listJahrgaenge: routeGost.data.listJahrgaenge,
 			dataFachkombinationen: this.data.dataFachkombinationen
 		};

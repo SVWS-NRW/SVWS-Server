@@ -47,12 +47,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<RouteDataGostKlau
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: routeGost.data.item,
-			schule: routeGost.data.schule,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
-			listJahrgaenge: routeGost.data.listJahrgaenge,
-			halbjahr: routeGostKlausurplanung.data.halbjahr,
+			faecherManager: routeGost.data.faecherManager.value,
 			manager: this.data.manager
 		}
 	}

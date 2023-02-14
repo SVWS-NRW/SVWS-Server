@@ -1,6 +1,6 @@
 
 <template>
-	<div v-if="visible" class="space-y-3">
+	<div class="space-y-3">
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
 			<Blockungsregel_1 v-model="regel" :schienen="schienen" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
@@ -33,20 +33,19 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach, GostFaecherManager, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from 'vue';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 
 	const props = defineProps<{
-		dataFaecher: DataGostFaecher;
+		faecherManager: GostFaecherManager;
 		blockung: DataGostKursblockung;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 
 	const mapFaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
 		const result = new Map<number, GostFach>();
-		const faecher = props.dataFaecher.manager?.faecher() || [];
+		const faecher = props.faecherManager.faecher() || [];
 		for (const fach of faecher)
 			result.set(fach.id, fach);
 		return result;
@@ -89,9 +88,5 @@
 		await props.blockung.add_blockung_regel(regel.value);
 		regel.value = undefined;
 	}
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return true;
-	});
 
 </script>

@@ -1,7 +1,7 @@
 <template>
-	<div v-if="visible && (blockung.datenmanager !== undefined) && (blockung.ergebnismanager !== undefined) && (dataFaecher.manager !== undefined)"
+	<div v-if="visible && (blockung.datenmanager !== undefined) && (blockung.ergebnismanager !== undefined)"
 		class="content-card--blockungsuebersicht flex content-start">
-		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="dataFaecher.manager"
+		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="faecherManager"
 			:datenmanager="blockung.datenmanager" :ergebnismanager="blockung.ergebnismanager"
 			:fachwahlen="fachwahlen" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -30,7 +30,7 @@
 					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
-					<s-card-gost-regelansicht v-if="!collapsed" :data-faecher="dataFaecher" :blockung="blockung" :map-schueler="mapSchueler" />
+					<s-card-gost-regelansicht v-if="!collapsed" :faecher-manager="faecherManager" :blockung="blockung" :map-schueler="mapSchueler" />
 				</div>
 			</div>
 		</div>
@@ -43,9 +43,8 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
@@ -65,7 +64,7 @@
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
-		dataFaecher: DataGostFaecher;
+		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;

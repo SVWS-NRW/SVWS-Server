@@ -57,227 +57,83 @@
 								:key="row.id"
 								class="tableRow"
 								style="grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;">
-								<div class="cell text-left"
-									:style="{
-										'background-color': getBgColor(row)
-									}">
+								<div class="cell text-left" :style="{ 'background-color': getBgColor(row) }">
 									{{ row.kuerzel }}
 								</div>
-								<div class="cell text-left"
-									:style="{
-										'background-color': getBgColor(row)
-									}">
+								<div class="cell text-left" :style="{ 'background-color': getBgColor(row) }">
 									{{ row.bezeichnung }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[0] == null ||
-											row.fachwahlen[0].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[0]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[0].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[0] == null ||
-											row.fachwahlen[0].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[0]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[0] .wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[0] == null ||
-											row.fachwahlen[0].wahlenGK == 0
-											? ""
-											: row.fachwahlen[0].wahlenGK
-									}}
+									{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGK == 0 ? "" : row.fachwahlen[0].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[1] == null ||
-											row.fachwahlen[1].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[1]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[1].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[1] == null ||
-											row.fachwahlen[1].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[1]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[1].wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[1] == null ||
-											row.fachwahlen[1].wahlenGK == 0
-											? ""
-											: row.fachwahlen[1].wahlenGK
-									}}
+									{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGK == 0 ? "" : row.fachwahlen[1].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[2] == null ||
-											row.fachwahlen[2].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[2]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[2].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[2] == null ||
-											row.fachwahlen[2].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[2]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[2].wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[2] == null ||
-											row.fachwahlen[2].wahlenGK == 0
-											? ""
-											: row.fachwahlen[2].wahlenGK
-									}}
+									{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGK == 0 ? "" : row.fachwahlen[2].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[2] == null ||
-											row.fachwahlen[2].wahlenLK == 0
-											? ""
-											: row.fachwahlen[2].wahlenLK
-									}}
+									{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenLK == 0 ? "" : row.fachwahlen[2].wahlenLK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[3] == null ||
-											row.fachwahlen[3].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[3]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[3].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[3] == null ||
-											row.fachwahlen[3].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[3]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[3].wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[3] == null ||
-											row.fachwahlen[3].wahlenGK == 0
-											? ""
-											: row.fachwahlen[3].wahlenGK
-									}}
+									{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGK == 0 ? "" : row.fachwahlen[3].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[3] == null ||
-											row.fachwahlen[3].wahlenLK == 0
-											? ""
-											: row.fachwahlen[3].wahlenLK
-									}}
+									{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenLK == 0 ? "" : row.fachwahlen[3].wahlenLK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[4] == null ||
-											row.fachwahlen[4].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[4]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[4].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[4] == null ||
-											row.fachwahlen[4].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[4]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[4].wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[4] == null ||
-											row.fachwahlen[4].wahlenGK == 0
-											? ""
-											: row.fachwahlen[4].wahlenGK
-									}}
+									{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenGK == 0 ? "" : row.fachwahlen[4].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[4] == null ||
-											row.fachwahlen[4].wahlenZK == 0
-											? ""
-											: row.fachwahlen[4].wahlenZK
-									}}
+									{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenZK == 0 ? "" : row.fachwahlen[4].wahlenZK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[4] == null ||
-											row.fachwahlen[4].wahlenLK == 0
-											? ""
-											: row.fachwahlen[4].wahlenLK
-									}}
+									{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenLK == 0 ? "" : row.fachwahlen[4].wahlenLK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[5] == null ||
-											row.fachwahlen[5].wahlenGKMuendlich == 0
-											? ""
-											: row.fachwahlen[5]
-												.wahlenGKMuendlich
-									}}
+									{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[5].wahlenGKMuendlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[5] == null ||
-											row.fachwahlen[5].wahlenGKSchriftlich ==
-											0
-											? ""
-											: row.fachwahlen[5]
-												.wahlenGKSchriftlich
-									}}
+									{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[5].wahlenGKSchriftlich }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[5] == null ||
-											row.fachwahlen[5].wahlenGK == 0
-											? ""
-											: row.fachwahlen[5].wahlenGK
-									}}
+									{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenGK == 0 ? "" : row.fachwahlen[5].wahlenGK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[5] == null ||
-											row.fachwahlen[5].wahlenZK == 0
-											? ""
-											: row.fachwahlen[5].wahlenZK
-									}}
+									{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenZK == 0 ? "" : row.fachwahlen[5].wahlenZK }}
 								</div>
 								<div class="cell center">
-									{{
-										row.fachwahlen[5] == null ||
-											row.fachwahlen[5].wahlenLK == 0
-											? ""
-											: row.fachwahlen[5].wahlenLK
-									}}
+									{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenLK == 0 ? "" : row.fachwahlen[5].wahlenLK }}
 								</div>
 							</div>
 						</div>
@@ -290,19 +146,13 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ref, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { GostJahrgang, GostStatistikFachwahl, List, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
+		jahrgang: GostJahrgang;
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
-
-	const nichtWaehlbar = ref("");
-	const waehlbarAusgewaehlt = ref("\u2705");
-	const waehlbarNichtAusgewaehlt = ref("\u274C");
-
-	const bezeichnung: ComputedRef<string | undefined> = computed(() => props.item.value?.bezeichnung ?? undefined);
 
 	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlen.toArray() as GostStatistikFachwahl[]);
 

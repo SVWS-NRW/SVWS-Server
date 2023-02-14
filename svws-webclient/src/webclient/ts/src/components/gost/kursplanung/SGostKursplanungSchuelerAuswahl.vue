@@ -6,7 +6,7 @@
 		</div>
 		<div class="flex justify-between items-center mb-3">
 			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.fach.value" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.fach.value" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
 			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
 		</div>
 		<div class="mb-3">
@@ -28,7 +28,7 @@
 				<i-ri-search-line />
 			</svws-ui-text-input>
 		</div>
-		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10"/>
+		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10" />
 		<div class="v-table--container v-table--rows-white">
 			<table class="v-table--complex">
 				<thead>
@@ -52,25 +52,17 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsergebnisManager, GostFach, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag,
-		List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { GostBlockungKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		setSchueler: (schueler: SchuelerListeEintrag) => Promise<void>;
 		schueler: SchuelerListeEintrag | undefined;
 		schuelerFilter: GostKursplanungSchuelerFilter;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		faecherManager: GostFaecherManager;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		fachwahlen: List<GostStatistikFachwahl>;
-		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 
 	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();

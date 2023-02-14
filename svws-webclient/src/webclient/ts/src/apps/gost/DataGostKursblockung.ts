@@ -56,9 +56,9 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		this.pending = true;
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			routeLogin.data.api.getGostBlockung(routeLogin.data.schema, eintrag.id));
-		if (blockungsdaten && routeGost.data.dataFaecher.manager){
+		if (blockungsdaten && routeGost.data.faecherManager.value) {
 			this.ergebnismanager = undefined;
-			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, routeGost.data.dataFaecher.manager);
+			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, routeGost.data.faecherManager.value);
 			this.commit();
 		}
 		this.pending = false;

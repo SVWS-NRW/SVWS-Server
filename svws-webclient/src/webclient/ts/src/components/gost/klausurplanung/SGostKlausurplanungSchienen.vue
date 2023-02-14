@@ -11,25 +11,18 @@
 				<p>{{ termin.id }} {{ termin.datum }} </p>
 			</template>
 			Konflikte: {{ props.manager.value.gibKonfliktTerminKursklausur(7,2029).toString() }}
-			{{ props.dataFaecher.manager!.get(193)?.bezeichnung }}
+			{{ props.faecherManager.get(193)?.bezeichnung }}
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostJahrgang, GostHalbjahr, GostKursklausurManager, GostKursklausur, List, GostKlausurtermin } from '@svws-nrw/svws-core-ts';
+	import { GostKursklausurManager, GostKursklausur, List, GostKlausurtermin, GostFaecherManager } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ShallowRef } from 'vue';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
-		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		faecherManager: GostFaecherManager;
 		manager: ShallowRef<GostKursklausurManager>;
 	}>();
 

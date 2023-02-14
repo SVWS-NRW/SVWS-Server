@@ -7,7 +7,6 @@ import { List, Vector, GostKursart, Fachgruppe, Schulgliederung,
 	Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive, ShallowRef, shallowRef } from "vue";
-import { DataGostFaecher } from "../gost/DataGostFaecher";
 import { DataGostJahrgang } from "../gost/DataGostJahrgang";
 import { DataSchuleStammdaten } from "../schule/DataSchuleStammdaten";
 import { routeApp } from "~/router/RouteApp";
@@ -49,7 +48,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 
 	protected _data = reactive(new DataSchuelerLaufbahnplanungReactiveState());
 
-	protected _dataGostFaecher: DataGostFaecher | undefined;
+	protected _gostFaecher: List<GostFach> | undefined;
 	protected _dataGostJahrgang: DataGostJahrgang | undefined;
 	protected _dataSchule: DataSchuleStammdaten | undefined;
 
@@ -68,16 +67,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		return void daten;
 	}
 
-	get dataGostFaecher(): DataGostFaecher | undefined {
-		return this._dataGostFaecher;
-	}
-
-	set dataGostFaecher(value: DataGostFaecher | undefined) {
-		this._dataGostFaecher = value;
-	}
-
 	get gostFaecher(): List<GostFach> {
-		return this._dataGostFaecher?.daten || new Vector()
+		return this._gostFaecher || new Vector()
+	}
+
+	set gostFaecher(value: List<GostFach> | undefined) {
+		this._gostFaecher = value;
 	}
 
 	get dataGostJahrgang(): DataGostJahrgang | undefined {
@@ -117,7 +112,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			return undefined;
 		const schuljahr = routeApp.data.aktAbschnitt;
 		const result = GostAbiturjahrUtils.getGostAbiturjahr(
-			schulform, gliederung, schuljahr?.schuljahr || 0, this.selected_list_item.jahrgang
+			schulform, gliederung, schuljahr.value?.schuljahr || 0, this.selected_list_item.jahrgang
 		);
 		return result ?? undefined;
 	}

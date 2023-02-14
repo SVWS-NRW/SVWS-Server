@@ -17,18 +17,13 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr, GostJahrgang } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ShallowRef } from 'vue';
+	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef } from 'vue';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
 		halbjahr: GostHalbjahr;
 	}>();
 

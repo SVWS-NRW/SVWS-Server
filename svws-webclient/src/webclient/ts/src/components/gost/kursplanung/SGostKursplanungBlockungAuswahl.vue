@@ -13,7 +13,7 @@
 									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="patch_blockung" />
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
-							<div v-if="allow_add_blockung(props.halbjahr.value)" class="flex gap-1">
+							<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
 								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button>
 								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending" />
 							</div>
@@ -45,32 +45,23 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostHalbjahr, GostJahrgang, List } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
+	import { GostBlockungListeneintrag, GostHalbjahr, List } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
-	import { useRouter } from 'vue-router';
-	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
 		removeBlockung: () => Promise<void>;
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
 	}>();
-
-	const router = useRouter();
 
 	const edit_blockungsname: Ref<boolean> = ref(false);
 
@@ -81,7 +72,7 @@
 	const pending: ComputedRef<boolean> = computed(()=> props.blockung.pending);
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
-		const curr_hj = (row.id === props.halbjahr.value.id);
+		const curr_hj = (row.id === props.halbjahr.id);
 		if (!curr_hj || props.jahrgangsdaten.daten === undefined)
 			return false;
 		return props.jahrgangsdaten.daten.istBlockungFestgelegt[row.id] ? false : true

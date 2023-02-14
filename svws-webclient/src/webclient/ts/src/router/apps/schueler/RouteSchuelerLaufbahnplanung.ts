@@ -1,25 +1,29 @@
-import { AbiturdatenManager, GostBelegpruefungsArt, GostFach, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { AbiturdatenManager, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
-import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { routeLogin } from "~/router/RouteLogin";
+import { shallowRef, ShallowRef } from "vue";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
 	dataLaufbahn: DataSchuelerLaufbahnplanung = new DataSchuelerLaufbahnplanung();
+	_faecherManager: ShallowRef<GostFaecherManager | undefined> = shallowRef(undefined);
 	gostJahrgang: GostJahrgang = new GostJahrgang();
 	dataJahrgang: DataGostJahrgang = new DataGostJahrgang();
-	dataFaecher: DataGostFaecher = new DataGostFaecher();
 	dataFachkombinationen: DataGostFachkombinationen = new DataGostFachkombinationen();
 
 	get faechermanager(): GostFaecherManager {
-		if (this.dataFaecher.manager === undefined)
+		if (this._faecherManager.value === undefined)
 			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
-		return this.dataFaecher.manager;
+		return this._faecherManager.value;
+	}
+
+	set faecherManager(manager: GostFaecherManager | undefined) {
+		this._faecherManager.value = manager;
 	}
 
 	get fachkombinationen(): List<GostJahrgangFachkombination> {
@@ -88,11 +92,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		if (item === undefined) {
 			this.data.item = undefined;
 			await this.data.dataLaufbahn.unselect();
-			this.data.dataLaufbahn.dataGostFaecher = undefined;
+			this.data.dataLaufbahn.gostFaecher = undefined;
 			this.data.dataLaufbahn.dataGostJahrgang = undefined;
 			this.data.dataLaufbahn.dataSchule = undefined;
 			await this.data.dataJahrgang.unselect();
-			await this.data.dataFaecher.unselect();
+			this.data.faecherManager = undefined;
 			await this.data.dataFachkombinationen.unselect();
 		} else {
 			this.data.item = item;
@@ -107,8 +111,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 					await this.data.dataLaufbahn.unselect();
 					return false;
 				}
-				await this.data.dataFaecher.select(this.data.gostJahrgang);
-				this.data.dataLaufbahn.dataGostFaecher = this.data.dataFaecher;
+				const listFaecher = await routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, this.data.gostJahrgang.abiturjahr);
+				this.data.faecherManager = new GostFaecherManager(listFaecher);
+				this.data.dataLaufbahn.gostFaecher = listFaecher;
 				this.data.dataLaufbahn.dataGostJahrgang = this.data.dataJahrgang;
 				this.data.dataLaufbahn.dataSchule = routeSchueler.data.schule;
 				await this.data.dataFachkombinationen.select(this.data.gostJahrgang);

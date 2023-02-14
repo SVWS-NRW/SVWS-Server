@@ -39,21 +39,16 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
-		GostFachwahl, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+		GostFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 
 	const props = defineProps<{
 		gotoSchueler: (idSchueler: number) => Promise<void>;
 		gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		fachwahlen: List<GostStatistikFachwahl>;
 		schueler: SchuelerListeEintrag;
 	}>();
 

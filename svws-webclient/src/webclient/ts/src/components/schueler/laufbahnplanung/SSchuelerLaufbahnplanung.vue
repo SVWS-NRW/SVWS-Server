@@ -13,12 +13,12 @@
 
 <script setup lang="ts">
 
-	import { AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten,
+	import { AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{
-		setWahl: (fach: GostFach, wahl: GostSchuelerFachwahl) => Promise<void>;
+		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		setBelegpruefungsart: (value: GostBelegpruefungsArt) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		schueler: SchuelerListeEintrag | undefined,

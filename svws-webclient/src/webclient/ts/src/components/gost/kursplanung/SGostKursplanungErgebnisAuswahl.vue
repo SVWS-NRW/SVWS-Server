@@ -60,31 +60,20 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
+	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List, Vector } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
 	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { ListLehrer } from '~/apps/lehrer/ListLehrer';
-	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
-	import { DataGostKursblockungsergebnis } from '~/apps/gost/DataGostKursblockungsergebnis';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungBlockung } from '~/router/apps/gost/kursplanung/RouteGostKursplanungBlockung';
 
 	const props = defineProps<{
-		item: ShallowRef<GostJahrgang | undefined>;
-		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
-		listLehrer: ListLehrer;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
@@ -101,7 +90,7 @@
 	const pending: ComputedRef<boolean> = computed(()=> props.blockung.pending);
 
 	async function remove_ergebnisse() {
-		if (props.halbjahr.value === undefined)
+		if (props.halbjahr === undefined)
 			return;
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
@@ -109,7 +98,7 @@
 				await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
 			}
 			selected_ergebnisse.value = [];
-			await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value);
+			await props.listBlockungen.update_list(abiturjahr, props.halbjahr);
 		}
 	}
 
@@ -118,7 +107,7 @@
 			return;
 		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, selected_ergebnis.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
-		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value)
+		await props.listBlockungen.update_list(abiturjahr, props.halbjahr)
 	}
 
 	async function derive_blockung() {
@@ -126,7 +115,7 @@
 			return;
 		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, selected_ergebnis.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
-		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value);
+		await props.listBlockungen.update_list(abiturjahr, props.halbjahr);
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
