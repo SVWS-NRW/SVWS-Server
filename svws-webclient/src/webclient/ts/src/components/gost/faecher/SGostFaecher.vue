@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="s-gost-faecher--wrapper">
+	<div class="s-gost-faecher--wrapper">
 		<div class="w-128">
 			<s-card-gost-faecher :faecher-manager="faecherManager" :abiturjahr="item?.abiturjahr ?? -1" :patch-fach="patchFach" />
 		</div>
@@ -19,11 +19,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
 	import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
 	const props = defineProps<{
@@ -38,10 +36,6 @@
 		faecherManager: GostFaecherManager;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeGostFaecher.hidden());
-	});
 
 </script>
 

@@ -32,7 +32,7 @@
 						<td class="border border-[#7f7f7f]/20 text-center">LK</td>
 					</tr>
 				</thead>
-				<tr v-for="fach in faecherManager.toVector()" :key="fach.id">
+				<tr v-for="fach in faecher" :key="fach.id">
 					<s-row-gost-faecher :fach="fach" :abiturjahr="abiturjahr" :map-leitfaecher="mapLeitfaecher" :patch-fach="patchFach" />
 				</tr>
 			</table>
@@ -44,7 +44,7 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { Fachgruppe, GostFach, GostFaecherManager, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { Fachgruppe, GostFach, GostFaecherManager, LinkedCollection, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
@@ -52,9 +52,13 @@
 		faecherManager: GostFaecherManager;
 	}>();
 
+	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
+		return props.faecherManager.faecher();
+	});
+
 	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
 		const result = new Map<number, GostFach>();
-		for (const fach of props.faecherManager.toVector()) {
+		for (const fach of faecher.value) {
 			const fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
 			if ((fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX))
 				result.set(fach.id, fach);

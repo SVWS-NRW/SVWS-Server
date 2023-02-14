@@ -15,7 +15,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { List, GostJahrgangFachkombination, GostFach, GostFaecherManager, GostKursart, GostHalbjahr } from "@svws-nrw/svws-core-ts";
+	import { GostJahrgangFachkombination, GostFach, GostFaecherManager, GostKursart, GostHalbjahr, LinkedCollection } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		kombination: GostJahrgangFachkombination;
@@ -24,7 +24,7 @@
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 	}>();
 
-	const faecher: ComputedRef<List<GostFach> | undefined> = computed(() => props.faecherManager.toVector());
+	const faecher: ComputedRef<LinkedCollection<GostFach> | undefined> = computed(() => props.faecherManager.faecher());
 	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
 
 	const fach1: WritableComputedRef<GostFach | undefined> = computed({
