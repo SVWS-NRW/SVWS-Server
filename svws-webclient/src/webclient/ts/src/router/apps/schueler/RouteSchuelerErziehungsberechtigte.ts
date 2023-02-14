@@ -12,12 +12,12 @@ export class RouteDataSchuelerErziehungsberechtigte {
 
 	idSchueler: number | undefined = undefined;
 	_daten: Ref<List<ErzieherStammdaten> | undefined> = ref(undefined);
-	_erzieherarten: Ref<List<Erzieherart> | undefined> = ref(undefined);
+	_mapErzieherarten: Ref<Map<number, Erzieherart>> = ref(new Map());
 
-	public get erzieherarten() : List<Erzieherart> {
-		if (this._erzieherarten.value === undefined)
+	public get mapErzieherarten() : Map<number, Erzieherart> {
+		if (this._mapErzieherarten.value.size === 0)
 			throw new Error("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte. ");
-		return this._erzieherarten.value;
+		return this._mapErzieherarten.value;
 	}
 
 	public get daten(): List<ErzieherStammdaten> {
@@ -54,7 +54,11 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		this.data._erzieherarten.value = await routeLogin.data.api.getErzieherArten(routeLogin.data.schema);
+		const listErzieherarten = await routeLogin.data.api.getErzieherArten(routeLogin.data.schema);
+		const mapErzieherarten = new Map<number, Erzieherart>();
+		for (const e of listErzieherarten)
+			mapErzieherarten.set(e.id, e);
+		this.data._mapErzieherarten.value = mapErzieherarten;
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -74,9 +78,9 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 		return {
 			patch: this.data.patch,
 			data: this.data.daten,
-			erzieherarten: this.data.erzieherarten,
-			orte: routeApp.data.orte,
-			ortsteile: routeApp.data.ortsteile
+			mapErzieherarten: this.data.mapErzieherarten,
+			mapOrte: routeApp.data.mapOrte,
+			mapOrtsteile: routeApp.data.mapOrtsteile
 		};
 	}
 

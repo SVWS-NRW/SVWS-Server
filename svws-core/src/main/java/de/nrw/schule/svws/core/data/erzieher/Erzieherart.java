@@ -14,9 +14,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class Erzieherart {
     
-    /** ID der Erzieherart */
-    @Schema(required = true, description = "die ID der Erzieherart, welchem der Erzieher zugeordnet ist", example="1")
-	public Long id;
+	/** ID der Erzieherart */
+	@Schema(required = true, description = "die ID der Erzieherart, welchem der Erzieher zugeordnet ist", example="1")
+	public long id;
 
 	/** Bezeichnung der Erzieherart */
 	@Schema(required = true, description = "die Bezeichnung der Erzieherart, welchem der Erzieher zugeordnet ist", example="Mutter")

@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Erzieherart extends JavaObject {
@@ -7,7 +6,7 @@ export class Erzieherart extends JavaObject {
 	/**
 	 * ID der Erzieherart 
 	 */
-	public id : number | null = null;
+	public id : number = 0;
 
 	/**
 	 * Bezeichnung der Erzieherart 
@@ -26,14 +25,16 @@ export class Erzieherart extends JavaObject {
 	public static transpilerFromJSON(json : string): Erzieherart {
 		const obj = JSON.parse(json);
 		const result = new Erzieherart();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Erzieherart) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"id" : ' + obj.id + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -43,7 +44,7 @@ export class Erzieherart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Erzieherart>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';

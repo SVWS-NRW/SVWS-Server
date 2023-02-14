@@ -11,7 +11,7 @@
 			<div class="entry-wrapper">
 				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
 				<div class="entry-content">
-					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="katalogErzieherarten"
+					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten.values()"
 						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
 					<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
 						@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)">
@@ -39,9 +39,9 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerZusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="orte" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte.values()" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="ortsteile"
+					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile.values()"
 						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 				</div>
 			</div>
@@ -59,16 +59,16 @@
 
 <script setup lang="ts">
 
-	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, List } from "@svws-nrw/svws-core-ts";
+	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort,
 		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;
-		erzieherarten: List<Erzieherart>;
-		orte: List<OrtKatalogEintrag>;
-		ortsteile: List<OrtsteilKatalogEintrag>;
+		mapErzieherarten: Map<number, Erzieherart>;
+		mapOrte: Map<number, OrtKatalogEintrag>;
+		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -80,23 +80,13 @@
 	}
 
 	const wohnort: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => {
-			for (const ort of props.orte)
-				if (ort.id == props.erzieher.wohnortID)
-					return ort;
-			return undefined
-		},
-		set: (value) => void doPatch({ wohnortID: value === undefined ? null : value?.id }, props.erzieher.id)
+		get: () => props.erzieher.wohnortID === null ? undefined : props.mapOrte.get(props.erzieher.wohnortID),
+		set: (value) => void doPatch({ wohnortID: value === undefined ? null : value.id }, props.erzieher.id)
 	});
 
 	const ortsteil: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get: () => {
-			for (const ortsteil of props.ortsteile)
-				if (ortsteil.id == props.erzieher.ortsteilID)
-					return ortsteil;
-			return undefined
-		},
-		set: (value) => void doPatch({ ortsteilID: value === undefined ? null : value?.id }, props.erzieher.id)
+		get: () => props.erzieher.ortsteilID === null ? undefined : props.mapOrtsteile.get(props.erzieher.ortsteilID),
+		set: (value) => void doPatch({ ortsteilID: value === undefined ? null : value.id }, props.erzieher.id)
 	});
 
 	const staatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
@@ -104,10 +94,9 @@
 		set: (value) => void doPatch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher.id)
 	});
 
-	const katalogErzieherarten: ComputedRef<Erzieherart[]> = computed(() => props.erzieherarten.toArray() as Erzieherart[]);
 	const idErzieherArt: WritableComputedRef<Erzieherart | undefined> = computed({
-		get: () => katalogErzieherarten.value.find(n => n.id === props.erzieher.idErzieherArt),
-		set: (value) => void doPatch({ idErzieherArt: value?.id }, props.erzieher.id)
+		get: () => props.erzieher.idErzieherArt === null ? undefined : props.mapErzieherarten.get(props.erzieher.idErzieherArt),
+		set: (value) => void doPatch({ idErzieherArt: value === undefined ? null : value.id }, props.erzieher.id)
 	});
 
 	const strassenname: WritableComputedRef<string> = computed({
