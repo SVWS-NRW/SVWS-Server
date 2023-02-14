@@ -28,7 +28,7 @@
 
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 

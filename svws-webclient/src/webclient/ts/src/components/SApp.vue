@@ -55,7 +55,7 @@
 	import { version } from '../../version';
 	import { computed, ComputedRef, onErrorCaptured, ref, Ref, watch } from "vue";
 	import { useRoute } from "vue-router";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';

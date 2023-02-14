@@ -22,7 +22,7 @@
 
 	import { FaecherListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { router } from "~/router"
+	import { router } from "~/router/RouteManager";
 	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeKataloge } from "~/router/apps/RouteKataloge";
 	import { List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 

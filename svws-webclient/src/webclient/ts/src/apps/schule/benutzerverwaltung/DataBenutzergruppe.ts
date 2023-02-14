@@ -4,7 +4,7 @@ import { BaseData } from "~/apps/BaseData";
 import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
-import { router } from "~/router";
+import { router } from "~/router/RouteManager";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 

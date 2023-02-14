@@ -3,6 +3,8 @@ import { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
+import { createRouter, createWebHashHistory } from "vue-router";
+
 
 export class RouteManager {
 
@@ -211,3 +213,11 @@ export class RouteManager {
 	}
 
 }
+
+// Initialisiere den Router
+export const router = createRouter({
+	history: createWebHashHistory(import.meta.env.BASE_URL ?? "/"),
+	routes: [ ]
+});
+
+export const routerManager = RouteManager.create(router);

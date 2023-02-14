@@ -18,7 +18,7 @@
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { ref } from "vue";
 	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 
 	const props = defineProps<{

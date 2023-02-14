@@ -23,7 +23,7 @@
 	import {FoerderschwerpunktEintrag, List, Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 	import {computed, ComputedRef, ShallowRef} from "vue";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
 	const props = defineProps<{

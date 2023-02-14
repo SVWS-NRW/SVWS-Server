@@ -46,7 +46,7 @@
 	import { Religion, ReligionEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, ShallowRef } from "vue";
 	import { routeLogin } from "~/router/RouteLogin";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 

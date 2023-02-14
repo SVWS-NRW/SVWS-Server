@@ -15,6 +15,6 @@
 <script setup lang="ts">
 
 	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { router } from "~/router";
+	import { router } from "~/router/RouteManager";
 
 </script>
