@@ -29,9 +29,11 @@ export class RouteDataGostKursplanung  {
 	removeFachkombination = async (id: number) => {
 		const result = await routeLogin.data.api.deleteGostFachkombination(routeLogin.data.schema, id);
 		if ((result !== undefined) && (this.dataFachkombinationen.daten !== undefined))
-			for (let i : number = this.dataFachkombinationen.daten.size() - 1; i >= 0; i--)
-				if (this.dataFachkombinationen.daten.get(i).id === id)
-					this.dataFachkombinationen.daten.remove(i);
+			for (let i : number = this.dataFachkombinationen.daten.size() - 1; i >= 0; i--) {
+				const element = this.dataFachkombinationen.daten.get(i);
+				if (element.id === id)
+				  this.dataFachkombinationen.daten.remove(element);
+			}
 		return result;
 	}
 
