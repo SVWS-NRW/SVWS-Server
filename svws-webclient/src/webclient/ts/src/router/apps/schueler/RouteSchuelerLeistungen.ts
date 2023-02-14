@@ -19,9 +19,7 @@ export class RouteDataSchuelerLeistungen {
 	}
 
 	public getEntryDefault() : SchuelerLernabschnittListeEintrag | undefined {
-		if (routeApp.data.schule.daten === undefined)
-			throw new Error("Keine Daten für die Schule geladen!");
-		const entry = this.getEntry(routeApp.data.schule.daten.idSchuljahresabschnitt, null);
+		const entry = this.getEntry(routeApp.data.aktAbschnitt.value.id, null);
 		if (entry !== undefined)
 			return entry;
 		if (this.listAbschnitte.size() > 0)
