@@ -1,14 +1,18 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams,  RouteParamValue,  useRouter } from "vue-router";
-import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { ShallowRef, shallowRef } from "vue";
 import { routeGostKursplanungHalbjahr } from "./kursplanung/RouteGostKursplanungHalbjahr";
-import { routeLogin } from "~/router/RouteLogin";
 import { routeApp } from "~/router/RouteApp";
+import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKursplanung  {
 	halbjahr: ShallowRef<GostHalbjahr> = shallowRef(GostHalbjahr.EF1);
+
+	setHalbjahr = async (value: GostHalbjahr) => {
+		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(routeGost.data.item.value!.abiturjahr, value.id, undefined));
+	}
 }
 
 const SGostKursplanungEmpty = () => import("~/components/gost/kursplanung/SGostKursplanungEmpty.vue");
@@ -74,24 +78,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			setHalbjahr: this.data.setHalbjahr,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
 			halbjahr: this.data.halbjahr.value
 		}
-	}
-
-	public getSelector() : WritableComputedRef<GostHalbjahr> {
-		const router = useRouter();
-		return computed({
-			get: () => {
-				return this.data.halbjahr.value;
-			},
-			set: (value) => {
-				this.data.halbjahr.value = value;
-				const id_value = "" + value.id;
-				const params = { abiturjahr: routeGost.data.item.value!.abiturjahr, halbjahr: id_value };
-				void router.push({ name: this.defaultChild!.name, params: params });
-			}
-		});
 	}
 
 }

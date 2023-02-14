@@ -8,11 +8,25 @@ import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausu
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
 import { routeApp } from "~/router/RouteApp";
+import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKlausurplanung  {
+
+	child: ShallowRef<RouteRecordRaw> = shallowRef(routeGostKlausurplanungKlausurdaten.record);
 	halbjahr: ShallowRef<GostHalbjahr> = shallowRef(GostHalbjahr.EF1);
+
+	setHalbjahr = async (value: GostHalbjahr) => {
+		await RouteManager.doRoute(routeGostKlausurplanung.getRoute(routeGost.data.item.value!.abiturjahr, value.id));
+	}
+
+	setChild = async (value: RouteRecordRaw) => {
+		if (value.name === this.child.value.name)
+			return;
+		const abiturjahr = (routeGost.data.item.value === undefined) ? undefined : "" + routeGost.data.item.value.abiturjahr;
+		await RouteManager.doRoute({ name: value.name, params: { abiturjahr: abiturjahr, halbjahr: this.halbjahr.value.id } });
+	}
+
 }
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -84,6 +98,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			setHalbjahr: this.data.setHalbjahr,
 			item: routeGost.data.item,
 			schule: routeGost.data.schule,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
@@ -94,29 +109,11 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: routeGost.data.item,
-			schule: routeGost.data.schule,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			dataFaecher: routeGost.data.dataFaecher,
-			listJahrgaenge: routeGost.data.listJahrgaenge,
-			halbjahr: this.data.halbjahr
+			setChild: this.data.setChild,
+			child: this.data.child.value,
+			children: this.children_records,
+			hidden: this.children_hidden().value
 		}
-	}
-
-	public getSelector() : WritableComputedRef<GostHalbjahr> {
-		const router = useRouter();
-		return computed({
-			get: () => {
-				return this.data.halbjahr.value;
-			},
-			set: (value) => {
-				this.data.halbjahr.value = value;
-				const id_value = "" + value.id;
-				const params = { abiturjahr: routeGost.data.item.value!.abiturjahr, halbjahr: id_value };
-				const child = this.parent!.selectedChild === undefined ? this.parent!.defaultChild! : this.parent!.selectedChild;
-				void router.push({ name: child.name, params: params });
-			}
-		});
 	}
 
 	/**

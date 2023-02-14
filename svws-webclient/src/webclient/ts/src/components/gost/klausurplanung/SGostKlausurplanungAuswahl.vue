@@ -1,9 +1,10 @@
 <template>
 	<div v-if="visible" class="mt-10">
-		<svws-ui-table :v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
+		<svws-ui-table :model-value="halbjahr" @update:model-value="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
+			:data="GostHalbjahr.values()" class="mb-10">
 			<template #body="{rows}: {rows: GostHalbjahr[]}">
 				<template v-for="row in rows" :key="row.id">
-					<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
+					<tr :class="{'vt-clicked': row.id === halbjahr.id}" @click="select_hj(row)">
 						<td>
 							{{ row.kuerzel }}
 						</td>
@@ -17,27 +18,22 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr, GostJahrgang } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
+	import { computed, ComputedRef, ShallowRef } from 'vue';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
-	import { useRouter } from 'vue-router';
-	import { routeGostKlausurplanung } from '~/router/apps/gost/RouteGostKlausurplanung';
 
 	const props = defineProps<{
+		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
-		halbjahr: ShallowRef<GostHalbjahr>;
+		halbjahr: GostHalbjahr;
 	}>();
 
-	const router = useRouter();
-
-	const selected_hj: WritableComputedRef<GostHalbjahr> = routeGostKlausurplanung.getSelector();
-
-	function select_hj(halbjahr: GostHalbjahr) {
-		selected_hj.value = halbjahr;
+	async function select_hj(halbjahr: GostHalbjahr) {
+		await props.setHalbjahr(halbjahr);
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {

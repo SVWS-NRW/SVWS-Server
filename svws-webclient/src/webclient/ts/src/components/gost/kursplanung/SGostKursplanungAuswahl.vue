@@ -1,9 +1,9 @@
 <template>
 	<div v-if="visible" class="mt-10">
-		<svws-ui-table :v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
+		<svws-ui-table :model-value="halbjahr" @update:model-value="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
 			<template #body="{rows}: {rows: GostHalbjahr[]}">
 				<template v-for="row in rows" :key="row.id">
-					<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
+					<tr :class="{'vt-clicked': row.id === halbjahr.id}" @click="select_hj(row)">
 						<td>
 							{{ row.kuerzel }}
 							<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
@@ -19,37 +19,35 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, WritableComputedRef } from 'vue';
+	import { computed, ComputedRef } from 'vue';
 	import { RouterView, useRouter } from 'vue-router';
 	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
-	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
 	const props = defineProps<{
-		jahrgangsdaten: DataGostJahrgang;
+		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 		halbjahr: GostHalbjahr;
+		jahrgangsdaten: DataGostJahrgang;
 	}>();
 
 	const router = useRouter();
 
-	const selected_hj: WritableComputedRef<GostHalbjahr> = routeGostKursplanung.getSelector();
-
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
-		const curr_hj = row.id === selected_hj.value?.id;
+		const curr_hj = row.id === props.halbjahr.id;
 		if (!curr_hj || props.jahrgangsdaten.daten === undefined)
 			return false;
 		return props.jahrgangsdaten.daten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	function select_hj(halbjahr: GostHalbjahr) {
-		selected_hj.value = halbjahr;
+	async function select_hj(halbjahr: GostHalbjahr) {
+		await props.setHalbjahr(halbjahr);
 	}
 
 	async function blockung_hinzufuegen() {
-		if (props.jahrgangsdaten.daten?.abiturjahr === undefined || !selected_hj.value)
+		if (props.jahrgangsdaten.daten?.abiturjahr === undefined)
 			return;
-		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.daten.abiturjahr, selected_hj.value.id);
+		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.daten.abiturjahr, props.halbjahr.id);
 		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr;
 		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}
