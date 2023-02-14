@@ -1,4 +1,4 @@
-import { GostJahrgang, GostJahrgangsdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { GostFach, GostJahrgang, GostJahrgangsdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { routeLogin } from "~/router/RouteLogin";
@@ -35,6 +35,13 @@ export class RouteDataGost {
 		const abiturjahr = await routeLogin.data.api.createGostAbiturjahrgang(routeLogin.data.schema, idJahrgang);
 		await routeGost.liste.update_list();
 		await RouteManager.doRoute(routeGost.getRoute(abiturjahr));
+	}
+
+	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
+		if (this.jahrgangsdaten.daten === undefined)
+			return false;
+		await routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, this.jahrgangsdaten.daten.abiturjahr, fach_id);
+		return true;
 	}
 
 }

@@ -1,166 +1,65 @@
 <template>
-	<td class="border border-[#7f7f7f]/20 px-2 text-left"
-		:style="{
-			'background-color': bgColor
-		}">
+	<td class="border border-[#7f7f7f]/20 px-2 text-left" :style="{ 'background-color': bgColor }">
 		{{ fach.kuerzelAnzeige }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left"
-		:style="{
-			'background-color': bgColor
-		}">
+	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
 		{{ fach.bezeichnung }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-center"
-		:style="{
-			'background-color': bgColor
-		}">
+	<td class="border border-[#7f7f7f]/20 text-center" :style="{ 'background-color': bgColor }">
 		{{ fach.istFremdSpracheNeuEinsetzend ? "&#x2713;" : "&#x2717;" }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-center"
-		:class="{ 'cursor-pointer': istProjektkurs }"
-		:style="{
-			'background-color': bgColor
-		}"
+	<td class="border border-[#7f7f7f]/20 text-center" :class="{ 'cursor-pointer': istProjektkurs }" :style="{ 'background-color': bgColor }"
 		@click="set_pjk_stunden">
 		<template v-if="istProjektkurs">
-			<span class="px-1"
-				:class="{
-					'bg-green-400': fach.wochenstundenQualifikationsphase === 2,
-					'bg-slate-50': fach.wochenstundenQualifikationsphase === 3
-				}">2</span>
-			<span class="px-1"
-				:class="{
-					'bg-green-400': fach.wochenstundenQualifikationsphase === 3,
-					'bg-slate-50': fach.wochenstundenQualifikationsphase === 2
-				}">3
-			</span>
+			<span class="px-1" :class="{ 'bg-green-400': fach.wochenstundenQualifikationsphase === 2, 'bg-slate-50': fach.wochenstundenQualifikationsphase === 3}">2</span>
+			<span class="px-1" :class="{ 'bg-green-400': fach.wochenstundenQualifikationsphase === 3, 'bg-slate-50': fach.wochenstundenQualifikationsphase === 2}">3</span>
 		</template>
 		<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left"
-		:style="{
-			'background-color': bgColor
-		}">
+	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
-			<svws-ui-multi-select headless
-				:disabled="!leitfach1"
-				:items="katalogLeitfaecher"
-				:item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''"
-				v-model="leitfach1" />
+			<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher.values()" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left"
-		:style="{
-			'background-color': bgColor
-		}">
+	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-			<svws-ui-multi-select headless
-				:disabled="!leitfach1"
-				:items="katalogLeitfaecher"
-				:item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''"
-				v-model="leitfach2" />
+			<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher.values()" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
 	</td>
-
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': ef1_moeglich
-			}
-		]"
-		:style="{
-			'background-color': ef1_moeglich ? bgColor : 'gray'
-		}"
-		@click="ef1_set">
-		{{ ef1_moeglich ? toggle(fach.istMoeglichEF1) : "" }}
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': ef_moeglich } ]"
+		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef1_set">
+		{{ ef_moeglich ? toggle(fach.istMoeglichEF1) : "" }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': ef2_moeglich
-			}
-		]"
-		:style="{
-			'background-color': ef2_moeglich ? bgColor : 'gray'
-		}"
-		@click="ef2_set">
-		{{ ef2_moeglich ? toggle(fach.istMoeglichEF2) : "" }}
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': ef_moeglich } ]"
+		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef2_set">
+		{{ ef_moeglich ? toggle(fach.istMoeglichEF2) : "" }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': q11_moeglich
-			}
-		]"
-		:style="{
-			'background-color': q11_moeglich ? bgColor : 'gray'
-		}"
-		@click="q11_set">
-		{{ q11_moeglich ? toggle(fach.istMoeglichQ11) : "" }}
+	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+		:style="{ 'background-color': bgColor }" @click="q11_set">
+		{{ toggle(fach.istMoeglichQ11) }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': q12_moeglich
-			}
-		]"
-		:style="{
-			'background-color': q12_moeglich ? bgColor : 'gray'
-		}"
-		@click="q12_set">
-		{{ q12_moeglich ? toggle(fach.istMoeglichQ12) : "" }}
+	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+		:style="{ 'background-color': bgColor }" @click="q12_set">
+		{{ toggle(fach.istMoeglichQ12) }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': q21_moeglich
-			}
-		]"
-		:style="{
-			'background-color': q21_moeglich ? bgColor : 'gray'
-		}"
-		@click="q21_set">
-		{{ q21_moeglich ? toggle(fach.istMoeglichQ21) : "" }}
+	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+		:style="{ 'background-color': bgColor }" @click="q21_set">
+		{{ toggle(fach.istMoeglichQ21) }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': q22_moeglich
-			}
-		]"
-		:style="{
-			'background-color': q22_moeglich ? bgColor : 'gray'
-		}"
-		@click="q22_set">
-		{{ q22_moeglich ? toggle(fach.istMoeglichQ22) : "" }}
+	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+		:style="{ 'background-color': bgColor }" @click="q22_set">
+		{{ toggle(fach.istMoeglichQ22) }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': abi_gk_moeglich
-			}
-		]"
-		:style="{
-			'background-color': abi_gk_moeglich ? bgColor : 'gray'
-		}"
-		@click="abi_gk_set">
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': abi_gk_moeglich } ]"
+		:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'gray' }" @click="abi_gk_set">
 		{{ abi_gk_moeglich ? toggle(fach.istMoeglichAbiGK) : "" }}
 	</td>
-	<td :class="[
-			'w-12 text-center',
-			{
-				'cursor-pointer border border-[#7f7f7f]/20': abi_lk_moeglich
-			}
-		]"
-		:style="{
-			'background-color': abi_lk_moeglich ? bgColor : 'gray'
-		}"
-		@click="abi_lk_set">
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': abi_lk_moeglich } ]"
+		:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'gray' }" @click="abi_lk_set">
 		{{ abi_lk_moeglich ? toggle(fach.istMoeglichAbiLK) : "" }}
 	</td>
 </template>
@@ -168,105 +67,111 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { GostFach } from "@svws-nrw/svws-core-ts";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { routeGost } from "~/router/apps/RouteGost";
+	import { Fachgruppe, GostFach, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
+		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
+		abiturjahr: number;
 		fach: GostFach;
-		dataFaecher: DataGostFaecher;
+		mapLeitfaecher: Map<number, GostFach>;
 	}>();
 
-	const katalogLeitfaecher: ComputedRef<(GostFach)[]> = computed(() => props.dataFaecher.faecherOhnePJKundVTF);
+	async function doPatch(data: Partial<GostFach>) {
+		await props.patchFach(data, props.fach.id);
+	}
+
+	function istPJK(fach: GostFach) : boolean {
+		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
+	}
 
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.dataFaecher.faecherOhnePJKundVTF.find(item => props.fach.projektKursLeitfach1ID == item.id),
-		set: (value) => {
-			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
-				return;
-			void props.dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr);
-		}
+		get: () => props.fach.projektKursLeitfach1ID === null ? undefined : props.mapLeitfaecher.get(props.fach.projektKursLeitfach1ID),
+		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.dataFaecher.faecherOhnePJKundVTF.find(item => props.fach.projektKursLeitfach2ID == item.id),
-		set: (value) => {
-			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined || value === leitfach1.value)
-				return;
-			void props.dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr);
-		}
+		get: () => props.fach.projektKursLeitfach2ID === null ? undefined : props.mapLeitfaecher.get(props.fach.projektKursLeitfach2ID),
+		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
 	});
 
-	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() =>
-		!routeGost.liste.ausgewaehlt || !routeGost.liste.ausgewaehlt.abiturjahr || routeGost.liste.ausgewaehlt.abiturjahr < 0
-	);
+	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => props.abiturjahr < 0);
 
-	const istProjektkurs: ComputedRef<boolean> = computed(() => props.dataFaecher.ist_PJK(props.fach));
+	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(props.fach));
 
-	const hatLeitfach1: ComputedRef<boolean> = computed(() => props.dataFaecher.hatLeitfach1(props.fach));
+	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
+		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
+	});
 
-	const bgColor: ComputedRef<string> = computed(() => props.dataFaecher.getBgColor(props.fach));
+	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	const ef1_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getEF1Moeglich(props.fach));
-	const ef2_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getEF2Moeglich(props.fach));
-	const q11_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getQ11Moeglich(props.fach));
-	const q12_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getQ12Moeglich(props.fach));
-	const q21_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getQ21Moeglich(props.fach));
-	const q22_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getQ22Moeglich(props.fach));
-	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getAbiGKMoeglich(props.fach));
-	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => props.dataFaecher.getAbiLKMoeglich(props.fach));
+	const ef_moeglich: ComputedRef<boolean> = computed(() => {
+		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		return !((fg === Fachgruppe.FG_ME) || (fg === Fachgruppe.FG_PX));
+	});
+
+	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
+		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
+	});
+
+	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
+		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+		if ((fach.getJahrgangAb() === Jahrgaenge.JG_EF) ||
+			((props.fach.biliSprache !== null) && (props.fach.biliSprache !== "D")))
+			return false;
+		const fg = fach.getFachgruppe();
+		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
+	});
 
 	function toggle(bool: boolean): string {
 		return bool ? "\u2705" : "\u274C";
 	}
 
-	function set(data: Partial<GostFach>) {
-		void props.dataFaecher.patch(data, props.fach, routeGost.liste.ausgewaehlt?.abiturjahr);
+	async function ef1_set() {
+		if (!ef_moeglich.value)
+			return;
+		await doPatch({ istMoeglichEF1: !props.fach.istMoeglichEF1 });
 	}
 
-	function ef1_set(): void {
-		if (!ef1_moeglich.value) return;
-		set({ istMoeglichEF1: !props.fach.istMoeglichEF1 });
+	async function ef2_set() {
+		if (!ef_moeglich.value)
+			return;
+		await doPatch({ istMoeglichEF2: !props.fach.istMoeglichEF2 });
 	}
 
-	function ef2_set(): void {
-		if (!ef2_moeglich.value) return;
-		set({ istMoeglichEF2: !props.fach.istMoeglichEF2 });
+	async function q11_set() {
+		await doPatch({ istMoeglichQ11: !props.fach.istMoeglichQ11 });
 	}
 
-	function q11_set(): void {
-		if (!q11_moeglich.value) return;
-		set({ istMoeglichQ11: !props.fach.istMoeglichQ11 });
+	async function q12_set() {
+		await doPatch({ istMoeglichQ12: !props.fach.istMoeglichQ12 });
 	}
 
-	function q12_set(): void {
-		if (!q12_moeglich.value) return;
-		set({ istMoeglichQ12: !props.fach.istMoeglichQ12 });
+	async function q21_set() {
+		await doPatch({ istMoeglichQ21: !props.fach.istMoeglichQ21 });
 	}
 
-	function q21_set(): void {
-		if (!q21_moeglich.value) return;
-		set({ istMoeglichQ21: !props.fach.istMoeglichQ21 });
+	async function q22_set() {
+		await doPatch({ istMoeglichQ22: !props.fach.istMoeglichQ22 });
 	}
 
-	function q22_set(): void {
-		if (!q22_moeglich.value) return;
-		set({ istMoeglichQ22: !props.fach.istMoeglichQ22 });
+	async function abi_gk_set() {
+		if (!abi_gk_moeglich.value)
+			return;
+		await doPatch({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK });
 	}
 
-	function abi_gk_set(): void {
-		if (!abi_gk_moeglich.value) return;
-		set({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK });
+	async function abi_lk_set() {
+		if (!abi_gk_moeglich.value)
+			return;
+		await doPatch({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK });
 	}
 
-	function abi_lk_set(): void {
-		if (!abi_gk_moeglich.value) return;
-		set({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK });
-	}
-
-	function set_pjk_stunden(): void {
-		if (!props.dataFaecher.ist_PJK(props.fach)) return;
-		set({ wochenstundenQualifikationsphase: props.fach.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
+	async function set_pjk_stunden() {
+		if (!istPJK(props.fach))
+			return;
+		await doPatch({ wochenstundenQualifikationsphase: props.fach.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
 	}
 
 </script>

@@ -78,6 +78,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteG
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,
 			addFachkombination: this.data.addFachkombination,
 			removeFachkombination: this.data.removeFachkombination,
