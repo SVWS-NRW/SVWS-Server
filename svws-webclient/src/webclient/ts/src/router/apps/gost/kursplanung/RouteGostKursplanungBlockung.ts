@@ -25,7 +25,7 @@ export class RouteDataGostKursplanungBlockung {
 	ergebnisHochschreiben = async () => {
 		if (!this.ergebnis.value)
 			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
-		const abiturjahr = routeGost.data.jahrgangsdaten.daten?.abiturjahr;
+		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
 		const halbjahr = routeGostKursplanung.data.halbjahr.value.next()?.id || routeGostKursplanung.data.halbjahr.value.id;
@@ -34,7 +34,7 @@ export class RouteDataGostKursplanungBlockung {
 	}
 
 	ergebnisAktivieren = async () => {
-		if ((routeGost.data.jahrgangsdaten.daten === undefined) ||
+		if ((routeGost.data.jahrgangsdaten.value === undefined) ||
 			(routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt === undefined) ||
 			(routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager === undefined) ||
 			(routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager === undefined) ||
@@ -43,7 +43,7 @@ export class RouteDataGostKursplanungBlockung {
 		const res = await this.dataKursblockungsergebnis.activate_blockungsergebnis();
 		if (!res)
 			return false;
-		routeGost.data.jahrgangsdaten.daten.istBlockungFestgelegt[routeGostKursplanung.data.halbjahr.value.id] = true;
+		routeGost.data.jahrgangsdaten.value.istBlockungFestgelegt[routeGostKursplanung.data.halbjahr.value.id] = true;
 		routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt.istAktiv = true;
 		routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager.daten().istAktiv = true;
 		routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager.getErgebnis().istVorlage = true;
@@ -167,7 +167,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
 			listBlockungen: routeGostKursplanungHalbjahr.data.listBlockungen,
 			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung

@@ -1,8 +1,7 @@
 import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, Vector } from "@svws-nrw/svws-core-ts";
-import { computed, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
+import { computed, Ref, ref, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { routeLogin } from "~/router/RouteLogin";
-import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
@@ -19,14 +18,15 @@ import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 export class RouteDataGost {
 	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
-	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
+	jahrgangsdaten: Ref<GostJahrgangsdaten | undefined> = ref(undefined);
 	faecherManager: ShallowRef<GostFaecherManager> = shallowRef(new GostFaecherManager(new Vector()));
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
-		if (this.jahrgangsdaten.daten === undefined)
+		if (this.jahrgangsdaten.value === undefined)
 			return false;
 		await routeLogin.data.api.patchGostAbiturjahrgang(data, routeLogin.data.schema, abiturjahr);
+		Object.assign(this.jahrgangsdaten.value, data);
 		return true;
 	}
 
@@ -37,9 +37,9 @@ export class RouteDataGost {
 	}
 
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
-		if (this.jahrgangsdaten.daten === undefined)
+		if (this.jahrgangsdaten.value === undefined)
 			return false;
-		await routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, this.jahrgangsdaten.daten.abiturjahr, fach_id);
+		await routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, this.jahrgangsdaten.value.abiturjahr, fach_id);
 		const fach = this.faecherManager.value.get(fach_id);
 		if (fach !== null)
 			Object.assign(fach, data);
@@ -102,11 +102,11 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		this.liste.ausgewaehlt = item;
 		if (item === undefined) {
 			this.data.item.value = undefined;
-			await this.data.jahrgangsdaten.unselect();
+			this.data.jahrgangsdaten.value = undefined;
 			this.data.faecherManager.value = new GostFaecherManager();
 		} else {
 			this.data.item.value = item;
-			await this.data.jahrgangsdaten.select(this.data.item.value);
+			this.data.jahrgangsdaten.value = await routeLogin.data.api.getGostAbiturjahrgang(routeLogin.data.schema, item.abiturjahr);
 			const listFaecher = await routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, item.abiturjahr);
 			this.data.faecherManager.value = new GostFaecherManager(listFaecher);
 		}

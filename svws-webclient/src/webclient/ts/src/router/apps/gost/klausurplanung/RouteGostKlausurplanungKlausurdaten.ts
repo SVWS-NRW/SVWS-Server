@@ -19,7 +19,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten
+			jahrgangsdaten: routeGost.data.jahrgangsdaten.value
 		}
 	}
 

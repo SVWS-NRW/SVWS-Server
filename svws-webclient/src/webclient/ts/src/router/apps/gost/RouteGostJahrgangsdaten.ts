@@ -19,7 +19,7 @@ export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten.daten,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 		};
 	}
 

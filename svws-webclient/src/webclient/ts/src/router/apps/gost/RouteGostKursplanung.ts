@@ -79,7 +79,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			setHalbjahr: this.data.setHalbjahr,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: this.data.halbjahr.value
 		}
 	}

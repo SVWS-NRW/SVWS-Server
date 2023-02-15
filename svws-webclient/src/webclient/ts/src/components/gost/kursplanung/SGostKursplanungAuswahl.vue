@@ -18,26 +18,25 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
+	import { GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
 	import { RouterView, useRouter } from 'vue-router';
 	import { routeLogin } from "~/router/RouteLogin";
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 		halbjahr: GostHalbjahr;
-		jahrgangsdaten: DataGostJahrgang;
+		jahrgangsdaten: GostJahrgangsdaten | undefined;
 	}>();
 
 	const router = useRouter();
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = row.id === props.halbjahr.id;
-		if (!curr_hj || props.jahrgangsdaten.daten === undefined)
+		if (!curr_hj || props.jahrgangsdaten === undefined)
 			return false;
-		return props.jahrgangsdaten.daten.istBlockungFestgelegt[row.id] ? false : true
+		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
 	async function select_hj(halbjahr: GostHalbjahr) {
@@ -45,15 +44,15 @@
 	}
 
 	async function blockung_hinzufuegen() {
-		if (props.jahrgangsdaten.daten?.abiturjahr === undefined)
+		if (props.jahrgangsdaten?.abiturjahr === undefined)
 			return;
-		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.daten.abiturjahr, props.halbjahr.id);
-		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr;
+		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.abiturjahr, props.halbjahr.id);
+		const abiturjahr = props.jahrgangsdaten.abiturjahr;
 		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.jahrgangsdaten.daten !== undefined) && (props.jahrgangsdaten.daten.abiturjahr > 0);
+		return (props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0);
 	});
 
 </script>

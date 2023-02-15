@@ -45,9 +45,8 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostHalbjahr, List } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
@@ -57,7 +56,7 @@
 
 	const props = defineProps<{
 		removeBlockung: () => Promise<void>;
-		jahrgangsdaten: DataGostJahrgang;
+		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
@@ -73,9 +72,9 @@
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = (row.id === props.halbjahr.id);
-		if (!curr_hj || props.jahrgangsdaten.daten === undefined)
+		if (!curr_hj || props.jahrgangsdaten === undefined)
 			return false;
-		return props.jahrgangsdaten.daten.istBlockungFestgelegt[row.id] ? false : true
+		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
 	function select_blockungauswahl(blockung: GostBlockungListeneintrag) {

@@ -15,10 +15,10 @@ export class RouteDataGostKursplanungHalbjahr  {
 	dataKursblockung: DataGostKursblockung = new DataGostKursblockung();
 
 	removeBlockung = async () => {
-		if ((routeGost.data.jahrgangsdaten.daten === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
+		if ((routeGost.data.jahrgangsdaten.value === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
 			return;
 		await routeLogin.data.api.deleteGostBlockung(routeLogin.data.schema, this.listBlockungen.ausgewaehlt.id);
-		const abiturjahr = routeGost.data.jahrgangsdaten.daten.abiturjahr;
+		const abiturjahr = routeGost.data.jahrgangsdaten.value.abiturjahr;
 		const halbjahr = routeGostKursplanung.data.halbjahr.value;
 		await this.listBlockungen.update_list(abiturjahr, halbjahr);
 		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined));
@@ -178,7 +178,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			removeBlockung: this.data.removeBlockung,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
 			listBlockungen: this.data.listBlockungen,
 			blockung: this.data.dataKursblockung

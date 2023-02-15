@@ -17,13 +17,12 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
+	import { GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
-		jahrgangsdaten: DataGostJahrgang;
+		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 	}>();
 
@@ -32,7 +31,7 @@
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.jahrgangsdaten.daten !== undefined) && (props.jahrgangsdaten.daten.abiturjahr > 0);
+		return (props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0);
 	});
 
 </script>

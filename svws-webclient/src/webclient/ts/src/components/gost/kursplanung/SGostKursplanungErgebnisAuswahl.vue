@@ -60,17 +60,16 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List, Vector } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List, Vector } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
 	import { routeLogin } from "~/router/RouteLogin";
-	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungBlockung } from '~/router/apps/gost/kursplanung/RouteGostKursplanungBlockung';
 
 	const props = defineProps<{
-		jahrgangsdaten: DataGostJahrgang;
+		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
 		blockung: DataGostKursblockung;
@@ -92,7 +91,7 @@
 	async function remove_ergebnisse() {
 		if (props.halbjahr === undefined)
 			return;
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
+		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
 		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
 			for (const ergebnis of selected_ergebnisse.value) {
 				await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
@@ -106,7 +105,7 @@
 		if (!selected_ergebnis.value)
 			return;
 		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
+		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr)
 	}
 
@@ -114,7 +113,7 @@
 		if (!selected_ergebnis.value)
 			return;
 		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
+		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr);
 	}
 
