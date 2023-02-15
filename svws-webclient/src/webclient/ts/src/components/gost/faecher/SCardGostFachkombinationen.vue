@@ -42,7 +42,7 @@
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
-		faecherManager: ShallowRef<GostFaecherManager>;
+		faecherManager: GostFaecherManager;
 		fachkombinationen: List<GostJahrgangFachkombination>;
 	}>();
 
