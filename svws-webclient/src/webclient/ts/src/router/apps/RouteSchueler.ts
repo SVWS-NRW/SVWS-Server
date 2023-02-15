@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -13,22 +13,19 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSc
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { ListGost } from "~/apps/gost/ListGost";
+import { routeLogin } from "../RouteLogin";
 
 export class RouteDataSchueler {
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
-	listKlassen: ListKlassen = new ListKlassen();
 	mapKlassen: Map<Number, KlassenListeEintrag> = new Map();
-	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
-	listKurse: ListKurse = new ListKurse();
-	mapKurs: Map<Number, KursListeEintrag> = new Map();
+	mapKurse: Map<Number, KursListeEintrag> = new Map();
 	listeAbiturjahrgaenge: ListGost = new ListGost();
 }
 
@@ -72,16 +69,29 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 			throw new Error("Schulform unbekannt.");
 		if (schulform?.daten.hatGymOb)
 			await this.data.listeAbiturjahrgaenge.update_list();
-		await this.data.listKlassen.update_list();
+		// aktualisiere die Klassen und erstelle Map
+		const listKlassen = await routeLogin.data.api.getKlassenFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		const mapKlassen: Map<number, KlassenListeEintrag> = new Map()
+		for (const k of listKlassen)
+			mapKlassen.set(k.id, k)
 		this.data.mapKlassen.clear();
-		this.data.listKlassen.liste.forEach(k => this.data.mapKlassen.set(k.id, k));
-		await this.data.listJahrgaenge.update_list();
+		this.data.mapKlassen = mapKlassen;
+		// aktualisiere die Kurse und erstelle Map
+		const listKurse = await routeLogin.data.api.getKurseFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		const mapKurse: Map<number, KursListeEintrag> = new Map();
+		for (const k of listKurse)
+			mapKurse.set(k.id, k)
+		this.data.mapKurse.clear();
+		this.data.mapKurse = mapKurse;
+		// aktualisiere die Jahrgänge und erstelle Map
+		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map()
+		for (const j of listJahrgaenge)
+			mapJahrgaenge.set(j.id, j)
 		this.data.mapJahrgaenge.clear();
-		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
-		await this.data.listKurse.update_list();
-		this.data.mapKurs.clear();
-		this.data.listKurse.liste.forEach(k => this.data.mapKurs.set(k.id, k));
-		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+		this.data.mapJahrgaenge = mapJahrgaenge;
+		// Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -116,13 +126,10 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			listKlassen: this.data.listKlassen,
 			mapKlassen: this.data.mapKlassen,
-			listJahrgaenge: this.data.listJahrgaenge,
 			mapJahrgaenge: this.data.mapJahrgaenge,
-			listKurse: this.data.listKurse,
-			mapKurs: this.data.mapKurs,
-			schulgliederungen: this.data.schule.schulgliederungen,
+			mapKurse: this.data.mapKurse,
+			schulgliederungen: this.data.schule.schulgliederungen.value,
 			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt

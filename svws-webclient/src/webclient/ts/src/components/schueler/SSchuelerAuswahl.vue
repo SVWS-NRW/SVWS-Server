@@ -11,8 +11,8 @@
 				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="inputJahrgaenge" :item-text="text_jahrgang" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="inputKurse" :item-text="text_kurs" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" />
 				</div>
 			</div>
@@ -66,9 +66,6 @@
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
 	import { ListSchueler } from "~/apps/schueler/ListSchueler";
-	import { ListKlassen } from "~/apps/klassen/ListKlassen";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-	import { ListKurse } from "~/apps/kurse/ListKurse";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	export interface SchuelerProps {
@@ -80,12 +77,9 @@
 
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		listKlassen: ListKlassen;
 		mapKlassen: Map<Number, KlassenListeEintrag>;
-		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
-		listKurse: ListKurse;
-		mapKurs: Map<Number, KursListeEintrag>;
+		mapKurse: Map<Number, KursListeEintrag>;
 		schulgliederungen: List<Schulgliederung>;
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
@@ -159,10 +153,6 @@
 		}
 	});
 
-	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag> | undefined> = computed(() => {
-		return props.listJahrgaenge.liste;
-	});
-
 	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get(): JahrgangsListeEintrag | undefined {
 			return listSchueler.value.filter.jahrgang;
@@ -180,7 +170,7 @@
 	});
 
 	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> = computed(() => {
-		const liste = [...props.listKlassen.liste];
+		const liste = [...props.mapKlassen.values()];
 		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined) ? liste : liste.filter(k => k.idJahrgang === jahrgang.id);
 	});
@@ -200,7 +190,7 @@
 	});
 
 	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> = computed(() => {
-		const liste = [...props.listKurse.liste];
+		const liste = [...props.mapKurse.values()];
 		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined)
 			? liste
