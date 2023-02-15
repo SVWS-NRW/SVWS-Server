@@ -130,7 +130,13 @@
 
 	const sortedList: ComputedRef<Item[]> = computed(() => {
 		if (!isIterable(items)) return [];
-		const arr: Item[] = Array.isArray(items) ? items : [...items];
+		let arr
+		if (Array.isArray(items))
+			arr = items;
+		else if (items instanceof Map)
+			arr = [...items.values()];
+		else
+			arr = [...items];
 		if (itemSort) return arr.sort(itemSort);
 		return arr;
 	});
