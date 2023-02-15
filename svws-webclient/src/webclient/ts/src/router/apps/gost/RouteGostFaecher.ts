@@ -5,7 +5,7 @@ import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombi
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLogin } from "~/router/RouteLogin";
 
-export class RouteDataGostKursplanung  {
+export class RouteDataGostFaecher  {
 
 	item: GostJahrgang | undefined = undefined;
 	dataFachkombinationen: DataGostFachkombinationen = new DataGostFachkombinationen();
@@ -43,10 +43,10 @@ export class RouteDataGostKursplanung  {
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
 
-export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteGost> {
+export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost> {
 
 	public constructor() {
-		super("gost.faecher", "faecher", SGostFaecher, new RouteDataGostKursplanung());
+		super("gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 	}
