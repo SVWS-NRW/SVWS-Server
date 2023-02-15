@@ -8,8 +8,18 @@
 					<td> Kompetenz / Kompetenzgruppe </td>
 					<td>durch Gruppe(n)</td>
 				</tr>
+				<!-- <tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }"> -->
+				<tr>
+					<td />
+					<td colspan="2"> <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager.istInAdminGruppe()"> Admin ? </svws-ui-checkbox></td>
+					<!-- <td> Admin ?  </td>  -->
+					<td> Kompetenz von </td>
+				</tr>
 				<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
-					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin" :data="data" />
+					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :manager="manager"
+						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
+						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
+						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
 				</template>
 			</table>
 		</div>
@@ -18,18 +28,29 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenzGruppe } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
-	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
+	import { BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: DataBenutzer;
+		manager : BenutzerManager;
+		setIstAdmin : (istAdmin: boolean) => Promise<void>;
+		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
+		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
+		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>;
+		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>;
+		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 	}>();
-
-	const istAdmin: ComputedRef<boolean> = computed(() => (props.data.manager === undefined) ? false: props.data.manager.istAdmin());
 
 	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 
+	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
+		get: () => props.manager.istAdmin(),
+		set: (value) => {
+			if ((value === undefined) || (value === props.manager.istAdmin()))
+				return;
+			void props.setIstAdmin(value);
+		}
+	});
 </script>
 
 <style scoped>

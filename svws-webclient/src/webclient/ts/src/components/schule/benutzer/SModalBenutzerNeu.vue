@@ -17,7 +17,7 @@
 
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modalNeuerBenutzer.closeModal()"> Abbrechen </svws-ui-button>
-			<svws-ui-button @click="createBenutzerAllgemein"> Weiter </svws-ui-button>
+			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
@@ -25,7 +25,7 @@
 		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 	</button>
 
-	<button v-if="showDeleteIcon" class="button button--icon" @click="deleteBenutzer()">
+	<button v-if="showDeleteIcon" class="button button--icon" @click="deleteBenutzerAllgemein()">
 		<svws-ui-icon><i-ri-delete-bin2-line /></svws-ui-icon>
 	</button>
 
@@ -41,35 +41,33 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 
 	const modalNeuerBenutzer = ref();
 
-	const props = defineProps({
-		showDeleteIcon : {type:Boolean, default:false}
+	const props = withDefaults(defineProps<{
+		showDeleteIcon?: boolean;
+		createBenutzerAllgemein: (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
+		deleteBenutzerAllgemein: () => Promise<void>;
+	}>(), {
+		showDeleteIcon: false,
 	});
 
 	const anzeigename = ref();
 	const name = ref();
-	const passwort1=ref();
-	const passwort2=ref();
+	const passwort1 = ref();
+	const passwort2 = ref();
 
-	async function createBenutzerAllgemein(){
+	async function create() {
 		if (passwort1.value === passwort2.value){
-			await routeSchuleBenutzerDaten.data.daten.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
+			await props.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
 			modalNeuerBenutzer.value.closeModal();
-			anzeigename.value="";
-			name.value="";
-			passwort1.value="";
-			passwort2.value="";
-		}
-		else{
+			anzeigename.value = "";
+			name.value = "";
+			passwort1.value = "";
+			passwort2.value = "";
+		} else {
 			alert("Passwörter stimmen nicht überein")
 		}
-	}
-
-	async function deleteBenutzer(){
-		await routeSchuleBenutzerDaten.data.daten.deleteBenutzerAllgemein();
 	}
 
 </script>

@@ -11,7 +11,10 @@
 				</thead>
 				<tbody>
 					<template v-for="bgle in benutzergruppen" :key="bgle.id">
-						<s-benutzergruppen-listeneintrag :bgle="bgle" :data="data" />
+						<s-benutzergruppen-listeneintrag :bgle="bgle"
+							:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
+							:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
+							:manager="manager" />
 					</template>
 				</tbody>
 			</table>
@@ -22,27 +25,21 @@
 <script setup lang="ts">
 
 	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
+	import { computed, WritableComputedRef } from "vue";
 
-	const props = defineProps<{
-		data: DataBenutzer;
-		benutzergruppen: BenutzergruppeListeEintrag[];
+	const props = defineProps<{		benutzergruppen: BenutzergruppeListeEintrag[];
+		manager : BenutzerManager;
+		addBenutzerToBenutzergruppe : (bg_id : number) => Promise<void>;
+		removeBenutzerFromBenutzergruppe	: (bg_id : number) => Promise<void>;
 	}>();
 
-	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => {
-		return props.data.manager;
-	});
-
 	const selected: WritableComputedRef<boolean> = computed({
-		get(): boolean {
-			return props.benutzergruppen.length === manager.value?.anzahlGruppen() ?  true : false;
-		},
-		set(value: boolean) {
+		get: () => props.benutzergruppen.length === props.manager.anzahlGruppen() ?  true : false,
+		set: (value) => {
 			if (value)
-				void props.data.addBenutzergruppenBenutzer(props.benutzergruppen);
+				void props.addBenutzerToBenutzergruppe(-1);
 			else
-				void props.data.removeBenutzergruppenBenutzer(props.benutzergruppen);
+				void props.removeBenutzerFromBenutzergruppe(-1);
 		}
 	});
 

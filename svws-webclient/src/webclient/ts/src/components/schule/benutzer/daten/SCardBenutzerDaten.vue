@@ -5,13 +5,13 @@
 				<svws-ui-text-input class="mb-5" v-model="name" type="text" placeholder="Name" />
 				<svws-ui-text-input class="mb-5" v-model="anzeigename" type="text" placeholder="Login-Name" />
 			</div>
-			<svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
+			<!-- <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager.istInAdminGruppe()"> Admin ? </svws-ui-checkbox> -->
 			<div class="flex gap-4 mt-3">
 				<svws-ui-text-input class="mb-5" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
 				<svws-ui-text-input class="mb-5" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
 			</div>
 			<div>
-			<svws-ui-button @click="setPassword()"> Kennwort ändern </svws-ui-button>
+				<svws-ui-button @click="setPassword()"> Kennwort ändern </svws-ui-button>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -19,40 +19,30 @@
 
 <script setup lang="ts">
 	import { BenutzerManager } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
-
-	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
+	import { computed, ref, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: DataBenutzer;
+		manager : BenutzerManager;
+		setAnzeigename : (anzeigename : string) => Promise<void>;
+		setAnmeldename : (anzeigename : string) => Promise<void>;
+		setPassword : (passwort : string) => Promise<void>;
 	}>();
 
-	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => props.data.manager);
-
 	const anzeigename: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getAnzeigename(),
+		get: () => props.manager.getAnzeigename(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getAnzeigename()))
+			if ((value === undefined) || (value === "") || (value === props.manager.getAnzeigename()))
 				return;
-			void props.data.setAnzeigename(value);
+			void props.setAnzeigename(value);
 		}
 	});
 
 	const name: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getAnmeldename(),
+		get: () => props.manager.getAnmeldename(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getAnmeldename()))
+			if ((value === undefined) || (value === "") || (value === props.manager.getAnmeldename()))
 				return;
-			void props.data.setAnmeldename(value);
-		}
-	});
-
-	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
-		get: () => manager.value?.istAdmin(),
-		set: (value) => {
-			if ((value === undefined) || (value === manager.value?.istAdmin()))
-				return;
-			void props.data.setIstAdmin(value);
+			void props.setAnmeldename(value);
 		}
 	});
 
@@ -61,7 +51,7 @@
 
 	function setPassword(){
 		if (kennwort1.value === kennwort2.value)
-			void props.data.setPassword(kennwort1.value)
+			void props.setPassword(kennwort1.value)
 		else
 			alert("Kennwörter stimmen nicht überein")
 	}

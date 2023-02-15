@@ -17,7 +17,8 @@
 			<!-- Auswahlliste für die Benutzer -->
 			<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
 				<template #footer>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
+						:delete-benutzer-allgemein="deleteBenutzerAllgemein" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -34,6 +35,8 @@
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzerListeEintrag | undefined>;
+		createBenutzerAllgemein : (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
+		deleteBenutzerAllgemein : () => Promise<void>;
 	}>();
 
 	const selected = routeSchuleBenutzer.auswahl;
@@ -48,9 +51,7 @@
 
 	const rows: ComputedRef<BenutzerListeEintrag[]> = computed(() => routeSchuleBenutzer.liste.liste || []);
 
-	const rowsFiltered: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		if (rows.value === undefined)
-			return undefined;
+	const rowsFiltered: ComputedRef<BenutzerListeEintrag[]> = computed(() => {
 		const rowsValue: BenutzerListeEintrag[] = rows.value;
 		return (search.value)
 			? rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))

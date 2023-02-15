@@ -1,11 +1,11 @@
-import { BenutzerListeEintrag, LogConsumerConsole, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
 import { WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteApp } from "~/router/RouteApp";
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
@@ -66,6 +66,8 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
+			createBenutzerAllgemein : routeSchuleBenutzerDaten.data.createBenutzerAllgemein,
+			deleteBenutzerAllgemein : routeSchuleBenutzerDaten.data.deleteBenutzerAllgemein
 		};
 	}
 
