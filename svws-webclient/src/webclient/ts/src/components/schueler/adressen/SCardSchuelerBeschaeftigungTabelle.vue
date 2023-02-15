@@ -1,12 +1,12 @@
 <template>
 	<td>
-		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="mapBetriebe.values()" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Ausbilder" v-model="ausbilder" type="text" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten.values()" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Vertragsbeginn" v-model="vertragsbeginn" type="date" />
@@ -18,10 +18,10 @@
 		<svws-ui-checkbox v-model="praktikum" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Betreuungslehrer" v-model="inputBetreuungslehrer" :items="mapLehrer.values()" :item-text="(i: LehrerListeEintrag) => i.nachname" />
+		<svws-ui-multi-select title="Betreuungslehrer" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner.values()" :item-text="(i: BetriebAnsprechpartner) => i.name || ''" />
+		<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name || ''" />
 	</td>
 	<td>
 		<svws-ui-checkbox v-model="anschreiben" />

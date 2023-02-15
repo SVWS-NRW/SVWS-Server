@@ -20,7 +20,7 @@
 					<div class="flex w-full flex-row items-center space-x-4">
 						<div class="flex-grow">
 							<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
-								:items="mapAnsprechpartner.values()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
+								:items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
 							<p v-else>Kein Ansprechpartner</p>
 						</div>
 						<div class="flex flex-row space-x-4">
@@ -28,7 +28,7 @@
 							<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
 						</div>
 					</div>
-					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer.values()" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -40,7 +40,7 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerzusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte.values()" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 					<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
 					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"

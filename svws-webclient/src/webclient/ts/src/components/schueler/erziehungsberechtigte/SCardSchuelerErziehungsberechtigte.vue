@@ -11,7 +11,7 @@
 			<div class="entry-wrapper">
 				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
 				<div class="entry-content">
-					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten.values()"
+					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten"
 						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
 					<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
 						@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)">
@@ -39,9 +39,9 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerZusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte.values()" :item-filter="orte_filter"
+					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile.values()"
+					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile"
 						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 				</div>
 			</div>

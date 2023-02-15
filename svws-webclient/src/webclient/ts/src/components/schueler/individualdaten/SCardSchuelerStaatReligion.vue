@@ -8,7 +8,7 @@
 			<svws-ui-multi-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit"
 				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-			<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen.values()" required />
+			<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen" required />
 			<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
 			<svws-ui-text-input v-model="religionAbmeldung" type="date"
 				placeholder="Abmeldung vom Religionsunterricht" />

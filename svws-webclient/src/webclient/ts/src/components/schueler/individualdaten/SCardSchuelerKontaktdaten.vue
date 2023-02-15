@@ -4,9 +4,9 @@
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" :valid="eingabeStrasseOk" />
 			</div>
-			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte.values()" :item-filter="orte_filter"
+			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile.values()" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
+			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-text-input placeholder="Telefon" :model-value="data.telefon"
 				@update:model-value="doPatch({ telefon: String($event) })" type="tel" />

@@ -3,8 +3,8 @@
 		<div class="input-wrapper">
 			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
-			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten.values()" />
-			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen.values()" />
+			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" />
+			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" />
 			<svws-ui-text-input placeholder="Anmeldedatum" v-model="inputAnmeldedatum" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" />
 			<svws-ui-checkbox v-model="inputIstVolljaehrig"> Volljährig </svws-ui-checkbox>

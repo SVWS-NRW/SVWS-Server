@@ -18,14 +18,14 @@
 	</td>
 	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
-			<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher.values()" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+			<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
 	</td>
 	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-			<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher.values()" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+			<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>

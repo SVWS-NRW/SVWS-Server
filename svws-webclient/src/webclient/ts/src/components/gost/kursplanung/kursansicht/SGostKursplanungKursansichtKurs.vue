@@ -16,7 +16,7 @@
 			<td class="text-center cell--has-multiselect">
 				<template v-if="allowRegeln">
 					<svws-ui-multi-select :model-value="kurslehrer" @update:model-value="setKurslehrer($event as LehrerListeEintrag | undefined)" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
-						:items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
+						:items="mapLehrer" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
 				</template>
 				<template v-else>
 					{{ kurslehrer?.kuerzel }}

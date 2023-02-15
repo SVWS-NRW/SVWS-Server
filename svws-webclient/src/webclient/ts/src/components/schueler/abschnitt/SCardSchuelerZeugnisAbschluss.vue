@@ -10,7 +10,7 @@
 				<div> TODO: istAbschlussPrognose </div>
 				<div> TODO: versetzungsvermerk </div>
 				<div> TODO: abschlussart </div>
-				<svws-ui-multi-select title="Folgeklasse" v-model="folgeklasse" :items="mapKlassen.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
+				<svws-ui-multi-select title="Folgeklasse" v-model="folgeklasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
 			</div>
 			<div> TODO: abschluss </div>
 			<div> TODO: abschlussBerufsbildend </div>
