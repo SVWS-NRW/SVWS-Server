@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -13,8 +13,6 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSc
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { ListGost } from "~/apps/gost/ListGost";
