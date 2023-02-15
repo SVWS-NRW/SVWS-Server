@@ -23,6 +23,7 @@
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { ShallowRef } from "vue";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
@@ -33,7 +34,7 @@
 		item: GostJahrgang | undefined;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		faecherManager: GostFaecherManager;
+		faecherManager: ShallowRef<GostFaecherManager>;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 

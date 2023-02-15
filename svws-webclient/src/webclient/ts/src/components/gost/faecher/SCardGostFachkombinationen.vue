@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
@@ -42,7 +42,7 @@
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
-		faecherManager: GostFaecherManager;
+		faecherManager: ShallowRef<GostFaecherManager>;
 		fachkombinationen: List<GostJahrgangFachkombination>;
 	}>();
 

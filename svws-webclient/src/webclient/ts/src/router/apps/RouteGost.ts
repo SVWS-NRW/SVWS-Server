@@ -40,6 +40,9 @@ export class RouteDataGost {
 		if (this.jahrgangsdaten.daten === undefined)
 			return false;
 		await routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, this.jahrgangsdaten.daten.abiturjahr, fach_id);
+		const fach = this.faecherManager.value.get(fach_id);
+		if (fach !== null)
+			Object.assign(fach, data);
 		triggerRef(this.faecherManager);
 		return true;
 	}
