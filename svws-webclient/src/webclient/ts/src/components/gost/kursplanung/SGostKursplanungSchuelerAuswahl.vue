@@ -2,7 +2,8 @@
 	<svws-ui-content-card>
 		<div class="flex justify-between items-center">
 			<svws-ui-checkbox v-model="kurs_filter_toggle" class="">Kursfilter<span v-if="kurs_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id) ?? ''" class="w-48" />
+			<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()" headless
+				:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" class="w-48" />
 		</div>
 		<div class="flex justify-between items-center mb-3">
 			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
@@ -40,7 +41,7 @@
 				</thead>
 				<tbody>
 					<s-kurs-schueler-schueler v-for="s in filtered.values()" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
-						:blockung="blockung" :schueler-filter="schuelerFilter" />
+						:get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
 					<tr v-if="!filtered.size">
 						<td class="opacity-50 text-sm">Keine Schüler zu diesem Filter gefunden.</td>
 					</tr>
@@ -53,16 +54,15 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { computed, WritableComputedRef } from "vue";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		setSchueler: (schueler: SchuelerListeEintrag) => Promise<void>;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schueler: SchuelerListeEintrag | undefined;
 		schuelerFilter: GostKursplanungSchuelerFilter;
 		faecherManager: GostFaecherManager;
-		blockung: DataGostKursblockung;
 	}>();
 
 	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();
@@ -70,11 +70,6 @@
 	const radio_filter = props.schuelerFilter.radio_filter();
 
 	const filtered = props.schuelerFilter.filtered();
-
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
-		// löse ein erneutes Filtern aus, wenn der Manager sich ändert (z.B. bei Blockungs- oder -Ergebniswechsel)
-		return props.blockung.ergebnismanager
-	});
 
 	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = computed({
 		get: () => props.schueler,

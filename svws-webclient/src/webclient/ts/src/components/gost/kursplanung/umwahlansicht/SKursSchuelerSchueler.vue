@@ -49,29 +49,22 @@
 
 	import { GostBlockungsergebnisManager, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { ComputedRef, computed } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schueler: SchuelerListeEintrag;
 		schuelerFilter: GostKursplanungSchuelerFilter;
 		selected: boolean;
-		blockung: DataGostKursblockung;
 	}>();
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
-
 	const kollision: ComputedRef<boolean> = computed(()=> {
-		if (manager.value === undefined)
-			return false;
 		const kursid = props.schuelerFilter.kurs.value?.id;
 		if (kursid === undefined)
-			return manager.value.getOfSchuelerHatKollision(props.schueler.id);
-		return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(props.schueler.id);
+			return props.getErgebnismanager().getOfSchuelerHatKollision(props.schueler.id);
+		return props.getErgebnismanager().getOfKursSchuelermengeMitKollisionen(kursid).contains(props.schueler.id);
 	});
 
-	const nichtwahl: ComputedRef<boolean> = computed(() =>
-		(manager.value === undefined) ? false : manager.value.getOfSchuelerHatNichtwahl(props.schueler.id)
-	);
+	const nichtwahl: ComputedRef<boolean> = computed(() => props.getErgebnismanager().getOfSchuelerHatNichtwahl(props.schueler.id));
 
 </script>

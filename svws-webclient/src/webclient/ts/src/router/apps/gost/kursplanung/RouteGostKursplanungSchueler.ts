@@ -140,10 +140,10 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			setSchueler: this.data.setSchueler,
+			getErgebnismanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager,
 			schueler: this.data.schueler.value,
 			schuelerFilter: this.data.schuelerFilter.value!,
-			faecherManager: routeGost.data.faecherManager.value,
-			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung
+			faecherManager: routeGost.data.faecherManager.value
 		}
 	}
 
