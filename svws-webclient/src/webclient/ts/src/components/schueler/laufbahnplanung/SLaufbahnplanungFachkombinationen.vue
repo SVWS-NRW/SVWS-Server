@@ -27,7 +27,7 @@
 	import { List, GostJahrgangFachkombination, Vector, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager, AbiturdatenManager, GostHalbjahr, GostKursart } from '@svws-nrw/svws-core-ts';
 
 	const props = defineProps<{
-		abiturmanager: AbiturdatenManager;
+		abiturdatenManager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
@@ -62,13 +62,13 @@
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
 		const fach1 = props.faechermanager.get(kombi.fachID1);
-		const f1 = props.abiturmanager.getFachbelegungByKuerzel(fach1?.kuerzel || null)
+		const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1?.kuerzel || null)
 		const fach2 = props.faechermanager.get(kombi.fachID2);
-		const f2 = props.abiturmanager.getFachbelegungByKuerzel(fach2?.kuerzel || null)
+		const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(fach2?.kuerzel || null)
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
-				const belegung_1 = props.abiturmanager.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, hj)
-				const belegung_2 = props.abiturmanager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, hj);
+				const belegung_1 = props.abiturdatenManager.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, hj)
+				const belegung_2 = props.abiturdatenManager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, hj);
 				if (belegung_1 && belegung_2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
 					return false;
 				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && belegung_1 != belegung_2)

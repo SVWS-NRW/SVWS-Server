@@ -28,7 +28,7 @@
 							</tr>
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
-							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten"
+							<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
 								:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
 						</tr>
 						<thead class="bg-slate-100">
@@ -132,10 +132,10 @@
 		GostHalbjahr, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		abiturmanager: AbiturdatenManager;
+		abiturdatenManager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
-		jahrgangsdaten: GostJahrgangsdaten;
+		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		item?: SchuelerListeEintrag;
@@ -146,12 +146,12 @@
 	}
 
 	async function reset_fachwahlen() {
-		for (const fachbelegung of props.abiturmanager.getFachbelegungen()) {
-			const fach = props.abiturmanager.getFach(fachbelegung);
+		for (const fachbelegung of props.abiturdatenManager.getFachbelegungen()) {
+			const fach = props.abiturdatenManager.getFach(fachbelegung);
 			if (fach) {
-				const fachwahl = props.abiturmanager.getSchuelerFachwahl(fach.id);
+				const fachwahl = props.abiturdatenManager.getSchuelerFachwahl(fach.id);
 				for (const hj  of GostHalbjahr.values()) {
-					if (!props.abiturmanager.istBewertet(hj))
+					if (!props.abiturdatenManager.istBewertet(hj))
 						fachwahl[hj.toString() as 'EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22'] = null;
 				}
 				fachwahl.abiturFach = null;
@@ -162,12 +162,12 @@
 
 	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toVector());
 
-	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturmanager.getAnrechenbareKurse());
+	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager.getAnrechenbareKurse());
 
 	const kurse_summe: ComputedRef<number> = computed(() => kurszahlen.value.reduce((p, c) => p + c, 0));
 	//TODO korrigieren
 
-	const wochenstunden: ComputedRef<number[]> = computed(() => props.abiturmanager.getWochenstunden());
+	const wochenstunden: ComputedRef<number[]> = computed(() => props.abiturdatenManager.getWochenstunden());
 
 	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 

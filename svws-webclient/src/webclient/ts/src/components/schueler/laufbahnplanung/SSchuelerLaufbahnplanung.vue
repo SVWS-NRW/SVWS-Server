@@ -1,12 +1,12 @@
 <template>
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
-				:jahrgangsdaten="jahrgangsdaten" :item="schueler" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" />
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :item="schueler" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" />
 		</div>
 		<div class="flex-auto">
-			<s-laufbahnplanung-card-status v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
-				:fehlerliste="belegpruefungsergebnis.fehlercodes" :belegpruefungsart="props.belegpruefungsart" @update:belegpruefungsart="setBelegpruefungsart" />
+			<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
+				:fehlerliste="gostBelegpruefungErgebnis.fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 		</div>
 	</div>
 </template>
@@ -19,13 +19,13 @@
 
 	const props = defineProps<{
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
-		setBelegpruefungsart: (value: GostBelegpruefungsArt) => Promise<void>;
+		setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		schueler: SchuelerListeEintrag | undefined,
-		jahrgangsdaten: GostJahrgangsdaten;
-		belegpruefungsart: GostBelegpruefungsArt;
-		belegpruefungsergebnis: GostBelegpruefungErgebnis;
-		abiturmanager: AbiturdatenManager;
+		gostJahrgangsdaten: GostJahrgangsdaten;
+		gostBelegpruefungsArt: GostBelegpruefungsArt;
+		gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
+		abiturdatenManager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
