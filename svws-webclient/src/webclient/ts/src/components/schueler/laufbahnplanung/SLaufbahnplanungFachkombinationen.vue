@@ -1,5 +1,5 @@
 <template>
-	<template v-if="(fachkombinationen.size())">
+	<template v-if="(mapFachkombinationen.size)">
 		<table class="border-collapse text-sm">
 			<thead class="bg-slate-100">
 				<tr>
@@ -29,12 +29,12 @@
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
-		fachkombinationen: List<GostJahrgangFachkombination>;
+		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
 
 	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
 		const result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of props.fachkombinationen)
+		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);
@@ -48,7 +48,7 @@
 
 	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
 		const result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of props.fachkombinationen)
+		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);

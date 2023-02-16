@@ -17,7 +17,7 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
 	private _liste: TAuswahl | undefined;
 
 	/** Die Referenz auf das aktuell ausgewählte Item */
-	private _item: ShallowRef<TItemAuswahl | undefined> = shallowRef(undefined);
+	public _item: ShallowRef<TItemAuswahl | undefined> = shallowRef(undefined);
 
 	/** Der Name des identifizierenden Attributs eines Auswahl-Elements */
 	private _itemKey: (keyof TItemAuswahl) | undefined;

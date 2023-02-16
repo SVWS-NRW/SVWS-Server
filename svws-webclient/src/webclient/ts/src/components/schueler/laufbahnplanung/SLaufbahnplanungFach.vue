@@ -35,7 +35,7 @@
 		faechermanager: GostFaecherManager;
 		jahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		fachkombinationen: List<GostJahrgangFachkombination>;
+		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		manuellerModus: boolean;
 	}>();
 
@@ -84,7 +84,7 @@
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
-		for (const kombi of props.fachkombinationen)
+		for (const kombi of props.mapFachkombinationen.values())
 			if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.jahrgangsdaten.abiturjahr)
 				result.add(kombi)
 		return result;

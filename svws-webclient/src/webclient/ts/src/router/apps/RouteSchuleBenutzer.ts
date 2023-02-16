@@ -65,7 +65,7 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.item,
+			item: this._item,
 			createBenutzerAllgemein : routeSchuleBenutzerDaten.data.createBenutzerAllgemein,
 			deleteBenutzerAllgemein : routeSchuleBenutzerDaten.data.deleteBenutzerAllgemein
 		};
@@ -73,7 +73,7 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.item,
+			item: this._item,
 		};
 	}
 

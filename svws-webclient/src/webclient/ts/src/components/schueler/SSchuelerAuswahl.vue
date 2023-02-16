@@ -74,7 +74,6 @@
 		filtered: boolean;
 		search: string;
 	}
-	console.log(import.meta.env)
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		mapKlassen: Map<Number, KlassenListeEintrag>;

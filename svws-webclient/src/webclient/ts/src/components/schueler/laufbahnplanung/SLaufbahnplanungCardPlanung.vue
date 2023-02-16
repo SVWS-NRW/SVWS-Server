@@ -29,7 +29,7 @@
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
 							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten"
-								:fach="row" :fachkombinationen="fachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+								:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
 						</tr>
 						<thead class="bg-slate-100">
 							<tr>
@@ -134,7 +134,7 @@
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
-		fachkombinationen: List<GostJahrgangFachkombination>;
+		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		jahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;

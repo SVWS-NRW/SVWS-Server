@@ -4,7 +4,7 @@
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
-			<s-laufbahnplanung-fachkombinationen :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen" />
+			<s-laufbahnplanung-fachkombinationen :abiturmanager="abiturmanager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
 			<div class="am:px-6 py-2 lg:px-8">
 				<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
 			</div>
@@ -19,12 +19,12 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
-		fachkombinationen: List<GostJahrgangFachkombination>;
+		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
 		belegpruefungsart: GostBelegpruefungsArt;
 	}>();

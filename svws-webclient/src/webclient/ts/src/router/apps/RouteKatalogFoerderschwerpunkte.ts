@@ -66,7 +66,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.item,
+			item: this._item,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
@@ -75,7 +75,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.item,
+			item: this._item,
 		};
 	}
 

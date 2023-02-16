@@ -1,12 +1,11 @@
-import { AbiturdatenManager, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { AbiturdatenManager, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostSchuelerFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { routeLogin } from "~/router/RouteLogin";
-import { shallowRef, ShallowRef } from "vue";
+import { ref, Ref, shallowRef, ShallowRef } from "vue";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -14,7 +13,25 @@ export class RouteDataSchuelerLaufbahnplanung {
 	_faecherManager: ShallowRef<GostFaecherManager | undefined> = shallowRef(undefined);
 	gostJahrgang: GostJahrgang = new GostJahrgang();
 	dataJahrgang: DataGostJahrgang = new DataGostJahrgang();
-	dataFachkombinationen: DataGostFachkombinationen = new DataGostFachkombinationen();
+	private _mapFachkombinationen: Ref<Map<number, GostJahrgangFachkombination> | undefined> = ref(undefined);
+
+	get mapFachkombinationen() : Map<number, GostJahrgangFachkombination> {
+		if (this._mapFachkombinationen.value === undefined)
+			throw new Error("Zugriff auf die Fachkombinationen, bevor diese geladen wurden.");
+		return this._mapFachkombinationen.value;
+	}
+
+	public async ladeFachkombinationen() {
+		if (this.gostJahrgang === undefined) {
+			this._mapFachkombinationen.value = undefined;
+			return;
+		}
+		const listfachkombinationen	= await routeLogin.data.api.getGostAbiturjahrgangFachkombinationen(routeLogin.data.schema, this.gostJahrgang.abiturjahr);
+		const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
+		for (const fk of listfachkombinationen)
+			mapFachkombinationen.set(fk.id, fk);
+		this._mapFachkombinationen.value = mapFachkombinationen;
+	}
 
 	get faechermanager(): GostFaecherManager {
 		if (this._faecherManager.value === undefined)
@@ -24,16 +41,6 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	set faecherManager(manager: GostFaecherManager | undefined) {
 		this._faecherManager.value = manager;
-	}
-
-	get fachkombinationen(): List<GostJahrgangFachkombination> {
-		const list = new Vector<GostJahrgangFachkombination>();
-		if ((this.item === undefined) || (this.dataFachkombinationen.daten === undefined))
-			return list;
-		for (const regel of	this.dataFachkombinationen.daten)
-			if (regel.abiturjahr === this.item.abiturjahrgang)
-				list.add(regel)
-		return list;
 	}
 
 	get abiturmanager(): AbiturdatenManager {
@@ -96,7 +103,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			this.data.dataLaufbahn.dataGostJahrgang = undefined;
 			await this.data.dataJahrgang.unselect();
 			this.data.faecherManager = undefined;
-			await this.data.dataFachkombinationen.unselect();
+			await this.data.ladeFachkombinationen();
 		} else {
 			this.data.item = item;
 			await this.data.dataLaufbahn.select(this.data.item);
@@ -114,7 +121,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				this.data.faecherManager = new GostFaecherManager(listFaecher);
 				this.data.dataLaufbahn.gostFaecher = listFaecher;
 				this.data.dataLaufbahn.dataGostJahrgang = this.data.dataJahrgang;
-				await this.data.dataFachkombinationen.select(this.data.gostJahrgang);
+				await this.data.ladeFachkombinationen();
 				// TODO: Dies ist nur ein temporärer Workaround, um das Setzen des Abiturdaten-Managers und die Durchführung der Belegprüfung zu triggern...
 				const tmp = this.data.dataLaufbahn.gostAktuelleBelegpruefungsart;
 				this.data.dataLaufbahn.gostAktuelleBelegpruefungsart = tmp;
@@ -139,7 +146,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			belegpruefungsergebnis: this.data.dataLaufbahn.gostBelegpruefungsErgebnis,
 			abiturmanager: this.data.abiturmanager,
 			faechermanager: this.data.faechermanager,
-			fachkombinationen: this.data.fachkombinationen
+			mapFachkombinationen: this.data.mapFachkombinationen
 		};
 	}
 
