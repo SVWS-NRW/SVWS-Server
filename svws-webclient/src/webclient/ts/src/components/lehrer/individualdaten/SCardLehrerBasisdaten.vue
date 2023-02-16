@@ -20,95 +20,66 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, WritableComputedRef } from "vue";
 
 	import { Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@svws-nrw/svws-core-ts";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
-	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
-	const props = defineProps<{ stammdaten: DataLehrerStammdaten }>();
+	const props = defineProps<{
+		stammdaten: LehrerStammdaten
+	}>();
 
-	const daten: ComputedRef<LehrerStammdaten> = computed(() => props.stammdaten.daten || new LehrerStammdaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<LehrerStammdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<LehrerStammdaten>) {
+		emit('patch', data);
+	}
 
 	const inputKuerzel: WritableComputedRef<string> = computed({
-		get(): string {
-			return daten.value.kuerzel;
-		},
-		set(val) {
-			void props.stammdaten.patch({ kuerzel: val });
-		}
+		get: () => props.stammdaten.kuerzel,
+		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const inputNachname: WritableComputedRef<string> = computed({
-		get(): string {
-			return daten.value.nachname;
-		},
-		set(val: string) {
-			void props.stammdaten.patch({ nachname: val });
-		}
+		get: () => props.stammdaten.nachname,
+		set: (value) => doPatch({ nachname: value })
 	});
 
 	const inputVorname: WritableComputedRef<string> = computed({
-		get(): string {
-			return daten.value.vorname;
-		},
-		set(val) {
-			void props.stammdaten.patch({ vorname: val });
-		}
+		get: () => props.stammdaten.vorname,
+		set: (value) => doPatch({ vorname: value })
 	});
 
 	const inputGeschlecht: WritableComputedRef<Geschlecht> = computed({
-		get(): Geschlecht {
-			return Geschlecht.fromValue(daten.value.geschlecht) || Geschlecht.X;
-		},
-		set(val: Geschlecht) {
-			void props.stammdaten.patch({ geschlecht: val.id });
-		}
+		get: () => Geschlecht.fromValue(props.stammdaten.geschlecht) || Geschlecht.X,
+		set: (value) => doPatch({ geschlecht: value.id })
 	});
 
 	const inputGeburtsdatum: WritableComputedRef<string> = computed({
-		get(): string {
-			return daten.value?.geburtsdatum ? daten.value.geburtsdatum : '';
-		},
-		set(val) {
-			void props.stammdaten.patch({ geburtsdatum: val });
-		}
+		get: () => props.stammdaten?.geburtsdatum ? props.stammdaten.geburtsdatum : '',
+		set: (value) => doPatch({ geburtsdatum: value })
 	});
 
 	const inputPersonalTyp: WritableComputedRef<PersonalTyp> = computed({
-		get(): PersonalTyp {
-			return PersonalTyp.values().find(i => i.kuerzel === daten.value.personalTyp) || PersonalTyp.SONSTIGE;
-		},
-		set(val: PersonalTyp) {
-			void props.stammdaten.patch({ personalTyp: val.kuerzel });
-		}
+		get: () => PersonalTyp.values().find(i => i.kuerzel === props.stammdaten.personalTyp) || PersonalTyp.SONSTIGE,
+		set: (value) => doPatch({ personalTyp: value.kuerzel })
 	});
 
 	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			void props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(props.stammdaten.staatsangehoerigkeitID) || Nationalitaeten.DEU,
+		set: (value) => doPatch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
 	const inputTitel: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return (daten.value.titel) === null ? "" : daten.value.titel;
-		},
-		set(val) {
-			void props.stammdaten.patch({ titel: val });
-		}
+		get: () => (props.stammdaten.titel) === null ? "" : props.stammdaten.titel,
+		set: (value) => doPatch({ titel: value })
 	});
 
 	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return (daten.value.amtsbezeichnung === null) ? "" : daten.value.amtsbezeichnung;
-		},
-		set(val) {
-			void props.stammdaten.patch({ amtsbezeichnung: val });
-		}
+		get: () => (props.stammdaten.amtsbezeichnung === null) ? "" : props.stammdaten.amtsbezeichnung,
+		set: (value) => doPatch({ amtsbezeichnung: value })
 	});
 
 </script>

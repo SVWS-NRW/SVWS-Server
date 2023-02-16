@@ -15,13 +15,20 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, WritableComputedRef } from "vue";
 	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt, LehrerPersonaldaten } from "@svws-nrw/svws-core-ts";
-	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
 
-	const props = defineProps<{ personaldaten: DataLehrerPersonaldaten }>();
+	const props = defineProps<{
+		personaldaten: LehrerPersonaldaten
+	}>();
 
-	const daten: ComputedRef<LehrerPersonaldaten> = computed(() => props.personaldaten.daten || new LehrerPersonaldaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<LehrerPersonaldaten>): void;
+	}>()
+
+	function doPatch(data: Partial<LehrerPersonaldaten>) {
+		emit('patch', data);
+	}
 
 	const mehrleistungsgrund: WritableComputedRef<LehrerMehrleistungArt | undefined> = computed({
 		get(): LehrerMehrleistungArt | undefined {
@@ -58,19 +65,19 @@
 
 	const pflichtstundensoll: WritableComputedRef<number | undefined> = computed({
 		get(): number | undefined {
-			return daten.value.pflichtstundensoll ?? undefined;
+			return props.personaldaten.pflichtstundensoll ?? undefined;
 		},
 		set(val: number | undefined) {
-			void props.personaldaten.patch({ pflichtstundensoll: val });
+			doPatch({ pflichtstundensoll: val });
 		}
 	});
 
 	const stammschulnummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.stammschulnummer ?? undefined;
+			return props.personaldaten.stammschulnummer ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.personaldaten.patch({ stammschulnummer: val });
+			doPatch({ stammschulnummer: val });
 		}
 	});
 

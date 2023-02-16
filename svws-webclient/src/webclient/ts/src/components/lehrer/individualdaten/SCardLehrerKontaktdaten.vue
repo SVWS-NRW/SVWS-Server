@@ -22,29 +22,34 @@
 
 	import { AdressenUtils, LehrerStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
-	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
 	const eingabeStrasseOk: Ref<boolean> = ref(true);
 
 
 	const props = defineProps<{
-		stammdaten: DataLehrerStammdaten;
+		stammdaten: LehrerStammdaten;
 		orte: List<OrtKatalogEintrag>;
 		ortsteile: List<OrtsteilKatalogEintrag>;
 	}>();
 
-	const daten: ComputedRef<LehrerStammdaten> = computed(() => props.stammdaten.daten || new LehrerStammdaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<LehrerStammdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<LehrerStammdaten>) {
+		emit('patch', data);
+	}
 
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get(): string {
-			const d = daten.value;
+			const d = props.stammdaten;
 			const ret = AdressenUtils.combineStrasse(d.strassenname || "", d.hausnummer || "", d.hausnummerZusatz || "");
 			return ret ?? "";
 		},
 		set(val: string | undefined) {
 			if (val) {
 				const vals = AdressenUtils.splitStrasse(val);
-				void props.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+				doPatch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 				eingabeStrasseOk.value = !!vals;
 			}
 		}
@@ -52,7 +57,7 @@
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get(): OrtKatalogEintrag | undefined {
-			const id = daten.value.wohnortID;
+			const id = props.stammdaten.wohnortID;
 			let o;
 			for (const r of props.orte) {
 				if (r.id === id) {
@@ -63,13 +68,13 @@
 			return o;
 		},
 		set(val: OrtKatalogEintrag | undefined) {
-			void props.stammdaten.patch({ wohnortID: val?.id });
+			doPatch({ wohnortID: val?.id });
 		}
 	});
 
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			const id = daten.value.ortsteilID;
+			const id = props.stammdaten.ortsteilID;
 			let o;
 			for (const r of props.ortsteile) {
 				if (r.id === id) {
@@ -80,43 +85,43 @@
 			return o;
 		},
 		set(val) {
-			void props.stammdaten.patch({ ortsteilID: val?.id });
+			doPatch({ ortsteilID: val?.id });
 		}
 	});
 
 	const inputTelefon: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.telefon ?? undefined;
+			return props.stammdaten.telefon ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.stammdaten.patch({ telefon: val });
+			doPatch({ telefon: val });
 		}
 	});
 
 	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.telefonMobil ?? undefined;
+			return props.stammdaten.telefonMobil ?? undefined;
 		},
 		set(val) {
-			void props.stammdaten.patch({ telefonMobil: val });
+			doPatch({ telefonMobil: val });
 		}
 	});
 
 	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.emailPrivat ?? undefined;
+			return props.stammdaten.emailPrivat ?? undefined;
 		},
 		set(val) {
-			void props.stammdaten.patch({ emailPrivat: val });
+			doPatch({ emailPrivat: val });
 		}
 	});
 
 	const inputEmailDienstlich: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.emailDienstlich ?? undefined;
+			return props.stammdaten.emailDienstlich ?? undefined;
 		},
 		set(val) {
-			void props.stammdaten.patch({ emailDienstlich: val });
+			doPatch({ emailDienstlich: val });
 		}
 	});
 

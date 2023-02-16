@@ -20,12 +20,19 @@
 <script setup lang="ts">
 	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung, LehrerLehrbefaehigung,
 		LehrerLehrbefaehigungAnerkennung, LehrerPersonaldaten } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
+	import { computed, WritableComputedRef } from "vue";
 
-	const props = defineProps<{ personaldaten: DataLehrerPersonaldaten }>();
+	const props = defineProps<{
+		personaldaten: LehrerPersonaldaten
+	}>();
 
-	const daten: ComputedRef<LehrerPersonaldaten> = computed(() => props.personaldaten.daten || new LehrerPersonaldaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<LehrerPersonaldaten>): void;
+	}>()
+
+	function doPatch(data: Partial<LehrerPersonaldaten>) {
+		emit('patch', data);
+	}
 
 	const lehramt: WritableComputedRef<LehrerLehramt | undefined> = computed({
 		get(): LehrerLehramt | undefined {

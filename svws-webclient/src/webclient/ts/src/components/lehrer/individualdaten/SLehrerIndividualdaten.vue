@@ -1,24 +1,22 @@
 <template>
-	<div v-if="visible" class="app-container">
-		<s-card-lehrer-basisdaten :stammdaten="stammdaten" />
-		<s-card-lehrer-kontaktdaten :stammdaten="stammdaten" :orte="orte" :ortsteile="ortsteile" />
+	<div class="app-container">
+		<s-card-lehrer-basisdaten :stammdaten="stammdaten" @patch="doPatch" />
+		<s-card-lehrer-kontaktdaten :stammdaten="stammdaten" :orte="orte" :ortsteile="ortsteile" @patch="doPatch" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
-	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
+	import { LehrerStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed } from "vue";
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
-		stammdaten: DataLehrerStammdaten;
+		patch: (data : Partial<LehrerStammdaten>) => Promise<void>;
+		stammdaten: LehrerStammdaten;
 		orte: List<OrtKatalogEintrag>;
 		ortsteile: List<OrtsteilKatalogEintrag>;
 	}>();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return props.stammdaten.daten !== undefined;
-	});
-
+	const { doPatch } = useDebouncedPatch(computed(() => props.stammdaten), props.patch)
 </script>

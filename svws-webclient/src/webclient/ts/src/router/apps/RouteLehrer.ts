@@ -1,18 +1,28 @@
-import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { LehrerListeEintrag, LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
+import { routeLogin } from "../RouteLogin";
 
 
 export class RouteDataLehrer {
-	stammdaten: DataLehrerStammdaten = new DataLehrerStammdaten();
+	_stammdaten: LehrerStammdaten | undefined = undefined;
+
+	get stammdaten(): LehrerStammdaten {
+		if (this._stammdaten === undefined)
+			throw new Error("Unerwarteter Fehler: Lehrerstammdaten nicht initialisiert");
+		return this._stammdaten;
+	}
+
+	set stammdaten(value: LehrerStammdaten | undefined) {
+		this._stammdaten = value;
+	}
 }
 
 
@@ -62,10 +72,10 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 			return;
 		if (item === undefined) {
 			this.item = undefined;
-			await this.data.stammdaten.unselect();
+			this.data.stammdaten = undefined;
 		} else {
 			this.item = item;
-			await this.data.stammdaten.select(this.item);
+			this.data.stammdaten = await routeLogin.data.api.getLehrerStammdaten(routeLogin.data.schema, item.id);
 		}
 	}
 

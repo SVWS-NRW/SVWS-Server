@@ -21,30 +21,37 @@
 <script setup lang="ts">
 
 	import { LehrerAbgangsgrund, LehrerFachrichtung, LehrerLehrbefaehigung, LehrerPersonaldaten, LehrerZugangsgrund } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
+	import { computed, WritableComputedRef } from "vue";
 
-	const props = defineProps<{ personaldaten: DataLehrerPersonaldaten }>();
+	const props = defineProps<{
+		personaldaten: LehrerPersonaldaten
+	}>();
 
-	const daten: ComputedRef<LehrerPersonaldaten> = computed(() => props.personaldaten.daten || new LehrerPersonaldaten());
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<LehrerPersonaldaten>): void;
+	}>()
+
+	function doPatch(data: Partial<LehrerPersonaldaten>) {
+		emit('patch', data);
+	}
 
 	const zugangsgrund: WritableComputedRef<LehrerZugangsgrund | undefined> =
 		computed({
 			get(): LehrerZugangsgrund | undefined {
-				return LehrerZugangsgrund.values().find(e => e.daten.kuerzel === daten.value.zugangsgrund);
+				return LehrerZugangsgrund.values().find(e => e.daten.kuerzel === props.personaldaten.zugangsgrund);
 			},
 			set(val: LehrerZugangsgrund | undefined) {
-				void props.personaldaten.patch({ zugangsgrund: val?.daten.kuerzel });
+				doPatch({ zugangsgrund: val?.daten.kuerzel });
 			}
 		});
 
 	const abgangsgrund: WritableComputedRef<LehrerAbgangsgrund | undefined> =
 		computed({
 			get(): LehrerAbgangsgrund | undefined {
-				return LehrerAbgangsgrund.values().find(e => e.daten.kuerzel === daten.value.abgangsgrund );
+				return LehrerAbgangsgrund.values().find(e => e.daten.kuerzel === props.personaldaten.abgangsgrund );
 			},
 			set(val: LehrerAbgangsgrund | undefined) {
-				void props.personaldaten.patch({ abgangsgrund: val?.daten.kuerzel });
+				doPatch({ abgangsgrund: val?.daten.kuerzel });
 			}
 		});
 
@@ -74,64 +81,64 @@
 
 	const inputZugangsdatum: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.zugangsdatum ?? undefined;
+			return props.personaldaten.zugangsdatum ?? undefined;
 		},
 		set(val) {
-			void props.personaldaten.patch({ zugangsdatum: val });
+			doPatch({ zugangsdatum: val });
 		}
 	});
 
 	const inputAbgangsdatum: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.abgangsdatum ?? undefined;
+			return props.personaldaten.abgangsdatum ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.personaldaten.patch({ abgangsdatum: val });
+			doPatch({ abgangsdatum: val });
 		}
 	});
 
 	const inputIdentNrTeil1: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.identNrTeil1 ?? undefined;
+			return props.personaldaten.identNrTeil1 ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.personaldaten.patch({ identNrTeil1: val });
+			doPatch({ identNrTeil1: val });
 		}
 	});
 
 	const inputIdentNrTeil2SerNr: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.identNrTeil2SerNr ?? undefined;
+			return props.personaldaten.identNrTeil2SerNr ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.personaldaten.patch({ identNrTeil2SerNr: val });
+			doPatch({ identNrTeil2SerNr: val });
 		}
 	});
 
 	const inputLbvVerguetungsschluessel: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.lbvVerguetungsschluessel ?? undefined;
+			return props.personaldaten.lbvVerguetungsschluessel ?? undefined;
 		},
 		set(val: string | undefined) {
-			void props.personaldaten.patch({ lbvVerguetungsschluessel: val });
+			doPatch({ lbvVerguetungsschluessel: val });
 		}
 	});
 
 	const inputPersonalaktennummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.personalaktennummer ?? undefined;
+			return props.personaldaten.personalaktennummer ?? undefined;
 		},
 		set(val) {
-			void props.personaldaten.patch({ personalaktennummer: val });
+			doPatch({ personalaktennummer: val });
 		}
 	});
 
 	const inputLbvPersonalnummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.lbvPersonalnummer ?? undefined;
+			return props.personaldaten.lbvPersonalnummer ?? undefined;
 		},
 		set(val) {
-			void props.personaldaten.patch({ lbvPersonalnummer: val });
+			doPatch({ lbvPersonalnummer: val });
 		}
 	});
 

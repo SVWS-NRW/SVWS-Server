@@ -3,16 +3,16 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4">
-					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten.daten?.foto" :alt="stammdaten.daten?.foto ? 'Foto ' + stammdaten.daten?.vorname + ' ' + stammdaten.daten?.nachname : ''" />
+					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten.foto" :alt="stammdaten.foto ? 'Foto ' + stammdaten.vorname + ' ' + stammdaten.nachname : ''" />
 				</div>
 				<div>
-					<span class="inline-block mr-3">{{ stammdaten.daten?.titel }} {{ stammdaten.daten?.vorname }} {{ stammdaten.daten?.nachname }}</span>
+					<span class="inline-block mr-3">{{ stammdaten.titel }} {{ stammdaten.vorname }} {{ stammdaten.nachname }}</span>
 					<svws-ui-badge type="light" title="ID">
 						<i-ri-fingerprint-line />
-						{{ stammdaten.daten?.id }}
+						{{ stammdaten.id }}
 					</svws-ui-badge>
 					<br>
-					<span class="opacity-50">{{ stammdaten.daten?.kuerzel }}</span>
+					<span class="opacity-50">{{ stammdaten.kuerzel }}</span>
 				</div>
 			</div>
 		</svws-ui-header>
@@ -27,19 +27,19 @@
 
 <script setup lang="ts">
 
+	import { LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 
 	const props = defineProps<{
-		stammdaten: DataLehrerStammdaten;
+		stammdaten: LehrerStammdaten;
 	}>();
 
 	const selectedRoute = routeLehrer.childRouteSelector;
 	const children_hidden = routeLehrer.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.stammdaten.daten !== undefined) && (!routeLehrer.hidden());
+		return !routeLehrer.hidden();
 	});
 
 </script>
