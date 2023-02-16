@@ -78,6 +78,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			getFaecherManager: routeGost.data.getFaecherManager,
 			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,
 			addFachkombination: this.data.addFachkombination,
@@ -86,7 +87,6 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			item: routeGost.data.item.value,
 			schule: routeGost.data.schule,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
-			faecherManager: routeGost.data.faecherManager,
 			listJahrgaenge: routeGost.data.listJahrgaenge,
 			dataFachkombinationen: this.data.dataFachkombinationen
 		};

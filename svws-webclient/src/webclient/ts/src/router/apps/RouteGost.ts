@@ -22,6 +22,10 @@ export class RouteDataGost {
 	faecherManager: ShallowRef<GostFaecherManager> = shallowRef(new GostFaecherManager(new Vector()));
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 
+	getFaecherManager = () => {
+		return this.faecherManager.value;
+	}
+
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten.value === undefined)
 			return false;

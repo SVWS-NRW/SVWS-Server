@@ -42,18 +42,18 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 
 	import { Fachgruppe, GostFach, GostFaecherManager, LinkedCollection, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
+		getFaecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
-		faecherManager: ShallowRef<GostFaecherManager>;
 	}>();
 
 	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
-		return props.faecherManager.value.faecher();
+		return props.getFaecherManager().faecher();
 	});
 
 	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
