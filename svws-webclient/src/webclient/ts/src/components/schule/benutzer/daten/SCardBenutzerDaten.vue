@@ -22,10 +22,10 @@
 	import { computed, ref, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		manager : BenutzerManager;
-		setAnzeigename : (anzeigename : string) => Promise<void>;
-		setAnmeldename : (anzeigename : string) => Promise<void>;
-		setPassword : (passwort : string) => Promise<void>;
+		manager: BenutzerManager;
+		setAnzeigename: (anzeigename: string) => Promise<void>;
+		setAnmeldename: (anzeigename: string) => Promise<void>;
+		setPassword: (passwort: string) => Promise<void>;
 	}>();
 
 	const anzeigename: WritableComputedRef<string | undefined> = computed({

@@ -21,25 +21,26 @@
 
 	const props = defineProps<{
 		data: DataBenutzergruppe;
+		manager : BenutzergruppenManager;
+		setBezeichnung : (anzeigename: string) => Promise<void>;
+		setIstAdmin : (istAdmin:boolean) => Promise<void>;
 	}>();
 
-	const manager: ComputedRef<BenutzergruppenManager | undefined> = computed(() => props.data.manager);
-
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getBezeichnung(),
+		get: () => props.manager.getBezeichnung(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getBezeichnung()))
+			if ((value === undefined) || (value === "") || (value === props.manager.getBezeichnung()))
 				return;
-			void props.data.setBezeichnung(value);
+			void props.setBezeichnung(value);
 		}
 	});
 
 	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
-		get: () => manager.value?.istAdmin(),
+		get: () => props.manager.istAdmin(),
 		set: (value) => {
-			if ((value === undefined) || (value === manager.value?.istAdmin()))
+			if ((value === undefined) || (value === props.manager.istAdmin()))
 				return;
-			void props.data.setIstAdmin(value);
+			void props.setIstAdmin(value);
 		}
 	});
 

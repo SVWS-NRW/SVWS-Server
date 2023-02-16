@@ -92,7 +92,7 @@ export class RouteDataSchuleBenutzerDaten {
 	 * @returns {Promise<void>}
 	 */
 	addBenutzerToBenutzergruppe = async(bg_id: number) => {
-		if(bg_id !=-1){
+		if(bg_id != -1){
 			if (!this.daten.manager)
 				return;
 			const bg_ids = new Vector<number>();
