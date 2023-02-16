@@ -14,38 +14,37 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
+	import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostFach, GostFachwahl, GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		fach: GostFachwahl;
 		kurse: Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>;
 		schuelerId: number;
-		blockung: DataGostKursblockung;
 	}>();
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
-
 	const kursart: ComputedRef<string | undefined> = computed(() =>
-		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel);
+		props.getErgebnismanager().getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel);
 
 	const kursartid: ComputedRef<number | undefined> = computed(() => GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id)
 
 	const kursid: ComputedRef<number | undefined> = computed(() => belegung.value?.id);
 
 	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() =>
-		manager.value?.getOfSchuelerOfFachZugeordneterKurs(props.schuelerId, props.fach.fachID) || undefined
+		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(props.schuelerId, props.fach.fachID) || undefined
 	);
 
-	const gostfach: ComputedRef<GostFach | undefined> = computed(() => manager.value?.getFach(props.fach.fachID));
+	const gostfach: ComputedRef<GostFach> = computed(() => props.getErgebnismanager().getFach(props.fach.fachID));
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (belegung.value !== undefined)
 			return "gray"
-		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
+		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value.kuerzel);
 		if (!zulfach)
 			return "#ffffff";
 		return zulfach.getHMTLFarbeRGB();
@@ -66,12 +65,12 @@
 		}
 	});
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.blockung.daten?.istAktiv || false)
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	function get_kurs_name(): String {
 		if (kursid.value === undefined)
-			return manager.value?.getFach(props.fach.fachID).kuerzelAnzeige + "-" + kursart.value || "?";
-		return manager.value?.getOfKursName(kursid.value) || "";
+			return props.getErgebnismanager().getFach(props.fach.fachID).kuerzelAnzeige + "-" + kursart.value || "?";
+		return props.getErgebnismanager().getOfKursName(kursid.value);
 	}
 
 	function drag_started(e: DragEvent) {

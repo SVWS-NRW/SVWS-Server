@@ -10,8 +10,8 @@
 				<div :class="{ 'border-2 border-dashed border-red-700': active }">
 					<div class="">
 						<table class="v-table--complex table-fixed">
-							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach"
-								:kurse="blockungsergebnisse" :schueler-id="schueler.id" :blockung="blockung" />
+							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
+								:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" />
 						</table>
 						<template v-if="!blockung_aktiv">
 							<div class="flex items-center justify-center" :class="{'bg-red-400 text-white': active}">
@@ -28,7 +28,9 @@
 				<div class="v-table--container">
 					<table class="v-table--complex">
 						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"
-							:blockung="blockung" :pending="pending" :allow-regeln="allow_regeln" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
+							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+							:pending="pending" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
+							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 					</table>
 				</div>
 			</div>
@@ -38,39 +40,33 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
-		GostFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
+		GostFachwahl, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
 		removeKursSchuelerZuordnung: (idSchueler: number, idKurs: number) => Promise<boolean>;
 		autoKursSchuelerZuordnung: (idSchueler : number) => Promise<void>;
 		gotoSchueler: (idSchueler: number) => Promise<void>;
 		gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
-		blockung: DataGostKursblockung;
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schueler: SchuelerListeEintrag;
 		pending: boolean;
 	}>();
 
 	const is_dragging: Ref<boolean> = ref(false)
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
-		// löse ein erneutes Filtern aus, wenn der Manager sich ändert (z.B. bei Blockungs- oder -Ergebniswechsel)
-		return props.blockung.ergebnismanager
-	});
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() =>
-		(props.blockung.datenmanager !== undefined) && (props.blockung.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1)
-	);
+	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer());
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>());
+	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => props.getErgebnismanager().getMengeAllerSchienen());
 
-	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>());
-
-	const blockung_aktiv: ComputedRef<boolean> = computed(()=> props.blockung.daten?.istAktiv || false);
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 		const map = new Map();
@@ -98,9 +94,7 @@
 	}
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
-		if (props.blockung.datenmanager === undefined)
-			return new Vector<GostFachwahl>();
-		return props.blockung.datenmanager.getOfSchuelerFacharten(props.schueler.id);
+		return props.getDatenmanager().getOfSchuelerFacharten(props.schueler.id);
 	});
 
 	function routeLaufbahnplanung() {
@@ -110,4 +104,5 @@
 	function routeSchueler() {
 		void props.gotoSchueler(props.schueler.id);
 	}
+
 </script>

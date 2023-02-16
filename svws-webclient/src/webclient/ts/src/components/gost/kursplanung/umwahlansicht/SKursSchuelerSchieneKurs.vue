@@ -29,17 +29,19 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostKursblockungRegelTyp,
-		List, SchuelerListeEintrag, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostKursblockungRegelTyp,
+		List, SchuelerListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		kurs: GostBlockungsergebnisKurs;
 		schueler: SchuelerListeEintrag;
-		blockung: DataGostKursblockung;
 		pending: boolean;
 		allowRegeln: boolean;
 	}>();
@@ -50,10 +52,8 @@
 		set: (value) => routeApp.data.drag_and_drop_data.value = value
 	});
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
-
 	const fach_gewaehlt: ComputedRef<boolean> = computed(() =>
-		manager.value?.getOfSchuelerHatFachwahl(props.schueler.id, props.kurs.fachID, props.kurs.kursart) || false
+		props.getErgebnismanager().getOfSchuelerHatFachwahl(props.schueler.id, props.kurs.fachID, props.kurs.kursart)
 	);
 
 	const is_draggable: ComputedRef<boolean> = computed(() => {
@@ -76,37 +76,36 @@
 		return true;
 	});
 
-	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(() => manager.value?.getKursG(props.kurs.id));
+	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(() => props.getErgebnismanager().getKursG(props.kurs.id));
 
-	const kurs_name: ComputedRef<String> = computed(() => manager.value?.getOfKursName(props.kurs.id) || "")
+	const kurs_name: ComputedRef<String> = computed(() => props.getErgebnismanager().getOfKursName(props.kurs.id))
 
-	const schueler_schriftlich: ComputedRef<number> = computed(() => manager.value?.getOfKursAnzahlSchuelerSchriftlich(props.kurs.id) || 0);
+	const schueler_schriftlich: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(props.kurs.id));
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
-		if (props.blockung.datenmanager === undefined)
-			return
 		let fach
-		for (const f of props.blockung.datenmanager.faecherManager().values())
+		for (const f of props.getDatenmanager().faecherManager().values()) {
 			if (f.id === kurs_original.value?.fach_id) {
 				fach = f;
 				break;
 			}
+		}
 		return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null);
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (gostfach.value === undefined)
 			return "";
-		if (manager.value?.getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id))
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id))
 			return gostfach.value.getHMTLFarbeRGB();
 		return "";
 	});
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(()=> props.blockung.daten?.istAktiv || false)
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.blockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.getDatenmanager().getMengeOfRegeln());
 
-	// const fixier_regel: ComputedRef<boolean> = computed(() => manager.value?.getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id) || false)
+	// const fixier_regel: ComputedRef<boolean> = computed(() => props.getDatenmanager().getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id))
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
 		for (const regel of regeln.value)
 			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
@@ -116,7 +115,7 @@
 		return undefined;
 	})
 
-	// const verbieten_regel: ComputedRef<boolean> = computed(() => manager.value?.getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id) || false)
+	// const verbieten_regel: ComputedRef<boolean> = computed(() => props.getDatenmanager().getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id))
 	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
 		for (const regel of regeln.value)
 			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
@@ -133,37 +132,38 @@
 	const regel_speichern = async (regel: GostBlockungRegel) => {
 		regel.parameter.add(props.schueler.id);
 		regel.parameter.add(props.kurs.id);
-		await props.blockung.add_blockung_regel(regel)
+		await props.addRegel(regel);
 	}
 
 	const fixieren_regel_hinzufuegen = async () => {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-		await regel_speichern(regel)
+		await regel_speichern(regel);
 	}
 
 	const fixieren_regel_entfernen = async () => {
 		if (!fixier_regel.value)
 			return
-		await props.blockung.del_blockung_regel(fixier_regel.value.id)
+		await props.removeRegel(fixier_regel.value.id);
 	}
 
 	const verbieten_regel_hinzufuegen = async () => {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
-		await regel_speichern(regel)
+		await regel_speichern(regel);
 	}
 
 	const verbieten_regel_entfernen = async () => {
 		if (verbieten_regel.value === undefined)
 			return
-		await props.blockung.del_blockung_regel(verbieten_regel.value.id)
+		await props.removeRegel(verbieten_regel.value.id);
 	}
 
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		const data = JSON.parse(transfer?.getData('text/plain') || "") as { id: number, fachID: number, kursart: number } | undefined;
-		if (!data) return;
+		if (!data)
+			return;
 		drag_data.value = data
 	}
 

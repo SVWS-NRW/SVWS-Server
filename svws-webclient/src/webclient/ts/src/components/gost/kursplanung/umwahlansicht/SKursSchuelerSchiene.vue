@@ -8,36 +8,36 @@
 			</div>
 		</td>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
-			:blockung="blockung" :pending="pending" :allow-regeln="allowRegeln" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
+			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+			:pending="pending" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
+			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 	</tr>
 </template>
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
+	import { GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostBlockungsergebnisSchiene, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 
 	const props = defineProps<{
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schiene: GostBlockungsergebnisSchiene;
 		selected: SchuelerListeEintrag;
-		blockung: DataGostKursblockung;
 		pending: boolean;
 		allowRegeln: boolean;
 	}>();
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
+	const anzahl_schueler: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfSchieneAnzahlSchueler(props.schiene.id));
 
-	const anzahl_schueler: ComputedRef<number> = computed(() => manager.value?.getOfSchieneAnzahlSchueler(props.schiene.id) || 0);
-
-	const schiene_g: ComputedRef<GostBlockungSchiene | undefined> = computed(() => manager.value?.getSchieneG(props.schiene.id))
+	const schiene_g: ComputedRef<GostBlockungSchiene | undefined> = computed(() => props.getErgebnismanager().getSchieneG(props.schiene.id))
 
 	const schiene_hat_kollisionen: ComputedRef<boolean> = computed(() => {
-		if (manager.value === undefined)
-			return false;
-		return manager.value.getOfSchieneSchuelermengeMitKollisionen(props.schiene.id).contains(props.selected.id);
+		return props.getErgebnismanager().getOfSchieneSchuelermengeMitKollisionen(props.schiene.id).contains(props.selected.id);
 	});
 
 	const getSchieneKurse: ComputedRef<Vector<GostBlockungsergebnisKurs>> = computed(()=> props.schiene.kurse)
