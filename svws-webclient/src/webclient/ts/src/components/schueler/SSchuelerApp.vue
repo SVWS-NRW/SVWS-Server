@@ -9,7 +9,7 @@
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge type="light" title="ID">
 						<i-ri-fingerprint-line />
-						{{ item.value?.id }}
+						{{ stammdaten.id }}
 					</svws-ui-badge>
 					<br>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
@@ -30,12 +30,11 @@
 	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
-	import { KlassenListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { KlassenListeEintrag, SchuelerListeEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten;
+		stammdaten: SchuelerStammdaten;
 		mapKlassen: Map<Number, KlassenListeEintrag>;
 	}>();
 
@@ -44,25 +43,25 @@
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return props.stammdaten.daten?.foto ?? undefined;
+		return props.stammdaten.foto ?? undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.nachname;
+		return props.stammdaten.nachname;
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.vorname;
+		return props.stammdaten.vorname;
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
 		if (props.item.value === undefined)
 			return false;
-		return props.mapKlassen.get(props.item.value?.idKlasse)?.kuerzel ?? false;
+		return props.mapKlassen.get(props.item.value.idKlasse)?.kuerzel ?? false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden()) && (props.item.value !== undefined);
+		return !(routeSchueler.hidden());
 	});
 
 </script>

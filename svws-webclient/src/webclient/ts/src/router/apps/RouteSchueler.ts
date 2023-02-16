@@ -1,7 +1,6 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
@@ -18,11 +17,21 @@ import { ListGost } from "~/apps/gost/ListGost";
 import { routeLogin } from "../RouteLogin";
 
 export class RouteDataSchueler {
-	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
+	private _stammdaten: SchuelerStammdaten | undefined = undefined;
 	mapKlassen: Map<Number, KlassenListeEintrag> = new Map();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	mapKurse: Map<Number, KursListeEintrag> = new Map();
 	listeAbiturjahrgaenge: ListGost = new ListGost();
+
+	get stammdaten(): SchuelerStammdaten {
+		if (this._stammdaten === undefined)
+			throw new Error("Unerwarteter Fehler: Schülerstammdaten nicht initialisiert");
+		return this._stammdaten;
+	}
+
+	set stammdaten(value: SchuelerStammdaten | undefined) {
+		this._stammdaten = value;
+	}
 }
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
@@ -100,10 +109,10 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 			return;
 		if (item === undefined) {
 			this.item = undefined;
-			await this.data.stammdaten.unselect();
+			this.data.stammdaten = undefined;
 		} else {
 			this.item = item;
-			await this.data.stammdaten.select(this.item);
+			this.data.stammdaten = await routeLogin.data.api.getSchuelerStammdaten(routeLogin.data.schema, item.id);
 		}
 	}
 

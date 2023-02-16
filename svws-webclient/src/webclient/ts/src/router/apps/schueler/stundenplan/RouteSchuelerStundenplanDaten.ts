@@ -38,7 +38,7 @@ export class RouteDataSchuelerStundenplan {
 	}
 
 	setStundenplan = async (value: StundenplanListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeSchuelerStundenplanDaten.name, params: { id: routeSchueler.data.stammdaten.daten?.id, idStundenplan: value?.id } });
+		await RouteManager.doRoute({ name: routeSchuelerStundenplanDaten.name, params: { id: routeSchueler.data.stammdaten.id, idStundenplan: value?.id } });
 	}
 
 }
