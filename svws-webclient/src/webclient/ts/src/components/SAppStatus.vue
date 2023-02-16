@@ -14,7 +14,7 @@
 
 </script>
 
-<style>
+<style lang="postcss">
 	footer.status {
 		@apply px-4 py-1;
 		@apply flex flex-col;
