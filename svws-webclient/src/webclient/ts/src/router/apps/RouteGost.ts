@@ -1,9 +1,8 @@
-import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, Ref, ref, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { routeLogin } from "~/router/RouteLogin";
 import { ListGost } from "~/apps/gost/ListGost";
-import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -18,7 +17,24 @@ export class RouteDataGost {
 	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
 	jahrgangsdaten: Ref<GostJahrgangsdaten | undefined> = ref(undefined);
 	faecherManager: ShallowRef<GostFaecherManager> = shallowRef(new GostFaecherManager(new Vector()));
-	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
+	mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map();
+
+	public async ladeJahrgaenge() {
+		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
+		for (const j of listJahrgaenge)
+			mapJahrgaenge.set(j.id, j);
+		this.mapJahrgaenge = mapJahrgaenge;
+	}
+
+	public get mapJahrgaengeOhneAbiJahrgang() : Map<number, JahrgangsListeEintrag> {
+		const jahrgaengeMitAbiturjahrgang = new Set(routeGost.liste.liste.map(r => r.jahrgang));
+		const map = new Map<number, JahrgangsListeEintrag>();
+		for (const j of this.mapJahrgaenge.values())
+			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel))
+				map.set(j.id, j);
+		return map;
+	}
 
 	getFaecherManager = () => {
 		return this.faecherManager.value;
@@ -84,8 +100,10 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.listJahrgaenge.update_list();
-		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
+		await this.data.ladeJahrgaenge();
+		// Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -125,7 +143,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		return {
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			item: this.data.item.value,
-			listJahrgaenge: this.data.listJahrgaenge,
+			mapJahrgaengeOhneAbiJahrgang: this.data.mapJahrgaengeOhneAbiJahrgang,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt

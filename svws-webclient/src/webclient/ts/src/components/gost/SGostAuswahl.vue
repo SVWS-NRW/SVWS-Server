@@ -17,10 +17,7 @@
 						<svws-ui-dropdown type="icon" class="">
 							<template #dropdownButton>Abiturjahr hinzufügen</template>
 							<template #dropdownItems>
-								<svws-ui-dropdown-item v-for="jahrgang in jahrgaenge"
-									:key="jahrgang.id"
-									class="px-2"
-									@click="abiturjahr_hinzufuegen(jahrgang)">
+								<svws-ui-dropdown-item v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" class="px-2" @click="abiturjahr_hinzufuegen(jahrgang)">
 									{{ jahrgang.kuerzel }}
 								</svws-ui-dropdown-item>
 							</template>
@@ -40,12 +37,11 @@
 	import { routeGost } from "~/router/apps/RouteGost";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
 		item: GostJahrgang | undefined;
-		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
@@ -58,18 +54,10 @@
 		{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
 		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
-	const rows: ComputedRef<GostJahrgang[]> =
-		computed(() => {
-			const list = [...routeGost.liste.liste];
-			return list.sort((a, b) =>
-				(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
-		});
-
-	const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
-		computed( () => {
-			const set = new Set(routeGost.liste.liste.map(r=>r.jahrgang))
-			return props.listJahrgaenge.liste.filter(j=>!set.has(j.kuerzel))
-		});
+	const rows: ComputedRef<GostJahrgang[]> = computed(() => {
+		const list = [...routeGost.liste.liste];
+		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
+	});
 
 	const pending: ComputedRef<boolean> = computed(() => routeGostKursplanungHalbjahr.data.dataKursblockung.pending);
 
@@ -78,7 +66,7 @@
 	}
 </script>
 
-<style>
+<style lang="postcss">
 
 	.loading-disclaimer {
 		background-color: rgba(var(--svws-ui-color-dark-20), var(--tw-border-opacity));
