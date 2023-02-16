@@ -121,7 +121,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 			mapKlassen: this.data.mapKlassen,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapKurse: this.data.mapKurse,
-			schulgliederungen: routeApp.data.schulgliederungen,
+			schulgliederungen: routeApp.data.schulgliederungen.value,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
