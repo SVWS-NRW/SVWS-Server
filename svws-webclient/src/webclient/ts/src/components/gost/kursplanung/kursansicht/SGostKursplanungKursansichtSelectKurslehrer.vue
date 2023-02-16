@@ -22,18 +22,18 @@
 	import { lehrer_filter } from '~/helfer';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		kurs: GostBlockungKurs;
-		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		const liste = props.datenmanager.getOfKursLehrkraefteSortiert(props.kurs.id);
+		const liste = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id);
 		const lehrer = new Set();
 		for (const l of liste)
 			lehrer.add(l.id)
@@ -57,7 +57,7 @@
 
 	async function remove_kurslehrer(lehrer: LehrerListeEintrag) {
 		await props.removeKursLehrer(props.kurs.id, lehrer.id);
-		props.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
+		props.getDatenmanager().patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
 	}
 
 	async function update_kurslehrer(lehrer: unknown, lehrer_alt?: LehrerListeEintrag) {
@@ -70,14 +70,14 @@
 			if (!kurslehrer)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
 			await add_lehrer_regel();
-			props.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
+			props.getDatenmanager().patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
 			new_kurs_lehrer.value = false;
 		}
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN;
-		const regeln = props.datenmanager.getMengeOfRegeln();
+		const regeln = props.getDatenmanager().getMengeOfRegeln();
 		if (!regeln)
 			return undefined;
 		for (const r of regeln)

@@ -1,8 +1,7 @@
 <template>
-	<div v-if="visible && (blockung.datenmanager !== undefined) && (blockung.ergebnismanager !== undefined)"
-		class="content-card--blockungsuebersicht flex content-start">
+	<div class="content-card--blockungsuebersicht flex content-start">
 		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="faecherManager"
-			:datenmanager="blockung.datenmanager" :ergebnismanager="blockung.ergebnismanager"
+			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:fachwahlen="fachwahlen" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
@@ -30,26 +29,24 @@
 					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
-					<s-card-gost-regelansicht v-if="!collapsed" :faecher-manager="faecherManager" :blockung="blockung" :map-schueler="mapSchueler" />
+					<s-card-gost-regelansicht v-if="!collapsed" :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
+						:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" />
 				</div>
 			</div>
 		</div>
-	</div>
-	<div v-else>
-		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
-		"Blockung hinzufügen", um eine neue Kursplanung zu erstellen.
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
+		patchRegel: (data: Partial<GostBlockungRegel>, id: number) => Promise<void>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -66,7 +63,6 @@
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
-		blockung: DataGostKursblockung;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
@@ -74,16 +70,12 @@
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const regelzahl: ComputedRef<number> = computed(() => props.blockung.datenmanager?.getRegelAnzahl() || 0);
+	const regelzahl: ComputedRef<number> = computed(() => props.getDatenmanager().getRegelAnzahl() || 0);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => {
-		return props.blockung.datenmanager?.getErgebnisseSortiertNachBewertung().size() === 1;
-	});
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;
 	}
-
-	const visible: ComputedRef<boolean> = computed(() => (props.blockung.daten !== undefined));
 
 </script>

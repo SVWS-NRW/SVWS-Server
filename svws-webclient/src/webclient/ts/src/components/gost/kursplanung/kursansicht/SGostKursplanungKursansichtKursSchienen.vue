@@ -1,6 +1,6 @@
 <template>
 	<template v-if="!blockungAktiv">
-		<svws-ui-drop-data v-for="(schiene) in ergebnismanager.getMengeAllerSchienen()" :key="schiene.id"
+		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
 			v-slot="{ active }"
 			class="text-center"
 			:class="{'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
@@ -37,7 +37,7 @@
 		</svws-ui-drop-data>
 	</template>
 	<template v-else>
-		<td v-for="schiene in ergebnismanager.getMengeAllerSchienen()" :key="schiene.id" class="text-center leading-5 select-none">
+		<td v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="text-center leading-5 select-none">
 			<svws-ui-badge v-if="kurs_schiene_zugeordnet(schiene)"
 				size="tiny" :type="selected_kurs ? 'primary' : 'highlight'" class="cursor-pointer"
 				@click="toggle_active_kurs">
@@ -51,7 +51,7 @@
 			</svws-ui-badge>
 		</td>
 	</template>
-	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :manager="datenmanager"
+	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
 		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" :add-regel="addRegel" />
 </template>
 
@@ -62,6 +62,8 @@
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -69,12 +71,10 @@
 		allowRegeln: boolean;
 		kurs: GostBlockungKurs;
 		bgColor: string;
-		datenmanager: GostBlockungsdatenManager;
-		ergebnismanager: GostBlockungsergebnisManager;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	}>();
 
-	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.ergebnismanager.getKursE(props.kurs.id));
+	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.getErgebnismanager().getKursE(props.kurs.id));
 
 	const selected_kurs: ComputedRef<boolean> = computed(() => {
 		const filter_kurs_id = props.schuelerFilter?.kurs?.value?.id;
@@ -128,13 +128,13 @@
 	}
 
 	function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
-		return props.ergebnismanager.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id);
+		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id);
 	}
 
 
 	// Regeln
 
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.datenmanager.getMengeOfRegeln());
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.getDatenmanager().getMengeOfRegeln());
 
 
 	// Regeln zum Sperren
@@ -148,7 +148,7 @@
 	})
 
 	const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
-		const schiene =	props.ergebnismanager.getSchieneG(ergebnis_schiene.id)
+		const schiene =	props.getErgebnismanager().getSchieneG(ergebnis_schiene.id)
 		if (!schiene)
 			throw new Error("Schiene fehlt in der Definition");
 		return schiene;
@@ -223,10 +223,10 @@
 		const kurs = kurs_blockungsergebnis.value;
 		if (!kurs)
 			return;
-		const schienen = props.ergebnismanager.getOfKursSchienenmenge(kurs.id);
+		const schienen = props.getErgebnismanager().getOfKursSchienenmenge(kurs.id);
 		if (!schienen)
 			return;
-		const schiene = props.ergebnismanager.getSchieneG([...schienen][0].id);
+		const schiene = props.getErgebnismanager().getSchieneG([...schienen][0].id);
 		if (!schiene)
 			return;
 		regel.parameter.add(kurs.id);

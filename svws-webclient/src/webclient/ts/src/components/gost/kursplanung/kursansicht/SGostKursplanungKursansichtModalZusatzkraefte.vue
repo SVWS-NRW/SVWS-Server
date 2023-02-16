@@ -2,7 +2,7 @@
 	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
 		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
 		<template #modalContent>
-			<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :datenmanager="datenmanager"
+			<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 		</template>
 		<template #modalActions>
@@ -18,15 +18,15 @@
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		kurs: GostBlockungKurs;
-		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const kursbezeichnung: ComputedRef<String> = computed(() => props.datenmanager.getNameOfKurs(props.kurs.id));
+	const kursbezeichnung: ComputedRef<String> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
 
 	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {

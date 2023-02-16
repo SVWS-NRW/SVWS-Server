@@ -10,7 +10,7 @@
 									{{ row.name }}
 								</span>
 								<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
-									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="patch_blockung" />
+									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), row.id)" />
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
@@ -45,21 +45,21 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostBlockungsdaten, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
+		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 		removeBlockung: () => Promise<void>;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
-		blockung: DataGostKursblockung;
+		pending: boolean;
 	}>();
 
 	const edit_blockungsname: Ref<boolean> = ref(false);
@@ -67,8 +67,6 @@
 	const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> = computed(() => props.listBlockungen.liste);
 
 	const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = routeGostKursplanungHalbjahr.getSelector();
-
-	const pending: ComputedRef<boolean> = computed(()=> props.blockung.pending);
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = (row.id === props.halbjahr.id);
@@ -78,7 +76,7 @@
 	}
 
 	function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
-		if (!pending.value)
+		if (!props.pending)
 			selected_blockungauswahl.value = blockung;
 	}
 
@@ -103,13 +101,10 @@
 		}
 	}
 
-	function patch_blockung(value: string | number) {
-		props.blockung.patch({name: value.toString()})
-			.then(res => {
-				if (res && selected_blockungauswahl.value)
-					selected_blockungauswahl.value.name = value.toString();
-			})
-			.catch(error => { throw error });
+	async function patch_blockung(value: string, idBlockung : number) {
+		const result = await props.patchBlockung({ name: value.toString() }, idBlockung);
+		if (result && selected_blockungauswahl.value)
+			selected_blockungauswahl.value.name = value.toString();
 	}
 
 	async function remove_blockung() {

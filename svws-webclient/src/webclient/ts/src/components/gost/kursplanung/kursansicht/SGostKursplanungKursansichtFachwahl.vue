@@ -14,7 +14,7 @@
 	</template>
 	<template v-else>
 		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
-			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
+			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 	</template>
@@ -30,6 +30,8 @@
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -43,8 +45,6 @@
 		faecherManager: GostFaecherManager;
 		kursart: GostKursart;
 		halbjahr: number;
-		datenmanager: GostBlockungsdatenManager;
-		ergebnismanager: GostBlockungsergebnisManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
 	}>();
@@ -75,11 +75,11 @@
 
 	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		if (sort_by.value === 'kursart')
-			return props.datenmanager.getKursmengeSortiertNachKursartFachNummer()
-		else return props.datenmanager.getKursmengeSortiertNachFachKursartNummer()
+			return props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer()
+		else return props.getDatenmanager().getKursmengeSortiertNachFachKursartNummer()
 	})
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.datenmanager.getMengeOfSchienen())
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().getMengeOfSchienen())
 
 	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
 

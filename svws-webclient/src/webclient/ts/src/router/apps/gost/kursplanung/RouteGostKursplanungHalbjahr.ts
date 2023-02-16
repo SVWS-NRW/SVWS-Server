@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostBlockungKurs, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostHalbjahr } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
 import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
@@ -13,6 +13,13 @@ import { RouteManager } from "~/router/RouteManager";
 export class RouteDataGostKursplanungHalbjahr  {
 	listBlockungen: ListKursblockungen = new ListKursblockungen();
 	dataKursblockung: DataGostKursblockung = new DataGostKursblockung();
+
+	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
+		if (this.dataKursblockung.daten === undefined)
+			return false;
+		await routeLogin.data.api.patchGostBlockung(data, routeLogin.data.schema, idBlockung);
+		return true;
+	}
 
 	removeBlockung = async () => {
 		if ((routeGost.data.jahrgangsdaten.value === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
@@ -30,6 +37,12 @@ export class RouteDataGostKursplanungHalbjahr  {
 
 	removeRegel = async (id: number) => {
 		return await this.dataKursblockung.del_blockung_regel(id);
+	}
+
+	patchRegel = async (data: Partial<GostBlockungRegel>, idRegel: number) => {
+		this.dataKursblockung.pending = true;
+		await routeLogin.data.api.patchGostBlockungRegel(data, routeLogin.data.schema, idRegel);
+		this.dataKursblockung.pending = false;
 	}
 
 	patchKurs = async(data: Partial<GostBlockungKurs>, kurs_id: number) => {
@@ -178,16 +191,17 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			removeBlockung: this.data.removeBlockung,
+			patchBlockung: this.data.patchBlockung,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
 			listBlockungen: this.data.listBlockungen,
-			blockung: this.data.dataKursblockung
+			pending: this.data.dataKursblockung.pending
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			listBlockungen: this.data.listBlockungen
+			hatBlockung: this.data.listBlockungen.liste.length > 0
 		}
 	}
 

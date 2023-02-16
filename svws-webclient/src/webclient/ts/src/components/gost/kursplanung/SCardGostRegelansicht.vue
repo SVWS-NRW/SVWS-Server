@@ -33,13 +33,15 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach, GostFaecherManager, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from 'vue';
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		patchRegel: (data: Partial<GostBlockungRegel>, id: number) => Promise<void>;
+		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		faecherManager: GostFaecherManager;
-		blockung: DataGostKursblockung;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 
@@ -52,11 +54,11 @@
 	});
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
-		return props.blockung.datenmanager?.getMengeOfSchienen()?.toArray() as GostBlockungSchiene[] || [];
+		return props.getDatenmanager().getMengeOfSchienen()?.toArray() as GostBlockungSchiene[];
 	});
 
 	const kurse: ComputedRef<GostBlockungKurs[]> = computed(() => {
-		return props.blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[] || [];
+		return props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[];
 	});
 
 	const _regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
@@ -67,17 +69,17 @@
 			_regel.value = value;
 			if (value === undefined || value.id < 1)
 				return;
-			void props.blockung.patch_blockung_regel(value);
+			void props.patchRegel(value, value.id);
 		}
 	})
 
-	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.blockung.datenmanager?.getMengeOfRegeln().toArray() as GostBlockungRegel[] || []);
+	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.getDatenmanager().getMengeOfRegeln().toArray() as GostBlockungRegel[]);
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 	for (let i = 1; i < 10; i++)
 		regeln[i] = computed(() => alle_regeln.value.filter(r => r.typ === i));
 
 	async function regelEntfernen(r: GostBlockungRegel) {
-		await props.blockung.del_blockung_regel(r.id);
+		await props.removeRegel(r.id);
 		if (r.id === regel.value?.id)
 			regel.value = undefined;
 	}
@@ -85,7 +87,7 @@
 	async function regelSpeichern() {
 		if (regel.value === undefined)
 			return;
-		await props.blockung.add_blockung_regel(regel.value);
+		await props.addRegel(regel.value);
 		regel.value = undefined;
 	}
 

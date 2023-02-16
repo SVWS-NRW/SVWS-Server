@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
-		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10"/>
+		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10" />
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline">{{ blockungsname }}</h3>
 			<div class="flex items-center gap-2">
@@ -78,7 +78,7 @@
 						<template v-for="fach in fachwahlen" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
+									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
@@ -90,7 +90,7 @@
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in fachwahlen" :key="fach.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :datenmanager="datenmanager" :ergebnismanager="ergebnismanager"
+									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
@@ -116,7 +116,7 @@
 		<svws-ui-modal ref="modal_hochschreiben" size="small">
 			<template #modalTitle>Blockungsergebnis hochschreiben</template>
 			<template #modalContent>
-				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ datenmanager.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
+				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
@@ -138,6 +138,8 @@
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -153,8 +155,6 @@
 		ergebnisAktivieren: () => Promise<boolean>;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
-		datenmanager: GostBlockungsdatenManager;
-		ergebnismanager: GostBlockungsergebnisManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
@@ -176,26 +176,26 @@
 			}
 		});
 
-	const blockungsname: ComputedRef<string> = computed(() => props.datenmanager.daten().name);
+	const blockungsname: ComputedRef<string> = computed(() => props.getDatenmanager().daten().name);
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.datenmanager.getMengeOfSchienen());
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().getMengeOfSchienen());
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => (props.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1));
+	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1));
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.datenmanager.daten().istAktiv);
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnismanager.getErgebnis().istVorlage || false);
+	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.getErgebnismanager().getErgebnis().istVorlage || false);
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		return props.ergebnismanager.getOfSchieneAnzahlSchueler(idSchiene) || 0;
+		return props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
-		return props.datenmanager.removeSchieneAllowed(schiene.id) && props.ergebnismanager.getOfSchieneRemoveAllowed(schiene.id);
+		return props.getDatenmanager().removeSchieneAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		return props.ergebnismanager.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
+		return props.getErgebnismanager().getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	}
 
 	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {

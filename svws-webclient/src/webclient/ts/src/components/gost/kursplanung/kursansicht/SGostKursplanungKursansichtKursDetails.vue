@@ -3,7 +3,7 @@
 		<td :colspan="anzahlSpalten" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
-					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :datenmanager="datenmanager"
+					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 						:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
@@ -52,6 +52,7 @@
 	import { computed, ComputedRef } from 'vue';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
@@ -61,7 +62,6 @@
 		anzahlSpalten: number;
 		kurs: GostBlockungKurs;
 		kurseMitKursart: Vector<GostBlockungsergebnisKurs>;
-		datenmanager: GostBlockungsdatenManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
@@ -74,7 +74,7 @@
 	});
 
 	function get_kursbezeichnung(kurs_id: number): string {
-		return props.datenmanager.getNameOfKurs(kurs_id);
+		return props.getDatenmanager().getNameOfKurs(kurs_id);
 	}
 
 	async function add_kurs() {

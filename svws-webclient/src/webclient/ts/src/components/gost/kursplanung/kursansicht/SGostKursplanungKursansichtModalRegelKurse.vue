@@ -3,7 +3,7 @@
 		<template #modalTitle>Regel erstellen für Kurse</template>
 		<template #modalDescription>
 			<div class="">
-				Sollen die Kurse {{ props.kurs1Id === undefined ? '???' : manager.getNameOfKurs(props.kurs1Id) }} und {{ manager.getNameOfKurs(props.kurs2Id) }} immer oder nie zusammen auf einer Schiene liegen?
+				Sollen die Kurse {{ props.kurs1Id === undefined ? '???' : getDatenmanager().getNameOfKurs(props.kurs1Id) }} und {{ getDatenmanager().getNameOfKurs(props.kurs2Id) }} immer oder nie zusammen auf einer Schiene liegen?
 			</div>
 			<div class="flex gap-1">
 				<svws-ui-button @click="close">Abbrechen</svws-ui-button>
@@ -20,9 +20,9 @@
 	import { Ref, ref, watch } from 'vue';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		modelValue: boolean;
-		manager: GostBlockungsdatenManager;
 		kurs1Id?: number;
 		kurs2Id: number;
 	}>();

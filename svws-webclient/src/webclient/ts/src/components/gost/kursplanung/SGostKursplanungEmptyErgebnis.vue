@@ -1,5 +1,5 @@
 <template>
-	<template v-if="hat_blockung">
+	<template v-if="hatBlockung">
 		<router-view :key="$route.hash" />
 	</template>
 	<div v-else>
@@ -10,13 +10,8 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
-
-	const props = defineProps<{
-		listBlockungen: ListKursblockungen;
+	defineProps<{
+		hatBlockung: boolean;
 	}>();
-
-	const hat_blockung: ComputedRef<boolean> = computed(() => props.listBlockungen.liste.length > 0);
 
 </script>

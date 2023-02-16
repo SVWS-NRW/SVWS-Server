@@ -179,15 +179,20 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			getDatenmanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
 			listBlockungen: routeGostKursplanungHalbjahr.data.listBlockungen,
-			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung
+			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
+			pending: routeGostKursplanungHalbjahr.data.dataKursblockung.pending,
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			getDatenmanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
+			getErgebnismanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager,
+			patchRegel: routeGostKursplanungHalbjahr.data.patchRegel,
 			addRegel: routeGostKursplanungHalbjahr.data.addRegel,
 			removeRegel: routeGostKursplanungHalbjahr.data.removeRegel,
 			updateKursSchienenZuordnung: this.data.updateKursSchienenZuordnung,
@@ -204,7 +209,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
 			faecherManager: routeGost.data.faecherManager.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
-			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
 			mapLehrer: this.data.mapLehrer,
 			fachwahlen: this.data.fachwahlen,
 			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value

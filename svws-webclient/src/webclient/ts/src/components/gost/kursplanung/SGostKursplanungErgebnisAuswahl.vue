@@ -26,10 +26,10 @@
 			</template>
 			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
 				<span class="flex gap-1 cell--bewertung items-center text-sm">
-					<span :style="{'background-color': color1(row)}">{{ manager?.getOfBewertung1Wert(row.id) }}</span>
-					<span :style="{'background-color': color2(row)}">{{ manager?.getOfBewertung2Wert(row.id) }}</span>
-					<span :style="{'background-color': color3(row)}">{{ manager?.getOfBewertung3Wert(row.id) }}</span>
-					<span :style="{'background-color': color4(row)}">{{ manager?.getOfBewertung4Wert(row.id) }}</span>
+					<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
+					<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
+					<span :style="{'background-color': color3(row)}">{{ getDatenmanager().getOfBewertung3Wert(row.id) }}</span>
+					<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
 				</span>
 				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
 				<div v-if="(row.id === selected_ergebnis?.id && !blockung_aktiv)" class="flex gap-1">
@@ -60,33 +60,28 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List, Vector } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
 	import { routeLogin } from "~/router/RouteLogin";
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
-	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungBlockung } from '~/router/apps/gost/kursplanung/RouteGostKursplanungBlockung';
 
 	const props = defineProps<{
+		getDatenmanager: () => GostBlockungsdatenManager;
+		pending: boolean;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		listBlockungen: ListKursblockungen;
-		blockung: DataGostKursblockung;
 	}>();
 
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
 
-	const manager: ComputedRef<GostBlockungsdatenManager | undefined> = computed(() => props.blockung.datenmanager);
+	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung());
 
-	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
-		computed(() => manager.value?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>());
-
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.blockung.daten?.istAktiv || false);
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> = routeGostKursplanungBlockung.getSelector();
-
-	const pending: ComputedRef<boolean> = computed(()=> props.blockung.pending);
 
 	async function remove_ergebnisse() {
 		if (props.halbjahr === undefined)
@@ -118,24 +113,27 @@
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function colorMix(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		const combined = (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0);
+		const combined = (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id))
+			+ (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id))
+			+ (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id))
+			+ (props.getDatenmanager().getOfBewertung4Intervall(ergebnis.id));
 		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.blockung.daten !== undefined) && (props.blockung.daten?.ergebnisse.size() > 0);
+		return props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() > 0;
 	});
 
 </script>
