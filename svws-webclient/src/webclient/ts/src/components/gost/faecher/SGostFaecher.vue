@@ -5,14 +5,12 @@
 		</div>
 		<div>
 			<s-card-gost-zusatzkurse v-if="jahrgangsdaten !== undefined" :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
-			<template v-if="dataFachkombinationen.daten !== undefined">
-				<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :get-faecher-manager="getFaecherManager"
-					:fachkombinationen="dataFachkombinationen.daten" :patch-fachkombination="patchFachkombination"
-					:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
-				<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :get-faecher-manager="getFaecherManager"
-					:fachkombinationen="dataFachkombinationen.daten" :patch-fachkombination="patchFachkombination"
-					:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
-			</template>
+			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :get-faecher-manager="getFaecherManager"
+				:map-fachkombinationen="mapFachkombinationen" :patch-fachkombination="patchFachkombination"
+				:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
+			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :get-faecher-manager="getFaecherManager"
+				:map-fachkombinationen="mapFachkombinationen" :patch-fachkombination="patchFachkombination"
+				:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
 		</div>
 	</div>
 </template>
@@ -20,7 +18,6 @@
 <script setup lang="ts">
 
 	import { GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
-	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
 	defineProps<{
 		getFaecherManager: () => GostFaecherManager;
@@ -30,7 +27,7 @@
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		dataFachkombinationen: DataGostFachkombinationen;
+		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
 
 </script>
