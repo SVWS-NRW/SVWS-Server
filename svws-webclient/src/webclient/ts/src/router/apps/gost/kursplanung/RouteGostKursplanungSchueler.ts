@@ -149,11 +149,14 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			updateKursSchuelerZuordnung: routeGostKursplanungBlockung.data.updateKursSchuelerZuordnung,
+			removeKursSchuelerZuordnung: routeGostKursplanungBlockung.data.removeKursSchuelerZuordnung,
+			autoKursSchuelerZuordnung:  routeGostKursplanungBlockung.data.autoKursSchuelerZuordnung,
 			gotoSchueler: this.data.gotoSchueler,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
 			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
-			ergebnis: routeGostKursplanungBlockung.data.dataKursblockungsergebnis,
 			schueler: this.data.schueler.value,
+			pending: routeGostKursplanungBlockung.data.dataKursblockungsergebnis.pending,
 		}
 	}
 

@@ -11,7 +11,7 @@
 					<div class="">
 						<table class="v-table--complex table-fixed">
 							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach"
-								:kurse="blockungsergebnisse" :schueler-id="schueler.id" :blockung="blockung" :ergebnis="ergebnis" />
+								:kurse="blockungsergebnisse" :schueler-id="schueler.id" :blockung="blockung" />
 						</table>
 						<template v-if="!blockung_aktiv">
 							<div class="flex items-center justify-center" :class="{'bg-red-400 text-white': active}">
@@ -28,7 +28,7 @@
 				<div class="v-table--container">
 					<table class="v-table--complex">
 						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"
-							:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
+							:blockung="blockung" :pending="pending" :allow-regeln="allow_regeln" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 					</table>
 				</div>
 			</div>
@@ -45,11 +45,14 @@
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 
 	const props = defineProps<{
+		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
+		removeKursSchuelerZuordnung: (idSchueler: number, idKurs: number) => Promise<boolean>;
+		autoKursSchuelerZuordnung: (idSchueler : number) => Promise<void>;
 		gotoSchueler: (idSchueler: number) => Promise<void>;
 		gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
 		schueler: SchuelerListeEintrag;
+		pending: boolean;
 	}>();
 
 	const is_dragging: Ref<boolean> = ref(false)
@@ -83,17 +86,15 @@
 		return map;
 	});
 
-	const pending = computed(() => props.ergebnis.pending);
-
 	async function drop_entferne_kurszuordnung(kurs: any) {
 		const schuelerid = props.schueler.id;
 		if (kurs === undefined)
 			return;
-		await props.ergebnis.removeSchuelerKurs(schuelerid, kurs.id);
+		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
 	}
 
 	async function auto_verteilen() {
-		await props.ergebnis.multiAssignSchuelerKurs(props.schueler.id);
+		await props.autoKursSchuelerZuordnung(props.schueler.id);
 	}
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {

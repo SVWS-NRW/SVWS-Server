@@ -18,8 +18,20 @@ export class RouteDataGostKursplanungBlockung {
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
 
-	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => {
+	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		return await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
+	}
+
+	updateKursSchuelerZuordnung = async (idSchueler: number, idKursNeu: number, idKursAlt: number): Promise<boolean> => {
+		return await this.dataKursblockungsergebnis.assignSchuelerKurs(idSchueler, idKursNeu, idKursAlt);
+	}
+
+	removeKursSchuelerZuordnung = async (idSchueler: number, idKurs: number): Promise<boolean> => {
+		return await this.dataKursblockungsergebnis.removeSchuelerKurs(idSchueler, idKurs);
+	}
+
+	autoKursSchuelerZuordnung = async (idSchueler : number) => {
+		return await this.dataKursblockungsergebnis.multiAssignSchuelerKurs(idSchueler);
 	}
 
 	ergebnisHochschreiben = async () => {
@@ -193,7 +205,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			faecherManager: routeGost.data.faecherManager.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
 			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
-			ergebnis: this.data.dataKursblockungsergebnis,
 			mapLehrer: this.data.mapLehrer,
 			fachwahlen: this.data.fachwahlen,
 			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value

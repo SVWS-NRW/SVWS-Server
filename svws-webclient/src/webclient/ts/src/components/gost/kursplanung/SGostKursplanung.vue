@@ -67,7 +67,6 @@
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
@@ -77,14 +76,14 @@
 
 	const regelzahl: ComputedRef<number> = computed(() => props.blockung.datenmanager?.getRegelAnzahl() || 0);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.blockung.daten?.ergebnisse.size() === 1);
+	const allow_regeln: ComputedRef<boolean> = computed(() => {
+		return props.blockung.datenmanager?.getErgebnisseSortiertNachBewertung().size() === 1;
+	});
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;
 	}
 
-	const visible: ComputedRef<boolean> = computed(() =>
-		(props.blockung.daten !== undefined) && (props.ergebnis.daten !== undefined)
-	);
+	const visible: ComputedRef<boolean> = computed(() => (props.blockung.daten !== undefined));
 
 </script>

@@ -8,7 +8,7 @@
 			</div>
 		</td>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
-			:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
+			:blockung="blockung" :pending="pending" :allow-regeln="allowRegeln" :update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 	</tr>
 </template>
 
@@ -18,14 +18,14 @@
 		GostBlockungsergebnisSchiene, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 
 	const props = defineProps<{
+		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
 		schiene: GostBlockungsergebnisSchiene;
 		selected: SchuelerListeEintrag;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
-		allow_regeln: boolean;
+		pending: boolean;
+		allowRegeln: boolean;
 	}>();
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);

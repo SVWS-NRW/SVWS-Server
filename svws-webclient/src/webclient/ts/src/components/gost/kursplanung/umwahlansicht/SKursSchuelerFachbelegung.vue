@@ -18,7 +18,6 @@
 		GostFach, GostFachwahl, GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
@@ -26,7 +25,6 @@
 		kurse: Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>;
 		schuelerId: number;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
 	}>();
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
@@ -69,8 +67,6 @@
 	});
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.blockung.daten?.istAktiv || false)
-
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnis.daten?.istVorlage || false)
 
 	function get_kurs_name(): String {
 		if (kursid.value === undefined)

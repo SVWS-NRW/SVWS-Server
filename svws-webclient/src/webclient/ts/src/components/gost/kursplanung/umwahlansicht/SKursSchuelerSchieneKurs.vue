@@ -8,7 +8,7 @@
 				<br>
 				<span class="text-sm" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
 				<br>
-				<span v-if="(allow_regeln && fach_gewaehlt && !blockung_aktiv)">
+				<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
 					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle">
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400" />
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
@@ -33,15 +33,15 @@
 		List, SchuelerListeEintrag, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
+		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
 		kurs: GostBlockungsergebnisKurs;
 		schueler: SchuelerListeEintrag;
 		blockung: DataGostKursblockung;
-		ergebnis: DataGostKursblockungsergebnis;
-		allow_regeln: boolean;
+		pending: boolean;
+		allowRegeln: boolean;
 	}>();
 
 
@@ -57,15 +57,13 @@
 	);
 
 	const is_draggable: ComputedRef<boolean> = computed(() => {
-		if (pending.value || blockung_aktiv.value)
+		if (props.pending || blockung_aktiv.value)
 			return false;
 		for (const s of props.kurs.schueler)
 			if (s === props.schueler.id)
 				return true;
 		return false;
 	});
-
-	const pending: ComputedRef<boolean> = computed(()=> props.ergebnis.pending);
 
 	const is_drop_zone: ComputedRef<boolean> = computed(() => {
 		if (!drag_data.value)
@@ -106,8 +104,6 @@
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(()=> props.blockung.daten?.istAktiv || false)
 
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.ergebnis.daten?.istVorlage || false)
-
 	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.blockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
 	// const fixier_regel: ComputedRef<boolean> = computed(() => manager.value?.getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id) || false)
@@ -130,29 +126,34 @@
 		return undefined;
 	})
 
-	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
-	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen()
+	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen();
+
+	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen();
 
 	const regel_speichern = async (regel: GostBlockungRegel) => {
 		regel.parameter.add(props.schueler.id);
 		regel.parameter.add(props.kurs.id);
 		await props.blockung.add_blockung_regel(regel)
 	}
+
 	const fixieren_regel_hinzufuegen = async () => {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 		await regel_speichern(regel)
 	}
+
 	const fixieren_regel_entfernen = async () => {
 		if (!fixier_regel.value)
 			return
 		await props.blockung.del_blockung_regel(fixier_regel.value.id)
 	}
+
 	const verbieten_regel_hinzufuegen = async () => {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
 		await regel_speichern(regel)
 	}
+
 	const verbieten_regel_entfernen = async () => {
 		if (verbieten_regel.value === undefined)
 			return
@@ -165,6 +166,7 @@
 		if (!data) return;
 		drag_data.value = data
 	}
+
 	function drag_ended() {
 		drag_data.value = undefined;
 	}
@@ -172,7 +174,8 @@
 	async function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {
 		if (!is_drop_zone.value)
 			return;
-		await props.ergebnis.assignSchuelerKurs(props.schueler.id, id_kurs_neu, kurs.id);
+		await props.updateKursSchuelerZuordnung(props.schueler.id, id_kurs_neu, kurs.id);
 		drag_ended();
 	}
+
 </script>
