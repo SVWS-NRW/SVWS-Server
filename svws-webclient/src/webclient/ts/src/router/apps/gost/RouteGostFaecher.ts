@@ -86,7 +86,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			item: routeGost.data.item.value,
 			schule: routeGost.data.schule,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
-			faecherManager: routeGost.data.faecherManager.value,
+			faecherManager: routeGost.data.faecherManager,
 			listJahrgaenge: routeGost.data.listJahrgaenge,
 			dataFachkombinationen: this.data.dataFachkombinationen
 		};

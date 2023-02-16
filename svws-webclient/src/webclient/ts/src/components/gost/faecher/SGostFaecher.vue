@@ -22,6 +22,7 @@
 	import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { ShallowRef } from "vue";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
@@ -32,7 +33,7 @@
 		item: GostJahrgang | undefined;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		faecherManager: GostFaecherManager;
+		faecherManager: ShallowRef<GostFaecherManager>;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 

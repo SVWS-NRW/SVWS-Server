@@ -49,11 +49,11 @@
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
-		faecherManager: GostFaecherManager;
+		faecherManager: ShallowRef<GostFaecherManager>;
 	}>();
 
 	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
-		return props.faecherManager.faecher();
+		return props.faecherManager.value.faecher();
 	});
 
 	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {

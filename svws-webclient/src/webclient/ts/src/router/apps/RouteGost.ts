@@ -43,8 +43,7 @@ export class RouteDataGost {
 		const fach = this.faecherManager.value.get(fach_id);
 		if (fach !== null)
 			Object.assign(fach, data);
-		const faecher = new Vector(this.faecherManager.value.faecher())
-		this.faecherManager.value = new GostFaecherManager(faecher)
+		triggerRef(this.faecherManager);
 		return true;
 	}
 
