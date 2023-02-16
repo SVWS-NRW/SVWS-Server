@@ -1,4 +1,4 @@
-import { LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
@@ -8,13 +8,11 @@ import { RouteNodeListView } from "../RouteNodeListView";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataLehrer {
 	stammdaten: DataLehrerStammdaten = new DataLehrerStammdaten();
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 }
 
 
@@ -47,7 +45,6 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
@@ -83,7 +80,7 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

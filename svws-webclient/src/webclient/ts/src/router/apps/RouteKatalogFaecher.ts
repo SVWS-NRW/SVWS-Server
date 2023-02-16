@@ -6,10 +6,8 @@ import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKatalogFaecher {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	item: FaecherListeEintrag | undefined = undefined;
 }
 
@@ -39,7 +37,6 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
@@ -73,7 +70,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

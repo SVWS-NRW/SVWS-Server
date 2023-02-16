@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListKurse } from "~/apps/kurse/ListKurse";
@@ -7,11 +7,9 @@ import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "../RouteApp";
 
 export class RouteDataKurse {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	listLehrer: ListLehrer = new ListLehrer();
@@ -44,7 +42,6 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listJahrgaenge.update_list();
 		this.data.mapJahrgaenge.clear();
 		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
@@ -86,7 +83,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 			...super.getProps(to),
 			listJahrgaenge: this.data.listJahrgaenge,
 			listLehrer: this.data.listLehrer,
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

@@ -4,11 +4,10 @@ import { List, Vector, GostKursart, Fachgruppe, Schulgliederung,
 	GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 	ZulaessigesFach, GostFach,
 	SchuelerListeEintrag,
-	Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
+	Sprachbelegung, SprachendatenUtils, Schulform } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive, ShallowRef, shallowRef } from "vue";
 import { DataGostJahrgang } from "../gost/DataGostJahrgang";
-import { DataSchuleStammdaten } from "../schule/DataSchuleStammdaten";
 import { routeApp } from "~/router/RouteApp";
 
 /** Signatur für die Sprachbelegungen */
@@ -50,7 +49,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 
 	protected _gostFaecher: List<GostFach> | undefined;
 	protected _dataGostJahrgang: DataGostJahrgang | undefined;
-	protected _dataSchule: DataSchuleStammdaten | undefined;
+	protected _schulform: Schulform | undefined;
 
 	public abimanager: ShallowRef<AbiturdatenManager | undefined> = shallowRef(undefined);
 
@@ -83,12 +82,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		this._dataGostJahrgang = value;
 	}
 
-	get dataSchule(): DataSchuleStammdaten | undefined {
-		return this._dataSchule;
+	get schulform(): Schulform | undefined {
+		return this._schulform;
 	}
 
-	set dataSchule(value: DataSchuleStammdaten | undefined) {
-		this._dataSchule = value;
+	set schulform(value: Schulform | undefined) {
+		this._schulform = value;
 	}
 
 	get gostFachbelegungen(): Array<AbiturFachbelegung> {
@@ -107,7 +106,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const gliederung: Schulgliederung | null = Schulgliederung.getByKuerzel(
 			this.selected_list_item.schulgliederung
 		);
-		const schulform = this._dataSchule?.schulform.value || null;
+		const schulform = this._schulform || null;
 		if (gliederung === null || schulform === null)
 			return undefined;
 		const schuljahr = routeApp.data.aktAbschnitt;
@@ -124,7 +123,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean} True, falls gymnasiale Laufbahndaten zur Verfügung stehen.
 	 */
 	private hasGostlaufbahn(): boolean {
-		const schulform = this._dataSchule?.schulform.value || null;
+		const schulform = this._schulform || null;
 		return (!!schulform && this.abiturjahr !== undefined && this.abiturjahr !== -1);
 	}
 

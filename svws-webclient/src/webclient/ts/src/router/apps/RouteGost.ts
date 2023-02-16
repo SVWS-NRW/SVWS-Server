@@ -4,7 +4,6 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw,
 import { routeLogin } from "~/router/RouteLogin";
 import { ListGost } from "~/apps/gost/ListGost";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -17,7 +16,6 @@ import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 
 export class RouteDataGost {
 	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	jahrgangsdaten: Ref<GostJahrgangsdaten | undefined> = ref(undefined);
 	faecherManager: ShallowRef<GostFaecherManager> = shallowRef(new GostFaecherManager(new Vector()));
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
@@ -86,7 +84,6 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listJahrgaenge.update_list();
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
@@ -129,7 +126,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			item: this.data.item.value,
 			listJahrgaenge: this.data.listJahrgaenge,
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

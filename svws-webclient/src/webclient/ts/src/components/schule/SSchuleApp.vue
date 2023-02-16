@@ -3,7 +3,7 @@
 		<div class="flex w-full flex-col">
 			<svws-ui-header>
 				<span>{{
-					schule.daten?.bezeichnung1
+					schuleStammdaten.bezeichnung1
 				}}</span>
 			</svws-ui-header>
 			<svws-ui-tab-bar>
@@ -21,10 +21,11 @@
 </template>
 
 <script setup lang="ts">
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
+
+	import { SchuleStammdaten } from '@svws-nrw/svws-core-ts';
 
 	const props = defineProps<{
-		schule: DataSchuleStammdaten;
+		schuleStammdaten: SchuleStammdaten;
 	}>();
 
 </script>

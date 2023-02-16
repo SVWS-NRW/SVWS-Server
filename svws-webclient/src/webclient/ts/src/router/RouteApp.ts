@@ -16,37 +16,60 @@ import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, SchuleStammdaten, Schulform, UnsupportedOperationException, Schulgliederung } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
 import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
-import { BaseList } from "~/apps/BaseList";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
 
 export class RouteDataApp {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+
+	private _schuleStammdaten: Ref<SchuleStammdaten | undefined> = ref(undefined);
 	orte: List<OrtKatalogEintrag> = new Vector();
 	mapOrte: Map<number, OrtKatalogEintrag> = new Map();
 	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag> = new Map();
 	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
 
+	public get schuleStammdaten(): SchuleStammdaten {
+		if (this._schuleStammdaten.value === undefined)
+			throw new Error("Zugriff auf Schul-Stammdaten, bevor diese geladen wurden.");
+		return this._schuleStammdaten.value;
+	}
+
+	public async getSchulstammdaten() {
+		this._schuleStammdaten.value = await routeLogin.data.api.getSchuleStammdaten(routeLogin.data.schema);
+	}
+
+	public async removeSchulstammdaten() {
+		this._schuleStammdaten.value = undefined;
+	}
+
+	public schulform: WritableComputedRef<Schulform> = computed({
+		get: () => {
+			const sf = Schulform.getByKuerzel(this.schuleStammdaten.schulform);
+			if (sf === null)
+				throw new Error("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
+			return sf;
+		},
+		set: (value) => { throw new UnsupportedOperationException("Das nachträgliche Setzen der Schulform wird zur Zeit nicht unterstützt"); }
+	});
+
+	public schulgliederungen: WritableComputedRef<List<Schulgliederung>> = computed({
+		get: () => Schulgliederung.get(this.schulform.value),
+		set: (value) => { throw new UnsupportedOperationException("Das nachträgliche Setzen der Schulgliederung wird zur Zeit nicht unterstützt"); }
+	});
+
+
 	public user_config: Ref<Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]>> = ref(new Map());
 	public drag_and_drop_data: Ref<any> = ref(undefined);
 
 	aktAbschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-
-		/**
-	 * Der aktuell ausgewählte Abschnitt
-	 *
-	 * @returns {Schuljahresabschnitt | undefined}
-	 */
 		get: () => {
 			let abschnitt = this.user_config.value.get('app.akt_abschnitt') as Schuljahresabschnitt | undefined;
-			if (abschnitt === undefined && this.schule.daten !== undefined) {
-				const id = this.schule.daten.idSchuljahresabschnitt;
-				for (const a of this.schule.daten.abschnitte) {
+			if (abschnitt === undefined) {
+				const id = this.schuleStammdaten.idSchuljahresabschnitt;
+				for (const a of this.schuleStammdaten.abschnitte) {
 					if (a.id === id) {
 						this.user_config.value.set('app.akt_abschnitt', a);
 						abschnitt = a;
@@ -58,18 +81,9 @@ export class RouteDataApp {
 				throw new Error("Es fehlt ein aktueller Abschnitt in den Schuldaten");
 			return abschnitt;
 		},
-		/**
-	 * Setzt den aktuellen Schuljahresabschnitt
-	 *
-	 * @param {Schuljahresabschnitt} abschnitt
-	 */
 		set: (abschnitt: Schuljahresabschnitt) => {
 			this.user_config.value.set('app.akt_abschnitt', abschnitt);
 			// TODO was tun, wenn das akt Halbjahr neu gesetzt wurde?
-			// const lists = BaseList.all
-			// for (const l of lists) {
-			// 	void l.update_list()
-			// }
 		}
 	})
 
@@ -117,7 +131,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);    // TODO Kein Data-Objekt, sondern Handhabung des aktuellen Abschnitts, etc. in dieser Route (RouteDataApp-Objekt)
+		await this.data.getSchulstammdaten();
 		// Lade den Katalog der Orte
 		this.data.orte = await routeLogin.data.api.getOrte(routeLogin.data.schema);
 		this.data.mapOrte = new Map();
@@ -134,7 +148,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		await this.data.schule.unselect();
+		await this.data.removeSchulstammdaten();
 		this.data.orte = new Vector<OrtKatalogEintrag>();
 		this.data.mapOrte = new Map();
 		this.data.ortsteile = new Vector<OrtsteilKatalogEintrag>();
@@ -148,7 +162,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public getProps(): Record<string, any> {
 		return {
 			username: routeLogin.data.username,
-			schule: this.data.schule,
+			schuleStammdaten: this.data.schuleStammdaten,
 			orte: this.data.orte,
 			ortsteile: this.data.ortsteile,
 			aktAbschnitt: this.data.aktAbschnitt,

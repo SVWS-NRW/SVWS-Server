@@ -4,10 +4,10 @@
 			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 				<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
-				<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="listJahrgaenge.liste"
+				<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="mapJahrgaenge.values()"
 					:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel ?? ''" />
 				<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
-				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
+				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
 				<svws-ui-text-input placeholder="Sortierung" v-model="sortierung" type="number" />
 				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
@@ -19,15 +19,11 @@
 
 	import { computed, WritableComputedRef } from "vue";
 	import { JahrgangsListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataKurs } from "~/apps/kurse/DataKurs";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
 		data: DataKurs;
-		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
-		listLehrer: ListLehrer;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 

@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -13,14 +13,12 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSc
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { ListGost } from "~/apps/gost/ListGost";
 import { routeLogin } from "../RouteLogin";
 
 export class RouteDataSchueler {
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	mapKlassen: Map<Number, KlassenListeEintrag> = new Map();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	mapKurse: Map<Number, KursListeEintrag> = new Map();
@@ -60,12 +58,8 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 				id = -1;
 			return this.getRoute(id);
 		}
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
-		// TODO Code für Schulform mit Fehlerhandling in die zukünftige API-Klasse auslagern
-		const schulform : Schulform | undefined = this.data.schule.schulform.value;
-		if (schulform === undefined)
-			throw new Error("Schulform unbekannt.");
-		if (schulform?.daten.hatGymOb)
+		// Prüfe, ob die Schulform eine gymnasiale Oberstufe hat und lade ggf. die Abiturjahrgänge
+		if (routeApp.data.schulform.value.daten.hatGymOb)
 			await this.data.listeAbiturjahrgaenge.update_list();
 		// aktualisiere die Klassen und erstelle Map
 		const listKlassen = await routeLogin.data.api.getKlassenFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
@@ -127,8 +121,8 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 			mapKlassen: this.data.mapKlassen,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapKurse: this.data.mapKurse,
-			schulgliederungen: this.data.schule.schulgliederungen.value,
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			schulgliederungen: routeApp.data.schulgliederungen,
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

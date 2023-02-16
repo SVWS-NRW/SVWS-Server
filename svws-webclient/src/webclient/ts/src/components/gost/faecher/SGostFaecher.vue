@@ -1,7 +1,7 @@
 <template>
 	<div class="s-gost-faecher--wrapper">
 		<div class="w-128">
-			<s-card-gost-faecher :get-faecher-manager="getFaecherManager" :abiturjahr="item?.abiturjahr ?? -1" :patch-fach="patchFach" />
+			<s-card-gost-faecher :get-faecher-manager="getFaecherManager" :abiturjahr="jahrgangsdaten?.abiturjahr ?? -1" :patch-fach="patchFach" />
 		</div>
 		<div>
 			<s-card-gost-zusatzkurse v-if="jahrgangsdaten !== undefined" :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
@@ -19,19 +19,16 @@
 
 <script setup lang="ts">
 
-	import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
-	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
-	const props = defineProps<{
+	defineProps<{
 		getFaecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-		item: GostJahrgang | undefined;
-		schule: DataSchuleStammdaten;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();

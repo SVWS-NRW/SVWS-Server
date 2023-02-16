@@ -1,4 +1,4 @@
-import { KlassenListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -6,11 +6,9 @@ import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 
 export class RouteDataKlassen {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
@@ -41,7 +39,6 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
@@ -78,7 +75,7 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

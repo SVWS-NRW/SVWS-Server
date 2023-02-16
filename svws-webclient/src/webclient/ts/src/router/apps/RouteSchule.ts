@@ -1,22 +1,18 @@
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteApp } from "~/router/RouteApp";
+import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 import { ListNone } from "~/apps/ListNone";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
-export class RouteDataSchule {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
-}
-export class RouteSchule extends RouteNodeListView<ListNone, unknown, RouteDataSchule, RouteApp> {
+export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
 
 	public constructor() {
-		super("schule", "/schule", SSchuleAuswahl, SSchuleApp, undefined, undefined, new RouteDataSchule());
+		super("schule", "/schule", SSchuleAuswahl, SSchuleApp, undefined, undefined);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getNoProps(route));
@@ -46,10 +42,8 @@ export class RouteSchule extends RouteNodeListView<ListNone, unknown, RouteDataS
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		// TODO
 		return {
-			...super.getProps(to),
-			schule: this.data.schule,
+			schuleStammdaten: routeApp.data.schuleStammdaten
 		};
 	}
 

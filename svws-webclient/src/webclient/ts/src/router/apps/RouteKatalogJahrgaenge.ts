@@ -6,19 +6,14 @@ import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatal
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
-import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-
-export class RouteDataKatalogJahrgaenge {
-	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
-}
 
 const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
 
-export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, JahrgangsListeEintrag, RouteDataKatalogJahrgaenge, RouteApp> {
+export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, JahrgangsListeEintrag, unknown, RouteApp> {
 
 	public constructor() {
-		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id', new RouteDataKatalogJahrgaenge());
+		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
@@ -38,7 +33,6 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
@@ -72,7 +66,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			abschnitte: this.data.schule.daten?.abschnitte || new Vector(),
+			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
@@ -81,7 +75,6 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...super.getProps(to),
-			schule: this.data.schule,
 		};
 	}
 

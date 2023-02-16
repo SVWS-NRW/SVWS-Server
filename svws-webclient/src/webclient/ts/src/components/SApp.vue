@@ -58,7 +58,7 @@
 	import { router } from "~/router/RouteManager";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
-	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
+	import { SchuleStammdaten } from '@svws-nrw/svws-core-ts';
 
 	const errors: Ref<Error[]> = ref([]);
 	onErrorCaptured((e)=>{
@@ -73,14 +73,14 @@
 	// })
 
 	const props = defineProps<{
-		schule: DataSchuleStammdaten;
+		schuleStammdaten: SchuleStammdaten;
 		username: string;
 	}>();
 
 	const route = useRoute();
 
 	const schulname: ComputedRef<string> = computed(() => {
-		const name = props.schule.daten?.bezeichnung1;
+		const name = props.schuleStammdaten.bezeichnung1;
 		return name ? name : "fehlende Bezeichnung";
 	});
 
