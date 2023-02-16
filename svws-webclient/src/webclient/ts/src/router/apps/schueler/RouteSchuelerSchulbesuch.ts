@@ -61,8 +61,6 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchueler.getProps(to),
-			propdata: this.data,
 			data: this.data.daten,
 			patch: this.data.patch
 		};

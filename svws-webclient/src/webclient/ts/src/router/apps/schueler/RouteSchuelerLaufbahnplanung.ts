@@ -94,7 +94,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			await this.data.dataLaufbahn.unselect();
 			this.data.dataLaufbahn.gostFaecher = undefined;
 			this.data.dataLaufbahn.dataGostJahrgang = undefined;
-			this.data.dataLaufbahn.dataSchule = undefined;
 			await this.data.dataJahrgang.unselect();
 			this.data.faecherManager = undefined;
 			await this.data.dataFachkombinationen.unselect();
@@ -115,7 +114,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				this.data.faecherManager = new GostFaecherManager(listFaecher);
 				this.data.dataLaufbahn.gostFaecher = listFaecher;
 				this.data.dataLaufbahn.dataGostJahrgang = this.data.dataJahrgang;
-				this.data.dataLaufbahn.dataSchule = routeSchueler.data.schule;
 				await this.data.dataFachkombinationen.select(this.data.gostJahrgang);
 				// TODO: Dies ist nur ein temporärer Workaround, um das Setzen des Abiturdaten-Managers und die Durchführung der Belegprüfung zu triggern...
 				const tmp = this.data.dataLaufbahn.gostAktuelleBelegpruefungsart;

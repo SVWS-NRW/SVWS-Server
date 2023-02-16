@@ -64,7 +64,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id === undefined)
 			return routeSchueler.getRoute(undefined);
-		const abschnitt = routeApp.data.schule.daten?.idSchuljahresabschnitt;
+		const abschnitt = routeApp.data.schuleStammdaten.idSchuljahresabschnitt;
 		if (abschnitt === undefined)
 			return false;
 		this.data.listAuswahl.value = await routeLogin.data.api.getStundenplanlisteFuerAbschnitt(routeLogin.data.schema, abschnitt);

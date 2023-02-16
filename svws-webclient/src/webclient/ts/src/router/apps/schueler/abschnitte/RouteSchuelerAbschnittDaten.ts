@@ -123,7 +123,7 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			schule: routeApp.data.schule.daten!,
+			schule: routeApp.data.schuleStammdaten,
 			data: this.data.daten.value,
 			mapLehrer: this.data.mapLehrer,
 			mapJahrgaenge: this.data.mapJahrgaenge,
