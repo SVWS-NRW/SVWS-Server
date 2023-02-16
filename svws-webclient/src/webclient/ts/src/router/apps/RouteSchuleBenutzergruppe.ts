@@ -65,13 +65,13 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergru
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to)
+			item: this.item,
 		};
 	}
 

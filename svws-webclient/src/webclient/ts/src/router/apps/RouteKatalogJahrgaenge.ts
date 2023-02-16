@@ -65,7 +65,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
@@ -74,7 +74,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 		};
 	}
 

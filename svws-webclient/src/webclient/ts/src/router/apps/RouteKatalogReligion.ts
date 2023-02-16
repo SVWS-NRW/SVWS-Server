@@ -66,7 +66,7 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
@@ -75,7 +75,7 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 		};
 	}
 

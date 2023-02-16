@@ -69,7 +69,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
@@ -78,7 +78,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 		};
 	}
 

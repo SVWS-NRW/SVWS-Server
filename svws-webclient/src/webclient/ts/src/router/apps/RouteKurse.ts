@@ -80,7 +80,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			listJahrgaenge: this.data.listJahrgaenge,
 			listLehrer: this.data.listLehrer,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
@@ -91,7 +91,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			mapLehrer: this.data.mapLehrer
 		};
 	}

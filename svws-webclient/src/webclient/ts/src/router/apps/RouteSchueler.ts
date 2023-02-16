@@ -117,7 +117,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			mapKlassen: this.data.mapKlassen,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapKurse: this.data.mapKurse,
@@ -130,7 +130,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...super.getProps(to),
+			item: this.item,
 			stammdaten: this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
 		};
