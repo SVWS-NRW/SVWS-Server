@@ -10,7 +10,7 @@
 			<div class="mt-1">
 				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" />
@@ -74,7 +74,7 @@
 		filtered: boolean;
 		search: string;
 	}
-
+	console.log(import.meta.env)
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		mapKlassen: Map<Number, KlassenListeEintrag>;
@@ -169,10 +169,13 @@
 		}
 	});
 
-	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> = computed(() => {
-		const liste = [...props.mapKlassen.values()];
+	const mapKlassenFiltered: ComputedRef<Map<number, KlassenListeEintrag>> = computed(() => {
+		const result: Map<number, KlassenListeEintrag> = new Map();
 		const jahrgang = listSchueler.value.filter.jahrgang;
-		return (jahrgang === undefined) ? liste : liste.filter(k => k.idJahrgang === jahrgang.id);
+		for (const kl of props.mapKlassen.values())
+			if ((jahrgang === undefined) || (kl.idJahrgang === jahrgang.id))
+				result.set(kl.id, kl);
+		return result;
 	});
 
 	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
