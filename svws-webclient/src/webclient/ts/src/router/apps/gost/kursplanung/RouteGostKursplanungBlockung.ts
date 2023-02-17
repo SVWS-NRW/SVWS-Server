@@ -2,11 +2,11 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { GostBlockungsergebnisListeneintrag, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 import { RouteGostKursplanungHalbjahr, routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
-import { computed, Ref, ref, WritableComputedRef } from "vue";
+import { Ref, ref } from "vue";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLogin } from "~/router/RouteLogin";
@@ -52,6 +52,10 @@ export class RouteDataGostKursplanungBlockung {
 		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
+		const reselect = ergebnisse.find(e => e.id === this.ergebnisAuswahl.value?.id);
+		if (reselect) {
+			// TODO Lade ein anderes, nicht ausgewähltes Ergebnis und lösche erst dann...
+		}
 		for (const ergebnis of ergebnisse) {
 			await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
 		}
@@ -70,8 +74,8 @@ export class RouteDataGostKursplanungBlockung {
 		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
-		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, idErgebnis);
-		await routeGostKursplanungHalbjahr.data.listBlockungen.update_list(abiturjahr, routeGostKursplanung.data.halbjahr.value);
+		const result = await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, idErgebnis);
+		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(result.abijahrgang, result.gostHalbjahr, result.id));
 	}
 
 	ergebnisHochschreiben = async () => {
