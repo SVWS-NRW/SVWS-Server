@@ -1,12 +1,12 @@
 <template>
 	<div v-if="visible">
-		<svws-ui-table :v-model="selected_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :data="rows_blockungswahl" class="mt-10">
+		<svws-ui-table :model-value="auswahlBlockung" @update:model-value="setAuswahlBlockung" :columns="[{ key: 'name', label: 'Blockung' }]" :data="rows" class="mt-10">
 			<template #body>
-				<template v-for="row in rows_blockungswahl" :key="row.hashCode()">
-					<tr :class="{'vt-clicked': row === selected_blockungauswahl}" @click="select_blockungauswahl(row)">
-						<td v-if=" row === selected_blockungauswahl ">
+				<template v-for="row in mapBlockungen.values()" :key="row.hashCode()">
+					<tr :class="{'vt-clicked': row === auswahlBlockung}" @click="select_blockungauswahl(row)">
+						<td v-if=" row === auswahlBlockung ">
 							<div class="flex">
-								<span v-if="(!edit_blockungsname && row === selected_blockungauswahl)" class="text-input--inline" @click.stop="edit_blockungsname = true">
+								<span v-if="(!edit_blockungsname && row === auswahlBlockung)" class="text-input--inline" @click.stop="edit_blockungsname = true">
 									{{ row.name }}
 								</span>
 								<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
@@ -46,27 +46,30 @@
 <script setup lang="ts">
 
 	import { GostBlockungListeneintrag, GostBlockungsdaten, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
+	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
-	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
-	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 		removeBlockung: () => Promise<void>;
+		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
+		auswahlBlockung: GostBlockungListeneintrag | undefined;
+		mapBlockungen: Map<number, GostBlockungListeneintrag>;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
-		listBlockungen: ListKursblockungen;
 		pending: boolean;
 	}>();
 
+	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {
+		const result: GostBlockungListeneintrag[] = [];
+		for (const bl of props.mapBlockungen.values())
+			result.push(bl);
+		return result;
+	});
+
 	const edit_blockungsname: Ref<boolean> = ref(false);
-
-	const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> = computed(() => props.listBlockungen.liste);
-
-	const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = routeGostKursplanungHalbjahr.getSelector();
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = (row.id === props.halbjahr.id);
@@ -75,14 +78,14 @@
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
+	async function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
 		if (!props.pending)
-			selected_blockungauswahl.value = blockung;
+			await props.setAuswahlBlockung(blockung);
 	}
 
 	const create_blockungsergebnisse = () => {
-		const halbjahresHashCode: number = props.listBlockungen.ausgewaehlt?.hashCode() ? props.listBlockungen.ausgewaehlt.hashCode() : -1;
-		const id = props.listBlockungen.ausgewaehlt?.id;
+		const halbjahresHashCode: number = props.auswahlBlockung?.hashCode() ? props.auswahlBlockung.hashCode() : -1;
+		const id = props.auswahlBlockung?.id;
 		if (!id)
 			return;
 		const apiCall = do_create_blockungsergebnisse(id, halbjahresHashCode);
@@ -90,21 +93,21 @@
 	};
 
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
-		props.listBlockungen.addIdToApiStatus(hjId);
-		props.listBlockungen.setApiStatusIdle(hjId);
+		// TODO props.listBlockungen.addIdToApiStatus(hjId);
+		// TODO props.listBlockungen.setApiStatusIdle(hjId);
 		try {
 			const res = await routeLogin.data.api.rechneGostBlockung(routeLogin.data.schema, id, 5000)
-			props.listBlockungen.removeApiStatusId(hjId)
+			// TODO props.listBlockungen.removeApiStatusId(hjId)
 			return res
 		} catch (e) {
-			props.listBlockungen.setApiStatusError(hjId);
+			// TODO props.listBlockungen.setApiStatusError(hjId);
 		}
 	}
 
 	async function patch_blockung(value: string, idBlockung : number) {
 		const result = await props.patchBlockung({ name: value.toString() }, idBlockung);
-		if (result && selected_blockungauswahl.value)
-			selected_blockungauswahl.value.name = value.toString();
+		if (result && props.auswahlBlockung)
+			props.auswahlBlockung.name = value.toString();
 	}
 
 	async function remove_blockung() {
@@ -118,7 +121,7 @@
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return rows_blockungswahl.value.length > 0;
+		return props.mapBlockungen.size > 0;
 	});
 
 </script>

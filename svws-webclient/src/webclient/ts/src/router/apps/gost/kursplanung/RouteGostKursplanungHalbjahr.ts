@@ -1,34 +1,26 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { GostBlockungKurs, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostHalbjahr } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
 import { routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
-import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
-import { computed, WritableComputedRef } from "vue";
 import { routeLogin } from "~/router/RouteLogin";
-import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKursplanungHalbjahr  {
-	listBlockungen: ListKursblockungen = new ListKursblockungen();
+
 	dataKursblockung: DataGostKursblockung = new DataGostKursblockung();
+
+	setAuswahlBlockung = async (auswahl: GostBlockungListeneintrag | undefined): Promise<void> => {
+		if (auswahl !== undefined)
+			await routeGostKursplanung.data.gotoBlockung(auswahl?.id);
+	}
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
 		if (this.dataKursblockung.daten === undefined)
 			return false;
 		await routeLogin.data.api.patchGostBlockung(data, routeLogin.data.schema, idBlockung);
 		return true;
-	}
-
-	removeBlockung = async () => {
-		if ((routeGost.data.jahrgangsdaten.value === undefined) || (this.listBlockungen.ausgewaehlt === undefined))
-			return;
-		await routeLogin.data.api.deleteGostBlockung(routeLogin.data.schema, this.listBlockungen.ausgewaehlt.id);
-		const abiturjahr = routeGost.data.jahrgangsdaten.value.abiturjahr;
-		const halbjahr = routeGostKursplanung.data.halbjahr.value;
-		await this.listBlockungen.update_list(abiturjahr, halbjahr);
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined));
 	}
 
 	addRegel = async (regel: GostBlockungRegel) => {
@@ -122,7 +114,6 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -133,34 +124,32 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		if ((abiturjahr !== this.data.listBlockungen.abiturjahr) || (halbjahr !== this.data.listBlockungen.halbjahr)) {
-			await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
-			if ((abiturjahr !== this.data.listBlockungen.abiturjahr) || (halbjahr !== this.data.listBlockungen.halbjahr))
-				return false;
-		}
+		await routeGostKursplanung.data.setAbiturjahr(abiturjahr);
+		await routeGostKursplanung.data.setHalbjahr(halbjahr);
 		// Prüfe die ID der Blockung
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
 		// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
 		if (idBlockung === undefined) {
-			if ((idBlockung === undefined) && (this.data.listBlockungen.liste.length > 0)) {
-				const blockungsEintrag = this.data.listBlockungen.liste[0];
+			if ((idBlockung === undefined) && (routeGostKursplanung.data.mapBlockungen.size > 0)) {
+				const blockungsEintrag = routeGostKursplanung.data.mapBlockungen.values().next().value;
 				return this.getRoute(abiturjahr, halbjahr.id, blockungsEintrag.id);
 			}
-			if (this.data.listBlockungen.ausgewaehlt !== undefined) {
+			if (routeGostKursplanung.data.hatBlockung) {
 				await this.data.dataKursblockung.unselect();
-				this.data.listBlockungen.ausgewaehlt = undefined;
+				await routeGostKursplanung.data.setAuswahlBlockung(undefined);
 			}
 			return;
 		}
+		// ... exisitiert die Blockung mit der ID überhaupt? Wenn nicht, muss die Route abgelehnt werden und umgeleitet werden
+		if (routeGostKursplanung.data.mapBlockungen.size === 0)
+			return routeGostKursplanung.data.gotoHalbjahr(routeGostKursplanung.data.halbjahr);
 		// ... wurde die ID der Blockung verändert, so lade die neue Blockung aus der Datenbank
-		if (this.data.listBlockungen.ausgewaehlt?.id !== idBlockung) {
-			// Lade die Liste der Blockungen neu
-			await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
+		if (routeGostKursplanung.data.auswahlBlockung.id !== idBlockung) {
 			// Setze den neu ausgewählten Blockungs-Eintrag
-			const blockungsEintrag = this.data.listBlockungen.liste.find(b => b.id === idBlockung);
+			const blockungsEintrag = routeGostKursplanung.data.mapBlockungen.get(idBlockung);
 			if (blockungsEintrag === undefined)
 				throw new Error("Programmierfehler: Ein Eintrag für die Blockungs-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
-			this.data.listBlockungen.ausgewaehlt = blockungsEintrag;
+			await routeGostKursplanung.data.setAuswahlBlockung(blockungsEintrag);
 			// Lade die neuen Blockungsdaten
 			await this.data.dataKursblockung.select(blockungsEintrag);
 			const blockung = this.data.dataKursblockung.daten;
@@ -169,14 +158,14 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		}
 		// ... prüfe, wenn diese Route das aktuelle Zeil ist, ob Daten vorhanden sind und damit ein Ergebnis existiert, welches selektiert werden kann
 		if ((this.name === to.name) && (this.data.dataKursblockung.daten !== undefined) && (this.data.dataKursblockung.daten.ergebnisse.size() > 0)) {
-			const blid = this.data.listBlockungen.ausgewaehlt?.id;
+			const blid = routeGostKursplanung.data.auswahlBlockung.id;
 			const ergebnis = this.data.dataKursblockung.ergebnisse().get(0);
 			return routeGostKursplanungBlockung.getRoute(abiturjahr, halbjahr.id, blid, ergebnis.id);
 		}
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		this.data.listBlockungen.ausgewaehlt = undefined;
+		await routeGostKursplanung.data.setAuswahlBlockung(undefined);
 		await this.data.dataKursblockung.unselect();
 	}
 
@@ -190,32 +179,21 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			removeBlockung: this.data.removeBlockung,
+			removeBlockung: routeGostKursplanung.data.removeBlockung,
 			patchBlockung: this.data.patchBlockung,
+			setAuswahlBlockung: this.data.setAuswahlBlockung,
+			auswahlBlockung: routeGostKursplanung.data.auswahlBlockung,
+			mapBlockungen: routeGostKursplanung.data.mapBlockungen,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
-			halbjahr: routeGostKursplanung.data.halbjahr.value,
-			listBlockungen: this.data.listBlockungen,
+			halbjahr: routeGostKursplanung.data.halbjahr,
 			pending: this.data.dataKursblockung.pending
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			hatBlockung: this.data.listBlockungen.liste.length > 0
+			hatBlockung: routeGostKursplanung.data.mapBlockungen.size > 0
 		}
-	}
-
-	public getSelector(onSet?: (value : GostBlockungListeneintrag | undefined) => void) : WritableComputedRef<GostBlockungListeneintrag | undefined> {
-		const router = useRouter();
-		return computed({
-			get: () => this.data.listBlockungen.ausgewaehlt,
-			set: (value) => {
-				if (onSet !== undefined)
-					onSet(value);
-				if (value !== this.data.listBlockungen.ausgewaehlt)
-					void router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.id));
-			}
-		});
 	}
 
 }

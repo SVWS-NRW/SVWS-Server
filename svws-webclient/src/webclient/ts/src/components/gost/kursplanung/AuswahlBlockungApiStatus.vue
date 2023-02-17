@@ -30,8 +30,8 @@
 		blockung: GostBlockungListeneintrag;
 	}>();
 
-	// const apiStatus: ComputedRef<ApiStatus> = computed(()=>routeLogin.data.apiStatus)
-	const status_blockung: ComputedRef<FeedbackValues> = computed(() => routeGostKursplanungHalbjahr.data.listBlockungen.getApiStatus(props.blockung.hashCode()))
+	const status_blockung: ComputedRef<FeedbackValues> = computed(() => undefined)
+	// TODO const status_blockung: ComputedRef<FeedbackValues> = computed(() => routeGostKursplanungHalbjahr.data.listBlockungen.getApiStatus(props.blockung.hashCode()))
 
 </script>
 

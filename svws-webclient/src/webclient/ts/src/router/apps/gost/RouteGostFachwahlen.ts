@@ -4,17 +4,17 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "~/router/RouteLogin";
 
-export class RouteDataGostKursplanung  {
+export class RouteDataGostFachwahlen  {
 	item: GostJahrgang | undefined = undefined;
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
 }
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
 
-export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, RouteGost> {
+export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, RouteGost> {
 
 	public constructor() {
-		super("gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostKursplanung());
+		super("gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {
