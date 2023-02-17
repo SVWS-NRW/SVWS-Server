@@ -93,7 +93,7 @@
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
 		}">
-		<span v-if="url" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60" :class="`before:content-['https://']`" />
+		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
 		<input ref="input"
 			v-focus
 			:class="{
@@ -120,12 +120,12 @@
 			}">
 			{{ placeholder }}
 			<Popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
-			<template #trigger>
-				<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
-			</template>
-			<template #content>
-				Relevant für die Statistik
-			</template>
+				<template #trigger>
+					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
+				</template>
+				<template #content>
+					Relevant für die Statistik
+				</template>
 			</Popover>
 		</span>
 		<Icon v-if="type !== 'date' && hasIcon">
