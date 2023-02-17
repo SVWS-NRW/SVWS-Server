@@ -38,7 +38,7 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
         for (Long schuelerID : params)
             if (schueler.get(schuelerID) == null)
-                throw OperationError.CONFLICT.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht."); 
+                throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
         // Aggregiere die benötigten Daten aus der Datenbank
         List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", params, DTOSchuelerLernabschnittsdaten.class);
         if (lernabschnittsdaten == null)

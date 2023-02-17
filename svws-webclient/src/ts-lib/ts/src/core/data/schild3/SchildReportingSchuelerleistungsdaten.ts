@@ -33,12 +33,12 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 	/**
 	 * Die ID des Fachlehrers 
 	 */
-	public lehrerID : number = -1;
+	public lehrerID : number | null = null;
 
 	/**
 	 * Das Kürzel des Fachlehrers 
 	 */
-	public lehrerKuerzel : string = "";
+	public lehrerKuerzel : string | null = null;
 
 	/**
 	 * Die ID des Kurses, sofern vorhanden 
@@ -102,12 +102,8 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		if (typeof obj.fach === "undefined")
 			 throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
-		if (typeof obj.lehrerID === "undefined")
-			 throw new Error('invalid json format, missing attribute lehrerID');
-		result.lehrerID = obj.lehrerID;
-		if (typeof obj.lehrerKuerzel === "undefined")
-			 throw new Error('invalid json format, missing attribute lehrerKuerzel');
-		result.lehrerKuerzel = obj.lehrerKuerzel;
+		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID === null ? null : obj.lehrerID;
+		result.lehrerKuerzel = typeof obj.lehrerKuerzel === "undefined" ? null : obj.lehrerKuerzel === null ? null : obj.lehrerKuerzel;
 		result.kursID = typeof obj.kursID === "undefined" ? null : obj.kursID === null ? null : obj.kursID;
 		if (typeof obj.kurs === "undefined")
 			 throw new Error('invalid json format, missing attribute kurs');
@@ -135,8 +131,8 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		result += '"fachID" : ' + obj.fachID + ',';
 		result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel! + '"' + ',';
 		result += '"fach" : ' + '"' + obj.fach! + '"' + ',';
-		result += '"lehrerID" : ' + obj.lehrerID + ',';
-		result += '"lehrerKuerzel" : ' + '"' + obj.lehrerKuerzel! + '"' + ',';
+		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
+		result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : '"' + obj.lehrerKuerzel + '"') + ',';
 		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
 		result += '"kurs" : ' + '"' + obj.kurs! + '"' + ',';
 		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
@@ -167,10 +163,10 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 			result += '"fach" : ' + '"' + obj.fach + '"' + ',';
 		}
 		if (typeof obj.lehrerID !== "undefined") {
-			result += '"lehrerID" : ' + obj.lehrerID + ',';
+			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
 		}
 		if (typeof obj.lehrerKuerzel !== "undefined") {
-			result += '"lehrerKuerzel" : ' + '"' + obj.lehrerKuerzel + '"' + ',';
+			result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : '"' + obj.lehrerKuerzel + '"') + ',';
 		}
 		if (typeof obj.kursID !== "undefined") {
 			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';

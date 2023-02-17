@@ -34,12 +34,12 @@ public class SchildReportingSchuelerleistungsdaten {
     public @NotNull String fach = "";
 
     /** Die ID des Fachlehrers */
-    @Schema(required = true, description = "Die ID des Fachlehrers", example="42")
-    public long lehrerID = -1;
+    @Schema(required = true, description = "Die ID des Fachlehrers, sofern einer zugewiesen ist - ansonsten null", example="42")
+    public Long lehrerID = null;
 
     /** Das Kürzel des Fachlehrers */
-    @Schema(required = true, description = "das Kürzel des Fachlehrers", example="Alt")
-    public @NotNull String lehrerKuerzel = "";
+    @Schema(required = true, description = "das Kürzel des Fachlehrers, sofern einer zugewiesen ist - ansonsten null", example="Alt")
+    public String lehrerKuerzel = null;
 
     /** Die ID des Kurses, sofern vorhanden */
     @Schema(required = false, description = "Die ID des Kurses, sofern vorhanden", example="4711")
