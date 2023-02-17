@@ -1,12 +1,29 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
-import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
-import { DataKurs } from "~/apps/kurse/DataKurs";
+import { KursDaten, KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataKurseDaten {
 	item: KursListeEintrag | undefined = undefined;
-	daten: DataKurs = new DataKurs();
+	private _daten: KursDaten | undefined = undefined;
+
+	get daten(): KursDaten {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Lehrerstammdaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: KursDaten | undefined) {
+		this._daten = value;
+	}
+
+	patch = async (data : Partial<KursDaten>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchKursDaten", data);
+		//await routeLogin.data.api.patchKursDaten(data, routeLogin.data.schema, this.item.id);
+	}
 }
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
@@ -33,10 +50,10 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getKurs(routeLogin.data.schema, item.id);
 		}
 	}
 
@@ -46,6 +63,7 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			patch: this.data.patch,
 			mapJahrgaenge: routeKurse.data.mapJahrgaenge,
 			mapLehrer: routeKurse.data.mapLehrer,
 			data: this.data.daten
