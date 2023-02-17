@@ -15,24 +15,7 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" :footer="false" is-multi-select>
-					<template #cell-actions="{ row }">
-						<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
-							<template #trigger>
-								<button class="action-button">
-									<svws-ui-icon> <i-ri-more-2-fill /> </svws-ui-icon>
-								</button>
-							</template>
-							<template #content>
-								<div class="action-items">
-									<div v-for="action in actions" :key="action.action">
-										<button class="action-item" @click="onAction(action.action, row)">{{ action.label }}</button>
-									</div>
-								</div>
-							</template>
-						</svws-ui-popover>
-					</template>
-				</svws-ui-table>
+				<svws-ui-data-table v-model:clicked="selected" v-model="selectedItems" :items="rowsFiltered" :columns="cols" clickable selectable :footer="true" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -57,6 +40,7 @@
 	];
 
 	const search: Ref<string> = ref("");
+	const selectedItems = ref([]);
 
 	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;

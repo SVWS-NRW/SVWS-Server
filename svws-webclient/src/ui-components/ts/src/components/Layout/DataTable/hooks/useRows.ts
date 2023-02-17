@@ -40,15 +40,8 @@ export default function useRows (
 	columns: Ref<DataTableColumnInternal[]>,
 	props: UseRowsProps
 ) {
-	const rowsComputed = computed(() => {
-		const arr: DataTableRow[] = [];
-		let index = 0;
-		for (const rawItem of props.items) {
-			arr.push(buildTableRow(rawItem, index, columns.value))
-			index++
-		}
-		return arr;
-	})
+	const rowsComputed = computed(() => [...props.items]
+		.map((rawItem, index) => buildTableRow(rawItem, index, columns.value)))
 
 	return {
 		rowsComputed,

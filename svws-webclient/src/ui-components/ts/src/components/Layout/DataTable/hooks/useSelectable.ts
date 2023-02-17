@@ -29,25 +29,22 @@ export default function useSelectable(
 	}
 
 	function selectAllRows() {
-		selectedItems.value = [...new Set([
-			...selectedItems.value,
-			...sortedRows.value.map(row => row.source),
-		])]
+		selectedItems.value = [...sortedRows.value.map(row => row.source)];
 	}
 
 	function unselectAllRows() {
-		const sortedRowsKeys = sortedRows.value.map(row => row.source)
-
-		selectedItems.value = selectedItems.value
-			.filter((item) => !sortedRowsKeys.includes(item))
+		selectedItems.value = [];
 	}
 
 	function selectRow(row: DataTableRow) {
-		selectedItems.value.push(row.source);
+		selectedItems.value = [
+			...selectedItems.value,
+			row.source,
+		]
 	}
 
 	function unselectRow(row: DataTableRow) {
-		const index = selectedItems.value.findIndex(item => item === row.source)
+		const index = selectedItems.value.indexOf(row.source)
 
 		selectedItems.value = [
 			...selectedItems.value.slice(0, index),

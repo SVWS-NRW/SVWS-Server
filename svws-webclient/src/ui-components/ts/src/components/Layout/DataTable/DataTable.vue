@@ -197,7 +197,7 @@
 		toggleRowSelection,
 	} = useSelectable(sortedRows, props);
 
-	const { isRowClicked, toggleRowClick } = useClickable(sortedRows, props);
+	const { isRowClicked, toggleRowClick } = useClickable(props);
 
 	const showNoDataHtml = computed(() => {
 		if (Array.isArray(props.items))
