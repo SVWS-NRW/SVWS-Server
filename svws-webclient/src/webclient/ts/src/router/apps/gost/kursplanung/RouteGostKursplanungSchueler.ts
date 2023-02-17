@@ -22,7 +22,7 @@ export class RouteDataGostKursplanungSchueler {
 	setSchueler = async (schueler: SchuelerListeEintrag) => {
 		if (schueler.id !== this.schueler.value?.id)
 			void RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
-				routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnis.value?.id, schueler.id));
+				routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnisAuswahl.value?.id, schueler.id));
 	}
 
 	gotoSchueler = async (idSchueler: number) => {

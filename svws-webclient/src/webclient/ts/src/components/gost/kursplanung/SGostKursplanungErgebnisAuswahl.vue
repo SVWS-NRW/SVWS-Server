@@ -1,6 +1,6 @@
 <template>
 	<div v-if="visible">
-		<svws-ui-table v-model="selected_ergebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10"
+		<svws-ui-table :model-value="auswahlErgebnis" @update:model-value="setAuswahlErgebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10"
 			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
 			:footer="true">
 			<template #head-bewertung>
@@ -32,7 +32,7 @@
 					<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
 				</span>
 				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
-				<div v-if="(row.id === selected_ergebnis?.id && !blockung_aktiv)" class="flex gap-1">
+				<div v-if="(row.id === auswahlErgebnis?.id && !blockung_aktiv)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
 					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending" title="Ergebnis löschen" />
 				</div>
@@ -61,18 +61,19 @@
 <script setup lang="ts">
 
 	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from 'vue';
-	import { routeLogin } from "~/router/RouteLogin";
+	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
-	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
-	import { routeGostKursplanungBlockung } from '~/router/apps/gost/kursplanung/RouteGostKursplanungBlockung';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		removeErgebnis: (idErgebnis: number) => Promise<void>;
+		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
+		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
+		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 		pending: boolean;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
-		listBlockungen: ListKursblockungen;
 	}>();
 
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
@@ -81,35 +82,23 @@
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> = routeGostKursplanungBlockung.getSelector();
-
 	async function remove_ergebnisse() {
 		if (props.halbjahr === undefined)
 			return;
-		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
-		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
-			for (const ergebnis of selected_ergebnisse.value) {
-				await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
-			}
-			selected_ergebnisse.value = [];
-			await props.listBlockungen.update_list(abiturjahr, props.halbjahr);
-		}
+		await props.removeErgebnisse(selected_ergebnisse.value);
+		selected_ergebnisse.value = [];
 	}
 
 	async function remove_ergebnis() {
-		if (!selected_ergebnis.value)
+		if (!props.auswahlErgebnis)
 			return;
-		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
-		await props.listBlockungen.update_list(abiturjahr, props.halbjahr)
+		await props.removeErgebnis(props.auswahlErgebnis.id);
 	}
 
 	async function derive_blockung() {
-		if (!selected_ergebnis.value)
+		if (!props.auswahlErgebnis)
 			return;
-		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten?.abiturjahr ?? -1;
-		await props.listBlockungen.update_list(abiturjahr, props.halbjahr);
+		await props.ergebnisZuNeueBlockung(props.auswahlErgebnis.id);
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {

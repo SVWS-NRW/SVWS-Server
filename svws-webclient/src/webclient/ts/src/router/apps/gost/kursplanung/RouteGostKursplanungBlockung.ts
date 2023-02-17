@@ -12,11 +12,23 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataGostKursplanungBlockung {
-	ergebnis: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
+	ergebnisAuswahl: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
 	dataKursblockungsergebnis: DataGostKursblockungsergebnis = new DataGostKursblockungsergebnis();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
+
+	setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
+		if ((value?.id !== this.ergebnisAuswahl.value?.id) && (!RouteManager.isActive())) {
+			const idSchueler = routeGostKursplanungSchueler.data.schueler.value?.id;
+			if (idSchueler === undefined)
+				await RouteManager.doRoute(routeGostKursplanungBlockung.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr,
+					routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id));
+			else
+				await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr,
+					routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id, idSchueler));
+		}
+	}
 
 	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		return await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
@@ -34,14 +46,42 @@ export class RouteDataGostKursplanungBlockung {
 		return await this.dataKursblockungsergebnis.multiAssignSchuelerKurs(idSchueler);
 	}
 
+	removeErgebnisse = async (ergebnisse: GostBlockungsergebnisListeneintrag[]) => {
+		if (ergebnisse.length <= 0)
+			return;
+		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
+		if (abiturjahr === undefined)
+			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
+		for (const ergebnis of ergebnisse) {
+			await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
+		}
+		await routeGostKursplanungHalbjahr.data.listBlockungen.update_list(abiturjahr, routeGostKursplanung.data.halbjahr.value);
+	}
+
+	removeErgebnis = async (idErgebnis: number) => {
+		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
+		if (abiturjahr === undefined)
+			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
+		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, idErgebnis);
+		await routeGostKursplanungHalbjahr.data.listBlockungen.update_list(abiturjahr, routeGostKursplanung.data.halbjahr.value);
+	}
+
+	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
+		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
+		if (abiturjahr === undefined)
+			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
+		await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, idErgebnis);
+		await routeGostKursplanungHalbjahr.data.listBlockungen.update_list(abiturjahr, routeGostKursplanung.data.halbjahr.value);
+	}
+
 	ergebnisHochschreiben = async () => {
-		if (!this.ergebnis.value)
+		if (!this.ergebnisAuswahl.value)
 			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
 		const abiturjahr = routeGost.data.jahrgangsdaten.value?.abiturjahr;
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
 		const halbjahr = routeGostKursplanung.data.halbjahr.value.next()?.id || routeGostKursplanung.data.halbjahr.value.id;
-		const result = await routeLogin.data.api.schreibeGostBlockungsErgebnisHoch(routeLogin.data.schema, this.ergebnis.value.id);
+		const result = await routeLogin.data.api.schreibeGostBlockungsErgebnisHoch(routeLogin.data.schema, this.ergebnisAuswahl.value.id);
 		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr, result.id));
 	}
 
@@ -50,7 +90,7 @@ export class RouteDataGostKursplanungBlockung {
 			(routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt === undefined) ||
 			(routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager === undefined) ||
 			(routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager === undefined) ||
-			(this.ergebnis.value === undefined))
+			(this.ergebnisAuswahl.value === undefined))
 			return false;
 		const res = await this.dataKursblockungsergebnis.activate_blockungsergebnis();
 		if (!res)
@@ -59,7 +99,7 @@ export class RouteDataGostKursplanungBlockung {
 		routeGostKursplanungHalbjahr.data.listBlockungen.ausgewaehlt.istAktiv = true;
 		routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager.daten().istAktiv = true;
 		routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager.getErgebnis().istVorlage = true;
-		this.ergebnis.value.istVorlage = true;
+		this.ergebnisAuswahl.value.istVorlage = true;
 		return true;
 	}
 
@@ -139,9 +179,9 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 				const ergebnis = routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnisse().get(0);
 				return this.getRoute(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
-			if (this.data.ergebnis.value !== undefined) {
+			if (this.data.ergebnisAuswahl.value !== undefined) {
 				await this.data.dataKursblockungsergebnis.unselect();
-				this.data.ergebnis.value = undefined;
+				this.data.ergebnisAuswahl.value = undefined;
 			}
 			return;
 		}
@@ -150,9 +190,9 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		if (ergebnisEintrag === undefined)
 			throw new Error("Programmierfehler: Ein Eintrag für die Ergebnis-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
 		// ... wurde die ID des Ergebnisses verändert, so lade das neue Ergebnis aus der Datenbank
-		if (this.data.ergebnis.value?.id !== idBlockung) {
+		if (this.data.ergebnisAuswahl.value?.id !== idBlockung) {
 			// Setze den neu ausgewählten Ergebnis-Eintrag
-			this.data.ergebnis.value = ergebnisEintrag;
+			this.data.ergebnisAuswahl.value = ergebnisEintrag;
 			// Lade die neuen Ergebnisdaten
 			await this.data.dataKursblockungsergebnis.select(ergebnisEintrag);
 			const ergebnis = this.data.dataKursblockungsergebnis.daten;
@@ -165,7 +205,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		this.data.ergebnis.value = undefined;
+		this.data.ergebnisAuswahl.value = undefined;
 		await this.data.dataKursblockungsergebnis.unselect();
 	}
 
@@ -180,9 +220,13 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			getDatenmanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
+			removeErgebnis: this.data.removeErgebnis,
+			removeErgebnisse: this.data.removeErgebnisse,
+			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,
+			setAuswahlErgebnis: this.data.setAuswahlErgebnis,
+			auswahlErgebnis: this.data.ergebnisAuswahl.value,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
 			halbjahr: routeGostKursplanung.data.halbjahr.value,
-			listBlockungen: routeGostKursplanungHalbjahr.data.listBlockungen,
 			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
 			pending: routeGostKursplanungHalbjahr.data.dataKursblockung.pending,
 		}
@@ -213,23 +257,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			fachwahlen: this.data.fachwahlen,
 			mapSchueler: routeGostKursplanungSchueler.data.mapSchueler.value
 		}
-	}
-
-	public getSelector() : WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> {
-		const router = useRouter();
-		return computed({
-			get: () => this.data.ergebnis.value,
-			set: (value) => {
-				if ((value?.id !== this.data.ergebnis.value?.id) && (!RouteManager.isActive())) {
-					const idSchueler = routeGostKursplanungSchueler.data.schueler.value?.id;
-					if (idSchueler === undefined)
-						void router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id));
-					else
-						void router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
-							value?.blockungID, value?.id, idSchueler));
-				}
-			}
-		});
 	}
 
 }
