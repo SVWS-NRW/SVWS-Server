@@ -25,8 +25,8 @@
 		"@headlessui/vue": "^1.7.7",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
-		"@@npm_organization@/svws-core-ts": "^@version@",
-		"@@npm_organization@/svws-ui": "^@version@"
+		"@@npm_organization@/svws-core-ts": "*",
+		"@@npm_organization@/svws-ui": "*"
 	},
 	"devDependencies": {
 		"@vueuse/core": "^9.9.0"
