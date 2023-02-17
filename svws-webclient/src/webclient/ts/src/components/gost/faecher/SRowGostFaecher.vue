@@ -1,14 +1,14 @@
 <template>
-	<td class="border border-[#7f7f7f]/20 px-2 text-left" :style="{ 'background-color': bgColor }">
+	<td class="px-2 text-left" :style="{ 'background-color': bgColor }">
 		{{ fach.kuerzelAnzeige }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
+	<td class="text-left" :style="{ 'background-color': bgColor }">
 		{{ fach.bezeichnung }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-center" :style="{ 'background-color': bgColor }">
+	<td class="text-center" :style="{ 'background-color': bgColor }">
 		{{ fach.istFremdSpracheNeuEinsetzend ? "&#x2713;" : "&#x2717;" }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-center" :class="{ 'cursor-pointer': istProjektkurs }" :style="{ 'background-color': bgColor }"
+	<td class="text-center" :class="{ 'cursor-pointer': istProjektkurs }" :style="{ 'background-color': bgColor }"
 		@click="set_pjk_stunden">
 		<template v-if="istProjektkurs">
 			<span class="px-1" :class="{ 'bg-green-400': fach.wochenstundenQualifikationsphase === 2, 'bg-slate-50': fach.wochenstundenQualifikationsphase === 3}">2</span>
@@ -16,49 +16,50 @@
 		</template>
 		<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
+	<td class="text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
 			<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }">
+	<td class="text-left" :style="{ 'background-color': bgColor }">
 		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
 			<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
 	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': ef_moeglich } ]"
+
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer': ef_moeglich } ]"
 		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef1_set">
 		{{ ef_moeglich ? toggle(fach.istMoeglichEF1) : "" }}
 	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': ef_moeglich } ]"
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer': ef_moeglich } ]"
 		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef2_set">
 		{{ ef_moeglich ? toggle(fach.istMoeglichEF2) : "" }}
 	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
 		:style="{ 'background-color': bgColor }" @click="q11_set">
 		{{ toggle(fach.istMoeglichQ11) }}
 	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
 		:style="{ 'background-color': bgColor }" @click="q12_set">
 		{{ toggle(fach.istMoeglichQ12) }}
 	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
 		:style="{ 'background-color': bgColor }" @click="q21_set">
 		{{ toggle(fach.istMoeglichQ21) }}
 	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer border border-[#7f7f7f]/20' ]"
+	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
 		:style="{ 'background-color': bgColor }" @click="q22_set">
 		{{ toggle(fach.istMoeglichQ22) }}
 	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': abi_gk_moeglich } ]"
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer': abi_gk_moeglich } ]"
 		:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'gray' }" @click="abi_gk_set">
 		{{ abi_gk_moeglich ? toggle(fach.istMoeglichAbiGK) : "" }}
 	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer border border-[#7f7f7f]/20': abi_lk_moeglich } ]"
+	<td :class="[ 'w-12 text-center', { 'cursor-pointer': abi_lk_moeglich } ]"
 		:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'gray' }" @click="abi_lk_set">
 		{{ abi_lk_moeglich ? toggle(fach.istMoeglichAbiLK) : "" }}
 	</td>

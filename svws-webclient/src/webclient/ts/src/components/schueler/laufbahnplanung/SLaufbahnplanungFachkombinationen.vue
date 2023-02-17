@@ -1,24 +1,18 @@
 <template>
-	<template v-if="(mapFachkombinationen.size)">
-		<table class="border-collapse text-sm">
-			<thead class="bg-slate-100">
-				<tr>
-					<td class="px-2"> Informationen zu Fachkombinationsregeln </td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left">
-					<td class="px-2">
-						<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1" /> {{ regel.hinweistext }}
-					</td>
-				</tr>
-				<tr v-for="regel in fachkombi_verboten()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left">
-					<td class="px-2">
-						<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1" /> {{ regel.hinweistext }}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<template v-if="mapFachkombinationen.size">
+		<h4 class="flex font-bold mt-5"> Informationen zu Fachkombinationsregeln </h4>
+		<ul class="mt-1 flex flex-col gap-1.5">
+			<li v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="flex gap-1 leading-tight">
+				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))"/>
+				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error"/>
+				<span :class="{'': regel_umgesetzt(regel)}">{{ regel.hinweistext }}</span>
+			</li>
+			<li v-for="regel in fachkombi_verboten()" :key="regel.id" class="flex gap-1 leading-tight">
+				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))"/>
+				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error"/>
+				<span :class="{'': regel_umgesetzt(regel)}">{{ regel.hinweistext }}</span>
+			</li>
+		</ul>
 	</template>
 </template>
 

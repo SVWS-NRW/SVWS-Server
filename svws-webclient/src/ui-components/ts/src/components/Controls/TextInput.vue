@@ -109,6 +109,7 @@
 			:required="required"
 			:readonly="readonly"
 			:aria-labelledby="labelId"
+			:placeholder="headless ? placeholder : ''"
 			@input="onInput">
 		<span v-if="placeholder && !headless"
 			:id="labelId"
@@ -182,8 +183,9 @@
 	}
 
 	.text-input--prefix {
-		padding: 0.2em 4.3em;
+		padding-left: 4.3em;
 	}
+
 	.text-input--rounded {
 		@apply rounded-full;
 	}
@@ -341,7 +343,24 @@
 	}
 
 	.text-input--headless {
-		@apply w-full whitespace-nowrap border-0 bg-transparent px-3 font-medium text-black outline-none;
+		@apply w-full whitespace-nowrap border-0 outline-none;
+
+		&:not([class*="bg-"]) {
+			background-color: unset;
+		}
+
+		&::placeholder {
+			@apply opacity-40;
+			color: inherit;
+		}
+
+		&:hover:not(:focus) {
+			@apply underline decoration-dashed underline-offset-2;
+
+			&::placeholder {
+				@apply opacity-60;
+			}
+		}
 	}
 </style>
 <style lang="postcss">

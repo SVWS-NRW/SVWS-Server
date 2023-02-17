@@ -1,10 +1,15 @@
+<script setup lang="ts">
+const {
+	row = false,
+} = defineProps<{
+	row?: boolean;
+}>();
+</script>
 <template>
-	<div class="radio">
+	<div class="radio" :class="{'radio--row': row}">
 		<slot />
 	</div>
 </template>
-<script setup lang="ts">
-</script>
 <style>
 	.radio {
 		@apply flex flex-col items-start gap-1;

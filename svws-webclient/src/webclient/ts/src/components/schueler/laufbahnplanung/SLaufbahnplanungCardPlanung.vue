@@ -1,126 +1,191 @@
 <template>
-	<svws-ui-content-card title="Laufbahnplanung">
-		<s-modal-hilfe> <hilfe-laufbahnplanung /> </s-modal-hilfe>
-		<div class="flex-none sm:-mx-6 lg:-mx-8">
-			<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
-				<div class="overflow-hidden rounded-lg shadow">
-					<table class="border-collapse text-sm">
-						<thead :class="{'bg-slate-100': !istManuellerModus, 'bg-red-400': istManuellerModus}">
-							<tr>
-								<td class="border border-[#7f7f7f]/20 text-center" colspan="3"> Fach </td>
-								<td class="border border-[#7f7f7f]/20 text-center" colspan="2"> Sprachen </td>
-								<td class="border border-[#7f7f7f]/20 text-center" colspan="2"> EF </td>
-								<td class="border border-[#7f7f7f]/20 text-center" colspan="4"> Qualifikationsphase </td>
-								<td class="border border-[#7f7f7f]/20 px-2 text-center" rowspan="2"> Abitur<br>-fach </td>
-							</tr>
-							<tr>
-								<td class="border border-[#7f7f7f]/20 px-2 text-center"> Kürzel </td>
-								<td class="border border-[#7f7f7f]/20 text-center"> Bezeichnung </td>
-								<td class="border border-[#7f7f7f]/20 text-center">WStd.</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Folge</td>
-								<td class="border border-[#7f7f7f]/20 text-center">ab Jg</td>
-								<td class="border border-[#7f7f7f]/20 text-center">EF.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">EF.2</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q1.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q1.2</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q2.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q2.2</td>
-							</tr>
-						</thead>
-						<tr v-for="row in rows" :key="row.id" class="select-none">
-							<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-								:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
-						</tr>
-						<thead class="bg-slate-100">
-							<tr>
-								<td class="border border-[#7f7f7f]/20 text-center" colspan="5" />
-								<td class="border border-[#7f7f7f]/20 text-center">EF.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">EF.2</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q1.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q1.2</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q2.1</td>
-								<td class="border border-[#7f7f7f]/20 text-center">Q2.2</td>
-								<td class="border border-[#7f7f7f]/20 text-center" />
-							</tr>
-						</thead>
-						<tr>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5"> Anzahl Kurse </td>
-							<td v-for="(jahrgang, i) in kurszahlen" :key="i"
-								class="border border-[#7f7f7f]/20 text-center"
-								:class="{
+	<svws-ui-content-card class="pt-8">
+		<div class="router-tab-bar--subnav">
+			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
+			<svws-ui-button size="small" type="transparent" title="Planung exportieren">Exportieren <i-ri-download-2-line/></svws-ui-button>
+			<svws-ui-button size="small" type="transparent" title="Planung importieren">Importieren <i-ri-upload-2-line/></svws-ui-button>
+			<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
+				Manueller Modus
+				<template v-if="istManuellerModus">
+					<i-ri-lock-unlock-line />
+				</template>
+			</svws-ui-button>
+			<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
+			<s-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </s-modal-hilfe>
+		</div>
+		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10"/>
+		<div class="v-table--container">
+			<table class="v-table--complex table-auto w-full">
+				<thead :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
+					<tr>
+						<th class="text-center" colspan="3"> Fach </th>
+						<th class="text-center" colspan="2"> Sprachen </th>
+						<th class="text-center" colspan="2"> EF </th>
+						<th class="text-center" colspan="4"> Qualifikationsphase </th>
+						<th class="text-center" rowspan="2"> Abitur-<br/>fach </th>
+					</tr>
+					<tr>
+						<th class="text-center"> Kürzel </th>
+						<th class="text-center"> Bezeichnung </th>
+						<th class="text-center" title="Wochenstunden">WStd.</th>
+						<th class="text-center">Folge</th>
+						<th class="text-center">ab Jg</th>
+						<th class="text-center">EF.1</th>
+						<th class="text-center">EF.2</th>
+						<th class="text-center">Q1.1</th>
+						<th class="text-center">Q1.2</th>
+						<th class="text-center">Q2.1</th>
+						<th class="text-center">Q2.2</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="row in rows" :key="row.id">
+						<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
+												:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th class="text-center" colspan="5" />
+						<th class="text-center">EF.1</th>
+						<th class="text-center">EF.2</th>
+						<th class="text-center">Q1.1</th>
+						<th class="text-center">Q1.2</th>
+						<th class="text-center">Q2.1</th>
+						<th class="text-center">Q2.2</th>
+						<th class="text-center" />
+					</tr>
+					<tr>
+						<th class="text-right" colspan="5"> Anzahl Kurse </th>
+						<td v-for="(jahrgang, i) in kurszahlen" :key="i"
+							class="text-center cell--padding-sm"
+							:class="{
 									'bg-yellow-400': jahrgang < 10,
 									'bg-green-300': jahrgang > 9,
-									'bg-green-700': jahrgang > 11
+									'bg-green-600': jahrgang > 11
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-yellow-400': jahrgang < 10,
+									'bg-green-300': jahrgang > 9 && jahrgang < 12,
+									'bg-green-600': jahrgang > 11
+								}"
+							>
 								{{ jahrgang }}
-							</td>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-								:class="{
+							</span>
+							<!--
+							<i-ri-checkbox-circle-fill class="text-green-700" v-if="jahrgang > 11" />
+							<i-ri-checkbox-circle-line class="text-green-300" v-else-if="jahrgang > 9" />
+							<i-ri-error-warning-line class="text-yellow-400" v-else-if="jahrgang < 10" />
+							-->
+						</td>
+						<td class="text-center cell--padding-sm"
+							:class="{
 									'bg-red-400': kurse_summe < 30,
 									'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
 									'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
-									'bg-green-700': kurse_summe > 36
+									'bg-green-600': kurse_summe > 36
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-red-400': kurse_summe < 30,
+									'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
+									'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
+									'bg-green-600': kurse_summe > 36
+								}"
+							>
 								{{ kurse_summe }}
-							</td>
-						</tr>
-						<tr>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5"> Wochenstunden </td>
-							<td v-for="(jahrgang, i) in wochenstunden" :key="i"
-								class="border border-[#7f7f7f]/20 text-center"
-								:class="{
+							</span>
+							<!--
+							<i-ri-checkbox-circle-fill class="text-green-700" v-if="kurse_summe > 36" />
+							<i-ri-checkbox-circle-line class="text-green-300" v-else-if="kurse_summe > 32 && kurse_summe < 37" />
+							<i-ri-error-warning-line class="text-yellow-400" v-else-if="kurse_summe >= 31 && kurse_summe <= 32" />
+							<i-ri-error-warning-fill class="text-red-400" v-else-if="kurse_summe < 30" />
+							-->
+						</td>
+					</tr>
+					<tr>
+						<th class="text-right" colspan="5"> Wochenstunden </th>
+						<td v-for="(jahrgang, i) in wochenstunden" :key="i"
+							class="text-center cell--padding-sm"
+							:class="{
 									'bg-red-400': jahrgang < 30,
 									'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
 									'bg-green-300': jahrgang > 32 && jahrgang < 37,
-									'bg-green-700': jahrgang > 36
+									'bg-green-600': jahrgang > 36
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-red-400': jahrgang < 30,
+									'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
+									'bg-green-300': jahrgang > 32 && jahrgang < 37,
+									'bg-green-600': jahrgang > 36
+								}"
+							>
 								{{ jahrgang }}
-							</td>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-								:class="{
+							</span>
+						</td>
+						<td class="text-center cell--padding-sm"
+							:class="{
 									'bg-red-400': wst_summe < 100,
 									'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
 									'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
-									'bg-green-700': wst_summe > 108
+									'bg-green-600': wst_summe > 108
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-red-400': wst_summe < 100,
+									'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
+									'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
+									'bg-green-600': wst_summe > 108
+								}"
+							>
 								{{ wst_summe }}
-							</td>
-						</tr>
-						<tr>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5"> Durchschnitt </td>
-							<td colspan="2"
-								class="border border-[#7f7f7f]/20 text-center"
-								:class="{
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<th class="text-right" colspan="5"> Durchschnitt </th>
+						<td colspan="2"
+							class="text-center cell--padding-sm"
+							:class="{
 									'bg-red-400': wst_d_ef < 34,
 									'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
-									'bg-green-700': wst_d_ef >= 37
+									'bg-green-600': wst_d_ef >= 37
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-red-400': wst_d_ef < 34,
+									'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
+									'bg-green-600': wst_d_ef >= 37
+								}"
+							>
 								{{ wst_d_ef }}
-							</td>
-							<td colspan="4"
-								class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-								:class="{
+							</span>
+						</td>
+						<td colspan="4"
+							class="text-center cell--padding-sm"
+							:class="{
 									'bg-red-400': wst_d_q < 34,
 									'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
-									'bg-green-700': wst_d_q >= 37
+									'bg-green-600': wst_d_q >= 37
 								}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								  :class="{
+									'bg-red-400': wst_d_q < 34,
+									'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
+									'bg-green-600': wst_d_q >= 37
+								}"
+							>
 								{{ wst_d_q }}
-							</td>
-							<td class="border border-[#7f7f7f]/20 bg-slate-100" />
-						</tr>
-					</table>
-				</div>
-				<div class="flex justify-between gap-1">
-					<svws-ui-button @click.prevent="download_file">Wahlbogen herunterladen</svws-ui-button>
-					<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
-					<svws-ui-button :type="istManuellerModus ? 'error' : 'primary'" @click="switchManuellerModus">Manuellen Modus {{ istManuellerModus ? "de" : "" }}aktivieren</svws-ui-button>
-				</div>
-				<div class="flex justify-evenly mt-4">
-					<svws-ui-button>Plaung exportieren</svws-ui-button>
-					<svws-ui-button>Planung importieren</svws-ui-button>
-				</div>
-			</div>
+							</span>
+						</td>
+						<td class="" />
+					</tr>
+				</tfoot>
+			</table>
 		</div>
+		<div class="sticky h-8 -mb-8 -bottom-8 bg-white z-10"/>
 	</svws-ui-content-card>
 </template>
 

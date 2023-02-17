@@ -32,6 +32,7 @@
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
 		'button--trash': type === 'trash',
+		'button--small': size === 'small',
 		'button--big': size === 'big',
 		'button--dropdown-action': dropdownAction === true,
 	}" :disabled="disabled" @click="onClick">
@@ -186,13 +187,12 @@
 }
 
 .hover--danger:hover {
-	@apply text-error;
+	@apply text-error bg-error/10;
 }
 
 .button--small {
-	@apply rounded;
-	font-size: .833rem;
-	padding: 0.2em 0.6em;
+	@apply text-sm font-medium;
+	padding: 0.3em 0.75em;
 }
 
 .button--big {

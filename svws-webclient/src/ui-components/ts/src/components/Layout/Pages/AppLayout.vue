@@ -66,7 +66,8 @@
 	}
 
 	.app-layout--secondary {
-		@apply w-1/5 flex-shrink-0;
+		@apply flex-shrink-0;
+		width: 18%;
 		min-width: 22rem;
 		max-width: 32rem;
 	}

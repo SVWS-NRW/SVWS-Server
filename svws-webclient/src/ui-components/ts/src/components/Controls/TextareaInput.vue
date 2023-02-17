@@ -11,7 +11,7 @@
 		resizeable = "both",
 		autoresize = false,
 		cols = 80,
-		rows = 6
+		rows = 3
 	} = defineProps<{
 		modelValue?: string | null;
 		placeholder?: string;
@@ -131,7 +131,14 @@
 				'textarea-input--placeholder--required': required
 			}">
 			{{ placeholder }}
-			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
+			<Popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
+			<template #trigger>
+				<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
+			</template>
+			<template #content>
+				Relevant für die Statistik
+			</template>
+			</Popover>
 		</span>
 	</label>
 </template>
@@ -149,6 +156,12 @@
 		@apply text-base;
 		@apply cursor-text;
 		padding: 0.5em 0.7em;
+		min-height: theme("spacing.9");
+	}
+
+	span.textarea-input--control {
+		padding-top: 0.4em;
+		padding-bottom: 0.4em;
 	}
 
 	.textarea-input-focus .textarea-input--control,
@@ -161,7 +174,7 @@
 		@apply cursor-not-allowed;
 	}
 
-	.textarea-input-invalid .textarea-input--control {
+	.textarea-input-invalid:not(:focus-within) .textarea-input--control {
 		@apply border-error;
 	}
 
@@ -184,13 +197,17 @@
 	.textarea-input--placeholder {
 		@apply absolute;
 		@apply pointer-events-none;
-		@apply opacity-50;
+		@apply opacity-40;
 		@apply transform;
 		@apply flex items-center;
 
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
+	}
+
+	.textarea-input-component:not(.textarea-input-filled):not(:focus-within):not(.textarea-input-disabled):hover .textarea-input--placeholder {
+		@apply opacity-60;
 	}
 
 	.textarea-input--statistics .textarea-input--control {
@@ -226,12 +243,23 @@
 		}
 	}
 
-	.textarea-input-invalid .textarea-input--placeholder {
+	.textarea-input-invalid:not(:focus-within) .textarea-input--placeholder,
+	.textarea-input-invalid:not(:focus-within) .textarea-input--control {
 		@apply text-error;
 	}
 
 	.textarea-input-disabled {
-		@apply opacity-50;
+		@apply cursor-not-allowed;
+
+		.textarea-input--placeholder {
+			@apply text-black/25;
+		}
+
+		.textarea-input--control {
+			@apply bg-black bg-opacity-10 border-black border-opacity-50 text-black;
+			@apply opacity-20;
+			@apply cursor-not-allowed;
+		}
 	}
 
 	.textarea-input--placeholder--required:after {

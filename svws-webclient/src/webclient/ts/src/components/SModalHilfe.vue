@@ -1,15 +1,17 @@
 <template>
 	<div>
-		<svws-ui-badge class="cursor-pointer print:hidden" size="tiny" type="primary" @click="modal.openModal()"> Hilfe </svws-ui-badge>
-		<svws-ui-modal ref="modal">
-			<template #modalTitle>Hilfe</template>
-			<template #modalDescription>
-				<slot> Komponente für den Hilfe-Text fehlt... </slot>
+		<svws-ui-button type="transparent" size="small" @click="modal.openModal()" class="print:hidden">
+			<span>Hilfe</span>
+			<i-ri-question-line />
+		</svws-ui-button>
+		<svws-ui-modal ref="modal" size="help">
+			<template #modalTitle>
+				<div class="inline-flex items-center gap-1">
+					Hilfe <i-ri-question-line />
+				</div>
 			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="modal.closeModal">
-					Schließen
-				</svws-ui-button>
+			<template #modalDescription>
+				<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
 			</template>
 		</svws-ui-modal>
 	</div>

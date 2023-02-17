@@ -27,7 +27,7 @@
 <style lang="postcss">
 .badge {
 	@apply font-bold leading-none;
-	@apply rounded-full inline-flex items-center align-top;
+	@apply rounded-full inline-flex items-center align-text-top;
 	font-size: 0.65em;
 	padding: 0.35em 0.5em;
 	gap: 0.25em;

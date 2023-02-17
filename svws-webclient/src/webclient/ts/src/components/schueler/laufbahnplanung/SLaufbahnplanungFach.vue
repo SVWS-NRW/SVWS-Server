@@ -1,17 +1,19 @@
 <template>
-	<td class="border border-[#7f7f7f]/20 px-2 text-left select-text" :style="{ 'background-color': bgColor }">
+	<td class="text-left select-text" :style="{ 'background-color': bgColor }">
 		{{ fach.kuerzelAnzeige }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-left select-text" :style="{ 'background-color': bgColor }">
+	<td class="text-left select-all" :style="{ 'background-color': bgColor }">
 		{{ fach.bezeichnung }}
 	</td>
-	<td class="border border-[#7f7f7f]/20 text-center" :style="{ 'background-color': bgColor }">
+	<td class="text-center" :style="{ 'background-color': bgColor }">
 		{{ fach.wochenstundenQualifikationsphase }}
 	</td>
-	<td :class="[ 'text-center', { 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' } ]" :style="{ 'background-color': bgColorIfLanguage }">
-		{{ bgColorIfLanguage === "gray" ? "" : sprachenfolgeNr || "" }}
+	<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
+		<template v-if="isLanguage">
+			{{ sprachenfolgeNr }}
+		</template>
 	</td>
-	<td :class="[ 'text-center', { 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' } ]" :style="{ 'background-color': bgColorIfLanguage }">
+	<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
 		{{ sprachenfolgeJahrgang }}
 	</td>
 	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
@@ -45,8 +47,10 @@
 
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	const bgColorTransparent: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.5));
 
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache ? bgColor.value : "gray");
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache ? bgColor.value : bgColor.value); //"gray" or 'rgb(var(--color-light))' or 'bgColorTransparent'
+	const isLanguage: ComputedRef<boolean> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
 
 	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager.getFachbelegungByID(props.fach.id));
 

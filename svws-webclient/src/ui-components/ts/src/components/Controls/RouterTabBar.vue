@@ -109,14 +109,15 @@
 
 <style lang="postcss">
     .router-tab-bar--area {
-        @apply flex flex-col items-start;
+        @apply flex flex-col items-start overflow-hidden;
     }
 
     .router-tab-bar--panel {
         @apply h-full;
         @apply flex-grow overflow-auto flex-auto w-full;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
-		@apply py-4 lg:py-6 3xl:py-8;
+		@apply py-8;
+		@apply relative;
 		-webkit-overflow-scrolling: touch;
     }
 
@@ -186,5 +187,18 @@
     .router-tab-bar--scroll-button:focus {
 		@apply outline-none ring ring-primary ring-opacity-50 ring-inset;
     }
+
+	.router-tab-bar--subnav {
+		@apply absolute inset-0 z-20;
+		@apply flex items-center gap-2;
+		@apply bg-light bg-opacity-50;
+		@apply border-b-2 border-light;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
+		@apply h-9 text-sm;
+
+		.button {
+			padding: .5rem .75rem;
+		}
+	}
 
 </style>

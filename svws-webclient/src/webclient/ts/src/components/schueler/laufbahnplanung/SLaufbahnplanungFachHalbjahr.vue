@@ -1,8 +1,32 @@
 <template>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer border': moeglich && !bewertet, 'border-[#7f7f7f]/20': moeglich, 'opacity-80': bewertet,
-		'cursor-not-allowed': cursorNotAllowed } ]" :style=" { 'background-color': bgColor }" @click.stop="stepper">
+	<td
+		:class="[
+			'min-w-[3rem] text-center',
+			{
+				'cursor-pointer': moeglich && !bewertet,
+				'': moeglich,
+				'text-sm text-black/50': bewertet,
+				'cursor-not-allowed': cursorNotAllowed,
+				'bg--stripes': cursorNotAllowed || bewertet,
+			}
+		]"
+		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
+		@click.stop="stepper"
+		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''"
+	>
 		<template v-if="halbjahr !== undefined">
-			<span :class="{'rounded-full px-2 bg-red-400': istFachkombiErforderlich}"> {{ wahl }} </span>
+			<svws-ui-popover class="popper--danger" v-if="istFachkombiErforderlich" placement="bottom">
+				<template #trigger>
+					<div class="inline-flex items-center">
+						<span>{{ wahl }}</span>
+						<i-ri-error-warning-line class="text-error ml-0.5" />
+					</div>
+				</template>
+				<template #content>
+					Fachkombination erforderlich
+				</template>
+			</svws-ui-popover>
+			<span v-else>{{ wahl }}</span>
 		</template>
 		<template v-else>
 			{{ wahl }}
@@ -80,9 +104,11 @@
 
 	const bgColor: ComputedRef<string> = computed(() =>
 		((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
-			? 'gray'
+			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()
 	);
+	const bgColorTransparent: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.5));
+	//const bgColorTransparent: ComputedRef<string> = computed(() => 'rgb(var(--color-light))');
 
 
 	function ist_VTF(): boolean {

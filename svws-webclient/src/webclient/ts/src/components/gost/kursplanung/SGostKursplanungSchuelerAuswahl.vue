@@ -29,7 +29,7 @@
 				<i-ri-search-line />
 			</svws-ui-text-input>
 		</div>
-		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10" />
+		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10"/>
 		<div class="v-table--container v-table--rows-white">
 			<table class="v-table--complex">
 				<thead>

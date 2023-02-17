@@ -1,15 +1,15 @@
 <template>
-	<svws-ui-content-card title="Belegprüfungsergebnisse">
-		<div class="print:hidden">
+	<svws-ui-content-card title="Belegprüfungsergebnisse" class="sticky -top-8 pt-8">
+		<template #actions>
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
+		</template>
+		<div class="print:hidden -mt-4">
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
-			<div class="am:px-6 py-2 lg:px-8">
+			<div class="mt-16 flex flex-col gap-2">
 				<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
-			</div>
-			<div class="am:px-6 py-2 lg:px-8">
-				<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical" :autoresize="true" />
 			</div>
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
 		</div>

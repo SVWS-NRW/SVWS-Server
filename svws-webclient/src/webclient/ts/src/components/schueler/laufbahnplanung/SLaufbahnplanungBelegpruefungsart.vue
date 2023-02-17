@@ -1,9 +1,8 @@
 <template>
-	<div class="flex flex-row m-2">
-		<div class="mr-2"> Art: </div>
-		<div class="mr-2"> <svws-ui-radio-option v-model="art" :value="GostBelegpruefungsArt.EF1.kuerzel" name="ef1" label="EF.1" /> </div>
-		<div class="mr-2"> <svws-ui-radio-option v-model="art" :value="GostBelegpruefungsArt.GESAMT.kuerzel" name="gesamt" label="Gesamt" /> </div>
-	</div>
+	<svws-ui-radio-group class="radio--row">
+		<svws-ui-radio-option v-model="art" :value="GostBelegpruefungsArt.EF1.kuerzel" name="ef1" label="EF.1" />
+		<svws-ui-radio-option v-model="art" :value="GostBelegpruefungsArt.GESAMT.kuerzel" name="gesamt" label="Gesamt" />
+	</svws-ui-radio-group>
 </template>
 
 

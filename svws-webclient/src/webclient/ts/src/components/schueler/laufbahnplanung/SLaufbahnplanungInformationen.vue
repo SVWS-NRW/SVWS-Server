@@ -1,19 +1,13 @@
 <template>
-	<table class="border-collapse text-sm">
-		<thead class="bg-slate-100">
-			<tr>
-				<td class="px-2"> Informationen zur Laufbahn </td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="fehler in belegungsHinweise" :key="fehler.code" class="border border-[#7f7f7f]/20 text-left">
-				<td class="px-2"> {{ fehler.beschreibung }} </td>
-			</tr>
-			<tr v-if="!belegungsHinweise.size()">
-				<td class="px-2">Keine</td>
-			</tr>
-		</tbody>
-	</table>
+	<template v-if="belegungsHinweise.size()">
+		<h4 class="flex font-bold mt-5">Informationen zur Laufbahn</h4>
+		<ul v-if="belegungsHinweise.size()" class="mt-1 flex flex-col gap-1.5">
+			<li v-for="fehler in belegungsHinweise" :key="fehler.code" class="flex gap-1 leading-tight">
+				<i-ri-information-line class="flex-shrink-0 text-primary"/>
+				{{ fehler.beschreibung }}
+			</li>
+		</ul>
+	</template>
 </template>
 
 <script setup lang="ts">

@@ -121,17 +121,15 @@
 		@apply flex flex-col flex-shrink items-start;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply rounded-md;
-		@apply mr-4;
+		@apply mr-8;
     }
 
     .router-vertical-tab-bar--content {
-		@apply bg-light;
+		@apply bg-light rounded-lg p-1;
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
 		@apply relative;
-		@apply space-y-1 p-1;
-		border-radius: 1.25rem;
+		@apply gap-1;
 
 		-ms-overflow-style: none;
 		/* Remove Scrollbar in IE and Edge */
@@ -140,6 +138,15 @@
 
 		.router-tab-bar-button {
 			@apply w-full;
+		}
+
+		.router-tab-bar-button--active {
+			@apply overflow-hidden bg-white;
+
+			&:after {
+				@apply hidden;
+				@apply bottom-0 border-b-0 border-r-2 h-full pointer-events-none;
+			}
 		}
     }
 

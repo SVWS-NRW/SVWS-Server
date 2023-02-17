@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
-		<div class="sticky h-4 lg:h-6 3xl:h-8 -mt-4 lg:-mt-6 3xl:-mt-8 -top-4 lg:-top-6 3xl:-top-8 bg-white z-10" />
+		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10"/>
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline">{{ blockungsname }}</h3>
 			<div class="flex items-center gap-2">
