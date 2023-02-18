@@ -1,4 +1,4 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
@@ -13,6 +13,9 @@ interface RouteStateGostKursplanung {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	faecherManager: GostFaecherManager;
+	mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
+	// ... die mit dem Abiturjahrgang aktualisiert/mitgeladen werden
+	mapLehrer: Map<number, LehrerListeEintrag>;
 	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
 	mapBlockungen: Map<number, GostBlockungListeneintrag>;
@@ -35,6 +38,8 @@ export class RouteDataGostKursplanung {
 		jahrgangsdaten: undefined,
 		mapSchueler: new Map(),
 		faecherManager: new GostFaecherManager(),
+		mapFachwahlStatistik: new Map(),
+		mapLehrer: new Map(),
 		halbjahr: GostHalbjahr.EF1,
 		mapBlockungen: new Map(),
 		auswahlBlockung: undefined,
@@ -84,12 +89,24 @@ export class RouteDataGostKursplanung {
 		for (const s of listSchueler)
 			mapSchueler.set(s.id, s);
 		this.apiStatus.stop();
+		// Lade die Fachwahlstatistik des Abiturjahrgangs
+		const listFachwahlStatistik = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, abiturjahr);
+		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
+		for (const fw of listFachwahlStatistik)
+			mapFachwahlStatistik.set(fw.id, fw);
+		// Lade die Lehrerliste
+		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
 		// Setze den State neu
 		this._state.value = {
 			abiturjahr: abiturjahr,
 			jahrgangsdaten: jahrgangsdaten,
 			mapSchueler: mapSchueler,
 			faecherManager: faecherManager,
+			mapFachwahlStatistik: mapFachwahlStatistik,
+			mapLehrer: mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 			mapBlockungen: new Map(),
 			auswahlBlockung: undefined,
@@ -112,6 +129,14 @@ export class RouteDataGostKursplanung {
 
 	public get faecherManager() : GostFaecherManager {
 		return this._state.value.faecherManager;
+	}
+
+	public get mapFachwahlStatistik() : Map<number, GostStatistikFachwahl> {
+		return this._state.value.mapFachwahlStatistik;
+	}
+
+	public get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
 	}
 
 
@@ -147,6 +172,8 @@ export class RouteDataGostKursplanung {
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
 			mapSchueler: this._state.value.mapSchueler,
 			faecherManager: this._state.value.faecherManager,
+			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
+			mapLehrer: this._state.value.mapLehrer,
 			halbjahr: halbjahr,
 			mapBlockungen: mapBlockungen,
 			auswahlBlockung: auswahlBlockung,
@@ -183,6 +210,8 @@ export class RouteDataGostKursplanung {
 				jahrgangsdaten: this._state.value.jahrgangsdaten,
 				mapSchueler: this._state.value.mapSchueler,
 				faecherManager: this._state.value.faecherManager,
+				mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
+				mapLehrer: this._state.value.mapLehrer,
 				halbjahr: this._state.value.halbjahr,
 				mapBlockungen: this._state.value.mapBlockungen,
 				auswahlBlockung: undefined,
@@ -203,6 +232,8 @@ export class RouteDataGostKursplanung {
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
 			mapSchueler: this._state.value.mapSchueler,
 			faecherManager: this._state.value.faecherManager,
+			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
+			mapLehrer: this._state.value.mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 			mapBlockungen: this._state.value.mapBlockungen,
 			auswahlBlockung: value,
@@ -246,6 +277,8 @@ export class RouteDataGostKursplanung {
 				jahrgangsdaten: this._state.value.jahrgangsdaten,
 				mapSchueler: this._state.value.mapSchueler,
 				faecherManager: this._state.value.faecherManager,
+				mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
+				mapLehrer: this._state.value.mapLehrer,
 				halbjahr: this._state.value.halbjahr,
 				mapBlockungen: this._state.value.mapBlockungen,
 				auswahlBlockung: this._state.value.auswahlBlockung,
@@ -267,6 +300,8 @@ export class RouteDataGostKursplanung {
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
 			mapSchueler: this._state.value.mapSchueler,
 			faecherManager: this._state.value.faecherManager,
+			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
+			mapLehrer: this._state.value.mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 			mapBlockungen: this._state.value.mapBlockungen,
 			auswahlBlockung: this._state.value.auswahlBlockung,

@@ -75,7 +75,7 @@
 				</thead>
 				<tbody>
 					<template v-if="sort_by==='fach_id'">
-						<template v-for="fach in fachwahlen" :key="fach.id">
+						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
@@ -88,7 +88,7 @@
 					</template>
 					<template v-else>
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-							<template v-for="fach in fachwahlen" :key="fach.id">
+							<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
@@ -157,7 +157,7 @@
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		fachwahlen: List<GostStatistikFachwahl>;
+		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	}>();
 
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()

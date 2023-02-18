@@ -2,7 +2,7 @@
 	<div class="content-card--blockungsuebersicht flex content-start">
 		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="faecherManager"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-			:fachwahlen="fachwahlen" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
+			:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 			:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
@@ -64,7 +64,7 @@
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		fachwahlen: List<GostStatistikFachwahl>;
+		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
 	}>();
 

@@ -1,26 +1,18 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteGostKursplanungHalbjahr, routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
-import { routeLogin } from "~/router/RouteLogin";
-
-export class RouteDataGostKursplanungBlockung {
-	listLehrer: ListLehrer = new ListLehrer();
-	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
-	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
-}
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungErgebnisAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungErgebnisAuswahl.vue");
 
-export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKursplanungBlockung, RouteGostKursplanungHalbjahr> {
+export class RouteGostKursplanungBlockung extends RouteNode<unknown, RouteGostKursplanungHalbjahr> {
 
 	public constructor() {
-		super("gost.kursplanung.halbjahr.ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanungBlockung());
+		super("gost.kursplanung.halbjahr.ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung);
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";
@@ -59,10 +51,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idBlockung === undefined))
 			throw new Error("Fehler: Abiturjahr, Halbjahr und ID der Blockung müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		await this.data.listLehrer.update_list();
-		this.data.mapLehrer.clear();
-		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-		this.data.fachwahlen = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, abiturjahr);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -149,8 +137,8 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
 			faecherManager: routeGost.data.faecherManager.value,
 			halbjahr: routeGostKursplanung.data.halbjahr,
-			mapLehrer: this.data.mapLehrer,
-			fachwahlen: this.data.fachwahlen,
+			mapLehrer: routeGostKursplanung.data.mapLehrer,
+			mapFachwahlStatistik: routeGostKursplanung.data.mapFachwahlStatistik,
 			mapSchueler: routeGostKursplanung.data.mapSchueler
 		}
 	}
