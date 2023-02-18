@@ -1,4 +1,6 @@
 <script setup lang='ts'>
+	import { WritableComputedRef } from 'vue';
+
 	const {
 		name = '',
 		label = '',
@@ -34,7 +36,7 @@
 		set(value: string) {
 			emit('update:modelValue', value);
 		}
-	})
+	}) as unknown as WritableComputedRef<any[]>
 </script>
 
 <template>
