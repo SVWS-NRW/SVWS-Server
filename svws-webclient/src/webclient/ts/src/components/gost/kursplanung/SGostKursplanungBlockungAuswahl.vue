@@ -14,8 +14,8 @@
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
-								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button>
-								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending" />
+								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
+								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
 							</div>
 						</td>
 						<td v-else>
@@ -25,7 +25,7 @@
 							</div>
 						</td>
 					</tr>
-					<auswahl-blockung-api-status :blockung="row" />
+					<auswahl-blockung-api-status :blockung="row" :api-status="apiStatus" />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -50,6 +50,7 @@
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
 	import { routeApp } from '~/router/RouteApp';
+	import { ApiStatus } from '~/utils/ApiStatus';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
@@ -59,7 +60,7 @@
 		mapBlockungen: Map<number, GostBlockungListeneintrag>;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
-		pending: boolean;
+		apiStatus: ApiStatus;
 	}>();
 
 	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {
@@ -79,7 +80,7 @@
 	}
 
 	async function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
-		if (!props.pending)
+		if (!props.apiStatus.pending)
 			await props.setAuswahlBlockung(blockung);
 	}
 
@@ -93,14 +94,13 @@
 	};
 
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
-		// TODO props.listBlockungen.addIdToApiStatus(hjId);
-		// TODO props.listBlockungen.setApiStatusIdle(hjId);
+		props.apiStatus.start();
 		try {
 			const res = await routeLogin.data.api.rechneGostBlockung(routeLogin.data.schema, id, 5000)
-			// TODO props.listBlockungen.removeApiStatusId(hjId)
-			return res
+			props.apiStatus.stop();
+			return res;
 		} catch (e) {
-			// TODO props.listBlockungen.setApiStatusError(hjId);
+			props.apiStatus.stop(e instanceof Error ? e : undefined);
 		}
 	}
 

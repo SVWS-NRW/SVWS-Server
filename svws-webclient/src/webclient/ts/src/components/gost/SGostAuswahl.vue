@@ -36,7 +36,7 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { routeGost } from "~/router/apps/RouteGost";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
+	import { ApiStatus } from "~/utils/ApiStatus";
 
 	const props = defineProps<{
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
@@ -45,6 +45,7 @@
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+		apiStatusKursplanung: ApiStatus;
 	}>();
 
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
@@ -59,7 +60,7 @@
 		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 
-	const pending: ComputedRef<boolean> = computed(() => routeGostKursplanungHalbjahr.data.dataKursblockung.pending);
+	const pending: ComputedRef<boolean> = computed(() => props.apiStatusKursplanung.pending);
 
 	async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		await props.addAbiturjahrgang(jahrgang.id);

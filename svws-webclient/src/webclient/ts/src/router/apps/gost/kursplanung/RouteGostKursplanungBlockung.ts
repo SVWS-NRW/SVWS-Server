@@ -1,98 +1,17 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { GostBlockungsergebnisListeneintrag, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 import { RouteGostKursplanungHalbjahr, routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
-import { Ref, ref } from "vue";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
-import { RouteManager } from "~/router/RouteManager";
 import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataGostKursplanungBlockung {
-	ergebnisAuswahl: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
-	dataKursblockungsergebnis: DataGostKursblockungsergebnis = new DataGostKursblockungsergebnis();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
-
-	setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
-		if ((value?.id !== this.ergebnisAuswahl.value?.id) && (!RouteManager.isActive())) {
-			const idSchueler = routeGostKursplanungSchueler.data.schueler.value?.id;
-			if (idSchueler === undefined)
-				await RouteManager.doRoute(routeGostKursplanungBlockung.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr,
-					routeGostKursplanung.data.halbjahr.id, value?.blockungID, value?.id));
-			else
-				await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr,
-					routeGostKursplanung.data.halbjahr.id, value?.blockungID, value?.id, idSchueler));
-		}
-	}
-
-	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
-		return await this.dataKursblockungsergebnis.assignKursSchiene(idKurs, idSchieneAlt, idSchieneNeu);
-	}
-
-	updateKursSchuelerZuordnung = async (idSchueler: number, idKursNeu: number, idKursAlt: number): Promise<boolean> => {
-		return await this.dataKursblockungsergebnis.assignSchuelerKurs(idSchueler, idKursNeu, idKursAlt);
-	}
-
-	removeKursSchuelerZuordnung = async (idSchueler: number, idKurs: number): Promise<boolean> => {
-		return await this.dataKursblockungsergebnis.removeSchuelerKurs(idSchueler, idKurs);
-	}
-
-	autoKursSchuelerZuordnung = async (idSchueler : number) => {
-		return await this.dataKursblockungsergebnis.multiAssignSchuelerKurs(idSchueler);
-	}
-
-	removeErgebnisse = async (ergebnisse: GostBlockungsergebnisListeneintrag[]) => {
-		if (ergebnisse.length <= 0)
-			return;
-		const reselect = ergebnisse.find(e => e.id === this.ergebnisAuswahl.value?.id);
-		if (reselect) {
-			// TODO Lade ein anderes, nicht ausgewähltes Ergebnis und lösche erst dann...
-		}
-		for (const ergebnis of ergebnisse) {
-			await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, ergebnis.id);
-		}
-	}
-
-	removeErgebnis = async (idErgebnis: number) => {
-		await routeLogin.data.api.deleteGostBlockungsergebnis(routeLogin.data.schema, idErgebnis);
-	}
-
-	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
-		const result = await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, idErgebnis);
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(result.abijahrgang, result.gostHalbjahr, result.id));
-	}
-
-	ergebnisHochschreiben = async () => {
-		if (!this.ergebnisAuswahl.value)
-			throw new Error("Unerwarteter Fehler: Aktuell ist kein Ergebnis ausgewählt.");
-		const abiturjahr = routeGostKursplanung.data.abiturjahr;
-		const halbjahr = routeGostKursplanung.data.halbjahr.next()?.id || routeGostKursplanung.data.halbjahr.id;
-		const result = await routeLogin.data.api.schreibeGostBlockungsErgebnisHoch(routeLogin.data.schema, this.ergebnisAuswahl.value.id);
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr, result.id));
-	}
-
-	ergebnisAktivieren = async () => {
-		if ((!routeGostKursplanung.data.hatBlockung) ||
-			(routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager === undefined) ||
-			(routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager === undefined) ||
-			(this.ergebnisAuswahl.value === undefined))
-			return false;
-		const res = await this.dataKursblockungsergebnis.activate_blockungsergebnis();
-		if (!res)
-			return false;
-		routeGostKursplanung.data.jahrgangsdaten.istBlockungFestgelegt[routeGostKursplanung.data.halbjahr.id] = true;
-		routeGostKursplanung.data.auswahlBlockung.istAktiv = true;
-		routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager.daten().istAktiv = true;
-		routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager.getErgebnis().istVorlage = true;
-		this.ergebnisAuswahl.value.istVorlage = true;
-		return true;
-	}
-
 }
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -144,8 +63,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
 		this.data.fachwahlen = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, abiturjahr);
-		// notwendig, damit der Ergebnis-Manager initialisiert werden kann
-		this.data.dataKursblockungsergebnis.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
@@ -165,38 +82,28 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
 		// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das erste Element aus
 		if (idErgebnis === undefined) {
-			if ((routeGostKursplanungHalbjahr.data.dataKursblockung.daten !== undefined) && (routeGostKursplanungHalbjahr.data.dataKursblockung.daten.ergebnisse.size() > 0)) {
-				const ergebnis = routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnisse().get(0);
+			if ((routeGostKursplanung.data.hatBlockung) && (routeGostKursplanung.data.hatErgebnis)) {
+				const ergebnis = routeGostKursplanung.data.datenmanager.getErgebnisseSortiertNachBewertung().get(0);
 				return this.getRoute(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
-			if (this.data.ergebnisAuswahl.value !== undefined) {
-				await this.data.dataKursblockungsergebnis.unselect();
-				this.data.ergebnisAuswahl.value = undefined;
-			}
-			return;
+			if ((routeGostKursplanung.data.hatBlockung) && (!routeGostKursplanung.data.hatErgebnis))
+				return;
+			return routeGostKursplanung.getRoute(abiturjahr, halbjahr.id);
 		}
 		// ... bestimme den Listen-Eintrag zu dem Ergebnis
-		const ergebnisEintrag = (routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnisse().toArray() as GostBlockungsergebnisListeneintrag[]).find(e => e.id === idErgebnis);
+		const ergebnisEintrag = routeGostKursplanung.data.datenmanager.getErgebnis(idErgebnis);
 		if (ergebnisEintrag === undefined)
 			throw new Error("Programmierfehler: Ein Eintrag für die Ergebnis-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
-		// ... wurde die ID des Ergebnisses verändert, so lade das neue Ergebnis aus der Datenbank
-		if (this.data.ergebnisAuswahl.value?.id !== idBlockung) {
-			// Setze den neu ausgewählten Ergebnis-Eintrag
-			this.data.ergebnisAuswahl.value = ergebnisEintrag;
-			// Lade die neuen Ergebnisdaten
-			await this.data.dataKursblockungsergebnis.select(ergebnisEintrag);
-			const ergebnis = this.data.dataKursblockungsergebnis.daten;
-			if (ergebnis === undefined)
-				throw new Error("Fehler beim Laden der Blockungs-Ergebnisdaten für die Ergebnis-ID als Parameter der Route.");
-		}
+		// ... wurde die ID des Ergebnisses verändert, so setze den neu ausgewählten Ergebnis-Eintrag
+		if (routeGostKursplanung.data.auswahlErgebnis.id !== ergebnisEintrag.id)
+			await routeGostKursplanung.data.setAuswahlErgebnis(ergebnisEintrag);
 		// ... setze die aktuelle Route auf die Schüler-Route, so dass die Auswahl geladen wird.
 		if (this.name === to.name)
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		this.data.ergebnisAuswahl.value = undefined;
-		await this.data.dataKursblockungsergebnis.unselect();
+		await routeGostKursplanung.data.setAuswahlErgebnis(undefined);
 	}
 
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined) : RouteLocationRaw {
@@ -209,37 +116,36 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			getDatenmanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
-			removeErgebnis: this.data.removeErgebnis,
-			removeErgebnisse: this.data.removeErgebnisse,
-			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,
-			setAuswahlErgebnis: this.data.setAuswahlErgebnis,
-			auswahlErgebnis: this.data.ergebnisAuswahl.value,
+			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
+			removeErgebnis: routeGostKursplanung.data.removeErgebnis,
+			removeErgebnisse: routeGostKursplanung.data.removeErgebnisse,
+			ergebnisZuNeueBlockung: routeGostKursplanung.data.ergebnisZuNeueBlockung,
+			setAuswahlErgebnis: routeGostKursplanung.data.setAuswahlErgebnis,
+			auswahlErgebnis: routeGostKursplanung.data.auswahlErgebnis,
 			jahrgangsdaten: routeGostKursplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKursplanung.data.halbjahr,
-			blockung: routeGostKursplanungHalbjahr.data.dataKursblockung,
-			pending: routeGostKursplanungHalbjahr.data.dataKursblockung.pending,
+			apiStatus: routeGostKursplanung.data.apiStatus,
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			getDatenmanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.datenmanager,
-			getErgebnismanager: () => routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnismanager,
-			patchRegel: routeGostKursplanungHalbjahr.data.patchRegel,
-			addRegel: routeGostKursplanungHalbjahr.data.addRegel,
-			removeRegel: routeGostKursplanungHalbjahr.data.removeRegel,
-			updateKursSchienenZuordnung: this.data.updateKursSchienenZuordnung,
-			patchSchiene: routeGostKursplanungHalbjahr.data.patchSchiene,
-			addSchiene: routeGostKursplanungHalbjahr.data.addSchiene,
-			removeSchiene: routeGostKursplanungHalbjahr.data.removeSchiene,
-			patchKurs: routeGostKursplanungHalbjahr.data.patchKurs,
-			addKurs: routeGostKursplanungHalbjahr.data.addKurs,
-			removeKurs: routeGostKursplanungHalbjahr.data.removeKurs,
-			addKursLehrer: routeGostKursplanungHalbjahr.data.addKursLehrer,
-			removeKursLehrer: routeGostKursplanungHalbjahr.data.removeKursLehrer,
-			ergebnisHochschreiben: this.data.ergebnisHochschreiben,
-			ergebnisAktivieren: this.data.ergebnisAktivieren,
+			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
+			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
+			patchRegel: routeGostKursplanung.data.patchRegel,
+			addRegel: routeGostKursplanung.data.addRegel,
+			removeRegel: routeGostKursplanung.data.removeRegel,
+			updateKursSchienenZuordnung: routeGostKursplanung.data.updateKursSchienenZuordnung,
+			patchSchiene: routeGostKursplanung.data.patchSchiene,
+			addSchiene: routeGostKursplanung.data.addSchiene,
+			removeSchiene: routeGostKursplanung.data.removeSchiene,
+			patchKurs: routeGostKursplanung.data.patchKurs,
+			addKurs: routeGostKursplanung.data.addKurs,
+			removeKurs: routeGostKursplanung.data.removeKurs,
+			addKursLehrer: routeGostKursplanung.data.addKursLehrer,
+			removeKursLehrer: routeGostKursplanung.data.removeKursLehrer,
+			ergebnisHochschreiben: routeGostKursplanung.data.ergebnisHochschreiben,
+			ergebnisAktivieren: routeGostKursplanung.data.ergebnisAktivieren,
 			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
 			faecherManager: routeGost.data.faecherManager.value,
 			halbjahr: routeGostKursplanung.data.halbjahr,

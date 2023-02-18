@@ -18,7 +18,7 @@
 								<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 							</div>
 							<div class="flex items-center justify-center">
-								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
+								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="apiStatus.pending">Automatisch verteilen</svws-ui-button>
 							</div>
 						</template>
 					</div>
@@ -29,7 +29,7 @@
 					<table class="v-table--complex">
 						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"
 							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-							:pending="pending" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
+							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
 							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 					</table>
 				</div>
@@ -43,6 +43,7 @@
 	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
 		GostFachwahl, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { ApiStatus } from "~/utils/ApiStatus";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -55,7 +56,7 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schueler: SchuelerListeEintrag;
-		pending: boolean;
+		apiStatus: ApiStatus;
 	}>();
 
 	const is_dragging: Ref<boolean> = ref(false)

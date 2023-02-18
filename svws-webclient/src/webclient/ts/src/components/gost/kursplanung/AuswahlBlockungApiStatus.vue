@@ -1,6 +1,6 @@
 <template>
-	<tr v-if="status_blockung">
-		<template v-if="status_blockung.idle">
+	<tr v-if="apiStatus.hasError || apiStatus.pending">
+		<template v-if="apiStatus.pending">
 			<td class="loading-disclaimer">
 				<div class="loading-display">
 					<span>Blockung wird berechnet...</span>
@@ -12,7 +12,7 @@
 				</div>
 			</td>
 		</template>
-		<template v-if="status_blockung.error">
+		<template v-if="apiStatus.hasError">
 			<td>
 				<p class="api-error-text">Fehler beim Berechnen der Blockung!</p>
 			</td>
@@ -21,17 +21,14 @@
 </template>
 
 <script setup lang="ts">
+
 	import { GostBlockungListeneintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
-	import { FeedbackValues } from "~/apps/gost/userfeedback";
-	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
+	import { ApiStatus } from "~/utils/ApiStatus";
 
 	const props = defineProps<{
 		blockung: GostBlockungListeneintrag;
+		apiStatus: ApiStatus;
 	}>();
-
-	const status_blockung: ComputedRef<FeedbackValues> = computed(() => undefined)
-	// TODO const status_blockung: ComputedRef<FeedbackValues> = computed(() => routeGostKursplanungHalbjahr.data.listBlockungen.getApiStatus(props.blockung.hashCode()))
 
 </script>
 

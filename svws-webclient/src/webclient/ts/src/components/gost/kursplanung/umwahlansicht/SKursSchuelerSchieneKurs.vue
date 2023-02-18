@@ -33,6 +33,7 @@
 		List, SchuelerListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { routeApp } from "~/router/RouteApp";
+	import { ApiStatus } from "~/utils/ApiStatus";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -42,7 +43,7 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		kurs: GostBlockungsergebnisKurs;
 		schueler: SchuelerListeEintrag;
-		pending: boolean;
+		apiStatus: ApiStatus;
 		allowRegeln: boolean;
 	}>();
 
@@ -57,7 +58,7 @@
 	);
 
 	const is_draggable: ComputedRef<boolean> = computed(() => {
-		if (props.pending || blockung_aktiv.value)
+		if (props.apiStatus.pending || blockung_aktiv.value)
 			return false;
 		for (const s of props.kurs.schueler)
 			if (s === props.schueler.id)

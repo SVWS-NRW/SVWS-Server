@@ -9,7 +9,7 @@
 		</td>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-			:pending="pending" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
+			:api-status="apiStatus" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
 			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
 	</tr>
 </template>
@@ -19,6 +19,7 @@
 	import { GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostBlockungsergebnisSchiene, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { ApiStatus } from "~/utils/ApiStatus";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -28,7 +29,7 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schiene: GostBlockungsergebnisSchiene;
 		selected: SchuelerListeEintrag;
-		pending: boolean;
+		apiStatus: ApiStatus;
 		allowRegeln: boolean;
 	}>();
 
