@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.data.schild3.reporting;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -16,7 +17,7 @@ import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
 
 /**
- * Die Definition der Schild-Reporting-Datenquelle "Schuelerlernabschnitte" 
+ * Die Definition der Schild-Reporting-Datenquelle "Schuelerlernabschnitte"
  */
 public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSchildReportingDatenquelle {
 
@@ -29,8 +30,7 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
     }
 
-
-    @Override
+	@Override
     List<? extends Object> getDatenInteger(DBEntityManager conn, List<Long> params) {
         // Prüfe, ob die Schüler in der DB vorhanden sind
         Map<Long, DTOSchueler> schueler = conn
@@ -60,21 +60,21 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
         for (DTOSchuelerLernabschnittsdaten dto : lernabschnittsdaten) {
             DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
             if (dtoSJA == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Schuljahresabschnitt mit der ID " + dto.Schuljahresabschnitts_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden."); 
+                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Schuljahresabschnitt mit der ID " + dto.Schuljahresabschnitts_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
             DTOKlassen dtoKlasse = mapKlassen.get(dto.Klassen_ID);
             if (dtoKlasse == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Klasse mit der ID " + dto.Klassen_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden."); 
+                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Klasse mit der ID " + dto.Klassen_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
             DTOJahrgang dtoJahrgang = mapJahrgaenge.get(dto.Jahrgang_ID);
             if (dtoJahrgang == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Jahrgang mit der ID " + dto.Jahrgang_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden."); 
+                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Jahrgang mit der ID " + dto.Jahrgang_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
             SchildReportingSchuelerlernabschnitt data = new SchildReportingSchuelerlernabschnitt();
             data.id = dto.ID;
             data.schuelerID = dto.Schueler_ID;
             data.schuljahr = dtoSJA.Jahr;
             data.abschnitt = dtoSJA.Abschnitt;
             data.wechselNr = dto.WechselNr;
-            data.istGewertet = dto.SemesterWertung == null ? false : dto.SemesterWertung;
-            data.istWiederholung = dto.Wiederholung == null ? false : dto.Wiederholung;
+            data.istGewertet = dto.SemesterWertung != null && dto.SemesterWertung;
+            data.istWiederholung = dto.Wiederholung != null && dto.Wiederholung;
             data.pruefungsOrdnung = dto.PruefOrdnung;
             data.klasse = dtoKlasse.Klasse;
             data.klasseStatistik = dtoKlasse.ASDKlasse;
@@ -85,8 +85,44 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
             data.logPruefungsalgorithmus = dto.PruefAlgoErgebnis;
             result.add(data);
         }
-        // Geben die Ergebnis-Liste mit den Core-DTOs zurück
+		result.sort(comparatorLernabschnitte);
+
+		// Geben die Ergebnis-Liste mit den Core-DTOs zurück
         return result;
     }
+
+	private final Comparator<SchildReportingSchuelerlernabschnitt> comparatorLernabschnitte = (la1, la2) -> {
+		if (la1.schuljahr != la2.schuljahr) {
+			return Integer.compare(la1.schuljahr, la2.schuljahr);
+		} else {
+			if (la1.abschnitt != la2.abschnitt) {
+				return Integer.compare(la1.abschnitt, la2.abschnitt);
+			} else {
+				if ((la1.wechselNr != null && la2.wechselNr != null) || (la1.wechselNr == null && la2.wechselNr == null)) {
+					if ((la1.wechselNr != null) && !la1.wechselNr.equals(la2.wechselNr)) {
+						return Integer.compare(la1.wechselNr, la2.wechselNr);
+					} else {
+						// Dieser Fall darf bei korrekten Daten nicht auftreten, weil es dann zwei identische Lernabschnitte geben würde.
+						// Prüfe aber dennoch zusätzlich die Wertung und Wiederholung.
+						int checkA1 = 1;
+						if (!la1.istGewertet)
+							checkA1 -= 1;
+						if (la1.istWiederholung)
+							checkA1 += 2;
+						int checkA2 = 1;
+						if (!la2.istGewertet)
+							checkA2 -= 1;
+						if (la2.istWiederholung)
+							checkA2 += 2;
+						return Integer.compare(checkA1, checkA2);
+					}
+				} else if (la1.wechselNr == null) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+		}
+	};
 
 }

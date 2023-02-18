@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.schild3.reporting;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -17,7 +18,7 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnit
 import de.nrw.schule.svws.db.utils.OperationError;
 
 /**
- * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten" 
+ * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten"
  */
 public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSchildReportingDatenquelle {
 
@@ -39,7 +40,7 @@ public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSc
                 .stream().collect(Collectors.toMap(a -> a.ID, a -> a));
         for (Long abschnittID : params)
             if (abschnitte.get(abschnittID) == null)
-                throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht."); 
+                throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
         // Aggregiere die benötigten Daten aus der Datenbank
         List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", params, DTOSchuelerLeistungsdaten.class);
         if (leistungsdaten == null)
@@ -55,7 +56,7 @@ public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSc
         		: conn.queryNamed("DTOLehrer.id.multiple", idLehrer, DTOLehrer.class)
         			.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
         List<Long> idKurse = leistungsdaten.stream().filter(l -> l.Kurs_ID != null).map(l -> l.Kurs_ID).distinct().toList();
-        Map<Long, DTOKurs> mapKurse = (idKurse.size() == 0) ? Collections.emptyMap() 
+        Map<Long, DTOKurs> mapKurse = (idKurse.size() == 0) ? Collections.emptyMap()
         		: conn.queryNamed("DTOKurs.id.multiple", idKurse, DTOKurs.class)
         			.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
         // Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
@@ -63,12 +64,12 @@ public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSc
         for (DTOSchuelerLeistungsdaten dto : leistungsdaten) {
         	DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
             if (dtoFach == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Fach mit der ID " + dto.Fach_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
+                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistent: Fach mit der ID " + dto.Fach_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
             String lehrerKuerzel = null;
             if (dto.Fachlehrer_ID != null) {
 	        	DTOLehrer dtoLehrer = mapLehrer.get(dto.Fachlehrer_ID);
 	            if (dtoLehrer == null)
-	                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Fachlehrer mit der ID " + dto.Fachlehrer_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
+	                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistent: Fachlehrer mit der ID " + dto.Fachlehrer_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
 	            lehrerKuerzel = dtoLehrer.Kuerzel;
             }
         	DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);
@@ -87,8 +88,12 @@ public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSc
             data.note = dto.NotenKrz.text;
             data.noteKuerzel = dto.NotenKrz.kuerzel;
             data.notePunkte = dto.NotenKrz.notenpunkte;
+			data.sortierungAllg = dtoFach.SortierungAllg;
+			data.sortierungSekII = dtoFach.SortierungSekII;
             result.add(data);
         }
+		result.sort(Comparator.comparing(ld -> ld.sortierungAllg));
+
         // Geben die Ergebnis-Liste mit den Core-DTOs zurück
         return result;
     }

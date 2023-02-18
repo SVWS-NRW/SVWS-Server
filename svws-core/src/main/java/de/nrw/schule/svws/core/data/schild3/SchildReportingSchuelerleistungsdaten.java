@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Die Klasse enthält den Core-DTO für die Schild-Reporting-Datenquelle Schuelerleistungsdaten.  
+ * Die Klasse enthält den Core-DTO für die Schild-Reporting-Datenquelle Schuelerleistungsdaten.
  */
 @XmlRootElement
 @Schema(description="Datenquelle Schuelerleistungsdaten.")
@@ -30,7 +30,7 @@ public class SchildReportingSchuelerleistungsdaten {
     public @NotNull String fachKuerzel = "";
 
     /** Die Bezeichnung des Faches */
-    @Schema(required = true, description = "die Bezeichnung des Faches", example="Deutsch") 
+    @Schema(required = true, description = "die Bezeichnung des Faches", example="Deutsch")
     public @NotNull String fach = "";
 
     /** Die ID des Fachlehrers */
@@ -60,7 +60,7 @@ public class SchildReportingSchuelerleistungsdaten {
     /** Die Bezeichnung der Note */
     @Schema(required = false, description = "Die Bezeichnung der Note", example="ausreichend (plus)")
     public @NotNull String note = "";
-    
+
     /** Das Notenkürzel */
     @Schema(required = false, description = "Das Notenkürzel", example="4+")
     public @NotNull String noteKuerzel = "";
@@ -68,6 +68,14 @@ public class SchildReportingSchuelerleistungsdaten {
     /** Die Notenpunkte, sofern eine Note gesetzt ist */
     @Schema(required = false, description = "Die Notenpunkte, sofern eine Note gesetzt ist", example="6")
     public Integer notePunkte = null;
+
+	/** Wert für allgemeine Sortierung der Fächer. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen */
+	@Schema(required = true, description = "Der Wert für die allgemeine Sortierung der Fächer", example="50")
+	public Integer sortierungAllg = null;
+
+	/** Wert für Sortierung der Fächer in der Sek-II. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen */
+	@Schema(required = true, description = "Der Wert für die Sortierung für Fächer in der Sek-II", example="102")
+	public Integer sortierungSekII = null;
 
     // TODO weitere Attribute
 

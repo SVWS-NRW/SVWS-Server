@@ -75,6 +75,16 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 	 */
 	public notePunkte : number | null = null;
 
+	/**
+	 * Wert für allgemeine Sortierung der Fächer. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen 
+	 */
+	public sortierungAllg : number | null = null;
+
+	/**
+	 * Wert für Sortierung der Fächer in der Sek-II. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen 
+	 */
+	public sortierungSekII : number | null = null;
+
 
 	public constructor() {
 		super();
@@ -121,6 +131,8 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute noteKuerzel');
 		result.noteKuerzel = obj.noteKuerzel;
 		result.notePunkte = typeof obj.notePunkte === "undefined" ? null : obj.notePunkte === null ? null : obj.notePunkte;
+		result.sortierungAllg = typeof obj.sortierungAllg === "undefined" ? null : obj.sortierungAllg === null ? null : obj.sortierungAllg;
+		result.sortierungSekII = typeof obj.sortierungSekII === "undefined" ? null : obj.sortierungSekII === null ? null : obj.sortierungSekII;
 		return result;
 	}
 
@@ -140,6 +152,8 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		result += '"note" : ' + '"' + obj.note! + '"' + ',';
 		result += '"noteKuerzel" : ' + '"' + obj.noteKuerzel! + '"' + ',';
 		result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';
+		result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg) + ',';
+		result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -188,6 +202,12 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		}
 		if (typeof obj.notePunkte !== "undefined") {
 			result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';
+		}
+		if (typeof obj.sortierungAllg !== "undefined") {
+			result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg) + ',';
+		}
+		if (typeof obj.sortierungSekII !== "undefined") {
+			result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

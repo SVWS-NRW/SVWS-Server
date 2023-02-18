@@ -10,7 +10,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, zu dem die Lernabschnittdaten gehören. 
+	 * Die ID des Schülers, zu dem die Lernabschnittsdaten gehören. 
 	 */
 	public schuelerID : number = 0;
 
@@ -25,7 +25,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	public abschnitt : number = 0;
 
 	/**
-	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
 	 */
 	public wechselNr : number | null = null;
 
@@ -75,7 +75,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	public datumZeugnis : string = "";
 
 	/**
-	 * Das Ergebnis des Prüfungs-Algorithmus 
+	 * Das Ergebnis des Prüfungsalgorithmus 
 	 */
 	public logPruefungsalgorithmus : string = "";
 
