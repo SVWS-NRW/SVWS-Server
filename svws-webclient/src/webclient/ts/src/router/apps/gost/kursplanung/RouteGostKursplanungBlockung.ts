@@ -134,7 +134,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<unknown, RouteGostKu
 			removeKursLehrer: routeGostKursplanung.data.removeKursLehrer,
 			ergebnisHochschreiben: routeGostKursplanung.data.ergebnisHochschreiben,
 			ergebnisAktivieren: routeGostKursplanung.data.ergebnisAktivieren,
-			schuelerFilter: routeGostKursplanungSchueler.data.schuelerFilter.value,
+			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager.value,
 			halbjahr: routeGostKursplanung.data.halbjahr,
 			mapLehrer: routeGostKursplanung.data.mapLehrer,

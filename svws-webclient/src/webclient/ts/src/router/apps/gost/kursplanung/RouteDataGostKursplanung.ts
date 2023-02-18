@@ -1,5 +1,6 @@
 import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
+import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { ApiStatus } from "~/utils/ApiStatus";
@@ -25,6 +26,7 @@ interface RouteStateGostKursplanung {
 	// ...auch abhängig von dem ausgewählten Blockungsergebnis
 	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	ergebnismanager: GostBlockungsergebnisManager | undefined;
+	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	// ... auch abhängig von dem ausgewählten Schüler
 	auswahlSchueler: SchuelerListeEintrag | undefined;
 }
@@ -46,6 +48,7 @@ export class RouteDataGostKursplanung {
 		datenmanager: undefined,
 		auswahlErgebnis: undefined,
 		ergebnismanager: undefined,
+		schuelerFilter: undefined,
 		auswahlSchueler: undefined,
 	}
 
@@ -113,6 +116,7 @@ export class RouteDataGostKursplanung {
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
+			schuelerFilter: undefined,
 			auswahlSchueler: undefined,
 		};
 	}
@@ -180,6 +184,7 @@ export class RouteDataGostKursplanung {
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
+			schuelerFilter: undefined,
 			auswahlSchueler: this._state.value.auswahlSchueler,
 		};
 	}
@@ -218,6 +223,7 @@ export class RouteDataGostKursplanung {
 				datenmanager: undefined,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
+				schuelerFilter: undefined,
 				auswahlSchueler: this._state.value.auswahlSchueler,
 			};
 			return;
@@ -240,6 +246,7 @@ export class RouteDataGostKursplanung {
 			datenmanager: datenmanager,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
+			schuelerFilter: undefined,
 			auswahlSchueler: this._state.value.auswahlSchueler,
 		};
 		await this.setAuswahlErgebnis(ergebnisse.size() <= 0 ? undefined : ergebnisse.get(0));
@@ -285,6 +292,7 @@ export class RouteDataGostKursplanung {
 				datenmanager: this._state.value.datenmanager,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
+				schuelerFilter: undefined,
 				auswahlSchueler: this._state.value.auswahlSchueler,
 			};
 			return;
@@ -294,6 +302,7 @@ export class RouteDataGostKursplanung {
 		this.apiStatus.start();
 		const ergebnis = await routeLogin.data.api.getGostBlockungsergebnis(routeLogin.data.schema, value.id);
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
+		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toVector(), this.mapSchueler)
 		this.apiStatus.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
@@ -308,14 +317,21 @@ export class RouteDataGostKursplanung {
 			datenmanager: this._state.value.datenmanager,
 			auswahlErgebnis: value,
 			ergebnismanager: ergebnismanager,
+			schuelerFilter: schuelerFilter,
 			auswahlSchueler: this._state.value.auswahlSchueler,
 		};
 	}
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
 		if (this._state.value.ergebnismanager === undefined)
-			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
+			throw new Error("Es wurde noch kein Blockungsergebnis geladen, so dass kein Ergebnis-Manager zur Verfügung steht.");
 		return this._state.value.ergebnismanager;
+	}
+
+	public get schuelerFilter(): GostKursplanungSchuelerFilter {
+		if (this._state.value.schuelerFilter === undefined)
+			throw new Error("Es wurde noch keine Ergebnis geladen, so dass kein Schüler-Filter zur Verfügung steht.");
+		return this._state.value.schuelerFilter;
 	}
 
 
@@ -649,6 +665,12 @@ export class RouteDataGostKursplanung {
 				await RouteManager.doRoute(routeGostKursplanungBlockung.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, undefined));
 			}
 		}
+	}
+
+	gotoSchueler = async (schueler: SchuelerListeEintrag) => {
+		// TODO alle möglichen Fälle von fehlenden Informationen (Abiturjahr, Blockung und Ergebnis) berücksichtigen
+		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
+			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
 	}
 
 }

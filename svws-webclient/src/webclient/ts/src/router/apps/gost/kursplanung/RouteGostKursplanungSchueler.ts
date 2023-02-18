@@ -5,41 +5,17 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { RouteGostKursplanungBlockung, routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
-import { ShallowRef, shallowRef } from "vue";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
-import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-
-export class RouteDataGostKursplanungSchueler {
-
-	idErgebnis: number | undefined = undefined;
-	schuelerFilter: ShallowRef<GostKursplanungSchuelerFilter | undefined> = shallowRef(undefined);
-
-	// TODO gotoSchueler in routeGostKursplanung
-	setSchueler = async (schueler: SchuelerListeEintrag) => {
-		if ((!routeGostKursplanung.data.hatSchueler) || (schueler.id !== routeGostKursplanung.data.auswahlSchueler.id))
-			void RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.id,
-				routeGostKursplanung.data.auswahlBlockung.id, routeGostKursplanung.data.auswahlErgebnis.id, schueler.id));
-	}
-
-	gotoSchueler = async (idSchueler: number) => {
-		await RouteManager.doRoute(routeSchuelerIndividualdaten.getRoute(idSchueler));
-	}
-
-	gotoLaufbahnplanung = async (idSchueler: number) => {
-		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
-	}
-
-}
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
 
-export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKursplanungSchueler, RouteGostKursplanungBlockung> {
+export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanungBlockung> {
 
 	public constructor() {
-		super("gost.kursplanung.halbjahr.ergebnis.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht, new RouteDataGostKursplanungSchueler());
+		super("gost.kursplanung.halbjahr.ergebnis.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";
@@ -105,12 +81,6 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 			}
 			return;
 		}
-		// ... wurde das Blockungsergebnis verändert, so muss der Schüler-Filter neu initialisiert werden
-		if (this.data.idErgebnis !== idErgebnis) {
-			this.data.schuelerFilter.value = new GostKursplanungSchuelerFilter(routeGostKursplanung.data.datenmanager, routeGostKursplanung.data.ergebnismanager,
-				routeGost.data.faecherManager.value.toVector(), routeGostKursplanung.data.mapSchueler);
-			this.data.idErgebnis = idErgebnis;
-		}
 		// ... wurde die ID des Schülers verändert, merke diesen Schüler
 		if ((!routeGostKursplanung.data.hatSchueler) || (routeGostKursplanung.data.auswahlSchueler.id !== idSchueler)) {
 			// Setze den neu ausgewählten Schüler-Eintrag
@@ -129,12 +99,20 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
 	}
 
+	gotoSchuelerIndividualdaten = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerIndividualdaten.getRoute(idSchueler));
+	}
+
+	gotoLaufbahnplanung = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+	}
+
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			setSchueler: this.data.setSchueler,
+			setSchueler: routeGostKursplanung.data.gotoSchueler,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.auswahlSchueler,
-			schuelerFilter: this.data.schuelerFilter.value!,
+			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager.value
 		}
 	}
@@ -146,8 +124,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 			updateKursSchuelerZuordnung: routeGostKursplanung.data.updateKursSchuelerZuordnung,
 			removeKursSchuelerZuordnung: routeGostKursplanung.data.removeKursSchuelerZuordnung,
 			autoKursSchuelerZuordnung:  routeGostKursplanung.data.autoKursSchuelerZuordnung,
-			gotoSchueler: this.data.gotoSchueler,
-			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
+			gotoSchueler: this.gotoSchuelerIndividualdaten,
+			gotoLaufbahnplanung: this.gotoLaufbahnplanung,
 			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.auswahlSchueler,
