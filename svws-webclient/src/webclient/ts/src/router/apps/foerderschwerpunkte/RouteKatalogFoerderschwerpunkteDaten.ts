@@ -1,12 +1,29 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteKatalogFoerderschwerpunkte, routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
+import { RouteKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataKatalogFoerderschwerpunkteDaten {
 	item: FoerderschwerpunktEintrag | undefined = undefined;
-	daten: DataFoerderschwerpunkt = new DataFoerderschwerpunkt();
+	private _daten: FoerderschwerpunktEintrag | undefined = undefined;
+
+	get daten(): FoerderschwerpunktEintrag {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: FoerderschwerpunktEintrag | undefined) {
+		this._daten = value;
+	}
+
+	patch = async (data : Partial<FoerderschwerpunktEintrag>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchFoerderschwerpunktDaten", data);
+		//await routeLogin.data.api.patchJahrgangDaten(data, routeLogin.data.schema, this.item.id);
+	}
 }
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
@@ -33,10 +50,10 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getSchuelerFoerderschwerpunkt(routeLogin.data.schema, item.id);
 		}
 	}
 
@@ -46,6 +63,7 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			patch: this.data.patch,
 			item: this.data.item,
 			data: this.data.daten
 		};

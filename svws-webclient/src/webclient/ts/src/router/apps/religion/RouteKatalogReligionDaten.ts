@@ -1,12 +1,28 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
+import { routeLogin } from "~/router/RouteLogin";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogReligion, RouteKatalogReligion } from "../RouteKatalogReligion";
+import { RouteKatalogReligion } from "../RouteKatalogReligion";
 
 export class RouteDataKlassenDaten {
 	item: ReligionEintrag | undefined = undefined;
-	daten: DataReligion = new DataReligion();
+	private _daten: ReligionEintrag | undefined = undefined;
+
+	get daten(): ReligionEintrag {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Religionsdaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: ReligionEintrag | undefined) {
+		this._daten = value;
+	}
+
+	patch = async (data : Partial<ReligionEintrag>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		await routeLogin.data.api.patchReligion(data, routeLogin.data.schema, this.item.id)
+	}
 }
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
@@ -33,10 +49,10 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getReligion(routeLogin.data.schema, item.id);
 		}
 	}
 
@@ -46,6 +62,7 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			patch: this.data.patch,
 			item: this.data.item,
 			data: this.data.daten
 		};

@@ -1,12 +1,29 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
+import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { routeLogin } from "~/router/RouteLogin";
 
 export class RouteDataKatalogJahrgaengeDaten {
 	item: JahrgangsListeEintrag | undefined = undefined;
-	daten: DataJahrgang = new DataJahrgang();
+	private _daten: JahrgangsDaten | undefined = undefined;
+
+	get daten(): JahrgangsDaten {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: JahrgangsDaten | undefined) {
+		this._daten = value;
+	}
+
+	patch = async (data : Partial<JahrgangsDaten>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchJahrgangDaten", data);
+		//await routeLogin.data.api.patchJahrgangDaten(data, routeLogin.data.schema, this.item.id);
+	}
 }
 
 const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJahrgangDaten.vue");
@@ -33,10 +50,10 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getJahrgang(routeLogin.data.schema, item.id);
 		}
 	}
 
@@ -46,6 +63,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			patch: this.data.patch,
 			item: this.data.item,
 			data: this.data.daten,
 			listJahrgaenge: routeKatalogJahrgaenge.liste.liste

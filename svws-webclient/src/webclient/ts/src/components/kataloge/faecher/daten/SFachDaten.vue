@@ -1,23 +1,25 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-fach-basisdaten :item="item" :data="data" />
+		<s-card-fach-basisdaten :data="data" @patch="doPatch" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataFach } from "~/apps/kataloge/faecher/DataFach";
+	import { FachDaten } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
-		item: ShallowRef<FaecherListeEintrag | undefined>;
-		data: DataFach;
+		patch: (data : Partial<FachDaten>) => Promise<void>;
+		data: FachDaten;
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeFaecherDaten.hidden()) && (props.item.value !== undefined);
+		return !routeFaecherDaten.hidden();
 	});
+
+	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

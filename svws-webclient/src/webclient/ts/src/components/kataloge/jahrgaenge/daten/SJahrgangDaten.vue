@@ -1,24 +1,26 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-jahrgang-basisdaten :data="data" :list-jahrgaenge="listJahrgaenge" />
+		<s-card-jahrgang-basisdaten :data="data" :list-jahrgaenge="listJahrgaenge" @patch="doPatch" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
+	import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
-		item: ShallowRef<JahrgangsListeEintrag | undefined>;
-		data: DataJahrgang,
+		patch: (data : Partial<JahrgangsDaten>) => Promise<void>;
+		data: JahrgangsDaten,
 		listJahrgaenge: JahrgangsListeEintrag[];
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogJahrgaengeDaten.hidden()) && (props.item.value !== undefined);
+		return !routeKatalogJahrgaengeDaten.hidden();
 	});
+
+	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

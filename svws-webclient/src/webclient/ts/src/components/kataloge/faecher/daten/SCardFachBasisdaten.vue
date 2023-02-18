@@ -12,28 +12,34 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ShallowRef, WritableComputedRef } from "vue";
-	import { DataFach } from "~/apps/kataloge/faecher/DataFach";
+	import { FachDaten } from "@svws-nrw/svws-core-ts";
+	import { computed, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		item: ShallowRef<FaecherListeEintrag | undefined>;
-		data: DataFach;
+		data: FachDaten;
 	}>();
 
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<FachDaten>): void;
+	}>()
+
+	function doPatch(data: Partial<FachDaten>) {
+		emit('patch', data);
+	}
+
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel ?? undefined,
-		set: (value) => void props.data.patch({ kuerzel: value })
+		get: () => props.data.kuerzel ?? undefined,
+		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.bezeichnung ?? undefined,
-		set: (value) => void props.data.patch({ bezeichnung: value })
+		get: () => props.data.bezeichnung ?? undefined,
+		set: (value) => doPatch({ bezeichnung: value })
 	});
 
 	const inputFachStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelStatistik ?? undefined,
-		set: (value) => void props.data.patch({ kuerzelStatistik: value })
+		get: () => props.data.kuerzelStatistik ?? undefined,
+		set: (value) => doPatch({ kuerzelStatistik: value })
 	});
 
 </script>

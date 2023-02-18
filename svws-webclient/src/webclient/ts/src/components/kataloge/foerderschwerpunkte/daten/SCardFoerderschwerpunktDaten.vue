@@ -14,29 +14,36 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { Foerderschwerpunkt } from "@svws-nrw/svws-core-ts";
-	import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
+	import { Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		data: DataFoerderschwerpunkt
+		data: FoerderschwerpunktEintrag
 	}>();
 
-	const id: ComputedRef<number | undefined> = computed(() => props.data.daten?.id);
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<FoerderschwerpunktEintrag>): void;
+	}>()
+
+	function doPatch(data: Partial<FoerderschwerpunktEintrag>) {
+		emit('patch', data);
+	}
+
+	const id: ComputedRef<number | undefined> = computed(() => props.data.id);
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel ?? undefined,
-		set: (value) => void props.data.patch({ kuerzel: value })
+		get: () => props.data.kuerzel,
+		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.text ?? undefined,
-		set: (value) => void props.data.patch({ text: value })
+		get: () => props.data.text,
+		set: (value) => doPatch({ text: value })
 	});
 
-	const statistikKatalog: ComputedRef<Foerderschwerpunkt[] | undefined> = computed(() => Foerderschwerpunkt.values());
+	const statistikKatalog: ComputedRef<Foerderschwerpunkt[]> = computed(() => Foerderschwerpunkt.values());
 	const statistikEintrag: WritableComputedRef<Foerderschwerpunkt | undefined> = computed({
-		get: () => Foerderschwerpunkt.getByKuerzel(props.data.daten?.kuerzelStatistik || null) || undefined,
-		set: (value) => void props.data.patch({ kuerzelStatistik: value?.daten.kuerzel })
+		get: () => Foerderschwerpunkt.getByKuerzel(props.data.kuerzelStatistik) ?? undefined,
+		set: (value) => doPatch({ kuerzelStatistik: value?.daten.kuerzel })
 	});
 
 </script>

@@ -16,42 +16,49 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
 
 	const props = defineProps<{
-		data: DataJahrgang,
+		data: JahrgangsDaten,
 		listJahrgaenge: JahrgangsListeEintrag[];
 	}>();
 
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<JahrgangsDaten>): void;
+	}>()
+
+	function doPatch(data: Partial<JahrgangsDaten>) {
+		emit('patch', data);
+	}
+
 	const id: ComputedRef<number | undefined> = computed(() => {
-		return props.data.daten?.id;
+		return props.data.id;
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel ?? undefined,
-		set: (value) => void props.data.patch({ kuerzel: value })
+		get: () => props.data.kuerzel ?? undefined,
+		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.bezeichnung ?? undefined,
-		set: (value) => void props.data.patch({ bezeichnung: value })
+		get: () => props.data.bezeichnung ?? undefined,
+		set: (value) => doPatch({ bezeichnung: value })
 	});
 
 	const inputKuerzelStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelStatistik ?? undefined,
-		set: (value: string | undefined) => void props.data.patch({ kuerzelStatistik: value })
+		get: () => props.data.kuerzelStatistik ?? undefined,
+		set: (value: string | undefined) => doPatch({ kuerzelStatistik: value })
 	});
 
 	const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelSchulgliederung ?? undefined,
-		set: (value) => void props.data.patch({ kuerzelSchulgliederung: value })
+		get: () => props.data.kuerzelSchulgliederung ?? undefined,
+		set: (value) => doPatch({ kuerzelSchulgliederung: value })
 	});
 
 	const inputIdFolgejahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
-		get: () => props.listJahrgaenge.find((e: JahrgangsListeEintrag) => props.data.daten?.idFolgejahrgang === e.id),
-		set: (value) => void props.data.patch({ idFolgejahrgang: value?.id })
+		get: () => props.listJahrgaenge.find((e: JahrgangsListeEintrag) => props.data.idFolgejahrgang === e.id),
+		set: (value) => doPatch({ idFolgejahrgang: value?.id })
 	});
 
 </script>

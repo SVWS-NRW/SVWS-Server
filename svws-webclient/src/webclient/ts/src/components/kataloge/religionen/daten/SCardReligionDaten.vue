@@ -15,37 +15,40 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { Religion} from "@svws-nrw/svws-core-ts";
-	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
+	import { Religion, ReligionEintrag} from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		data: DataReligion;
+		data: ReligionEintrag;
 	}>();
+
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<ReligionEintrag>): void;
+	}>()
+
+	function doPatch(data: Partial<ReligionEintrag>) {
+		emit('patch', data);
+	}
 
 	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
-	const id: ComputedRef<number | undefined> = computed(() => {
-		return props.data.daten?.id;
-	});
-
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel ?? undefined,
-		set: (value) => void props.data.patch({ kuerzel: value })
+		get: () => props.data.kuerzel ?? undefined,
+		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.text ?? undefined,
-		set: (value) => void props.data.patch({ text: value })
+		get: () => props.data.text ?? undefined,
+		set: (value) => doPatch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.textZeugnis ?? undefined,
-		set: (value) => void props.data.patch({ textZeugnis: value })
+		get: () => props.data.textZeugnis ?? undefined,
+		set: (value) => doPatch({ textZeugnis: value })
 	});
 
 	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
-		get: () => Religion.getByKuerzel(props.data.daten?.kuerzel || null) || undefined,
-		set: (value) => void props.data.patch({ kuerzel: value?.daten.kuerzel || null })
+		get: () => Religion.getByKuerzel(props.data.kuerzel || null) || undefined,
+		set: (value) => doPatch({ kuerzel: value?.daten.kuerzel || null })
 	});
 
 </script>
