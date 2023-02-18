@@ -17,7 +17,6 @@
 	import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostFach, GostFachwahl, GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { routeApp } from "~/router/RouteApp";
 
 	const props = defineProps<{
