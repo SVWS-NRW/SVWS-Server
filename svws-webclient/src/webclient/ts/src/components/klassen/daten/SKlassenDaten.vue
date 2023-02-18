@@ -1,30 +1,28 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-klasse-basisdaten :data="data" :list-jahrgaenge="listJahrgaenge" :map-jahrgaenge="mapJahrgaenge" />
-		<s-card-klasse-klassenleitungen :data="data" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
+		<s-card-klasse-basisdaten :data="data" :map-jahrgaenge="mapJahrgaenge" @patch="doPatch" />
+		<s-card-klasse-klassenleitungen :data="data" :map-lehrer="mapLehrer" @patch="doPatch" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataKlasse } from "~/apps/klassen/DataKlasse";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
+	import { JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
-		item: ShallowRef<KlassenListeEintrag | undefined>,
-		data: DataKlasse,
-		listLehrer: ListLehrer,
+		patch: (data : Partial<KlassenDaten>) => Promise<void>;
+		data: KlassenDaten,
 		mapLehrer: Map<number, LehrerListeEintrag>,
-		listJahrgaenge: ListJahrgaenge,
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>,
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKlassenDaten.hidden()) && (props.item.value !== undefined);
+		return !routeKlassenDaten.hidden();
 	});
+
+	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

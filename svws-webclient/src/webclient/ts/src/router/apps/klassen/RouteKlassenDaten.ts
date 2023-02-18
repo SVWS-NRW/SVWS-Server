@@ -1,15 +1,32 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-import { DataKlasse } from "~/apps/klassen/DataKlasse";
+import { routeLogin } from "~/router/RouteLogin";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKlassen, routeKlassen } from "../RouteKlassen";
 
 export class RouteDataKlassenDaten {
 	item: KlassenListeEintrag | undefined = undefined;
-	daten: DataKlasse = new DataKlasse();
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
+	private _daten: KlassenDaten | undefined = undefined;
+
+	get daten(): KlassenDaten {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: KlassenDaten | undefined) {
+		this._daten = value;
+	}
+
+	patch = async (data : Partial<KlassenDaten>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchKlassenDaten", data);
+		//await routeLogin.data.api.patchKursDaten(data, routeLogin.data.schema, this.item.id);
+	}
 }
 
 const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue");
@@ -42,10 +59,10 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getKlasse(routeLogin.data.schema, item.id)
 		}
 	}
 
@@ -55,11 +72,9 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.data.item,
+			patch: this.data.patch,
 			data: this.data.daten,
-			listLehrer: routeKlassen.data.listLehrer,
 			mapLehrer: routeKlassen.data.mapLehrer,
-			listJahrgaenge: this.data.listJahrgaenge,
 			mapJahrgaenge: this.data.mapJahrgaenge
 		};
 	}

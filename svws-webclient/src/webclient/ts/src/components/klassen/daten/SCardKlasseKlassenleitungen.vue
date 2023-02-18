@@ -11,9 +11,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core-ts";
-	import { DataKlasse } from "~/apps/klassen/DataKlasse";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { KlassenDaten, LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	type Lehrer = {
@@ -24,15 +22,14 @@
 	}
 
 	const props = defineProps<{
-		data: DataKlasse,
-		listLehrer: ListLehrer,
+		data: KlassenDaten,
 		mapLehrer: Map<number, LehrerListeEintrag>
 	}>();
 
 	const liste: ComputedRef<Lehrer[]> = computed(() => {
-		if (props.data.daten?.klassenLeitungen === undefined)
+		if (props.data.klassenLeitungen === undefined)
 			return [];
-		return (props.data.daten.klassenLeitungen?.toArray() as number[]).map((id) => {
+		return (props.data.klassenLeitungen?.toArray() as number[]).map((id) => {
 			const lehrer = props.mapLehrer.get(id);
 			if (lehrer === undefined)
 				return {};
