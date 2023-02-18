@@ -1,5 +1,5 @@
 <template>
-	<div class="content-card--blockungsuebersicht flex content-start">
+	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex content-start">
 		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="faecherManager"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
@@ -35,6 +35,10 @@
 			</div>
 		</div>
 	</div>
+	<div v-else>
+		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
+		"Blockung hinzufügen", um eine neue Kursplanung zu erstellen.
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -60,6 +64,7 @@
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		hatBlockung: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
@@ -70,9 +75,9 @@
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const regelzahl: ComputedRef<number> = computed(() => props.getDatenmanager().getRegelAnzahl() || 0);
+	const regelzahl: ComputedRef<number> = computed(() => props.hatBlockung ? props.getDatenmanager().getRegelAnzahl() : 0);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1);
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.hatBlockung ? props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1 : false);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;

@@ -1,10 +1,8 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostHalbjahr, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
-import { routeGostKursplanung } from "../RouteGostKursplanung";
-import { RouteGostKursplanungBlockung, routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
+import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
@@ -12,10 +10,10 @@ import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuel
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
 
-export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanungBlockung> {
+export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanung> {
 
 	public constructor() {
-		super("gost.kursplanung.halbjahr.ergebnis.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
+		super("gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";
@@ -39,9 +37,9 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
 			return { name: routeGost.name, params: { } };
 		if ((halbjahr === undefined) || (idBlockung === undefined))
-			return routeGostKursplanung.getRoute(abiturjahr, halbjahr?.id);
+			return routeGostKursplanung.getRouteHalbjahr(abiturjahr, (halbjahr === undefined) ? GostHalbjahr.EF1.id : halbjahr.id);
 		if (idErgebnis === undefined)
-			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, idBlockung);
+			return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
 		return true;
 	}
 
@@ -67,11 +65,15 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		if ((abiturjahr !== routeGostKursplanung.data.abiturjahr) || (halbjahr !== routeGostKursplanung.data.halbjahr) || (idBlockung === undefined))
-			return routeGostKursplanung.getRoute(abiturjahr, halbjahr.id);
+			return routeGostKursplanung.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		if (idBlockung !== routeGostKursplanung.data.auswahlBlockung.id)
-			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, idBlockung);
-		if (idErgebnis !== routeGostKursplanung.data.auswahlErgebnis.id)
-			routeGostKursplanungBlockung.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis);
+			return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
+		if (idErgebnis !== routeGostKursplanung.data.auswahlErgebnis.id) {
+			if (idErgebnis === undefined)
+				routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
+			else
+				routeGostKursplanung.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, idErgebnis);
+		}
 		const idSchueler = to_params.idschueler === undefined ? undefined : parseInt(to_params.idschueler);
 		// ... wurde die ID des Schülers auf undefined setzt, so prüfe, ob die Schülerliste leer ist und wähle ggf. das erste Element aus
 		if (idSchueler === undefined) {

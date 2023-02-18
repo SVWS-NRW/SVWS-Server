@@ -29,7 +29,9 @@
 				</template>
 			</template>
 		</svws-ui-table>
-		<router-view name="gost_kursplanung_ergebnis_auswahl" />
+		<s-gost-kursplanung-ergebnis-auswahl :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
+			:get-datenmanager="getDatenmanager" :remove-ergebnis="removeErgebnis" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 		<svws-ui-modal ref="modal_remove_blockung" size="small">
 			<template #modalTitle>Blockung löschen</template>
 			<template #modalDescription>
@@ -45,7 +47,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostBlockungsdaten, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
@@ -61,6 +63,13 @@
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
+		// ... zusätzlich für die Ergebnisauswahl
+		getDatenmanager: () => GostBlockungsdatenManager;
+		removeErgebnis: (idErgebnis: number) => Promise<void>;
+		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
+		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
+		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	}>();
 
 	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {

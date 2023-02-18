@@ -4,8 +4,7 @@ import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/Gos
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { ApiStatus } from "~/utils/ApiStatus";
-import { routeGostKursplanungBlockung } from "./RouteGostKursplanungBlockung";
-import { routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
+import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
 
 interface RouteStateGostKursplanung {
@@ -148,11 +147,11 @@ export class RouteDataGostKursplanung {
 		return this._state.value.halbjahr;
 	}
 
-	public async setHalbjahr(halbjahr: GostHalbjahr) {
+	public async setHalbjahr(halbjahr: GostHalbjahr): Promise<boolean> {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (halbjahr === this._state.value.halbjahr)
-			return;
+			return false;
 		// Lade die Liste der Blockungen
 		this.apiStatus.start();
 		const listBlockungen = await routeLogin.data.api.getGostAbiturjahrgangBlockungsliste(routeLogin.data.schema, this.abiturjahr, halbjahr.id);
@@ -187,6 +186,7 @@ export class RouteDataGostKursplanung {
 			schuelerFilter: undefined,
 			auswahlSchueler: this._state.value.auswahlSchueler,
 		};
+		return true;
 	}
 
 
@@ -619,7 +619,7 @@ export class RouteDataGostKursplanung {
 		this.apiStatus.start();
 		const result = await routeLogin.data.api.dupliziereGostBlockungMitErgebnis(routeLogin.data.schema, idErgebnis);
 		this.apiStatus.stop();
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(result.abijahrgang, result.gostHalbjahr, result.id));
+		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(result.abijahrgang, result.gostHalbjahr, result.id));
 	}
 
 	ergebnisHochschreiben = async () => {
@@ -630,7 +630,7 @@ export class RouteDataGostKursplanung {
 		const halbjahr = this.halbjahr.next()?.id || this.halbjahr.id;
 		const result = await routeLogin.data.api.schreibeGostBlockungsErgebnisHoch(routeLogin.data.schema, this.auswahlErgebnis.id);
 		this.apiStatus.stop();
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr, result.id));
+		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr, result.id));
 	}
 
 	ergebnisAktivieren = async (): Promise<boolean> => {
@@ -647,22 +647,26 @@ export class RouteDataGostKursplanung {
 
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
-		await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(this.abiturjahr, this.halbjahr.id, undefined));
+		await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, value.id));
 	}
 
-	gotoBlockung = async (idBlockung : number) => {
-		if (idBlockung !== this._state.value.auswahlBlockung?.id)
-			await RouteManager.doRoute(routeGostKursplanungHalbjahr.getRoute(this.abiturjahr, this.halbjahr.id, idBlockung));
+	gotoBlockung = async (value: GostBlockungListeneintrag | undefined) => {
+		if (value?.id !== this._state.value.auswahlBlockung?.id) {
+			if (value === undefined)
+				await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, this.halbjahr.id));
+			else
+				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, value.id));
+		}
 	}
 
 	gotoErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
 		if ((value?.id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive())) {
-			if (this.hatErgebnis && this.hatSchueler) {
-				await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value?.id, this.auswahlSchueler.id));
+			if (this.hatErgebnis && this.hatSchueler && (value !== undefined)) {
+				await RouteManager.doRoute(routeGostKursplanung.getRouteSchueler(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value.id, this.auswahlSchueler.id));
 			} else if (value !== undefined) {
-				await RouteManager.doRoute(routeGostKursplanungBlockung.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value.id));
+				await RouteManager.doRoute(routeGostKursplanung.getRouteErgebnis(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value.id));
 			} else {
-				await RouteManager.doRoute(routeGostKursplanungBlockung.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, undefined));
+				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id));
 			}
 		}
 	}

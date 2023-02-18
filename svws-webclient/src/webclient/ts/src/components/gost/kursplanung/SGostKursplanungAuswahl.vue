@@ -12,22 +12,40 @@
 				</template>
 			</template>
 		</svws-ui-table>
-		<router-view name="gost_kursplanung_blockung_auswahl" />
+		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
+			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
+			:get-datenmanager="getDatenmanager" :remove-ergebnis="removeErgebnis" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
-	import { RouterView, useRouter } from 'vue-router';
+	import { useRouter } from 'vue-router';
 	import { routeLogin } from "~/router/RouteLogin";
-	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
+	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
+	import { ApiStatus } from '~/utils/ApiStatus';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 		halbjahr: GostHalbjahr;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
+		// ... zusätzlich für die Blockungsauswahl
+		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
+		removeBlockung: () => Promise<void>;
+		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
+		auswahlBlockung: GostBlockungListeneintrag | undefined;
+		mapBlockungen: Map<number, GostBlockungListeneintrag>;
+		apiStatus: ApiStatus;
+		// ... zusätzlich für die Ergebnisauswahl
+		getDatenmanager: () => GostBlockungsdatenManager;
+		removeErgebnis: (idErgebnis: number) => Promise<void>;
+		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
+		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
+		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	}>();
 
 	const router = useRouter();
@@ -48,7 +66,7 @@
 			return;
 		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.abiturjahr, props.halbjahr.id);
 		const abiturjahr = props.jahrgangsdaten.abiturjahr;
-		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
+		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
