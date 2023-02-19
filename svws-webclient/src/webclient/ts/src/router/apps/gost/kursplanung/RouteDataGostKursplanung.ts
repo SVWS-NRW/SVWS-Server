@@ -191,7 +191,7 @@ export class RouteDataGostKursplanung {
 
 
 	public get hatBlockung(): boolean {
-		return this._state.value.auswahlBlockung !== undefined;
+		return this._state.value.datenmanager !== undefined;
 	}
 
 	public get mapBlockungen(): Map<number, GostBlockungListeneintrag> {
@@ -205,7 +205,6 @@ export class RouteDataGostKursplanung {
 	}
 
 	public async setAuswahlBlockung(value: GostBlockungListeneintrag | undefined) {
-console.log("setAuswahlBlockung", value);
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (this._state.value.auswahlBlockung?.id === value?.id)
@@ -261,7 +260,7 @@ console.log("setAuswahlBlockung", value);
 
 
 	public get hatErgebnis(): boolean {
-		return this._state.value.auswahlErgebnis !== undefined;
+		return this._state.value.ergebnismanager !== undefined;
 	}
 
 	public get ergebnisse(): List<GostBlockungsergebnisListeneintrag> {

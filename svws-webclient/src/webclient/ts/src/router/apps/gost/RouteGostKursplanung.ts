@@ -94,7 +94,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// ... wurde die ID der Blockung verändert, so setze den neu ausgewählten Blockungs-Eintrag und aktualisiere ggf. die Route
 			await this.data.setAuswahlBlockung(blockungsEintrag);
 			if (idErgebnis === undefined) {
-				if (!this.data.hatErgebnis)
+				if (this.data.ergebnisse.size() <= 0)
 					throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 				// ...wenn kein Ergebnis in der Route gesetzt wurde, aber ein Ergebnis existiert, dann setze die Route neu auf das Vorlagen-Ergebnis und ggf. auf den aktuellen Schüler
 				if (this.data.hatSchueler)
@@ -105,18 +105,18 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		// Prüfe das Blockungsergebnis und setzte dieses ggf.
 		if (idErgebnis === undefined) {
 			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das erste Element aus
-			if ((this.data.hatBlockung) && (this.data.hatErgebnis)) {
+			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
 				const ergebnis = this.data.datenmanager.getErgebnisseSortiertNachBewertung().get(0);
 				return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
-			if ((this.data.hatBlockung) && (!this.data.hatErgebnis))
+			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))
 				return;   // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id); // Es existiert keine Blockung, also route zu der Halbjahresauswahl
 		}
 		const ergebnisEintrag = routeGostKursplanung.data.datenmanager.getErgebnis(idErgebnis);
 		if (ergebnisEintrag === undefined) {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
-			if (!this.data.hatErgebnis)
+			if (this.data.ergebnisse.size() <= 0)
 				throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
 			const ergebnis = this.data.datenmanager.getErgebnisseSortiertNachBewertung().get(0);
 			return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
