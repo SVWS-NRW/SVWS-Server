@@ -264,6 +264,7 @@ task publishNexusTsLib(type: NpmPublish) {
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
+	scopePublic = false
 }
 
 task publishNexusUiComponents(type: NpmPublish) {
@@ -273,6 +274,7 @@ task publishNexusUiComponents(type: NpmPublish) {
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
+	scopePublic = false
 }
 
 task publishNexusWebClient(type: NpmPublish) {
@@ -282,6 +284,7 @@ task publishNexusWebClient(type: NpmPublish) {
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
+	scopePublic = false
 }
 
 publishReleaseAll.dependsOn publishNexusTsLib

@@ -16,6 +16,7 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 	public String repository = null
 	public String actor = null
 	public String token = null
+	public boolean scopePublic = false
 
 	NpmPublish() {
 		super(NpmPublish.class);
@@ -35,7 +36,13 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 		this.environment('NPM_ACTOR', this.actor);
 		this.environment('NPM_TOKEN', this.token);
 		this.environment('NPM_TOKEN_BASE64', (this.actor + ':' + this.token).bytes.encodeBase64().toString());
-		cmdLine.set(0, 'publish');
+		if (scopePublic) {
+			cmdLine.set(0, 'public');
+			cmdLine.add(0, '--access');
+			cmdLine.add(0, 'publish');
+		} else {
+			cmdLine.set(0, 'publish');
+		}
 		cmdLine.add(0, cfg.getNpmExectuable());
 		if (cfg.isWindows()) {
 			cmdLine.add(0, '/c');
