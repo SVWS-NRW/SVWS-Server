@@ -74,6 +74,7 @@
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		hatErgebnis: boolean;
 		kurs: GostBlockungKurs;
 		bgColor: string;
 		mapLehrer: Map<number, LehrerListeEintrag>;
@@ -149,13 +150,15 @@
 
 	function get_kursbezeichnung(kurs_id: number | undefined): string {
 		if (kurs_id === undefined)
-			return ""
-		return props.getErgebnismanager().getOfKursName(kurs_id);
+			return "";
+		return props.getDatenmanager().getNameOfKurs(kurs_id);
 	}
 
-	const anzahlSchienen: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfSchieneAnzahl() || 0);
+	const anzahlSchienen: ComputedRef<number> = computed(() => props.getDatenmanager().getSchienenAnzahl());
 
-	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.getErgebnismanager().getKursE(props.kurs.id));
+	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() =>
+		props.hatErgebnis ? props.getErgebnismanager().getKursE(props.kurs.id) : undefined
+	);
 
 	const kurseMitKursart: ComputedRef<Vector<GostBlockungsergebnisKurs>> = computed(() => {
 		const fachart = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
@@ -166,8 +169,8 @@
 		const kurse = props.getErgebnismanager().getOfFachKursmenge(props.kurs.fach_id);
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		return arr.filter(k => k.kursart === props.kurs.kursart).sort((a, b) => {
-			const a_name: string = props.getErgebnismanager().getOfKursName(a.id);
-			const b_name: string = props.getErgebnismanager().getOfKursName(b.id);
+			const a_name: string = props.getDatenmanager().getNameOfKurs(a.id);
+			const b_name: string = props.getDatenmanager().getNameOfKurs(b.id);
 			return a_name.localeCompare(b_name, "de-DE");
 		})
 	})

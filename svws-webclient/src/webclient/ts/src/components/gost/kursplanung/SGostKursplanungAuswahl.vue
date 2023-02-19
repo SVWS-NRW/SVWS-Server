@@ -15,7 +15,7 @@
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnis="removeErgebnis" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
-			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" />
 	</div>
 </template>
 
@@ -45,6 +45,7 @@
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
+		hatBlockung: boolean;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 	}>();
 

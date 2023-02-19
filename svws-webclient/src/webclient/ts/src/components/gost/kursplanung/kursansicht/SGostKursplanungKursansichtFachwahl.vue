@@ -14,7 +14,8 @@
 	</template>
 	<template v-else>
 		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
-			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager"
+			:hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 	</template>
@@ -40,6 +41,7 @@
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		fach: GostStatistikFachwahl;
 		faecherManager: GostFaecherManager;

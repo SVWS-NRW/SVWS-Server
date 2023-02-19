@@ -34,10 +34,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
+		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
+		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
 		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
 			return this.getRoute();
 		if (halbjahr === undefined) {
@@ -55,10 +55,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
+		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
+		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
 		// Prüfe den Abiturjahrgang und setze diesen ggf.
 		if (abiturjahr === undefined)
 			throw new Error("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
@@ -173,14 +173,16 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			removeErgebnisse: this.data.removeErgebnisse,
 			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,
 			setAuswahlErgebnis: this.data.setAuswahlErgebnis,
+			hatBlockung: this.data.hatBlockung,
 			auswahlErgebnis: this.data.hatErgebnis ? this.data.auswahlErgebnis : undefined,
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			hatBlockung: this.data.mapBlockungen.size > 0,
+			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,
+			hatErgebnis: this.data.hatErgebnis,
 			getErgebnismanager: () => this.data.ergebnismanager,
 			patchRegel: this.data.patchRegel,
 			addRegel: this.data.addRegel,

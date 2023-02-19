@@ -78,7 +78,7 @@
 						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
@@ -90,7 +90,7 @@
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
@@ -153,6 +153,7 @@
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
@@ -184,18 +185,20 @@
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.getErgebnismanager().getErgebnis().istVorlage || false);
+	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		return props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) || 0;
+		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
+		if (!props.hatErgebnis)
+			return false;
 		return props.getDatenmanager().removeSchieneAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		return props.getErgebnismanager().getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
+		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) : 0;
 	}
 
 	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {
