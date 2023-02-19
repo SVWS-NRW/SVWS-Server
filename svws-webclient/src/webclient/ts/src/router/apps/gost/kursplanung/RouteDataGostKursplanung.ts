@@ -207,7 +207,7 @@ export class RouteDataGostKursplanung {
 	public async setAuswahlBlockung(value: GostBlockungListeneintrag | undefined) {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (this._state.value.auswahlBlockung?.id === value?.id)
+		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
 			this._state.value = {
@@ -276,7 +276,7 @@ export class RouteDataGostKursplanung {
 	public async setAuswahlErgebnis(value: GostBlockungsergebnisListeneintrag | undefined) {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (this._state.value.auswahlBlockung?.id === value?.id)
+		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
 		if (value === undefined) {
 			this._state.value = {
