@@ -33,7 +33,7 @@
 </script>
 
 <template>
-	<label class="checkbox"
+	<label role="none" class="checkbox"
 		:class="{
 			'checkbox--disabled': disabled,
 			'checkbox--statistics': statistics,
@@ -43,14 +43,14 @@
 			'checkbox--indeterminate': modelValue === undefined || modelValue === null
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<Icon v-if="modelValue === undefined">
+		<Icon v-if="modelValue === null" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</Icon>
-		<Icon v-else-if="modelValue">
+		<Icon v-else-if="modelValue" role="checkbox">
 			<i-ri-checkbox-line v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</Icon>
-		<Icon v-else-if="!modelValue">
+		<Icon v-else-if="!modelValue" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 		</Icon>
 		<span class="checkbox--label" v-if="$slots.default || statistics">

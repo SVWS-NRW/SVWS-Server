@@ -89,7 +89,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Table">
+	<Story title="SVWS UI/Layout/Table (Deprecated)" icon="ri:alert-line" icon-color="#ccc">
 		<Variant title="Basic">
 			<Table :data="data" />
 		</Variant>

@@ -25,6 +25,69 @@
 			age: 49,
 			isActive: true,
 		},
+		{
+			id: 4,
+			name: "D",
+			email: "hallo@gmail.com",
+			age: 49,
+			isActive: true,
+		},
+		{
+			id: 5,
+			name: "A",
+			email: "test@web.de",
+			age: 16,
+			isActive: false,
+		},
+		{
+			id: 6,
+			name: "B",
+			email: "bla@gmx.de",
+			age: 31,
+			isActive: true,
+		},
+		{
+			id: 7,
+			name: "C",
+			email: "hallo@gmail.com",
+			age: 49,
+			isActive: true,
+		},
+		{
+			id: 8,
+			name: "D",
+			email: "hallo@gmail.com",
+			age: 49,
+			isActive: true,
+		},
+		{
+			id: 9,
+			name: "A",
+			email: "test@web.de",
+			age: 16,
+			isActive: false,
+		},
+		{
+			id: 10,
+			name: "B",
+			email: "bla@gmx.de",
+			age: 31,
+			isActive: true,
+		},
+		{
+			id: 11,
+			name: "C",
+			email: "hallo@gmail.com",
+			age: 49,
+			isActive: true,
+		},
+		{
+			id: 12,
+			name: "D",
+			email: "hallo@gmail.com",
+			age: 49,
+			isActive: true,
+		}
 	]);
 	const set = new Set<DataTableItem>();
 	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
@@ -34,9 +97,17 @@
 	setReactive.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
 	const columns = ref([
 		{
-			key: "name",
-			label: "Überschriebener NAme",
+			key: "id",
+			label: "ID",
 			sortable: true,
+			fixedWidth: 4,
+			align: "right",
+		},
+		{
+			key: "name",
+			label: "Überschriebener Name",
+			sortable: true,
+			span: 2,
 		},
 		{
 			key: "email",
@@ -51,7 +122,7 @@
 	const columns2 = ref([
 		{
 			key: "name",
-			label: "Überschriebener NAme",
+			label: "Überschriebener Name",
 			sortable: true,
 		},
 		{
@@ -99,7 +170,41 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/DataTable">
+	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
+		<Variant title="All Features">
+			<section style="max-height: 50vh" class="flex flex-col">
+				<DataTable v-model="selectedRows3"
+						   :items="data"
+						   :columns="columns"
+						   selectable
+						   v-model:sort-by="sortBy"
+						   v-model:sorting-order="sortingOrder"
+						   v-model:clicked="clickedRow"
+						   clickable
+						   count
+						   :rowActions="actions"
+						   :rowExecute="execute"
+				>
+					<template #footerActions>
+						<Button type="transparent">
+							Button
+						</Button>
+						<Button type="trash">
+							Button
+						</Button>
+						<Button type="icon">
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						</Button>
+					</template>
+				</DataTable>
+			</section>
+			<section class="mt-8">
+				<code><strong>Sort By:</strong> {{ sortBy }}</code><br/>
+				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br/>
+				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br/>
+				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
+			</section>
+		</Variant>
 		<Variant title="Basic">
 			<DataTable :items="data" />
 		</Variant>
@@ -139,7 +244,7 @@
 		</Variant>
 		<Variant title="Selection Multi + Footer Action">
 			<DataTable v-model="selectedRows2" :items="data" selectable>
-				<template #footer-actions>
+				<template #footerActions>
 					<button class="button button--icon">
 						<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 					</button>

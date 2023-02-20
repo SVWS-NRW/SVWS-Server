@@ -35,30 +35,23 @@
 			</div>
 		</template>
 		<template #content>
-			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-					:columns="cols" clickable selectable :footer="true">
-					<template #cell(idKlasse)="{ value }">
-						{{ mapKlassen.get(value)?.kuerzel }}
-					</template>
-					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-					<template #footer>
-						<div class="text-sm normal-case mr-auto">
-							<span v-if="selectedItems.length">{{ selectedItems.length }}/{{ rowsFiltered.length }} ausgewählt</span>
-							<span v-else :class="{'opacity-50' : !rowsFiltered.length}">{{ rowsFiltered.length }} Einträge</span>
-						</div>
-						<button class="button button--icon" @click="addLine()">
-							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-						</button>
-						<button class="button button--icon">
-							<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
-						</button>
-						<button class="button button--icon">
-							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
-						</button>
-					</template>
-				</svws-ui-data-table>
-			</div>
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
+				:columns="cols" clickable selectable count>
+				<template #cell(idKlasse)="{ value }">
+					{{ mapKlassen.get(value)?.kuerzel }}
+				</template>
+				<template #footerActions>
+					<button class="button button--icon" @click="addLine()">
+						<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+					</button>
+					<button class="button button--icon">
+						<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
+					</button>
+					<button class="button button--icon">
+						<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
+					</button>
+				</template>
+			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>

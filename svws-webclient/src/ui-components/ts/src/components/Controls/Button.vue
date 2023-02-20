@@ -152,6 +152,29 @@
 	}
 }
 
+.button--trash,
+.button--icon {
+	&.button--small {
+		@apply text-sm font-medium h-6 w-6;
+		padding: 0.3em !important;
+
+		svg {
+			width: 1.2em;
+			height: 1.2em;
+		}
+	}
+
+	.data-table__tfoot-actions &.button {
+		@apply text-button h-7 w-7;
+		padding: 0.3em !important;
+
+		svg {
+			width: 1.2em;
+			height: 1.2em;
+		}
+	}
+}
+
 .button--icon {
 	@apply p-2 justify-center border-0 items-center;
 	@apply w-8 h-8;

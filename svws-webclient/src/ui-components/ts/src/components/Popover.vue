@@ -2,7 +2,6 @@
 	import Popper from "vue3-popper";
 	import { Placement } from "../types";
 
-
 	const {
 		placement = "auto",
 		disableClickAway = false,
@@ -10,6 +9,7 @@
 		offsetY = '0',
 		openDelay = 0,
 		hover = true,
+		context = false,
 	} = defineProps<{
 		placement?: Placement;
 		disableClickAway?: boolean;
@@ -17,12 +17,13 @@
 		offsetY?: string;
 		openDelay?: number;
 		hover?: boolean;
+		context?: boolean;
 	}>();
 </script>
 
 <template>
 	<Popper :hover="hover" :placement="placement" :disable-click-away="disableClickAway" :offset-x="offsetX"
-		:offset-y="offsetY" :open-delay="openDelay" arrow>
+		:offset-y="offsetY" :open-delay="openDelay" arrow :class="{'popper--context': context}">
 		<slot name="trigger" />
 		<template #content>
 			<slot name="content" />
@@ -63,6 +64,14 @@
 		--popper-theme-background-color: theme("colors.light");
 		--popper-theme-background-color-hover: theme("colors.light");
 		--popper-theme-text-color: theme("colors.black");
+	}
+
+	.popper--context {
+		--popper-theme-background-color: theme("colors.white");
+		--popper-theme-background-color-hover: theme("colors.white");
+		--popper-theme-text-color: theme("colors.black");
+		--popper-theme-padding: theme("spacing.2");
+		--popper-theme-border-radius: theme("borderRadius.lg");
 	}
 
 	.popper--statistics {

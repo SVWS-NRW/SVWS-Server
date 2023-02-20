@@ -14,7 +14,8 @@ export default function useClickable(
 	const clickedItem = useSafeVModel(props, null as DataTableItem | null, 'clicked');
 
 	function isRowClicked(row: DataTableRow) {
-		return clickedItem.value === row.source
+		const clicked = {...clickedItem.value};
+		return clicked.id === row.source.id
 	}
 
 	function resetClickedRow() {
@@ -44,5 +45,6 @@ export default function useClickable(
 	return {
 		isRowClicked,
 		toggleRowClick,
+		setClickedRow
 	}
 }

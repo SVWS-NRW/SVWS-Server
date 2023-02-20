@@ -15,7 +15,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
-				<template #footer>
+				<template #footerActions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0"
 						:create-benutzergruppe="createBenutzergruppe"
 						:delete-benutzergruppe_n="deleteBenutzergruppe_n" />

@@ -3,7 +3,7 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ auswahl?.kuerzel ?? '' }}</span>
-				<svws-ui-badge type="light" title="ID">
+				<svws-ui-badge type="light" title="ID" class="font-mono">
 					<i-ri-fingerprint-line />
 					{{ auswahl?.id }}
 				</svws-ui-badge>

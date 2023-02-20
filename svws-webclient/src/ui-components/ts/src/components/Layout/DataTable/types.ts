@@ -8,6 +8,8 @@ export type DataTableColumn = {
   label?: string
   sortable?: boolean
   span?: number
+  fixedWidth?: string | number
+  align?: 'left' | 'center' | 'right'
 }
 
 export type DataTableColumnSource = DataTableColumn | string
@@ -21,6 +23,8 @@ export interface DataTableColumnInternal {
   label: string
   sortable: boolean
   span: number
+  fixedWidth: string | number
+  align: 'left' | 'center' | 'right'
 }
 
 export type DataTableItem = Record<string, any>
@@ -36,4 +40,5 @@ export interface DataTableRow {
   initialIndex: number
   source: DataTableItem
   cells: DataTableCell[]
+  isEditing?: boolean
 }

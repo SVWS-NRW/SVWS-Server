@@ -27,7 +27,7 @@
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "kuerzel", label: "Kuerzel", sortable: true, defaultSort: 'asc' },
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	];
 </script>

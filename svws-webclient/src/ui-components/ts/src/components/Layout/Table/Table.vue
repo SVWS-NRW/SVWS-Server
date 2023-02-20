@@ -349,7 +349,8 @@
 		line-height: 1.25;
 	}
 
-	.secondary-menu--content .v-table {
+	.secondary-menu--content .v-table,
+	.secondary-menu--content table 	{
 		@apply border-l-0;
 	}
 

@@ -14,7 +14,7 @@
 			<div class="container">
 				<svws-ui-data-table :clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
 					:columns="cols" clickable :footer="true">
-					<template #footer>
+					<template #footerActions>
 						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>

@@ -23,6 +23,11 @@ export default function useSelectable({
 		return sortedRows.value.every(isRowSelected)
 	})
 
+	const someNotAllRowsSelected = computed(() => {
+		if (sortedRows.value.length === 0) { return false }
+		return sortedRows.value.some(isRowSelected) && !allRowsSelected.value
+	})
+
 	function isRowSelected(row: DataTableRow) {
 		return selectedItemsRaw.value.includes(row.source)
 	}
@@ -72,5 +77,6 @@ export default function useSelectable({
 		isRowSelected,
 		noRowsSelected,
 		allRowsSelected,
+		someNotAllRowsSelected,
 	}
 }

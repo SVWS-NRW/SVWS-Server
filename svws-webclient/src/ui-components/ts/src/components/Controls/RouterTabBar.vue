@@ -194,7 +194,7 @@
 		@apply h-9 text-sm;
 
 		.button {
-			padding: .5rem .75rem;
+			padding: .25rem .75rem;
 		}
 	}
 

@@ -7,7 +7,7 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge type="light" title="ID">
+					<svws-ui-badge type="light" title="ID" class="font-mono">
 						<i-ri-fingerprint-line />
 						{{ stammdaten === undefined ? "" : stammdaten.id }}
 					</svws-ui-badge>

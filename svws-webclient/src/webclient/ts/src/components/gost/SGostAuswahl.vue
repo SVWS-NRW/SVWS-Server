@@ -13,7 +13,7 @@
 						<span v-if="(pending && value.abiturjahr === auswahl?.abiturjahr)" class="loading-spinner-dimensions">
 							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
-					<template #footer>
+					<template #footerActions>
 						<svws-ui-dropdown type="icon" class="">
 							<template #dropdownButton>Abiturjahr hinzufügen</template>
 							<template #dropdownItems>

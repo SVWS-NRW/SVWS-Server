@@ -17,7 +17,7 @@
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="setBenutzer" :model-value="auswahlGruppe" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
 				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
 				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-				<template #footer>
+				<template #footerActions>
 					<s-modal-benutzer-neu :show-delete-icon="auswahlGruppe.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
 						:delete-benutzer-allgemein="deleteBenutzerAllgemein" />
 				</template>

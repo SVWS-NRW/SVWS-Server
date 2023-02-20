@@ -27,6 +27,8 @@ export const buildTableColumn = (
 		label: input.label || capitalizeFirstLetter(input.key),
 		sortable: input.sortable || false,
 		span: input.span || 1,
+		fixedWidth: input.fixedWidth || 0,
+		align: input.align || 'left',
 	}
 }
 
@@ -47,7 +49,18 @@ export default function useColumns(props: UseColumnProps) {
 		}
 	})
 
+	const gridTemplateColumns = computed(() => {
+		return columnsComputed.value.map(column => {
+			return `minmax(${
+				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : '4rem'
+			}, ${
+				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
+			})`
+		}).join(' ')
+	})
+
 	return {
 		columnsComputed,
+		gridTemplateColumns,
 	}
 }
