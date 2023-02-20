@@ -6,6 +6,8 @@ import { routeLogin } from "~/router/RouteLogin";
 import { ref, Ref } from "vue";
 import { routeSchuelerAbschnitt, RouteSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeApp } from "~/router/RouteApp";
+import { SchuelerAbschnittDatenProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittDatenProps";
+import { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";
 
 export class RouteDataSchuelerAbschnittDaten {
 
@@ -113,7 +115,7 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAbschnittAuswahlProps {
 		return {
 			lernabschnitt: this.data.auswahl,
 			lernabschnitte: routeSchuelerAbschnitt.data.listAbschnitte,
@@ -121,7 +123,7 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuelerAbschnittDatenProps {
 		return {
 			schule: routeApp.data.schuleStammdaten,
 			data: this.data.daten.value,

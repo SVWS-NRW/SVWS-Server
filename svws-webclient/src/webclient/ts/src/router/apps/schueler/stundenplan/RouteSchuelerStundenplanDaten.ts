@@ -7,6 +7,8 @@ import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerSt
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/RouteApp";
+import { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
+import { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
 
 export class RouteDataSchuelerStundenplan {
 
@@ -87,7 +89,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 		return { name: this.name, params: { id, idStundenplan }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): SchuelerStundenplanAuswahlProps {
 		return {
 			stundenplan: this.data.auswahl.value,
 			stundenplaene: this.data.listAuswahl.value,
@@ -95,7 +97,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuelerStundenplanDatenProps {
 		return {
 			manager: this.data.manager.value
 		};

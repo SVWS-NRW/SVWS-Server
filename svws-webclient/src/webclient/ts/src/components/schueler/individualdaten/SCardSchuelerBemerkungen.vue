@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card class="lg:col-span-2 4xl:col-span-3 self-end">
 		<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data.bemerkungen"
-								@update:model-value="doPatch({ bemerkungen: String($event) })" resizeable="vertical" />
+			@update:model-value="doPatch({ bemerkungen: String($event) })" resizeable="vertical" />
 	</svws-ui-content-card>
 </template>
 

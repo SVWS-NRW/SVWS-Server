@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import BetterDefine from '@vue-macros/better-define'
 import Vue from "@vitejs/plugin-vue";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
@@ -11,6 +12,7 @@ export default defineConfig({
 	test: {},
 	server: { port: 3000 },
 	plugins: [
+		BetterDefine.vite(),
 		Vue({
 			include: [/\.vue$/, /\.md$/]
 		}),

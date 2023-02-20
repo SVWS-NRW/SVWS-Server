@@ -36,7 +36,8 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" v-model:selection="selectedItems" :data="rowsFiltered" :columns="cols" is-multi-select :footer="true">
+				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
+					:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<div class="text-sm normal-case mr-auto">
@@ -53,7 +54,7 @@
 							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 						</button>
 					</template>
-				</svws-ui-table>
+				</svws-ui-data-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -61,31 +62,14 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { routeSchueler } from "~/router/apps/RouteSchueler";
-	import { ListSchueler } from "~/apps/schueler/ListSchueler";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
-	export interface SchuelerProps {
-		selectedItems: Array<SchuelerListeEintrag>;
-		schulgliederung: Schulgliederung | undefined;
-		filtered: boolean;
-		search: string;
-	}
-	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		mapKlassen: Map<Number, KlassenListeEintrag>;
-		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
-		mapKurse: Map<Number, KursListeEintrag>;
-		schulgliederungen: List<Schulgliederung>;
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
 
-	const selected = routeSchueler.auswahl;
+	const props = defineProps<SchuelerAuswahlProps>();
 
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
@@ -95,27 +79,26 @@
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
-	const listSchueler: ComputedRef<ListSchueler> = computed(() => routeSchueler.liste);
 
-	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
-	const rows: ComputedRef<Array<any>> = computed(() => {
-		const array = listSchueler.value.gefiltert.map(e => ({
-			...e,
-			klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel ?? ""
-		}));
-		return array;
-	});
+	const rows = computed(() =>
+		[...props.listSchueler]
+			.filter(s => !props.filter.status.length || props.filter.status.map(s => s.bezeichnung).includes(s.status))
+			.filter(s => !props.filter.jahrgang || s.jahrgang === props.filter.jahrgang.kuerzel)
+			.filter(s => !props.filter.klasse || s.idKlasse === props.filter.klasse.id)
+			.filter(s => !props.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(props.filter.kurs.id))
+			.filter(s => !props.filter.schulgliederung || s.schulgliederung === props.filter.schulgliederung.daten.kuerzel)
+			.map(e => ({
+				...e,
+				klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel ?? ""
+			}))
+	);
 
-	const rowsFiltered: ComputedRef<Array<any>> = computed(() => {
-		const rowsConst = rows.value;
-		if (search.value && rowsConst) {
-			return rowsConst.filter(
-				(e: any) =>
-					e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-					e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-			);
-		}
-		return rowsConst;
+	const rowsFiltered = computed(() => {
+		return rows.value.filter(
+			(e: any) =>
+				e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+				e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+		);
 	});
 
 	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
@@ -126,51 +109,45 @@
 	const filterStatus: WritableComputedRef<Array<SchuelerStatus> | undefined> =
 		computed({
 			get(): Array<SchuelerStatus> | undefined {
-				return listSchueler.value.filter.status;
+				return props.filter.status;
 			},
 			set(value: Array<SchuelerStatus> | undefined) {
-				const filter = listSchueler.value.filter;
-				if (filter) {
-					filter.status = value || [];
-					listSchueler.value.filter = filter;
-					filtered.value = true;
-				}
+				const filter = props.filter;
+				filter.status = value || [];
+				props.setFilter(filter);
+				filtered.value = true;
 			}
 		});
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {
-			return listSchueler.value.filter.schulgliederung;
+			return props.filter.schulgliederung;
 		},
 		set(value: Schulgliederung | undefined) {
-			const filter = listSchueler.value.filter;
-			if (filter) {
-				filter.schulgliederung = value;
-				listSchueler.value.filter = filter;
-				filtered.value = true;
-			}
+			const filter = props.filter;
+			filter.schulgliederung = value;
+			props.setFilter(filter);
+			filtered.value = true;
 		}
 	});
 
 	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get(): JahrgangsListeEintrag | undefined {
-			return listSchueler.value.filter.jahrgang;
+			return props.filter.jahrgang;
 		},
 		set(value: JahrgangsListeEintrag | undefined) {
-			const filter = listSchueler.value.filter;
-			if (filter && listSchueler.value) {
-				filter.jahrgang = value;
-				filter.klasse = undefined;
-				filter.kurs = undefined;
-				listSchueler.value.filter = filter;
-				filtered.value = true;
-			}
+			const filter = props.filter;
+			filter.jahrgang = value;
+			filter.klasse = undefined;
+			filter.kurs = undefined;
+			props.setFilter(filter);
+			filtered.value = true;
 		}
 	});
 
 	const mapKlassenFiltered: ComputedRef<Map<number, KlassenListeEintrag>> = computed(() => {
 		const result: Map<number, KlassenListeEintrag> = new Map();
-		const jahrgang = listSchueler.value.filter.jahrgang;
+		const jahrgang = props.filter.jahrgang;
 		for (const kl of props.mapKlassen.values())
 			if ((jahrgang === undefined) || (kl.idJahrgang === jahrgang.id))
 				result.set(kl.id, kl);
@@ -179,37 +156,25 @@
 
 	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
 		get(): KlassenListeEintrag | undefined {
-			return listSchueler.value.filter.klasse;
+			return props.filter.klasse;
 		},
 		set(value: KlassenListeEintrag | undefined) {
-			if (listSchueler.value) {
-				const filter = listSchueler.value.filter;
-				filter.klasse = value;
-				listSchueler.value.filter = filter;
-				filtered.value = true;
-			}
+			const filter = props.filter;
+			filter.klasse = value;
+			props.setFilter(filter);
+			filtered.value = true;
 		}
-	});
-
-	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> = computed(() => {
-		const liste = [...props.mapKurse.values()];
-		const jahrgang = listSchueler.value.filter.jahrgang;
-		return (jahrgang === undefined)
-			? liste
-			: liste.filter(k => k.idJahrgaenge.contains(jahrgang.id));
 	});
 
 	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> = computed({
 		get(): KursListeEintrag | undefined {
-			return listSchueler.value.filter.kurs;
+			return props.filter.kurs;
 		},
 		set(value: KursListeEintrag | undefined) {
-			if (listSchueler.value) {
-				const filter = listSchueler.value.filter;
-				filter.kurs = value;
-				listSchueler.value.filter = filter;
-				filtered.value = true;
-			}
+			const filter = props.filter;
+			filter.kurs = value;
+			props.setFilter(filter);
+			filtered.value = true;
 		}
 	});
 
@@ -235,10 +200,8 @@
 	}
 
 	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({
-		get: () => listSchueler.value.ausgewaehlt_gruppe,
-		set: (items: SchuelerListeEintrag[]) => {
-			listSchueler.value.ausgewaehlt_gruppe = items;
-		}
+		get: () => props.auswahlGruppe,
+		set: (items: SchuelerListeEintrag[]) => props.setAuswahlGruppe(items)
 	});
 
 	function onAction(action: string, item: SchuelerListeEintrag) {
@@ -268,16 +231,14 @@
 	}
 
 	function filterReset() {
-		if (listSchueler.value) {
-			search.value = "";
-			const filter = listSchueler.value.filter;
-			filter.jahrgang = undefined;
-			filter.klasse = undefined;
-			filter.kurs = undefined;
-			filter.schulgliederung = undefined;
-			filter.status = [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ];
-			listSchueler.value.filter = filter;
-			filtered.value = false;
-		}
+		search.value = "";
+		const filter = props.filter;
+		filter.jahrgang = undefined;
+		filter.klasse = undefined;
+		filter.kurs = undefined;
+		filter.schulgliederung = undefined;
+		filter.status = [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ];
+		props.setFilter(filter);
+		filtered.value = false;
 	}
 </script>

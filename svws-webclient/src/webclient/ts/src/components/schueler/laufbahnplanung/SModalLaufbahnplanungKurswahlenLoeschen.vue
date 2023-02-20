@@ -10,7 +10,7 @@
 			</template>
 			<template #modalActions>
 				<svws-ui-button @click="toggle_modal" type="secondary">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja <i-ri-delete-bin-line/></svws-ui-button>
+				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja <i-ri-delete-bin-line /></svws-ui-button>
 			</template>
 		</svws-ui-modal>
 	</div>

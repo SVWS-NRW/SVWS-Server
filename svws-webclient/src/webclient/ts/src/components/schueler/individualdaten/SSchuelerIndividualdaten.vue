@@ -12,20 +12,11 @@
 
 <script setup lang="ts">
 
-	import { FoerderschwerpunktEintrag, KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
+	import { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 
-	const props = defineProps<{
-		patch: (data : Partial<SchuelerStammdaten>) => Promise<void>;
-		data: SchuelerStammdaten;
-		mapOrte: Map<number, OrtKatalogEintrag>;
-		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-		mapFahrschuelerarten: Map<number, KatalogEintrag>;
-		mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
-		mapHaltestellen: Map<number, KatalogEintrag>
-		mapReligionen: Map<number, ReligionEintrag>;
-	}>();
+	const props = defineProps<SchuelerIndividualdatenProps>();
 	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

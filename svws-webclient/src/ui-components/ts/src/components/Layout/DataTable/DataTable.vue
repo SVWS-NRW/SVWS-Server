@@ -204,7 +204,7 @@
 			return props.items.length === 0;
 		const iterator = props.items[Symbol.iterator]();
 		const res = iterator.next();
-		return res.done === true && res.value === undefined
+		return res.done !== true && res.value === undefined
 	});
 
 	const computedTableAttributes = computed(

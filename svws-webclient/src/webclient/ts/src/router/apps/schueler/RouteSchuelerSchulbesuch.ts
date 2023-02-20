@@ -4,6 +4,7 @@ import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
 import { routeLogin } from "~/router/RouteLogin";
+import { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -46,12 +47,17 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		super.text = "Schulbesuch";
 	}
 
+
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.data.onSelect(undefined);
 		} else {
-			const tmp = parseInt(to_params.id as string);
-			await this.data.onSelect(this.parent!.liste.liste.find(s => s.id === tmp)?.id);
+			const id = parseInt(to_params.id);
+			await this.data.onSelect(this.parent.data.mapSchueler.get(id)?.id);
 		}
 	}
 
@@ -59,7 +65,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
 			data: this.data.daten,
 			patch: this.data.patch

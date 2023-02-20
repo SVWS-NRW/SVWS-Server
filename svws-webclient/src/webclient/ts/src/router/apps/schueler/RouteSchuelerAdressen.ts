@@ -6,6 +6,7 @@ import { routeSchueler, RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
 import { Ref, ref } from "vue";
+import { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 
@@ -124,18 +125,24 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 		this.data.mapBetriebe = mapBetriebe;
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if (to_params.id === undefined)
-			return false;
-		const tmp = parseInt(to_params.id as string);
-		await this.data.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+		if (to_params.id === undefined) {
+			await this.data.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id);
+			await this.data.onSelect(this.parent.data.mapSchueler.get(id));
+		}
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuelerAdressenProps {
 		return {
 			patchBetrieb: this.data.patchBetrieb,
 			patchSchuelerBetriebsdaten: this.data.patchSchuelerBetriebsdaten,

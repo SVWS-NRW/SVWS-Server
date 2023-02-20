@@ -1,19 +1,8 @@
 <template>
-	<td
-		:class="[
-			'min-w-[3rem] text-center',
-			{
-				'cursor-pointer': moeglich && !bewertet,
-				'': moeglich,
-				'text-sm text-black/50': bewertet,
-				'cursor-not-allowed': cursorNotAllowed,
-				'bg--stripes': cursorNotAllowed || bewertet,
-			}
-		]"
+	<td :class="[ 'min-w-[3rem] text-center', { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed, 'bg--stripes': cursorNotAllowed || bewertet } ]"
 		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
-		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''"
-	>
+		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
 			<svws-ui-popover class="popper--danger" v-if="istFachkombiErforderlich" placement="bottom">
 				<template #trigger>

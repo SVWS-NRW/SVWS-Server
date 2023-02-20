@@ -2,8 +2,8 @@
 	<svws-ui-content-card class="pt-8">
 		<div class="router-tab-bar--subnav">
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
-			<svws-ui-button size="small" type="transparent" title="Planung exportieren">Exportieren <i-ri-download-2-line/></svws-ui-button>
-			<svws-ui-button size="small" type="transparent" title="Planung importieren">Importieren <i-ri-upload-2-line/></svws-ui-button>
+			<svws-ui-button size="small" type="transparent" title="Planung exportieren">Exportieren <i-ri-download-2-line /></svws-ui-button>
+			<svws-ui-button size="small" type="transparent" title="Planung importieren">Importieren <i-ri-upload-2-line /></svws-ui-button>
 			<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
 				Manueller Modus
 				<template v-if="istManuellerModus">
@@ -13,7 +13,7 @@
 			<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
 			<s-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </s-modal-hilfe>
 		</div>
-		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10"/>
+		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10" />
 		<div class="v-table--container">
 			<table class="v-table--complex table-auto w-full">
 				<thead :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
@@ -22,7 +22,7 @@
 						<th class="text-center" colspan="2"> Sprachen </th>
 						<th class="text-center" colspan="2"> EF </th>
 						<th class="text-center" colspan="4"> Qualifikationsphase </th>
-						<th class="text-center" rowspan="2"> Abitur-<br/>fach </th>
+						<th class="text-center" rowspan="2"> Abitur-<br>fach </th>
 					</tr>
 					<tr>
 						<th class="text-center"> Kürzel </th>
@@ -41,7 +41,7 @@
 				<tbody>
 					<tr v-for="row in rows" :key="row.id">
 						<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-												:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+							:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
 					</tr>
 				</tbody>
 				<tfoot>
@@ -60,17 +60,16 @@
 						<td v-for="(jahrgang, i) in kurszahlen" :key="i"
 							class="text-center cell--padding-sm"
 							:class="{
-									'bg-yellow-400': jahrgang < 10,
-									'bg-green-300': jahrgang > 9,
-									'bg-green-600': jahrgang > 11
-								}">
+								'bg-yellow-400': jahrgang < 10,
+								'bg-green-300': jahrgang > 9,
+								'bg-green-600': jahrgang > 11
+							}">
 							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
+								:class="{
 									'bg-yellow-400': jahrgang < 10,
 									'bg-green-300': jahrgang > 9 && jahrgang < 12,
 									'bg-green-600': jahrgang > 11
-								}"
-							>
+								}">
 								{{ jahrgang }}
 							</span>
 							<!--
@@ -81,19 +80,18 @@
 						</td>
 						<td class="text-center cell--padding-sm"
 							:class="{
+								'bg-red-400': kurse_summe < 30,
+								'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
+								'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
+								'bg-green-600': kurse_summe > 36
+							}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								:class="{
 									'bg-red-400': kurse_summe < 30,
 									'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
 									'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
 									'bg-green-600': kurse_summe > 36
 								}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
-									'bg-red-400': kurse_summe < 30,
-									'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
-									'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
-									'bg-green-600': kurse_summe > 36
-								}"
-							>
 								{{ kurse_summe }}
 							</span>
 							<!--
@@ -109,37 +107,35 @@
 						<td v-for="(jahrgang, i) in wochenstunden" :key="i"
 							class="text-center cell--padding-sm"
 							:class="{
+								'bg-red-400': jahrgang < 30,
+								'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
+								'bg-green-300': jahrgang > 32 && jahrgang < 37,
+								'bg-green-600': jahrgang > 36
+							}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								:class="{
 									'bg-red-400': jahrgang < 30,
 									'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
 									'bg-green-300': jahrgang > 32 && jahrgang < 37,
 									'bg-green-600': jahrgang > 36
 								}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
-									'bg-red-400': jahrgang < 30,
-									'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
-									'bg-green-300': jahrgang > 32 && jahrgang < 37,
-									'bg-green-600': jahrgang > 36
-								}"
-							>
 								{{ jahrgang }}
 							</span>
 						</td>
 						<td class="text-center cell--padding-sm"
 							:class="{
+								'bg-red-400': wst_summe < 100,
+								'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
+								'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
+								'bg-green-600': wst_summe > 108
+							}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								:class="{
 									'bg-red-400': wst_summe < 100,
 									'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
 									'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
 									'bg-green-600': wst_summe > 108
 								}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
-									'bg-red-400': wst_summe < 100,
-									'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
-									'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
-									'bg-green-600': wst_summe > 108
-								}"
-							>
 								{{ wst_summe }}
 							</span>
 						</td>
@@ -149,34 +145,32 @@
 						<td colspan="2"
 							class="text-center cell--padding-sm"
 							:class="{
+								'bg-red-400': wst_d_ef < 34,
+								'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
+								'bg-green-600': wst_d_ef >= 37
+							}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								:class="{
 									'bg-red-400': wst_d_ef < 34,
 									'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
 									'bg-green-600': wst_d_ef >= 37
 								}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
-									'bg-red-400': wst_d_ef < 34,
-									'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
-									'bg-green-600': wst_d_ef >= 37
-								}"
-							>
 								{{ wst_d_ef }}
 							</span>
 						</td>
 						<td colspan="4"
 							class="text-center cell--padding-sm"
 							:class="{
+								'bg-red-400': wst_d_q < 34,
+								'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
+								'bg-green-600': wst_d_q >= 37
+							}">
+							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
+								:class="{
 									'bg-red-400': wst_d_q < 34,
 									'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
 									'bg-green-600': wst_d_q >= 37
 								}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								  :class="{
-									'bg-red-400': wst_d_q < 34,
-									'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
-									'bg-green-600': wst_d_q >= 37
-								}"
-							>
 								{{ wst_d_q }}
 							</span>
 						</td>
@@ -185,7 +179,7 @@
 				</tfoot>
 			</table>
 		</div>
-		<div class="sticky h-8 -mb-8 -bottom-8 bg-white z-10"/>
+		<div class="sticky h-8 -mb-8 -bottom-8 bg-white z-10" />
 	</svws-ui-content-card>
 </template>
 

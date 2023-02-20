@@ -36,7 +36,7 @@
 		set(value: string) {
 			emit('update:modelValue', value);
 		}
-	}) as unknown as WritableComputedRef<any[]>
+	})
 </script>
 
 <template>

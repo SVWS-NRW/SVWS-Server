@@ -5,6 +5,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLogin } from "~/router/RouteLogin";
 import { shallowRef, ShallowRef } from "vue";
+import { SchuelerLaufbahnplanungProps } from "~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanungProps";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -16,7 +17,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 	gostJahrgang: GostJahrgang = new GostJahrgang();
 	gostJahrgangsdaten: GostJahrgangsdaten = new GostJahrgangsdaten();
 	listGostFaecher: List<GostFach> = new Vector();
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination> | undefined = undefined;
+	mapFachkombinationen: Map<number, GostJahrgangFachkombination> = new Map();
 
 	public async ladeFachkombinationen() {
 		if (this.gostJahrgang === undefined) {
@@ -81,22 +82,26 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {
-			if (routeSchueler.item === undefined)
+			if (routeSchueler.data.auswahl.value === undefined)
 				return false;
-			const abiturjahr = routeSchueler.item?.abiturjahrgang;
+			const abiturjahr = routeSchueler.data.auswahl.value?.abiturjahrgang;
 			const jahrgang = routeSchueler.data.listeAbiturjahrgaenge.liste.find(j => (j.abiturjahr === abiturjahr));
 			return (jahrgang === undefined);
 		}
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any>  {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const tmp = parseInt(to_params.id as string);
-			const success = await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
-			if (!success)
-				return routeSchueler.getRoute(tmp);
+			const id = parseInt(to_params.id);
+			const res = await this.onSelect(this.parent.data.mapSchueler.get(id));
+			if (res === undefined)
+				return routeSchueler.getRoute(id);
 		}
 	}
 
@@ -110,7 +115,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			this.data.gostJahrgang = new GostJahrgang();
 			this.data.gostJahrgangsdaten = new GostJahrgangsdaten();
 			this.data.faecherManager = undefined;
-			this.data.mapFachkombinationen = undefined;
+			this.data.mapFachkombinationen = new Map();
 		} else {
 			this.data.item = item;
 			this.data.abiturdaten = await routeLogin.data.api.getGostSchuelerLaufbahnplanung(routeLogin.data.schema, item.id);
@@ -137,7 +142,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {
 		return {
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,

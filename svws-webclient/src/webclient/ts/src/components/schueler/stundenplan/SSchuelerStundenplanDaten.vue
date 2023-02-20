@@ -35,12 +35,9 @@
 </template>
 
 <script setup lang="ts">
+	import { SchuelerStundenplanDatenProps } from "./SSchuelerStundenplanDatenProps";
 
-	import { SchuelerStundenplanManager } from "@svws-nrw/svws-core-ts";
-
-	const props = defineProps<{
-		manager: SchuelerStundenplanManager | undefined
-	}>();
+	const props = defineProps<SchuelerStundenplanDatenProps>();
 
 	function unterrichtsdaten(wochentyp: number, wochentag: number, stunde: number) {
 		if (props.manager === undefined)

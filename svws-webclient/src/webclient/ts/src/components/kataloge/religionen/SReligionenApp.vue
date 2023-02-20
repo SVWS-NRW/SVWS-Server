@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3 capitalize">{{ item.value?.text }}</span>
 				<svws-ui-badge type="light" title="ID">
-					<i-ri-fingerprint-line/>
+					<i-ri-fingerprint-line />
 					{{ item.value?.id }}
 				</svws-ui-badge>
 			</div>

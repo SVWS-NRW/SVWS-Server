@@ -25,18 +25,17 @@
 	</div>
 </template>
 
+<script lang="ts" type="module">
+</script>
+
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
-	import { KlassenListeEintrag, SchuelerListeEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { SchuelerAppProps } from "./SSchuelerAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: SchuelerStammdaten;
-		mapKlassen: Map<Number, KlassenListeEintrag>;
-	}>();
+	const props = defineProps<SchuelerAppProps>();
 
 	const selectedRoute = routeSchueler.childRouteSelector;
 	const children_hidden = routeSchueler.children_hidden();
@@ -55,9 +54,9 @@
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (props.item.value === undefined)
+		if (props.auswahl === undefined)
 			return false;
-		return props.mapKlassen.get(props.item.value.idKlasse)?.kuerzel ?? false;
+		return props.mapKlassen.get(props.auswahl.idKlasse)?.kuerzel ?? false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {

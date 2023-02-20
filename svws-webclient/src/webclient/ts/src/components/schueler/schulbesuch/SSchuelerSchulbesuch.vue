@@ -12,14 +12,11 @@
 
 <script setup lang="ts">
 
-	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 	import { computed } from 'vue';
 	import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
+	import { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 
-	const props = defineProps<{
-		data: SchuelerSchulbesuchsdaten;
-		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>;
-	}>();
+	const props = defineProps<SchuelerSchulbesuchProps>();
 	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 </script>

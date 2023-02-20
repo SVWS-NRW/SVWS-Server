@@ -4,14 +4,11 @@
 
 <script setup lang="ts">
 
-	import { List, StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn, DataTableItem } from "@svws-nrw/svws-ui";
+	import { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
 
-	const props = defineProps<{
-		stundenplan: StundenplanListeEintrag | undefined;
-		stundenplaene: List<StundenplanListeEintrag>;
-		setStundenplan: (value: StundenplanListeEintrag | undefined) => Promise<void>;
-	}>();
+	const props = defineProps<SchuelerStundenplanAuswahlProps>();
 
 	async function setStundenplan(value: DataTableItem) {
 		return await props.setStundenplan(value as StundenplanListeEintrag | undefined);

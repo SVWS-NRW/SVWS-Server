@@ -10,20 +10,10 @@
 
 <script setup lang="ts">
 
-	import { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag,
-		SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten, SchuleStammdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { SchuelerAbschnittDatenProps } from "./SSchuelerAbschnittDatenProps";
 
-	const props = defineProps<{
-		schule: SchuleStammdaten;
-		data: SchuelerLernabschnittsdaten | undefined;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
-		mapKlassen: Map<number, KlassenListeEintrag>;
-		mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
-		patch: (data : Partial<SchuelerLernabschnittsdaten>) => Promise<void>;
-		patchBemerkungen: (data : Partial<SchuelerLernabschnittBemerkungen>) => Promise<void>;
-	}>();
+	const props = defineProps<SchuelerAbschnittDatenProps>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (props.data !== undefined);

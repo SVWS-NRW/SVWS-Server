@@ -17,16 +17,12 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
+	import { SchuelerLeistungsdaten } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef } from "vue";
+	import { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
 
-	const props = defineProps<{
-		data: SchuelerLernabschnittsdaten | undefined;
-		mapFaecher: Map<number, FaecherListeEintrag>;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		patchLeistung: (data : Partial<SchuelerLeistungsdaten>, id : number) => Promise<void>;
-	}>();
+	const props = defineProps<SchuelerLeistungenDatenProps>();
 
 	const liste: ComputedRef<SchuelerLeistungsdaten[]> = computed(() =>
 		props.data?.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
