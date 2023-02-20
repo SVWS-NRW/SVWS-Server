@@ -15,7 +15,8 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table v-model:clicked="selected" v-model="selectedItems" :items="rowsFiltered" :columns="cols" clickable selectable :footer="true" />
+				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
+					:columns="cols" clickable selectable :footer="true" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -24,8 +25,7 @@
 <script setup lang="ts">
 
 	import type { LehrerListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
-	import { routeLehrer } from "~/router/apps/RouteLehrer";
+	import { computed, ComputedRef, Ref, ref } from "vue";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const cols: DataTableColumn[] = [
@@ -43,36 +43,35 @@
 	const selectedItems = ref([]);
 
 	const props = defineProps<{
-		item: ShallowRef<LehrerListeEintrag | undefined>;
+		auswahl: LehrerListeEintrag | undefined;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+		setLehrer: (value: LehrerListeEintrag | undefined) => Promise<void>;
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();
 
-	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => routeLehrer.liste.liste);
-
-	const rowsFiltered: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		if (rows.value === undefined)
-			return [];
-		if (search.value) {
-			return rows.value.filter(
-				(e: LehrerListeEintrag) =>
-					e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-					e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-			);
+	const rowsFiltered: ComputedRef<Map<number, LehrerListeEintrag>> = computed(() => {
+		if (!search.value)
+			return props.mapLehrer;
+		const result = new Map<number, LehrerListeEintrag>();
+		for (const l of props.mapLehrer.values()) {
+			if (l.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+				l.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				result.set(l.id, l);
 		}
-		return rows.value;
+		return result;
 	});
-
-	const selected = routeLehrer.auswahl;
 
 	function onAction(action: string, item: LehrerListeEintrag) {
 		console.log(action, item);
 	}
+
 </script>
 
 
-<style>
+<style lang="postcss">
+
 	.action-button {
 		@apply h-6 w-6;
 	}
