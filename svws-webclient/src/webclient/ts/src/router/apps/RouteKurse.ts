@@ -5,14 +5,11 @@ import { ListKurse } from "~/apps/kurse/ListKurse";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 import { RouteNode } from "~/router/RouteNode";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { routeApp, RouteApp } from "../RouteApp";
+import { routeLogin } from "../RouteLogin";
 
 export class RouteDataKurse {
-	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
-	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
 
@@ -42,13 +39,19 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.listJahrgaenge.update_list();
-		this.data.mapJahrgaenge.clear();
-		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
-		await this.data.listLehrer.update_list();
-		this.data.mapLehrer.clear();
-		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
+		for (const j of listJahrgaenge)
+			mapJahrgaenge.set(j.id, j);
+		this.data.mapJahrgaenge = mapJahrgaenge;
+		// Laden des Lehrer-Katalogs
+		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		this.data.mapLehrer = mapLehrer;
+		// Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -81,8 +84,8 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			item: this._item,
-			listJahrgaenge: this.data.listJahrgaenge,
-			listLehrer: this.data.listLehrer,
+			mapJahrgaenge: this.data.mapJahrgaenge,
+			mapLehrer: this.data.mapLehrer,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt

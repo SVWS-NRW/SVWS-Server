@@ -4,12 +4,11 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
+import { routeLogin } from "../RouteLogin";
 
 export class RouteDataKlassen {
-	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
 
@@ -39,10 +38,14 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.listLehrer.update_list();
-		this.data.mapLehrer.clear();
-		this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
-		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+		// Laden des Lehrer-Katalogs
+		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		this.data.mapLehrer = mapLehrer;
+		// Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {

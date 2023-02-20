@@ -15,17 +15,15 @@
 
 <script setup lang="ts">
 
-	import { KursListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, List, Schuljahresabschnitt, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ShallowRef } from "vue";
 	import { routeKurse } from "~/router/apps/RouteKurse";
-	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
-	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
-		listJahrgaenge: ListJahrgaenge;
-		listLehrer: ListLehrer;
+		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
@@ -39,12 +37,47 @@
 		{ key: "jahrgang", label: "Jahrgang", sortable: true }
 	];
 
+	/**
+	 * Bestimmt für die übergebene Lehrer-ID dessen Kürzel
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 */
+	function getLehrerKuerzel(idLehrer: number | null) : string {
+		if (idLehrer === null)
+			return "";
+		const lehrer = props.mapLehrer.get(idLehrer);
+		if (lehrer === undefined)
+			return "";
+		return lehrer.kuerzel;
+	}
+
+	/**
+	 * Ermittel eine komma-separierte Liste der Kürzel der Jahrgänge mit den übergebenen IDs.
+	 *
+	 * @param jahrgaenge   die Liste von Jahrgangs-IDs
+	 */
+	function getJahrgangsKuerzel(jahrgaenge: Vector<number>) : string {
+		// Prüfe zunächst, ob die Liste der Jahrgänge von dem Kurs einen Jahrgang der Map beinhaltet.
+		let found = false;
+		let result = "";
+		for (const jg of jahrgaenge) {
+			const jahrgang = props.mapJahrgaenge.get(jg);
+			if ((jahrgang !== undefined) && (jahrgang.kuerzel !== null)) {
+				if (found)
+					result += ",";
+				result += jahrgang.kuerzel;
+				found = true;
+			}
+		}
+		return result;
+	}
+
 	// FIXME: Typing: const rows: ComputedRef<KursEintrag[] | undefined> = computed(() => {
 	const rows = computed(() => {
 		return routeKurse.liste.liste.map((e: KursListeEintrag) => ({
 			...e,
-			lehrer_name: props.listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
-			jahrgang: props.listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel ?? ""
+			lehrer_name: getLehrerKuerzel(e.lehrer),
+			jahrgang: getJahrgangsKuerzel(e.idJahrgaenge)
 		}));
 	});
 </script>
