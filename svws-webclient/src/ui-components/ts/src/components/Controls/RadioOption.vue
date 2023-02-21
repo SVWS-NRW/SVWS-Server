@@ -1,6 +1,4 @@
 <script setup lang='ts'>
-	import { WritableComputedRef } from 'vue';
-
 	const {
 		name = '',
 		label = '',
@@ -23,12 +21,6 @@
 		(e: 'update:modelValue', value: string): void,
 	}>();
 
-	function onInput(event: Event) {
-		if (!disabled) {
-			emit("update:modelValue", (event.target as HTMLInputElement).value);
-		}
-	}
-
 	const checked = computed({
 		get() {
 			return modelValue;
@@ -46,17 +38,13 @@
 		'radio--label--checked': modelValue === value,
 		'radio--label--no-icon': !icon,
 	}">
-		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator"
-			@input="onInput">
+		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
 		<span v-if="icon" class="radio--indicator-icon">
 			<slot />
-			<i-ri-checkbox-blank-circle-line v-if="!$slots.default" class="radio--indicator-icon--blank"/>
-			<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked"/>
+			<i-ri-checkbox-blank-circle-line v-if="!$slots.default" class="radio--indicator-icon--blank" />
+			<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked" />
 		</span>
-		<span class="radio--label--text">
-			{{ label }}
-			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
-		</span>
+		<span class="radio--label--text"> {{ label }} <i-ri-bar-chart-fill v-if="statistics" class="ml-2" /> </span>
 	</label>
 </template>
 
