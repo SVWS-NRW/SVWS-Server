@@ -10,7 +10,7 @@
 			<template v-for="termin of termine" :key="termin.id">
 				<p>{{ termin.id }} {{ termin.datum }} </p>
 			</template>
-			Konflikte: {{ props.manager.value.gibKonfliktTerminKursklausur(7,2029).toString() }}
+			Konflikte: {{ props.kursklausurmanager().gibKonfliktTerminKursklausur(7,2029).toString() }}
 			{{ props.faecherManager.get(193)?.bezeichnung }}
 		</div>
 	</div>
@@ -19,14 +19,14 @@
 <script setup lang="ts">
 
 	import { GostKursklausurManager, GostKursklausur, List, GostKlausurtermin, GostFaecherManager } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ShallowRef } from 'vue';
+	import { computed, ComputedRef } from 'vue';
 
 	const props = defineProps<{
 		faecherManager: GostFaecherManager;
-		manager: ShallowRef<GostKursklausurManager>;
+		kursklausurmanager: () => GostKursklausurManager;
 	}>();
 
-	const kursklausuren: ComputedRef<List<GostKursklausur>> = computed(() => props.manager.value.getKursklausurenOhneTermin());
-	const termine: ComputedRef<List<GostKlausurtermin>> = computed(() => props.manager.value.getKlausurtermine());
+	const kursklausuren: ComputedRef<List<GostKursklausur>> = computed(() => props.kursklausurmanager().getKursklausurenOhneTermin());
+	const termine: ComputedRef<List<GostKlausurtermin>> = computed(() => props.kursklausurmanager().getKlausurtermine());
 
 </script>
