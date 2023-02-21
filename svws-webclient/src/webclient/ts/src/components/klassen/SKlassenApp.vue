@@ -1,11 +1,11 @@
 <template>
-	<div v-if="visible && item.value?.id">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ item.value?.kuerzel ?? '' }}</span>
+				<span class="inline-block mr-3">{{ auswahl?.kuerzel ?? '' }}</span>
 				<svws-ui-badge type="light" title="ID">
 					<i-ri-fingerprint-line />
-					{{ item.value?.id }}
+					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
 			<div>
@@ -25,24 +25,22 @@
 
 <script setup lang="ts">
 
-	import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
+	import { KlassenAppProps } from "./SKlassenAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<KlassenListeEintrag | undefined>,
-		mapLehrer: Map<number, LehrerListeEintrag>,
-	}>();
+	const props = defineProps<KlassenAppProps>();
 
 	const selectedRoute = routeKlassen.childRouteSelector;
 	const children_hidden = routeKlassen.children_hidden();
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
-		(props.item.value?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
+		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
 	);
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKlassen.hidden()) && (props.item.value !== undefined);
+		return (!routeKlassen.hidden()) && (props.auswahl !== undefined);
 	});
 
 </script>

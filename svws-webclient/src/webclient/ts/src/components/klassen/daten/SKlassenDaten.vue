@@ -7,17 +7,12 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KlassenDaten, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
+	import { KlassenDatenProps } from "./SKlassenDatenProps";
 
-	const props = defineProps<{
-		patch: (data : Partial<KlassenDaten>) => Promise<void>;
-		data: KlassenDaten,
-		mapLehrer: Map<number, LehrerListeEintrag>,
-		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>,
-	}>();
+	const props = defineProps<KlassenDatenProps>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !routeKlassenDaten.hidden();

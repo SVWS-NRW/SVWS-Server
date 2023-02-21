@@ -7,7 +7,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table v-model:clicked="selected" clickable :columns="cols" :items="rows" :footer="false" />
+				<svws-ui-data-table model-value:clicked="auswahl" @update:clicked="setKlasse" clickable :columns="cols" :items="listKlassen" :footer="false" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -15,23 +15,14 @@
 
 <script setup lang="ts">
 
-	import { KlassenListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { routeKlassen } from "~/router/apps/RouteKlassen";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<KlassenListeEintrag | undefined>;
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
-	const selected = routeKlassen.auswahl;
+	const props = defineProps<KlassenAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	];
 
-	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.liste.liste);
 </script>
