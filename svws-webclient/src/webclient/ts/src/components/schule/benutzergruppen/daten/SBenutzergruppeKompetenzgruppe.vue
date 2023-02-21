@@ -15,36 +15,38 @@
 			<td> {{ kompetenzgruppe.daten.bezeichnung }} </td>
 		</tr>
 		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :data="data" />
+			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :data="data"
+				:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
 		</template>
 	</template>
 </template>
 
 <script setup lang="ts">
 
-	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
-	import { ref, Ref, computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
+	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
+	import { ref, Ref, computed,WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: DataBenutzergruppe;
+		data: BenutzergruppeDaten;
+		getBenutzergruppenManager: () => BenutzergruppenManager;
 		kompetenzgruppe: BenutzerKompetenzGruppe;
 		istAdmin: boolean;
+		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
+		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
+		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>,
+		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>
 	}>();
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const manager: ComputedRef<BenutzergruppenManager | BenutzerManager| undefined> = computed(() => {
-		return props.data.manager;
-	});
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (manager.value === undefined) ? false : manager.value.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
+		get: () => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
 		set: (value) => {
 			if (value)
-				void props.data.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
 			else
-				void props.data.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
 		}
 	});
 

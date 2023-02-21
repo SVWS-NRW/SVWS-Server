@@ -15,24 +15,24 @@
 
 <script setup lang="ts">
 
-	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { BenutzergruppeDaten, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { ref } from "vue";
-	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
 	import { router } from "~/router/RouteManager";
 	import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 
 	const props = defineProps<{
-		data: DataBenutzergruppe;
 		benutzer: BenutzerListeEintrag;
 		spalteLinks : boolean;
+		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
+		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 	}>();
 
 	const showIcon = ref(false);
 
 	async function add() {
 		props.spalteLinks
-			? await props.data.removeBenutzergruppeBenutzer(props.benutzer)
-			: await props.data.addBenutzergruppeBenutzer(props.benutzer)
+			? await props.removeBenutzerFromBenutzergruppe(props.benutzer)
+			: await props.addBenutzerToBenutzergruppe(props.benutzer)
 	}
 
 	function doRoute() {

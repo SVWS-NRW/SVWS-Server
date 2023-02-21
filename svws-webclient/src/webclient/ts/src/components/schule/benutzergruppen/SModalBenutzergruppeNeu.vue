@@ -15,7 +15,7 @@
 
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modalNeueBenutzergruppe.closeModal()"> Abbrechen </svws-ui-button>
-			<svws-ui-button @click="createBenutzergruppe"> Weiter </svws-ui-button>
+			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
@@ -23,7 +23,7 @@
 		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 	</button>
 
-	<button class="button button--icon" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n()">
+	<button class="button button--icon" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n">
 		<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
 	</button>
 
@@ -48,17 +48,16 @@
 
 	const props = defineProps<{
 		showDeleteIcon: boolean;
+		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
+		// eslint-disable-next-line vue/prop-name-casing
+		deleteBenutzergruppe_n : () => Promise<void>;
 	}>();
 
-	function createBenutzergruppe(){
-		routeSchuleBenutzergruppeDaten.data.daten.create(bezeichnung.value,inputbgIstAdmin.value);
+	function create(){
+		void props.createBenutzergruppe(bezeichnung.value,inputbgIstAdmin.value);
 		modalNeueBenutzergruppe.value.closeModal();
 		bezeichnung.value="";
 		inputbgIstAdmin.value=false;
-	}
-
-	function deleteBenutzergruppe_n(){
-		routeSchuleBenutzergruppeDaten.data.daten.deleteBenutzergruppe_n();
 	}
 
 </script>

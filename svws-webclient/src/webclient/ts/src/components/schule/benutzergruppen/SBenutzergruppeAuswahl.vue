@@ -16,7 +16,9 @@
 		<template #content>
 			<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
 				<template #footer>
-					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" />
+					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0"
+						:create-benutzergruppe="createBenutzergruppe"
+						:delete-benutzergruppe_n="deleteBenutzergruppe_n" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -33,6 +35,9 @@
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
+		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
+		// eslint-disable-next-line vue/prop-name-casing
+		deleteBenutzergruppe_n : () => Promise<void>;
 	}>();
 
 	const selected = routeSchuleBenutzergruppe.auswahl;

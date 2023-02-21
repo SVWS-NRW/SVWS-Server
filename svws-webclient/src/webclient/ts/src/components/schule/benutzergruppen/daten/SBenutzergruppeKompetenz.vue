@@ -7,28 +7,30 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
+	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
 
 	const props = defineProps<{
-		data: DataBenutzergruppe;
+		data: BenutzergruppeDaten;
+		getBenutzergruppenManager: () => BenutzergruppenManager;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
+		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
+		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
 	}>();
 
 	const aktiviert : ComputedRef<boolean> = computed(() => props.istAdmin);
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz),
+		get: () => props.getBenutzergruppenManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
-			const alt : boolean = (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz);
+			const alt = props.getBenutzergruppenManager().hatKompetenz(props.kompetenz);
 			if (alt === value)
 				return;
 			if (value)
-				void props.data.addKompetenz(props.kompetenz);
+				void props.addKompetenz(props.kompetenz);
 			else
-				void props.data.removeKompetenz(props.kompetenz);
+				void props.removeKompetenz(props.kompetenz);
 		}
 	});
 

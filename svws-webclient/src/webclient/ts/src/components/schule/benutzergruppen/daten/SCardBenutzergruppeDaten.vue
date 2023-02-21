@@ -3,80 +3,37 @@
 		<div class="flex flex-col">
 			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
-			<!-- <svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" :footer="true"> -->
-			<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-			<!-- <template #footer>
-					<s-modal-benutzergruppe-benutzer-auswahl />
-				</template>
-			</svws-ui-table> -->
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { BenutzergruppenManager, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
+	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: DataBenutzergruppe;
-		manager : BenutzergruppenManager;
+		data: BenutzergruppeDaten;
+		getBenutzergruppenManager: () => BenutzergruppenManager;
 		setBezeichnung : (anzeigename: string) => Promise<void>;
 		setIstAdmin : (istAdmin:boolean) => Promise<void>;
 	}>();
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.manager.getBezeichnung(),
+		get: () => props.getBenutzergruppenManager().getBezeichnung(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === props.manager.getBezeichnung()))
+			if ((value === undefined) || (value === "") || (value === props.getBenutzergruppenManager().getBezeichnung()))
 				return;
 			void props.setBezeichnung(value);
 		}
 	});
 
 	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.manager.istAdmin(),
+		get: () => props.getBenutzergruppenManager().istAdmin(),
 		set: (value) => {
-			if ((value === undefined) || (value === props.manager.istAdmin()))
+			if ((value === undefined) || (value === props.getBenutzergruppenManager().istAdmin()))
 				return;
 			void props.setIstAdmin(value);
-		}
-	});
-
-	// Die Spalte für die Tabelle der Gruppenbenutzer
-	const cols = [
-		{ key: "id", label: "ID", sortable: true },
-		{ key: "Bezeichnung", label: "Login-Nmae", sortable: true },
-		{ key: "name", label: "Name", sortable: true },
-		{ key: "istAdmin", label: "IstAdmin", sortable: false }
-	];
-
-	const rows: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		return props.data.listBenutzergruppenBenutzer.liste;
-	});
-
-	const rowsFiltered: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		if (rows.value === undefined)
-			return undefined;
-		const rowsValue: BenutzerListeEintrag[] = rows.value;
-		if (search.value)
-			return rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()));
-		return rowsValue;
-	});
-
-	const search: Ref<string> = ref("");
-	const selection: WritableComputedRef<BenutzerListeEintrag[] | undefined> = computed({
-		get: () => props.data.listBenutzergruppenBenutzer.liste,
-		set: (value) => {
-			// TODO console.log(val)
-		}
-	});
-
-	const selected: WritableComputedRef<BenutzerListeEintrag | undefined> = computed({
-		get: () => props.data.listBenutzergruppenBenutzer.liste[0],
-		set: (value) => {
-			// TODO
 		}
 	});
 

@@ -1,19 +1,39 @@
 import { RouteNode } from "~/router/RouteNode";
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
-import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../RouteSchuleBenutzergruppe";
 import { routeLogin } from "~/router/RouteLogin";
 import { router } from "~/router/RouteManager";
+import { ref, Ref, shallowRef, ShallowRef, triggerRef } from "vue";
+import { BenutzergruppenManager } from "@svws-nrw/svws-core-ts";
+import { List } from "@svws-nrw/svws-core-ts";
+
+
 
 const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
 
 export class RouteDataSchuleBenutzergruppeDaten {
 	item: BenutzergruppeListeEintrag | undefined = undefined;
-	daten: DataBenutzergruppe = new DataBenutzergruppe();
-	listBenutzer: ListBenutzer = new ListBenutzer();
-	
+	benutzergruppenManager: ShallowRef<BenutzergruppenManager> = shallowRef(new BenutzergruppenManager(new BenutzergruppeDaten()));
+	listBenutzerAlle: Ref<List<BenutzerListeEintrag>> = ref(new Vector());
+	listBenutzergruppenBenutzer: Ref<List<BenutzerListeEintrag>> = ref( new Vector());
+
+	private _daten: BenutzergruppeDaten | undefined = undefined;
+
+	get daten(): BenutzergruppeDaten {
+		if (this._daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._daten;
+	}
+
+	set daten(value: BenutzergruppeDaten | undefined) {
+		this._daten = value;
+	}
+
+	getBenutzergruppenManager = () => {
+		return this.benutzergruppenManager.value;
+	}
+
 	/**
 	 * Setzt die Bezeichnung der Benutzergruppe
 	 *
@@ -22,13 +42,14 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 * @returns {Promise<void>}
 	 */
 	setBezeichnung = async (bezeichnung: string) => {
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return;
-		await routeLogin.data.api.setBenutzergruppeBezeichnung(bezeichnung, routeLogin.data.schema, this.daten.manager.getID());
-		this.daten.manager.setBezeichnung(bezeichnung);
+		await routeLogin.data.api.setBenutzergruppeBezeichnung(bezeichnung, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		this.benutzergruppenManager.value.setBezeichnung(bezeichnung);
+		triggerRef(this.benutzergruppenManager);
 		for(const index in routeSchuleBenutzergruppe.liste.liste){
-			if(routeSchuleBenutzergruppe.liste.liste[index].id ===this.daten.daten?.id)
-			routeSchuleBenutzergruppe.liste.liste[index].bezeichnung=bezeichnung;
+			if(routeSchuleBenutzergruppe.liste.liste[index].id ===this.daten.id)
+				routeSchuleBenutzergruppe.liste.liste[index].bezeichnung=bezeichnung;
 		}
 	}
 
@@ -40,13 +61,14 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 * @returns {Promise<void>}
 	 */
 	 setIstAdmin = async (istAdmin: boolean) => {
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return;
 		if(istAdmin)
-			await routeLogin.data.api.addBenutzergruppeAdmin(routeLogin.data.schema, this.daten.manager.getID());
+			await routeLogin.data.api.addBenutzergruppeAdmin(routeLogin.data.schema, this.benutzergruppenManager.value.getID());
 		else
-			await routeLogin.data.api.removeBenutzergruppeAdmin(routeLogin.data.schema, this.daten.manager.getID());
-		this.daten.manager.setAdmin(istAdmin);
+			await routeLogin.data.api.removeBenutzergruppeAdmin(routeLogin.data.schema,this.benutzergruppenManager.value.getID());
+		this.benutzergruppenManager.value.setAdmin(istAdmin);
+		triggerRef(this.benutzergruppenManager);
 	}
 
 
@@ -58,12 +80,13 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new Vector<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return false;
-		if (this.daten.manager.hatKompetenz(kompetenz))
+		if (this.benutzergruppenManager.value.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.addBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.daten.manager.getID());
-		this.daten.manager.addKompetenz(kompetenz);
+		await routeLogin.data.api.addBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		this.benutzergruppenManager.value.addKompetenz(kompetenz);
+		triggerRef(this.benutzergruppenManager);
 		return true;
 	}
 
@@ -75,12 +98,13 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new Vector<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return false;
-		if (!this.daten.manager.hatKompetenz(kompetenz))
+		if (!this.benutzergruppenManager.value.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.removeBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.daten.manager.getID());
-		this.daten.manager.removeKompetenz(kompetenz);
+		await routeLogin.data.api.removeBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		this.benutzergruppenManager.value.removeKompetenz(kompetenz);
+		triggerRef(this.benutzergruppenManager);
 		return true;
 	}
 
@@ -91,19 +115,20 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 */
 	 addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids  = new Vector<number>();
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return false;
-		if (!this.daten.manager.istAdmin()) {
+		if (!this.benutzergruppenManager.value.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
 			}
-			await routeLogin.data.api.addBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.daten.manager.getID());
-			const benutzergruppendaten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, this.daten.manager.getID())
+			await routeLogin.data.api.addBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.benutzergruppenManager.value.getID());
+			const benutzergruppendaten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, this.benutzergruppenManager.value.getID())
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (!this.daten.manager?.hatKompetenz(komp))
-					this.daten.manager?.addKompetenz(komp);
+				if (!this.benutzergruppenManager.value?.hatKompetenz(komp))
+					this.benutzergruppenManager.value?.addKompetenz(komp);
 			}
 		}
+		triggerRef(this.benutzergruppenManager);
 		return true;
 	}
 
@@ -114,17 +139,18 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 */
 	 removeBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new Vector<number>();
-		if (!this.daten.manager)
+		if (!this.benutzergruppenManager.value)
 			return false;
-		if (!this.daten.manager.istAdmin()) {
+		if (!this.benutzergruppenManager.value.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(komp.daten.id);
-			await routeLogin.data.api.removeBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.daten.manager.getID());
+			await routeLogin.data.api.removeBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.benutzergruppenManager.value.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.daten.manager?.hatKompetenz(komp))
-					this.daten.manager?.removeKompetenz(komp);
+				if (this.benutzergruppenManager.value?.hatKompetenz(komp))
+					this.benutzergruppenManager.value?.removeKompetenz(komp);
 			}
 		}
+		triggerRef(this.benutzergruppenManager);
 		return true;
 	}
 
@@ -174,13 +200,14 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 *
 	 * @returns {Promise<void>}
 	 */
-	addBenutzergruppeBenutzer = async  (benutzer: BenutzerListeEintrag) => {
-		if (!this.daten.manager)
+	addBenutzerToBenutzergruppe = async  (benutzer: BenutzerListeEintrag) => {
+		if (!this.benutzergruppenManager.value)
 			return;
 		const b_ids = new Vector<number>();
 		b_ids.add(benutzer.id);
-		await routeLogin.data.api.addBenutzergruppeBenutzer(b_ids, routeLogin.data.schema,this.daten.manager.getID()) as BenutzergruppeDaten;
-		this.listBenutzer.liste.push(benutzer);
+		await routeLogin.data.api.addBenutzergruppeBenutzer(b_ids, routeLogin.data.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
+		this.listBenutzergruppenBenutzer.value.add(benutzer);
+		this.listBenutzerAlle.value.remove(benutzer);
 
 	}
 
@@ -191,13 +218,14 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	 *
 	 * @returns {Promise<void>}
 	 */
-	removeBenutzergruppeBenutzer = async (benutzer: BenutzerListeEintrag) => {
-		if (!this.daten.manager)
+	removeBenutzerFromBenutzergruppe = async (benutzer: BenutzerListeEintrag) => {
+		if (!this.benutzergruppenManager.value)
 			return;
 		const bg_ids = new Vector<number>();
 		bg_ids.add(benutzer.id);
-		const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,this.daten.manager.getID()) as BenutzergruppeDaten;
-		this.listBenutzer.liste = this.listBenutzer.liste.filter(item => item.id !== benutzer.id);
+		const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
+		this.listBenutzergruppenBenutzer.value.remove(benutzer);
+		this.listBenutzerAlle.value.add(benutzer);
 	}
 
 
@@ -218,7 +246,6 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			await this.data.listBenutzer.update_list();
 			await this.onSelect(this.parent!.liste.liste.find(f => f.id === id));
 		}
 	}
@@ -228,10 +255,16 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.daten.unselect();
+			this.data.daten = undefined;
+			this.data.benutzergruppenManager.value = new BenutzergruppenManager(new BenutzergruppeDaten());
+			this.data.listBenutzergruppenBenutzer.value = new Vector();
+			this.data.listBenutzerAlle.value = new Vector();
 		} else {
 			this.data.item = item;
-			await this.data.daten.select(this.data.item);
+			this.data.daten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, item.id);
+			this.data.benutzergruppenManager.value = new BenutzergruppenManager(this.data.daten);
+			this.data.listBenutzerAlle.value = await routeLogin.data.api.getBenutzerliste(routeLogin.data.schema);
+			this.data.listBenutzergruppenBenutzer.value = await routeLogin.data.api.getBenutzerMitGruppenID(routeLogin.data.schema, item.id);
 		}
 	}
 
@@ -241,10 +274,11 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			...routeSchuleBenutzergruppe.getProps(to),
+			item: routeSchuleBenutzergruppe._item,
 			data: this.data.daten,
-			benutzer: this.data.listBenutzer.liste,
-			manager : this.data.daten.manager,
+			listBenutzerAlle: this.data.listBenutzerAlle.value,
+			listBenutzergruppenBenutzer: this.data.listBenutzergruppenBenutzer.value,
+			getBenutzergruppenManager : this.data.getBenutzergruppenManager,
 			setBezeichnung : this.data.setBezeichnung,
 			setIstAdmin : this.data.setIstAdmin,
 			addKompetenz : this.data.addKompetenz,
@@ -253,8 +287,8 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 			removeBenutzerKompetenzGruppe : this.data.removeBenutzerKompetenzGruppe,
 			create : this.data.create,
 			deleteBenutzergruppe_n : this.data.deleteBenutzergruppe_n,
-			addBenutzergruppeBenutzer : this.data.addBenutzergruppeBenutzer,
-			removeBenutzergruppeBenutzer : this.data.removeBenutzergruppeBenutzer
+			addBenutzerToBenutzergruppe : this.data.addBenutzerToBenutzergruppe,
+			removeBenutzerFromBenutzergruppe : this.data.removeBenutzerFromBenutzergruppe
 
 
 		};
