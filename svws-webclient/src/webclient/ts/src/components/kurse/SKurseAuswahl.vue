@@ -7,7 +7,8 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
+				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setKurs" :items="rows"
+					:columns="cols" clickable :footer="false" unique-key="id" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -15,21 +16,12 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, List, Schuljahresabschnitt, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ShallowRef } from "vue";
-	import { routeKurse } from "~/router/apps/RouteKurse";
+	import { KursListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed } from "vue";
+	import { KurseAuswahlProps } from "./SKurseAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<KursListeEintrag | undefined>;
-		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
-
-	const selected = routeKurse.auswahl;
+	const props = defineProps<KurseAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -72,12 +64,11 @@
 		return result;
 	}
 
-	// FIXME: Typing: const rows: ComputedRef<KursEintrag[] | undefined> = computed(() => {
-	const rows = computed(() => {
-		return routeKurse.liste.liste.map((e: KursListeEintrag) => ({
+	const rows = computed(() =>
+		[...props.listKurse].map((e: KursListeEintrag) => ({
 			...e,
 			lehrer_name: getLehrerKuerzel(e.lehrer),
 			jahrgang: getJahrgangsKuerzel(e.idJahrgaenge)
-		}));
-	});
+		}))
+	);
 </script>

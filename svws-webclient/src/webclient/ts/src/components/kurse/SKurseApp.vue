@@ -5,7 +5,7 @@
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
 				<svws-ui-badge type="light" title="ID">
 					<i-ri-fingerprint-line />
-					{{ item.value?.id }}
+					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
 			<div v-if="inputFachlehrer">
@@ -23,22 +23,19 @@
 
 <script setup lang="ts">
 
-	import { KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { routeKurse } from "~/router/apps/RouteKurse";
+	import { KurseAppProps } from "./SKurseAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<KursListeEintrag | undefined>;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-	}>();
+	const props = defineProps<KurseAppProps>();
 
 	const selectedRoute = routeKurse.childRouteSelector;
 	const children_hidden = routeKurse.children_hidden();
 
-	const kuerzel: ComputedRef<string> = computed(() => props.item.value?.kuerzel ?? "");
+	const kuerzel: ComputedRef<string> = computed(() => props.auswahl?.kuerzel ?? "");
 
 	const inputFachlehrer: ComputedRef<string> = computed(() => {
-		const id = routeKurse.liste.ausgewaehlt?.lehrer;
+		const id = props.auswahl?.lehrer;
 		const leer = "kein Lehrer festgelegt";
 		if (!id)
 			return leer;
@@ -47,7 +44,7 @@
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKurse.hidden()) && (props.item.value !== undefined);
+		return !routeKurse.hidden();
 	});
 
 </script>

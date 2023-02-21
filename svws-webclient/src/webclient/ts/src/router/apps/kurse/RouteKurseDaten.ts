@@ -3,6 +3,7 @@ import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
 import { KursDaten, KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLogin } from "~/router/RouteLogin";
+import { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
 
 export class RouteDataKurseDaten {
 	item: KursListeEintrag | undefined = undefined;
@@ -37,11 +38,15 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const id = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
+			const id = parseInt(to_params.id);
+			await this.onSelect(this.parent.data.mapKurse.get(id));
 		}
 	}
 
@@ -61,7 +66,7 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): KursDatenProps {
 		return {
 			patch: this.data.patch,
 			mapJahrgaenge: routeKurse.data.mapJahrgaenge,

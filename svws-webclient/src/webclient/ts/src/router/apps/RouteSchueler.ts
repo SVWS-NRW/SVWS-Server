@@ -104,7 +104,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		if (to_params.id === undefined) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.ladeListe();
 			if (this.data.mapSchueler.size === 0)
 				// TODO Handhabung bei neuer Schule -> Schülerliste leer
