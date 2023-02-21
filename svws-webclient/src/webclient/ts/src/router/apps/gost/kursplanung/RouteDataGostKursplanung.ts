@@ -350,7 +350,7 @@ export class RouteDataGostKursplanung {
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (value?.id === this._state.value.auswahlSchueler?.id)
 			return;
-		// Setze die neue Schülerwauswahl im geklonten State
+		// Setze die neue Schülerauswahl im geklonten State
 		this._state.value = Object.assign({ ... this._state.value }, { auswahlSchueler: value });
 	}
 

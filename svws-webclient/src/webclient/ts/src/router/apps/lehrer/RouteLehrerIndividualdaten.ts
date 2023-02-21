@@ -1,31 +1,22 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
-import { LehrerListeEintrag, LehrerStammdaten } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
 import { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
-export class RouteDataLehrerIndividualdaten {
 
-	item: LehrerListeEintrag | undefined = undefined;
-
-	patch = async (data : Partial<LehrerStammdaten>) => {
-		if (this.item === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await routeLogin.data.api.patchLehrerStammdaten(data, routeLogin.data.schema, this.item.id);
-		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
-	}
-
-}
-
-export class RouteLehrerIndividualdaten extends RouteNode<RouteDataLehrerIndividualdaten, RouteLehrer> {
+export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
-		super("lehrer_daten", "daten", SLehrerIndividualdaten, new RouteDataLehrerIndividualdaten());
+		super("lehrer_daten", "daten", SLehrerIndividualdaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+		if (routeLehrer.data.auswahl === undefined)
+			return routeLehrer.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -34,7 +25,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<RouteDataLehrerIndivid
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
-			patch: this.data.patch,
+			patch: routeLehrer.data.patchStammdaten,
 			stammdaten: routeLehrer.data.stammdaten,
 			orte: routeApp.data.orte,
 			ortsteile: routeApp.data.ortsteile

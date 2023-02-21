@@ -3,9 +3,10 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4">
-					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten.foto" :alt="stammdaten.foto ? 'Foto ' + stammdaten.vorname + ' ' + stammdaten.nachname : ''" />
+					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten?.foto ?? undefined"
+						:alt="(stammdaten !== undefined) && (stammdaten.foto !== null) ? 'Foto ' + stammdaten.vorname + ' ' + stammdaten.nachname : ''" />
 				</div>
-				<div>
+				<div v-if="stammdaten !== undefined">
 					<span class="inline-block mr-3">{{ stammdaten.titel }} {{ stammdaten.vorname }} {{ stammdaten.nachname }}</span>
 					<svws-ui-badge type="light" title="ID">
 						<i-ri-fingerprint-line />
@@ -13,6 +14,11 @@
 					</svws-ui-badge>
 					<br>
 					<span class="opacity-50">{{ stammdaten.kuerzel }}</span>
+				</div>
+				<div v-else>
+					<span class="inline-block mr-3"> --- </span>
+					<br>
+					<span class="opacity-50"> --- </span>
 				</div>
 			</div>
 		</svws-ui-header>
