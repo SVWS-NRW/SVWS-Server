@@ -9,10 +9,8 @@
 </template>
 
 <script setup lang="ts">
-	import { LehrerStammdaten } from '@svws-nrw/svws-core-ts';
+	import { LehrerUnterrichtsdatenProps } from './SLehrerUnterrichtsdatenProps';
 
-	const props = defineProps<{
-		stammdaten: LehrerStammdaten;
-	}>();
+	const props = defineProps<LehrerUnterrichtsdatenProps>();
 
 </script>

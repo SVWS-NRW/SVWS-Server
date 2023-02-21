@@ -24,9 +24,12 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+
+	const props = defineProps<LehrerAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -41,15 +44,6 @@
 
 	const search: Ref<string> = ref("");
 	const selectedItems = ref([]);
-
-	const props = defineProps<{
-		auswahl: LehrerListeEintrag | undefined;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		setLehrer: (value: LehrerListeEintrag | undefined) => Promise<void>;
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
 
 	const rowsFiltered: ComputedRef<Map<number, LehrerListeEintrag>> = computed(() => {
 		if (!search.value)

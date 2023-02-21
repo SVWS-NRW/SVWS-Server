@@ -4,6 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
 import { LehrerListeEintrag, LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "~/router/RouteLogin";
+import { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
 export class RouteDataLehrerIndividualdaten {
@@ -31,7 +32,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<RouteDataLehrerIndivid
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
 			patch: this.data.patch,
 			stammdaten: routeLehrer.data.stammdaten,

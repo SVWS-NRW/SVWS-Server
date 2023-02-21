@@ -27,13 +27,11 @@
 
 <script setup lang="ts">
 
-	import { LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
+	import { LehrerAppProps } from "./SLehrerAppProps";
 
-	const props = defineProps<{
-		stammdaten: LehrerStammdaten;
-	}>();
+	const props = defineProps<LehrerAppProps>();
 
 	const selectedRoute = routeLehrer.childRouteSelector;
 	const children_hidden = routeLehrer.children_hidden();

@@ -3,6 +3,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, RouteLehrer } from "~/router/apps/RouteLehrer";
 import { routeLogin } from "~/router/RouteLogin";
+import { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
 
 
 
@@ -59,7 +60,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
 			patch: this.data.patch,
 			personaldaten: this.data.personaldaten

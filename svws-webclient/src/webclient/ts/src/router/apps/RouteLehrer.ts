@@ -8,6 +8,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { routeLogin } from "../RouteLogin";
 import { RouteManager } from "../RouteManager";
+import { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
+import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 
 
 export class RouteDataLehrer {
@@ -103,17 +105,17 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		return { name: redirect_name, params: { id: id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): LehrerAuswahlProps {
 		return {
 			auswahl: this.data.auswahl.value,
 			mapLehrer: this.data.mapLehrer,
 			setLehrer: this.data.gotoLehrer,
 			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
-			aktAbschnitt: routeApp.data.aktAbschnitt,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
 			stammdaten: this.data.stammdaten,
 		};

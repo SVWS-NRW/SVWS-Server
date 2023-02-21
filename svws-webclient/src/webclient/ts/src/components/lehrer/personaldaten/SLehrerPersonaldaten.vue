@@ -8,14 +8,11 @@
 </template>
 
 <script setup lang="ts">
-	import { LehrerPersonaldaten } from '@svws-nrw/svws-core-ts';
 	import { computed } from 'vue';
 	import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
+	import { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 
-	const props = defineProps<{
-		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
-		personaldaten: LehrerPersonaldaten;
-	}>();
+	const props = defineProps<LehrerPersonaldatenProps>();
 
 	const { doPatch } = useDebouncedPatch(computed(() => props.personaldaten), props.patch)
 </script>
