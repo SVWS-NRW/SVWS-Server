@@ -165,6 +165,11 @@ export class RouteDataLehrer {
 		});
 	}
 
+	public async unloadPersonaldaten() {
+		this.setPatchedState({
+			personaldaten: undefined,
+		});
+	}
 
 	patchStammdaten = async (data : Partial<LehrerStammdaten>) => {
 		await routeLogin.data.api.patchLehrerStammdaten(data, routeLogin.data.schema, this.stammdaten.id);

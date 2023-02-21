@@ -24,6 +24,10 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 			await routeLehrer.data.loadPersonaldaten();
 	}
 
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await routeLehrer.data.unloadPersonaldaten();
+	}
+
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id: id }};
 	}
