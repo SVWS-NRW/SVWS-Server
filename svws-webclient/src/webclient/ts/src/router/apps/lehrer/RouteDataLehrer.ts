@@ -120,11 +120,13 @@ export class RouteDataLehrer {
 		}
 		const neueAuswahl = (this.mapLehrer.get(lehrer.id) === undefined) ? this.ersterLehrer(this.mapLehrer) : lehrer;
 		const stammdaten = await this.ladeStammdaten(neueAuswahl);
+		const personaldaten = this.hatPersonaldaten ? await this.ladePersonaldaten(neueAuswahl) : undefined;
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 			mapLehrer: this._state.value.mapLehrer,
 			auswahl: neueAuswahl,
 			stammdaten: stammdaten,
+			personaldaten: personaldaten,
 		});
 	}
 
