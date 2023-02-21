@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Webclient (Tests)",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.5.5",
+	"version": "0.5.6-SNAPSHOT",
 	"main": "./dist/index.js",
 	"type": "module",
 	"types": "./dist/index.d.ts",
