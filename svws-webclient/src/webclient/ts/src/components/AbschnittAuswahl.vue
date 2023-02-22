@@ -8,7 +8,7 @@
 	import { List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		abschnitte: List<Schuljahresabschnitt>;
+		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();

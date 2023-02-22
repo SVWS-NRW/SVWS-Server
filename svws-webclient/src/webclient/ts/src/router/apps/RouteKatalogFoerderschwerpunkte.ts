@@ -6,6 +6,7 @@ import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwe
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
+import { api } from "../Api";
 
 
 const SFoerderschwerpunkteAuswahl = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue")
@@ -67,7 +68,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			item: this._item,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

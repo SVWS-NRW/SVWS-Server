@@ -111,7 +111,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			return this.getRoute(this.data.mapSchueler.values().next().value.id);
 		}
 		// Prüfe, ob die Schulform eine gymnasiale Oberstufe hat und lade ggf. die Abiturjahrgänge
-		if (routeApp.data.schulform.value.daten.hatGymOb)
+		if (api.schulform.daten.hatGymOb)
 			await this.data.listeAbiturjahrgaenge.update_list();
 		// aktualisiere die Klassen und erstelle Map
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
@@ -162,8 +162,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			mapKlassen: this.data.mapKlassen,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapKurse: this.data.mapKurse,
-			schulgliederungen: routeApp.data.schulgliederungen.value,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			schulgliederungen: api.schulgliederungen,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoSchueler: this.data.gotoSchueler,

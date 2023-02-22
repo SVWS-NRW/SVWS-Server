@@ -7,6 +7,7 @@ import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { api } from "../Api";
 
 const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
 const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
@@ -42,7 +43,7 @@ export class RouteKataloge extends RouteNodeListView<ListNone, unknown, unknown,
 
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

@@ -1,5 +1,5 @@
-import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
-import { Ref, ref } from "vue";
+import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { Ref, ref, ShallowRef, shallowRef } from "vue";
 
 export class ApiConnection {
 
@@ -27,6 +27,12 @@ export class ApiConnection {
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
 
+	// TODO Benutzerkomptenzen des angemeldeten Benutzers
+
+	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
+	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
+
+
 	get api(): ApiServer {
 		if (this._api === undefined)
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
@@ -52,6 +58,13 @@ export class ApiConnection {
 	// Gibt den Benutzernamen zurück
 	get username() : string {
 		return this._username;
+	}
+
+	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
+	get schuleStammdaten(): SchuleStammdaten {
+		if (this._stammdaten.value === undefined)
+			throw new Error("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
+		return this._stammdaten.value;
 	}
 
 	private async connect(hostname : string): Promise<List<DBSchemaListeEintrag>> {
@@ -117,6 +130,7 @@ export class ApiConnection {
 			this._password = password;
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
+			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
@@ -125,6 +139,7 @@ export class ApiConnection {
 
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
+		this._stammdaten.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

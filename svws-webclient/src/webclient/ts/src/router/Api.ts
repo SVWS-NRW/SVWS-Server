@@ -1,6 +1,7 @@
-import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag, Schulform, Schulgliederung, SchuleStammdaten, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
+import { ComputedRef, computed } from "vue";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
@@ -80,6 +81,68 @@ class Api {
 	logout = async (): Promise<void> => {
 		await this.logout();
 	}
+
+
+	/// --- Informationen zu dem Benutzer, der angemeldet ist
+
+
+	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
+
+	/**
+	 * Gibt die Stammdaten der Schule zurück.
+	 *
+	 * @returns die Stammdaten
+	 */
+	public get schuleStammdaten(): SchuleStammdaten {
+		return this.conn.schuleStammdaten;
+	}
+
+	/**
+	 * Gibt die Schulform der Schule zurück, wo der Benutzer angemeldet ist.
+	 *
+	 * @returns die Schulform
+	 */
+	public get schulform(): Schulform {
+		const schulform = Schulform.getByKuerzel(this.conn.schuleStammdaten.schulform);
+		if (schulform === null)
+			throw new Error("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
+		return schulform;
+	}
+
+	/**
+	 * Gibt die zulässigen Schulgliederungen für die Schule zurück, wo der
+	 * Benutzer angemeldet ist.
+	 *
+	 * @returns eine Liste mit den Schulgliederungen
+	 */
+	public get schulgliederungen(): List<Schulgliederung> {
+		return Schulgliederung.get(this.schulform);
+	}
+
+	/**
+	 * Liefert ein Map für alle in der Schule angelegten Schuljahresabschnitte
+	 *
+	 * @return eine Map mit den Schuljahresabschnitten
+	 */
+	public mapAbschnitte: ComputedRef<Map<number, Schuljahresabschnitt>> = computed(() => {
+		const mapAbschnitte = new Map<number, Schuljahresabschnitt>();
+		for (const a of this.schuleStammdaten.abschnitte)
+			mapAbschnitte.set(a.id, a);
+		return mapAbschnitte;
+	});
+
+	/**
+	 * Gibt den aktuellen Schuljahresabschnitt zurück.
+	 *
+	 * @returns der aktuelle Schuljahresabschnitt
+	 */
+	public get abschnitt(): Schuljahresabschnitt {
+		const abschnitt = this.mapAbschnitte.value.get(this.schuleStammdaten.idSchuljahresabschnitt);
+		if (abschnitt === undefined)
+			throw new Error("Der aktuelle Schuljahresabschnitt der schule existiert nicht in der Liste der Schuljahresabschnitte.");
+		return abschnitt;
+	}
+
 
 
 	/// --- Methoden für den einfachen Api-Zugriff

@@ -42,7 +42,7 @@
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
 		item: GostJahrgang | undefined;
 		mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
-		abschnitte: List<Schuljahresabschnitt>;
+		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 		apiStatus: ApiStatus;

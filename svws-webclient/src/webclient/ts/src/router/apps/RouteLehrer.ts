@@ -9,6 +9,7 @@ import { RouteManager } from "../RouteManager";
 import { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
+import { api } from "../Api";
 
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")
@@ -67,7 +68,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 			auswahl: this.data.auswahl,
 			mapLehrer: this.data.mapLehrer,
 			setLehrer: this.data.gotoLehrer,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

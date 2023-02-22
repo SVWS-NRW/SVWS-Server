@@ -5,7 +5,7 @@ export interface KurseAuswahlProps {
 	listKurse: List<KursListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	abschnitte: List<Schuljahresabschnitt>;
+	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	setKurs: (value: KursListeEintrag) => Promise<void>;

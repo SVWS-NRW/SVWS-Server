@@ -100,7 +100,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return {
 			auswahl: this.data.auswahl.value,
 			listKlassen: this.data.listKlassen,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			setKlasse: this.data.setKlasse

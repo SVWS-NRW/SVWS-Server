@@ -28,7 +28,7 @@
 
 	const props = defineProps<{
 		item: ShallowRef<JahrgangsListeEintrag | undefined>;
-		abschnitte: List<Schuljahresabschnitt>;
+		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}>();

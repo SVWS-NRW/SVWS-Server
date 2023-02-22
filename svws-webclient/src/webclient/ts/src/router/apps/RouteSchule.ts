@@ -1,10 +1,11 @@
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 import { ListNone } from "~/apps/ListNone";
+import { api } from "../Api";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
@@ -43,7 +44,7 @@ export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, R
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			schuleStammdaten: routeApp.data.schuleStammdaten
+			schuleStammdaten: api.schuleStammdaten
 		};
 	}
 

@@ -109,7 +109,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			listKurse: this.data.listKurse,
 			mapJahrgaenge: this.data.mapJahrgaenge,
 			mapLehrer: this.data.mapLehrer,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			setKurs: this.data.setKurs

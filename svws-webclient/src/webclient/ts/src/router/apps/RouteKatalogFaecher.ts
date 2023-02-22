@@ -6,6 +6,7 @@ import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDate
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { api } from "../Api";
 
 export class RouteDataKatalogFaecher {
 	item: FaecherListeEintrag | undefined = undefined;
@@ -70,7 +71,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			item: this._item,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};

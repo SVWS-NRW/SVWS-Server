@@ -6,6 +6,7 @@ import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatal
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
+import { api } from "../Api";
 
 const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
@@ -66,7 +67,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			item: this._item,
-			abschnitte: routeApp.data.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
