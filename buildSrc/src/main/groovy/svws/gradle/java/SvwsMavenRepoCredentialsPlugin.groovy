@@ -69,6 +69,18 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		}
     }
 
+	void addNpmToken() {
+		project.ext.getNpmToken = { ->
+			if (project.hasProperty('npm_token'))
+				return project.npm_token
+			def token = System.getenv("NPM_TOKEN")
+			if (token != null)
+				return token
+			project.logger.info('Info: Das Npm Repository kann nicht genutzt werden, weil die Zugangsdaten nicht hinterlegt sind. Der Npm-Token wurde weder in USERHOME/.gradle/gradle.properties als npm_token, noch als Umgebungsvariable NPM_TOKEN festgelegt!')
+			return null
+		}
+	}
+	
 	
   	void apply(Project project) {
     	this.project = project
@@ -77,6 +89,7 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		this.addNexusActor()
 		this.addNexusToken()
 		this.addNexusNpmBase64Token()
+		this.addNpmToken()
     }
 
 }

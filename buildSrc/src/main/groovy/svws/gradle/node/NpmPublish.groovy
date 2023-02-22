@@ -27,7 +27,7 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 	@TaskAction
     @Override
     protected void exec() {
-    	if (actor == null)
+    	if ((!tokenOnly) && (actor == null))
     		throw new Exception("Es wurde kein Benutzername/Actor angegeben.");
     	if (token == null)
     		throw new Exception("Es wurde kein Benutzertoken bzw. -kennwort angegeben.");

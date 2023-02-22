@@ -257,8 +257,18 @@ clean.dependsOn cleanUIComponents
 clean.dependsOn cleanWebClient
 
 
+task copyNexusNpmrc(type: Copy) {
+	dependsOn assemble
+	group "build"
+	from "$projectDir/.npmrc.nexus"
+	into "$projectDir/"
+	inputs.files "$projectDir/.npmrc.nexus"
+	outputs.files "$projectDir/.npmrc"
+	rename(".npmrc.nexus", ".npmrc")
+}
+
 task publishNexusTsLib(type: NpmPublish) {
-	dependsOn assembleTSLib
+	dependsOn copyNexusNpmrc
 	group "publishing"
 	workingDir = file("$projectDir/src/ts-lib/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -268,7 +278,7 @@ task publishNexusTsLib(type: NpmPublish) {
 }
 
 task publishNexusUiComponents(type: NpmPublish) {
-	dependsOn assembleUIComponents
+	dependsOn copyNexusNpmrc
 	group "publishing"
 	workingDir = file("$projectDir/src/ui-components/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -278,7 +288,7 @@ task publishNexusUiComponents(type: NpmPublish) {
 }
 
 task publishNexusWebClient(type: NpmPublish) {
-	dependsOn assembleWebClient
+	dependsOn copyNexusNpmrc
 	group "publishing"
 	workingDir = file("$projectDir/src/webclient/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
@@ -287,9 +297,52 @@ task publishNexusWebClient(type: NpmPublish) {
 	scopePublic = false
 }
 
+task copyNpmNpmrc(type: Copy) {
+	dependsOn publishNexusTsLib, publishNexusUiComponents, publishNexusWebClient
+	group "build"
+	from "$projectDir/.npmrc.npm"
+	into "$projectDir/"
+	inputs.files "$projectDir/.npmrc.npm"
+	outputs.files "$projectDir/.npmrc"
+	rename(".npmrc.npm", ".npmrc")
+}
+
+task publishNpmTsLib(type: NpmPublish) {
+	dependsOn copyNpmNpmrc
+	group "publishing"
+	workingDir = file("$projectDir/src/ts-lib/ts")
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
+task publishNpmUiComponents(type: NpmPublish) {
+	dependsOn copyNpmNpmrc
+	group "publishing"
+	workingDir = file("$projectDir/src/ui-components/ts")
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
+task publishNpmWebClient(type: NpmPublish) {
+	dependsOn copyNpmNpmrc
+	group "publishing"
+	workingDir = file("$projectDir/src/webclient/ts")
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
 publishReleaseAll.dependsOn publishNexusTsLib
 publishReleaseAll.dependsOn publishNexusUiComponents
 publishReleaseAll.dependsOn publishNexusWebClient
+publishReleaseAll.dependsOn publishNpmTsLib
+publishReleaseAll.dependsOn publishNpmUiComponents
+publishReleaseAll.dependsOn publishNpmWebClient
 
 
 publishing {
