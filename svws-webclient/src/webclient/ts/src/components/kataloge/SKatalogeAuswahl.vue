@@ -19,13 +19,9 @@
 
 	import { router } from "~/router/RouteManager";
 	import { routeKataloge } from "~/router/apps/RouteKataloge";
-	import { List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
 
-	const props = defineProps<{
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
+	const props = defineProps<KatalogeAuswahlProps>();
 
 	const menu_items = [
 		{ title: "Fächer", value: "faecher" },

@@ -6,15 +6,12 @@
 
 <script setup lang="ts">
 
-	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
+	import { ReligionDatenProps } from "./SReligionDatenProps";
 
-	const props = defineProps<{
-		patch: (data : Partial<ReligionEintrag>) => Promise<void>;
-		data: ReligionEintrag;
-	}>();
+	const props = defineProps<ReligionDatenProps>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !routeKatalogReligionDaten.hidden();

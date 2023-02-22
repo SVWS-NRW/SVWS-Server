@@ -2,14 +2,14 @@
 	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3 capitalize">{{ item.value?.text }}</span>
+				<span class="inline-block mr-3 capitalize">{{ auswahl?.text }}</span>
 				<svws-ui-badge type="light" title="ID">
 					<i-ri-fingerprint-line />
-					{{ item.value?.id }}
+					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
 			<div>
-				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
+				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="children_hidden" v-model="selectedRoute">
@@ -23,19 +23,17 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+	import { ReligionenAppProps } from "./SReligionenAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<ReligionEintrag | undefined>;
-	}>();
+	const props = defineProps<ReligionenAppProps>();
 
 	const selectedRoute = routeKatalogReligion.childRouteSelector;
 	const children_hidden = routeKatalogReligion.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogReligion.hidden()) && (props.item.value !== undefined);
+		return (!routeKatalogReligion.hidden()) && (props.auswahl !== undefined);
 	});
 
 </script>

@@ -1,5 +1,6 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKatalogReligion } from "../RouteKatalogReligion";
@@ -36,11 +37,15 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const id = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
+			const id = parseInt(to_params.id);
+			await this.onSelect(this.parent.data.mapReligionen.get(id));
 		}
 	}
 
@@ -60,10 +65,9 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): ReligionDatenProps {
 		return {
 			patch: this.data.patch,
-			item: this.data.item,
 			data: this.data.daten
 		};
 	}

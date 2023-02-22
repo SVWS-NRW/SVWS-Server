@@ -12,13 +12,14 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="true">
+				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
+					:columns="cols" clickable selectable :footer="true">
 					<template #footer>
 						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
 					</template>
-				</svws-ui-table>
+				</svws-ui-data-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -43,21 +44,15 @@
 
 <script setup lang="ts">
 
-	import { Religion, ReligionEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref, ShallowRef } from "vue";
+	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed, ComputedRef, reactive, ref } from "vue";
+	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 	import { routeLogin } from "~/router/RouteLogin";
 	import { router } from "~/router/RouteManager";
-	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 
-	const props = defineProps<{
-		item: ShallowRef<ReligionEintrag | undefined>;
-		abschnitte: List<Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
-
-	const selected = routeKatalogReligion.auswahl;
+	const props = defineProps<ReligionenAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -65,8 +60,6 @@
 	];
 
 	const modalAdd = ref();
-
-	const rows: ComputedRef<ReligionEintrag[]> = computed(() => routeKatalogReligion.liste.liste);
 
 	/** Modalfenster: Neue Religion */
 	const reli_neu: ReligionEintrag = reactive(new ReligionEintrag());
