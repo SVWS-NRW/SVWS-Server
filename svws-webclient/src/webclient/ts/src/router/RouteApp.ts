@@ -18,7 +18,6 @@ import SApp from "~/components/SApp.vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
-import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
 import { api } from "./Api";
@@ -29,7 +28,6 @@ export class RouteDataApp {
 	mapOrte: Map<number, OrtKatalogEintrag> = new Map();
 	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag> = new Map();
-	apiLoadingStatus: ApiLoadingStatus = new ApiLoadingStatus();
 
 	public user_config: Ref<Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]>> = ref(new Map());
 	public drag_and_drop_data: Ref<any> = ref(undefined);

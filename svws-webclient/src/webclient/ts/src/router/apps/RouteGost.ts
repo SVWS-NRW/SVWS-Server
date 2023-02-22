@@ -144,7 +144,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			item: this.data.item.value,
 			mapJahrgaengeOhneAbiJahrgang: this.data.mapJahrgaengeOhneAbiJahrgang,
-			abschnitte: api.schuleStammdaten.abschnitte,
+			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			apiStatus: api.status,

@@ -14,7 +14,7 @@
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
-								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
+								<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
 								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
 							</div>
 						</td>
@@ -47,12 +47,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { api } from '~/router/Api';
 	import { ApiPendingData, ApiStatus } from '~/components/ApiStatus';
-	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
@@ -94,26 +92,20 @@
 			await props.setAuswahlBlockung(blockung);
 	}
 
-	const create_blockungsergebnisse = () => {
-		const halbjahresHashCode: number = props.auswahlBlockung?.hashCode() ? props.auswahlBlockung.hashCode() : -1;
-		const id = props.auswahlBlockung?.id;
-		if (!id)
-			return;
-		const apiCall = do_create_blockungsergebnisse(id, halbjahresHashCode);
-		routeApp.data.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-	};
-
 	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
 
-	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
-		props.apiStatus.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
+	async function do_create_blockungsergebnisse() {
+		const id = props.auswahlBlockung?.id;
+		if (id === undefined)
+			return;
 		try {
-			const res = await api.server.rechneGostBlockung(api.schema, id, 5000)
+			props.apiStatus.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
+			await api.server.rechneGostBlockung(api.schema, id, 5000)
 			props.apiStatus.stop();
-			return res;
 		} catch (e) {
 			props.apiStatus.stop(e instanceof Error ? e : undefined);
 		}
+		return;
 	}
 
 	async function patch_blockung(value: string, idBlockung : number) {

@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 
-	import { List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		abschnitte: Map<number, Schuljahresabschnitt>;
