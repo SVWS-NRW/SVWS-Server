@@ -143,6 +143,43 @@ class Api {
 		return abschnitt;
 	}
 
+	public hatQuartalsModus(): boolean {
+		return (this.schuleStammdaten.schuleAbschnitte.anzahlAbschnitte === 4);
+	}
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt anhand des übergebenen Schuljahres und dem Abschnitt.
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param abschnitt der Abschnitt (Anzahl der Abschnitt in einem Jahrgang beachten!)
+	 *
+	 * @returns der Schuljahresabschnitt
+	 */
+	public getAbschnittBySchuljahrUndAbschnitt(schuljahr: number, abschnitt: number): Schuljahresabschnitt | undefined {
+		let result : Schuljahresabschnitt | undefined = undefined;
+		for (const a of this.schuleStammdaten.abschnitte) {
+			if ((a.schuljahr === schuljahr) && (a.abschnitt === abschnitt)) {
+				result = a;
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt anhand des übergebenen Schuljahres, dem Halbjahr und ggf. dem Quartal,
+	 * falls die Schule im Quartalsmodus betrieben wird.
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param halbjahr  das Halbjahr (1 oder 2)
+	 * @param quartal   das Quartal (1 oder 2), default 1
+	 *
+	 * @returns der Schuljahresabschnitt
+	 */
+	public getAbschnittBySchuljahrUndHalbjahr(schuljahr: number, halbjahr: number, quartal: number = 1): Schuljahresabschnitt | undefined {
+		const abschnitt = this.hatQuartalsModus() ? (halbjahr - 1) * 2 + quartal : halbjahr;
+		return this.getAbschnittBySchuljahrUndAbschnitt(schuljahr, abschnitt);
+	}
 
 
 	/// --- Methoden für den einfachen Api-Zugriff
