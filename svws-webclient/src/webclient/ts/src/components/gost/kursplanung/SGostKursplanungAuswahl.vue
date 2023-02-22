@@ -25,7 +25,7 @@
 	import { computed, ComputedRef } from 'vue';
 	import { useRouter } from 'vue-router';
 	import { api } from '~/router/Api';
-	import { ApiStatus } from '~/router/ApiStatus';
+	import { ApiStatus } from '~/components/ApiStatus';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
 	const props = defineProps<{

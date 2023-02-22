@@ -1,6 +1,11 @@
 import { ShallowRef, shallowRef } from "vue";
 
 
+export interface ApiPendingData {
+	name: string;
+	id: number;
+}
+
 /**
  * Das Interface mit dem internen Zustand des API-Status
  */
@@ -13,7 +18,7 @@ interface APIStatusState {
 	error: Error | undefined;
 
 	/// Ein Objekt, welches Informationen zu dem enthält, der gerade auf der API ausgeführt wird
-	data: unknown;
+	data:	ApiPendingData | undefined;
 
 }
 
@@ -68,7 +73,7 @@ export class ApiStatus {
 	 *
 	 * @returns {string} der Text
 	 */
-	public get data(): unknown {
+	public get data(): ApiPendingData | undefined {
 		return this._state.value.data;
 	}
 
@@ -78,7 +83,7 @@ export class ApiStatus {
 	 * @returns {boolean} true, falls der API-Status gesetzt werden konnte und false, falls
 	 * 	bereits ein anderer API-Aufruf läuft.
 	 */
-	public start(data?: unknown): boolean {
+	public start(data?: ApiPendingData): boolean {
 		if (this.pending)
 			return false;
 		this._state.value = { pending: true, error: undefined, data: data };

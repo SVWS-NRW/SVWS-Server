@@ -51,7 +51,7 @@
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { api } from '~/router/Api';
-	import { ApiStatus } from '~/router/ApiStatus';
+	import { ApiPendingData, ApiStatus } from '~/components/ApiStatus';
 	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
@@ -103,15 +103,7 @@
 		routeApp.data.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
 	};
 
-	interface ApiPendingData {
-		name: string;
-		id: number;
-	}
-
-	function isPending(id: number) : boolean {
-		const data = props.apiStatus.data as ApiPendingData | undefined;
-		return ((data !== undefined) && (data.name === "gost.kursblockung.berechnen") && (data.id === id))
-	}
+	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
 
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
 		props.apiStatus.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });

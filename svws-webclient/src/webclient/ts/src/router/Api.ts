@@ -1,6 +1,6 @@
 import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { ApiConnection } from "./ApiConnection";
-import { ApiStatus } from "./ApiStatus";
+import { ApiStatus } from "../components/ApiStatus";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich

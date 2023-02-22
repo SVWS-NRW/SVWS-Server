@@ -63,7 +63,7 @@
 	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
-	import { ApiStatus } from '~/router/ApiStatus';
+	import { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

@@ -33,7 +33,7 @@
 		List, SchuelerListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { routeApp } from "~/router/RouteApp";
-	import { ApiStatus } from "~/router/ApiStatus";
+	import { ApiStatus } from "~/components/ApiStatus";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
