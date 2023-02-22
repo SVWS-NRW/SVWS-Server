@@ -3,7 +3,7 @@ import { shallowRef } from "vue";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
-import { ApiStatus } from "~/utils/ApiStatus";
+import { ApiStatus } from "~/router/ApiStatus";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
 

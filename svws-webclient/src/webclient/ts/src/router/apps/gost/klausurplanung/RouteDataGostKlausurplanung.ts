@@ -3,7 +3,7 @@ import { shallowRef } from "vue";
 import { routeLogin } from "~/router/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { ApiStatus } from "~/utils/ApiStatus";
+import { ApiStatus } from "~/router/ApiStatus";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungKlausurdaten } from "./RouteGostKlausurplanungKlausurdaten";

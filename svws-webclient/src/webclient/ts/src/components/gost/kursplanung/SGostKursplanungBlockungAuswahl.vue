@@ -52,7 +52,7 @@
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { routeLogin } from "~/router/RouteLogin";
 	import { routeApp } from '~/router/RouteApp';
-	import { ApiStatus } from '~/utils/ApiStatus';
+	import { ApiStatus } from '~/router/ApiStatus';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;

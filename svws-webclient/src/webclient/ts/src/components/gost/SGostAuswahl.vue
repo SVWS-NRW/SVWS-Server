@@ -36,7 +36,7 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { routeGost } from "~/router/apps/RouteGost";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { ApiStatus } from "~/utils/ApiStatus";
+	import { ApiStatus } from "~/router/ApiStatus";
 
 	const props = defineProps<{
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;

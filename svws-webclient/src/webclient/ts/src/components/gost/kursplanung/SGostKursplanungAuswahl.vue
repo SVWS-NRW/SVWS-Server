@@ -26,7 +26,7 @@
 	import { useRouter } from 'vue-router';
 	import { routeLogin } from "~/router/RouteLogin";
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
-	import { ApiStatus } from '~/utils/ApiStatus';
+	import { ApiStatus } from '~/router/ApiStatus';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
