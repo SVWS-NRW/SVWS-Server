@@ -17,6 +17,7 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 	public String actor = null
 	public String token = null
 	public boolean scopePublic = false
+	public boolean tokenOnly = false
 
 	NpmPublish() {
 		super(NpmPublish.class);
@@ -33,9 +34,13 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
         def cmdLine = this.getCommandLine();
 		def cfg = project.nodeconfig;
 		cfg.addEnvironment(this);
-		this.environment('NPM_ACTOR', this.actor);
-		this.environment('NPM_TOKEN', this.token);
-		this.environment('NPM_TOKEN_BASE64', (this.actor + ':' + this.token).bytes.encodeBase64().toString());
+		if (tokenOnly) {
+			this.environment('NPM_TOKEN_BASE64', this.token);
+		} else {
+			this.environment('NPM_ACTOR', this.actor);
+			this.environment('NPM_TOKEN', this.token);
+			this.environment('NPM_TOKEN_BASE64', (this.actor + ':' + this.token).bytes.encodeBase64().toString());
+		}
 		if (scopePublic) {
 			cmdLine.set(0, 'public');
 			cmdLine.add(0, '--access');
