@@ -13,7 +13,7 @@
 		<template #content>
 			<div class="container">
 				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
-					:columns="cols" clickable selectable :footer="true">
+					:columns="cols" clickable :footer="true">
 					<template #footer>
 						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
@@ -48,7 +48,7 @@
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef, reactive, ref } from "vue";
 	import { api } from "~/router/Api";
-	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 	import { router } from "~/router/RouteManager";
 	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 

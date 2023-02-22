@@ -6,15 +6,12 @@
 
 <script setup lang="ts">
 
-	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
+	import { FoerderschwerpunktDatenProps } from "./SFoerderschwerpunktDatenProps";
 
-	const props = defineProps<{
-		patch: (data : Partial<FoerderschwerpunktEintrag>) => Promise<void>;
-		data: FoerderschwerpunktEintrag;
-	}>();
+	const props = defineProps<FoerderschwerpunktDatenProps>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !(routeKatalogFoerderschwerpunkteDaten.hidden());

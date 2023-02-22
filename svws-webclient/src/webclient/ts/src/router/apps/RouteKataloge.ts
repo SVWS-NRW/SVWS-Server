@@ -1,10 +1,11 @@
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { ListNone } from "~/apps/ListNone";
+import { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { api } from "../Api";
@@ -41,10 +42,10 @@ export class RouteKataloge extends RouteNodeListView<ListNone, unknown, unknown,
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): KatalogeAuswahlProps {
 		return {
 			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}

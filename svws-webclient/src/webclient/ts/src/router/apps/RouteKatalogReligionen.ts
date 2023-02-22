@@ -9,7 +9,7 @@ import { ReligionenAppProps } from "~/components/kataloge/religionen/SReligionen
 import { ReligionenAuswahlProps } from "~/components/kataloge/religionen/SReligionenAuswahlPops";
 import { api } from "../Api";
 
-export class RouteDataReligionen {
+export class RouteDataKatalogReligionen {
 	auswahl: ShallowRef<ReligionEintrag | undefined> = shallowRef(undefined);
 	listReligionen: List<ReligionEintrag> = new Vector();
 	mapReligionen: Map<number, ReligionEintrag> = new Map();
@@ -44,10 +44,10 @@ export class RouteDataReligionen {
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 const SReligionenApp = () => import("~/components/kataloge/religionen/SReligionenApp.vue")
 
-export class RouteKatalogReligion extends RouteNode<RouteDataReligionen, RouteApp> {
+export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataReligionen());
+		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
@@ -116,4 +116,4 @@ export class RouteKatalogReligion extends RouteNode<RouteDataReligionen, RouteAp
 	}
 }
 
-export const routeKatalogReligion = new RouteKatalogReligion();
+export const routeKatalogReligion = new RouteKatalogReligionen();

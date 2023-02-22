@@ -37,11 +37,15 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const id = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.liste.find(f => f.id === id));
+			const id = parseInt(to_params.id);
+			await this.onSelect(this.parent.data.mapFoerderschwerpunkte.get(id));
 		}
 	}
 
@@ -64,7 +68,7 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			patch: this.data.patch,
-			item: this.data.item,
+			auswahl: this.data.item,
 			data: this.data.daten
 		};
 	}

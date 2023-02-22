@@ -1,6 +1,5 @@
-import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -8,9 +7,16 @@ import { RouteKlassen, routeKlassen } from "../RouteKlassen";
 
 export class RouteDataKlassenDaten {
 	item: KlassenListeEintrag | undefined = undefined;
-	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	private _daten: KlassenDaten | undefined = undefined;
+
+	public async ladeListeJahrgaenge() {
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const mapKurse = new Map<number, JahrgangsListeEintrag>();
+		for (const l of listJahrgaenge)
+			mapKurse.set(l.id, l);
+		this.mapJahrgaenge = mapKurse;
+	}
 
 	get daten(): KlassenDaten {
 		if (this._daten === undefined)
@@ -41,9 +47,7 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		await this.data.listJahrgaenge.update_list();
-		this.data.mapJahrgaenge.clear();
-		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
+		await this.data.ladeListeJahrgaenge();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {

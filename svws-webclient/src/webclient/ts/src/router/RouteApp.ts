@@ -3,7 +3,7 @@ import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
-import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogFoerderschwerpunkte } from "./apps/RouteKatalogFoerderschwerpunkte";
 import { routeSchueler } from "~/router/apps/RouteSchueler";

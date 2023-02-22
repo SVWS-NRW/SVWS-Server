@@ -6,18 +6,15 @@
 
 <script setup lang="ts">
 
-	import { FachDaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
+	import { routeKatalogFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
+	import { FachDatenProps } from "./SFachDatenProps";
 
-	const props = defineProps<{
-		patch: (data : Partial<FachDaten>) => Promise<void>;
-		data: FachDaten;
-	}>();
+	const props = defineProps<FachDatenProps>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !routeFaecherDaten.hidden();
+		return !routeKatalogFaecherDaten.hidden();
 	});
 
 	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)

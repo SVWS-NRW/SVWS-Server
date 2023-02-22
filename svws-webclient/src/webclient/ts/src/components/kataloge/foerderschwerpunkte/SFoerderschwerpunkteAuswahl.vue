@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
+				<svws-ui-data-table :model-value:clicked="auswahl" clickable @update:clicked="setFoerderschwerpunkt" :items="listFoerderschwerpunkte" :columns="cols" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -20,25 +20,14 @@
 
 <script setup lang="ts">
 
-	import {FoerderschwerpunktEintrag, List, Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
-	import {computed, ComputedRef, ShallowRef} from "vue";
 	import { router } from "~/router/RouteManager";
-	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
+	import { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
-		abschnitte: Map<number, Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
-
-	const selected = routeKatalogFoerderschwerpunkte.auswahl;
+	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kuerzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	];
-
-	const rows: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => routeKatalogFoerderschwerpunkte.liste.liste || []);
 </script>

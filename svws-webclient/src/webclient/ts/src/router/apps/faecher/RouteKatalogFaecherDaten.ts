@@ -1,10 +1,11 @@
 import { FachDaten, FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKatalogFaecher } from "../RouteKatalogFaecher";
 
-export class RouteDataFaecherDaten {
+export class RouteDataKatalogFaecherDaten {
 	item: FaecherListeEintrag | undefined = undefined;
 	private _daten: FachDaten | undefined = undefined;
 
@@ -28,20 +29,24 @@ export class RouteDataFaecherDaten {
 
 const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 
-export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKatalogFaecher> {
+export class RouteKatalogFaecherDaten extends RouteNode<RouteDataKatalogFaecherDaten, RouteKatalogFaecher> {
 
 	public constructor() {
-		super("faecher_daten", "daten", SFachDaten, new RouteDataFaecherDaten());
+		super("faecher_daten", "daten", SFachDaten, new RouteDataKatalogFaecherDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const id = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.gefiltert.find(f => f.id === id));
+			const id = parseInt(to_params.id);
+			await this.onSelect(this.parent.data.mapFaecher.get(id));
 		}
 	}
 
@@ -61,15 +66,14 @@ export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKat
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): FachDatenProps {
 		return {
 			patch: this.data.patch,
-			item: this.data.item,
 			data: this.data.daten
 		};
 	}
 
 }
 
-export const routeFaecherDaten = new RouteFaecherDaten();
+export const routeKatalogFaecherDaten = new RouteKatalogFaecherDaten();
 

@@ -3,7 +3,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteKatalogReligion } from "../RouteKatalogReligion";
+import { RouteKatalogReligionen } from "../RouteKatalogReligionen";
 
 export class RouteDataKlassenDaten {
 	item: ReligionEintrag | undefined = undefined;
@@ -28,7 +28,7 @@ export class RouteDataKlassenDaten {
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
 
-export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, RouteKatalogReligion> {
+export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, RouteKatalogReligionen> {
 
 	public constructor() {
 		super("religionen_daten", "daten", SReligionDaten, new RouteDataKlassenDaten());

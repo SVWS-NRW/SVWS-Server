@@ -2,14 +2,14 @@
 	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ item.value?.bezeichnung }}</span>
+				<span class="inline-block mr-3">{{ auswahl?.bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID">
 					<i-ri-fingerprint-line />
-					{{ item.value?.id }}
+					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
 			<div>
-				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
+				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogJahrgaenge.children_records" :hidden="children_hidden" v-model="selectedRoute">
@@ -23,19 +23,17 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+	import { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<JahrgangsListeEintrag | undefined>;
-	}>();
+	const props = defineProps<JahrgaengeAppProps>();
 
 	const selectedRoute = routeKatalogJahrgaenge.childRouteSelector;
 	const children_hidden = routeKatalogJahrgaenge.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogJahrgaenge.hidden()) && (props.item.value !== undefined);
+		return (!routeKatalogJahrgaenge.hidden()) && (props.auswahl !== undefined);
 	});
 
 </script>

@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 	import { ReligionenAppProps } from "./SReligionenAppProps";
 
 	const props = defineProps<ReligionenAppProps>();

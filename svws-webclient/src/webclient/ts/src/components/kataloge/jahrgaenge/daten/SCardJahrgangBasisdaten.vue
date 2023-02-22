@@ -6,8 +6,7 @@
 				<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
 				<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputKuerzelStatistik" type="text" />
 				<svws-ui-multi-select title="Folgejahrgang" v-model="inputIdFolgejahrgang"
-					:items="listJahrgaenge?.filter((e: JahrgangsListeEintrag) => e.id !== id)"
-					:item-text="(e: JahrgangsListeEintrag) => e.bezeichnung ?? ''" />
+					:items="inputJahrgaenge" :item-text="(e: JahrgangsListeEintrag) => e.bezeichnung ?? ''" />
 				<svws-ui-text-input placeholder="Kürzel Schulgliederung" v-model="inputKuerzelSchulgliederung" type="text" />
 			</div>
 		</div>
@@ -16,12 +15,12 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsDaten, JahrgangsListeEintrag, List } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
 		data: JahrgangsDaten,
-		listJahrgaenge: JahrgangsListeEintrag[];
+		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -56,8 +55,12 @@
 		set: (value) => doPatch({ kuerzelSchulgliederung: value })
 	});
 
+	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag>> = computed(()=>
+		[...props.mapJahrgaenge.values()].filter(j => j.id !== props.data.id)
+	);
+
 	const inputIdFolgejahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
-		get: () => props.listJahrgaenge.find((e: JahrgangsListeEintrag) => props.data.idFolgejahrgang === e.id),
+		get: () => props.data.idFolgejahrgang ? props.mapJahrgaenge.get(props.data.idFolgejahrgang) : undefined,
 		set: (value) => doPatch({ idFolgejahrgang: value?.id })
 	});
 

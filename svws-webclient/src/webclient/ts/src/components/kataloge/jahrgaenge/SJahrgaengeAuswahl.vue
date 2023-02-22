@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" />
+				<svws-ui-data-table :model-value:clicked="auswahl" clickable @update:clicked="setJahrgang" :items="listJahrgaenge" :columns="cols" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -20,25 +20,15 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { router } from "~/router/RouteManager";
-	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { router } from "~/router/RouteManager";
+	import { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<JahrgangsListeEintrag | undefined>;
-		abschnitte: Map<number, Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	}>();
-
-	const selected = routeKatalogJahrgaenge.auswahl;
+	const props = defineProps<JahrgaengeAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 
-	const rows: ComputedRef<JahrgangsListeEintrag[]> = computed(() => routeKatalogJahrgaenge.liste.liste || []);
 </script>

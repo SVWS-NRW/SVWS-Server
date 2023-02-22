@@ -1,5 +1,6 @@
 import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 import { api } from "~/router/Api";
 import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
@@ -37,11 +38,15 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const id = parseInt(to_params.id as string);
-			await this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
+			const id = parseInt(to_params.id);
+			await this.onSelect(this.parent.data.mapJahrgaenge.get(id));
 		}
 	}
 
@@ -61,12 +66,11 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 		return { name: this.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {
 		return {
 			patch: this.data.patch,
-			item: this.data.item,
 			data: this.data.daten,
-			listJahrgaenge: routeKatalogJahrgaenge.liste.liste
+			mapJahrgaenge: routeKatalogJahrgaenge.data.mapJahrgaenge
 		};
 	}
 
