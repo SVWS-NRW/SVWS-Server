@@ -12,6 +12,9 @@ interface APIStatusState {
 	/// Der zuletzt gemeldete Fehler, falls ein API-Aufruf fehlgeschlagen ist
 	error: Error | undefined;
 
+	/// Ein Objekt, welches Informationen zu dem enthält, der gerade auf der API ausgeführt wird
+	data: unknown;
+
 }
 
 
@@ -25,7 +28,8 @@ export class ApiStatus {
 	/// Der aktuelle Zustand des API-Status
 	private _state: ShallowRef<APIStatusState> = shallowRef({
 		pending: false,
-		error: undefined
+		error: undefined,
+		data: undefined,
 	});
 
 	/**
@@ -58,15 +62,26 @@ export class ApiStatus {
 	}
 
 	/**
+	 * Gibt die Daten zurück, der für den aktuellen ausstehenden API-Aufruf gesetzt wurden.
+	 * Im Falle eines nicht aussstehenden Aufrufs oder nicht gesetzten Daten, wird
+	 * undefined zurückgegeben.
+	 *
+	 * @returns {string} der Text
+	 */
+	public get data(): unknown {
+		return this._state.value.data;
+	}
+
+	/**
 	 * Setzt beim API-Status, dass derzeit ein API-Aufruf läuft.
 	 *
 	 * @returns {boolean} true, falls der API-Status gesetzt werden konnte und false, falls
 	 * 	bereits ein anderer API-Aufruf läuft.
 	 */
-	public start(): boolean {
+	public start(data?: unknown): boolean {
 		if (this.pending)
 			return false;
-		this._state.value = { pending: true, error: undefined };
+		this._state.value = { pending: true, error: undefined, data: data };
 		return true;
 	}
 
@@ -81,7 +96,7 @@ export class ApiStatus {
 	public stop(error?: Error): boolean {
 		if (!this.pending)
 			return false;
-		this._state.value = { pending: false, error: error };
+		this._state.value = { pending: false, error: error, data: undefined };
 		return true;
 	}
 

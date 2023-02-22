@@ -25,7 +25,7 @@
 							</div>
 						</td>
 					</tr>
-					<auswahl-blockung-api-status :blockung="row" :api-status="apiStatus" />
+					<auswahl-blockung-api-status v-if="isPending(row.id)" :blockung="row" :api-status="apiStatus" />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -103,8 +103,18 @@
 		routeApp.data.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
 	};
 
+	interface ApiPendingData {
+		name: string;
+		id: number;
+	}
+
+	function isPending(id: number) : boolean {
+		const data = props.apiStatus.data as ApiPendingData | undefined;
+		return ((data !== undefined) && (data.name === "gost.kursblockung.berechnen") && (data.id === id))
+	}
+
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
-		props.apiStatus.start();
+		props.apiStatus.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
 		try {
 			const res = await api.server.rechneGostBlockung(api.schema, id, 5000)
 			props.apiStatus.stop();
