@@ -5,6 +5,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { routeApp } from "~/router/RouteApp";
 import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
 import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
+import { api } from "~/router/Api";
 
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -166,7 +167,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			setAuswahlBlockung: this.data.gotoBlockung,
 			auswahlBlockung: this.data.hatBlockung ? this.data.auswahlBlockung : undefined,
 			mapBlockungen: this.data.mapBlockungen,
-			apiStatus: this.data.apiStatus,
+			apiStatus: api.status,
 			// ... und zusätzlich für die Ergebnisauswahl
 			getDatenmanager: () => this.data.datenmanager,
 			removeErgebnis: this.data.removeErgebnis,

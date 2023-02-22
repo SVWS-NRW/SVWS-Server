@@ -1,13 +1,16 @@
 import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { ApiConnection } from "./ApiConnection";
+import { ApiStatus } from "./ApiStatus";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
  * dem Aufbau und Abbau einer Verbindung und den Zugriff auf API-Methoden.
  * Des Weiteren werden Hilfsmethoden zur Verfügung gestellt, um API-Zugriffe
- * zu erleichtern.
+ * zu erleichtern. Der Status der API ist über das Attribute status verfügbar.
  */
 class Api {
+
+	public readonly status: ApiStatus = new ApiStatus();
 
 	/** Die aktuelle Verbindung zum SVWS-Server */
 	private readonly conn: ApiConnection = new ApiConnection();

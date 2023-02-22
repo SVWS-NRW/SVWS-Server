@@ -45,7 +45,7 @@
 		abschnitte: List<Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-		apiStatusKursplanung: ApiStatus;
+		apiStatus: ApiStatus;
 	}>();
 
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
@@ -60,7 +60,7 @@
 		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 
-	const pending: ComputedRef<boolean> = computed(() => props.apiStatusKursplanung.pending);
+	const pending: ComputedRef<boolean> = computed(() => props.apiStatus.pending);
 
 	async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		await props.addAbiturjahrgang(jahrgang.id);

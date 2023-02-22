@@ -6,6 +6,7 @@ import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplan
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
+import { api } from "~/router/Api";
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -131,7 +132,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.auswahlSchueler,
-			apiStatus: routeGostKursplanung.data.apiStatus,
+			apiStatus: api.status,
 		}
 	}
 

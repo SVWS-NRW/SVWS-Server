@@ -1,7 +1,6 @@
 import { GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
-import { ApiStatus } from "~/router/ApiStatus";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
@@ -25,8 +24,6 @@ interface RouteStateGostKlausurplanung {
 }
 
 export class RouteDataGostKlausurplanung {
-
-	public readonly apiStatus: ApiStatus = new ApiStatus();
 
 	private static _defaultState : RouteStateGostKlausurplanung = {
 		abiturjahr: undefined,
@@ -75,7 +72,7 @@ export class RouteDataGostKlausurplanung {
 			this._state.value = RouteDataGostKlausurplanung._defaultState;
 			return;
 		}
-		this.apiStatus.start();
+		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
 		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
@@ -85,7 +82,7 @@ export class RouteDataGostKlausurplanung {
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler)
 			mapSchueler.set(s.id, s);
-		this.apiStatus.stop();
+		api.status.stop();
 		// Lade die Lehrerliste
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
@@ -133,11 +130,11 @@ export class RouteDataGostKlausurplanung {
 		if (halbjahr === this._state.value.halbjahr)
 			return false;
 		// Lade die Liste der Blockungen
-		this.apiStatus.start();
+		api.status.start();
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
-		this.apiStatus.stop();
+		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
 			jahrgangsdaten: this._state.value.jahrgangsdaten,

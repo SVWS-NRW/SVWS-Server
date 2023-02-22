@@ -2,7 +2,6 @@ import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, Go
 import { shallowRef } from "vue";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { api } from "~/router/Api";
-import { ApiStatus } from "~/router/ApiStatus";
 import { RouteManager } from "~/router/RouteManager";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
@@ -31,8 +30,6 @@ interface RouteStateGostKursplanung {
 }
 
 export class RouteDataGostKursplanung {
-
-	public readonly apiStatus: ApiStatus = new ApiStatus();
 
 	private static _defaultState : RouteStateGostKursplanung = {
 		abiturjahr: undefined,
@@ -80,7 +77,7 @@ export class RouteDataGostKursplanung {
 			this._state.value = RouteDataGostKursplanung._defaultState;
 			return;
 		}
-		this.apiStatus.start();
+		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
 		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
@@ -90,7 +87,7 @@ export class RouteDataGostKursplanung {
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler)
 			mapSchueler.set(s.id, s);
-		this.apiStatus.stop();
+		api.status.stop();
 		// Lade die Fachwahlstatistik des Abiturjahrgangs
 		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
 		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
@@ -153,7 +150,7 @@ export class RouteDataGostKursplanung {
 		if (halbjahr === this._state.value.halbjahr)
 			return false;
 		// Lade die Liste der Blockungen
-		this.apiStatus.start();
+		api.status.start();
 		const listBlockungen = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, this.abiturjahr, halbjahr.id);
 		const mapBlockungen: Map<number, GostBlockungListeneintrag> = new Map();
 		for (const bl of listBlockungen)
@@ -169,7 +166,7 @@ export class RouteDataGostKursplanung {
 			if (auswahlBlockung === undefined)
 				auswahlBlockung = listBlockungen.get(0);
 		}
-		this.apiStatus.stop();
+		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
@@ -228,11 +225,11 @@ export class RouteDataGostKursplanung {
 			};
 			return;
 		}
-		this.apiStatus.start();
+		api.status.start();
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, value.id);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.getErgebnisseSortiertNachBewertung();
-		this.apiStatus.stop();
+		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
@@ -299,11 +296,11 @@ export class RouteDataGostKursplanung {
 		}
 		if (this._state.value.datenmanager === undefined)
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
-		this.apiStatus.start();
+		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
 		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toVector(), this.mapSchueler)
-		this.apiStatus.stop();
+		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
 			jahrgangsdaten: this._state.value.jahrgangsdaten,
@@ -358,165 +355,165 @@ export class RouteDataGostKursplanung {
 	removeBlockung = async () => {
 		if (!this.hatBlockung)
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.deleteGostBlockung(api.schema, this.auswahlBlockung.id);
 		await this.setAuswahlBlockung(undefined);
-		this.apiStatus.stop();
+		api.status.stop();
 		await this.gotoHalbjahr(this.halbjahr);
 	}
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<void> => {
 		if (this._state.value.datenmanager === undefined)
 			throw new Error("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
 		// TODO Anpassungen an den Managern und Commit
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	addRegel = async (regel: GostBlockungRegel): Promise<GostBlockungRegel | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const result = await api.server.addGostBlockungRegel(regel.parameter, api.schema, this.auswahlBlockung.id, regel.typ);
 		if (!result) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return;
 		}
 		this.datenmanager.addRegel(result);
 		this.ergebnismanager.setAddRegelByID(result.id);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return result;
 	}
 
 	removeRegel = async (id: number) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const result = await api.server.deleteGostBlockungRegelByID(api.schema, id);
 		if (!result) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return
 		}
 		this.datenmanager.removeRegel(result);
 		this.ergebnismanager.setRemoveRegelByID(result.id);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return result;
 	}
 
 	patchRegel = async (data: Partial<GostBlockungRegel>, idRegel: number): Promise<void> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.patchGostBlockungRegel(data, api.schema, idRegel);
 		// TODO Anpassungen an den Managern und Commit
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	patchKurs = async(data: Partial<GostBlockungKurs>, kurs_id: number): Promise<void> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.patchGostBlockungKurs(data, api.schema, kurs_id);
 		// TODO Anpassungen an den Managern und Commit
 		if (data.suffix !== undefined)
 			this.datenmanager.setSuffixOfKurs(kurs_id, data.suffix);
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	addKurs = async (fach_id : number, kursart_id : number): Promise<GostBlockungKurs | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const kurs = await api.server.addGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
 		if (kurs === undefined) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return;
 		}
 		this.datenmanager.addKurs(kurs);
 		this.ergebnismanager.setAddKursByID(kurs.id);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return kurs;
 	}
 
 	removeKurs = async (fach_id : number, kursart_id : number): Promise<GostBlockungKurs | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const kurs = await api.server.deleteGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
 		if (kurs === undefined) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return;
 		}
 		this.datenmanager.removeKurs(kurs)
 		this.ergebnismanager.setRemoveKursByID(kurs.id)
 		this.commit()
-		this.apiStatus.stop();
+		api.status.stop();
 		return kurs;
 	}
 
 	addKursLehrer = async(kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const lehrer = await api.server.addGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
 		if (lehrer === undefined) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return
 		}
 		// TODO Anpassungen an den Managern und Commit
-		this.apiStatus.stop();
+		api.status.stop();
 		return lehrer;
 	}
 
 	removeKursLehrer = async(kurs_id: number, lehrer_id: number): Promise<void> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
 		// TODO Anpassungen an den Managern und Commit
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	patchSchiene = async (data: Partial<GostBlockungSchiene>, id : number) => {
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.patchGostBlockungSchiene(data, api.schema, id);
 		// TODO Anpassungen an den Managern und Commit
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	addSchiene = async (): Promise<GostBlockungSchiene | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const schiene = await api.server.addGostBlockungSchiene(api.schema, this.auswahlBlockung.id);
 		if (schiene === undefined) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return
 		}
 		this.datenmanager.addSchiene(schiene);
 		this.ergebnismanager.setAddSchieneByID(schiene.id)
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return schiene;
 	}
 
 	removeSchiene = async (schiene: GostBlockungSchiene) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const result = await api.server.deleteGostBlockungSchieneByID(api.schema, schiene.id);
 		if (!result) {
-			this.apiStatus.stop();
+			api.status.stop();
 			return;
 		}
 		this.datenmanager.removeSchieneByID(result.id);
 		this.ergebnismanager.setRemoveSchieneByID(result.id);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return result;
 	}
 
@@ -524,19 +521,19 @@ export class RouteDataGostKursplanung {
 	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneAlt, false);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneNeu, true);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return true;
 	}
 
 	updateKursSchuelerZuordnung = async (idSchueler: number, idKursNeu: number, idKursAlt: number | undefined): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
-		this.apiStatus.start();
+		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		if (idKursAlt !== undefined) {
 			await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKursAlt);
@@ -547,26 +544,26 @@ export class RouteDataGostKursplanung {
 		}
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKursNeu, true);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return true;
 	}
 
 	removeKursSchuelerZuordnung = async (idSchueler: number, idKurs: number): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
-		this.apiStatus.start();
+		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKurs);
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKurs, false);
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return true;
 	}
 
 	autoKursSchuelerZuordnung = async (idSchueler : number): Promise<void> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const zuordnungen = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler);
 		for (const z of zuordnungen.fachwahlenZuKurs) {
@@ -584,14 +581,14 @@ export class RouteDataGostKursplanung {
 			}
 		}
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 		return;
 	}
 
 	removeErgebnisse = async (ergebnisse: GostBlockungsergebnisListeneintrag[]): Promise<void> => {
 		if ((ergebnisse.length <= 0) || (!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const reselect = ergebnisse.find(e => e.id === ergebnisid);
 		if (reselect) {
@@ -602,34 +599,34 @@ export class RouteDataGostKursplanung {
 			// TODO entferne das Blockungsergebnis aus den Managern
 		}
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	removeErgebnis = async (idErgebnis: number) => {
 		if (this._state.value.auswahlErgebnis === undefined)
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		await api.server.deleteGostBlockungsergebnis(api.schema, idErgebnis);
 		// TODO entferne das Blockungsergebnis aus den Managern
 		this.commit();
-		this.apiStatus.stop();
+		api.status.stop();
 	}
 
 	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
-		this.apiStatus.start();
+		api.status.start();
 		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, idErgebnis);
-		this.apiStatus.stop();
+		api.status.stop();
 		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(result.abijahrgang, result.gostHalbjahr, result.id));
 	}
 
 	ergebnisHochschreiben = async () => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
-		this.apiStatus.start();
+		api.status.start();
 		const abiturjahr = this.abiturjahr;
 		const halbjahr = this.halbjahr.next()?.id || this.halbjahr.id;
 		const result = await api.server.schreibeGostBlockungsErgebnisHoch(api.schema, this.auswahlErgebnis.id);
-		this.apiStatus.stop();
+		api.status.stop();
 		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr, result.id));
 	}
 
