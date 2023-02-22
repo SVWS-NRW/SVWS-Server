@@ -1,11 +1,11 @@
 import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, Ref, ref, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
-import { routeLogin } from "~/router/RouteLogin";
 import { ListGost } from "~/apps/gost/ListGost";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
 import { routeGostFaecher } from "./gost/RouteGostFaecher";
@@ -20,7 +20,7 @@ export class RouteDataGost {
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map();
 
 	public async ladeJahrgaenge() {
-		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
 		for (const j of listJahrgaenge)
 			mapJahrgaenge.set(j.id, j);
@@ -43,13 +43,13 @@ export class RouteDataGost {
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten.value === undefined)
 			return false;
-		await routeLogin.data.api.patchGostAbiturjahrgang(data, routeLogin.data.schema, abiturjahr);
+		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr);
 		Object.assign(this.jahrgangsdaten.value, data);
 		return true;
 	}
 
 	addAbiturjahrgang = async (idJahrgang: number) => {
-		const abiturjahr = await routeLogin.data.api.createGostAbiturjahrgang(routeLogin.data.schema, idJahrgang);
+		const abiturjahr = await api.server.createGostAbiturjahrgang(api.schema, idJahrgang);
 		await routeGost.liste.update_list();
 		await RouteManager.doRoute(routeGost.getRoute(abiturjahr));
 	}
@@ -57,7 +57,7 @@ export class RouteDataGost {
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
 		if (this.jahrgangsdaten.value === undefined)
 			return false;
-		await routeLogin.data.api.patchGostAbiturjahrgangFach(data, routeLogin.data.schema, this.jahrgangsdaten.value.abiturjahr, fach_id);
+		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this.jahrgangsdaten.value.abiturjahr, fach_id);
 		const fach = this.faecherManager.value.get(fach_id);
 		if (fach !== null)
 			Object.assign(fach, data);
@@ -125,8 +125,8 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			this.data.faecherManager.value = new GostFaecherManager();
 		} else {
 			this.data.item.value = item;
-			this.data.jahrgangsdaten.value = await routeLogin.data.api.getGostAbiturjahrgang(routeLogin.data.schema, item.abiturjahr);
-			const listFaecher = await routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, item.abiturjahr);
+			this.data.jahrgangsdaten.value = await api.server.getGostAbiturjahrgang(api.schema, item.abiturjahr);
+			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, item.abiturjahr);
 			this.data.faecherManager.value = new GostFaecherManager(listFaecher);
 		}
 	}

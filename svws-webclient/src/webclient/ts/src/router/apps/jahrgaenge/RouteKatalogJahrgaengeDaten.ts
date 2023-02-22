@@ -1,8 +1,8 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
+import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataKatalogJahrgaengeDaten {
 	item: JahrgangsListeEintrag | undefined = undefined;
@@ -22,7 +22,7 @@ export class RouteDataKatalogJahrgaengeDaten {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchJahrgangDaten", data);
-		//await routeLogin.data.api.patchJahrgangDaten(data, routeLogin.data.schema, this.item.id);
+		//await api.server.patchJahrgangDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -53,7 +53,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getJahrgang(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getJahrgang(api.schema, item.id);
 		}
 	}
 

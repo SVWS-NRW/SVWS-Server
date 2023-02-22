@@ -1,5 +1,5 @@
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { BaseList } from "../BaseList";
 
 export class ListGost extends BaseList<GostJahrgang> {
@@ -16,7 +16,7 @@ export class ListGost extends BaseList<GostJahrgang> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(async () => routeLogin.data.api.getGostAbiturjahrgaenge(routeLogin.data.schema));
+		await super._update_list(async () => api.server.getGostAbiturjahrgaenge(api.schema));
 		if (this.ausgewaehlt === undefined)
 		 	this.ausgewaehlt = this.liste[0];
 	}

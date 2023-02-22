@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { routeLogin } from "~/router/RouteLogin";
+	import { api } from "~/router/Api";
 
 	const status = ref<boolean | undefined>(undefined);
 
@@ -28,10 +28,7 @@
 		const formData = new FormData();
 		formData.append("data", file);
 		try {
-			const res = await routeLogin.data.api.setGostLupoImportMDBFuerJahrgang(
-				formData,
-				routeLogin.data.schema
-			);
+			const res = await api.server.setGostLupoImportMDBFuerJahrgang( formData, api.schema);
 			status.value = res.success;
 		} catch (err) {
 			status.value = false;

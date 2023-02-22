@@ -50,9 +50,9 @@
 	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-	import { routeLogin } from "~/router/RouteLogin";
-	import { routeApp } from '~/router/RouteApp';
+	import { api } from '~/router/Api';
 	import { ApiStatus } from '~/router/ApiStatus';
+	import { routeApp } from '~/router/RouteApp';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
@@ -106,7 +106,7 @@
 	async function do_create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number> | void> {
 		props.apiStatus.start();
 		try {
-			const res = await routeLogin.data.api.rechneGostBlockung(routeLogin.data.schema, id, 5000)
+			const res = await api.server.rechneGostBlockung(api.schema, id, 5000)
 			props.apiStatus.stop();
 			return res;
 		} catch (e) {

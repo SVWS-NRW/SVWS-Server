@@ -1,6 +1,6 @@
 import { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "../RouteLehrer";
 import { routeLehrerIndividualdaten } from "./RouteLehrerIndividualdaten";
@@ -43,7 +43,7 @@ export class RouteDataLehrer {
 
 
 	private async ladeListe(): Promise<Map<number, LehrerListeEintrag>> {
-		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
@@ -61,14 +61,14 @@ export class RouteDataLehrer {
 	private async ladeStammdaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerStammdaten | undefined> {
 		if (eintrag === undefined)
 			return undefined;
-		return await routeLogin.data.api.getLehrerStammdaten(routeLogin.data.schema, eintrag.id);
+		return await api.server.getLehrerStammdaten(api.schema, eintrag.id);
 	}
 
 
 	private async ladePersonaldaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerPersonaldaten | undefined> {
 		if (eintrag === undefined)
 			return undefined;
-		return await routeLogin.data.api.getLehrerPersonaldaten(routeLogin.data.schema, eintrag.id);
+		return await api.server.getLehrerPersonaldaten(api.schema, eintrag.id);
 	}
 
 
@@ -172,14 +172,14 @@ export class RouteDataLehrer {
 	}
 
 	patchStammdaten = async (data : Partial<LehrerStammdaten>) => {
-		await routeLogin.data.api.patchLehrerStammdaten(data, routeLogin.data.schema, this.stammdaten.id);
+		await api.server.patchLehrerStammdaten(data, api.schema, this.stammdaten.id);
 		Object.assign(this.stammdaten, data);
 		// TODO Bei Anpassungen von nachname, vorname, kürzel -> Lehrerliste aktualisieren...
 		this.commit();
 	}
 
 	patchPersonaldaten = async (data : Partial<LehrerPersonaldaten>) => {
-		await routeLogin.data.api.patchLehrerPersonaldaten(data, routeLogin.data.schema, this.personaldaten.id);
+		await api.server.patchLehrerPersonaldaten(data, api.schema, this.personaldaten.id);
 		Object.assign(this.personaldaten, data);
 		this.commit();
 	}

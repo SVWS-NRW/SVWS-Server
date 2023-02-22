@@ -1,11 +1,13 @@
-import { Abiturdaten, AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
-	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
-import { routeLogin } from "~/router/RouteLogin";
+import {
+	Abiturdaten, AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
+	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector
+} from "@svws-nrw/svws-core-ts";
 import { shallowRef, ShallowRef } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerLaufbahnplanungProps } from "~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanungProps";
+import { api } from "~/router/Api";
+import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -60,15 +62,15 @@ export class RouteDataSchuelerLaufbahnplanung {
 	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
 		if (this.item === undefined)
 			return;
-		await routeLogin.data.api.patchGostSchuelerFachwahl(wahl, routeLogin.data.schema, this.item.id, fachID);
-		this.abiturdaten = await routeLogin.data.api.getGostSchuelerLaufbahnplanung(routeLogin.data.schema, this.item.id);
+		await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.item.id, fachID);
+		this.abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.item.id);
 		this.setGostBelegpruefungErgebnis();
 	}
 
 	getPdfWahlbogen = async() => {
 		if (this.item == undefined)
 			throw Error("Keine Schülerauswahl zur Bestimmung des PDF-Wahlbogens vorhanden.");
-		return await routeLogin.data.api.getGostSchuelerPDFWahlbogen(routeLogin.data.schema, this.item.id);
+		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.item.id);
 	}
 
 }
@@ -118,17 +120,17 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			this.data.mapFachkombinationen = new Map();
 		} else {
 			this.data.item = item;
-			this.data.abiturdaten = await routeLogin.data.api.getGostSchuelerLaufbahnplanung(routeLogin.data.schema, item.id);
+			this.data.abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, item.id);
 			if (this.data.abiturdaten === undefined)
 				return false;
 			if (this.data.item.abiturjahrgang !== null) {
 				this.data.gostJahrgang.abiturjahr = this.data.item.abiturjahrgang;
 				this.data.gostJahrgang.jahrgang = this.data.item.jahrgang;
-				this.data.gostJahrgangsdaten = await routeLogin.data.api.getGostAbiturjahrgang(routeLogin.data.schema, this.data.gostJahrgang.abiturjahr);
-				this.data.listGostFaecher = await routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, this.data.gostJahrgang.abiturjahr);
+				this.data.gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, this.data.gostJahrgang.abiturjahr);
+				this.data.listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.data.gostJahrgang.abiturjahr);
 				this.data.faecherManager = new GostFaecherManager(this.data.listGostFaecher);
 				this.data.setGostBelegpruefungErgebnis();
-				const listfachkombinationen	= await routeLogin.data.api.getGostAbiturjahrgangFachkombinationen(routeLogin.data.schema, this.data.gostJahrgang.abiturjahr);
+				const listfachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, this.data.gostJahrgang.abiturjahr);
 				const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
 				for (const fk of listfachkombinationen)
 					mapFachkombinationen.set(fk.id, fk);

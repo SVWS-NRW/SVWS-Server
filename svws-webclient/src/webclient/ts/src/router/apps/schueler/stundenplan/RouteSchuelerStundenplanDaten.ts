@@ -1,14 +1,14 @@
 import { List, SchuelerStundenplanManager, StundenplanListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
+import { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
+import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { routeLogin } from "~/router/RouteLogin";
-import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/RouteApp";
-import { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
-import { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerStundenplan {
 
@@ -25,7 +25,7 @@ export class RouteDataSchuelerStundenplan {
 		if (item === undefined) {
 			this.manager.value = undefined;
 		} else {
-			const daten = await routeLogin.data.api.getSchuelerStundenplan(routeLogin.data.schema, item.id, idSchueler);
+			const daten = await api.server.getSchuelerStundenplan(api.schema, item.id, idSchueler);
 			this.manager.value = new SchuelerStundenplanManager(daten);
 		}
 	}
@@ -69,7 +69,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 		const abschnitt = routeApp.data.schuleStammdaten.idSchuljahresabschnitt;
 		if (abschnitt === undefined)
 			return false;
-		this.data.listAuswahl.value = await routeLogin.data.api.getStundenplanlisteFuerAbschnitt(routeLogin.data.schema, abschnitt);
+		this.data.listAuswahl.value = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt);
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {

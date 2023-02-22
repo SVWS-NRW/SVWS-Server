@@ -2,7 +2,7 @@ import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag } from "@svws-
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKlassen, routeKlassen } from "../RouteKlassen";
 
@@ -26,7 +26,7 @@ export class RouteDataKlassenDaten {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchKlassenDaten", data);
-		//await routeLogin.data.api.patchKursDaten(data, routeLogin.data.schema, this.item.id);
+		//await api.server.patchKursDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -67,7 +67,7 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getKlasse(routeLogin.data.schema, item.id)
+			this.data.daten = await api.server.getKlasse(api.schema, item.id)
 		}
 	}
 

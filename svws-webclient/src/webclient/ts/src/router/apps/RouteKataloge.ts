@@ -1,14 +1,12 @@
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeApp, RouteApp } from "~/router/RouteApp";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import { ListNone } from "~/apps/ListNone";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
-import { ListNone } from "~/apps/ListNone";
-import { RouteNode } from "../RouteNode";
-import { Vector } from "@svws-nrw/svws-core-ts";
+import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
 const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
 const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")

@@ -1,9 +1,9 @@
-import { RouteNode } from "~/router/RouteNode";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeLogin } from "~/router/RouteLogin";
 import { Ref, ref } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { api } from "~/router/Api";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataGostFaecher  {
 
@@ -29,7 +29,7 @@ export class RouteDataGostFaecher  {
 	}
 
 	public async ladeFachkombinationen(item: GostJahrgang) {
-		const listfachkombinationen = await routeLogin.data.api.getGostAbiturjahrgangFachkombinationen(routeLogin.data.schema, item.abiturjahr);
+		const listfachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, item.abiturjahr);
 		const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
 		for (const fk of listfachkombinationen)
 			mapFachkombinationen.set(fk.id, fk);
@@ -40,7 +40,7 @@ export class RouteDataGostFaecher  {
 		const kombi = this.mapFachkombinationen.get(id);
 		if (kombi === undefined)
 			throw new Error("Änderungen an der Fachkombination mit der ID " + id + " nicht möglich, da eine solche Fachkombination nicht bekannt ist.");
-		await routeLogin.data.api.patchGostFachkombination(data, routeLogin.data.schema, id);
+		await api.server.patchGostFachkombination(data, api.schema, id);
 		Object.assign(kombi, data);
 		return true;
 	}
@@ -48,14 +48,14 @@ export class RouteDataGostFaecher  {
 	addFachkombination = async (typ: GostLaufbahnplanungFachkombinationTyp) => {
 		if (this.item === undefined)
 			return undefined;
-		const result = await routeLogin.data.api.addGostAbiturjahrgangFachkombination(routeLogin.data.schema, this.item.abiturjahr, typ.getValue());
+		const result = await api.server.addGostAbiturjahrgangFachkombination(api.schema, this.item.abiturjahr, typ.getValue());
 		if (result !== undefined)
 			this.mapFachkombinationen.set(result.id, result);
 		return result;
 	}
 
 	removeFachkombination = async (id: number) => {
-		const result = await routeLogin.data.api.deleteGostFachkombination(routeLogin.data.schema, id);
+		const result = await api.server.deleteGostFachkombination(api.schema, id);
 		if (result !== undefined)
 			this.mapFachkombinationen.delete(id);
 		return result;

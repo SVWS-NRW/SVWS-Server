@@ -1,13 +1,11 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-import { BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, Credentials } from "@svws-nrw/svws-core-ts";
-import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
+import { BenutzergruppeDaten, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, Credentials, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
 import { ListBenutzergruppe } from "~/apps/schule/benutzerverwaltung/ListBenutzergruppe";
-import { Vector } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
+import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { router } from "~/router/RouteManager";
-import { BenutzergruppeDaten } from "@svws-nrw/svws-core-ts";
+import { RouteNode } from "~/router/RouteNode";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
 
@@ -27,7 +25,7 @@ export class RouteDataSchuleBenutzerDaten {
 		if (!this.daten.manager)
 			return;
 		console.log("Es hat geklappt!!");
-		await routeLogin.data.api.setAnzeigename(anzeigename,routeLogin.data.schema,this.daten.manager.getID());
+		await api.server.setAnzeigename(anzeigename,api.schema,this.daten.manager.getID());
 		for (const index in routeSchuleBenutzer.liste.liste) {
 			if (routeSchuleBenutzer.liste.liste[index].id === routeSchuleBenutzerDaten.data.daten.daten?.id)
 				routeSchuleBenutzer.liste.liste[index].anzeigename = anzeigename;
@@ -45,7 +43,7 @@ export class RouteDataSchuleBenutzerDaten {
 	setAnmeldename =  async (anmeldename: string)=> {
 		if (!this.daten.manager)
 			return;
-		await routeLogin.data.api.setAnmeldename(anmeldename, routeLogin.data.schema, this.daten.manager.getID());
+		await api.server.setAnmeldename(anmeldename, api.schema, this.daten.manager.getID());
 		for (const index in routeSchuleBenutzer.liste.liste){
 			if (routeSchuleBenutzer.liste.liste[index].id === routeSchuleBenutzerDaten.data.daten.daten?.id)
 				routeSchuleBenutzer.liste.liste[index].name = anmeldename;
@@ -64,9 +62,9 @@ export class RouteDataSchuleBenutzerDaten {
 		if (!this.daten.manager)
 			return;
 		if(istAdmin)
-			await routeLogin.data.api.addBenutzerAdmin(routeLogin.data.schema, this.daten.manager.getID());
+			await api.server.addBenutzerAdmin(api.schema, this.daten.manager.getID());
 		else
-			await routeLogin.data.api.removeBenutzerAdmin(routeLogin.data.schema, this.daten.manager.getID());
+			await api.server.removeBenutzerAdmin(api.schema, this.daten.manager.getID());
 		this.daten.manager.setAdmin(istAdmin);
 	}
 
@@ -79,7 +77,7 @@ export class RouteDataSchuleBenutzerDaten {
 	setPassword = async( passwort : string ) => {
 		if (!this.daten.manager)
 			return false;
-		await routeLogin.data.api.setBenutzerPasswort(passwort,routeLogin.data.schema,this.daten.manager.getID());
+		await api.server.setBenutzerPasswort(passwort,api.schema,this.daten.manager.getID());
 		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert!!" ); }, 300 );
 	}
 
@@ -97,14 +95,14 @@ export class RouteDataSchuleBenutzerDaten {
 				return;
 			const bg_ids = new Vector<number>();
 			bg_ids.add(this.daten.manager.getID());
-			const result = await routeLogin.data.api.addBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,bg_id) as BenutzergruppeDaten;
+			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
 			this.daten.manager.addToGruppe(result);
 		}else{
 			const benutzer_id = new Vector<number>();
 			benutzer_id.add(this.daten.manager?.getID() ?? null);
 			this.listBenutzergruppen.liste.forEach(eintrag =>  {
 				if (!this.daten.manager?.IstInGruppe(eintrag.id)) {
-					routeLogin.data.api.addBenutzergruppeBenutzer(benutzer_id, routeLogin.data.schema,eintrag.id)
+					api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema,eintrag.id)
 						.then((result: any) => this.daten.manager?.addToGruppe(result))
 						.catch((e: any) => {throw e});
 				}
@@ -126,12 +124,12 @@ export class RouteDataSchuleBenutzerDaten {
 		const ids = new Vector<number>();
 		ids.add(this.daten.manager.getID());
 		if (bg_id !== -1) {
-			const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(ids, routeLogin.data.schema,bg_id) as BenutzergruppeDaten;
+			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id) as BenutzergruppeDaten;
 			this.daten.manager.removeFromGruppe(result);
 		} else {
 			for (const eintrag of this.listBenutzergruppen.liste) {
 				if (this.daten.manager?.IstInGruppe(eintrag.id)) {
-					const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(ids, routeLogin.data.schema,eintrag.id);
+					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,eintrag.id);
 					this.daten.manager?.removeFromGruppe(result);
 				}
 			}
@@ -150,7 +148,7 @@ export class RouteDataSchuleBenutzerDaten {
 			return false;
 		if (this.daten.manager.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.addBenutzerKompetenzen(kid, routeLogin.data.schema, this.daten.manager.getID());
+		await api.server.addBenutzerKompetenzen(kid, api.schema, this.daten.manager.getID());
 		this.daten.manager.addKompetenz(kompetenz);
 		return true;
 	}
@@ -167,7 +165,7 @@ export class RouteDataSchuleBenutzerDaten {
 			return false;
 		if (!this.daten.manager.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.removeBenutzerKompetenzen(kid, routeLogin.data.schema, this.daten.manager.getID());
+		await api.server.removeBenutzerKompetenzen(kid, api.schema, this.daten.manager.getID());
 		this.daten.manager.removeKompetenz(kompetenz);
 		return true;
 	}
@@ -188,7 +186,7 @@ export class RouteDataSchuleBenutzerDaten {
 				if (this.daten.manager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
 			}
-			await routeLogin.data.api.addBenutzerKompetenzen(kids,routeLogin.data.schema,this.daten.manager.getID());
+			await api.server.addBenutzerKompetenzen(kids,api.schema,this.daten.manager.getID());
 			//Den obigen Schritten entsprechende Anpassung des Client-Objekts mithilfe des Managers
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.daten.manager.getGruppen(komp).size() === 0) {
@@ -213,7 +211,7 @@ export class RouteDataSchuleBenutzerDaten {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				if (this.daten.manager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
-			await routeLogin.data.api.removeBenutzerKompetenzen(kids,routeLogin.data.schema,this.daten.manager.getID());
+			await api.server.removeBenutzerKompetenzen(kids,api.schema,this.daten.manager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.daten.manager.getGruppen(komp).size() === 0) {
 					if (this.daten.manager?.hatKompetenz(komp))
@@ -233,7 +231,7 @@ export class RouteDataSchuleBenutzerDaten {
 		const credential = new Credentials();
 		credential.benutzername = benutzername;
 		credential.password = passwort;
-		const result = await routeLogin.data.api.createBenutzerAllgemein(credential,routeLogin.data.schema,anmeldename);
+		const result = await api.server.createBenutzerAllgemein(credential,api.schema,anmeldename);
 		const ble = new BenutzerListeEintrag();
 		ble.id = result.id;
 		ble.anzeigename = result.anzeigename;
@@ -254,7 +252,7 @@ export class RouteDataSchuleBenutzerDaten {
 		for (const b of benutzer) {
 			bids.add(b.id)
 		}
-		await routeLogin.data.api.removeBenutzerAllgemein(bids,routeLogin.data.schema);
+		await api.server.removeBenutzerAllgemein(bids,api.schema);
 		routeSchuleBenutzer.liste.ausgewaehlt_gruppe = [];
 		for (const b of benutzer) {
 			routeSchuleBenutzer.liste.liste = routeSchuleBenutzer.liste.liste.filter(item => item.id !== b.id);

@@ -1,13 +1,7 @@
-import { ApiSchema, ApiServer, List, DBSchemaListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
-import { routeLogin } from "./RouteLogin";
-import { RouteManager } from "./RouteManager";
-
 
 export class ApiConnection {
-
-	// Der Pfad, zu welchem weitergeleitet wird
-	public routepath = "/";
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	protected _authenticated: Ref<boolean> = ref(false);
@@ -123,7 +117,6 @@ export class ApiConnection {
 			this._password = password;
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
-			await RouteManager.doRoute(this.routepath);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
@@ -135,8 +128,6 @@ export class ApiConnection {
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;
-		this.routepath = "/";
-		await RouteManager.doRoute({ name: routeLogin.name });
 	}
 
 }

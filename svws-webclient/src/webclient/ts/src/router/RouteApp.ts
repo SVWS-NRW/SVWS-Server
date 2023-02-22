@@ -21,6 +21,7 @@ import { routeLogin } from "./RouteLogin";
 import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
+import { api } from "./Api";
 
 export class RouteDataApp {
 
@@ -38,7 +39,7 @@ export class RouteDataApp {
 	}
 
 	public async getSchulstammdaten() {
-		this._schuleStammdaten.value = await routeLogin.data.api.getSchuleStammdaten(routeLogin.data.schema);
+		this._schuleStammdaten.value = await api.server.getSchuleStammdaten(api.schema);
 	}
 
 	public async removeSchulstammdaten() {
@@ -133,12 +134,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.getSchulstammdaten();
 		// Lade den Katalog der Orte
-		this.data.orte = await routeLogin.data.api.getOrte(routeLogin.data.schema);
+		this.data.orte = await api.server.getOrte(api.schema);
 		this.data.mapOrte = new Map();
 		for (const o of this.data.orte)
 			this.data.mapOrte.set(o.id, o);
 		// Lade den Katalog der Ortsteile
-		this.data.ortsteile = await routeLogin.data.api.getOrtsteile(routeLogin.data.schema);
+		this.data.ortsteile = await api.server.getOrtsteile(api.schema);
 		this.data.mapOrtsteile = new Map();
 		for (const o of this.data.ortsteile)
 			this.data.mapOrtsteile.set(o.id, o);
@@ -161,7 +162,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public getProps(): Record<string, any> {
 		return {
-			username: routeLogin.data.username,
+			logout: routeLogin.logout,
+			username: api.username,
 			schuleStammdaten: this.data.schuleStammdaten,
 			orte: this.data.orte,
 			ortsteile: this.data.ortsteile,

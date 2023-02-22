@@ -5,8 +5,8 @@ import { KurseAppProps } from "~/components/kurse/SKurseAppProps";
 import { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 import { RouteNode } from "~/router/RouteNode";
+import { api } from "../Api";
 import { routeApp, RouteApp } from "../RouteApp";
-import { routeLogin } from "../RouteLogin";
 import { RouteManager } from "../RouteManager";
 
 export class RouteDataKurse {
@@ -17,7 +17,7 @@ export class RouteDataKurse {
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 
 	public async ladeListe() {
-		this.listKurse = await routeLogin.data.api.getKurseFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		this.listKurse = await api.server.getKurseFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKurse = new Map<number, KursListeEintrag>();
 		for (const l of this.listKurse)
 			mapKurse.set(l.id, l);
@@ -73,13 +73,13 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			return this.getRoute(this.data.mapKurse.values().next().value.id);
 		}
 		// Laden der Jahrgänge
-		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
 		for (const j of listJahrgaenge)
 			mapJahrgaenge.set(j.id, j);
 		this.data.mapJahrgaenge = mapJahrgaenge;
 		// Laden des Lehrer-Katalogs
-		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);

@@ -1,12 +1,12 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
+import { ref, Ref, ShallowRef, shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+import { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
+import { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
+import { api } from "~/router/Api";
 import { routeSchuelerLeistungen, RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
-import { routeLogin } from "~/router/RouteLogin";
-import { ref, Ref, ShallowRef, shallowRef } from "vue";
-import { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
-import { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerLeistungenDaten {
 
@@ -19,7 +19,7 @@ export class RouteDataSchuelerLeistungenDaten {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
 			return;
 		this.auswahl = item;
-		this.daten.value = (item?.id === undefined) ? undefined : await routeLogin.data.api.getSchuelerLernabschnittsdatenByID(routeLogin.data.schema, item.id);
+		this.daten.value = (item?.id === undefined) ? undefined : await api.server.getSchuelerLernabschnittsdatenByID(api.schema, item.id);
 	}
 
 	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
@@ -29,7 +29,7 @@ export class RouteDataSchuelerLeistungenDaten {
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		// TODO await routeLogin.data.api.patchSchuelerLeistungsdaten(data, routeLogin.data.schema, id);
+		// TODO await api.server.patchSchuelerLeistungsdaten(data, api.schema, id);
 	}
 
 }
@@ -56,13 +56,13 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 		if (to_params.id === undefined)
 			return false;
 		// Laden des Fächerkatalogs
-		const listFaecher = await	routeLogin.data.api.getFaecher(routeLogin.data.schema);
+		const listFaecher = await	api.server.getFaecher(api.schema);
 		const mapFaecher = new Map<number, FaecherListeEintrag>();
 		for (const f of listFaecher)
 			mapFaecher.set(f.id, f);
 		this.data.mapFaecher.value = mapFaecher;
 		// Laden des LehrerKatalogs
-		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);

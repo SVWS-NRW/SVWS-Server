@@ -12,7 +12,7 @@
 					</svws-ui-sidebar-menu-item>
 				</template>
 				<template #footer>
-					<svws-ui-sidebar-menu-item class="print:hidden" subline="" @click="logout">
+					<svws-ui-sidebar-menu-item class="print:hidden" subline="" @click="doLogout">
 						<template #label>Abmelden</template>
 						<template #icon> <i-ri-logout-circle-line /> </template>
 					</svws-ui-sidebar-menu-item>
@@ -75,6 +75,7 @@
 	const props = defineProps<{
 		schuleStammdaten: SchuleStammdaten;
 		username: string;
+		logout: () => Promise<void>;
 	}>();
 
 	const route = useRoute();
@@ -113,8 +114,8 @@
 		return item.text;
 	}
 
-	async function logout() {
+	async function doLogout() {
 		document.title = "SVWS NRW";
-		await router.push("/login");
+		await props.logout();
 	}
 </script>

@@ -1,10 +1,9 @@
 import { GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
+import { ApiStatus } from "~/router/ApiStatus";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { ApiStatus } from "~/router/ApiStatus";
-import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungKlausurdaten } from "./RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungKonflikte } from "./RouteGostKlausurplanungKonflikte";
@@ -78,9 +77,9 @@ export class RouteDataGostKlausurplanung {
 		}
 		this.apiStatus.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
-		const jahrgangsdaten = await routeLogin.data.api.getGostAbiturjahrgang(routeLogin.data.schema, abiturjahr)
-		const listSchueler = await routeLogin.data.api.getGostAbiturjahrgangSchueler(routeLogin.data.schema, abiturjahr);
-		const listFaecher = await routeLogin.data.api.getGostAbiturjahrgangFaecher(routeLogin.data.schema, abiturjahr);
+		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
+		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
+		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
 		const faecherManager = new GostFaecherManager(listFaecher);
 		// Lade die Schülerliste des Abiturjahrgangs
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
@@ -88,7 +87,7 @@ export class RouteDataGostKlausurplanung {
 			mapSchueler.set(s.id, s);
 		this.apiStatus.stop();
 		// Lade die Lehrerliste
-		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
@@ -135,8 +134,8 @@ export class RouteDataGostKlausurplanung {
 			return false;
 		// Lade die Liste der Blockungen
 		this.apiStatus.start();
-		const listKursklausuren = await routeLogin.data.api.getGostKlausurenKursklausurenJahrgangHalbjahr(routeLogin.data.schema, this.abiturjahr, halbjahr.id);
-		const listKlausurtermine = await routeLogin.data.api.getGostKlausurenKlausurtermineJahrgangHalbjahr(routeLogin.data.schema, this.abiturjahr, halbjahr.id);
+		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 		this.apiStatus.stop();
 		this._state.value = {

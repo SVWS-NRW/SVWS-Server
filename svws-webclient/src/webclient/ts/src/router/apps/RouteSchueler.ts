@@ -12,10 +12,10 @@ import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerSt
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { ListGost } from "~/apps/gost/ListGost";
-import { routeLogin } from "../RouteLogin";
 import { RouteManager } from "../RouteManager";
 import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { Filter, SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
+import { api } from "../Api";
 
 export class RouteDataSchueler {
 	auswahl: ShallowRef<SchuelerListeEintrag | undefined> = shallowRef(undefined);
@@ -37,7 +37,7 @@ export class RouteDataSchueler {
 	}) as Filter;
 
 	public async ladeListe() {
-		this.listSchueler = await routeLogin.data.api.getSchuelerFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		this.listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const l of this.listSchueler)
 			mapSchueler.set(l.id, l);
@@ -52,7 +52,7 @@ export class RouteDataSchueler {
 			this._stammdaten = undefined;
 		} else {
 			this.auswahl.value = item;
-			this._stammdaten = await routeLogin.data.api.getSchuelerStammdaten(routeLogin.data.schema, item.id);
+			this._stammdaten = await api.server.getSchuelerStammdaten(api.schema, item.id);
 		}
 	}
 
@@ -114,21 +114,21 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (routeApp.data.schulform.value.daten.hatGymOb)
 			await this.data.listeAbiturjahrgaenge.update_list();
 		// aktualisiere die Klassen und erstelle Map
-		const listKlassen = await routeLogin.data.api.getKlassenFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKlassen: Map<number, KlassenListeEintrag> = new Map()
 		for (const k of listKlassen)
 			mapKlassen.set(k.id, k)
 		this.data.mapKlassen.clear();
 		this.data.mapKlassen = mapKlassen;
 		// aktualisiere die Kurse und erstelle Map
-		const listKurse = await routeLogin.data.api.getKurseFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKurse: Map<number, KursListeEintrag> = new Map();
 		for (const k of listKurse)
 			mapKurse.set(k.id, k)
 		this.data.mapKurse.clear();
 		this.data.mapKurse = mapKurse;
 		// aktualisiere die Jahrgänge und erstelle Map
-		const listJahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map()
 		for (const j of listJahrgaenge)
 			mapJahrgaenge.set(j.id, j)

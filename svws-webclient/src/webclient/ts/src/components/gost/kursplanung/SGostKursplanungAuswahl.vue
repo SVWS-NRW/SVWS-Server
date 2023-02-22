@@ -24,9 +24,9 @@
 	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
 	import { useRouter } from 'vue-router';
-	import { routeLogin } from "~/router/RouteLogin";
-	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
+	import { api } from '~/router/Api';
 	import { ApiStatus } from '~/router/ApiStatus';
+	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
 	const props = defineProps<{
 		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
@@ -65,7 +65,7 @@
 	async function blockung_hinzufuegen() {
 		if (props.jahrgangsdaten?.abiturjahr === undefined)
 			return;
-		const result = await routeLogin.data.api.createGostAbiturjahrgangBlockung(routeLogin.data.schema, props.jahrgangsdaten.abiturjahr, props.halbjahr.id);
+		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, props.jahrgangsdaten.abiturjahr, props.halbjahr.id);
 		const abiturjahr = props.jahrgangsdaten.abiturjahr;
 		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
 	}

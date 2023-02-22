@@ -1,4 +1,4 @@
-import { FoerderschwerpunktEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";

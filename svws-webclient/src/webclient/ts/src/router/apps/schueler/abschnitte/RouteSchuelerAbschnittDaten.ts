@@ -1,13 +1,13 @@
-import { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Vector } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { routeLogin } from "~/router/RouteLogin";
+import { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";
+import { SchuelerAbschnittDatenProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittDatenProps";
+import { api } from "~/router/Api";
 import { routeSchuelerAbschnitt, RouteSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeApp } from "~/router/RouteApp";
-import { SchuelerAbschnittDatenProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittDatenProps";
-import { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerAbschnittDaten {
 
@@ -22,12 +22,12 @@ export class RouteDataSchuelerAbschnittDaten {
 		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
 			return;
 		this.auswahl = item;
-		this.daten.value = (item?.id === undefined) ? undefined : await routeLogin.data.api.getSchuelerLernabschnittsdatenByID(routeLogin.data.schema, item.id);
+		this.daten.value = (item?.id === undefined) ? undefined : await api.server.getSchuelerLernabschnittsdatenByID(api.schema, item.id);
 		// Lade die Liste der Klassen als Katalog, der nur lesend genutzt wird
 		if (item === undefined) {
 			this.mapKlassen.value = new Map();
 		} else {
-			const klassen = await routeLogin.data.api.getKlassenFuerAbschnitt(routeLogin.data.schema, item.schuljahresabschnitt);
+			const klassen = await api.server.getKlassenFuerAbschnitt(api.schema, item.schuljahresabschnitt);
 			const mapKlassen = new Map<number, KlassenListeEintrag>();
 			for (const k of klassen)
 				mapKlassen.set(k.id, k);
@@ -43,14 +43,14 @@ export class RouteDataSchuelerAbschnittDaten {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patch", data);
-		// TODO await routeLogin.data.api.patchSchuelerLernabschnittsdaten(data, routeLogin.data.schema, this.daten.value.id);
+		// TODO await api.server.patchSchuelerLernabschnittsdaten(data, api.schema, this.daten.value.id);
 	}
 
 	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) => {
 		if (this.daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchBemerkungen", data);
-		// TODO await routeLogin.data.api.patchSchuelerLernabschnittsdatenBemerkungen(data, routeLogin.data.schema, this.daten.value.id);
+		// TODO await api.server.patchSchuelerLernabschnittsdatenBemerkungen(data, api.schema, this.daten.value.id);
 	}
 
 }
@@ -77,19 +77,19 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 		if (to_params.id === undefined)
 			return false;
 		// Lade die Liste der Lehrer als Katalog, der nur lesend genutzt wird
-		const lehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const lehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of lehrer)
 			mapLehrer.set(l.id, l);
 		this.data.mapLehrer = mapLehrer;
 		// Lade die Liste der Jahrgaenge als Katalog, der nur lesend genutzt wird
-		const jahrgaenge = await routeLogin.data.api.getJahrgaenge(routeLogin.data.schema);
+		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
 		for (const j of jahrgaenge)
 			mapJahrgaenge.set(j.id, j);
 		this.data.mapJahrgaenge = mapJahrgaenge;
 		// Lade die Liste der Förderschwerpunkte als Katalog, der nur lesend genutzt wird
-		const forderschwerpunkte = await routeLogin.data.api.getSchuelerFoerderschwerpunkte(routeLogin.data.schema);
+		const forderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
 		const mapFoerderschwerpunkte = new Map<number, FoerderschwerpunktEintrag>();
 		for (const fs of forderschwerpunkte)
 			mapFoerderschwerpunkte.set(fs.id, fs);

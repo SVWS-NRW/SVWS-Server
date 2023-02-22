@@ -1,11 +1,11 @@
 import { Erzieherart, ErzieherStammdaten, List } from "@svws-nrw/svws-core-ts";
+import { ref, Ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+import { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+import { api } from "~/router/Api";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
-import { routeLogin } from "~/router/RouteLogin";
-import { ref, Ref } from "vue";
-import { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
@@ -35,13 +35,13 @@ export class RouteDataSchuelerErziehungsberechtigte {
 		if (((idSchueler === undefined) && (this.idSchueler === undefined)) || ((this.idSchueler !== undefined) && (this.idSchueler === idSchueler)))
 			return;
 		this.idSchueler = idSchueler;
-		this._daten.value = (idSchueler === undefined) ? undefined : await routeLogin.data.api.getSchuelerErzieher(routeLogin.data.schema, idSchueler);
+		this._daten.value = (idSchueler === undefined) ? undefined : await api.server.getSchuelerErzieher(api.schema, idSchueler);
 	}
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
 		if (this._daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await routeLogin.data.api.patchErzieherStammdaten(data, routeLogin.data.schema, id);
+		await api.server.patchErzieherStammdaten(data, api.schema, id);
 	}
 
 }
@@ -55,7 +55,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		const listErzieherarten = await routeLogin.data.api.getErzieherArten(routeLogin.data.schema);
+		const listErzieherarten = await api.server.getErzieherArten(api.schema);
 		const mapErzieherarten = new Map<number, Erzieherart>();
 		for (const e of listErzieherarten)
 			mapErzieherarten.set(e.id, e);

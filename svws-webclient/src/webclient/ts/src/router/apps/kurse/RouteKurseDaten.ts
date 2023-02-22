@@ -1,9 +1,9 @@
-import { RouteNode } from "~/router/RouteNode";
-import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
 import { KursDaten, KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeLogin } from "~/router/RouteLogin";
 import { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
+import { api } from "~/router/Api";
+import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataKurseDaten {
 	item: KursListeEintrag | undefined = undefined;
@@ -23,7 +23,7 @@ export class RouteDataKurseDaten {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchKursDaten", data);
-		//await routeLogin.data.api.patchKursDaten(data, routeLogin.data.schema, this.item.id);
+		//await api.server.patchKursDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -58,7 +58,7 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getKurs(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getKurs(api.schema, item.id);
 		}
 	}
 

@@ -1,11 +1,11 @@
-import { FaecherListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
-import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
 export class RouteDataKatalogFaecher {
 	item: FaecherListeEintrag | undefined = undefined;

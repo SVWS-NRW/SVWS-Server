@@ -5,9 +5,9 @@ import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogRe
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteManager } from "../RouteManager";
-import { routeLogin } from "../RouteLogin";
 import { ReligionenAppProps } from "~/components/kataloge/religionen/SReligionenAppProps";
 import { ReligionenAuswahlProps } from "~/components/kataloge/religionen/SReligionenAuswahlPops";
+import { api } from "../Api";
 
 export class RouteDataReligionen {
 	auswahl: ShallowRef<ReligionEintrag | undefined> = shallowRef(undefined);
@@ -15,7 +15,7 @@ export class RouteDataReligionen {
 	mapReligionen: Map<number, ReligionEintrag> = new Map();
 
 	public async ladeListe() {
-		this.listReligionen = await routeLogin.data.api.getReligionen(routeLogin.data.schema);
+		this.listReligionen = await api.server.getReligionen(api.schema);
 		const mapKurse = new Map<number, ReligionEintrag>();
 		for (const l of this.listReligionen)
 			mapKurse.set(l.id, l);

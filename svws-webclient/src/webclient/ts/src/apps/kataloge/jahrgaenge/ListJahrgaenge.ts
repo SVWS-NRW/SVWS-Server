@@ -1,5 +1,5 @@
 import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { BaseList } from "../../BaseList";
 
 export class ListJahrgaenge extends BaseList<JahrgangsListeEintrag> {
@@ -12,6 +12,6 @@ export class ListJahrgaenge extends BaseList<JahrgangsListeEintrag> {
 	 */
 	public async update_list(): Promise<void> {
 		if (this.liste.length) return;
-		await super._update_list(() => routeLogin.data.api.getJahrgaenge(routeLogin.data.schema));
+		await super._update_list(() => api.server.getJahrgaenge(api.schema));
 	}
 }

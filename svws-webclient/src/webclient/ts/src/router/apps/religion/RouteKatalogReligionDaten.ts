@@ -1,7 +1,7 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKatalogReligion } from "../RouteKatalogReligion";
 
@@ -22,7 +22,7 @@ export class RouteDataKlassenDaten {
 	patch = async (data : Partial<ReligionEintrag>) => {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await routeLogin.data.api.patchReligion(data, routeLogin.data.schema, this.item.id)
+		await api.server.patchReligion(data, api.schema, this.item.id)
 	}
 }
 
@@ -57,7 +57,7 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getReligion(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getReligion(api.schema, item.id);
 		}
 	}
 

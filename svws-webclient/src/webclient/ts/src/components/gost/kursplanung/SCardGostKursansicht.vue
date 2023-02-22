@@ -128,14 +128,13 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector,
-		GostKursart, GostBlockungRegel, GostFaecherManager, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
-	import { routeLogin } from "~/router/RouteLogin";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core-ts";
+	import { SvwsUiButton, SvwsUiContentCard, SvwsUiIcon, SvwsUiModal, SvwsUiTextInput } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { SvwsUiContentCard, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal } from "@svws-nrw/svws-ui";
-	import type { UserConfigKeys } from "~/utils/userconfig/keys"
-	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import { api } from "~/router/Api";
 	import { routeApp } from "~/router/RouteApp";
+	import type { UserConfigKeys } from "~/utils/userconfig/keys";
+	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -172,7 +171,7 @@
 			set(value: UserConfigKeys['gost.kursansicht.sortierung']) {
 				if (value === undefined)
 					value = 'kursart'
-				void routeLogin.data.api.setClientConfigUserKey(value, routeLogin.data.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
+				void api.server.setClientConfigUserKey(value, api.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
 				routeApp.data.user_config.value.set('gost.kursansicht.sortierung', value)
 			}
 		});

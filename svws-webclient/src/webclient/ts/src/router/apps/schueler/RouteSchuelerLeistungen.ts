@@ -1,10 +1,10 @@
+import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+import { api } from "~/router/Api";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
-import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { routeApp } from "~/router/RouteApp";
-import { routeLogin } from "~/router/RouteLogin";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerLeistungen {
 
@@ -52,7 +52,7 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 			return false;
 		const id = parseInt(to_params.id as string);
 		if ((this.data.idSchueler !== id) || (to_params.abschnitt === undefined)) {
-			const liste = await routeLogin.data.api.getSchuelerLernabschnittsliste(routeLogin.data.schema, id);
+			const liste = await api.server.getSchuelerLernabschnittsliste(api.schema, id);
 			if (liste.size() <= 0)
 				return false;
 			this.data.idSchueler = id;

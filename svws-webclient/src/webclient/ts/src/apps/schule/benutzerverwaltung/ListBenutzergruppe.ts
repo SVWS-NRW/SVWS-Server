@@ -1,7 +1,7 @@
-import { routeLogin } from "~/router/RouteLogin";
 import { BaseList } from "~/apps/BaseList";
 
-import { BenutzergruppeListeEintrag} from "@svws-nrw/svws-core-ts";
+import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
+import { api } from "~/router/Api";
 
 
 export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, undefined> {
@@ -14,7 +14,7 @@ export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, und
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() => routeLogin.data.api.getBenutzergruppenliste(routeLogin.data.schema));
+		await super._update_list(() => api.server.getBenutzergruppenliste(api.schema));
 	}
 
 }

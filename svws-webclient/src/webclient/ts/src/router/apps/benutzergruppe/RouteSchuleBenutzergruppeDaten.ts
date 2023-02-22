@@ -1,12 +1,10 @@
-import { RouteNode } from "~/router/RouteNode";
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../RouteSchuleBenutzergruppe";
-import { routeLogin } from "~/router/RouteLogin";
-import { router } from "~/router/RouteManager";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref, shallowRef, ShallowRef, triggerRef } from "vue";
-import { BenutzergruppenManager } from "@svws-nrw/svws-core-ts";
-import { List } from "@svws-nrw/svws-core-ts";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { api } from "~/router/Api";
+import { router } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../RouteSchuleBenutzergruppe";
 
 
 
@@ -44,7 +42,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 	setBezeichnung = async (bezeichnung: string) => {
 		if (!this.benutzergruppenManager.value)
 			return;
-		await routeLogin.data.api.setBenutzergruppeBezeichnung(bezeichnung, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.benutzergruppenManager.value.getID());
 		this.benutzergruppenManager.value.setBezeichnung(bezeichnung);
 		triggerRef(this.benutzergruppenManager);
 		for(const index in routeSchuleBenutzergruppe.liste.liste){
@@ -64,9 +62,9 @@ export class RouteDataSchuleBenutzergruppeDaten {
 		if (!this.benutzergruppenManager.value)
 			return;
 		if(istAdmin)
-			await routeLogin.data.api.addBenutzergruppeAdmin(routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+			await api.server.addBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.value.getID());
 		else
-			await routeLogin.data.api.removeBenutzergruppeAdmin(routeLogin.data.schema,this.benutzergruppenManager.value.getID());
+			await api.server.removeBenutzergruppeAdmin(api.schema,this.benutzergruppenManager.value.getID());
 		this.benutzergruppenManager.value.setAdmin(istAdmin);
 		triggerRef(this.benutzergruppenManager);
 	}
@@ -84,7 +82,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			return false;
 		if (this.benutzergruppenManager.value.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.addBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		await api.server.addBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.value.getID());
 		this.benutzergruppenManager.value.addKompetenz(kompetenz);
 		triggerRef(this.benutzergruppenManager);
 		return true;
@@ -102,7 +100,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			return false;
 		if (!this.benutzergruppenManager.value.hatKompetenz(kompetenz))
 			return false;
-		await routeLogin.data.api.removeBenutzergruppeKompetenzen(kid, routeLogin.data.schema, this.benutzergruppenManager.value.getID());
+		await api.server.removeBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.value.getID());
 		this.benutzergruppenManager.value.removeKompetenz(kompetenz);
 		triggerRef(this.benutzergruppenManager);
 		return true;
@@ -121,8 +119,8 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
 			}
-			await routeLogin.data.api.addBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.benutzergruppenManager.value.getID());
-			const benutzergruppendaten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, this.benutzergruppenManager.value.getID())
+			await api.server.addBenutzergruppeKompetenzen(kids,api.schema,this.benutzergruppenManager.value.getID());
+			const benutzergruppendaten = await api.server.getBenutzergruppeDaten(api.schema, this.benutzergruppenManager.value.getID())
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (!this.benutzergruppenManager.value?.hatKompetenz(komp))
 					this.benutzergruppenManager.value?.addKompetenz(komp);
@@ -144,7 +142,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 		if (!this.benutzergruppenManager.value.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(komp.daten.id);
-			await routeLogin.data.api.removeBenutzergruppeKompetenzen(kids,routeLogin.data.schema,this.benutzergruppenManager.value.getID());
+			await api.server.removeBenutzergruppeKompetenzen(kids,api.schema,this.benutzergruppenManager.value.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.benutzergruppenManager.value?.hatKompetenz(komp))
 					this.benutzergruppenManager.value?.removeKompetenz(komp);
@@ -163,7 +161,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 		const bg = new BenutzergruppeDaten();
 		bg.bezeichnung = bezeichnung;
 		bg.istAdmin = istAdmin;
-		const result = await routeLogin.data.api.createBenutzergruppe(bg,routeLogin.data.schema);
+		const result = await api.server.createBenutzergruppe(bg,api.schema);
 		const bgle = new BenutzergruppeListeEintrag();
 		bgle.id = result.id;
 		bgle.bezeichnung = result.bezeichnung;
@@ -184,7 +182,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			bids.add(b.id)
 		}
 		console.log(bids);
-		await routeLogin.data.api.removeBenutzerGruppe(bids,routeLogin.data.schema);
+		await api.server.removeBenutzerGruppe(bids,api.schema);
 		routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe = [];
 		for(const b of benutzer) {
 			routeSchuleBenutzergruppe.liste.liste = routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe.filter(item => item.id !== b.id);
@@ -205,7 +203,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			return;
 		const b_ids = new Vector<number>();
 		b_ids.add(benutzer.id);
-		await routeLogin.data.api.addBenutzergruppeBenutzer(b_ids, routeLogin.data.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
+		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
 		this.listBenutzergruppenBenutzer.value.add(benutzer);
 		this.listBenutzerAlle.value.remove(benutzer);
 
@@ -223,7 +221,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 			return;
 		const bg_ids = new Vector<number>();
 		bg_ids.add(benutzer.id);
-		const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
+		const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.value.getID()) as BenutzergruppeDaten;
 		this.listBenutzergruppenBenutzer.value.remove(benutzer);
 		this.listBenutzerAlle.value.add(benutzer);
 	}
@@ -261,10 +259,10 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 			this.data.listBenutzerAlle.value = new Vector();
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getBenutzergruppeDaten(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getBenutzergruppeDaten(api.schema, item.id);
 			this.data.benutzergruppenManager.value = new BenutzergruppenManager(this.data.daten);
-			this.data.listBenutzerAlle.value = await routeLogin.data.api.getBenutzerliste(routeLogin.data.schema);
-			this.data.listBenutzergruppenBenutzer.value = await routeLogin.data.api.getBenutzerMitGruppenID(routeLogin.data.schema, item.id);
+			this.data.listBenutzerAlle.value = await api.server.getBenutzerliste(api.schema);
+			this.data.listBenutzergruppenBenutzer.value = await api.server.getBenutzerMitGruppenID(api.schema, item.id);
 		}
 	}
 

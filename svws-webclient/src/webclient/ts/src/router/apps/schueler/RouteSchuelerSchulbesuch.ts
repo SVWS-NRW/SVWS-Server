@@ -1,10 +1,10 @@
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
-import { routeLogin } from "~/router/RouteLogin";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
+import { api } from "~/router/Api";
+import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -29,13 +29,13 @@ class RouteDataSchuelerSchulbesuch {
 	public async onSelect(id?: number) {
 		if (((id === undefined) && (this._daten.value === undefined)) || ((this._daten.value !== undefined) && (this.daten.id === id)))
 			return;
-		this._daten.value = (id === undefined) ? undefined : await routeLogin.data.api.getSchuelerSchulbesuch(routeLogin.data.schema, id);
+		this._daten.value = (id === undefined) ? undefined : await api.server.getSchuelerSchulbesuch(api.schema, id);
 	}
 
 	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) => {
 		if (this._daten.value === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await routeLogin.data.api.patchSchuelerSchulbesuch(data, routeLogin.data.schema, this.daten.id);
+		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.daten.id);
 	}
 }
 

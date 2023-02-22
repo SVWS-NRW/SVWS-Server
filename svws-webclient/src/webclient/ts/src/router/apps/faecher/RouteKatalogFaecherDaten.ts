@@ -1,8 +1,8 @@
 import { FachDaten, FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeLogin } from "~/router/RouteLogin";
+import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogFaecher, RouteKatalogFaecher } from "../RouteKatalogFaecher";
+import { RouteKatalogFaecher } from "../RouteKatalogFaecher";
 
 export class RouteDataFaecherDaten {
 	item: FaecherListeEintrag | undefined = undefined;
@@ -22,7 +22,7 @@ export class RouteDataFaecherDaten {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchFachdatenDaten", data);
-		//await routeLogin.data.api.patchFachdatenDaten(data, routeLogin.data.schema, this.item.id);
+		//await api.server.patchFachdatenDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -53,7 +53,7 @@ export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKat
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getFach(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getFach(api.schema, item.id);
 		}
 	}
 

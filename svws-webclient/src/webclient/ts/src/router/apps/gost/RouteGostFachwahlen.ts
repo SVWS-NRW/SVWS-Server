@@ -1,8 +1,8 @@
-import { RouteNode } from "~/router/RouteNode";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { api } from "~/router/Api";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataGostFachwahlen  {
 	item: GostJahrgang | undefined = undefined;
@@ -54,7 +54,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			this.data.fachwahlen = new Vector<GostStatistikFachwahl>();
 		} else {
 			this.data.item = item;
-			this.data.fachwahlen = await routeLogin.data.api.getGostAbiturjahrgangFachwahlstatistik(routeLogin.data.schema, this.data.item.abiturjahr || -1);
+			this.data.fachwahlen = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, this.data.item.abiturjahr || -1);
 		}
 	}
 

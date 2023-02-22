@@ -4,10 +4,10 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw 
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
-import { routeLogin } from "../RouteLogin";
 import { RouteManager } from "../RouteManager";
 import { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
+import { api } from "../Api";
 
 export class RouteDataKlassen {
 	auswahl: ShallowRef<KlassenListeEintrag | undefined> = shallowRef(undefined);
@@ -16,7 +16,7 @@ export class RouteDataKlassen {
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 
 	public async ladeListe() {
-		this.listKlassen = await routeLogin.data.api.getKlassenFuerAbschnitt(routeLogin.data.schema, routeApp.data.aktAbschnitt.value.id);
+		this.listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKurse = new Map<number, KlassenListeEintrag>();
 		for (const l of this.listKlassen)
 			mapKurse.set(l.id, l);
@@ -72,7 +72,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			return this.getRoute(this.data.mapKlassen.values().next().value.id);
 		}
 		// Laden des Lehrer-Katalogs
-		const listLehrer = await routeLogin.data.api.getLehrer(routeLogin.data.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);

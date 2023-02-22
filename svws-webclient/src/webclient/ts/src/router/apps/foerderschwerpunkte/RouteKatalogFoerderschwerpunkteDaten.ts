@@ -1,8 +1,8 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+import { api } from "~/router/Api";
 import { RouteKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
-import { routeLogin } from "~/router/RouteLogin";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataKatalogFoerderschwerpunkteDaten {
 	item: FoerderschwerpunktEintrag | undefined = undefined;
@@ -22,7 +22,7 @@ export class RouteDataKatalogFoerderschwerpunkteDaten {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		console.log("TODO: Implementierung patchFoerderschwerpunktDaten", data);
-		//await routeLogin.data.api.patchJahrgangDaten(data, routeLogin.data.schema, this.item.id);
+		//await api.server.patchJahrgangDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -53,7 +53,7 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 			this.data.daten = undefined;
 		} else {
 			this.data.item = item;
-			this.data.daten = await routeLogin.data.api.getSchuelerFoerderschwerpunkt(routeLogin.data.schema, item.id);
+			this.data.daten = await api.server.getSchuelerFoerderschwerpunkt(api.schema, item.id);
 		}
 	}
 

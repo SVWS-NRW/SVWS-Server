@@ -1,10 +1,6 @@
+import { BenutzerDaten, BenutzerListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "~/apps/BaseData";
-import { router } from "~/router/RouteManager";
-import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe,
-	BenutzerListeEintrag, BenutzerManager, Credentials, Vector } from "@svws-nrw/svws-core-ts";
-import { routeLogin } from "~/router/RouteLogin";
-import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
+import { api } from "~/router/Api";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
 
@@ -24,7 +20,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 			return super.unselect();
 		}
 		const benutzerdaten = await super._select((eintrag: BenutzerListeEintrag) =>
-			routeLogin.data.api.getBenutzerDaten(routeLogin.data.schema, eintrag.id)
+			api.server.getBenutzerDaten(api.schema, eintrag.id)
 		);
 		if (benutzerdaten)
 			this.manager = new BenutzerManager(benutzerdaten);
@@ -57,9 +53,9 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 	if (!this.manager)
 	// 		return;
 	// 	if(istAdmin)
-	// 		await routeLogin.data.api.addBenutzerAdmin(routeLogin.data.schema, this.manager.getID());
+	// 		await api.server.addBenutzerAdmin(api.schema, this.manager.getID());
 	// 	else
-	// 		await routeLogin.data.api.removeBenutzerAdmin(routeLogin.data.schema, this.manager.getID());
+	// 		await api.server.removeBenutzerAdmin(api.schema, this.manager.getID());
 	// 	this.manager.setAdmin(istAdmin);
 	// }
 
@@ -75,7 +71,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 		return;
 	// 	const bg_ids = new Vector<number>();
 	// 	bg_ids.add(this.manager.getID());
-	// 	const result = await routeLogin.data.api.addBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,bg_id) as BenutzergruppeDaten;
+	// 	const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
 	// 	this.manager.addToGruppe(result);
 	// }
 
@@ -91,7 +87,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 	benutzer_id.add(this.manager?.getID() ?? null);
 	// 	bgle?.forEach(eintrag =>  {
 	// 		if (!this.manager?.IstInGruppe(eintrag.id)) {
-	// 			routeLogin.data.api.addBenutzergruppeBenutzer(benutzer_id, routeLogin.data.schema,eintrag.id)
+	// 			api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema,eintrag.id)
 	// 				.then(result => this.manager?.addToGruppe(result))
 	// 				.catch(e => {throw e});
 	// 		}
@@ -110,7 +106,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 		return;
 	// 	const bg_ids = new Vector<number>();
 	// 	bg_ids.add(this.manager.getID());
-	// 	const result = await routeLogin.data.api.removeBenutzergruppeBenutzer(bg_ids, routeLogin.data.schema,bg_id) as BenutzergruppeDaten;
+	// 	const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
 	// 	this.manager.removeFromGruppe(result);
 	// }
 
@@ -126,7 +122,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 	benutzer_id.add(this.manager?.getID() ?? null);
 	// 	bgle?.forEach(eintrag =>  {
 	// 		if (this.manager?.IstInGruppe(eintrag.id)) {
-	// 			routeLogin.data.api.removeBenutzergruppeBenutzer(benutzer_id, routeLogin.data.schema, eintrag.id)
+	// 			api.server.removeBenutzergruppeBenutzer(benutzer_id, api.schema, eintrag.id)
 	// 				.then(result => this.manager?.removeFromGruppe(result))
 	// 				.catch(e => {throw e});
 	// 		}
@@ -146,7 +142,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 		return false;
 	// 	if (this.manager.hatKompetenz(kompetenz))
 	// 		return false;
-	// 	await routeLogin.data.api.addBenutzerKompetenzen(kid, routeLogin.data.schema, this.manager.getID());
+	// 	await api.server.addBenutzerKompetenzen(kid, api.schema, this.manager.getID());
 	// 	this.manager.addKompetenz(kompetenz);
 	// 	return true;
 	// }
@@ -163,7 +159,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 		return false;
 	// 	if (!this.manager.hatKompetenz(kompetenz))
 	// 		return false;
-	// 	await routeLogin.data.api.removeBenutzerKompetenzen(kid, routeLogin.data.schema, this.manager.getID());
+	// 	await api.server.removeBenutzerKompetenzen(kid, api.schema, this.manager.getID());
 	// 	this.manager.removeKompetenz(kompetenz);
 	// 	return true;
 	// }
@@ -186,7 +182,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 			if(this.manager.getGruppen(komp).size() === 0)
 	// 				kids.add(komp.daten.id);
 	// 		}
-	// 		await routeLogin.data.api.addBenutzerKompetenzen(kids,routeLogin.data.schema,this.manager.getID());
+	// 		await api.server.addBenutzerKompetenzen(kids,api.schema,this.manager.getID());
 	// 		//Den obigen Schritten entsprechende Anpassung des Client-Objekts mithilfe des Managers
 	// 		for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 	// 			if(this.manager.getGruppen(komp).size() === 0){
@@ -211,7 +207,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 		for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 	// 			if(this.manager.getGruppen(komp).size() === 0)
 	// 				kids.add(komp.daten.id);
-	// 		await routeLogin.data.api.removeBenutzerKompetenzen(kids,routeLogin.data.schema,this.manager.getID());
+	// 		await api.server.removeBenutzerKompetenzen(kids,api.schema,this.manager.getID());
 	// 		for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 	// 			if(this.manager.getGruppen(komp).size() === 0){
 	// 				if (this.manager?.hatKompetenz(komp))
@@ -230,7 +226,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 	const credential = new Credentials();
 	// 	credential.benutzername = benutzername;
 	// 	credential.password = passwort;
-	// 	const result = await routeLogin.data.api.createBenutzerAllgemein(credential,routeLogin.data.schema,anmeldename);
+	// 	const result = await api.server.createBenutzerAllgemein(credential,api.schema,anmeldename);
 	// 	const ble = new BenutzerListeEintrag();
 	// 	ble.id = result.id;
 	// 	ble.anzeigename = result.anzeigename;
@@ -251,7 +247,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// 	for ( const b of benutzer){
 	// 		bids.add(b.id)
 	// 	}
-	// 	await routeLogin.data.api.removeBenutzerAllgemein(bids,routeLogin.data.schema);
+	// 	await api.server.removeBenutzerAllgemein(bids,api.schema);
 	// 	routeSchuleBenutzer.liste.ausgewaehlt_gruppe = [];
 	// 	for(const b of benutzer) {
 	// 		routeSchuleBenutzer.liste.liste = routeSchuleBenutzer.liste.liste.filter(item => item.id !== b.id);
@@ -269,7 +265,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	// // public async setPassword( passwort : string ){
 	// // 	if (!this.manager)
 	// // 		return false;
-	// // 	await routeLogin.data.api.setBenutzerPasswort(passwort,routeLogin.data.schema,this.manager.getID());
+	// // 	await api.server.setBenutzerPasswort(passwort,api.schema,this.manager.getID());
 	// // 	setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert!!" ); }, 300 );
 	// // }
 

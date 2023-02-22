@@ -1,10 +1,10 @@
-import { RouteNode } from "~/router/RouteNode";
 import { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteSchueler, routeSchueler } from "../RouteSchueler";
-import { routeApp } from "~/router/RouteApp";
-import { routeLogin } from "~/router/RouteLogin";
 import { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
+import { api } from "~/router/Api";
+import { routeApp } from "~/router/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteSchueler, routeSchueler } from "../RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -19,7 +19,7 @@ export class RouteDataSchuelerIndividualdaten {
 	patch = async (data : Partial<SchuelerStammdaten>) => {
 		if (this.item === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await routeLogin.data.api.patchSchuelerStammdaten(data, routeLogin.data.schema, this.item.id);
+		await api.server.patchSchuelerStammdaten(data, api.schema, this.item.id);
 		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
@@ -35,25 +35,25 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		// Lade den Katalog der Fahrschülerarten
-		const fahrschuelerarten = await routeLogin.data.api.getSchuelerFahrschuelerarten(routeLogin.data.schema)
+		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
 		const mapFachschuelerarten = new Map();
 		for (const fa of fahrschuelerarten)
 			mapFachschuelerarten.set(fa.id, fa);
 		this.data.mapFahrschuelerarten = mapFachschuelerarten;
 		// Lade den Katalog der Förderschwerpunkte
-		const foerderschwerpunkte = await routeLogin.data.api.getSchuelerFoerderschwerpunkte(routeLogin.data.schema);
+		const foerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
 		const mapFoerderschwerpunkte = new Map();
 		for (const fs of foerderschwerpunkte)
 			mapFoerderschwerpunkte.set(fs.id, fs);
 		this.data.mapFoerderschwerpunkte = mapFoerderschwerpunkte;
 		// Lade den Katalog der Haltestellen
-		const haltestellen = await routeLogin.data.api.getHaltestellen(routeLogin.data.schema);
+		const haltestellen = await api.server.getHaltestellen(api.schema);
 		const mapHaltestellen = new Map();
 		for (const h of haltestellen)
 			mapHaltestellen.set(h.id, h);
 		this.data.mapHaltestellen = mapHaltestellen;
 		// Lade den Katalog der Religionen
-		const religionen = await routeLogin.data.api.getReligionen(routeLogin.data.schema)
+		const religionen = await api.server.getReligionen(api.schema)
 		const mapReligionen = new Map();
 		for (const r of religionen)
 			mapReligionen.set(r.id, r);
