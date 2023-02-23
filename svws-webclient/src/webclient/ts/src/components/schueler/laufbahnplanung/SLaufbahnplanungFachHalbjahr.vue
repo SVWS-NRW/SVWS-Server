@@ -1,5 +1,5 @@
 <template>
-	<td :class="[ 'min-w-[3rem] text-center', { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed, 'bg--stripes': cursorNotAllowed || bewertet } ]"
+	<td :class="[ 'min-w-[3rem] text-center', { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
 		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
@@ -91,13 +91,19 @@
 			!props.moeglich || props.bewertet || istFachkombiVerboten.value
 	);
 
-	const bgColor: ComputedRef<string> = computed(() =>
-		((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
+	const bgColor: ComputedRef<string> = computed(() => {
+		if (!props.moeglich)
+			return 'rgba(160,160,160,1)';
+		return ((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
-			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()
-	);
-	const bgColorTransparent: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.5));
-	//const bgColorTransparent: ComputedRef<string> = computed(() => 'rgb(var(--color-light))');
+			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
+	});
+
+	const bgColorTransparent: ComputedRef<string> = computed(() => {
+		if (!props.moeglich)
+			return 'rgba(160,160,160,0.8)';
+		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.6)
+	});
 
 
 	function ist_VTF(): boolean {
