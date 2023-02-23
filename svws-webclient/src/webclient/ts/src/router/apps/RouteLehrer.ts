@@ -10,7 +10,7 @@ import { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
 import { api } from "../Api";
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")
@@ -20,7 +20,7 @@ const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue")
 export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), "lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lehrkräfte";
 		super.setView("liste", SLehrerAuswahl, (route) => this.getAuswahlProps(route));

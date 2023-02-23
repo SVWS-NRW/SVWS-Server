@@ -7,7 +7,7 @@
 				</template>
 				<template #default>
 					<template v-for="item in routeApp.menu" :key="item.name">
-						<svws-ui-sidebar-menu-item v-if="item.hatSchulform(schulform)" :active="is_active(item)" @click="select(item)">
+						<svws-ui-sidebar-menu-item v-if="item.hatSchulform() && item.hatEineKompetenz()" :active="is_active(item)" @click="select(item)">
 							<template #label> {{ getText(item) }} </template>
 							<template #icon> <s-app-icon :routename="item.name" /> </template>
 						</svws-ui-sidebar-menu-item>

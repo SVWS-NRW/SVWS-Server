@@ -3,14 +3,14 @@ import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
 import { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
 
 export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), "lehrer_daten", "daten", SLehrerIndividualdaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer_daten", "daten", SLehrerIndividualdaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

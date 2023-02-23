@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, SchuelerStammdaten, SchuelerStatus, Schulform, Schulgliederung, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, SchuelerStammdaten, SchuelerStatus, Schulform, Schulgliederung, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, reactive, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
@@ -81,7 +81,7 @@ const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
 export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler", "/schueler/:id(\\d+)?", SSchuelerApp, new RouteDataSchueler());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "/schueler/:id(\\d+)?", SSchuelerApp, new RouteDataSchueler());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
 		super.setView("liste", SSchuelerAuswahl, (route) => this.getAuswahlProps(route));

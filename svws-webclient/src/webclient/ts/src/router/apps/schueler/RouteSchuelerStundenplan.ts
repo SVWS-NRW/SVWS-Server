@@ -2,14 +2,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 import { RouteLocationRaw, RouteParams } from "vue-router";
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
 
 export class RouteSchuelerStundenplan extends RouteNode<unknown, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_stundenplan", "stundenplan", SSchuelerStundenplan);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_stundenplan", "stundenplan", SSchuelerStundenplan);
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Stundenplan";
 		super.children = [

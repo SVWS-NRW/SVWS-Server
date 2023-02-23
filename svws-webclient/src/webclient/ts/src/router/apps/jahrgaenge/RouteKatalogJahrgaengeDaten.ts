@@ -1,4 +1,4 @@
-import { JahrgangsDaten, JahrgangsListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, JahrgangsDaten, JahrgangsListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 import { api } from "~/router/Api";
@@ -32,7 +32,7 @@ const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJah
 export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrgaengeDaten, RouteKatalogJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), "jahrgaenge_daten", "daten", SJahrgangDaten, new RouteDataKatalogJahrgaengeDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "jahrgaenge_daten", "daten", SJahrgangDaten, new RouteDataKatalogJahrgaengeDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

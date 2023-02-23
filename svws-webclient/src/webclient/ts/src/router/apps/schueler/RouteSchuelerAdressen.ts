@@ -1,4 +1,5 @@
 import {
+	BenutzerKompetenz,
 	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, Exception, KatalogEintrag, LehrerListeEintrag, List,
 	SchuelerBetriebsdaten, SchuelerListeEintrag, Schulform, Vector
 } from "@svws-nrw/svws-core-ts";
@@ -99,7 +100,7 @@ export class RouteDataSchuelerAdressen {
 export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Adressen / Betriebe";
 	}

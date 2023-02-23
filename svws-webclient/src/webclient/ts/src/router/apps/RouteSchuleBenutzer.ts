@@ -1,4 +1,4 @@
-import { BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -13,7 +13,7 @@ const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue
 export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, unknown, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), "benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id');
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
 		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));

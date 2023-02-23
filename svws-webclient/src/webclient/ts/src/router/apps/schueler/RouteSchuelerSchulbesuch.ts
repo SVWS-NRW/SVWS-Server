@@ -1,4 +1,4 @@
-import { SchuelerSchulbesuchsdaten, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, SchuelerSchulbesuchsdaten, Schulform } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
@@ -42,7 +42,7 @@ class RouteDataSchuelerSchulbesuch {
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
 	}

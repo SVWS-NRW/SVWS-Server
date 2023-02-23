@@ -1,4 +1,4 @@
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationRaw } from "vue-router";
 import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
@@ -13,7 +13,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 	public routepath = "/";
 
 	public constructor() {
-		super(Schulform.values(), "login", "/login", SLogin);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login", SLogin);
 		super.propHandler = (route) => this.getProps();
 		super.text = "Login";
 	}

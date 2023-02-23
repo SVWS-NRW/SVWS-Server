@@ -1,4 +1,4 @@
-import { FoerderschwerpunktEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, FoerderschwerpunktEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
@@ -47,7 +47,7 @@ const SFoerderschwerpunkteApp = () => import("~/components/kataloge/foerderschwe
 export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogFoerderschwerpunkte, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), "foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteApp, new RouteDataKatalogFoerderschwerpunkte());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteApp, new RouteDataKatalogFoerderschwerpunkte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
 		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));

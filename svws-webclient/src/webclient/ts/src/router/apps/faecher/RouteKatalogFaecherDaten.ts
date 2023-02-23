@@ -1,4 +1,4 @@
-import { FachDaten, FaecherListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, FachDaten, FaecherListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 import { api } from "~/router/Api";
@@ -32,7 +32,7 @@ const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.
 export class RouteKatalogFaecherDaten extends RouteNode<RouteDataKatalogFaecherDaten, RouteKatalogFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), "faecher_daten", "daten", SFachDaten, new RouteDataKatalogFaecherDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "faecher_daten", "daten", SFachDaten, new RouteDataKatalogFaecherDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

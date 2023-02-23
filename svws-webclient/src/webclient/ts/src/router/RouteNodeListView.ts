@@ -1,4 +1,4 @@
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteComponent, RouteLocationNormalized, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { BaseList } from "~/apps/BaseList";
@@ -29,14 +29,15 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
      *
      * TODO
 	 * @param schulformen   die Schulformen, welche für welche die Route erlaubt ist.
+	 * @param kompetenzen   die Kompetenzen, die ein Benutzer für den Zugriff auf die Route benötigt
      * @param name   der Name des Routing-Knotens (siehe RouteRecordRaw)
      * @param path   der Pfad der Route (siehe RouteRecordRaw)
      * @param componentListe   die vue-Komponente für die Listen-Auswahl
      * @param componentDefault   die vue-Komponente für die Darstellung der Detail-Informationen
      * @param data   die dem Knoten zugeordneten Daten
      */
-	public constructor(schulformen: Iterable<Schulform>, name: string, path: string, componentListe: RouteComponent, componentDefault: RouteComponent, liste?: TAuswahl, itemKey?: keyof TItemAuswahl, data?: TRouteData) {
-		super(schulformen, name, path, componentDefault, data);
+	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, componentListe: RouteComponent, componentDefault: RouteComponent, liste?: TAuswahl, itemKey?: keyof TItemAuswahl, data?: TRouteData) {
+		super(schulformen, kompetenzen, name, path, componentDefault, data);
 		super.setView("liste", componentListe, (to) => this.getNoProps(to));
 		this._liste = liste;
 		this._itemKey = itemKey;

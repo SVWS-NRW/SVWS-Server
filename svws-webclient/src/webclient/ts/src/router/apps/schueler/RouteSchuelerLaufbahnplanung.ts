@@ -1,5 +1,5 @@
 import {
-	Abiturdaten, AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
+	Abiturdaten, AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
 	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
 } from "@svws-nrw/svws-core-ts";
 import { shallowRef, ShallowRef } from "vue";
@@ -80,7 +80,7 @@ const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnpla
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), "schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {

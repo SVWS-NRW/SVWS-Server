@@ -1,4 +1,4 @@
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, ref, Ref } from "vue";
 import { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
 import { api } from "./Api";
@@ -18,7 +18,10 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	/** Ein Set mit den Schulformen, für welche eine Route erlaubt ist oder nicht */
 	protected _schulformenErlaubt: Set<Schulform> = new Set();
 
-	// Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
+	/** Ein Set mit den Kompetenzen die ein angemeldeter Benutzer für die Route benötigt */
+	protected _kompetenzenBenoetigt: Set<BenutzerKompetenz> = new Set();
+
+	/** Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht */
 	protected isHidden: ((params?: RouteParams) => boolean) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
@@ -47,12 +50,13 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * ergänzt werden
      *
 	 * @param schulformen   die Schulformen, welche für welche die Route erlaubt ist.
+	 * @param kompetenzen   die Kompetenzen, die ein Benutzer für den Zugriff auf die Route benötigt
      * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
      * @param path          der Pfad der Route (siehe RouteRecordRaw)
      * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
      * @param data          die dem Knoten zugeordneten Daten
      */
-	public constructor(schulformen: Iterable<Schulform>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
+	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
 			name: name,
@@ -70,6 +74,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		// Setze die erlaubten Schulformen
 		for (const sf of schulformen)
 			this._schulformenErlaubt.add(sf);
+		for (const k of kompetenzen)
+			this._kompetenzenBenoetigt.add(k);
 	}
 
 
@@ -151,7 +157,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public get children() : RouteNode<unknown, any>[] {
 		const result : RouteNode<unknown, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && !node.hatSchulform(api.schulform))
+			if (api.authenticated && !node.hatSchulform() && !node.hatEineKompetenz())
 				continue;
 			result.push(node);
 		}
@@ -205,7 +211,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public get children_records() : RouteRecordRaw[] {
 		const result : RouteRecordRaw[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && !node.hatSchulform(api.schulform))
+			if (api.authenticated && !node.hatSchulform() && !node.hatEineKompetenz())
 				continue;
 			result.push(node.record);
 		}
@@ -260,14 +266,25 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	}
 
 	/**
-	 * Prüft, ob die angegebene Schulform für die Route erlaubt ist oder nicht.
+	 * Prüft, ob die Schulform des angemeldeten Benutzers für die Route
+	 * erlaubt ist oder nicht.
 	 *
 	 * @param schulform   die zu prüfende Schulform
 	 *
 	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
 	 */
-	public hatSchulform(schulform: Schulform): boolean {
-		return this._schulformenErlaubt.has(schulform);
+	public hatSchulform(): boolean {
+		return api.authenticated && this._schulformenErlaubt.has(api.schulform);
+	}
+
+	/**
+	 * Prüft, ob ein angemeldeter Benutzer eine der Kompetenz benötigten Komptenzen hat,
+	 * die den Zugriff auf diese Route erlauben.
+	 *
+	 * @returns true, falls der Benutzer eine benötigte Kompetenz hat und ansonsten false
+	 */
+	public hatEineKompetenz(): boolean {
+		return api.authenticated && api.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
 	}
 
 	/**
@@ -283,8 +300,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
 	public hidden(params?: RouteParams): boolean {
-		// Prüfen, ob die aktuelle Schulform die Router erlaubt oder nicht
-		if (api.authenticated && (!this.hatSchulform(api.schulform)))
+		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
+		if (api.authenticated && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
 			return false;
 		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);

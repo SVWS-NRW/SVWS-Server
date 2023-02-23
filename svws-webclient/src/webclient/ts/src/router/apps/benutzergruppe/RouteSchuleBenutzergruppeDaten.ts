@@ -234,7 +234,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBenutzergruppeDaten, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
-		super(Schulform.values(), "benutzergruppe_daten", "daten", SBenutzergruppe, new RouteDataSchuleBenutzergruppeDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe, new RouteDataSchuleBenutzergruppeDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

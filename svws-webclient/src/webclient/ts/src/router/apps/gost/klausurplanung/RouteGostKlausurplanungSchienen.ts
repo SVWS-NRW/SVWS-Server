@@ -1,14 +1,14 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
 export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}

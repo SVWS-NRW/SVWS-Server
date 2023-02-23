@@ -2,14 +2,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
 export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), "gost.klausurplanung.kalender", "kalender", SGostKlausurplanungKalender);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender", SGostKlausurplanungKalender);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
 	}

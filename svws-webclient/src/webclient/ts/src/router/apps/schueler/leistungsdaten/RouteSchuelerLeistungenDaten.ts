@@ -1,4 +1,4 @@
-import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Schulform } from "@svws-nrw/svws-core-ts";
 import { ref, Ref, ShallowRef, shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
@@ -40,7 +40,7 @@ const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungs
 export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_leistungen_daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_leistungen_daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
 		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getAuswahlProps(route));

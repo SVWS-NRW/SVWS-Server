@@ -16,7 +16,7 @@ import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, Schulform } from "@svws-nrw/svws-core-ts";
+import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { UserConfigKeys } from "~/utils/userconfig/keys";
@@ -53,7 +53,7 @@ export class RouteDataApp {
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public constructor() {
-		super(Schulform.values(), "app", "/", SApp, new RouteDataApp());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/", SApp, new RouteDataApp());
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		super.children = [

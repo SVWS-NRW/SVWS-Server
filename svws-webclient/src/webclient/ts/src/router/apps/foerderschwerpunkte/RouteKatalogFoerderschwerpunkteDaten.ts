@@ -1,4 +1,4 @@
-import { FoerderschwerpunktEintrag, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, FoerderschwerpunktEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
@@ -31,7 +31,7 @@ const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschw
 export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKatalogFoerderschwerpunkteDaten, RouteKatalogFoerderschwerpunkte> {
 
 	public constructor() {
-		super(Schulform.values(), "foerderschwerpunkte_daten", "daten", SFoerderschwerpunktDaten, new RouteDataKatalogFoerderschwerpunkteDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "foerderschwerpunkte_daten", "daten", SFoerderschwerpunktDaten, new RouteDataKatalogFoerderschwerpunkteDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

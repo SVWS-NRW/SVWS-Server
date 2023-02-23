@@ -1,4 +1,4 @@
-import { List, SchuelerStundenplanManager, Schulform, StundenplanListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, List, SchuelerStundenplanManager, Schulform, StundenplanListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
@@ -51,7 +51,7 @@ const SSchuelerStundenplanAuswahl = () => import("~/components/schueler/stundenp
 export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getAuswahlProps(route));

@@ -1,14 +1,14 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdaten.vue");
 
 export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), "gost.jahrgangsdaten", "daten", SGostStammdaten);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.jahrgangsdaten", "daten", SGostStammdaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Allgemein";
 	}

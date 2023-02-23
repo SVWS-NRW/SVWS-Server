@@ -1,4 +1,4 @@
-import { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
@@ -28,7 +28,7 @@ export class RouteDataSchuelerIndividualdaten {
 export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), "schueler_daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Individualdaten";
 	}
