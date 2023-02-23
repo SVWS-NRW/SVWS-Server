@@ -97,7 +97,7 @@ export class RouteDataGost {
 			return;
 		}
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.abiturjahr } });
+		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
 	}
 }
 
