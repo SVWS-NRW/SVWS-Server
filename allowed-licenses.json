@@ -1724,6 +1724,546 @@
 		"moduleLicense": "The Apache Software License, Version 2.0",
 		"moduleVersion": ".*",
 		"moduleName": "xml-apis:xml-apis-ext"
-	}    
+	} ,
+  {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations"
+        },
+        {
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "com.github.ben-manes.caffeine:caffeine"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.github.ben-manes.caffeine:caffeine"
+        },
+        {
+            "moduleLicense": "MIT",
+            "moduleVersion": ".*",
+            "moduleName": "com.github.waffle:waffle-jna"
+        },
+        {
+            "moduleLicense": "The GNU General Public License, v2 with Universal FOSS Exception, v1.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.mysql:mysql-connector-j"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.istack:istack-commons-tools"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.istack:istack-commons-tools"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.istack:istack-commons-tools"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:relaxng-datatype"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:relaxng-datatype"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:relaxng-datatype"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:rngom"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:rngom"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "com.sun.xml.bind.external:rngom"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-core-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-integration-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-jaxrs2-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": "\"Apache License 2.0\";link=\"http://www.apache.org/licenses/LICENSE-2.0.html\"",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "io.swagger.core.v3:swagger-models-jakarta"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "EDL 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "EPL 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": "GPL2 w/ CPE",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.mail:jakarta.mail-api"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": "GPL-2.0-with-classpath-exception",
+            "moduleVersion": ".*",
+            "moduleName": "jakarta.ws.rs:jakarta.ws.rs-api"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "mysql:mysql-connector-java"
+        },
+        {
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": ".*",
+            "moduleName": "net.java.dev.jna:jna"
+        },
+        {
+            "moduleLicense": "LGPL-2.1-or-later",
+            "moduleVersion": ".*",
+            "moduleName": "net.java.dev.jna:jna"
+        },
+        {
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": ".*",
+            "moduleName": "net.java.dev.jna:jna-platform"
+        },
+        {
+            "moduleLicense": "LGPL-2.1-or-later",
+            "moduleVersion": ".*",
+            "moduleName": "net.java.dev.jna:jna-platform"
+        },
+        {
+            "moduleLicense": "EDL 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-activation"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-activation"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-activation"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "EDL 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "EPL 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": "GPL2 w/ CPE",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.angus:angus-mail"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api"
+        },
+        {
+            "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:codemodel"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:codemodel"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:codemodel"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-core"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-core"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-core"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-jxc"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-jxc"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-jxc"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-xjc"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-xjc"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:jaxb-xjc"
+        },
+        {
+            "moduleLicense": "Eclipse Distribution License - v 1.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:xsom"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:xsom"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": ".*",
+            "moduleName": "org.glassfish.jaxb:xsom"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.jboss:jandex"
+        },
+        {
+            "moduleLicense": "Public Domain",
+            "moduleVersion": ".*",
+            "moduleName": "org.jboss:jandex"
+        },
+        {
+            "moduleLicense": "MIT-0",
+            "moduleVersion": ".*",
+            "moduleName": "org.reactivestreams:reactive-streams"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": ".*",
+            "moduleName": "org.slf4j:jcl-over-slf4j"
+        },
+        {
+            "moduleLicense": "MIT License",
+            "moduleVersion": ".*",
+            "moduleName": "org.slf4j:jcl-over-slf4j"
+        }	
   ]
 }
