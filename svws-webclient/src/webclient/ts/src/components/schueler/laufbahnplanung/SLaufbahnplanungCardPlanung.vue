@@ -39,10 +39,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="row in rows" :key="row.id">
+					<template v-for="row in rows" :key="row.id">
 						<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
 							:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
-					</tr>
+					</template>
 				</tbody>
 				<tfoot>
 					<tr>

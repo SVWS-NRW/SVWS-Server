@@ -1,28 +1,30 @@
 <template>
-	<td class="text-left select-text" :style="{ 'background-color': bgColor }">
-		{{ fach.kuerzelAnzeige }}
-	</td>
-	<td class="text-left select-all" :style="{ 'background-color': bgColor }">
-		{{ fach.bezeichnung }}
-	</td>
-	<td class="text-center" :style="{ 'background-color': bgColor }">
-		{{ fach.wochenstundenQualifikationsphase }}
-	</td>
-	<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
-		<template v-if="isLanguage">
-			{{ sprachenfolgeNr }}
+	<tr>
+		<td class="text-left select-text" :style="{ 'background-color': bgColor }">
+			{{ fach.kuerzelAnzeige }}
+		</td>
+		<td class="text-left select-all" :style="{ 'background-color': bgColor }">
+			{{ fach.bezeichnung }}
+		</td>
+		<td class="text-center" :style="{ 'background-color': bgColor }">
+			{{ fach.wochenstundenQualifikationsphase }}
+		</td>
+		<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
+			<template v-if="isLanguage">
+				{{ sprachenfolgeNr }}
+			</template>
+		</td>
+		<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
+			{{ sprachenfolgeJahrgang }}
+		</td>
+		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
+			<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
+				:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="istBewertet(halbjahr)"
+				:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @update:wahl="onUpdateWahl" />
 		</template>
-	</td>
-	<td :class="[ 'text-center', {'bg--stripes': !isLanguage} ]" :style="{ 'background-color': bgColorIfLanguage }">
-		{{ sprachenfolgeJahrgang }}
-	</td>
-	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 		<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
-			:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="istBewertet(halbjahr)"
-			:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @update:wahl="onUpdateWahl" />
-	</template>
-	<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
-		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="istBewertet(GostHalbjahr.Q22)" @update:wahl="onUpdateWahl" />
+			:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="istBewertet(GostHalbjahr.Q22)" @update:wahl="onUpdateWahl" />
+	</tr>
 </template>
 
 <script setup lang="ts">
