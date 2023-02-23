@@ -148,7 +148,13 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns ein Array mit den Kind-Knoten
      */
 	public get children() : RouteNode<unknown, any>[] {
-		return this._children;
+		const result : RouteNode<unknown, any>[] = [];
+		for (const node of this._children) {
+			if (api.authenticated && !node.hatSchulform(api.schulform))
+				continue;
+			result.push(node);
+		}
+		return result;
 	}
 
 	/**
@@ -196,7 +202,13 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns ein Array mit den vue-route-Record-Objekten
      */
 	public get children_records() : RouteRecordRaw[] {
-		return this._record.children || [];
+		const result : RouteRecordRaw[] = [];
+		for (const node of this._children) {
+			if (api.authenticated && !node.hatSchulform(api.schulform))
+				continue;
+			result.push(node.record);
+		}
+		return result;
 	}
 
 	/**
