@@ -120,7 +120,7 @@ public class FaecherGost {
 	 * @param conn          die Datenbank-Verbindung
 	 * @param abiJahrgang   der Abiturjahrgang, für den die Liste erstellt werden soll
 	 *  
-	 * @return       die Liste aller Fächer der gymnasialen Oberstufe
+	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
 	public static GostFaecherManager getFaecherListeGost(DBEntityManager conn, Integer abiJahrgang) {
 		Schulform schulform = Schule.query(conn).getSchulform();
@@ -129,7 +129,7 @@ public class FaecherGost {
     	Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	if (faecher == null)
     		throw OperationError.NOT_FOUND.exception();
-		if (abiJahrgang == -1) {
+		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
 	    	GostFaecherManager manager = new GostFaecherManager(faecher.values().stream()
 	    		.filter(fach -> fach.IstOberstufenFach)
 	    		.map(fach -> mapFromDTOFach(fach, faecher))

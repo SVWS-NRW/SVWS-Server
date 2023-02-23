@@ -420,6 +420,8 @@ public class ABPSchuelerFaecher {
 				for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					GostLeistungenFachbelegung belegung = null;
 					for (GostLeistungenFachbelegung tmpBelegung : fachwahl.belegungen) {
+						if (!tmpBelegung.abschnittGewertet)
+							continue;
 						if (halbjahr == GostHalbjahr.fromKuerzel(tmpBelegung.halbjahrKuerzel)) {
 							belegung = tmpBelegung;
 							break;
