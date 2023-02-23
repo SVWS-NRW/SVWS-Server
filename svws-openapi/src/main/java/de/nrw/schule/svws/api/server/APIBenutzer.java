@@ -19,7 +19,9 @@ import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzGruppenliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerliste;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -74,6 +76,33 @@ public class APIBenutzer {
         }
     }
 
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Daten des angemeldeten Benutzers, der
+     * die Abfrage ausführt.
+     * 
+     * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+     *                soll
+     * @param request die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Daten des angemeldeten Benutzers, der diese Abfrage ausführt.
+     */
+    @GET
+    @Path("/angemeldet/daten")
+    @Operation(summary = "Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen Daten.", 
+    	description = "Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen Daten. "
+            + "Dabei wird geprüft, ob der SVWS-Benutzer angemeldet ist.")
+    @ApiResponse(responseCode = "200", description = "Die Daten des Benutzers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BenutzerDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag gefunden")
+    public Response getBenutzerDatenEigene(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+        	Benutzer user = conn.getUser();
+        	if (user == null)
+        		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
+            return (new DataBenutzerDaten(conn).get(user.getId()));
+        }
+    }
+    
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Benutzers.
      * 

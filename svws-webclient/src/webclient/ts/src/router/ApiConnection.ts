@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { Ref, ref, ShallowRef, shallowRef } from "vue";
 
 export class ApiConnection {
@@ -27,7 +27,8 @@ export class ApiConnection {
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
 
-	// TODO Benutzerkomptenzen des angemeldeten Benutzers
+	// Die Benutzerdaten des angemeldeten Benutzers
+	protected _benutzerdaten: ShallowRef<BenutzerDaten | undefined> = shallowRef(undefined);
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
 	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
@@ -58,6 +59,13 @@ export class ApiConnection {
 	// Gibt den Benutzernamen zurück
 	get username() : string {
 		return this._username;
+	}
+
+	// Gibt die Benutzerdaten des angemeldeten Benutzers zurück, sofern ein Login stattgefunden hat
+	get benutzerdaten(): BenutzerDaten {
+		if (this._benutzerdaten.value === undefined)
+			throw new Error("Ein Benutzer muss angemeldet sein, damit dessen Daten geladen sein können.");
+		return this._benutzerdaten.value;
 	}
 
 	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
@@ -131,15 +139,19 @@ export class ApiConnection {
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
 			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
+			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
+			this._stammdaten.value = undefined;
+			this._benutzerdaten.value = undefined;
 		}
 	}
 
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
 		this._stammdaten.value = undefined;
+		this._benutzerdaten.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

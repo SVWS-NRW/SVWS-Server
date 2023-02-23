@@ -625,6 +625,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getBenutzerDatenEigene für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/angemeldet/daten
+	 *
+	 * Liefert zu dem angemeldeten Benutzer, der diese Abfrage ausführt, die zugehörigen Daten. Dabei wird geprüft, ob der SVWS-Benutzer angemeldet ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Benutzers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.
+	 *   Code 404: Kein Benutzer-Eintrag gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Benutzers
+	 */
+	public async getBenutzerDatenEigene(schema : string) : Promise<BenutzerDaten> {
+		const path = "/db/{schema}/benutzer/angemeldet/daten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return BenutzerDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createBenutzergruppe für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/benutzergruppe/new
 	 *
 	 * Erstellt eine neue Benutzergruppe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Benutzergruppe besitzt.
