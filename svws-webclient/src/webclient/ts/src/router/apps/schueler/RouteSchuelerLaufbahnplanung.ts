@@ -80,8 +80,7 @@ const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnpla
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {

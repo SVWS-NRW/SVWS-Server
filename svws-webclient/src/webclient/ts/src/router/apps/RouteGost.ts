@@ -74,8 +74,7 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
 		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));

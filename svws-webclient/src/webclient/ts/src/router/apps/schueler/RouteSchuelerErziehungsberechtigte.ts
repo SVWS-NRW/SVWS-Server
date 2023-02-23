@@ -1,4 +1,4 @@
-import { Erzieherart, ErzieherStammdaten, List } from "@svws-nrw/svws-core-ts";
+import { Erzieherart, ErzieherStammdaten, List, Schulform } from "@svws-nrw/svws-core-ts";
 import { ref, Ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
@@ -49,7 +49,7 @@ export class RouteDataSchuelerErziehungsberechtigte {
 export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchuelerErziehungsberechtigte, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_erziehungsberechtigte", "erziehungsberechtigte", SSchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());
+		super(Schulform.values(), "schueler_erziehungsberechtigte", "erziehungsberechtigte", SSchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Erziehungsberechtigte";
 	}

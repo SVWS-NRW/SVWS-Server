@@ -14,8 +14,7 @@ const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplan
 export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKursplanung> {
 
 	public constructor() {
-		super("gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";

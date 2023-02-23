@@ -2,14 +2,14 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, RouteLehrer } from "~/router/apps/RouteLehrer";
 import { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
-import { LehrerPersonaldaten } from "@svws-nrw/svws-core-ts";
+import { LehrerPersonaldaten, Schulform } from "@svws-nrw/svws-core-ts";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
 export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
-		super("lehrer_personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super(Schulform.values(), "lehrer_personaldaten", "personaldaten", SLehrerPersonaldaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
 	}

@@ -1,6 +1,6 @@
 import {
 	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, Exception, KatalogEintrag, LehrerListeEintrag, List,
-	SchuelerBetriebsdaten, SchuelerListeEintrag, Vector
+	SchuelerBetriebsdaten, SchuelerListeEintrag, Schulform, Vector
 } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -99,7 +99,7 @@ export class RouteDataSchuelerAdressen {
 export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
+		super(Schulform.values(), "schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Adressen / Betriebe";
 	}

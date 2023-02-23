@@ -1,4 +1,4 @@
-import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { List, SchuelerLernabschnittListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
@@ -34,7 +34,7 @@ const SSchuelerLeistungen = () => import("~/components/schueler/leistungsdaten/S
 export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistungen, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
+		super(Schulform.values(), "schueler_leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [

@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
@@ -47,7 +47,7 @@ const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaeng
 export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
+		super(Schulform.values(), "jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));

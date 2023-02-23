@@ -1,4 +1,4 @@
-import { KursDaten, KursListeEintrag } from "@svws-nrw/svws-core-ts";
+import { KursDaten, KursListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
 import { api } from "~/router/Api";
@@ -32,7 +32,7 @@ const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> {
 
 	public constructor() {
-		super("kurse_daten", "daten", SKursDaten, new RouteDataKurseDaten());
+		super(Schulform.values(), "kurse_daten", "daten", SKursDaten, new RouteDataKurseDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

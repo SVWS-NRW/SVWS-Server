@@ -46,12 +46,13 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * Es können mithilfe der Methode "setView" noch weitere Router-Views
      * ergänzt werden
      *
-     * @param name   der Name des Routing-Knotens (siehe RouteRecordRaw)
-     * @param path   der Pfad der Route (siehe RouteRecordRaw)
-     * @param component   die vue-Komponente für die Darstellung der Informationen der gewählten Route
-     * @param data   die dem Knoten zugeordneten Daten
+	 * @param schulformen   die Schulformen, welche für welche die Route erlaubt ist.
+     * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
+     * @param path          der Pfad der Route (siehe RouteRecordRaw)
+     * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
+     * @param data          die dem Knoten zugeordneten Daten
      */
-	public constructor(name: string, path: string, component: RouteComponent, data?: TRouteData) {
+	public constructor(schulformen: Iterable<Schulform>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
 			name: name,
@@ -66,8 +67,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		this._children = [];
 		this._menu = [];
 		this._data = (data !== undefined) ? data : {} as TRouteData;
-		// Erlaube alle Schulformen als Default
-		for (const sf of Schulform.values())
+		// Setze die erlaubten Schulformen
+		for (const sf of schulformen)
 			this._schulformenErlaubt.add(sf);
 	}
 
@@ -267,18 +268,6 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 */
 	public hatSchulform(schulform: Schulform): boolean {
 		return this._schulformenErlaubt.has(schulform);
-	}
-
-	/**
-	 * Setzt die Schulformen, für welche die Route erlaubt ist.
-	 *
-	 * @param schulformen   die Schulformen, für welche Route erlaubt ist
-	 */
-	protected setSchulformenErlaubt(schulformen: Iterable<Schulform>) {
-		const result = new Set<Schulform>();
-		for (const sf of schulformen)
-			result.add(sf);
-		this._schulformenErlaubt = result;
 	}
 
 	/**

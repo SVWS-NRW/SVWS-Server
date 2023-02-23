@@ -14,8 +14,7 @@ const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGos
 export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, RouteGost> {
 
 	public constructor() {
-		super("gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";

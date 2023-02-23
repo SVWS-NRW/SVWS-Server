@@ -1,4 +1,4 @@
-import { KlassenListeEintrag, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { KlassenListeEintrag, LehrerListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
@@ -49,7 +49,7 @@ const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super("klassen", "/klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super(Schulform.values(), "klassen", "/klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));

@@ -1,4 +1,4 @@
-import { FaecherListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { FaecherListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppProps";
@@ -47,7 +47,7 @@ const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue"
 export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, RouteApp> {
 
 	public constructor() {
-		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherApp, new RouteDataKatalogFaecher());
+		super(Schulform.values(), "faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherApp, new RouteDataKatalogFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));

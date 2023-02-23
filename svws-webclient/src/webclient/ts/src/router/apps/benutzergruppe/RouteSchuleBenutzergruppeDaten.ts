@@ -1,4 +1,4 @@
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { ref, Ref, shallowRef, ShallowRef, triggerRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
@@ -234,7 +234,7 @@ export class RouteDataSchuleBenutzergruppeDaten {
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBenutzergruppeDaten, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
-		super("benutzergruppe_daten", "daten", SBenutzergruppe, new RouteDataSchuleBenutzergruppeDaten());
+		super(Schulform.values(), "benutzergruppe_daten", "daten", SBenutzergruppe, new RouteDataSchuleBenutzergruppeDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

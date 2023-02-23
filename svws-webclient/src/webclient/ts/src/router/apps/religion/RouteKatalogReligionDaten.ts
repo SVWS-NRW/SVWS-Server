@@ -1,4 +1,4 @@
-import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
+import { ReligionEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 import { api } from "~/router/Api";
@@ -31,7 +31,7 @@ const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SRel
 export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, RouteKatalogReligionen> {
 
 	public constructor() {
-		super("religionen_daten", "daten", SReligionDaten, new RouteDataKlassenDaten());
+		super(Schulform.values(), "religionen_daten", "daten", SReligionDaten, new RouteDataKlassenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

@@ -68,8 +68,7 @@ const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
 export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost> {
 
 	public constructor() {
-		super("gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 	}

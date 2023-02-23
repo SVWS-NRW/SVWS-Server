@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
 import { api } from "~/router/Api";
@@ -41,7 +41,7 @@ const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue
 export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKlassen> {
 
 	public constructor() {
-		super("klassen_daten", "daten", SKlassenDaten, new RouteDataKlassenDaten());
+		super(Schulform.values(), "klassen_daten", "daten", SKlassenDaten, new RouteDataKlassenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

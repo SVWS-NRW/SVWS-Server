@@ -14,8 +14,7 @@ const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahl
 export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, RouteGost> {
 
 	public constructor() {
-		super("gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {

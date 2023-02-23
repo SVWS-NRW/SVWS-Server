@@ -9,8 +9,7 @@ const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super("gost.klausurplanung.kalender", "kalender", SGostKlausurplanungKalender);
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.klausurplanung.kalender", "kalender", SGostKlausurplanungKalender);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
 	}

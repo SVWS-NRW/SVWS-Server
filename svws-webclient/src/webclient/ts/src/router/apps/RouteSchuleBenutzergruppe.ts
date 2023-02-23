@@ -1,4 +1,4 @@
-import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
+import { BenutzergruppeListeEintrag, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -13,7 +13,7 @@ const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBe
 export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergruppe, BenutzergruppeListeEintrag, unknown, RouteApp> {
 
 	public constructor() {
-		super("benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeAuswahl, SBenutzergruppeApp, new ListBenutzergruppe(), 'id');
+		super(Schulform.values(), "benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeAuswahl, SBenutzergruppeApp, new ListBenutzergruppe(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));

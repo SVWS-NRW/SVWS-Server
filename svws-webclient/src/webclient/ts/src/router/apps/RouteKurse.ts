@@ -1,4 +1,4 @@
-import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { KurseAppProps } from "~/components/kurse/SKurseAppProps";
@@ -50,7 +50,7 @@ const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public constructor() {
-		super("kurse", "/kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
+		super(Schulform.values(), "kurse", "/kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
 		super.setView("liste", SKurseAuswahl, (route) => this.getAuswahlProps(route));

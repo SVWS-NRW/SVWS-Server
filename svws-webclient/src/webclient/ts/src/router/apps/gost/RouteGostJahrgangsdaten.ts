@@ -8,8 +8,7 @@ const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdat
 export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
-		super("gost.jahrgangsdaten", "daten", SGostStammdaten);
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.jahrgangsdaten", "daten", SGostStammdaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Allgemein";
 	}

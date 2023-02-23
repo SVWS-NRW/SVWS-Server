@@ -1,3 +1,4 @@
+import { Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { ListNone } from "~/apps/ListNone";
@@ -10,7 +11,7 @@ const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
 export class RouteStatistik extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
 
 	public constructor() {
-		super("statistik", "/statistik", SStatistikAuswahl, SStatistikApp);
+		super(Schulform.values(), "statistik", "/statistik", SStatistikAuswahl, SStatistikApp);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Statistik";
 		super.setView("liste", SStatistikAuswahl, (route) => this.getNoProps(route));

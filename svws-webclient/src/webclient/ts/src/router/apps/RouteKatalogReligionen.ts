@@ -1,4 +1,4 @@
-import { List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { List, ReligionEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
@@ -47,7 +47,7 @@ const SReligionenApp = () => import("~/components/kataloge/religionen/SReligione
 export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super(Schulform.values(), "religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));

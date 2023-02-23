@@ -19,8 +19,7 @@ const SGostKlausurplanungAuswahl = () => import("~/components/gost/klausurplanun
 export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanung, RouteGost> {
 
 	public constructor() {
-		super("gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
-		super.setSchulformenErlaubt(Schulform.getMitGymOb());
+		super(Schulform.getMitGymOb(), "gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Klausurplanung";

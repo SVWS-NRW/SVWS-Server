@@ -1,4 +1,4 @@
-import { List, SchuelerLernabschnittListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { List, SchuelerLernabschnittListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
@@ -34,7 +34,7 @@ const SSchuelerAbschnitt = () => import("~/components/schueler/abschnitt/SSchuel
 export class RouteSchuelerAbschnitt extends RouteNode<RouteDataSchuelerAbschnitt, RouteSchueler> {
 
 	public constructor() {
-		super("schueler_abschnitt", "abschnitt", SSchuelerAbschnitt, new RouteDataSchuelerAbschnitt());
+		super(Schulform.values(), "schueler_abschnitt", "abschnitt", SSchuelerAbschnitt, new RouteDataSchuelerAbschnitt());
 		super.propHandler = (route) => routeSchueler.getProps(route);
 		super.text = "Aktueller Abschnitt";
 		super.children = [
