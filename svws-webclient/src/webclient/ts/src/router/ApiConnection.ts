@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, BenutzerDaten, BenutzerKompetenz, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { Ref, ref, ShallowRef, shallowRef } from "vue";
 
 export class ApiConnection {
@@ -29,6 +29,12 @@ export class ApiConnection {
 
 	// Die Benutzerdaten des angemeldeten Benutzers
 	protected _benutzerdaten: ShallowRef<BenutzerDaten | undefined> = shallowRef(undefined);
+
+	// Gibt an, ob der Benutzer Administrator-Rechte hat oder nicht (direkt oder indirekt über eine Gruppen-Zugehörigkeit)
+	protected _istAdmin: ShallowRef<boolean | undefined> = shallowRef(undefined);
+
+	// Gibt die Kompetenzen des Benutzer zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
+	protected _kompetenzen: ShallowRef<Set<BenutzerKompetenz> | undefined> = shallowRef(undefined);
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
 	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
@@ -66,6 +72,20 @@ export class ApiConnection {
 		if (this._benutzerdaten.value === undefined)
 			throw new Error("Ein Benutzer muss angemeldet sein, damit dessen Daten geladen sein können.");
 		return this._benutzerdaten.value;
+	}
+
+	// Gibt an, sofern ein Login stattgefunden hat, ob es sich bei dem angemeldeten Benutzer um einen Administrator handelt oder nicht
+	get istAdmin(): boolean {
+		if (this._istAdmin.value === undefined)
+			throw new Error("Ein Benutzer muss angemeldet sein, damit ermittelt werden kann, ob es sich um einen Administrator handelt oder nicht.");
+		return this._istAdmin.value;
+	}
+
+	// Die Kompetenzen des angemeldeten Benutzers, sofern ein Login stattgefunden hat
+	get kompetenzen(): Set<BenutzerKompetenz> {
+		if (this._kompetenzen.value === undefined)
+			throw new Error("Ein Benutzer muss angemeldet sein, damit dessen Kompetenzen ermittelt werden können.");
+		return this._kompetenzen.value;
 	}
 
 	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
@@ -117,6 +137,57 @@ export class ApiConnection {
 	}
 
 	/**
+	 * Ermittelt, ob der Benutzer mit den angebenen Daten ein administrativer
+	 * Benutzer ist oder nicht.
+	 *
+	 * @param daten   die Daten des Benutzers
+	 *
+	 * @returns true, falls der benutzer Administrator-Rechte hat, und ansonsten false
+	 */
+	private getIstAdmin(daten: BenutzerDaten): boolean {
+		if (daten.istAdmin)
+			return true;
+		for (const gruppe of daten.gruppen)
+			if (gruppe.istAdmin)
+				return true;
+		return false;
+	}
+
+	/**
+	 * Ermittelt, die Menge an Kompetenzen, die der Benutzer mit den angebenen Daten
+	 * entweder direkt oder indirekt über eine Gruppe hat.
+	 *
+	 * @param daten   die Daten des Benutzers
+	 *
+	 * @returns die Menge an Kompetenzen
+	 */
+	private getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
+		const result: Set<BenutzerKompetenz> = new Set();
+		// Ein Admin-Benutzer hat alle Kompetenzen...
+		const istAdmin = this.getIstAdmin(daten);
+		if (istAdmin) {
+			for (const k of BenutzerKompetenz.values())
+				result.add(k);
+			return result;
+		}
+		// Lese die Kompetenzen ein, die der Benutzer direkt hat
+		for (const kid of daten.kompetenzen) {
+			const k = BenutzerKompetenz.getByID(kid);
+			if (k !== null)
+				result.add(k);
+		}
+		// Lese die Kompetenzen ein, die der Benutzer indirekt über eine Gruppe hat
+		for (const gruppe of daten.gruppen) {
+			for (const kid of gruppe.kompetenzen) {
+				const k = BenutzerKompetenz.getByID(kid);
+				if (k !== null)
+					result.add(k);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
 	 *
 	 * @param {string} schema   Das Schema
@@ -140,11 +211,15 @@ export class ApiConnection {
 			this._authenticated.value = true;
 			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
+			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
+			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
 			this._stammdaten.value = undefined;
 			this._benutzerdaten.value = undefined;
+			this._istAdmin.value = undefined;
+			this._kompetenzen.value = undefined;
 		}
 	}
 
@@ -152,6 +227,8 @@ export class ApiConnection {
 		this._authenticated.value = false;
 		this._stammdaten.value = undefined;
 		this._benutzerdaten.value = undefined;
+		this._istAdmin.value = undefined;
+		this._kompetenzen.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

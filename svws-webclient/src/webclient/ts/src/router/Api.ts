@@ -1,4 +1,5 @@
-import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag, JahrgangsListeEintrag, Schulform, Schulgliederung, SchuleStammdaten, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
+	JahrgangsListeEintrag, Schulform, Schulgliederung, SchuleStammdaten, Schuljahresabschnitt, BenutzerTyp, BenutzerDaten, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
 import { ComputedRef, computed } from "vue";
@@ -84,6 +85,89 @@ class Api {
 
 
 	/// --- Informationen zu dem Benutzer, der angemeldet ist
+
+	/**
+	 * Gibt die Daten des Benutzers zurück.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerdaten(): BenutzerDaten {
+		return this.conn.benutzerdaten;
+	}
+
+	/**
+	 * Gibt an, ob es sich bei dem angemeldeten Benutzer um einen adminstrativen Benutzer
+	 * handelt oder nicht.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerIstAdmin(): boolean {
+		return this.conn.istAdmin;
+	}
+
+	/**
+	 * Die Menge der Benutzerkompetenzen des angemeldeten Benutzers.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerKompetenzen(): Set<BenutzerKompetenz> {
+		return this.conn.kompetenzen;
+	}
+
+	/**
+	 * Prüft, ob der angemeldete Benutzer die angegebene Kompetenz hat oder
+	 * nicht.
+	 *
+	 * @param kompetenz   die zu prüfende Kompetenz.
+	 *
+	 * @returns true, falls der Benutzer die Kompetenz hat und ansonsten false
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public benutzerHatKompetenz(kompetenz: BenutzerKompetenz): boolean {
+		return this.benutzerKompetenzen.has(kompetenz);
+	}
+
+	/**
+	 * Prüft, ob der angemeldete Benutzer eine der angegebenen Kompetenzen
+	 * hat oder nicht.
+	 *
+	 * @param kompetenzen   die zu prüfenden Kompetenzen.
+	 *
+	 * @returns true, falls der Benutzer einer der Kompetenzen hat und ansonsten false
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public benutzerHatEineKompetenz(kompetenzen: Iterable<BenutzerKompetenz>): boolean {
+		const setKompetenzen = this.benutzerKompetenzen;
+		for (const kompetenz of kompetenzen)
+			if (setKompetenzen.has(kompetenz))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Gibt den Typ des Benutzers zurück.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig ist
+	 */
+	public get benutzertyp(): BenutzerTyp {
+		const typ = BenutzerTyp.getByID(this.benutzerdaten.typ);
+		if (typ === null)
+			throw new Error("Der Typ des Benutzers ist ungültig.");
+		return typ;
+	}
+
+	/**
+	 * Gibt an, ob es sich bei dem Benutzer um einen Lehrer-Benutzer handelt.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig oder kein Lehrer ist
+	 */
+	public get benutzerIDLehrer(): number {
+		if (this.benutzertyp !== BenutzerTyp.LEHRER)
+			throw new Error("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
+		return this.benutzerdaten.typID;
+	}
 
 
 	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
