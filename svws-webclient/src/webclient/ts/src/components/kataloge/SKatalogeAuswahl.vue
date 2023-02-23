@@ -6,11 +6,13 @@
 		</template>
 		<template #header />
 		<template #content>
-			<div class="secondary-menu--navigation container">
-				<svws-ui-sidebar-menu-item v-for="item in routeKataloge.menu" :key="item.name" @click="router.push({ name: item.name })">
-					<template #label> <span>{{ item.text }}</span> </template>
-				</svws-ui-sidebar-menu-item>
-			</div>
+			<template v-for="item in routeKataloge.menu" :key="item.name">
+				<div class="secondary-menu--navigation container">
+					<svws-ui-sidebar-menu-item v-if="item.hatSchulform() && item.hatEineKompetenz()" @click="router.push({ name: item.name })">
+						<template #label> <span>{{ item.text }}</span> </template>
+					</svws-ui-sidebar-menu-item>
+				</div>
+			</template>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
