@@ -163,9 +163,12 @@ export class ApiConnection {
 	 */
 	private getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
 		const result: Set<BenutzerKompetenz> = new Set();
+		// Jeder Benutzer hat die Kompetenz auf Teile Der Applikation zuzugreifen, die keine Kompetenz benötigen
+		result.add(BenutzerKompetenz.KEINE);
 		// Ein Admin-Benutzer hat alle Kompetenzen...
 		const istAdmin = this.getIstAdmin(daten);
 		if (istAdmin) {
+			result.add(BenutzerKompetenz.ADMIN);
 			for (const k of BenutzerKompetenz.values())
 				result.add(k);
 			return result;
