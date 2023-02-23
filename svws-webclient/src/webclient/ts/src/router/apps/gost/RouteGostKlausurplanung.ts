@@ -7,7 +7,7 @@ import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlaus
 import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
-import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
 import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { GostKlausurplanungAuswahlChildData } from "~/components/gost/klausurplanung/SGostKursplanungAuswahlProps";
@@ -20,6 +20,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public constructor() {
 		super("gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Klausurplanung";

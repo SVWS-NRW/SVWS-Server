@@ -1,5 +1,7 @@
+import { Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, ref, Ref } from "vue";
 import { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
+import { api } from "./Api";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -12,6 +14,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 
 	/** Das vue-Router-Objekt (siehe RouteRecordRaw) */
 	protected _record: RouteRecordRaw;
+
+	/** Ein Set mit den Schulformen, für welche eine Route erlaubt ist oder nicht */
+	protected _schulformenErlaubt: Set<Schulform> = new Set();
 
 	// Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
 	protected isHidden: ((params?: RouteParams) => boolean) | undefined = undefined;
@@ -61,6 +66,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		this._children = [];
 		this._menu = [];
 		this._data = (data !== undefined) ? data : {} as TRouteData;
+		// Erlaube alle Schulformen als Default
+		for (const sf of Schulform.values())
+			this._schulformenErlaubt.add(sf);
 	}
 
 
@@ -239,6 +247,29 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	}
 
 	/**
+	 * Prüft, ob die angegebene Schulform für die Route erlaubt ist oder nicht.
+	 *
+	 * @param schulform   die zu prüfende Schulform
+	 *
+	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
+	 */
+	public hatSchulform(schulform: Schulform): boolean {
+		return this._schulformenErlaubt.has(schulform);
+	}
+
+	/**
+	 * Setzt die Schulformen, für welche die Route erlaubt ist.
+	 *
+	 * @param schulformen   die Schulformen, für welche Route erlaubt ist
+	 */
+	protected setSchulformenErlaubt(schulformen: Iterable<Schulform>) {
+		const result = new Set<Schulform>();
+		for (const sf of schulformen)
+			result.add(sf);
+		this._schulformenErlaubt = result;
+	}
+
+	/**
      * Setzt der Property-Handler für die Default-View
      */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
@@ -251,7 +282,10 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
 	public hidden(params?: RouteParams): boolean {
-		// TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
+		// Prüfen, ob die aktuelle Schulform die Router erlaubt oder nicht
+		if (api.authenticated && (!this.hatSchulform(api.schulform)))
+			return false;
+		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
 	}
 

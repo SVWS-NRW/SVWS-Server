@@ -6,10 +6,12 @@
 					<svws-ui-sidebar-menu-header> {{ username }} </svws-ui-sidebar-menu-header>
 				</template>
 				<template #default>
-					<svws-ui-sidebar-menu-item v-for="item in routeApp.menu" :key="item.name" :active="is_active(item)" @click="select(item)">
-						<template #label> {{ getText(item) }} </template>
-						<template #icon> <s-app-icon :routename="item.name" /> </template>
-					</svws-ui-sidebar-menu-item>
+					<template v-for="item in routeApp.menu" :key="item.name">
+						<svws-ui-sidebar-menu-item v-if="item.hatSchulform(schulform)" :active="is_active(item)" @click="select(item)">
+							<template #label> {{ getText(item) }} </template>
+							<template #icon> <s-app-icon :routename="item.name" /> </template>
+						</svws-ui-sidebar-menu-item>
+					</template>
 				</template>
 				<template #footer>
 					<svws-ui-sidebar-menu-item class="print:hidden" subline="" @click="doLogout">
@@ -39,8 +41,8 @@
 						<div class="flex items-center space-x-4">
 							<i-ri-alert-line class="text-headline" />
 							<div>
-								<div class="font-bold">{{ error.name }}</div>
-								<div class="font-normal">{{ error.message }}</div>
+								<div class="font-bold"> {{ error.name }} </div>
+								<div class="font-normal"> {{ error.message }} </div>
 							</div>
 						</div>
 					</svws-ui-notification>
@@ -58,12 +60,11 @@
 	import { router } from "~/router/RouteManager";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
-	import { SchuleStammdaten } from '@svws-nrw/svws-core-ts';
+	import { SchuleStammdaten, Schulform } from '@svws-nrw/svws-core-ts';
 
 	const errors: Ref<Error[]> = ref([]);
-	onErrorCaptured((e)=>{
-		errors.value.push(e);
-	});
+
+	onErrorCaptured((e) => { errors.value.push(e); });
 
 	// const error: Ref<undefined|Error> = ref(undefined);
 	// watch(error_message, (new_val)=> {
@@ -73,6 +74,7 @@
 	// })
 
 	const props = defineProps<{
+		schulform: Schulform;
 		schuleStammdaten: SchuleStammdaten;
 		username: string;
 		logout: () => Promise<void>;
@@ -118,4 +120,5 @@
 		document.title = "SVWS NRW";
 		await props.logout();
 	}
+
 </script>

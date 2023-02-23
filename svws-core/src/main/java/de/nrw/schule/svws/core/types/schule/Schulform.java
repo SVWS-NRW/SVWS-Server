@@ -202,12 +202,25 @@ public enum Schulform {
 	 * 
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
-	public static @NotNull List<Schulform> get() {
-		@NotNull Vector<Schulform> result = new Vector<>();
-		for (Schulform sf : Schulform.values())
+	public static @NotNull List<@NotNull Schulform> get() {
+		@NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		for (@NotNull Schulform sf : Schulform.values())
 			if ((sf.daten != null) && (sf.daten.nummer != null))
 				result.add(sf);
 		return result;
+	}
+	
+	/**
+	 * Gibt alle Schulformen dieser Aufzählung mit gymnasialer Oberstufe zurück.
+	 * 
+	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben. 
+	 */
+	public static @NotNull List<@NotNull Schulform> getMitGymOb() {
+		@NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		for (@NotNull Schulform sf : Schulform.values())
+			if (sf.daten.hatGymOb)
+				result.add(sf);
+		return result;		
 	}
 	
 }

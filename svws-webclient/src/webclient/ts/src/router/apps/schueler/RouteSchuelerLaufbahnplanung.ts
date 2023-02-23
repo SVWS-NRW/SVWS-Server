@@ -1,6 +1,6 @@
 import {
 	Abiturdaten, AbiturdatenManager, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
-	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Vector
+	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
 } from "@svws-nrw/svws-core-ts";
 import { shallowRef, ShallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -81,6 +81,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	public constructor() {
 		super("schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {

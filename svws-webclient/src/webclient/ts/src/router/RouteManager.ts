@@ -96,6 +96,9 @@ export class RouteManager {
 			return false;
 		if ((from_node === undefined) && (from.fullPath !== "/"))
 			return false;
+		// Prüfe zunächst, ob die aktuelle Schulform die Ziel-Route überhaupt erlaubt oder nicht
+		if (api.authenticated && !to_node.hatSchulform(api.schulform))
+			return false;
 		// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 		if (to_node.hidden(to.params))
 			return false;

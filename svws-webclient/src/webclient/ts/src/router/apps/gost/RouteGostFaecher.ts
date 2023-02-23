@@ -1,4 +1,4 @@
-import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+import { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, Schulform } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
@@ -69,6 +69,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public constructor() {
 		super("gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 	}

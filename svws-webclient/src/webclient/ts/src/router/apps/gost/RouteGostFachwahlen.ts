@@ -1,4 +1,4 @@
-import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
+import { GostJahrgang, GostStatistikFachwahl, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
@@ -15,6 +15,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 
 	public constructor() {
 		super("gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {

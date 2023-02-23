@@ -213,10 +213,23 @@ export class Schulform extends JavaObject {
 	 * 
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
-	public static get() : List<Schulform | null> {
-		let result : Vector<Schulform | null> = new Vector();
+	public static get() : List<Schulform> {
+		let result : Vector<Schulform> = new Vector();
 		for (let sf of Schulform.values()) 
 			if ((sf.daten !== null) && (sf.daten.nummer !== null)) 
+				result.add(sf);
+		return result;
+	}
+
+	/**
+	 * Gibt alle Schulformen dieser Aufzählung mit gymnasialer Oberstufe zurück.
+	 * 
+	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben. 
+	 */
+	public static getMitGymOb() : List<Schulform> {
+		let result : Vector<Schulform> = new Vector();
+		for (let sf of Schulform.values()) 
+			if (sf.daten.hatGymOb) 
 				result.add(sf);
 		return result;
 	}

@@ -1,3 +1,4 @@
+import { Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../../RouteGost";
@@ -9,6 +10,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 	public constructor() {
 		super("gost.klausurplanung.klausurdaten", "klausurdaten", SGostKlausurplanungDaten);
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klausurdaten";
 	}

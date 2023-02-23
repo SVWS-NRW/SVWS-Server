@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
 import { RouteManager } from "~/router/RouteManager";
@@ -15,6 +15,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public constructor() {
 		super("gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";

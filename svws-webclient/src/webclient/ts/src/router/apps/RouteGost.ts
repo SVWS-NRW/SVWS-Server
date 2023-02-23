@@ -1,4 +1,4 @@
-import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, Ref, ref, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { ListGost } from "~/apps/gost/ListGost";
@@ -75,6 +75,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	public constructor() {
 		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
+		super.setSchulformenErlaubt(Schulform.getMitGymOb());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
 		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));
