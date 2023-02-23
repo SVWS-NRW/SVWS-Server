@@ -40,26 +40,13 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
-		GostFachwahl, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { ApiStatus } from "~/components/ApiStatus";
+	import { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 
-	const props = defineProps<{
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-		updateKursSchuelerZuordnung: (idSchueler: number, idKursNeu: number, idKursAlt: number) => Promise<boolean>;
-		removeKursSchuelerZuordnung: (idSchueler: number, idKurs: number) => Promise<boolean>;
-		autoKursSchuelerZuordnung: (idSchueler : number) => Promise<void>;
-		gotoSchueler: (idSchueler: number) => Promise<void>;
-		gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
-		getDatenmanager: () => GostBlockungsdatenManager;
-		getErgebnismanager: () => GostBlockungsergebnisManager;
-		schueler: SchuelerListeEintrag;
-		apiStatus: ApiStatus;
-	}>();
+	const props = defineProps<GostUmwahlansichtProps>();
 
 	const is_dragging: Ref<boolean> = ref(false);
 

@@ -39,18 +39,11 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausurManager, GostKursklausur, List, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, KursListeEintrag, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
-	import { computed, ref, ComputedRef } from 'vue';
+	import { GostKlausurtermin, GostKursklausur } from '@svws-nrw/svws-core-ts';
+	import { computed, ref } from 'vue';
+	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
-	const props = defineProps<{
-		kursklausurmanager: () => GostKursklausurManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
-		erzeugeKlausurtermin: (quartal: number) => Promise<GostKlausurtermin>;
-		loescheKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
-		mapSchueler: Map<number, SchuelerListeEintrag>;
-	}>();
+	const props = defineProps<GostKlausurplanungSchienenProps>();
 
 	const quartal = ref(-1);
 	const chooseQuartal = (q: number) => quartal.value = q;

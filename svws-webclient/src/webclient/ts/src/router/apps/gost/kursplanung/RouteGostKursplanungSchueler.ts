@@ -7,6 +7,8 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 import { api } from "~/router/Api";
+import { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
+import { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -110,7 +112,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): KursplanungSchuelerAuswahlProps {
 		return {
 			setSchueler: routeGostKursplanung.data.gotoSchueler,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
@@ -120,7 +122,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostUmwahlansichtProps {
 		return {
 			addRegel: routeGostKursplanung.data.addRegel,
 			removeRegel: routeGostKursplanung.data.removeRegel,

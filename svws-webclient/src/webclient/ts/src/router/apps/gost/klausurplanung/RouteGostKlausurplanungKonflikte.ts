@@ -20,7 +20,7 @@ export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGo
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten.value
+			jahrgangsdaten: routeGost.data.jahrgangsdaten
 		}
 	}
 }

@@ -53,17 +53,11 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostFach, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 
-	const props = defineProps<{
-		setSchueler: (schueler: SchuelerListeEintrag) => Promise<void>;
-		getErgebnismanager: () => GostBlockungsergebnisManager;
-		schueler: SchuelerListeEintrag | undefined;
-		schuelerFilter: GostKursplanungSchuelerFilter;
-		faecherManager: GostFaecherManager;
-	}>();
+	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
 	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();
 	const fach_filter_toggle = props.schuelerFilter.fach_filter_toggle();
