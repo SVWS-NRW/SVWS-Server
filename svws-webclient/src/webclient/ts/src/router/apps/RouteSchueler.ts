@@ -1,6 +1,8 @@
-import { BenutzerKompetenz, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, SchuelerStammdaten, SchuelerStatus, Schulform, Schulgliederung, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostJahrgang, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, SchuelerStammdaten, SchuelerStatus, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, reactive, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import { Filter, SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
@@ -9,13 +11,10 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuel
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
-import { ListGost } from "~/apps/gost/ListGost";
-import { RouteManager } from "../RouteManager";
-import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
-import { Filter, SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
+import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
+import { RouteManager } from "../RouteManager";
 
 export class RouteDataSchueler {
 	auswahl: ShallowRef<SchuelerListeEintrag | undefined> = shallowRef(undefined);
@@ -26,7 +25,7 @@ export class RouteDataSchueler {
 	mapKlassen: Map<Number, KlassenListeEintrag> = new Map();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	mapKurse: Map<Number, KursListeEintrag> = new Map();
-	listeAbiturjahrgaenge: ListGost = new ListGost();
+	mapAbiturjahrgaenge: Map<number, GostJahrgang> = new Map();
 
 	public filter = reactive({
 		jahrgang: undefined,
@@ -114,28 +113,30 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			return this.getRoute(this.data.mapSchueler.values().next().value.id);
 		}
 		// Prüfe, ob die Schulform eine gymnasiale Oberstufe hat und lade ggf. die Abiturjahrgänge
-		if (api.schulform.daten.hatGymOb)
-			await this.data.listeAbiturjahrgaenge.update_list();
+		if (api.schulform.daten.hatGymOb) {
+			const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema)
+			const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
+			for (const j of listAbiturjahrgaenge)
+				mapAbiturjahrgaenge.set(j.abiturjahr, j);
+			this.data.mapAbiturjahrgaenge = mapAbiturjahrgaenge;
+		}
 		// aktualisiere die Klassen und erstelle Map
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKlassen: Map<number, KlassenListeEintrag> = new Map()
 		for (const k of listKlassen)
 			mapKlassen.set(k.id, k)
-		this.data.mapKlassen.clear();
 		this.data.mapKlassen = mapKlassen;
 		// aktualisiere die Kurse und erstelle Map
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapKurse: Map<number, KursListeEintrag> = new Map();
 		for (const k of listKurse)
 			mapKurse.set(k.id, k)
-		this.data.mapKurse.clear();
 		this.data.mapKurse = mapKurse;
 		// aktualisiere die Jahrgänge und erstelle Map
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map()
 		for (const j of listJahrgaenge)
 			mapJahrgaenge.set(j.id, j)
-		this.data.mapJahrgaenge.clear();
 		this.data.mapJahrgaenge = mapJahrgaenge;
 		// Die Auswahlliste wird als letztes geladen
 		await this.data.ladeListe();

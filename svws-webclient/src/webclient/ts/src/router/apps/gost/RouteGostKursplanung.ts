@@ -6,6 +6,8 @@ import { routeApp } from "~/router/RouteApp";
 import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
 import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
 import { api } from "~/router/Api";
+import { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
+import { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -39,7 +41,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
-		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
+		if ((abiturjahr === undefined) || (routeGost.data.auswahl.value !== undefined) && (abiturjahr !== routeGost.data.auswahl.value.abiturjahr))
 			return this.getRoute();
 		if (halbjahr === undefined) {
 			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -155,7 +157,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): GostKursplanungAuswahlProps {
 		return {
 			// Für die Halbjahresauswahl
 			setHalbjahr: this.data.gotoHalbjahr,
@@ -179,7 +181,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,

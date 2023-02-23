@@ -10,7 +10,7 @@ import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlau
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
 import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
-import { GostKlausurplanungAuswahlChildData } from "~/components/gost/klausurplanung/SGostKursplanungAuswahlProps";
+import { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKursplanungAuswahlProps";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -43,7 +43,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
-		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
+		if ((abiturjahr === undefined) || (routeGost.data.auswahl.value !== undefined) && (abiturjahr !== routeGost.data.auswahl.value.abiturjahr))
 			return routeGost.defaultChild!.getRoute(-1);
 		return true;
 	}
@@ -80,7 +80,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): GostKlausurplanungAuswahlProps {
 		return {
 			gotoHalbjahr: this.data.gotoHalbjahr,
 			halbjahr: this.data.halbjahr,

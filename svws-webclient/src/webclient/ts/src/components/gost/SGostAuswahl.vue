@@ -7,10 +7,10 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" id="abiturjahr" :footer="true">
-					<template #cell-abiturjahr="{ row }">
-						{{ row.abiturjahr === -1 ? '' : row.abiturjahr }}
-						<span v-if="(pending && row.abiturjahr === selected?.abiturjahr)" class="loading-spinner-dimensions">
+				<svws-ui-data-table :model-value:clicked="auswahl" clickable @update:clicked="setAbiturjahrgang" :items="rows" :columns="cols" footer>
+					<template #cell(abiturjahr)="{ value }">
+						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
+						<span v-if="(pending && value.abiturjahr === auswahl?.abiturjahr)" class="loading-spinner-dimensions">
 							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
 					<template #footer>
@@ -23,7 +23,7 @@
 							</template>
 						</svws-ui-dropdown>
 					</template>
-				</svws-ui-table>
+				</svws-ui-data-table>
 				<router-view name="gost_child_auswahl" />
 			</div>
 		</template>
@@ -32,23 +32,12 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgang, JahrgangsListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { routeGost } from "~/router/apps/RouteGost";
+	import { GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { ApiStatus } from "~/components/ApiStatus";
+	import { computed, ComputedRef } from "vue";
+	import { GostAuswahlProps } from "./SGostAuswahlProps";
 
-	const props = defineProps<{
-		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
-		item: GostJahrgang | undefined;
-		mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
-		abschnitte: Map<number, Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-		apiStatus: ApiStatus;
-	}>();
-
-	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
+	const props = defineProps<GostAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
@@ -56,7 +45,7 @@
 		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
 	const rows: ComputedRef<GostJahrgang[]> = computed(() => {
-		const list = [...routeGost.liste.liste];
+		const list = [...props.mapAbiturjahrgaenge.values()];
 		return list.sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
 	});
 

@@ -5,7 +5,7 @@ export interface GostKlausurplanungAuswahlChildData {
 	text: string,
 }
 
-export interface SGostKlausurplanungAuswahlProps {
+export interface GostKlausurplanungAuswahlProps {
 	gotoHalbjahr: (value: GostHalbjahr) => Promise<void>;
 	halbjahr: GostHalbjahr;
 	setChild: (value: GostKlausurplanungAuswahlChildData) => Promise<void>;

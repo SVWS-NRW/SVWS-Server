@@ -1,6 +1,7 @@
 import { BenutzerKompetenz, GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, Schulform } from "@svws-nrw/svws-core-ts";
 import { Ref, ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { api } from "~/router/Api";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
@@ -74,11 +75,15 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.abiturjahr === undefined) {
 			await this.data.onSelect(undefined);
 		} else {
-			const tmp = parseInt(to_params.abiturjahr as string);
-			await this.data.onSelect(this.parent!.liste.liste.find(s => s.abiturjahr === tmp));
+			const id = parseInt(to_params.abiturjahr);
+			await this.data.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
 		}
 	}
 
@@ -86,7 +91,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 		return { name: this.name, params: { abiturjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostFaecherProps {
 		return {
 			getFaecherManager: routeGost.data.getFaecherManager,
 			patchFach: routeGost.data.patchFach,
@@ -94,7 +99,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			addFachkombination: this.data.addFachkombination,
 			removeFachkombination: this.data.removeFachkombination,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten.value,
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
 			mapFachkombinationen: this.data.mapFachkombinationen
 		};
 	}

@@ -362,13 +362,14 @@ export class RouteDataGostKursplanung {
 		await this.gotoHalbjahr(this.halbjahr);
 	}
 
-	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<void> => {
+	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
 		if (this._state.value.datenmanager === undefined)
 			throw new Error("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
 		// TODO Anpassungen an den Managern und Commit
 		api.status.stop();
+		return true;
 	}
 
 	addRegel = async (regel: GostBlockungRegel): Promise<GostBlockungRegel | undefined> => {

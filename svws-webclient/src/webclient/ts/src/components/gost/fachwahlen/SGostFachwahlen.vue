@@ -6,11 +6,8 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgang, GostStatistikFachwahl, List } from "@svws-nrw/svws-core-ts";
+	import { GostFachwahlenProps } from "./SGostFachwahlenProps";
 
-	defineProps<{
-		jahrgang: GostJahrgang;
-		fachwahlen: List<GostStatistikFachwahl>;
-	}>();
+	defineProps<GostFachwahlenProps>();
 
 </script>

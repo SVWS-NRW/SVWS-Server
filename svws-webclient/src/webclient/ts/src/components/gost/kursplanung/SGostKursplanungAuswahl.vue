@@ -21,33 +21,14 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
+	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
 	import { useRouter } from 'vue-router';
 	import { api } from '~/router/Api';
-	import { ApiStatus } from '~/components/ApiStatus';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
+	import { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
-	const props = defineProps<{
-		setHalbjahr: (value: GostHalbjahr) => Promise<void>;
-		halbjahr: GostHalbjahr;
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		// ... zusätzlich für die Blockungsauswahl
-		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
-		removeBlockung: () => Promise<void>;
-		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
-		auswahlBlockung: GostBlockungListeneintrag | undefined;
-		mapBlockungen: Map<number, GostBlockungListeneintrag>;
-		apiStatus: ApiStatus;
-		// ... zusätzlich für die Ergebnisauswahl
-		getDatenmanager: () => GostBlockungsdatenManager;
-		removeErgebnis: (idErgebnis: number) => Promise<void>;
-		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
-		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
-		hatBlockung: boolean;
-		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
-	}>();
+	const props = defineProps<GostKursplanungAuswahlProps>();
 
 	const router = useRouter();
 

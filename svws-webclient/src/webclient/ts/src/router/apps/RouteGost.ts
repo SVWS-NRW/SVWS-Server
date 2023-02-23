@@ -1,10 +1,10 @@
-import { BenutzerKompetenz, GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostFach, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, Ref, ref, shallowRef, ShallowRef, triggerRef, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
-import { ListGost } from "~/apps/gost/ListGost";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { GostAppProps } from "~/components/gost/SGostAppProps";
+import { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
@@ -14,21 +14,31 @@ import { routeGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 
 export class RouteDataGost {
-	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
-	jahrgangsdaten: Ref<GostJahrgangsdaten | undefined> = ref(undefined);
+	auswahl: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
+	_jahrgangsdaten: Ref<GostJahrgangsdaten | undefined> = ref(undefined);
 	faecherManager: ShallowRef<GostFaecherManager> = shallowRef(new GostFaecherManager(new Vector()));
+	listAbiturjahrgaenge: List<GostJahrgang> = new Vector();
+	mapAbiturjahrgaenge: Map<number, GostJahrgang> = new Map();
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag> = new Map();
 
-	public async ladeJahrgaenge() {
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
-		for (const j of listJahrgaenge)
-			mapJahrgaenge.set(j.id, j);
-		this.mapJahrgaenge = mapJahrgaenge;
+	get jahrgangsdaten(): GostJahrgangsdaten {
+		if (this._jahrgangsdaten.value === undefined)
+			throw new Error("Unerwarteter Fehler: Schülerstammdaten nicht initialisiert");
+		return this._jahrgangsdaten.value;
+	}
+
+	public async ladeListe() {
+		this.listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema);
+		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
+		for (const l of this.listAbiturjahrgaenge)
+			mapAbiturjahrgaenge.set(l.abiturjahr, l);
+		this.mapAbiturjahrgaenge = mapAbiturjahrgaenge;
 	}
 
 	public get mapJahrgaengeOhneAbiJahrgang() : Map<number, JahrgangsListeEintrag> {
-		const jahrgaengeMitAbiturjahrgang = new Set(routeGost.liste.liste.map(r => r.jahrgang));
+		const jahrgaengeMitAbiturjahrgang = new Set();
+		for (const j of this.listAbiturjahrgaenge)
+			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
 		const map = new Map<number, JahrgangsListeEintrag>();
 		for (const j of this.mapJahrgaenge.values())
 			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel))
@@ -36,28 +46,44 @@ export class RouteDataGost {
 		return map;
 	}
 
+	public async onSelect(item?: GostJahrgang) {
+		if (item === this.auswahl.value)
+			return;
+		this.auswahl.value = item;
+		if (item === undefined) {
+			this.auswahl.value = undefined;
+			this._jahrgangsdaten.value = undefined;
+			this.faecherManager.value = new GostFaecherManager();
+		} else {
+			this.auswahl.value = item;
+			this._jahrgangsdaten.value = await api.server.getGostAbiturjahrgang(api.schema, item.abiturjahr);
+			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, item.abiturjahr);
+			this.faecherManager.value = new GostFaecherManager(listFaecher);
+		}
+	}
+
 	getFaecherManager = () => {
 		return this.faecherManager.value;
 	}
 
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
-		if (this.jahrgangsdaten.value === undefined)
+		if (this._jahrgangsdaten.value === undefined)
 			return false;
 		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr);
-		Object.assign(this.jahrgangsdaten.value, data);
+		Object.assign(this._jahrgangsdaten.value, data);
 		return true;
 	}
 
 	addAbiturjahrgang = async (idJahrgang: number) => {
 		const abiturjahr = await api.server.createGostAbiturjahrgang(api.schema, idJahrgang);
-		await routeGost.liste.update_list();
+		await this.ladeListe();
 		await RouteManager.doRoute(routeGost.getRoute(abiturjahr));
 	}
 
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
-		if (this.jahrgangsdaten.value === undefined)
+		if (this._jahrgangsdaten.value === undefined)
 			return false;
-		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this.jahrgangsdaten.value.abiturjahr, fach_id);
+		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this._jahrgangsdaten.value.abiturjahr, fach_id);
 		const fach = this.faecherManager.value.get(fach_id);
 		if (fach !== null)
 			Object.assign(fach, data);
@@ -65,16 +91,24 @@ export class RouteDataGost {
 		return true;
 	}
 
+	setAbiturjahrgang = async (value: GostJahrgang | undefined) => {
+		if (value === undefined) {
+			await RouteManager.doRoute({ name: routeGost.name, params: { } });
+			return;
+		}
+		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
+		await RouteManager.doRoute({ name: redirect_name, params: { id: value.abiturjahr } });
+	}
 }
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
 
 
-export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDataGost, RouteApp> {
+export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "/gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
 		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));
@@ -92,10 +126,10 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (!to_params.abiturjahr)
-			await this.liste.update_list();
-		const abiturjahr = !to_params.abiturjahr ? ((this.data.item.value !== undefined) ? this.data.item.value.abiturjahr : -1)
-			: parseInt(to_params.abiturjahr);
+		if (to_params.abiturjahr === undefined)
+			await this.data.ladeListe();
+		const abiturjahr = (to_params.abiturjahr !== undefined) ? parseInt(to_params.abiturjahr as string)
+			: ((this.data.auswahl.value !== undefined) ? this.data.auswahl.value.abiturjahr : -1);
 		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
 			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
 		return { name: redirect.name, params: { abiturjahr: abiturjahr }};
@@ -103,59 +137,47 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
-		await this.data.ladeJahrgaenge();
-		// Die Auswahlliste wird als letztes geladen
-		await this.liste.update_list();
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
+		for (const j of listJahrgaenge)
+			mapJahrgaenge.set(j.id, j);
+		this.data.mapJahrgaenge = mapJahrgaenge;		// Die Auswahlliste wird als letztes geladen
+		await this.data.ladeListe();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.abiturjahr === undefined) {
-			await this.onSelect(undefined);
+			await this.data.onSelect(undefined);
 		} else {
-			const abiturjahr = parseInt(to_params.abiturjahr as string);
-			await this.onSelect(this.liste.liste.find(s => s.abiturjahr === abiturjahr));
+			const abiturjahr = parseInt(to_params.abiturjahr);
+			await this.data.onSelect(this.data.mapAbiturjahrgaenge.get(abiturjahr));
 		}
 	}
 
-	protected async onSelect(item?: GostJahrgang) {
-		if (item === this.data.item.value)
-			return;
-		this.liste.ausgewaehlt = item;
-		if (item === undefined) {
-			this.data.item.value = undefined;
-			this.data.jahrgangsdaten.value = undefined;
-			this.data.faecherManager.value = new GostFaecherManager();
-		} else {
-			this.data.item.value = item;
-			this.data.jahrgangsdaten.value = await api.server.getGostAbiturjahrgang(api.schema, item.abiturjahr);
-			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, item.abiturjahr);
-			this.data.faecherManager.value = new GostFaecherManager(listFaecher);
-		}
-	}
-
-	protected getAuswahlComputedProperty(): WritableComputedRef<GostJahrgang | undefined> {
-		return this.getSelectorByAbiturjahr(this.liste);
-	}
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr ?? -1 }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): Record<string, any> {
+	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
-			addAbiturjahrgang: this.data.addAbiturjahrgang,
-			item: this.data.item.value,
+			auswahl: this.data.auswahl.value,
+			mapAbiturjahrgaenge: this.data.mapAbiturjahrgaenge,
 			mapJahrgaengeOhneAbiJahrgang: this.data.mapJahrgaengeOhneAbiJahrgang,
 			abschnitte: api.mapAbschnitte.value,
-			aktAbschnitt: routeApp.data.aktAbschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			apiStatus: api.status,
+			setAbschnitt: routeApp.data.setAbschnitt,
+			addAbiturjahrgang: this.data.addAbiturjahrgang,
+			setAbiturjahrgang: this.data.setAbiturjahrgang
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostAppProps {
 		return {
-			item: this.data.item.value
+			auswahl: this.data.auswahl.value,
 		};
 	}
 
@@ -171,51 +193,12 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			get:() => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				const abiturjahr = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.abiturjahr;
+				const abiturjahr = (this.data.auswahl.value === undefined) ? undefined : "" + this.data.auswahl.value.abiturjahr;
 				void router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
 			}
 		});
 		return selectedRoute;
 	}
-
-	/**
-     * Eine Hilfs-Methode zum Erzeugen der beschreibaren Computed-Property für die Auswahl einer
-     * Route eines Routen-Eintrags in der zugehörigen vue-Komponente.
-     *
-     * @param auswahl   die Liste der Auswahl
-     *
-     * @returns die Computed-Property
-     */
-	public getSelectorByAbiturjahr(auswahl: ListGost) : WritableComputedRef<GostJahrgang | undefined> {
-		const router = useRouter();
-		const route = useRoute();
-		const name: string = this.name;
-		const redirect_name: string = (this.selectedChild === undefined) ? name : this.selectedChild.name;
-
-		const selected = computed({
-			get(): GostJahrgang | undefined {
-				if (route.params.abiturjahr === undefined)
-					return undefined;
-				let tmp = auswahl.ausgewaehlt;
-				if ((tmp === undefined) || (tmp.abiturjahr.toString() !== route.params.abiturjahr))
-					tmp = auswahl.liste.find(s => s.abiturjahr.toString() === route.params.abiturjahr);
-				return tmp;
-			},
-			set(value: GostJahrgang | undefined) {
-				auswahl.ausgewaehlt = value;
-				const from_name = route.name?.toString() || "";
-				if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
-					const params = {...route.params};
-					params.abiturjahr = "" + value?.abiturjahr;
-					void router.push({ name: from_name, params: params });
-				} else {
-					void router.push({ name: redirect_name, params: { abiturjahr: value?.abiturjahr } });
-				}
-			}
-		});
-		return selected;
-	}
-
 }
 
 export const routeGost = new RouteGost();

@@ -87,8 +87,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			if (routeSchueler.data.auswahl.value === undefined)
 				return false;
 			const abiturjahr = routeSchueler.data.auswahl.value?.abiturjahrgang;
-			const jahrgang = routeSchueler.data.listeAbiturjahrgaenge.liste.find(j => (j.abiturjahr === abiturjahr));
-			return (jahrgang === undefined);
+			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
 		}
 	}
 

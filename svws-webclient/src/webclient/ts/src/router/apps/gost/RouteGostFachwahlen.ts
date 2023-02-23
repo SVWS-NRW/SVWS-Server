@@ -1,5 +1,6 @@
 import { BenutzerKompetenz, GostJahrgang, GostStatistikFachwahl, List, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { api } from "~/router/Api";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
@@ -18,7 +19,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {
-			return this.checkHidden(routeGost.data.item.value);
+			return this.checkHidden(routeGost.data.auswahl.value);
 		}
 	}
 
@@ -27,22 +28,31 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to.name === this.name) {
 			if (to_params.abiturjahr === undefined)
 				return false;
-			const jahrgang = this.parent!.liste.liste.find(elem => elem.abiturjahr.toString() === to_params.abiturjahr);
+			if (this.parent === undefined)
+				throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			const id = parseInt(to_params.abiturjahr);
+			const jahrgang = this.parent.data.mapAbiturjahrgaenge.get(id)
 			if (this.checkHidden(jahrgang))
-				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: this.parent!.liste.liste.at(0)?.abiturjahr }};
+				return { name: this.parent.defaultChild!.name, params: { abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
 		}
 		return true;
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.parent === undefined)
+			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.abiturjahr === undefined) {
 			await this.onSelect(undefined);
 		} else {
-			const tmp = parseInt(to_params.abiturjahr as string);
-			await this.onSelect(this.parent!.liste.liste.find(s => s.abiturjahr === tmp));
+			const id = parseInt(to_params.abiturjahr);
+			await this.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
 		}
 	}
 
@@ -62,9 +72,9 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		return { name: this.name, params: { abiturjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {
 		return {
-			jahrgang: routeGost.data.item.value,
+			jahrgang: routeGost.data.jahrgangsdaten,
 			fachwahlen: this.data.fachwahlen
 		};
 	}

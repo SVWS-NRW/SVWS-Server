@@ -10,13 +10,10 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { GostStammdatenProps } from "./SGostStammdatenProps";
 
-	const props = defineProps<{
-		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-		jahrgangsdaten: GostJahrgangsdaten;
-	}>();
+	const props = defineProps<GostStammdatenProps>();
 
 	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten.abiturjahr > 0));
 

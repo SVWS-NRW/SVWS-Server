@@ -22,9 +22,9 @@
 
 	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
 	import { DataTableColumn } from '@svws-nrw/svws-ui';
-	import { SGostKlausurplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
+	import { GostKlausurplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
-	const props = defineProps<SGostKlausurplanungAuswahlProps>();
+	const props = defineProps<GostKlausurplanungAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "text", label: "Ansicht", sortable: false },

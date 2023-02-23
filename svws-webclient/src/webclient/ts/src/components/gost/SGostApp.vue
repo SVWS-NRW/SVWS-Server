@@ -18,26 +18,23 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { RouterView } from "vue-router";
-
 	import { routeGost } from "~/router/apps/RouteGost";
+	import { GostAppProps } from "./SGostAppProps";
 
-	const props = defineProps<{
-		item: GostJahrgang | undefined;
-	}>();
+	const props = defineProps<GostAppProps>();
 
 	const selectedRoute = routeGost.getChildRouteSelector();
 	const children_hidden = routeGost.children_hidden();
 
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.jahrgang ?? undefined;
+		return props.auswahl?.jahrgang ?? undefined;
 	});
 
 	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.bezeichnung ?? undefined;
+		return props.auswahl?.bezeichnung ?? undefined;
 	});
 
 </script>
