@@ -28,12 +28,12 @@
 </template>
 
 <script setup lang="ts">
-
 	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostKursblockungRegelTyp,
 		List, SchuelerListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { routeApp } from "~/router/RouteApp";
+	import { computed, ComputedRef } from "vue";
 	import { ApiStatus } from "~/components/ApiStatus";
+
+	type DndData = { id: number, fachID: number, kursart: number };
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -45,13 +45,12 @@
 		schueler: SchuelerListeEintrag;
 		apiStatus: ApiStatus;
 		allowRegeln: boolean;
+		dragAndDropData?: DndData;
 	}>();
 
-
-	const drag_data: WritableComputedRef<{ id: number, fachID: number, kursart: number } | undefined> = computed({
-		get: () => routeApp.data.drag_and_drop_data.value,
-		set: (value) => routeApp.data.drag_and_drop_data.value = value
-	});
+	const emit = defineEmits<{
+		(e: 'dnd', data: DndData | undefined): void;
+	}>()
 
 	const fach_gewaehlt: ComputedRef<boolean> = computed(() =>
 		props.getErgebnismanager().getOfSchuelerHatFachwahl(props.schueler.id, props.kurs.fachID, props.kurs.kursart)
@@ -67,9 +66,9 @@
 	});
 
 	const is_drop_zone: ComputedRef<boolean> = computed(() => {
-		if (!drag_data.value)
+		if (!props.dragAndDropData)
 			return false
-		const { id, fachID, kursart } = drag_data.value;
+		const { id, fachID, kursart } = props.dragAndDropData;
 		if (id === props.kurs.id)
 			return false;
 		if ((fachID !== props.kurs.fachID) || (kursart !== props.kurs.kursart))
@@ -162,14 +161,14 @@
 
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "") as { id: number, fachID: number, kursart: number } | undefined;
+		const data = JSON.parse(transfer?.getData('text/plain') || "") as DndData;
 		if (!data)
 			return;
-		drag_data.value = data
+		emit('dnd', data);
 	}
 
 	function drag_ended() {
-		drag_data.value = undefined;
+		emit('dnd', undefined);
 	}
 
 	async function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {

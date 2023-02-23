@@ -16,8 +16,9 @@
 
 	import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostFach, GostFachwahl, GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { routeApp } from "~/router/RouteApp";
+	import { computed, ComputedRef } from "vue";
+
+	type DndData = { id: number, fachID: number, kursart: number };
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -25,7 +26,12 @@
 		fach: GostFachwahl;
 		kurse: Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>;
 		schuelerId: number;
+		dragAndDropData?: DndData;
 	}>();
+
+	const emit = defineEmits<{
+		(e: 'dnd', data: DndData | undefined): void;
+	}>()
 
 	const kursart: ComputedRef<string | undefined> = computed(() =>
 		props.getErgebnismanager().getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel);
@@ -55,15 +61,6 @@
 		return { 'background-color': bgColor };
 	});
 
-	const drag_data: WritableComputedRef<{ id: number, fachID: number, kursart: number } | undefined> = computed({
-		get(): { id: number, fachID: number, kursart: number } {
-			return routeApp.data.drag_and_drop_data.value;
-		},
-		set(value: { id: number, fachID: number, kursart: number } | undefined) {
-			routeApp.data.drag_and_drop_data.value = value
-		}
-	});
-
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	function get_kurs_name(): String {
@@ -74,14 +71,14 @@
 
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "") as { id: number, fachID: number, kursart: number } | undefined;
+		const data = JSON.parse(transfer?.getData('text/plain') || "");
 		if (data === undefined)
 			return;
-		drag_data.value = data
+		emit('dnd', data);
 	}
 
 	function drag_ended() {
-		drag_data.value = undefined;
+		emit('dnd', undefined);
 	}
 
 </script>

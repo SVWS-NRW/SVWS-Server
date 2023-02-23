@@ -30,7 +30,6 @@ export class RouteDataApp {
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag> = new Map();
 
 	public user_config: Ref<Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]>> = ref(new Map());
-	public drag_and_drop_data: Ref<any> = ref(undefined);
 
 	aktAbschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
 		get: () => {

@@ -11,7 +11,7 @@
 					<div class="">
 						<table class="v-table--complex table-fixed">
 							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
-								:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" />
+								:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
 						</table>
 						<template v-if="!blockung_aktiv">
 							<div class="flex items-center justify-center" :class="{'bg-red-400 text-white': active}">
@@ -30,7 +30,7 @@
 						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"
 							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
-							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
+							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
 					</table>
 				</div>
 			</div>
@@ -44,6 +44,8 @@
 		GostFachwahl, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { ApiStatus } from "~/components/ApiStatus";
+
+	type DndData = { id: number, fachID: number, kursart: number };
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -59,7 +61,9 @@
 		apiStatus: ApiStatus;
 	}>();
 
-	const is_dragging: Ref<boolean> = ref(false)
+	const is_dragging: Ref<boolean> = ref(false);
+
+	const dragAndDropData: Ref<DndData | undefined> = ref(undefined);
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1);
 
@@ -104,6 +108,10 @@
 
 	function routeSchueler() {
 		void props.gotoSchueler(props.schueler.id);
+	}
+
+	function updateDragAndDropData(data: DndData | undefined) {
+		dragAndDropData.value = data;
 	}
 
 </script>

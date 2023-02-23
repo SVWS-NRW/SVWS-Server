@@ -10,7 +10,7 @@
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:api-status="apiStatus" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
-			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" />
+			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="emit('dnd', $event)" />
 	</tr>
 </template>
 
@@ -20,6 +20,8 @@
 		GostBlockungsergebnisSchiene, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { ApiStatus } from "~/components/ApiStatus";
+
+	type DndData = { id: number, fachID: number, kursart: number };
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -31,6 +33,11 @@
 		selected: SchuelerListeEintrag;
 		apiStatus: ApiStatus;
 		allowRegeln: boolean;
+		dragAndDropData?: DndData;
+	}>();
+
+	const emit = defineEmits<{
+		(e: 'dnd', data: DndData | undefined): void;
 	}>();
 
 	const anzahl_schueler: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfSchieneAnzahlSchueler(props.schiene.id));

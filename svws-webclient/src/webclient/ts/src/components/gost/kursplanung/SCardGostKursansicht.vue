@@ -68,7 +68,7 @@
 						<th class="text-center">Diff</th>
 						<!--Schienen-->
 						<template v-if="allow_regeln">
-							<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" />
+							<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" :drag-and-drop-data="dragAndDropData" @dnd="dragAndDropData=$event" />
 						</template>
 						<th v-else :colspan="schienen.size()" class="text-center normal-case font-normal text-black/50">Regeln können nicht in Ergebnissen erstellt werden</th>
 					</tr>
@@ -161,6 +161,7 @@
 	}>();
 
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
+	const dragAndDropData: Ref<{ schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined> = ref(undefined);
 
 	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
 		computed({

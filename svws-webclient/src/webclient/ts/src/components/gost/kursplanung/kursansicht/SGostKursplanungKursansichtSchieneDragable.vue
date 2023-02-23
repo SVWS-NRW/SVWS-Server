@@ -1,6 +1,5 @@
 <template>
 	<svws-ui-drop-data class="text-center"
-		:class="{'bg-yellow-200': drag_data.schiene && drag_data.schiene?.id !== schiene.id }"
 		tag="td"
 		@drop="openModal">
 		<svws-ui-drag-data :key="schiene.id"
@@ -9,8 +8,8 @@
 			class="select-none cursor-grab"
 			:draggable="true"
 			@drag-start="drag_started"
-			@drag-end="drag_data.schiene=undefined">
-			<svws-ui-icon>
+			@drag-end="emit('dnd', undefined)">
+			<svws-ui-icon	:class="{'bg-yellow-200': is_drop_zone }">
 				<i-ri-lock-unlock-line class="inline-block" />
 			</svws-ui-icon>
 		</svws-ui-drag-data>
@@ -21,45 +20,48 @@
 <script setup lang="ts">
 
 	import { GostBlockungRegel, GostBlockungSchiene } from "@svws-nrw/svws-core-ts";
-	import { computed, ref, Ref } from "vue";
-	import { routeApp } from "~/router/RouteApp";
+	import { computed, ComputedRef, ref, Ref } from "vue";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		schiene:  GostBlockungSchiene;
+		dragAndDropData?: { schiene: GostBlockungSchiene | undefined, kurs?: undefined };
 	}>();
 
+	const emit = defineEmits<{
+		(e: 'dnd', data: { schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined): void;
+	}>()
 	const isModalOpen_RegelSchienen: Ref<boolean> = ref(false);
 
 	const von: Ref<GostBlockungSchiene> = ref(props.schiene)
 	const bis: Ref<GostBlockungSchiene> = ref(props.schiene)
 
-	const drag_data = computed({
-		get(): { schiene: GostBlockungSchiene | undefined; kurs?: undefined } {
-			return routeApp.data.drag_and_drop_data.value || {schiene: undefined} as { schiene: GostBlockungSchiene | undefined };
-		},
-		set(value: {schiene: GostBlockungSchiene|undefined; kurs?: undefined}) {
-			routeApp.data.drag_and_drop_data.value = value
-		}
+	const is_drop_zone: ComputedRef<boolean> = computed(() => {
+		if (props.dragAndDropData === undefined)
+			return false
+		const { schiene } = props.dragAndDropData;
+		if (schiene === undefined || schiene.id === props.schiene.id)
+			return false;
+		return true;
 	});
 
-	function openModal() {
-		if (drag_data.value.kurs)
+	function openModal(data: { schiene: GostBlockungSchiene | undefined, kurs?: undefined }) {
+		if (data === undefined || data.kurs !== undefined)
 			return;
-		if (drag_data.value?.schiene && props.schiene.id !== drag_data.value?.schiene.id) {
-			von.value = drag_data.value.schiene;
+		if (data.schiene && props.schiene.id !== data.schiene.id) {
+			von.value = data.schiene;
 			bis.value = props.schiene;
 			isModalOpen_RegelSchienen.value = true;
-			drag_data.value.schiene = undefined
+			data.schiene = undefined
 		}
 	}
 
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "") as { schiene: GostBlockungSchiene | undefined };
-		if (!data)
+		const data = JSON.parse(transfer?.getData('text/plain') || "");
+		if (data === undefined)
 			return;
-		drag_data.value = data;
+		emit("dnd", data);
 	}
 
 </script>
