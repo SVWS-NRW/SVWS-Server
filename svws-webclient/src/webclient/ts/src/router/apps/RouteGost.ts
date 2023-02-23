@@ -89,11 +89,13 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (to_params.abiturjahr === undefined)
+		if (!to_params.abiturjahr)
 			await this.liste.update_list();
-		const abiturjahr = (to_params.abiturjahr !== undefined) ? parseInt(to_params.abiturjahr as string)
-			: ((this.data.item.value !== undefined) ? this.data.item.value.abiturjahr : -1);
+		const abiturjahr = !to_params.abiturjahr ? ((this.data.item.value !== undefined) ? this.data.item.value.abiturjahr : -1)
+			: parseInt(to_params.abiturjahr);
 		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
 			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
 		return { name: redirect.name, params: { abiturjahr: abiturjahr }};

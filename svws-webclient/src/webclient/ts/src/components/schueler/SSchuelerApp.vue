@@ -1,15 +1,15 @@
 <template>
-	<div v-if="visible" class="flex w-full flex-col h-full">
+	<div v-if="stammdaten !== undefined" class="flex w-full flex-col h-full">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4">
-					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''" />
+					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined? 'Foto ' + vorname + ' ' + nachname : ''" />
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge type="light" title="ID">
 						<i-ri-fingerprint-line />
-						{{ stammdaten.id }}
+						{{ stammdaten === undefined ? "" : stammdaten.id }}
 					</svws-ui-badge>
 					<br>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
@@ -42,25 +42,21 @@
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return props.stammdaten.foto ?? undefined;
+		return props.stammdaten?.foto ?? undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten.nachname;
+		return props.stammdaten?.nachname;
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten.vorname;
+		return props.stammdaten?.vorname;
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
 		if (props.auswahl === undefined)
 			return false;
 		return props.mapKlassen.get(props.auswahl.idKlasse)?.kuerzel ?? false;
-	});
-
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden());
 	});
 
 </script>

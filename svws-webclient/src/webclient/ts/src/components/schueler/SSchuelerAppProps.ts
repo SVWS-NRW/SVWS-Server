@@ -2,6 +2,6 @@ import { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag } from "@
 
 export interface SchuelerAppProps {
 	auswahl: SchuelerListeEintrag | undefined;
-	stammdaten: SchuelerStammdaten;
+	stammdaten: SchuelerStammdaten | undefined;
 	mapKlassen: Map<Number, KlassenListeEintrag>;
 }

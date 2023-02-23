@@ -103,7 +103,10 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
-		if (to_params.id === undefined) {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		if (id === undefined) {
 			await this.data.ladeListe();
 			if (this.data.mapSchueler.size === 0)
 				// TODO Handhabung bei neuer Schule -> Schülerliste leer
@@ -141,12 +144,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.data.mapSchueler.get(id));
-		}
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		await this.data.onSelect((id === undefined) ? undefined : this.data.mapSchueler.get(id));
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
@@ -175,7 +174,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
 			auswahl: this.data.auswahl.value,
-			stammdaten: this.data.stammdaten,
+			stammdaten: this.data.auswahl.value === undefined ? undefined : this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
 		};
 	}
