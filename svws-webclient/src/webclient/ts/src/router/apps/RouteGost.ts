@@ -23,7 +23,7 @@ export class RouteDataGost {
 
 	get jahrgangsdaten(): GostJahrgangsdaten {
 		if (this._jahrgangsdaten.value === undefined)
-			throw new Error("Unerwarteter Fehler: Schülerstammdaten nicht initialisiert");
+			throw new Error("Unerwarteter Fehler: Jahrgangsdaten nicht initialisiert");
 		return this._jahrgangsdaten.value;
 	}
 
