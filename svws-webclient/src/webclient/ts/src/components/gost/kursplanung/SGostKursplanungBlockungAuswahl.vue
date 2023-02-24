@@ -47,10 +47,9 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { api } from '~/router/Api';
-	import { ApiPendingData, ApiStatus } from '~/components/ApiStatus';
+	import { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
@@ -63,6 +62,7 @@
 		apiStatus: ApiStatus;
 		// ... zusätzlich für die Ergebnisauswahl
 		getDatenmanager: () => GostBlockungsdatenManager;
+		rechneGostBlockung: () => Promise<List<number>>;
 		removeErgebnis: (idErgebnis: number) => Promise<void>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
@@ -98,14 +98,7 @@
 		const id = props.auswahlBlockung?.id;
 		if (id === undefined)
 			return;
-		try {
-			props.apiStatus.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
-			await api.server.rechneGostBlockung(api.schema, id, 5000)
-			props.apiStatus.stop();
-		} catch (e) {
-			props.apiStatus.stop(e instanceof Error ? e : undefined);
-		}
-		return;
+		await props.rechneGostBlockung();
 	}
 
 	async function patch_blockung(value: string, idBlockung : number) {

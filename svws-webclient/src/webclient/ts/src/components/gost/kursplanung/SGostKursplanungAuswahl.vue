@@ -15,7 +15,7 @@
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnis="removeErgebnis" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
-			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" />
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung" />
 	</div>
 </template>
 
@@ -23,14 +23,10 @@
 
 	import { GostHalbjahr } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef } from 'vue';
-	import { useRouter } from 'vue-router';
-	import { api } from '~/router/Api';
-	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 	import { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
-	const router = useRouter();
 
 	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = row.id === props.halbjahr.id;
@@ -46,9 +42,7 @@
 	async function blockung_hinzufuegen() {
 		if (props.jahrgangsdaten?.abiturjahr === undefined)
 			return;
-		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, props.jahrgangsdaten.abiturjahr, props.halbjahr.id);
-		const abiturjahr = props.jahrgangsdaten.abiturjahr;
-		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.id, idblockung: result.id } });
+		await props.addBlockung();
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {

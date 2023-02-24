@@ -1,5 +1,6 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
+import { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -351,6 +352,12 @@ export class RouteDataGostKursplanung {
 		this._state.value = Object.assign({ ... this._state.value }, { auswahlSchueler: value });
 	}
 
+	addBlockung = async () => {
+		api.status.start();
+		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+		api.status.stop();
+		await this.gotoBlockung(result);
+	}
 
 	removeBlockung = async () => {
 		if (!this.hatBlockung)
@@ -601,6 +608,21 @@ export class RouteDataGostKursplanung {
 		}
 		this.commit();
 		api.status.stop();
+	}
+
+	rechneGostBlockung = async () => {
+		const id = this.auswahlBlockung.id;
+		let liste: List<number> = new Vector();
+		try {
+			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
+			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
+			api.status.stop();
+		} catch (e) {
+			api.status.stop(e instanceof Error ? e : undefined);
+			throw e;
+		}
+		// TODO Ergebnisse aktualisieren...
+		return liste;
 	}
 
 	removeErgebnis = async (idErgebnis: number) => {

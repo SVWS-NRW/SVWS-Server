@@ -164,6 +164,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			jahrgangsdaten: this.data.jahrgangsdaten,
 			halbjahr: this.data.halbjahr,
 			// ... und zusätzlich für die Blockungsauswahl
+			addBlockung: this.data.addBlockung,
 			removeBlockung: this.data.removeBlockung,
 			patchBlockung: this.data.patchBlockung,
 			setAuswahlBlockung: this.data.gotoBlockung,
@@ -172,6 +173,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			apiStatus: api.status,
 			// ... und zusätzlich für die Ergebnisauswahl
 			getDatenmanager: () => this.data.datenmanager,
+			rechneGostBlockung: this.data.rechneGostBlockung,
 			removeErgebnis: this.data.removeErgebnis,
 			removeErgebnisse: this.data.removeErgebnisse,
 			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,

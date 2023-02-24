@@ -1,4 +1,4 @@
-import { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag } from "@svws-nrw/svws-core-ts";
+import { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List } from "@svws-nrw/svws-core-ts";
 import { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {
@@ -7,6 +7,7 @@ export interface GostKursplanungAuswahlProps {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	// ... zusätzlich für die Blockungsauswahl
 	patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
+	addBlockung: () => Promise<void>;
 	removeBlockung: () => Promise<void>;
 	setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
@@ -14,6 +15,7 @@ export interface GostKursplanungAuswahlProps {
 	apiStatus: ApiStatus;
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;
+	rechneGostBlockung: () => Promise<List<number>>;
 	removeErgebnis: (idErgebnis: number) => Promise<void>;
 	removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 	ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;

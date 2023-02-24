@@ -40,6 +40,11 @@ export class RouteDataKatalogReligionen {
 		const redirect_name: string = (routeKatalogReligion.selectedChild === undefined) ? routeKatalogReligionDaten.name : routeKatalogReligion.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
+
+	addReligion = async (religion: ReligionEintrag) => {
+		const res = await api.server.createReligion(religion, api.schema);
+		await RouteManager.doRoute({ name: routeKatalogReligionDaten.name, params: { id: res.id } });
+	}
 }
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 const SReligionenApp = () => import("~/components/kataloge/religionen/SReligionenApp.vue")
@@ -92,6 +97,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		return {
 			auswahl: this.data.auswahl.value,
 			listReligionen: this.data.listReligionen,
+			addReligion: this.data.addReligion,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt,

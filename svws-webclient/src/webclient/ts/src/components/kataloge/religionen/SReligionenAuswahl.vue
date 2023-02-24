@@ -47,8 +47,6 @@
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef, reactive, ref } from "vue";
-	import { api } from "~/router/Api";
-	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 	import { router } from "~/router/RouteManager";
 	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 
@@ -67,12 +65,9 @@
 	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
 	async function saveEntries() {
-		//TODO  Den Attributswert von reli_neu.id von 0 auf null setzen.
 		if (reli_neu.kuerzel) {
-			await api.server.createReligion(reli_neu, api.schema);
 			modalAdd.value.closeModal();
-			// TODO aus Komponente entfernen
-			await routeKatalogReligion.data.ladeListe();
+			await props.addReligion(reli_neu);
 		} else {
 			alert("Kürzel darf nicht leer sein");
 		}
