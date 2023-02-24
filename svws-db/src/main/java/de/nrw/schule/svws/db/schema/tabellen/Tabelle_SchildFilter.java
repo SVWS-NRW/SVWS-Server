@@ -62,7 +62,7 @@ public class Tabelle_SchildFilter extends SchemaTabelle {
 	 */
 	public Tabelle_SchildFilter() {
 		super("SchildFilter", SchemaRevisionen.REV_0);
-		setMigrate(true);
+		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild");
