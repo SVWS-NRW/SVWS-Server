@@ -70,7 +70,7 @@ export class RouteDataGostKursplanung {
 		return this._state.value.abiturjahr;
 	}
 
-	public async setAbiturjahr(abiturjahr: number | undefined) {
+	public setAbiturjahr = async (abiturjahr: number | undefined) => {
 		if (abiturjahr === this._state.value.abiturjahr)
 			return;
 		if (abiturjahr === undefined) {
@@ -144,7 +144,7 @@ export class RouteDataGostKursplanung {
 		return this._state.value.halbjahr;
 	}
 
-	public async setHalbjahr(halbjahr: GostHalbjahr): Promise<boolean> {
+	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (halbjahr === this._state.value.halbjahr)
@@ -201,7 +201,7 @@ export class RouteDataGostKursplanung {
 		return this._state.value.auswahlBlockung;
 	}
 
-	public async setAuswahlBlockung(value: GostBlockungListeneintrag | undefined) {
+	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
@@ -270,7 +270,7 @@ export class RouteDataGostKursplanung {
 		return this._state.value.auswahlErgebnis;
 	}
 
-	public async setAuswahlErgebnis(value: GostBlockungsergebnisListeneintrag | undefined) {
+	public setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
