@@ -43,8 +43,7 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		_abiturjahr = abiturjahr;
 	}
 
-	@Override
-	public Response getAll() {
+	@Override public Response getAll() {
 		return this.getList();
 	}
 
@@ -89,6 +88,7 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kursklausuren.stream().forEach(k -> {
 			GostKursklausur kk = new GostKursklausur();
 			DTOGostKlausurenVorgaben v = mapVorgaben.get(k.Vorgabe_ID);
+			DTOKurs kurs = mapKurse.get(k.Kurs_ID);
 			kk.id = k.ID;
 			kk.idVorgabe = k.Vorgabe_ID;
 			kk.abijahr = v.Abi_Jahrgang;
@@ -100,8 +100,10 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 			kk.quartal = v.Quartal;
 			kk.halbjahr = v.Halbjahr.id;
 			kk.idKurs = k.Kurs_ID;
+			kk.kursKurzbezeichnung = kurs.KurzBez;
+			kk.idLehrer = kurs.Lehrer_ID;
 			try {
-				kk.kursSchiene = Integer.parseInt(mapKurse.get(k.Kurs_ID).Schienen);
+				kk.kursSchiene = Integer.parseInt(kurs.Schienen);
 			} catch (NumberFormatException nfe) {
 				// TODO ExceptionHandling?
 			}
@@ -118,14 +120,12 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return daten;
 	}
 
-	@Override
-	public Response get(Long halbjahr) {
+	@Override public Response get(Long halbjahr) {
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(halbjahr.intValue())).build();
 	}
 
-	@Override
-	public Response patch(Long id, InputStream is) {
+	@Override public Response patch(Long id, InputStream is) {
 		Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
@@ -153,11 +153,14 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 							throw OperationError.BAD_REQUEST.exception();
 					}
 					case "idTermin" -> {
-						DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, kursklausur.Termin_ID);
-						DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
-						if (termin.Quartal != vorgabe.Quartal)
-							throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
-						kursklausur.Termin_ID = JSONMapper.convertToLong(value, true);
+						Long newTermin = JSONMapper.convertToLong(value, true);
+						if (newTermin != null) {
+							DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
+							DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
+							if (termin.Quartal != vorgabe.Quartal)
+								throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
+						}
+						kursklausur.Termin_ID = newTermin;
 					}
 					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToString(value, true, false);
 
@@ -183,8 +186,7 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-	@Override
-	public Response getList() {
+	@Override public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,4 +1,4 @@
-import { GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostFaecherManager, GostKlausurtermin, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -176,6 +176,33 @@ export class RouteDataGostKlausurplanung {
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
+	}
+
+	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
+		api.status.start();
+		const termin = await api.server.createGostKlausurenKlausurtermin(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+		this.kursklausurmanager.addTermin(termin);
+		this.commit();
+		api.status.stop();
+		return termin;
+	}
+
+	loescheKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
+		api.status.start();
+		const result = await api.server.deleteGostKlausurenKlausurtermin(api.schema, termin.id);
+		this.kursklausurmanager.removeTermin(termin);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	setTerminToKursklausur = async (idTermin: number | null, klausur: GostKursklausur): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
+		this.kursklausurmanager.updateKursklausur(klausur);
+		this.commit();
+		api.status.stop();
+		return true;
 	}
 
 }

@@ -1,7 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
-import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
@@ -18,7 +17,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Die Klausurtermine, die im Manager vorhanden sind 
 	 */
-	private readonly _termine : List<GostKlausurtermin> | null;
+	private readonly _termine : List<GostKlausurtermin> = new Vector();
 
 	/**
 	 * Eine Map quartal -> Liste von GostKlausurterminen 
@@ -85,14 +84,12 @@ export class GostKursklausurManager extends JavaObject {
 			let klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
 			let termine : List<GostKlausurtermin> = cast_java_util_List(__param1);
 			this._klausuren = klausuren;
-			this._termine = termine;
 			this.helpKonstruktor();
-			for (let t of this._termine) {
+			for (let t of termine) {
 				this.addTermin(t);
 			}
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
 			let klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
-			this._termine = null;
 			this._klausuren = klausuren;
 			this.helpKonstruktor();
 		} else throw new Error('invalid method overload');
@@ -149,10 +146,14 @@ export class GostKursklausurManager extends JavaObject {
 		let terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin === null ? -1 : klausur.idTermin);
 		if (terminNeuKlausuren === null || !terminNeuKlausuren.contains(klausur)) {
 			let oldTerminId : number = -2;
-			for (let entry of this._mapTerminKursklausuren.entrySet()) {
-				if (entry.getValue().contains(klausur)) {
-					oldTerminId = entry.getKey().valueOf();
-					entry.getValue().remove(klausur);
+			for (let key of this._mapTerminKursklausuren.keySet()) {
+				let entry : Vector<GostKursklausur> | null = this._mapTerminKursklausuren.get(key);
+				if (entry === null) {
+				} else {
+					if (entry.contains(klausur)) {
+						oldTerminId = key.valueOf();
+						entry.remove(klausur);
+					}
 				}
 			}
 			let quartalMap : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
@@ -186,6 +187,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public addTermin(termin : GostKlausurtermin) : void {
+		this._termine.add(termin);
 		this._mapIdKlausurtermin.put(termin.id, termin);
 		let listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
 		if (listKlausurtermineMapQuartalKlausurtermine === null) {
@@ -193,6 +195,28 @@ export class GostKursklausurManager extends JavaObject {
 			this._mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
 		listKlausurtermineMapQuartalKlausurtermine.add(termin);
+	}
+
+	/**
+	 * Löscht einen Klausurtermin aus den internen Strukturen
+	 * 
+	 * @param termin das GostKlausurtermin-Objekt
+	 */
+	public removeTermin(termin : GostKlausurtermin) : void {
+		let listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
+		if (listKlausurtermineMapQuartalKlausurtermine === null) {
+			return;
+		}
+		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
+		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(termin.id);
+		if (listKlausurenZuTermin !== null) {
+			for (let k of listKlausurenZuTermin) {
+				k.idTermin = null;
+				this.addKlausurToInternalMaps(k);
+			}
+		}
+		this._termine.remove(termin);
+		this._mapIdKlausurtermin.remove(termin.id);
 	}
 
 	/**
@@ -366,6 +390,28 @@ export class GostKursklausurManager extends JavaObject {
 		let konflikte : List<number> = new Vector(schuelerIds);
 		konflikte.retainAll(klausur.schuelerIds);
 		return konflikte;
+	}
+
+	/**
+	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
+	 * wird die Anzahl der Konflikte zurückgegeben..
+	 * 
+	 * @param idTermin die ID des zu prüfenden Klausurtermins
+	 * 
+	 * @return die Anzahl der Konflikte innerhalb des Termins.
+	 */
+	public gibAnzahlKonflikteZuTermin(idTermin : number) : number {
+		let anzahl : number = 0;
+		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(idTermin);
+		if (listKlausurenZuTermin !== null) {
+			let copyListKlausurenZuTermin : List<GostKursklausur> | null = new Vector(listKlausurenZuTermin);
+			for (let k1 of listKlausurenZuTermin) {
+				copyListKlausurenZuTermin.remove(k1);
+				for (let k2 of copyListKlausurenZuTermin) 
+					anzahl += this.gibKonfliktKursklausurKursklausur(k1.id, k2.id).size();
+			}
+		}
+		return anzahl;
 	}
 
 	/**

@@ -77,9 +77,19 @@ export class GostKursklausur extends JavaObject {
 	public idKurs : number = -1;
 
 	/**
+	 * Die Kurzbezeichnung des Klausurkurses. 
+	 */
+	public kursKurzbezeichnung : string | null = "";
+
+	/**
 	 * Die Schiene des Kurses. 
 	 */
 	public kursSchiene : number = -1;
+
+	/**
+	 * Die ID des Kurslehrers. 
+	 */
+	public idLehrer : number = -1;
 
 	/**
 	 * Die ID des Klausurtermins, sofern schon gesetzt. 
@@ -148,9 +158,13 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.idKurs === "undefined")
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
+		result.kursKurzbezeichnung = typeof obj.kursKurzbezeichnung === "undefined" ? null : obj.kursKurzbezeichnung === null ? null : obj.kursKurzbezeichnung;
 		if (typeof obj.kursSchiene === "undefined")
 			 throw new Error('invalid json format, missing attribute kursSchiene');
 		result.kursSchiene = obj.kursSchiene;
+		if (typeof obj.idLehrer === "undefined")
+			 throw new Error('invalid json format, missing attribute idLehrer');
+		result.idLehrer = obj.idLehrer;
 		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
 		if (!!obj.schuelerIds) {
@@ -177,7 +191,9 @@ export class GostKursklausur extends JavaObject {
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
+		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
 		result += '"kursSchiene" : ' + obj.kursSchiene + ',';
+		result += '"idLehrer" : ' + obj.idLehrer + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
 		if (!obj.schuelerIds) {
@@ -241,8 +257,14 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';
 		}
+		if (typeof obj.kursKurzbezeichnung !== "undefined") {
+			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
+		}
 		if (typeof obj.kursSchiene !== "undefined") {
 			result += '"kursSchiene" : ' + obj.kursSchiene + ',';
+		}
+		if (typeof obj.idLehrer !== "undefined") {
+			result += '"idLehrer" : ' + obj.idLehrer + ',';
 		}
 		if (typeof obj.idTermin !== "undefined") {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';

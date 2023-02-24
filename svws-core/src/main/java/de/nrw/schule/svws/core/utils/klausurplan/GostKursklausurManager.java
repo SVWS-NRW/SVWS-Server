@@ -2,7 +2,6 @@ package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
@@ -20,7 +19,7 @@ public class GostKursklausurManager {
 	private final @NotNull List<@NotNull GostKursklausur> _klausuren;
 
 	/** Die Klausurtermine, die im Manager vorhanden sind */
-	private final List<@NotNull GostKlausurtermin> _termine;
+	private final @NotNull List<@NotNull GostKlausurtermin> _termine = new Vector<>();
 
 	/** Eine Map quartal -> Liste von GostKlausurterminen */
 	private final @NotNull HashMap<@NotNull Integer, @NotNull Vector<@NotNull GostKlausurtermin>> _mapQuartalKlausurtermine = new HashMap<>();
@@ -54,9 +53,9 @@ public class GostKursklausurManager {
 	 */
 	public GostKursklausurManager(@NotNull List<@NotNull GostKursklausur> klausuren, @NotNull List<@NotNull GostKlausurtermin> termine) {
 		_klausuren = klausuren;
-		_termine = termine;
 		helpKonstruktor();
-		for (@NotNull GostKlausurtermin t : _termine) {
+		for (@NotNull
+		GostKlausurtermin t : termine) {
 			addTermin(t);
 		}
 	}
@@ -69,13 +68,13 @@ public class GostKursklausurManager {
 	 *                  Gost-Halbjahres
 	 */
 	public GostKursklausurManager(@NotNull List<@NotNull GostKursklausur> klausuren) {
-		_termine = null;
 		_klausuren = klausuren;
 		helpKonstruktor();
 	}
 
 	private void helpKonstruktor() {
-		for (@NotNull GostKursklausur kk : _klausuren) {
+		for (@NotNull
+		GostKursklausur kk : _klausuren) {
 			// Füllen von _mapIdKursklausuren
 			_mapIdKursklausur.put(kk.id, kk);
 
@@ -141,10 +140,18 @@ public class GostKursklausurManager {
 			long oldTerminId = -2;
 
 			// aus _mapTerminKursklausuren löschen
-			for (@NotNull Entry<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> entry : _mapTerminKursklausuren.entrySet()) {
-				if (entry.getValue().contains(klausur)) {
-					oldTerminId = entry.getKey();
-					entry.getValue().remove(klausur);
+			// for (@NotNull Entry<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>>
+			// entry : _mapTerminKursklausuren.entrySet()) {
+			for (@NotNull
+			Long key : _mapTerminKursklausuren.keySet()) {
+				Vector<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
+				if (entry == null) {
+					// TODO Fehler, denn kann eigentlich nicht sein.
+				} else {
+					if (entry.contains(klausur)) {
+						oldTerminId = key;
+						entry.remove(klausur);
+					}
 				}
 			}
 
@@ -176,7 +183,8 @@ public class GostKursklausurManager {
 		List<@NotNull GostKursklausur> listKlausurenZuTermin = _mapTerminKursklausuren.get(idTermin);
 		if (listKlausurenZuTermin == null)
 			return;
-		for (@NotNull GostKursklausur k : listKlausurenZuTermin) {
+		for (@NotNull
+		GostKursklausur k : listKlausurenZuTermin) {
 			listSchuelerIds.addAll(k.schuelerIds);
 		}
 	}
@@ -187,6 +195,7 @@ public class GostKursklausurManager {
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public void addTermin(@NotNull GostKlausurtermin termin) {
+		_termine.add(termin);
 		// Füllen von _mapIdKlausurtermin
 		_mapIdKlausurtermin.put(termin.id, termin);
 
@@ -197,6 +206,31 @@ public class GostKursklausurManager {
 			_mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
 		listKlausurtermineMapQuartalKlausurtermine.add(termin);
+	}
+	
+	/**
+	 * Löscht einen Klausurtermin aus den internen Strukturen
+	 * 
+	 * @param termin das GostKlausurtermin-Objekt
+	 */
+	public void removeTermin(@NotNull GostKlausurtermin termin) {
+		Vector<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(termin.quartal);
+		if (listKlausurtermineMapQuartalKlausurtermine == null) {
+			// TODO Fehlerbehandlung
+			return;			
+		}
+		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
+
+		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(termin.id);
+		if (listKlausurenZuTermin != null) {
+			for (@NotNull GostKursklausur k : listKlausurenZuTermin) {
+				k.idTermin = null;
+				addKlausurToInternalMaps(k);
+			}
+		}
+		_termine.remove(termin);
+		_mapIdKlausurtermin.remove(termin.id);
+
 	}
 
 	/**
@@ -346,10 +380,33 @@ public class GostKursklausurManager {
 			return new Vector<>();
 		}
 
-		@NotNull List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
+		@NotNull
+		List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
 
 		konflikte.retainAll(klausur.schuelerIds);
 		return konflikte;
+	}
+
+	/**
+	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
+	 * wird die Anzahl der Konflikte zurückgegeben..
+	 * 
+	 * @param idTermin die ID des zu prüfenden Klausurtermins
+	 * 
+	 * @return die Anzahl der Konflikte innerhalb des Termins.
+	 */
+	public int gibAnzahlKonflikteZuTermin(long idTermin) {
+		int anzahl = 0;
+		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(idTermin);
+		if (listKlausurenZuTermin != null) {
+			List<@NotNull GostKursklausur> copyListKlausurenZuTermin = new Vector<>(listKlausurenZuTermin);
+			for (@NotNull GostKursklausur k1 : listKlausurenZuTermin) {
+				copyListKlausurenZuTermin.remove(k1);
+				for (@NotNull GostKursklausur k2 : copyListKlausurenZuTermin)
+					anzahl += gibKonfliktKursklausurKursklausur(k1.id, k2.id).size();
+			}
+		}
+		return anzahl;
 	}
 
 	/**

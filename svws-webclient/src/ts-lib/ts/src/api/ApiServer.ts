@@ -3599,6 +3599,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/delete/{id : \d+}
+	 *
+	 * Löscht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 */
+	public async deleteGostKlausurenKlausurtermin(schema : string, id : number) : Promise<number | null> {
+		const path = "/db/{schema}/gost/klausuren/termine/delete/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return parseFloat(JSON.parse(text));
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/new/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/quartal/{quartal : \d+}
 	 *
 	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
@@ -3610,7 +3637,6 @@ export class ApiServer extends BaseApi {
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {GostKlausurtermin} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
@@ -3618,14 +3644,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenKlausurtermin(data : GostKlausurtermin, schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurtermin> {
+	public async createGostKlausurenKlausurtermin(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurtermin> {
 		const path = "/db/{schema}/gost/klausuren/termine/new/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
 			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
-		const body : string = GostKlausurtermin.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostKlausurtermin.transpilerFromJSON(text);
 	}

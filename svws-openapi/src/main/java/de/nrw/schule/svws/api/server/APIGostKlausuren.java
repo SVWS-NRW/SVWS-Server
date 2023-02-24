@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -128,13 +129,13 @@ public class APIGostKlausuren {
 	/**
 	 * Die OpenAPI-Methode für das Erstellen eines neuen Klausurtermins.
 	 * 
-	 * @param schema     das Datenbankschema, in welchem der Schülerbetrieb erstellt
+	 * @param schema     das Datenbankschema, in welchem der Klausurtermin erstellt
 	 *                   wird
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 * @param halbjahr   das Gost-Halbjahr
-	 * @param quartal    das Quartal
-	 * @param is         JSON-Objekt mit den Daten
+	 * @param quartal    das Quartal 
+	 * param is         JSON-Objekt mit den Daten
 	 * @return die HTTP-Antwort mit der neuen Blockung
 	 */
 	@POST
@@ -145,10 +146,32 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createGostKlausurenKlausurtermin(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("halbjahr") int halbjahr, @PathParam("quartal") int quartal,
-			@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) InputStream is,
+			/*@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) InputStream is,*/
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
-			return (new DataGostKlausurenTermin(conn, abiturjahr)).create(halbjahr, quartal, is);
+			return (new DataGostKlausurenTermin(conn, abiturjahr)).create(halbjahr, quartal/*, is*/);
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für das Löschen eines Klausurtermins.
+	 * 
+	 * @param schema     das Datenbankschema, in welchem der Klausurtermin gelöscht wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param id	 die ID des zu löschenden Termins
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@DELETE
+	@Path("/termine/delete/{id : \\d+}")
+	@Operation(summary = "Löscht einen Gost-Klausurtermin.", description = "Löscht einen Gost-Klausurtermin."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.",
+    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))    
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostKlausurenKlausurtermin(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
+			return (new DataGostKlausurenTermin(conn, -1)).delete(id);
 		}
 	}
 
