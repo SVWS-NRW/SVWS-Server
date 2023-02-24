@@ -23,24 +23,22 @@
 
 <script setup lang="ts">
 
-	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 
 	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+	import { BenutzerAppProps } from "./SBenutzerAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<BenutzerListeEintrag | undefined>;
-	}>();
+	const props = defineProps<BenutzerAppProps>();
 
 	const selectedRoute = routeSchuleBenutzer.childRouteSelector;
 	const children_hidden = routeSchuleBenutzer.children_hidden();
 
-	const id: ComputedRef<number | string> = computed(() => props.item.value?.id ?? "?");
-	const anzeigename: ComputedRef<string> = computed(() => props.item.value?.anzeigename ?? "---");
-	const name: ComputedRef<string> = computed(() => props.item.value?.name ?? "---");
+	const id: ComputedRef<number | string> = computed(() => props.auswahl?.id ?? "?");
+	const anzeigename: ComputedRef<string> = computed(() => props.auswahl?.anzeigename ?? "---");
+	const name: ComputedRef<string> = computed(() => props.auswahl?.name ?? "---");
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeSchuleBenutzer.hidden()) && (props.item.value !== undefined);
+		return (!routeSchuleBenutzer.hidden()) && (props.auswahl !== undefined);
 	});
 
 </script>

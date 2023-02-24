@@ -14,32 +14,27 @@
 			</div>
 		</template>
 		<template #content>
-			<!-- Auswahlliste für die Benutzer -->
-			<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
+			<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setBenutzer" :model-value="auswahlGruppe" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
+				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
+				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footer>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
+					<s-modal-benutzer-neu :show-delete-icon="auswahlGruppe.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
 						:delete-benutzer-allgemein="deleteBenutzerAllgemein" />
 				</template>
-			</svws-ui-table>
+			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
 
 <script setup lang="ts">
 
-	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { router } from "~/router/RouteManager";
+	import { BenutzerListeEintrag, List } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+	import { router } from "~/router/RouteManager";
+	import { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<BenutzerListeEintrag | undefined>;
-		createBenutzerAllgemein : (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
-		deleteBenutzerAllgemein : () => Promise<void>;
-	}>();
-
-	const selected = routeSchuleBenutzer.auswahl;
+	const props = defineProps<BenutzerAuswahlProps>();
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -49,18 +44,16 @@
 
 	const search: Ref<string> = ref("");
 
-	const rows: ComputedRef<BenutzerListeEintrag[]> = computed(() => routeSchuleBenutzer.liste.liste || []);
-
-	const rowsFiltered: ComputedRef<BenutzerListeEintrag[]> = computed(() => {
-		const rowsValue: BenutzerListeEintrag[] = rows.value;
-		return (search.value)
-			? rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
-			: rowsValue;
-	});
-
-	const selectedItems: WritableComputedRef<BenutzerListeEintrag[]> = computed({
-		get: () => routeSchuleBenutzer.liste.ausgewaehlt_gruppe,
-		set: (items) => routeSchuleBenutzer.liste.ausgewaehlt_gruppe = items
+	const rowsFiltered: ComputedRef<Map<number, BenutzerListeEintrag> | List<BenutzerListeEintrag>> = computed(() => {
+		if (!search.value)
+			return props.listBenutzer;
+		const result = new Map<number, BenutzerListeEintrag>();
+		for (const l of props.listBenutzer) {
+			if (l.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+				l.anzeigename.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				result.set(l.id, l);
+		}
+		return result;
 	});
 
 </script>

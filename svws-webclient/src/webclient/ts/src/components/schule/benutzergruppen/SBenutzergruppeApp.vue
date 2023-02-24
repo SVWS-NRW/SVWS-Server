@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ bezeichnung }}</span>
 				<svws-ui-badge title="ID" variant="light">
-					<i-ri-fingerprint-line/>
+					<i-ri-fingerprint-line />
 					{{ id }}
 				</svws-ui-badge>
 			</div>

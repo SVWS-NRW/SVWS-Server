@@ -10,11 +10,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<template v-for="bgle in benutzergruppen" :key="bgle.id">
+					<template v-for="bgle in listBenutzergruppen" :key="bgle.id">
 						<s-benutzergruppen-listeneintrag :bgle="bgle"
 							:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 							:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-							:manager="manager" />
+							:get-benutzer-manager="getBenutzerManager" />
 					</template>
 				</tbody>
 			</table>
@@ -24,17 +24,18 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
+	import { BenutzergruppeListeEintrag, BenutzerManager, List } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
 
-	const props = defineProps<{		benutzergruppen: BenutzergruppeListeEintrag[];
-		manager : BenutzerManager;
+	const props = defineProps<{
+		listBenutzergruppen: List<BenutzergruppeListeEintrag>;
+		getBenutzerManager: () => BenutzerManager;
 		addBenutzerToBenutzergruppe : (bg_id : number) => Promise<void>;
 		removeBenutzerFromBenutzergruppe	: (bg_id : number) => Promise<void>;
 	}>();
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => props.benutzergruppen.length === props.manager.anzahlGruppen() ?  true : false,
+		get: () => props.listBenutzergruppen.size() === props.getBenutzerManager().anzahlGruppen() ?  true : false,
 		set: (value) => {
 			if (value)
 				void props.addBenutzerToBenutzergruppe(-1);

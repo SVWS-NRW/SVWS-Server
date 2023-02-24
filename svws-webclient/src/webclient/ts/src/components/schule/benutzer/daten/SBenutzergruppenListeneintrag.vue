@@ -18,7 +18,7 @@
 	const props = withDefaults(defineProps<{
 		bgle: BenutzergruppeListeEintrag;
 		istAlle?: boolean;
-		manager: BenutzerManager;
+		getBenutzerManager: () => BenutzerManager;
 		addBenutzerToBenutzergruppe: (bg_id : number) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (bg_id : number) => Promise<void>;
 	}>(), {
@@ -28,7 +28,7 @@
 	const router = useRouter();
 
 	const selected: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.manager.IstInGruppe(props.bgle.id),
+		get: () => props.getBenutzerManager().IstInGruppe(props.bgle.id),
 		set: (value) => {
 			if (value)
 				void props.addBenutzerToBenutzergruppe(props.bgle.id);

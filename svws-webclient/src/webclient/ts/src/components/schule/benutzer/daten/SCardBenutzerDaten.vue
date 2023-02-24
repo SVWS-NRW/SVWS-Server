@@ -22,25 +22,25 @@
 	import { computed, ref, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		manager: BenutzerManager;
+		getBenutzerManager: () => BenutzerManager;
 		setAnzeigename: (anzeigename: string) => Promise<void>;
 		setAnmeldename: (anzeigename: string) => Promise<void>;
-		setPassword: (passwort: string) => Promise<void>;
+		setPassword: (passwort: string) => Promise<boolean|undefined>;
 	}>();
 
 	const anzeigename: WritableComputedRef<string | undefined> = computed({
-		get: () => props.manager.getAnzeigename(),
+		get: () => props.getBenutzerManager().getAnzeigename(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === props.manager.getAnzeigename()))
+			if ((value === undefined) || (value === "") || (value === props.getBenutzerManager().getAnzeigename()))
 				return;
 			void props.setAnzeigename(value);
 		}
 	});
 
 	const name: WritableComputedRef<string | undefined> = computed({
-		get: () => props.manager.getAnmeldename(),
+		get: () => props.getBenutzerManager().getAnmeldename(),
 		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === props.manager.getAnmeldename()))
+			if ((value === undefined) || (value === "") || (value === props.getBenutzerManager().getAnmeldename()))
 				return;
 			void props.setAnmeldename(value);
 		}

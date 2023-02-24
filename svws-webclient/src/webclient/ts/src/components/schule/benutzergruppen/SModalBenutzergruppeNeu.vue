@@ -39,10 +39,8 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 
 	const modalNeueBenutzergruppe = ref();
-
 	const bezeichnung = ref();
 	const inputbgIstAdmin=ref(false);
 

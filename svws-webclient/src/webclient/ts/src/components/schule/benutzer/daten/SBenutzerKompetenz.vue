@@ -16,20 +16,20 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		manager : BenutzerManager;
+		getBenutzerManager: () => BenutzerManager;
 		kompetenz: BenutzerKompetenz;
-		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
-		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
+		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
+		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 	}>();
 
 	// True wenn Benutzer Admin ist oder die Kompetenz von einer Gruppe geerbt wird.
 	const aktiviert : ComputedRef<boolean | undefined> = computed(() => {
-		return props.manager.istAdmin() || (props.manager.getGruppen(props.kompetenz).size() !== 0)
+		return props.getBenutzerManager().istAdmin() || (props.getBenutzerManager().getGruppen(props.kompetenz).size() !== 0)
 	});
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (props.manager === undefined) ? false : props.manager.hatKompetenz(props.kompetenz),
+		get: () => props.getBenutzerManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
 			if (value)
 				void props.addKompetenz(props.kompetenz);

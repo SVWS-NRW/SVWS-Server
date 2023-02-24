@@ -3,7 +3,7 @@
 		<tr v-if="collapsed" style="background-color:lightblue; ">
 			<td> <svws-ui-icon><i-ri-arrow-right-s-line @click="setCollapse()" /></svws-ui-icon> </td>
 			<td colspan="3">
-				<svws-ui-checkbox v-model="selected" :disabled="manager.istAdmin()">
+				<svws-ui-checkbox v-model="selected" :disabled="getBenutzerManager().istAdmin()">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</td>
@@ -15,13 +15,13 @@
 				<svws-ui-icon><i-ri-arrow-down-s-line @click="collapsed = !collapsed" /></svws-ui-icon>
 			</td>
 			<td colspan="3">
-				<svws-ui-checkbox v-model="selected" :disabled="manager.istAdmin()">
+				<svws-ui-checkbox v-model="selected" :disabled="getBenutzerManager().istAdmin()">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</td>
 		</tr>
 		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-			<s-benutzer-kompetenz :kompetenz="kompetenz" :manager="manager"
+			<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager"
 				:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
 		</template>
 	</template>
@@ -34,18 +34,18 @@
 
 	const props = defineProps<{
 		kompetenzgruppe: BenutzerKompetenzGruppe;
-		manager : BenutzerManager;
-		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
-		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<void>;
-		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>;
-		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>;
+		getBenutzerManager: () => BenutzerManager;
+		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
+		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
+		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
+		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
 	}>();
 
 	const collapsed: Ref<boolean> = ref(true);
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => props.manager.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
+		get: () => props.getBenutzerManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
 		set: (value) => {
 			if (value)
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
