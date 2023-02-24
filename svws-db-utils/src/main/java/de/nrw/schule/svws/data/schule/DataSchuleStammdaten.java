@@ -5,17 +5,26 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 import java.util.function.Function;
 
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherart;
+import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulformen;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.nrw.schule.svws.db.utils.OperationError;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import jakarta.ws.rs.WebApplicationException;
@@ -60,7 +69,7 @@ public class DataSchuleStammdaten extends DataManager<Long> {
 		daten.email = schule.Email;
 		daten.webAdresse = schule.WebAdresse;
 		daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
-		daten.anzJGS_Jahr = schule.AnzJGS_Jahr;
+		daten.anzJGS_Jahr = schule.AnzJGS_Jahr == null ? 1 : schule.AnzJGS_Jahr;
 		daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
 		daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
 		daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt1);
@@ -315,6 +324,91 @@ public class DataSchuleStammdaten extends DataManager<Long> {
 		eigeneSchule.BezAbschnitt4 = null;
 		eigeneSchule.IstHauptsitz = true;
 		conn.persist(eigeneSchule);
+		
+		// Der Hauptstandort einrichten
+		DTOTeilstandorte teilstandort = new DTOTeilstandorte("A");
+		teilstandort.PLZ = schulEintrag.PLZ;
+        teilstandort.Ort = schulEintrag.Ort;
+        teilstandort.Strassenname = strasse[0];
+        teilstandort.HausNr = strasse[1];
+        teilstandort.HausNrZusatz = strasse[2];
+        teilstandort.Bemerkung = "Hauptstandort";
+        teilstandort.Kuerzel = "";
+        conn.persist(teilstandort);
+		
+        // Einrichten der Schulgliederung in EigeneSchule_Schulformen - je nach Schulform
+        DTOSchulformen schulgliederung = new DTOSchulformen(1L);
+        Schulgliederung sgl = switch (eigeneSchule.Schulform) {
+            case BK, SB -> Schulgliederung.A01;
+            case SG, SR, V, PS, S, KS, SK, R, H, GE, G, FW, HI, WF -> Schulgliederung.DEFAULT;
+            case GM -> Schulgliederung.GRH;
+            case GY -> Schulgliederung.GY9;
+            case WB -> Schulgliederung.G02;
+        };
+        schulgliederung.SGL = sgl.daten.kuerzel;
+        schulgliederung.SF_SGL = eigeneSchule.Schulform.daten.kuerzel + "" + sgl.daten.kuerzel;
+        schulgliederung.Schulform = sgl.daten.beschreibung;
+        schulgliederung.Sortierung = 1;
+        schulgliederung.BKIndex = sgl.daten.bkIndex;
+        schulgliederung.Schulform2 = sgl.daten.kuerzel + ": " + sgl.daten.beschreibung;
+        conn.persist(schulgliederung);
+        
+		// TODO Grundlegende Fächer - je nach Schulform - einrichten
+		// TODO Kursarten - je nach Schulform - einrichten
+		// TODO Jahrgänge - je nach Schulform - einrichten
+		
+		// TODO K_Addressart mit Betrieb füllen
+		// TODO K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
+		// TODO K_Datenschutz mit Verwendung Foto
+		// TODO K_EinschulgungsArt normal, vorzeitig und zurückgestellt
+		// TODO K_Entlassgrund mit "Schulpflicht endet", "Normales Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
+		
+		Vector<DTOErzieherart> erzieherarten = new Vector<>(); 
+		erzieherarten.add(new DTOErzieherart(1L, "Vater"));
+        erzieherarten.add(new DTOErzieherart(2L, "Mutter"));
+        erzieherarten.add(new DTOErzieherart(3L, "Schüler ist volljährig"));
+        erzieherarten.add(new DTOErzieherart(4L, "Schülerin ist volljährig"));
+        erzieherarten.add(new DTOErzieherart(5L, "Eltern"));
+        erzieherarten.add(new DTOErzieherart(6L, "Sonstige"));
+        for (int i = 0; i < erzieherarten.size(); i++)
+            erzieherarten.get(i).Sortierung = i+1;
+        conn.persistRange(erzieherarten, 0, 5);
+        
+        // TODO K-Ort aus der Default-Daten-Tabelle befüllen
+        // TODO K_Religion aus dem Core-Type befüllen
+        // TODO K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
+        
+        Vector<DTOSchwerpunkt> schwerpunkte = new Vector<>();
+        schwerpunkte.add(new DTOSchwerpunkt(1L, "naturwissenschaftlich-technisch"));
+        schwerpunkte.add(new DTOSchwerpunkt(2L, "sozialwissenschaftlich"));
+        schwerpunkte.add(new DTOSchwerpunkt(3L, "musisch-künstlerisch"));
+        schwerpunkte.add(new DTOSchwerpunkt(4L, "fremdsprachlich"));
+        for (int i = 0; i < schwerpunkte.size(); i++)
+            schwerpunkte.get(i).Sortierung = i+1;
+        conn.persistRange(schwerpunkte, 0, 3);
+		
+        DTOSportbefreiung sportbefreiung = new DTOSportbefreiung(1L, "temporär - Schwimmen");
+        sportbefreiung.Sortierung = 1;
+        conn.persist(sportbefreiung);
+        
+        Vector<DTOTelefonArt> telefonArten = new Vector<>();
+        telefonArten.add(new DTOTelefonArt(1L, "Eltern"));
+        telefonArten.add(new DTOTelefonArt(2L, "Mutter"));
+        telefonArten.add(new DTOTelefonArt(3L, "Vater"));
+        telefonArten.add(new DTOTelefonArt(4L, "Schüler/-in"));
+        telefonArten.add(new DTOTelefonArt(5L, "(sonst.) gesetzl. Vertreter"));
+        telefonArten.add(new DTOTelefonArt(6L, "Notfallnummer"));
+        telefonArten.add(new DTOTelefonArt(7L, "Festnetznummer"));
+        telefonArten.add(new DTOTelefonArt(8L, "Mobilnummer"));
+        telefonArten.add(new DTOTelefonArt(9L, "Fax-Nummer"));     
+        for (int i = 0; i < telefonArten.size(); i++)
+            telefonArten.get(i).Sortierung = i+1;
+        conn.persistRange(telefonArten, 0, 8);
+        
+        DTOVermerkArt vermerkArt = new DTOVermerkArt(1L, "allgemeine Bemerkung");
+        vermerkArt.Sortierung = 1;
+        conn.persist(vermerkArt);
+        
 		// Liefere die Schul-Stammdaten der neu angelegten Schule zurück.
 		return this.get(null);
 	}
