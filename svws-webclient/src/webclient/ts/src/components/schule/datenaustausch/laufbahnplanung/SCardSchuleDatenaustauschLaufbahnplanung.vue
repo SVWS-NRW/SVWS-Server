@@ -16,7 +16,10 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { api } from "~/router/Api";
+
+	const props = defineProps<{
+		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<boolean>;
+	}>();
 
 	const status = ref<boolean | undefined>(undefined);
 
@@ -27,12 +30,7 @@
 		if (!file) return;
 		const formData = new FormData();
 		formData.append("data", file);
-		try {
-			const res = await api.server.setGostLupoImportMDBFuerJahrgang( formData, api.schema);
-			status.value = res.success;
-		} catch (err) {
-			status.value = false;
-		}
+		status.value = await props.setGostLupoImportMDBFuerJahrgang(formData)
 	}
 
 	defineExpose({

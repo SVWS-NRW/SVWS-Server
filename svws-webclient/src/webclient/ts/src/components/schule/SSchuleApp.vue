@@ -12,7 +12,7 @@
 				</template>
 				<template #panels>
 					<svws-ui-tab-panel>
-						<s-schule-datenaustausch-app />
+						<s-schule-datenaustausch-app :set-gost-lupo-import-m-d-b-fuer-jahrgang="setGostLupoImportMDBFuerJahrgang" />
 					</svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>
@@ -22,10 +22,8 @@
 
 <script setup lang="ts">
 
-	import { SchuleStammdaten } from '@svws-nrw/svws-core-ts';
+	import { SchuleAppProps } from './SSchuleAppProps';
 
-	const props = defineProps<{
-		schuleStammdaten: SchuleStammdaten;
-	}>();
+	const props = defineProps<SchuleAppProps>();
 
 </script>

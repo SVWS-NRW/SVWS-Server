@@ -7,7 +7,7 @@
 			</template>
 			<template #panels>
 				<svws-ui-tab-panel>
-					<s-schule-datenaustausch-laufbahnplanung />
+					<s-schule-datenaustausch-laufbahnplanung :set-gost-lupo-import-m-d-b-fuer-jahrgang="setGostLupoImportMDBFuerJahrgang" />
 				</svws-ui-tab-panel>
 			</template>
 		</svws-ui-tab-bar>
@@ -15,4 +15,8 @@
 </template>
 
 <script setup lang="ts">
+	const props = defineProps<{
+		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<boolean>;
+	}>();
+
 </script>

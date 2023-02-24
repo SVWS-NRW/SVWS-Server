@@ -6,14 +6,26 @@ import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergrup
 import { api } from "../Api";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteNode } from "../RouteNode";
+import { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 
+export class RouteDataSchule {
+
+	setGostLupoImportMDBFuerJahrgang = async (formData: FormData) => {
+		try {
+			const res = await api.server.setGostLupoImportMDBFuerJahrgang( formData, api.schema);
+			return res.success;
+		} catch(e) {
+			return false;
+		}
+	}
+}
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
-export class RouteSchule extends RouteNode<unknown, RouteApp> {
+export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "/schule", SSchuleApp);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "/schule", SSchuleApp, new RouteDataSchule());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getNoProps(route));
@@ -42,9 +54,10 @@ export class RouteSchule extends RouteNode<unknown, RouteApp> {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): SchuleAppProps {
 		return {
-			schuleStammdaten: api.schuleStammdaten
+			schuleStammdaten: api.schuleStammdaten,
+			setGostLupoImportMDBFuerJahrgang: this.data.setGostLupoImportMDBFuerJahrgang
 		};
 	}
 
