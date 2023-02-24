@@ -60,25 +60,13 @@
 	import { router } from "~/router/RouteManager";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
-	import { SchuleStammdaten, Schulform } from '@svws-nrw/svws-core-ts';
+	import { AppProps } from './SAppProps';
 
 	const errors: Ref<Error[]> = ref([]);
 
 	onErrorCaptured((e) => { errors.value.push(e); });
 
-	// const error: Ref<undefined|Error> = ref(undefined);
-	// watch(error_message, (new_val)=> {
-	// 	setTimeout(()=> {
-	// 		if (new_val !== undefined) error_message.value = undefined;
-	// 	}, 10_000);
-	// })
-
-	const props = defineProps<{
-		schulform: Schulform;
-		schuleStammdaten: SchuleStammdaten;
-		username: string;
-		logout: () => Promise<void>;
-	}>();
+	const props = defineProps<AppProps>();
 
 	const route = useRoute();
 

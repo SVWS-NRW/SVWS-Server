@@ -15,6 +15,7 @@ import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
+import type { AppProps } from "~/components/SAppProps";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
@@ -116,15 +117,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return { name: this.defaultChild!.name };
 	}
 
-	public getProps(): Record<string, any> {
+	public getProps(): AppProps {
 		return {
 			logout: routeLogin.logout,
 			username: api.username,
 			schulform: api.schulform,
 			schuleStammdaten: api.schuleStammdaten,
-			orte: this.data.orte,
-			ortsteile: this.data.ortsteile,
-			aktAbschnitt: this.data.aktAbschnitt,
 		};
 	}
 }
