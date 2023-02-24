@@ -6480,6 +6480,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode initSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/init/{schulnummer : \d+}
+	 *
+	 * Legt die Daten für eine neue Schule an und gibt anschließend die Schulstammdaten zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Schule besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Schule wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuleStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schule anzulegen.
+	 *   Code 404: Keine Schule mit der angegebenen Schulnummer gefunden
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde, dies ist z.B. der Fall, falls zuvor schon eine Schule angelegt wurde.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schulnummer - der Pfad-Parameter schulnummer
+	 *
+	 * @returns Die Schule wurde erfolgreich angelegt.
+	 */
+	public async initSchule(schema : string, schulnummer : number) : Promise<SchuleStammdaten> {
+		const path = "/db/{schema}/schule/init/{schulnummer : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return SchuleStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchullogo für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logo
 	 *
 	 * Liest das Logo der Schule zum angegebenen Schema aus der Datenbank und liefert dieses zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schuldaten besitzt.

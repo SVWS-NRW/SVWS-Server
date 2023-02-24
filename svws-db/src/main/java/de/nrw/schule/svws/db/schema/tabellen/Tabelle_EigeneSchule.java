@@ -144,12 +144,12 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 		.setJavaComment("Bezeichnung der Abschnitte");
 
 	/** Die Definition der Tabellenspalte BezAbschnitt1 */
-	public SchemaTabelleSpalte col_BezAbschnitt1 = add("BezAbschnitt1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	public SchemaTabelleSpalte col_BezAbschnitt1 = add("BezAbschnitt1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(12)
 		.setDefault("1. Hj")
 		.setJavaComment("Bezeichnung des ersten Abschnitts");
 
 	/** Die Definition der Tabellenspalte BezAbschnitt2 */
-	public SchemaTabelleSpalte col_BezAbschnitt2 = add("BezAbschnitt2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	public SchemaTabelleSpalte col_BezAbschnitt2 = add("BezAbschnitt2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(12)
 		.setDefault("2. Hj")
 		.setJavaComment("Bezeichnung des zweiten Abschnitts");
 
@@ -166,11 +166,11 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 		.setJavaComment("Sperrt die Noteneingabe");
 
 	/** Die Definition der Tabellenspalte BezAbschnitt3 */
-	public SchemaTabelleSpalte col_BezAbschnitt3 = add("BezAbschnitt3", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	public SchemaTabelleSpalte col_BezAbschnitt3 = add("BezAbschnitt3", SchemaDatentypen.VARCHAR, false).setDatenlaenge(12)
 		.setJavaComment("Bezeichnung des dritten Abschnitts");
 
 	/** Die Definition der Tabellenspalte BezAbschnitt4 */
-	public SchemaTabelleSpalte col_BezAbschnitt4 = add("BezAbschnitt4", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	public SchemaTabelleSpalte col_BezAbschnitt4 = add("BezAbschnitt4", SchemaDatentypen.VARCHAR, false).setDatenlaenge(12)
 		.setJavaComment("Bezeichnung des vierten Abschnitts");
 
 	/** Die Definition der Tabellenspalte ZurueckgestelltAnzahl */

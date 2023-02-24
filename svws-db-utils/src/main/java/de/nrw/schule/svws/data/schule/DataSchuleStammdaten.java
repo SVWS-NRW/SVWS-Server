@@ -1,22 +1,27 @@
 package de.nrw.schule.svws.data.schule;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
+import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
+import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
 import de.nrw.schule.svws.db.utils.data.Schule;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -244,4 +249,74 @@ public class DataSchuleStammdaten extends DataManager<Long> {
 	}
 	
 	
+	/**
+	 * Initialisiert das Schema mit der angebenen Schulnummer
+	 * 
+	 * @param schulnummer   die Schulnummer der anzulegenden Schule
+	 * 
+	 * @return die HTTP-Response mit den Stammdaten der Schule
+	 */
+	public Response init(int schulnummer) {
+		// Prüfe, ob bereits ein Eintrag in der Tabelle EigeneSchule vorliegt...
+		DTOEigeneSchule eigeneSchule = conn.querySingle(DTOEigeneSchule.class);
+		if (eigeneSchule != null)
+			return OperationError.CONFLICT.getResponse("Das Datenbank-Schema kann nicht mit einer Schule initialisiert werden, da es bereits einen Schuleintrag enthält.");
+		// Prüfe, ob die Schulnummer im Katalog der Schulen vorkommt.
+		List<SchulenKatalogEintrag> katalogSchulen = DataKatalogSchulen.getKatalog();
+		SchulenKatalogEintrag schulEintrag = null;
+		for (SchulenKatalogEintrag eintrag : katalogSchulen) {
+			if (eintrag.SchulNr.equals("" + schulnummer)) {
+				schulEintrag = eintrag;
+				break;
+			}
+		}
+		if (schulEintrag == null)
+			return OperationError.NOT_FOUND.getResponse("Keine Schule mit der Schulnummer " + schulnummer + " im Katalog der Schulen gefunden.");
+		// Bestimme das aktuelle Datum
+		LocalDate date = LocalDate.now();
+		int month = date.getMonthValue();
+		int year = date.getYear();
+		// Lege den ersten Schuljahresabschnitt an
+		int schuljahr = month > 7 ? year : year - 1;
+		int abschnitt = month > 2 && month < 8 ? 2 : 1;
+		DTOSchuljahresabschnitte schuljahresabschnitt = new DTOSchuljahresabschnitte(1L, schuljahr, abschnitt);
+		conn.persist(schuljahresabschnitt);
+		// Initialisiere die Daten in der Tabelle EigeneSchule
+		eigeneSchule = new DTOEigeneSchule(1L);
+		eigeneSchule.Schulform = Schulform.getByNummer(schulEintrag.SF);
+		eigeneSchule.SchulformNr = eigeneSchule.Schulform.daten.nummer;
+		eigeneSchule.SchulformBez = eigeneSchule.Schulform.daten.bezeichnung;
+		eigeneSchule.SchultraegerArt = schulEintrag.ArtDerTraegerschaft;
+		eigeneSchule.SchultraegerNr = schulEintrag.SchultraegerNr;
+		eigeneSchule.SchulNr = Integer.parseInt(schulEintrag.SchulNr);
+		eigeneSchule.Bezeichnung1 = schulEintrag.ABez1;
+		eigeneSchule.Bezeichnung2 = schulEintrag.ABez2;
+		eigeneSchule.Bezeichnung3 = schulEintrag.ABez3;
+		String[] strasse = AdressenUtils.splitStrasse(schulEintrag.Strasse);
+		eigeneSchule.Strassenname = strasse[0];
+		eigeneSchule.HausNr = strasse[1];
+		eigeneSchule.HausNrZusatz = strasse[2];
+		eigeneSchule.PLZ = schulEintrag.PLZ;
+		eigeneSchule.Ort = schulEintrag.Ort;
+		eigeneSchule.Telefon = schulEintrag.TelVorw + " " + schulEintrag.Telefon;
+		eigeneSchule.Fax = schulEintrag.FaxVorw + " " + schulEintrag.Fax;
+		eigeneSchule.Email = schulEintrag.Email;
+		eigeneSchule.Ganztags = Integer.parseInt(schulEintrag.Ganztagsbetrieb) > 0;
+		eigeneSchule.Schuljahresabschnitts_ID = schuljahresabschnitt.ID;
+		eigeneSchule.AnzahlAbschnitte = 2;
+		eigeneSchule.Fremdsprachen = null;
+		eigeneSchule.JVAZeigen = null;
+		eigeneSchule.RefPaedagogikZeigen = null;
+		eigeneSchule.AnzJGS_Jahr = null;
+		eigeneSchule.AbschnittBez = "Halbjahr";
+		eigeneSchule.BezAbschnitt1 = "1. Halbjahr";
+		eigeneSchule.BezAbschnitt2 = "2. Halbjahr";
+		eigeneSchule.BezAbschnitt3 = null;
+		eigeneSchule.BezAbschnitt4 = null;
+		eigeneSchule.IstHauptsitz = true;
+		conn.persist(eigeneSchule);
+		// Liefere die Schul-Stammdaten der neu angelegten Schule zurück.
+		return this.get(null);
+	}
+
 }

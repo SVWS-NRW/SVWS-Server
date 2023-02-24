@@ -26,7 +26,7 @@ public class DataKatalogSchulen extends DataManager<Long> {
 	
 	@Override
 	public Response getAll() {
-		List<SchulenKatalogEintrag> katalog = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
+		List<SchulenKatalogEintrag> katalog = getKatalog();
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
@@ -45,6 +45,15 @@ public class DataKatalogSchulen extends DataManager<Long> {
 	@Override
 	public Response patch(Long id, InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Liest den Katalog der Schulen ein.
+	 * 
+	 * @return der Katalog der Schulen
+	 */
+	public static List<SchulenKatalogEintrag> getKatalog() {
+		return CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);		
 	}
 	
 }

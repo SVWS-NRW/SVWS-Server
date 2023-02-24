@@ -103,6 +103,33 @@ import jakarta.ws.rs.core.Response;
 )
 public class APISchule {
 	
+    /**
+     * Die OpenAPI-Methode für das Initialisieren des Schema mit einer Schulnummer.
+     * Es wird vorausgesetzt, dass bisher keine Schulnummer in dem Schema festgelegt wurde.
+     *  
+     * @param schema       das Datenbankschema, in welchem die Schule angelegt wird
+     * @param schulnummer  die Schulnummer
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort mit den neuen Schulstammdaten
+     */
+    @POST
+    @Path("/init/{schulnummer : \\d+}")
+    @Operation(summary = "Legt die Daten für eine neue Schule an und gibt anschließend die Schulstammdaten zurück.",
+    description = "Legt die Daten für eine neue Schule an und gibt anschließend die Schulstammdaten zurück."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Schule besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Schule wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = SchuleStammdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schule mit der angegebenen Schulnummer gefunden")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde, dies ist z.B. der Fall, falls zuvor schon eine Schule angelegt wurde.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response initSchule(@PathParam("schema") String schema, @PathParam("schulnummer") int schulnummer, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return (new DataSchuleStammdaten(conn)).init(schulnummer);
+    	}
+    }
 	
     /**
      * Die OpenAPI-Methode für die Abfrage der Schulnummer der Schule.
@@ -149,8 +176,7 @@ public class APISchule {
                  schema = @Schema(implementation = SchuleStammdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit dem angegebenen Schema gefunden")
-    public Response getSchuleStammdaten(@PathParam("schema") String schema, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getSchuleStammdaten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
     		return (new DataSchuleStammdaten(conn).get());
     	}
