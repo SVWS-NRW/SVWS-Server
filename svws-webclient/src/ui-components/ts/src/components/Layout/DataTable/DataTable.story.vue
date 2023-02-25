@@ -26,9 +26,12 @@
 			isActive: true,
 		},
 	]);
-	const set = reactive(new Set<DataTableItem>());
+	const set = new Set<DataTableItem>();
 	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
 	set.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
+	const setReactive = reactive(new Set<DataTableItem>());
+	setReactive.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
+	setReactive.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
 	const columns = ref([
 		{
 			key: "name",
@@ -78,6 +81,7 @@
 	const clickedRow = ref(data.value[0]);
 	const selectedRows2 = ref([]);
 	const selectedRows3 = ref([]);
+	const selectedRows4 = ref([]);
 	const sortBy = ref("age");
 	const sortingOrder = ref<DataTableSortingOrder>("desc");
 
@@ -123,6 +127,15 @@
 				clickable />
 			<p>Clicked row: {{ clickedRow }}</p>
 			<p>Selected Rows: {{ selectedRows2 }}</p>
+		</Variant>
+		<Variant title="Selection Multi reactive-Iterable">
+			<DataTable v-model="selectedRows2"
+				:items="setReactive"
+				selectable
+				v-model:clicked="clickedRow"
+				clickable />
+			<p>Clicked row: {{ clickedRow }}</p>
+			<p>Selected Rows: {{ selectedRows4 }}</p>
 		</Variant>
 		<Variant title="Selection Multi + Footer Action">
 			<DataTable v-model="selectedRows2" :items="data" selectable>

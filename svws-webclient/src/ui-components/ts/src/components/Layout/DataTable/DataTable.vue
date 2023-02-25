@@ -171,7 +171,7 @@
 		}
 	);
 
-	defineEmits<{
+	const emit = defineEmits<{
 		(e: "update:modelValue", items: DataTableItem[]): void;
 		(e: "update:sortBy", sortBy: string): void;
 		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
@@ -195,7 +195,12 @@
 		isRowSelected,
 		allRowsSelected,
 		toggleRowSelection,
-	} = useSelectable(sortedRows, props);
+	} = useSelectable({
+		isActive: () => props.selectable,
+		sortedRows,
+		selectedItems: () => props.modelValue,
+		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
+	});
 
 	const { isRowClicked, toggleRowClick } = useClickable(props);
 

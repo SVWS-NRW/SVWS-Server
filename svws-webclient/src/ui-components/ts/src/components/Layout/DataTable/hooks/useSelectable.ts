@@ -1,59 +1,53 @@
-import { Ref, computed, ref } from 'vue'
-
+import { Ref, computed } from 'vue'
 import type { DataTableRow, DataTableItem } from '../types'
-import useSafeVModel from './useSafeVModel';
 
-interface UseSelectableProps {
-	modelValue: DataTableItem[] | undefined
-	selectable: boolean
+interface UseSelectableOptions {
+	selectedItems: () => DataTableItem[] | undefined,
+	emit: (v: DataTableItem[]) => void,
+	sortedRows: Ref<DataTableRow[]>,
+	isActive: () => boolean
 }
 
-export default function useSelectable(
-	sortedRows: Ref<DataTableRow[]>,
-	props: UseSelectableProps,
-) {
-	const selectedItems = useSafeVModel(props, [] as DataTableItem[]);
+export default function useSelectable({
+	selectedItems: data, emit, sortedRows, isActive,
+}: UseSelectableOptions) {
+	// internally, we only work with raw values so we don't run into identity hazard when comparing them
+	const selectedItemsRaw = computed(() => (data() ?? []).map(i => toRaw(i)))
 
 	const noRowsSelected = computed(() => (
-		!sortedRows.value.some(({ source }) => selectedItems.value.includes(source))
+		!sortedRows.value.some(isRowSelected)
 	))
 
 	const allRowsSelected = computed(() => {
 		if (sortedRows.value.length === 0) { return false }
-
-		return sortedRows.value.every(({ source }) => selectedItems.value.includes(source))
+		return sortedRows.value.every(isRowSelected)
 	})
 
 	function isRowSelected(row: DataTableRow) {
-		return selectedItems.value.includes(row.source)
+		return selectedItemsRaw.value.includes(row.source)
 	}
 
 	function selectAllRows() {
-		selectedItems.value = [...sortedRows.value.map(row => row.source)];
+		emit([...sortedRows.value.map(row => row.source)]);
 	}
 
 	function unselectAllRows() {
-		selectedItems.value = [];
+		emit([]);
 	}
 
 	function selectRow(row: DataTableRow) {
-		selectedItems.value = [
-			...selectedItems.value,
-			row.source,
-		]
+		emit(selectedItemsRaw.value.concat(row.source))
 	}
 
 	function unselectRow(row: DataTableRow) {
-		const index = selectedItems.value.indexOf(row.source)
-
-		selectedItems.value = [
-			...selectedItems.value.slice(0, index),
-			...selectedItems.value.slice(index + 1),
-		]
+		const index = selectedItemsRaw.value.indexOf(row.source)
+		const newSelection = selectedItemsRaw.value.slice()
+		newSelection.splice(index, 1)
+		emit(newSelection)
 	}
 
 	function toggleRowSelection(row: DataTableRow) {
-		if (!props.selectable) {
+		if (!isActive()) {
 			return
 		}
 

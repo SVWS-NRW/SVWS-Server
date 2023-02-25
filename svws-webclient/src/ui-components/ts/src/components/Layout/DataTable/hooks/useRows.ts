@@ -41,7 +41,8 @@ export default function useRows (
 	props: UseRowsProps
 ) {
 	const rowsComputed = computed(() => [...props.items]
-		.map((rawItem, index) => buildTableRow(rawItem, index, columns.value)))
+		// we use toRaw() to avoid identity hazard with reactive proxies when comparing items
+		.map((source, index) => buildTableRow(toRaw(source), index, columns.value)))
 
 	return {
 		rowsComputed,
