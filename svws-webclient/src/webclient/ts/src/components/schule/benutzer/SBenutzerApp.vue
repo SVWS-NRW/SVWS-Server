@@ -37,8 +37,6 @@
 	const anzeigename: ComputedRef<string> = computed(() => props.auswahl?.anzeigename ?? "---");
 	const name: ComputedRef<string> = computed(() => props.auswahl?.name ?? "---");
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeSchuleBenutzer.hidden()) && (props.auswahl !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

@@ -35,8 +35,6 @@
 	const id: ComputedRef<string> = computed(() => "ID: " + props.item.value?.id);
 	const bezeichnung: ComputedRef<string> = computed(() => props.item.value?.bezeichnung ?? "");
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeSchuleBenutzergruppe.hidden()) && (props.item.value !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.item !== undefined);
 
 </script>

@@ -42,8 +42,6 @@
 	const selectedRoute = routeLehrer.childRouteSelector;
 	const children_hidden = routeLehrer.children_hidden();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !routeLehrer.hidden();
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.stammdaten !== undefined);
 
 </script>

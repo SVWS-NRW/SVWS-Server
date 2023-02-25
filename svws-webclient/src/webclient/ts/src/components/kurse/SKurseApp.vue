@@ -43,8 +43,6 @@
 		return lehrer?.kuerzel ?? leer;
 	});
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !routeKurse.hidden();
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

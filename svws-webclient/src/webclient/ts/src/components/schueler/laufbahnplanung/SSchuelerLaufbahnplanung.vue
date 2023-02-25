@@ -27,6 +27,6 @@
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => (props.schueler?.id !== undefined) && (props.schueler?.abiturjahrgang !== undefined));
+	const visible: ComputedRef<boolean> = computed(() => props.schueler?.abiturjahrgang !== undefined);
 
 </script>

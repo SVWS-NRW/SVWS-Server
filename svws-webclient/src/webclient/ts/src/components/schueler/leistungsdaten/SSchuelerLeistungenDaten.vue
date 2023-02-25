@@ -28,16 +28,12 @@
 		props.data?.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []
 	);
 
-	// TODO const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;
-
 	const cols: DataTableColumn[] = [
 		{ key: "fach", label: "Fach", span: 1, sortable: false },
 		{ key: "lehrer", label: "Lehrer", span: 1, sortable: false },
 		{ key: "note", label: "Note", span: 1, sortable: false },
 	];
 
-	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return (props.data !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);
 
 </script>

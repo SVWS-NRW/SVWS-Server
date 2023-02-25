@@ -34,7 +34,7 @@
 	const children_hidden = routeKatalogFaecher.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogFaecher.hidden()) && (props.auswahl !== undefined);
+		return props.auswahl !== undefined;
 	});
 
 </script>

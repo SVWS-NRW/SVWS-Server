@@ -32,8 +32,6 @@
 	const selectedRoute = routeKatalogJahrgaenge.childRouteSelector;
 	const children_hidden = routeKatalogJahrgaenge.children_hidden();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogJahrgaenge.hidden()) && (props.auswahl !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

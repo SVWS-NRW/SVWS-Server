@@ -32,8 +32,5 @@
 	const selectedRoute = routeKatalogReligion.childRouteSelector;
 	const children_hidden = routeKatalogReligion.children_hidden();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogReligion.hidden()) && (props.auswahl !== undefined);
-	});
-
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 </script>

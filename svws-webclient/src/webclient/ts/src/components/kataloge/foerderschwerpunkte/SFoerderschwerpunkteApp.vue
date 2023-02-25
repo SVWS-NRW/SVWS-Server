@@ -32,8 +32,6 @@
 	const selectedRoute = routeKatalogFoerderschwerpunkte.childRouteSelector;
 	const children_hidden = routeKatalogFoerderschwerpunkte.children_hidden();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogFoerderschwerpunkte.hidden()) && (props.auswahl !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

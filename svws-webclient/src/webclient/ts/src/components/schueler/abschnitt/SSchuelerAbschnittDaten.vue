@@ -15,8 +15,6 @@
 
 	const props = defineProps<SchuelerAbschnittDatenProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.data !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);
 
 </script>

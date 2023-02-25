@@ -21,7 +21,6 @@
 
 	import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
@@ -39,8 +38,6 @@
 		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>
 	}>();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeSchuleBenutzergruppe.hidden()) && (props.item.value !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.item !== undefined);
 
 </script>

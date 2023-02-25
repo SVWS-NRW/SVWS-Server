@@ -39,8 +39,6 @@
 		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
 	);
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKlassen.hidden()) && (props.auswahl !== undefined);
-	});
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>
