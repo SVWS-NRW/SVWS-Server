@@ -1,4 +1,4 @@
-import { GostFaecherManager, GostKlausurtermin, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostFaecherManager, GostKlausurtermin, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabenManager, GostKlausurvorgabe } from "@svws-nrw/svws-core-ts";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -20,6 +20,7 @@ interface RouteStateGostKlausurplanung {
 	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
 	kursklausurmanager: GostKursklausurManager | undefined;
+	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
 	view: RouteNode<any, any>;
 }
 
@@ -33,6 +34,7 @@ export class RouteDataGostKlausurplanung {
 		mapLehrer: new Map(),
 		halbjahr: GostHalbjahr.EF1,
 		kursklausurmanager: undefined,
+		klausurvorgabenmanager: undefined,
 		view: routeGostKlausurplanungKlausurdaten,
 	}
 
@@ -75,19 +77,22 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
 		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
-		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
 		const faecherManager = new GostFaecherManager(listFaecher);
-		// Lade die Schülerliste des Abiturjahrgangs
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
-		for (const s of listSchueler)
-			mapSchueler.set(s.id, s);
-		api.status.stop();
-		// Lade die Lehrerliste
-		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
+		if (abiturjahr !== -1) {
+			const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
+
+			// Lade die Schülerliste des Abiturjahrgangs
+			for (const s of listSchueler)
+				mapSchueler.set(s.id, s);
+			api.status.stop();
+			// Lade die Lehrerliste
+			const listLehrer = await api.server.getLehrer(api.schema);
+			for (const l of listLehrer)
+				mapLehrer.set(l.id, l);
+		}
 		// Setze den State neu
 		this._state.value = {
 			abiturjahr: abiturjahr,
@@ -97,6 +102,7 @@ export class RouteDataGostKlausurplanung {
 			mapLehrer: mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 			kursklausurmanager: undefined,
+			klausurvorgabenmanager: undefined,
 			view: this._state.value.view,
 		};
 	}
@@ -134,6 +140,8 @@ export class RouteDataGostKlausurplanung {
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
+		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
 		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
@@ -142,7 +150,8 @@ export class RouteDataGostKlausurplanung {
 			faecherManager: this._state.value.faecherManager,
 			mapLehrer: this._state.value.mapLehrer,
 			halbjahr: halbjahr,
-			kursklausurmanager: kursklausurmanager,
+			kursklausurmanager,
+			klausurvorgabenmanager,
 			view: this._state.value.view,
 		};
 		return true;
@@ -157,6 +166,16 @@ export class RouteDataGostKlausurplanung {
 		if (this._state.value.kursklausurmanager === undefined)
 			throw new Error("Es wurde noch keine Daten geladen, so dass kein Kurs-Klausur-Manager zur Verfügung steht.");
 		return this._state.value.kursklausurmanager;
+	}
+
+	public get hatKlausurvorgabenManager(): boolean {
+		return this._state.value.klausurvorgabenmanager !== undefined;
+	}
+
+	public get klausurvorgabenmanager(): GostKlausurvorgabenManager {
+		if (this._state.value.klausurvorgabenmanager === undefined)
+			throw new Error("Es wurde noch keine Daten geladen, so dass kein Klausur-Vorgaben-Manager zur Verfügung steht.");
+		return this._state.value.klausurvorgabenmanager;
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -200,6 +219,35 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
 		this.kursklausurmanager.updateKursklausur(klausur);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	erzeugeKlausurvorgabe = async (vorgabe: GostKlausurvorgabe): Promise<GostKlausurvorgabe> => {
+		api.status.start();
+		vorgabe.abiJahrgang = this.abiturjahr;
+		vorgabe.halbjahr = this.halbjahr.id;
+		const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
+		this.klausurvorgabenmanager.updateKlausurvorgabe(vorgabe);
+		this.commit();
+		api.status.stop();
+		return neueVorgabe;
+	}
+
+	patchKlausurvorgabe = async (vorgabe: GostKlausurvorgabe): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, vorgabe.idVorgabe);
+		this.klausurvorgabenmanager.updateKlausurvorgabe(vorgabe);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	loescheKlausurvorgabe = async (vorgabe: GostKlausurvorgabe): Promise<boolean> => {
+		api.status.start();
+		const result = await api.server.deleteGostKlausurenVorgabe(api.schema, vorgabe.idVorgabe);
+		this.klausurvorgabenmanager.removeVorgabe(vorgabe);
 		this.commit();
 		api.status.stop();
 		return true;

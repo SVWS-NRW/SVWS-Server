@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col border border-blue-900 border-solid w-52">
 		<div class="flex flex-row-reverse">
-			<svws-ui-badge class="-m-2 z-10" v-if="konflikteTerminDragKlausur > 0 || konflikteTermin > 0" type="error" size="big">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</svws-ui-badge>
+			<svws-ui-badge class="-m-2 z-10" v-if="konflikteTerminDragKlausur > 0 || konflikteTermin > 0" type="error" size="big"><span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span></svws-ui-badge>
 		</div>
 		<svws-ui-drop-data @drop="setKlausurToTermin">
 			<table class="w-full">
@@ -12,7 +12,7 @@
 							<svws-ui-popover v-if="loescheKlausurtermin != undefined" :hover="false" placement="left-end" :disable-click-away="false">
 								<template #trigger>
 									<svws-ui-button class="action-button">
-										<svws-ui-icon> <i-ri-more2-line /> </svws-ui-icon>
+										<i-ri-more2-line />
 									</svws-ui-button>
 								</template>
 								<template #content>

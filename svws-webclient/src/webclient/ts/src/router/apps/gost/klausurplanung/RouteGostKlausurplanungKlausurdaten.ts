@@ -2,7 +2,7 @@ import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../../RouteGost";
-import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
+import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 
 const SGostKlausurplanungDaten = () => import("~/components/gost/klausurplanung/SGostKlausurplanungDaten.vue");
 
@@ -20,7 +20,14 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			faecherManager: routeGostKlausurplanung.data.faecherManager,
+			kursklausurmanager: () => routeGostKlausurplanung.data.kursklausurmanager,
+			klausurvorgabenmanager: () => routeGostKlausurplanung.data.klausurvorgabenmanager,
+			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
+			erzeugeKlausurvorgabe: routeGostKlausurplanung.data.erzeugeKlausurvorgabe,
+			patchKlausurvorgabe: routeGostKlausurplanung.data.patchKlausurvorgabe,
+			loescheKlausurvorgabe: routeGostKlausurplanung.data.loescheKlausurvorgabe,
 		}
 	}
 

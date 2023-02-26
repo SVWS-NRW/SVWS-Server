@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 
-	import { GostKlausurtermin, GostKursklausur } from '@svws-nrw/svws-core-ts';
+	import { GostKursklausur, GostKlausurtermin } from '@svws-nrw/svws-core-ts';
 	import { computed, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 

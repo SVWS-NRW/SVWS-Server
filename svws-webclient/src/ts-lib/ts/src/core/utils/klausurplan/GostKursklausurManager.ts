@@ -424,15 +424,40 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
-	public gibKonfliktKursklausurKursklausur(idKursklausur1 : number, idKursklausur2 : number) : List<number> {
-		let klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
-		let klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
-		if (klausur1 === null || klausur2 === null) {
-			return new Vector();
-		}
-		let konflikte : List<number> | null = new Vector(klausur1.schuelerIds);
-		konflikte.retainAll(klausur2.schuelerIds);
-		return konflikte;
+	public gibKonfliktKursklausurKursklausur(idKursklausur1 : number, idKursklausur2 : number) : List<number>;
+
+	/**
+	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
+	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
+	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
+	 * 
+	 * @param klausur1 die erste zu prüfende Kursklausur
+	 * @param klausur2 die zweite zu prüfende Kursklausur
+	 * 
+	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
+	 */
+	public gibKonfliktKursklausurKursklausur(klausur1 : GostKursklausur | null, klausur2 : GostKursklausur | null) : List<number>;
+
+	/**
+	 * Implementation for method overloads of 'gibKonfliktKursklausurKursklausur'
+	 */
+	public gibKonfliktKursklausurKursklausur(__param0 : GostKursklausur | null | number, __param1 : GostKursklausur | null | number) : List<number> {
+		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			let idKursklausur1 : number = __param0 as number;
+			let idKursklausur2 : number = __param1 as number;
+			let klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
+			let klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
+			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))) || (__param1 === null))) {
+			let klausur1 : GostKursklausur | null = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
+			let klausur2 : GostKursklausur | null = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+			if (klausur1 === null || klausur2 === null) {
+				return new Vector();
+			}
+			let konflikte : List<number> | null = new Vector(klausur1.schuelerIds);
+			konflikte.retainAll(klausur2.schuelerIds);
+			return konflikte;
+		} else throw new Error('invalid method overload');
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

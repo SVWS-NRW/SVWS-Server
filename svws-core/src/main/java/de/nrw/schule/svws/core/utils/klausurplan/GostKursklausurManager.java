@@ -422,6 +422,20 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(long idKursklausur1, long idKursklausur2) {
 		GostKursklausur klausur1 = _mapIdKursklausur.get(idKursklausur1);
 		GostKursklausur klausur2 = _mapIdKursklausur.get(idKursklausur2);
+		return gibKonfliktKursklausurKursklausur(klausur1, klausur2);
+	}
+	
+	/**
+	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
+	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
+	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
+	 * 
+	 * @param klausur1 die erste zu prüfende Kursklausur
+	 * @param klausur2 die zweite zu prüfende Kursklausur
+	 * 
+	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
+	 */
+	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(GostKursklausur klausur1, GostKursklausur klausur2) {
 		if (klausur1 == null || klausur2 == null) {
 			// TODO Errorhandling
 			return new Vector<>();

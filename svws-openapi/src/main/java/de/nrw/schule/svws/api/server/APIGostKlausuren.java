@@ -71,6 +71,80 @@ public class APIGostKlausuren {
 	}
 	
 	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurvorgabe.
+	 * 
+	 * @param schema     das Datenbankschema, in welchem die Klausurvorgabe erstellt
+	 *                   wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param is         JSON-Objekt mit den Daten
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@POST
+	@Path("/vorgaben/new")
+	@Operation(summary = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.", description = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe " + "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurvorgabe wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createGostKlausurenVorgabe(@PathParam("schema") String schema, @RequestBody(description = "Der Post für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class))) InputStream is,
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
+			return (new DataGostKlausurenVorgabe(conn, -1)).create(is);
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Daten einer Gost-Klausurvorgabe.
+	 * 
+	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param id		 die ID der Klausurvorgabe
+	 * @param is         JSON-Objekt mit den Daten
+	 * 
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/vorgaben/{id : \\d+}")
+	@Operation(summary = "Patcht eine Gost-Klausurvorgabe.", description = "Patcht eine Gost-Klausurvorgabe."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Klausurvorgabe integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Klausurvorgabe-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostKlausurenVorgabe(@PathParam("schema") String schema, @PathParam("id") long id,
+			@RequestBody(description = "Der Patch für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class))) InputStream is,
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return (new DataGostKlausurenVorgabe(conn, -1).patch(id, is));
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für das Löschen einer Gost-Klausurvorgabe.
+	 * 
+	 * @param schema     das Datenbankschema, in welchem die Klausurvorgabe gelöscht wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param id	 die ID der zu löschenden Klausurvorgabe
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@DELETE
+	@Path("/vorgaben/delete/{id : \\d+}")
+	@Operation(summary = "Löscht eine Gost-Klausurvorgabe.", description = "Löscht eine Gost-Klausurvorgabe."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Gost-Klausurvorgabe " + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Klausurvorgabe für die angegebene ID wurden erfolgreich gelöscht.",
+    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))    
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe zu löschen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostKlausurenVorgabe(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
+			return (new DataGostKlausurenVorgabe(conn, -1)).delete(id);
+		}
+	}
+	
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Klausuren eines Abiturjahrgangs in
 	 * einem bestimmten Halbjahr der Gymnasialen Oberstufe.
 	 * 

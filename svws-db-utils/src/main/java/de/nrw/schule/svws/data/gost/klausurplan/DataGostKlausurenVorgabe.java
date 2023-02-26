@@ -2,6 +2,8 @@ package de.nrw.schule.svws.data.gost.klausurplan;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.function.Function;
 
@@ -9,8 +11,12 @@ import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -84,135 +90,149 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
 	}
 
-//	@Override
-//	public Response patch(Long id, InputStream is) {
-//    	Map<String, Object> map = JSONMapper.toMap(is);
-//    	if (map.size() > 0) {
-//    		try {
-//    			conn.transactionBegin();
-//    			DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
-//		    	if (termin == null)
-//		    		throw OperationError.NOT_FOUND.exception();
-//		    	for (Entry<String, Object> entry : map.entrySet()) {
-//		    		String key = entry.getKey();
-//		    		Object value = entry.getValue();
-//		    		switch (key) {
-//						case "id" -> {
-//							Long patch_id = JSONMapper.convertToLong(value, true);
-//							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-//								throw OperationError.BAD_REQUEST.exception();
-//						}
-//						case "abijahr" -> {
-//							int patch_abijahr = JSONMapper.convertToInteger(value, false);
-//							if ((patch_abijahr != termin.Abi_Jahrgang))
-//								throw OperationError.BAD_REQUEST.exception();
-//						}
-//						case "halbjahr" -> {
-//							int patch_halbjahr = JSONMapper.convertToInteger(value, false);
-//							if ((patch_halbjahr != termin.Halbjahr.id))
-//								throw OperationError.BAD_REQUEST.exception();
-//						}
-//						case "quartal" -> {
-//							int patch_quartal = JSONMapper.convertToInteger(value, false);
-//							if ((patch_quartal != termin.Quartal))
-//								throw OperationError.BAD_REQUEST.exception();
-//						}
-//						case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
-//						case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
-//						case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
-//		    			
-//		    			default -> throw OperationError.BAD_REQUEST.exception();
-//		    		}
-//		    	}
-//		    	conn.transactionPersist(termin);
-//		    	conn.transactionCommit();
-//    		} catch (Exception e) {
-//    			if (e instanceof WebApplicationException webAppException)
-//    				return webAppException.getResponse();
-//				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-//    		} finally {
-//    			// Perform a rollback if necessary
-//    			conn.transactionRollback();
-//    		}
-//    	}
-//    	return Response.status(Status.OK).build();
-//	}
+	@Override
+	public Response patch(Long id, InputStream is) {
+    	Map<String, Object> map = JSONMapper.toMap(is);
+    	if (map.size() > 0) {
+    		try {
+    			conn.transactionBegin();
+    			DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
+		    	if (vorgabe == null)
+		    		throw OperationError.NOT_FOUND.exception();
+		    	for (Entry<String, Object> entry : map.entrySet()) {
+		    		String key = entry.getKey();
+		    		Object value = entry.getValue();
+		    		switch (key) {
+						case "idVorgabe" -> {
+							Long patch_id = JSONMapper.convertToLong(value, true);
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "abiJahrgang" -> {
+							int patch_abijahr = JSONMapper.convertToInteger(value, false);
+							if ((patch_abijahr != vorgabe.Abi_Jahrgang))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "halbjahr" -> {
+							int patch_halbjahr = JSONMapper.convertToInteger(value, false);
+							if ((patch_halbjahr != vorgabe.Halbjahr.id))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "quartal" -> vorgabe.Quartal = JSONMapper.convertToInteger(value, false);
+						case "idFach" -> vorgabe.Fach_ID = JSONMapper.convertToLong(value, false);
+						case "kursartAllg" -> vorgabe.KursartAllg = JSONMapper.convertToString(value, false, false);
+						case "dauer" -> vorgabe.Dauer = JSONMapper.convertToInteger(value, false);
+						case "auswahlzeit" -> vorgabe.Auswahlzeit = JSONMapper.convertToInteger(value, false);
+						case "istMdlPruefung" -> vorgabe.IstMdlPruefung = JSONMapper.convertToBoolean(value, false);
+						case "istAudioNotwendig" -> vorgabe.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false);
+						case "istVideoNotwendig" -> vorgabe.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false);
+						case "bemerkungVorgabe" -> vorgabe.Bemerkungen = JSONMapper.convertToString(value, true, true);
+		    			
+		    			default -> throw OperationError.BAD_REQUEST.exception();
+		    		}
+		    	}
+		    	conn.transactionPersist(vorgabe);
+		    	conn.transactionCommit();
+    		} catch (Exception e) {
+    			if (e instanceof WebApplicationException webAppException)
+    				return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		} finally {
+    			// Perform a rollback if necessary
+    			conn.transactionRollback();
+    		}
+    	}
+    	return Response.status(Status.OK).build();
+	}
 	
 	@Override
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response patch(Long id, InputStream is) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/**
+	 * Erstellt eine neue Gost-Klausurvorgabe *
+	 * 
+	 * @param is       Das JSON-Objekt mit den Daten
+	 * 
+	 * @return Eine Response mit der neuen Gost-Klausurvorgabe
+	 */
+	public Response create(InputStream is) {
+		DTOGostKlausurenVorgaben vorgabe = null;
+		try {
+			conn.transactionBegin();
+			// Bestimme die ID des neuen Klausurtermins
+			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
+			Long ID = lastID == null ? 1 : lastID.MaxID + 1;
+			
+			 int abi_Jahrgang = -1;
+			 GostHalbjahr halbjahr = GostHalbjahr.EF1;
+			 int quartal = -1;
+			 long fach_ID = -1;
+			 String kursartAllg = "";
+			 int dauer = 0;
+			 int auswahlzeit = 0;
+			 boolean istMdlPruefung = false;
+			 boolean istAudioNotwendig = false;
+			 boolean istVideoNotwendig = false;
+			 String bemerkungen = null;
+			
+			Map<String, Object> map = JSONMapper.toMap(is);
+			if (map.size() > 0) {
+				for (Entry<String, Object> entry : map.entrySet()) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					switch (key) {
+					case "abiJahrgang" -> abi_Jahrgang = JSONMapper.convertToInteger(value, false);
+					case "halbjahr" -> halbjahr = GostHalbjahr.fromID(JSONMapper.convertToInteger(value, false));
+					case "quartal" -> quartal = JSONMapper.convertToInteger(value, false);
+					case "idFach" -> fach_ID = JSONMapper.convertToLong(value, false);
+					case "kursartAllg" -> kursartAllg = JSONMapper.convertToString(value, false, false);
+					case "dauer" -> dauer = JSONMapper.convertToInteger(value, false);
+					case "auswahlzeit" -> auswahlzeit = JSONMapper.convertToInteger(value, false);
+					case "istMdlPruefung" -> istMdlPruefung = JSONMapper.convertToBoolean(value, false);
+					case "istAudioNotwendig" -> istAudioNotwendig = JSONMapper.convertToBoolean(value, false);
+					case "istVideoNotwendig" -> istVideoNotwendig = JSONMapper.convertToBoolean(value, false);
+					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true);
+					case "idVorgabe" -> key = key;
+					default -> throw OperationError.BAD_REQUEST.exception();
+					}
+				}
+			}	
+			vorgabe = new DTOGostKlausurenVorgaben(ID, abi_Jahrgang, halbjahr, quartal, fach_ID, kursartAllg, dauer, auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
+			vorgabe.Bemerkungen = bemerkungen;
+			conn.transactionPersist(vorgabe);
+			if (!conn.transactionCommit())
+				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Gost-Klausurvorgabe");
+		} catch (Exception e) {
+			if (e instanceof WebApplicationException webApplicationException)
+				return webApplicationException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
 
-//	/**
-//	 * Erstellt einen neuen Gost-Klausurtermin *
-//	 * 
-//	 * @param halbjahr das Gost-Halbjahr, in dem der Klausurtermin liegen soll
-//	 * @param quartal  das Quartal, in dem der Klausurtermin liegen soll.
-//	 * @param is       Das JSON-Objekt mit den Daten
-//	 * 
-//	 * @return Eine Response mit dem neuen Gost-Klausurtermin
-//	 */
-//	public Response create(int halbjahr, int quartal, InputStream is) {
-//		DTOGostKlausurenTermine termin = null;
-//		try {
-//			conn.transactionBegin();
-//			// Bestimme die ID des neuen Klausurtermins
-//			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Termine");
-//			Long ID = lastID == null ? 1 : lastID.MaxID + 1;
-//			termin = new DTOGostKlausurenTermine(ID, _abiturjahr, GostHalbjahr.fromID(halbjahr), quartal);
-//			Map<String, Object> map = JSONMapper.toMap(is);
-//			if (map.size() > 0) {
-//				for (Entry<String, Object> entry : map.entrySet()) {
-//					String key = entry.getKey();
-//					Object value = entry.getValue();
-//					switch (key) {
-//					case "id" -> {
-//						Long patch_id = JSONMapper.convertToLong(value, true);
-//						if ((patch_id == null) || (patch_id.longValue() != ID.longValue()))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "abijahr" -> {
-//						int patch_abijahr = JSONMapper.convertToInteger(value, false);
-//						if ((patch_abijahr != termin.Abi_Jahrgang))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "halbjahr" -> {
-//						int patch_halbjahr = JSONMapper.convertToInteger(value, false);
-//						if ((patch_halbjahr != termin.Halbjahr.id))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "quartal" -> {
-//						int patch_quartal = JSONMapper.convertToInteger(value, false);
-//						if ((patch_quartal != termin.Quartal))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
-//					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
-//					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
-//					default -> throw OperationError.BAD_REQUEST.exception();
-//					}
-//				}
-//			}
-//			conn.transactionPersist(termin);
-//			if (!conn.transactionCommit())
-//				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Gost-Klausurtermins");
-//		} catch (Exception e) {
-//			if (e instanceof WebApplicationException webApplicationException)
-//				return webApplicationException.getResponse();
-//			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-//		} finally {
-//			conn.transactionRollback();
-//		}
-//
-//		GostKlausurtermin daten = dtoMapper.apply(termin);
-//		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-//
-//	}
+		GostKlausurvorgabe daten = dtoMapper.apply(vorgabe);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
+	}
+	
+	/**
+	 * Löscht eine Gost-Klausurvorgabe *
+	 * 
+	 * @param id 	die ID der zu löschenden Klausurvorgabe 
+	 * 
+	 * @return die Response
+	 */
+	public Response delete(Long id) {
+		// TODO use transaction
+		// Bestimme den Termin
+		DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
+		if (vorgabe == null)
+			return OperationError.NOT_FOUND.getResponse();
+		// Entferne den Termin
+		conn.remove(vorgabe);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
+	}
 
 }
