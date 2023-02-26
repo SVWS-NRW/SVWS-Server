@@ -3,6 +3,7 @@ import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerList
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
 import { ComputedRef, computed } from "vue";
+import { Config } from "~/components/Config";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich
@@ -12,6 +13,7 @@ import { ComputedRef, computed } from "vue";
  */
 class Api {
 
+	/** Der API-Status */
 	public readonly status: ApiStatus = new ApiStatus();
 
 	/** Die aktuelle Verbindung zum SVWS-Server */
@@ -169,6 +171,14 @@ class Api {
 		return this.benutzerdaten.typID;
 	}
 
+	/// --- Die Konfiguration
+
+	/**
+	 * Gibt die benutzerspezifische und globale Konfiguration zurück.
+	 */
+	public get config() : Config {
+		return this.conn.config;
+	}
 
 	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
 

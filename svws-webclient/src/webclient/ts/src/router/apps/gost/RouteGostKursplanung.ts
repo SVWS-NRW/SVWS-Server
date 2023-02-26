@@ -8,6 +8,7 @@ import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanung
 import { api } from "~/router/Api";
 import { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 import { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
+import { ConfigElement } from "~/components/Config";
 
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -27,6 +28,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
+		api.config.addElements([
+			new ConfigElement("gost.kursansicht.sortierung", "user", "kursart")
+		]);
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -185,6 +189,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
+			config: api.config,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,
 			hatErgebnis: this.data.hatErgebnis,

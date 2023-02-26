@@ -1,5 +1,6 @@
 import { ApiSchema, ApiServer, BenutzerDaten, BenutzerKompetenz, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { Ref, ref, ShallowRef, shallowRef } from "vue";
+import { Config } from "~/components/Config";
 
 export class ApiConnection {
 
@@ -36,16 +37,24 @@ export class ApiConnection {
 	// Gibt die Kompetenzen des Benutzer zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
 	protected _kompetenzen: ShallowRef<Set<BenutzerKompetenz> | undefined> = shallowRef(undefined);
 
+	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
+	protected _config: Ref<Config | undefined> = ref(undefined);
+
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
 	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
 
+	public constructor() {
+		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
+	}
 
+	// Gibt die Server-API zurück.
 	get api(): ApiServer {
 		if (this._api === undefined)
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
 		return this._api;
 	}
 
+	// Gibt das Datenbank-Schema zurück.
 	get schema(): string {
 		if (this._schema === undefined)
 			throw new Error("Es liegt kein DB-Schema für die Api vor")
@@ -88,6 +97,33 @@ export class ApiConnection {
 		return this._kompetenzen.value;
 	}
 
+	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
+	get config(): Config {
+		if (this._config.value === undefined)
+			throw new Error("Eine Konfiguration ist nicht vorhanden.");
+		return this._config.value;
+	}
+
+	/**
+	 * Setzt den Benutzer-spezifischen Konfigurationseintrag
+	 *
+	 * @param key    der Schlüssel des Konfigurationseintrags
+	 * @param value  der Wert des Konfigurationseintrags
+	 */
+	protected setConfigUser = async (key: string, value: string): Promise<void> => {
+		await this.api.setClientConfigUserKey(value, this.schema, 'SVWS-Client', key);
+	}
+
+	/**
+	 * Setzt den globalen Konfigurationseintrag
+	 *
+	 * @param key    der Schlüssel des Konfigurationseintrags
+	 * @param value  der Wert des Konfigurationseintrags
+	 */
+	protected setConfigGlobal = async (key: string, value: string): Promise<void> => {
+		await this.api.setClientConfigGlobalKey(value, this.schema, 'SVWS-Client', key);
+	}
+
 	// Gibt die Stammdaten der Schule zurück, sofern ein Login sattgefunden hat
 	get schuleStammdaten(): SchuleStammdaten {
 		if (this._stammdaten.value === undefined)
@@ -95,7 +131,14 @@ export class ApiConnection {
 		return this._stammdaten.value;
 	}
 
-	private async connect(hostname : string): Promise<List<DBSchemaListeEintrag>> {
+	/**
+	 * Stellt eine Verbindung zu dem angebenen Hostnamen her.
+	 *
+	 * @param hostname   der Hostname, evtl. mit Port-Adresse
+	 *
+	 * @returns die Liste der Schemata, welche über die Verbindung zur Verfügung stehen.
+	 */
+	protected async connect(hostname : string): Promise<List<DBSchemaListeEintrag>> {
 		const url = `https://${hostname}`;
 		const api = new ApiServer(url, "", "");
 		const schemata = await api.getConfigDBSchemata();
@@ -104,6 +147,11 @@ export class ApiConnection {
 		return schemata;
 	}
 
+	/**
+	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
+	 *
+	 * @param hostname    der Hostname
+	 */
 	setHostname = (hostname: string): void => {
 		this._hostname.value = hostname;
 	}
@@ -144,7 +192,7 @@ export class ApiConnection {
 	 *
 	 * @returns true, falls der benutzer Administrator-Rechte hat, und ansonsten false
 	 */
-	private getIstAdmin(daten: BenutzerDaten): boolean {
+	protected getIstAdmin(daten: BenutzerDaten): boolean {
 		if (daten.istAdmin)
 			return true;
 		for (const gruppe of daten.gruppen)
@@ -161,7 +209,7 @@ export class ApiConnection {
 	 *
 	 * @returns die Menge an Kompetenzen
 	 */
-	private getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
+	protected getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
 		const result: Set<BenutzerKompetenz> = new Set();
 		// Jeder Benutzer hat die Kompetenz auf Teile Der Applikation zuzugreifen, die keine Kompetenz benötigen
 		result.add(BenutzerKompetenz.KEINE);
@@ -191,6 +239,24 @@ export class ApiConnection {
 	}
 
 	/**
+	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
+	 * TypeScript-Objekt.
+	 *
+	 * @returns das Konfigurationspbjekt
+	 */
+	protected async getConfig(): Promise<void> {
+		const cfg = await this.api.getClientConfig(this.schema, 'SVWS-Client');
+		const mapUser = new Map<string, string>();
+		for (const c of cfg.user)
+			mapUser.set(c.key, c.value);
+		const mapGlobal = new Map<string, string>();
+		for (const c of cfg.global)
+			mapGlobal.set(c.key, c.value);
+		this.config.mapGlobal = mapGlobal;
+		this.config.mapUser = mapUser;
+	}
+
+	/**
 	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
 	 *
 	 * @param {string} schema   Das Schema
@@ -212,20 +278,26 @@ export class ApiConnection {
 			this._password = password;
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._authenticated.value = true;
-			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
+			await this.getConfig();
+			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
-			this._stammdaten.value = undefined;
 			this._benutzerdaten.value = undefined;
 			this._istAdmin.value = undefined;
 			this._kompetenzen.value = undefined;
+			this.config.mapGlobal = new Map();
+			this.config.mapUser = new Map();
+			this._stammdaten.value = undefined;
 		}
 	}
 
+	/**
+	 * Trennt die Verbindung für den aktuell angemeldeten Benutzer
+	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
 		this._stammdaten.value = undefined;

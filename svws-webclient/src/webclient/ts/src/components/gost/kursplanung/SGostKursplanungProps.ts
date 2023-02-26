@@ -1,4 +1,5 @@
 import { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { Config } from "~/components/Config";
 import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface GostKursplanungProps {
@@ -18,6 +19,7 @@ export interface GostKursplanungProps {
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
+	config: Config;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
 	schuelerFilter: GostKursplanungSchuelerFilter | undefined;

@@ -77,7 +77,7 @@
 					<template v-if="sort_by==='fach_id'">
 						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+								<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -89,7 +89,7 @@
 					<template v-else>
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+								<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
 									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -131,9 +131,7 @@
 	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core-ts";
 	import { SvwsUiButton, SvwsUiContentCard, SvwsUiIcon, SvwsUiModal, SvwsUiTextInput } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { api } from "~/router/Api";
-	import { routeApp } from "~/router/RouteApp";
-	import type { UserConfigKeys } from "~/utils/userconfig/keys";
+	import { Config } from "~/components/Config";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
@@ -152,6 +150,7 @@
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		config: Config;
 		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
@@ -163,19 +162,14 @@
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 	const dragAndDropData: Ref<{ schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined> = ref(undefined);
 
-	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
-		computed({
-			get(): UserConfigKeys['gost.kursansicht.sortierung'] {
-				return (routeApp.data.user_config.value.get('gost.kursansicht.sortierung')
-					|| 'kursart') as UserConfigKeys['gost.kursansicht.sortierung'];
-			},
-			set(value: UserConfigKeys['gost.kursansicht.sortierung']) {
-				if (value === undefined)
-					value = 'kursart'
-				void api.server.setClientConfigUserKey(value, api.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
-				routeApp.data.user_config.value.set('gost.kursansicht.sortierung', value)
-			}
-		});
+	const sort_by: WritableComputedRef<string> = computed({
+		get: () => props.config.getValue('gost.kursansicht.sortierung'),
+		set: (value) => {
+			if (value === undefined)
+				value = 'kursart'
+			void props.config.setValue('gost.kursansicht.sortierung', value);
+		}
+	});
 
 	const blockungsname: ComputedRef<string> = computed(() => props.getDatenmanager().daten().name);
 

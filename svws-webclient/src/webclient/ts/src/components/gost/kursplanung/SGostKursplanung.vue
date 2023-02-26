@@ -1,6 +1,6 @@
 <template>
 	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex content-start">
-		<s-card-gost-kursansicht :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
+		<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"

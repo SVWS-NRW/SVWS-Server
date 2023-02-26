@@ -24,10 +24,10 @@
 <script setup lang="ts">
 
 	import { List, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
-		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer, GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
+		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
+		GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { routeApp } from "~/router/RouteApp";
-	import type { UserConfigKeys } from "~/utils/userconfig/keys"
+	import { Config } from "~/components/Config";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
@@ -41,6 +41,7 @@
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		config: Config;
 		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		fach: GostStatistikFachwahl;
@@ -73,7 +74,7 @@
 		return liste;
 	}
 
-	const sort_by: ComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> = computed(() => (routeApp.data.user_config.value.get('gost.kursansicht.sortierung') || 'kursart') as UserConfigKeys['gost.kursansicht.sortierung']);
+	const sort_by: ComputedRef<string> = computed(() => props.config.getValue('gost.kursansicht.sortierung'));
 
 	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		if (sort_by.value === 'kursart')

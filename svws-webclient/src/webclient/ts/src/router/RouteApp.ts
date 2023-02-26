@@ -20,8 +20,8 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
-import { UserConfigKeys } from "~/utils/userconfig/keys";
 import { api } from "./Api";
+import { ConfigElement } from "~/components/Config";
 
 export class RouteDataApp {
 
@@ -30,19 +30,17 @@ export class RouteDataApp {
 	ortsteile: List<OrtsteilKatalogEintrag> = new Vector();
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag> = new Map();
 
-	public user_config: Ref<Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]>> = ref(new Map());
-
 	aktAbschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
 		get: () => {
-			let abschnitt = this.user_config.value.get('app.akt_abschnitt') as Schuljahresabschnitt | undefined;
-			if (abschnitt === undefined) {
-				this.user_config.value.set('app.akt_abschnitt', api.abschnitt);
+			let abschnitt = api.config.getObjectValue("app.akt_abschnitt", Schuljahresabschnitt.transpilerFromJSON);
+			if (abschnitt === null) {
+				void api.config.setObjectValue("app.akt_abschnitt", api.abschnitt, Schuljahresabschnitt.transpilerToJSON);
 				abschnitt = api.abschnitt;
 			}
 			return abschnitt;
 		},
 		set: (abschnitt: Schuljahresabschnitt) => {
-			this.user_config.value.set('app.akt_abschnitt', abschnitt);
+			void api.config.setObjectValue("app.akt_abschnitt", abschnitt, Schuljahresabschnitt.transpilerToJSON);
 			// TODO was tun, wenn das akt Halbjahr neu gesetzt wurde?
 		}
 	})
@@ -84,6 +82,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeStatistik
 		];
 		super.defaultChild = routeSchueler;
+		api.config.addElements([
+			new ConfigElement("app.akt_abschnitt", "user", "")
+		]);
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<any> {

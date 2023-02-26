@@ -2,6 +2,7 @@ import { BaseApi } from '../api/BaseApi';
 import { AbgangsartKatalog, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+import { BenutzerConfig, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
 import { BenutzerDaten, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
 import { BenutzergruppeDaten, cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
 import { BenutzergruppeListeEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeListeEintrag } from '../core/data/benutzer/BenutzergruppeListeEintrag';
@@ -1468,6 +1469,31 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerBetriebsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getClientConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/client/config/{app}
+	 *
+	 * Liest die Konfigurationseinträge der angegebenen Client-Anwendung aus.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Key-Value-Paare der Konfigurationseinträge als Liste
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerConfig
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} app - der Pfad-Parameter app
+	 *
+	 * @returns Die Key-Value-Paare der Konfigurationseinträge als Liste
+	 */
+	public async getClientConfig(schema : string, app : string) : Promise<BenutzerConfig> {
+		const path = "/db/{schema}/client/config/{app}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{app\s*(:[^}]+)?}/g, app);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return BenutzerConfig.transpilerFromJSON(text);
 	}
 
 

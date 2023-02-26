@@ -70,6 +70,8 @@ export { AdressbuchEintrag } from './core/data/adressbuch/AdressbuchEintrag';
 export { AdressbuchKontakt } from './core/data/adressbuch/AdressbuchKontakt';
 export { AdressbuchKontaktListe } from './core/data/adressbuch/AdressbuchKontaktListe';
 export { Telefonnummer } from './core/data/adressbuch/Telefonnummer';
+export { BenutzerConfig } from './core/data/benutzer/BenutzerConfig';
+export { BenutzerConfigElement } from './core/data/benutzer/BenutzerConfigElement';
 export { BenutzerDaten } from './core/data/benutzer/BenutzerDaten';
 export { BenutzerKompetenzGruppenKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 export { BenutzerKompetenzKatalogEintrag } from './core/data/benutzer/BenutzerKompetenzKatalogEintrag';
