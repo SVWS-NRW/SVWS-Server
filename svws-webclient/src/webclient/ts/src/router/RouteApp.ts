@@ -19,7 +19,7 @@ import type { AppProps } from "~/components/SAppProps";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { type List, OrtKatalogEintrag, type OrtsteilKatalogEintrag, Vector, Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 import { routeLogin } from "./RouteLogin";
-import { computed, Ref, ref, WritableComputedRef } from "vue";
+import { computed, WritableComputedRef } from "vue";
 import { api } from "./Api";
 import { ConfigElement } from "~/components/Config";
 
@@ -45,7 +45,7 @@ export class RouteDataApp {
 		}
 	})
 
-	public setAbschnitt(abschnitt: Schuljahresabschnitt) {
+	setAbschnitt = (abschnitt: Schuljahresabschnitt): void => {
 		this.aktAbschnitt.value = abschnitt;
 	}
 }
