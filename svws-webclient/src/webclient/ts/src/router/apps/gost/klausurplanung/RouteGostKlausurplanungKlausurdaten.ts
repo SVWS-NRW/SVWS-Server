@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../../RouteGost";
@@ -22,8 +22,8 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 		return {
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
-			kursklausurmanager: () => routeGostKlausurplanung.data.kursklausurmanager,
-			klausurvorgabenmanager: () => routeGostKlausurplanung.data.klausurvorgabenmanager,
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
+			klausurvorgabenmanager: () => { return routeGostKlausurplanung.data.hatKlausurvorgabenManager ? routeGostKlausurplanung.data.klausurvorgabenmanager : new GostKlausurvorgabenManager(new Vector())},
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			erzeugeKlausurvorgabe: routeGostKlausurplanung.data.erzeugeKlausurvorgabe,
 			patchKlausurvorgabe: routeGostKlausurplanung.data.patchKlausurvorgabe,

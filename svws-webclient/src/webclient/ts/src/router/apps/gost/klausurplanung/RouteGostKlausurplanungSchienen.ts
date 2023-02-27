@@ -1,7 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 import { GostKlausurplanungSchienenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungSchienenProps";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
@@ -31,7 +31,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
 		return {
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
-			kursklausurmanager: () => routeGostKlausurplanung.data.kursklausurmanager,
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
 			setTerminToKursklausur: routeGostKlausurplanung.data.setTerminToKursklausur,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermin: routeGostKlausurplanung.data.loescheKlausurtermin,
