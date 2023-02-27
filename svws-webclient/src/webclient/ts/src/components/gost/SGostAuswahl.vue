@@ -7,7 +7,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :model-value:clicked="auswahl" clickable @update:clicked="setAbiturjahrgang" :items="rows" :columns="cols" footer>
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="setAbiturjahrgang" :items="rows" :columns="cols" footer>
 					<template #cell(abiturjahr)="{ value }">
 						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
 						<span v-if="(pending && value.abiturjahr === auswahl?.abiturjahr)" class="loading-spinner-dimensions">

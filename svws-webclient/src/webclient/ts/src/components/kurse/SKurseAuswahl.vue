@@ -7,8 +7,15 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setKurs" :items="rows"
-					:columns="cols" clickable :footer="false" unique-key="id" />
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="setKurs" :items="listKurse"
+					:columns="cols" clickable :footer="false">
+					<template #cell(lehrer)="{ value }">
+						{{ mapLehrer.get(value)?.kuerzel ?? "" }}
+					</template>
+					<template #cell(idJahrgaenge)="{ value }">
+						{{ getJahrgangsKuerzel(value) }}
+					</template>
+				</svws-ui-data-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -16,32 +23,17 @@
 
 <script setup lang="ts">
 
-	import { KursListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { Vector } from "@svws-nrw/svws-core-ts";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { computed } from "vue";
 	import { KurseAuswahlProps } from "./SKurseAuswahlProps";
 
 	const props = defineProps<KurseAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "lehrer_name", label: "Fachlehrer", sortable: true },
-		{ key: "jahrgang", label: "Jahrgang", sortable: true }
+		{ key: "lehrer", label: "Fachlehrer", sortable: true },
+		{ key: "idJahrgaenge", label: "Jahrgänge", sortable: true }
 	];
-
-	/**
-	 * Bestimmt für die übergebene Lehrer-ID dessen Kürzel
-	 *
-	 * @param idLehrer   die ID des Lehrers
-	 */
-	function getLehrerKuerzel(idLehrer: number | null) : string {
-		if (idLehrer === null)
-			return "";
-		const lehrer = props.mapLehrer.get(idLehrer);
-		if (lehrer === undefined)
-			return "";
-		return lehrer.kuerzel;
-	}
 
 	/**
 	 * Ermittel eine komma-separierte Liste der Kürzel der Jahrgänge mit den übergebenen IDs.
@@ -64,11 +56,4 @@
 		return result;
 	}
 
-	const rows = computed(() =>
-		[...props.listKurse].map((e: KursListeEintrag) => ({
-			...e,
-			lehrer_name: getLehrerKuerzel(e.lehrer),
-			jahrgang: getJahrgangsKuerzel(e.idJahrgaenge)
-		}))
-	);
 </script>

@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
 					:columns="cols" clickable :footer="true">
 					<template #footer>
 						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">

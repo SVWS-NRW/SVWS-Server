@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :model-value:clicked="auswahl" clickable @update:clicked="setJahrgang" :items="listJahrgaenge" :columns="cols" />
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="setJahrgang" :items="listJahrgaenge" :columns="cols" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

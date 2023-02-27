@@ -14,7 +14,7 @@
 		</svws-ui-table>
 	</div>
 	<div>
-		<svws-ui-data-table :model-value:clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable :footer="false" />
+		<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable :footer="false" />
 	</div>
 </template>
 

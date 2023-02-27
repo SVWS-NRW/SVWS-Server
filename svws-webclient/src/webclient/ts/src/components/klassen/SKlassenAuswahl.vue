@@ -7,7 +7,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table model-value:clicked="auswahl" @update:clicked="setKlasse" clickable :columns="cols" :items="listKlassen" :footer="false" />
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="setKlasse" clickable :columns="cols" :items="listKlassen" :footer="false" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

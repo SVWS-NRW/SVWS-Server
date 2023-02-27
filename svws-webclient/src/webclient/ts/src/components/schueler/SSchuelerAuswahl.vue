@@ -36,8 +36,11 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-					:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
+					:columns="cols" clickable selectable :footer="true">
+					<template #cell(idKlasse)="{ value }">
+						{{ mapKlassen.get(value)?.kuerzel ?? value }}
+					</template>
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<div class="text-sm normal-case mr-auto">
@@ -75,7 +78,7 @@
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
 	const cols: DataTableColumn[] = [
-		{ key: "klasse", label: "Klasse", sortable: true, span: 1 },
+		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
@@ -87,10 +90,6 @@
 			.filter(s => !props.filter.klasse || s.idKlasse === props.filter.klasse.id)
 			.filter(s => !props.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(props.filter.kurs.id))
 			.filter(s => !props.filter.schulgliederung || s.schulgliederung === props.filter.schulgliederung.daten.kuerzel)
-			.map(e => ({
-				...e,
-				klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel ?? ""
-			}))
 	);
 
 	const rowsFiltered = computed(() => {

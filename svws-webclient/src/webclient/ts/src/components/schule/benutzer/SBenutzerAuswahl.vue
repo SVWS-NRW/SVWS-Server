@@ -14,7 +14,7 @@
 			</div>
 		</template>
 		<template #content>
-			<svws-ui-data-table :model-value:clicked="auswahl" @update:clicked="setBenutzer" :model-value="auswahlGruppe" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="setBenutzer" :model-value="auswahlGruppe" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
 				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
 				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footer>
