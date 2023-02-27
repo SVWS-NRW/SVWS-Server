@@ -24,6 +24,7 @@ import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.schueler.Herkunftsarten;
 import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
@@ -908,16 +909,32 @@ public class DBMigrationManager {
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
-			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
+				continue;
+			}
+			if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
 				entities.remove(i);
-			} else if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.");
+				continue;
+			} 
+			// Prüfe die Fachklasse im Lernabschnitt und setze diese ggf. auf NULL
+			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
+				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.");
 				daten.Fachklasse_ID = null;
-				schuelerLernabschnittsIDs.add(daten.ID);
-			} else {
-				schuelerLernabschnittsIDs.add(daten.ID);
 			}
+			// Prüfe die Schulgliederung im Lernabschnitt und setze diese ggf. auf NULL
+			if (daten.Schulgliederung != null) {
+				if ("".equals(daten.Schulgliederung)) {
+					logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben einen leeren Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.");
+					daten.Schulgliederung = null;
+				} else {
+					Schulgliederung sgl = Schulgliederung.getByKuerzel(daten.Schulgliederung);
+					if ((sgl == null) || (!sgl.hasSchulform(this.schulform))) {
+						logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.");
+						daten.Schulgliederung = null;
+					}
+				}
+			}
+			schuelerLernabschnittsIDs.add(daten.ID);
 		}
 		return true;
 	}
