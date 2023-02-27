@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
+import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
 import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
@@ -22,6 +23,7 @@ import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulformen;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOTeilstandorte;
@@ -355,7 +357,29 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         
 		// TODO Grundlegende Fächer - je nach Schulform - einrichten
 		// TODO Kursarten - je nach Schulform - einrichten
-		// TODO Jahrgänge - je nach Schulform - einrichten
+        
+		// Einrichten der Jahrgänge - je nach Schulform
+        Vector<DTOJahrgang> dtoJahrgaenge = new Vector<>();
+        List<Jahrgaenge> jahrgaenge = Jahrgaenge.get(eigeneSchule.Schulform);
+        for (int i = 0; i < jahrgaenge.size(); i++) {
+        	Jahrgaenge jg = jahrgaenge.get(i);
+        	DTOJahrgang dto = new DTOJahrgang((long)i + 1);
+        	dto.InternKrz = jg.daten.kuerzel;
+        	dto.GueltigVon = null;
+        	dto.GueltigBis = null;
+        	dto.ASDJahrgang = jg.daten.kuerzel;
+        	dto.ASDBezeichnung = jg.getBezeichnung(eigeneSchule.Schulform);
+        	dto.Sichtbar = true;
+        	dto.Sortierung = i + 1;
+        	dto.IstChronologisch = true;
+        	dto.Kurzbezeichnung = jg.daten.kuerzel;
+        	dto.Sekundarstufe = null;        // TODO Core-Type Jahrgaenge erweitern?
+        	dto.Gliederung = null;           // TODO   
+        	dto.AnzahlRestabschnitte = null; // TODO Core-Type Jahrgaenge erweitern?
+        	dto.Folgejahrgang_ID = null;     // TODO Core-Type Jahrgaenge erweitern?
+        	dtoJahrgaenge.add(dto);
+        }
+        conn.persistRange(dtoJahrgaenge, 0, dtoJahrgaenge.size() - 1);
 		
 		// TODO K_Addressart mit Betrieb füllen
 		// TODO K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
