@@ -25,6 +25,7 @@ import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
+import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -299,6 +300,25 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				}
 			}
 		}
+		// Kopiere die Informationen zu Gost-Klausurvorgaben aus der Vorlage
+		List<DTOGostKlausurenVorgaben> vorgaben = 
+				conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
+		if (vorgaben == null)
+			throw new NullPointerException();
+		if (vorgaben.size() > 0) { 
+			Vector<DTOGostKlausurenVorgaben> gostVorgaben = new Vector<>();
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
+			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
+			for (DTOGostKlausurenVorgaben vorgabe : vorgaben) {
+				DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.KursartAllg, vorgabe.Dauer, vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
+				k.Bemerkungen = vorgabe.Bemerkungen;
+				gostVorgaben.add(k);
+			}
+			if (!conn.persistAll(gostVorgaben))
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		}
+		
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}
 
