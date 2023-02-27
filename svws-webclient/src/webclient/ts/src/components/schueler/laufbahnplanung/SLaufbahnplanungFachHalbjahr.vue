@@ -15,6 +15,10 @@
 					Fachkombination erforderlich
 				</template>
 			</svws-ui-popover>
+			<div class="inline-flex items-center" v-if="!moeglich && wahl">
+				<span>{{ wahl }}</span>
+				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />
+			</div>
 			<span v-else>{{ wahl }}</span>
 		</template>
 		<template v-else>
@@ -138,36 +142,15 @@
 		else if (props.halbjahr === GostHalbjahr.Q22)
 			setQ22Wahl(wahl);
 		emit('update:wahl', wahl);
-		loescheDoppelbelegung(wahl);
 	}
 
-	/**
-	 * Doppelbelegungen, welche nach einem Klick bei Fächern mit dem gleichen Statistikkürzel
-	 * entstehen, werden mit Hilfe dieser Methode bei dem jeweils anderen Fach automatisch
-	 * entfernt.
-	 *
-	 * @param {GostSchuelerFachwahl} wahl die neue Fachwahl des Schülers
-	 */
-	function loescheDoppelbelegung(wahl: GostSchuelerFachwahl) {
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+	function deleteFachwahl() {
+		if (!props.wahl || props.moeglich === true || props.halbjahr === undefined)
 			return;
-		const fachbelegungen = props.abiturdatenManager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		if (fachbelegungen.size() > 1) {
-			for (const fachbelegung of fachbelegungen) {
-				const other_wahl = props.abiturdatenManager.getSchuelerFachwahl(fachbelegung.fachID);
-				GostHalbjahr.values().forEach((hj) => {
-					if (props.abiturdatenManager.pruefeBelegung(fachbelegung, hj)) {
-						if ((fachbelegung.fachID !== props.fach.id) && (wahl[hj.toString() as keyof GostSchuelerFachwahl] !== null)) {
-							(other_wahl[hj.toString() as keyof GostSchuelerFachwahl] as string | null) = null;
-						}
-					}
-				})
-				emit('update:wahl', other_wahl, fachbelegung.fachID);
-			}
-		}
+		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
+		wahl[props.halbjahr.toString() as ('EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22')] = null;
+		emit('update:wahl', wahl, props.fach.id);
 	}
-
 
 	function stepper_manuell() : void {
 		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
@@ -263,9 +246,9 @@
 				break;
 			case "M":
 				wahl.Q11 = ist_VTF() || ist_PJK() ? null : "S";
-				//TODO S->S ist bestimmt falsch
 				break;
 			case "S":
+				//S->S ist richtig, weil DE und MA muss belegt sein, entweder S oder LK, anders geht es nicht.
 				wahl.Q11 = (props.fach.istMoeglichAbiLK) ? "LK" : (GostFachbereich.DEUTSCH.hat(props.fach) || GostFachbereich.MATHEMATIK.hat(props.fach)) ? "S" : null;
 				break;
 			case "LK":
