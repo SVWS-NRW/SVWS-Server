@@ -42,16 +42,7 @@ export class RouteDataLehrer {
 	}
 
 
-	private async ladeListe(): Promise<Map<number, LehrerListeEintrag>> {
-		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		return mapLehrer;
-	}
-
-
-	private ersterLehrer(mapLehrer: Map<number, LehrerListeEintrag>): LehrerListeEintrag | undefined {
+	private firstLehrer(mapLehrer: Map<number, LehrerListeEintrag>): LehrerListeEintrag | undefined {
 		if (mapLehrer.size === 0)
 			return undefined;
 		return mapLehrer.values().next().value;
@@ -79,8 +70,8 @@ export class RouteDataLehrer {
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
-		const mapLehrer = await this.ladeListe();
-		const auswahl = this.ersterLehrer(mapLehrer);
+		const mapLehrer = await api.getLehrerListeAktuell();
+		const auswahl = this.firstLehrer(mapLehrer);
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
@@ -94,14 +85,6 @@ export class RouteDataLehrer {
 	public get mapLehrer(): Map<number, LehrerListeEintrag> {
 		return this._state.value.mapLehrer;
 	}
-
-
-	public get firstLehrer(): LehrerListeEintrag | undefined {
-		if (this.mapLehrer.size === 0)
-			return undefined;
-		return this.mapLehrer.values().next().value;
-	}
-
 
 	/**
 	 * Setzt den ausgewählten Lehrer und lädt dessen Stammddaten.
@@ -118,7 +101,7 @@ export class RouteDataLehrer {
 			});
 			return;
 		}
-		const neueAuswahl = (this.mapLehrer.get(lehrer.id) === undefined) ? this.ersterLehrer(this.mapLehrer) : lehrer;
+		const neueAuswahl = (this.mapLehrer.get(lehrer.id) === undefined) ? this.firstLehrer(this.mapLehrer) : lehrer;
 		const stammdaten = await this.ladeStammdaten(neueAuswahl);
 		const personaldaten = this.hatPersonaldaten ? await this.ladePersonaldaten(neueAuswahl) : undefined;
 		this.setPatchedDefaultState({
@@ -185,7 +168,7 @@ export class RouteDataLehrer {
 	}
 
 	gotoLehrer = async (value: LehrerListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeLehrer.name, params: { } });
 			return;
 		}

@@ -33,7 +33,7 @@ export class RouteDataKatalogJahrgaenge {
 	}
 
 	setJahrgang = async (value: JahrgangsListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKatalogJahrgaenge.name, params: { } });
 			return;
 		}

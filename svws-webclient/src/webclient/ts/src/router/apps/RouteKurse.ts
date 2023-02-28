@@ -35,7 +35,7 @@ export class RouteDataKurse {
 	}
 
 	setKurs = async (value: KursListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKurse.name, params: { } });
 			return;
 		}

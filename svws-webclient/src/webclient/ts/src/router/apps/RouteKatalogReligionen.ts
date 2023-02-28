@@ -33,7 +33,7 @@ export class RouteDataKatalogReligionen {
 	}
 
 	setReligion = async (value: ReligionEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKatalogReligion.name, params: { } });
 			return;
 		}

@@ -15,7 +15,7 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="setLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
 					:columns="cols" clickable selectable :footer="true" />
 			</div>
 		</template>

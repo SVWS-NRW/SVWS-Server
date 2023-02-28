@@ -37,7 +37,7 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	gotoBenutzer = async (value: BenutzerListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchuleBenutzer.name, params: { } });
 			return;
 		}

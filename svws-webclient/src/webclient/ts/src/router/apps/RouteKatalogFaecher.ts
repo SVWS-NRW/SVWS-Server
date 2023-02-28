@@ -33,7 +33,7 @@ export class RouteDataKatalogFaecher {
 	}
 
 	setFach = async (value: FaecherListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKatalogFaecher.name, params: { } });
 			return;
 		}

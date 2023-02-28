@@ -92,7 +92,7 @@ export class RouteDataGost {
 	}
 
 	setAbiturjahrgang = async (value: GostJahrgang | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeGost.name, params: { } });
 			return;
 		}

@@ -11,11 +11,11 @@ export interface Filter {
 export interface SchuelerAuswahlProps {
 	auswahl: SchuelerListeEintrag | undefined;
 	auswahlGruppe: SchuelerListeEintrag[];
-	listSchueler: List<SchuelerListeEintrag>;
 	filter: Filter,
-	mapKlassen: Map<Number, KlassenListeEintrag>;
-	mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
-	mapKurse: Map<Number, KursListeEintrag>;
+	mapSchueler: Map<number, SchuelerListeEintrag>;
+	mapKlassen: Map<number, KlassenListeEintrag>;
+	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	mapKurse: Map<number, KursListeEintrag>;
 	schulgliederungen: List<Schulgliederung>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;

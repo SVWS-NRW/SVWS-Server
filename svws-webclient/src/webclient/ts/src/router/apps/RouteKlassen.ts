@@ -34,7 +34,7 @@ export class RouteDataKlassen {
 	}
 
 	setKlasse = async (value: KlassenListeEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKlassen.name, params: { } });
 			return;
 		}

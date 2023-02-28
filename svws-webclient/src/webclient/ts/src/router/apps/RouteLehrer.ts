@@ -44,7 +44,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
-		const eintrag = (idLehrer !== undefined) ? this.data.mapLehrer.get(idLehrer) : this.data.firstLehrer;
+		const eintrag = (idLehrer !== undefined) ? this.data.mapLehrer.get(idLehrer) : undefined;
 		await this.data.setLehrer(eintrag);
 		if (!this.data.hatStammdaten) {
 			if (to.name === this.name)
@@ -68,7 +68,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		return {
 			auswahl: this.data.auswahl,
 			mapLehrer: this.data.mapLehrer,
-			setLehrer: this.data.gotoLehrer,
+			gotoLehrer: this.data.gotoLehrer,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			setAbschnitt: routeApp.data.setAbschnitt

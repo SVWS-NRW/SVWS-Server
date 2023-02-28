@@ -8,7 +8,7 @@
 		</template>
 		<template #header>
 			<div class="mt-1">
-				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
+				<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" />
@@ -39,7 +39,7 @@
 				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
 					:columns="cols" clickable selectable :footer="true">
 					<template #cell(idKlasse)="{ value }">
-						{{ mapKlassen.get(value)?.kuerzel ?? value }}
+						{{ mapKlassen.get(value)?.kuerzel }}
 					</template>
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
@@ -84,7 +84,7 @@
 	]
 
 	const rows = computed(() =>
-		[...props.listSchueler]
+		[...props.mapSchueler.values()]
 			.filter(s => !props.filter.status.length || props.filter.status.map(s => s.bezeichnung).includes(s.status))
 			.filter(s => !props.filter.jahrgang || s.jahrgang === props.filter.jahrgang.kuerzel)
 			.filter(s => !props.filter.klasse || s.idKlasse === props.filter.klasse.id)
@@ -92,18 +92,10 @@
 			.filter(s => !props.filter.schulgliederung || s.schulgliederung === props.filter.schulgliederung.daten.kuerzel)
 	);
 
-	const rowsFiltered = computed(() => {
-		return rows.value.filter(
-			(e: any) =>
-				e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-				e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-		);
-	});
-
-	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
-		computed(() => {
-			return SchuelerStatus.values();
-		});
+	const rowsFiltered = computed(() => rows.value.filter((e: any) =>
+		e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+		e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+	));
 
 	const filterStatus: WritableComputedRef<Array<SchuelerStatus> | undefined> =
 		computed({

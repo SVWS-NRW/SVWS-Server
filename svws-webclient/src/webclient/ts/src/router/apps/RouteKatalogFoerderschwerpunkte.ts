@@ -33,7 +33,7 @@ export class RouteDataKatalogFoerderschwerpunkte {
 	}
 
 	setFoerderschwerpunkt = async (value: FoerderschwerpunktEintrag | undefined) => {
-		if (value === undefined) {
+		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeKatalogFoerderschwerpunkte.name, params: { } });
 			return;
 		}
