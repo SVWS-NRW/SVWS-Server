@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
-import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -25,6 +23,12 @@ public class GostKlausurvorgabenManager {
 	/** Eine Map id -> GostKlausurvorgabe */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> _mapIdKlausurvorgabe = new HashMap<>();
 
+	/** Eine Map quartal -> kursartAllg -> fachId -> GostKlausurvorgabe */
+	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>>> _mapQuartalKursartFachKlausurvorgabe = new HashMap<>();
+
+	/** Eine Map kursartAllg -> fachId -> Liste von GostKlausurvorgabe */
+	private final @NotNull HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>>> _mapKursartFachKlausurvorgaben = new HashMap<>();
+
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen
 	 * GostKlausurvorgaben und erzeugt die privaten Attribute.
@@ -35,8 +39,7 @@ public class GostKlausurvorgabenManager {
 	public GostKlausurvorgabenManager(@NotNull List<@NotNull GostKlausurvorgabe> vorgaben) {
 		_vorgaben = vorgaben;
 
-		for (@NotNull
-		GostKlausurvorgabe v : _vorgaben) {
+		for (@NotNull GostKlausurvorgabe v : _vorgaben) {
 			_mapIdKlausurvorgabe.put(v.idVorgabe, v);
 			addVorgabeToInternalMaps(v);
 		}
@@ -45,12 +48,34 @@ public class GostKlausurvorgabenManager {
 
 	private void addVorgabeToInternalMaps(@NotNull GostKlausurvorgabe v) {
 		// Füllen von _mapQuartalKlausurvorgaben
-		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben.get(v.quartal);
+		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
+				.get(v.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben == null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben = new Vector<>();
 			_mapQuartalKlausurvorgaben.put(v.quartal, listKlausurvorgabenMapQuartalKlausurvorgaben);
 		}
 		listKlausurvorgabenMapQuartalKlausurvorgaben.add(v);
+
+		// Füllen von _mapQuartalKursartFachKlausurvorgabe
+		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> mapKursartFachKlausurvorgabe = _mapQuartalKursartFachKlausurvorgabe
+				.get(v.quartal);
+		if (mapKursartFachKlausurvorgabe == null)
+			_mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap<>());
+		HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> mapFachKlausurvorgabe = mapKursartFachKlausurvorgabe
+				.get(v.kursartAllg);
+		if (mapFachKlausurvorgabe == null)
+			mapKursartFachKlausurvorgabe.put(v.kursartAllg, mapFachKlausurvorgabe = new HashMap<>());
+		mapFachKlausurvorgabe.put(v.idFach, v);
+
+		// Füllen von _mapKursartFachKlausurvorgaben
+		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> mapFachKlausurvorgaben = _mapKursartFachKlausurvorgaben
+				.get(v.kursartAllg);
+		if (mapFachKlausurvorgaben == null)
+			_mapKursartFachKlausurvorgaben.put(v.kursartAllg, mapFachKlausurvorgaben = new HashMap<>());
+		List<@NotNull GostKlausurvorgabe> listKlausurvorgaben = mapFachKlausurvorgaben.get(v.idFach);
+		if (listKlausurvorgaben == null)
+			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector<>());
+		listKlausurvorgaben.add(v);
 	}
 
 	/**
@@ -61,39 +86,52 @@ public class GostKlausurvorgabenManager {
 	 */
 	public void updateKlausurvorgabe(@NotNull GostKlausurvorgabe vorgabe) {
 		if (!_vorgaben.contains(vorgabe)) {
-			_vorgaben.add(vorgabe);
-		}
-		
-		_mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
-
-		// aus _mapQuartalKlausurvorgaben löschen
-		Vector<@NotNull GostKlausurvorgabe> quartalList = _mapQuartalKlausurvorgaben.get(vorgabe.quartal);
-		if (quartalList != null) {
-			quartalList.remove(vorgabe);
-		} else {
-			// TODO Fehler, denn kann eigentlich nicht sein.
+			// TODO Error Klausurvorgabe nicht da
 		}
 
+		removeUpdateKlausurvorgabeCommons(vorgabe);
 		addVorgabeToInternalMaps(vorgabe);
 
 	}
-	
+
+	private void removeUpdateKlausurvorgabeCommons(@NotNull GostKlausurvorgabe vorgabe) {
+		// aus _mapQuartalKlausurvorgaben löschen
+		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
+				.get(vorgabe.quartal);
+		if (listKlausurvorgabenMapQuartalKlausurvorgaben != null) {
+			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
+		}
+		// aus _mapQuartalKursartFachKlausurvorgabe löschen
+		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
+				.get(vorgabe.quartal);
+		if (map1 != null) {
+			HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(vorgabe.kursartAllg);
+			if (map2 != null) {
+				GostKlausurvorgabe kv = map2.get(vorgabe.idFach);
+				if (kv == vorgabe)
+					map2.remove(vorgabe.idFach);
+			}
+		}
+		// aus _mapKursartFachKlausurvorgaben löschen
+		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map3 = _mapKursartFachKlausurvorgaben
+				.get(vorgabe.kursartAllg);
+		if (map3 != null) {
+			List<@NotNull GostKlausurvorgabe> list = map3.get(vorgabe.idFach);
+			if (list != null) {
+				list.remove(vorgabe);
+			}
+		}
+	}
+
 	/**
 	 * Löscht eine Klausurvorgabe aus den internen Strukturen
 	 * 
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void removeVorgabe(@NotNull GostKlausurvorgabe vorgabe) {
-		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben.get(vorgabe.quartal);
-		if (listKlausurvorgabenMapQuartalKlausurvorgaben == null) {
-			// TODO Fehlerbehandlung
-			return;			
-		}
-		listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
-
 		_vorgaben.remove(vorgabe);
 		_mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
-
+		removeUpdateKlausurvorgabeCommons(vorgabe);
 	}
 
 	/**
@@ -125,6 +163,67 @@ public class GostKlausurvorgabenManager {
 	 */
 	public GostKlausurvorgabe gibGostKlausurvorgabe(long idVorgabe) {
 		return _mapIdKlausurvorgabe.get(idVorgabe);
+	}
+
+	/**
+	 * Gibt das GostKlausurvorgabe-Objekt zu den übergebenen Parametern zurück.
+	 * 
+	 * @param quartal     das Quartal
+	 * @param kursartAllg die Kursart
+	 * @param idFach      die ID des Fachs
+	 * 
+	 * @return das GostKlausurvorgabe-Objekt
+	 */
+	public GostKlausurvorgabe gibGostKlausurvorgabe(int quartal, String kursartAllg, long idFach) {
+		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
+				.get(quartal);
+		if (map1 == null)
+			return null;
+		HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(kursartAllg);
+		if (map2 != null)
+			return map2.get(idFach);
+		return null;
+	}
+
+	/**
+	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
+	 * zurück.
+	 * 
+	 * @param quartal     das Quartal, wenn 0, Vorgaben für alle Quartale
+	 * @param kursartAllg die Kursart
+	 * @param idFach      die ID des Fachs
+	 * 
+	 * @return die Liste der GostKlausurvorgabe-Objekte
+	 */
+	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(int quartal, String kursartAllg, long idFach) {
+		if (quartal > 0) {
+			List<@NotNull GostKlausurvorgabe> retList = new Vector<>();
+			GostKlausurvorgabe vorgabe = gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
+			if (vorgabe != null)
+				retList.add(vorgabe);
+			return retList;
+		}
+		return gibGostKlausurvorgaben(kursartAllg, idFach);
+	}
+
+	/**
+	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
+	 * zurück.
+	 * 
+	 * @param kursartAllg die Kursart
+	 * @param idFach      die ID des Fachs
+	 * 
+	 * @return die Liste der GostKlausurvorgabe-Objekte
+	 */
+	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(String kursartAllg, long idFach) {
+		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map1 = _mapKursartFachKlausurvorgaben
+				.get(kursartAllg);
+		if (map1 == null)
+			return new Vector<>();
+		List<@NotNull GostKlausurvorgabe> list = map1.get(idFach);
+		if (list == null)
+			return new Vector<>();
+		return list;
 	}
 
 }

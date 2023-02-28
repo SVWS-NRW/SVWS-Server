@@ -3592,6 +3592,39 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode createGostKlausurenKursklausurenJahrgangHalbjahrQuartal für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/quartal/{quartal : \d+}
+	 *
+	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Kursklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKursklausur>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 * @param {number} quartal - der Pfad-Parameter quartal
+	 *
+	 * @returns Die Liste der Kursklausuren.
+	 */
+	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<List<GostKursklausur>> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
+			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new Vector<GostKursklausur>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}
 	 *
 	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.

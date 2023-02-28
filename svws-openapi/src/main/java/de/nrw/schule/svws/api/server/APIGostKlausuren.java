@@ -145,6 +145,35 @@ public class APIGostKlausuren {
 	}
 	
 	/**
+	 * Die OpenAPI-Methode für die Erzeugung der Klausuren eines Abiturjahrgangs in
+	 * einem bestimmten Halbjahr und Quartal der Gymnasialen Oberstufe.
+	 * 
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+	 * @param quartal   das Quartal, für das die Klausuren erzeugt werden sollen, falls 0 angegeben wird, für das gesamte Halbjahr
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * 
+	 * @return die Liste der Gost-Kursklausuren
+	 */
+	@GET // TODO oder POST???
+	@Path("/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}")
+	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
+	public Response createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("halbjahr") int halbjahr, @PathParam("quartal") int quartal,
+			@Context HttpServletRequest request) {
+		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
+		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return (new DataGostKlausurenVorgabe(conn, abiturjahr)).createKlausuren(halbjahr, quartal); // TODO Return value überdenken
+		}
+	}
+	
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Klausuren eines Abiturjahrgangs in
 	 * einem bestimmten Halbjahr der Gymnasialen Oberstufe.
 	 * 
