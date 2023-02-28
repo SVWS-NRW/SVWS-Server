@@ -3,6 +3,7 @@ import { shallowReactive, ShallowReactive, shallowRef } from "vue";
 import { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerIndividualdaten } from "./RouteSchuelerIndividualdaten";
 
@@ -17,6 +18,7 @@ interface RouteStateSchueler {
 	mapKurse: Map<number, KursListeEintrag>;
 	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
 	filter: ShallowReactive<Filter>;
+	view: RouteNode<any, any>;
 }
 
 export class RouteDataSchueler {
@@ -36,7 +38,8 @@ export class RouteDataSchueler {
 			klasse: undefined,
 			schulgliederung: undefined,
 			status: [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ]
-		})
+		}),
+		view: routeSchuelerIndividualdaten,
 	};
 
 	private _state = shallowRef(RouteDataSchueler._defaultState);
@@ -97,7 +100,8 @@ export class RouteDataSchueler {
 			mapJahrgaenge,
 			mapAbiturjahrgaenge,
 			auswahl,
-			stammdaten
+			stammdaten,
+			view: this._state.value.view
 		});
 	}
 
@@ -125,6 +129,16 @@ export class RouteDataSchueler {
 		});
 	}
 
+	public async setView(view: RouteNode<any,any>) {
+		if (routeSchueler.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für Scüler gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
 
 	get auswahl(): SchuelerListeEintrag | undefined {
 		return this._state.value.auswahl;

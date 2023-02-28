@@ -1,7 +1,7 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import { AuswahlChildData, SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
@@ -88,7 +88,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoSchueler: this.data.gotoSchueler,
 			setFilter: this.data.setFilter,
-			setAuswahlGruppe: this.data.setAuswahlGruppe
+			setAuswahlGruppe: this.data.setAuswahlGruppe,
 		};
 	}
 
@@ -97,6 +97,10 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			auswahl: this.data.auswahl,
 			stammdaten: this.data.auswahl === undefined ? undefined : this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
+			setChild: this.setChild,
+			child: this.getChild(),
+			children: this.getChildData(),
+			childrenHidden: this.children_hidden().value,
 		};
 	}
 
@@ -110,6 +114,26 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		});
 	}
 
+	private getChild(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getChildData(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of this.children)
+			result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setChild = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await this.data.setView(node);
+	}
 }
 
 export const routeSchueler = new RouteSchueler();

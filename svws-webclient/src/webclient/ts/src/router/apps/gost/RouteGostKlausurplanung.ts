@@ -10,7 +10,7 @@ import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlau
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core-ts";
 import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
-import { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKursplanungAuswahlProps";
+import { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
