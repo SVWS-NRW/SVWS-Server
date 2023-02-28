@@ -44,7 +44,7 @@ public class APIENM {
     @GET
     @Path("/alle")
     @Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM).",
-    description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
+    	description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
     			+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
     			+ "Auslesen der Notendaten besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM)",
@@ -57,6 +57,35 @@ public class APIENM {
 	    	return (new DataENMDaten(conn)).getAll();
     	}
     }
+    
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer
+     * des aktuellen Schuljahresabschnitts der Schule als GZIP-Json.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die ENM-Daten
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/alle/gzip")
+    @Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM) GZip-komprimiert.",
+    	description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
+    			+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
+    			+ "notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierte ENM-JSON-Datei",
+                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+                 schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierte ENM-JSON-Datei")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
+    public Response getENMDatenGZip(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+	    	return (new DataENMDaten(conn)).getAllGZip();
+    	}
+    }
+    
 
 
     /**

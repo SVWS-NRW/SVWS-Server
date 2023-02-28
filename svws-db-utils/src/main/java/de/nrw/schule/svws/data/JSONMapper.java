@@ -8,14 +8,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 
 /**
  * Diese Klasse enthält Routinen für das Mapping von einfachen Datentypen in das JSON-Format 
@@ -370,6 +372,24 @@ public class JSONMapper {
 	 */
 	public static Response fromInteger(Integer data) {
 		return Response.ok((data == null) ? null : data.toString(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Konvertiert das Object in eine {@link Response} mit einer GZIP-komprimierten JSON-Datei.
+	 *
+	 * @param obj        das nach JSON zu serialisierende Objekt
+	 * @param filename   der Name, der JSON-Datei ohne ".json.gz"-Endung
+	 *
+	 * @return die Response
+	 */
+	public static Response gzipFromObject(Object obj, String filename) {
+		return Response.ok((StreamingOutput) output -> {
+			try {
+				GZIPOutputStream gzipOut = new GZIPOutputStream(output);
+				mapper.writeValue(gzipOut, obj);
+				output.flush();
+			} catch (Exception e) { e.printStackTrace(); }
+        }).header("Content-Disposition", "attachment; filename=\"" + filename + ".json.gz\"").build();
 	}
 	
 	

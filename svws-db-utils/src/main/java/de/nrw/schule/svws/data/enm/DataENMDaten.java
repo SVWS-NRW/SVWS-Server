@@ -18,6 +18,7 @@ import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.enm.ENMDatenManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskelgruppen;
@@ -55,6 +56,16 @@ public class DataENMDaten extends DataManager<Long> {
 	public Response getAll() {
 		ENMDaten daten = getDaten(null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+	
+	/**
+	 * Gibt die ENM-Daten als mit GZIP komprimiertes JSON-Objekt zurück.
+	 * 
+	 * @return das GZIP-komprimierte JSON-Objekt.
+	 */
+	public Response getAllGZip() {
+		ENMDaten daten = getDaten(null);
+		return JSONMapper.gzipFromObject(daten, "enm");
 	}
 
 	@Override
