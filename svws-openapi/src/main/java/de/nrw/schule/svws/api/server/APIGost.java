@@ -1892,5 +1892,34 @@ public class APIGost {
     		return (new DataGostJahrgangFachkombinationen(conn, abiturjahr)).add(typ);
     	}
     }
+
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
+     * in Bezug auf den angegebenen Schüler als GZIP-Json.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Schülers
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Laufbahnplanungs-Daten
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/export")
+    @Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler (GZip-komprimiert).",
+    	description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank "
+    			+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
+    			+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe",
+                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+                 schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe")))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
+    public Response exportGostSchuelerLaufbahnplanung(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
+	    	return (new DataGostSchuelerLaufbahnplanung(conn)).exportGZip(id);
+    	}
+    }
+
 }

@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -389,8 +390,29 @@ public class JSONMapper {
 				mapper.writeValue(gzipOut, obj);
 				output.flush();
 			} catch (Exception e) { e.printStackTrace(); }
-        }).header("Content-Disposition", "attachment; filename=\"" + filename + ".json.gz\"").build();
+        }).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
 	}
-	
-	
+
+
+	/**
+	 * Wandelt die JSON-Daten aus dem {@link InputStream}, welche GZip-komprimiert sein müssen
+	 * in das Object vom Typ T um
+	 *  
+	 * @param <T>         der Typ des Objekts
+	 * @param in          der Input-Stream mit dem JSON-Input
+	 * @param valueType   die Klasse des Typs T
+	 * 
+	 * @return das Object vom Typ T
+	 *
+	 * @throws IOException falls beim deserialisieren aus dem Input-Stream ein Fehler auftritt. 
+	 */
+	public static <T> T toObjectGZip(InputStream in, Class<T> valueType) throws IOException {
+		try {
+			GZIPInputStream gzipIn = new GZIPInputStream(in); 
+			return mapper.readValue(gzipIn, valueType);
+		} catch (IOException e) {
+			throw new IOException("Fehler beim Deserialisieren der JSON-Daten aus dem übergebenen InputStream.", e);
+		}
+	}
+
 }

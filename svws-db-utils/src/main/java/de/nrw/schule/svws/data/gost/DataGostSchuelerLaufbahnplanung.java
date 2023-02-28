@@ -5,16 +5,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
+import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDaten;
+import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
+import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
+import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
@@ -23,6 +31,7 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnit
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
+import de.nrw.schule.svws.db.utils.gost.FaecherGost;
 import de.nrw.schule.svws.db.utils.gost.GostSchuelerLaufbahn;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.WebApplicationException;
@@ -260,4 +269,77 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
     	return Response.status(Status.OK).build();
 	}
 
+	/**
+	 * Erstellt das Export-Objekt mit den Laufbahnplanungsdaten des 
+	 * angegebenen Schülers. 
+	 *  
+	 * @param idSchueler   die ID des Schülers
+	 * 
+	 * @return das Laufbahnplanungsdaten-Objekt
+	 */
+	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(long idSchueler) {
+		// Lese die Daten aus der Datenbank
+		GostUtils.pruefeSchuleMitGOSt(conn);
+    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+    	if (dtoSchueler == null)
+    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, idSchueler);
+		GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+		List<DTOGostJahrgangFachkombinationen> kombis = conn
+				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
+		if (kombis == null)
+			throw OperationError.NOT_FOUND.exception();
+		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
+		if (jahrgangsdaten == null)
+    		throw OperationError.NOT_FOUND.exception();
+    	List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+    	// Schreibe die Daten in das Export-DTO
+		GostLaufbahnplanungDaten daten = new GostLaufbahnplanungDaten();
+		daten.abiturjahr = abidaten.abiturjahr;
+		daten.jahrgang = "";    // TODO Bestimme das aktuelle Planungshalbjahr  
+		daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen;
+		daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
+		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
+		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
+		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
+    	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
+    	daten.faecher.addAll(gostFaecher.toVector());
+		for (DTOGostJahrgangFachkombinationen kombi : kombis)
+			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));    	
+		GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler(); 
+		schuelerDaten.id = dtoSchueler.ID;
+		schuelerDaten.vorname = dtoSchueler.Vorname;
+		schuelerDaten.nachname = dtoSchueler.Nachname;
+		schuelerDaten.geschlecht = dtoSchueler.Geschlecht.kuerzel;
+		schuelerDaten.bilingualeSprache = abidaten.bilingualeSprache;
+		for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++)
+			schuelerDaten.bewertetesHalbjahr[i] = abidaten.bewertetesHalbjahr[i];
+		for (AbiturFachbelegung fbel : abidaten.fachbelegungen) {
+			GostLaufbahnplanungDatenFachbelegung fb = new GostLaufbahnplanungDatenFachbelegung();
+			fb.fachID = fbel.fachID;
+			fb.abiturFach = fbel.abiturFach;
+			for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
+				GostKursart kursart = fbel.belegungen[i] == null ? null : GostKursart.fromKuerzel(fbel.belegungen[i].kursartKuerzel); 
+				fb.kursart[i] = kursart == null ? null : kursart.kuerzel;
+				fb.schriftlich[i] = kursart == null ? false : fbel.belegungen[i].schriftlich == null ? false : fbel.belegungen[i].schriftlich;
+			}
+			schuelerDaten.fachbelegungen.add(fb);
+		}
+		schuelerDaten.sprachendaten = abidaten.sprachendaten;
+		daten.schueler.add(schuelerDaten);
+		return daten;
+	}
+	
+	/**
+	 * Erstellt eine Export-Datei mit den Laufbahnplanungsdaten des 
+	 * angegebenen Schülers zur Bearbeitung in einem externen Tool. 
+	 *  
+	 * @param idSchueler   die ID des Schülers
+	 * 
+	 * @return die Response mit der GZip-Komprimierten Laufbahnplanungs-Datei
+	 */
+	public Response exportGZip(long idSchueler) {
+		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(idSchueler), "Laufbahnplanung_Schueler_" + idSchueler + ".lp");
+	}
+	
 }

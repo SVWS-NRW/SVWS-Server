@@ -3953,6 +3953,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/export
+	 *
+	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
+	 */
+	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<Blob> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/export"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const data : Blob = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/leistungsdaten
 	 *
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
