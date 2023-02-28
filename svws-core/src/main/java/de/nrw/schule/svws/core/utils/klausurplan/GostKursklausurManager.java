@@ -54,8 +54,7 @@ public class GostKursklausurManager {
 	public GostKursklausurManager(@NotNull List<@NotNull GostKursklausur> klausuren, @NotNull List<@NotNull GostKlausurtermin> termine) {
 		_klausuren = klausuren;
 		helpKonstruktor();
-		for (@NotNull
-		GostKlausurtermin t : termine) {
+		for (@NotNull GostKlausurtermin t : termine) {
 			addTermin(t);
 		}
 	}
@@ -73,8 +72,7 @@ public class GostKursklausurManager {
 	}
 
 	private void helpKonstruktor() {
-		for (@NotNull
-		GostKursklausur kk : _klausuren) {
+		for (@NotNull GostKursklausur kk : _klausuren) {
 			// Füllen von _mapIdKursklausuren
 			_mapIdKursklausur.put(kk.id, kk);
 
@@ -142,8 +140,7 @@ public class GostKursklausurManager {
 			// aus _mapTerminKursklausuren löschen
 			// for (@NotNull Entry<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>>
 			// entry : _mapTerminKursklausuren.entrySet()) {
-			for (@NotNull
-			Long key : _mapTerminKursklausuren.keySet()) {
+			for (@NotNull Long key : _mapTerminKursklausuren.keySet()) {
 				Vector<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
 				if (entry == null) {
 					// TODO Fehler, denn kann eigentlich nicht sein.
@@ -183,8 +180,7 @@ public class GostKursklausurManager {
 		List<@NotNull GostKursklausur> listKlausurenZuTermin = _mapTerminKursklausuren.get(idTermin);
 		if (listKlausurenZuTermin == null)
 			return;
-		for (@NotNull
-		GostKursklausur k : listKlausurenZuTermin) {
+		for (@NotNull GostKursklausur k : listKlausurenZuTermin) {
 			listSchuelerIds.addAll(k.schuelerIds);
 		}
 	}
@@ -207,7 +203,29 @@ public class GostKursklausurManager {
 		}
 		listKlausurtermineMapQuartalKlausurtermine.add(termin);
 	}
-	
+
+	/**
+	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
+	 * 
+	 * @param klausur das GostKursklausur-Objekt
+	 */
+	public void addKlausur(@NotNull GostKursklausur klausur) {
+		_klausuren.add(klausur);
+		_mapIdKursklausur.put(klausur.id, klausur);
+		addKlausurToInternalMaps(klausur);
+	}
+
+	/**
+	 * Fügt den internen Strukturen neue Kursklausuren hinzu.
+	 * 
+	 * @param klausuren die Liste von GostKursklausur-Objekten
+	 */
+	public void addKlausuren(@NotNull List<@NotNull GostKursklausur> klausuren) {
+		for (@NotNull GostKursklausur klausur : klausuren) {
+			addKlausur(klausur);
+		}
+	}
+
 	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
 	 * 
@@ -217,7 +235,7 @@ public class GostKursklausurManager {
 		Vector<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(termin.quartal);
 		if (listKlausurtermineMapQuartalKlausurtermine == null) {
 			// TODO Fehlerbehandlung
-			return;			
+			return;
 		}
 		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
 
@@ -283,7 +301,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public List<@NotNull GostKursklausur> getKursklausurenOhneTermin(int quartal) {
-		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal);
+		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapTerminKursklausuren == null) {
 			// TODO Fehlerbehandlung?
 			return new Vector<>();
@@ -354,7 +372,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public List<@NotNull GostKlausurtermin> getKlausurtermine(int quartal) {
-		return _mapQuartalKlausurtermine.get(quartal);
+		return _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 	}
 
 	/**
@@ -380,8 +398,7 @@ public class GostKursklausurManager {
 			return new Vector<>();
 		}
 
-		@NotNull
-		List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
+		@NotNull List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
 
 		konflikte.retainAll(klausur.schuelerIds);
 		return konflikte;
@@ -424,7 +441,7 @@ public class GostKursklausurManager {
 		GostKursklausur klausur2 = _mapIdKursklausur.get(idKursklausur2);
 		return gibKonfliktKursklausurKursklausur(klausur1, klausur2);
 	}
-	
+
 	/**
 	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
 	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die

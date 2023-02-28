@@ -198,6 +198,28 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
+	 * 
+	 * @param klausur das GostKursklausur-Objekt
+	 */
+	public addKlausur(klausur : GostKursklausur) : void {
+		this._klausuren.add(klausur);
+		this._mapIdKursklausur.put(klausur.id, klausur);
+		this.addKlausurToInternalMaps(klausur);
+	}
+
+	/**
+	 * Fügt den internen Strukturen neue Kursklausuren hinzu.
+	 * 
+	 * @param klausuren die Liste von GostKursklausur-Objekten
+	 */
+	public addKlausuren(klausuren : List<GostKursklausur>) : void {
+		for (let klausur of klausuren) {
+			this.addKlausur(klausur);
+		}
+	}
+
+	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
 	 * 
 	 * @param termin das GostKlausurtermin-Objekt
@@ -285,7 +307,7 @@ export class GostKursklausurManager extends JavaObject {
 			return this.getKursklausuren(-1);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
-			let mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal);
+			let mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 			if (mapTerminKursklausuren === null) {
 				return new Vector();
 			}
@@ -352,7 +374,7 @@ export class GostKursklausurManager extends JavaObject {
 			return this._termine;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
-			return this._mapQuartalKlausurtermine.get(quartal);
+			return this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 		} else throw new Error('invalid method overload');
 	}
 

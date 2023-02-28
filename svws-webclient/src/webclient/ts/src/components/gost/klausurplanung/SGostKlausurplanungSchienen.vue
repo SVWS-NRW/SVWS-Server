@@ -3,10 +3,11 @@
 		<div class="flex flex-row items-center">
 			<label for="rgQuartalAuswahl">Quartalauswahl: </label>
 			<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
-				<svws-ui-radio-option name="rgQuartalAuswahl" label="beide" value="0" @input="chooseQuartal(-1)" model-value="0" />
+				<svws-ui-radio-option name="rgQuartalAuswahl" label="beide" value="0" @input="chooseQuartal(0)" model-value="0" />
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="1" value="1" @input="chooseQuartal(1)" />
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="2" value="2" @input="chooseQuartal(2)" />
 			</svws-ui-radio-group>
+			<svws-ui-button class="secondary mx-5" @click="erzeugeKursklausurenAusVorgaben(quartal)" :disabled="quartal === -1">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erstelleTermin" :disabled="quartal === -1">Neuer Termin</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
@@ -45,7 +46,7 @@
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 
-	const quartal = ref(-1);
+	const quartal = ref(0);
 	const chooseQuartal = (q: number) => quartal.value = q;
 
 	const dragKlausur = ref<GostKursklausur | null>(null);
@@ -57,7 +58,7 @@
 		"bg-red-100": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
 	});
 
-	const termine = computed(() => quartal.value === -1 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
+	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
 	const erstelleTermin = async () => await props.erzeugeKlausurtermin(quartal.value);
 
 </script>

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.utils.klausurplan.GostKlausurvorgabenManager;
 import de.nrw.schule.svws.data.DataManager;
@@ -46,8 +47,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		_abiturjahr = abiturjahr;
 	}
 
-	@Override
-	public Response getAll() {
+	@Override public Response getAll() {
 		return this.getList();
 	}
 
@@ -63,53 +63,55 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 	public Response createKlausuren(int hj, int quartal) {
 		GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
-		List<GostKlausurvorgabe> vorgaben = conn
-				.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj",
-						DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream()
-				.map(v -> dtoMapper.apply(v))
+		List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
+				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(v -> dtoMapper.apply(v))
 //				.filter(v -> quartal > 0 ? v.quartal == quartal : true)
 				.collect(Collectors.toList());
 		if (vorgaben == null)
 			throw new NullPointerException();
 		GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
+		List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
+				vorgaben.stream().map(v -> v.idVorgabe).collect(Collectors.toList()), DTOGostKlausurenKursklausuren.class);
+		Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
+				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
+		
 		// TODO Quartalsmodus
-		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt noch nciht angelegt.
-		DTOSchuljahresabschnitte sja = conn
-				.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt",
-						DTOSchuljahresabschnitte.class)
+		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
+		// noch nicht angelegt.
+		DTOSchuljahresabschnitte sja = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
 				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
-				.setParameter("abschnitt", halbjahr.id / 2).getSingleResult();
+				.setParameter("abschnitt", halbjahr.id % 2 + 1)
+				.getSingleResult();
 
 		// Kurse ermitteln
-		List<DTOKurs> kurse = conn
-				.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg",
-						DTOKurs.class)
-				.setParameter("sja", sja.ID) // TODO Quartalsmodus
+		List<DTOKurs> kurse = conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID) // TODO Quartalsmodus
 				.setParameter("jg", halbjahr.jahrgang).getResultList();
 
 		List<DTOGostKlausurenKursklausuren> kursklausuren = new Vector<>();
+		List<GostKursklausur> retKlausuren = new Vector<>();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
 		long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 
 		for (DTOKurs kurs : kurse) {
-			List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgaben(quartal, kurs.KursartAllg,
-					kurs.Fach_ID);
+			List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgaben(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if (vorgabe != null) {
-					DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++,
-							vorgabe.idVorgabe, kurs.ID);
-					kursklausuren.add(kursklausur);
+					if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
+						DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
+						kursklausuren.add(kursklausur);
+						retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, null));
+					}
 				}
 			}
 		}
 
 		if (!conn.persistAll(kursklausuren))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(kursklausuren.size()).build();
+
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
 
 	}
 
@@ -118,7 +120,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * {@link DTOGostKlausurenVorgaben} in einen Core-DTO
 	 * {@link GostKlausurvorgabe}.
 	 */
-	private Function<DTOGostKlausurenVorgaben, GostKlausurvorgabe> dtoMapper = (DTOGostKlausurenVorgaben z) -> {
+	public static Function<DTOGostKlausurenVorgaben, GostKlausurvorgabe> dtoMapper = (DTOGostKlausurenVorgaben z) -> {
 		GostKlausurvorgabe daten = new GostKlausurvorgabe();
 		daten.idVorgabe = z.ID;
 		daten.abiJahrgang = z.Abi_Jahrgang;
@@ -144,9 +146,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return die Liste der Kursklausuren
 	 */
 	private List<GostKlausurvorgabe> getKlausurvorgaben(int halbjahr) {
-		List<DTOGostKlausurenVorgaben> vorgaben = conn
-				.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj",
-						DTOGostKlausurenVorgaben.class)
+		List<DTOGostKlausurenVorgaben> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList();
 		List<GostKlausurvorgabe> daten = new Vector<>();
 		for (DTOGostKlausurenVorgaben v : vorgaben)
@@ -154,15 +154,12 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return daten;
 	}
 
-	@Override
-	public Response get(Long halbjahr) {
+	@Override public Response get(Long halbjahr) {
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
-				.entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
 	}
 
-	@Override
-	public Response patch(Long id, InputStream is) {
+	@Override public Response patch(Long id, InputStream is) {
 		Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
@@ -216,8 +213,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-	@Override
-	public Response getList() {
+	@Override public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -270,8 +266,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					}
 				}
 			}
-			vorgabe = new DTOGostKlausurenVorgaben(ID, abi_Jahrgang, halbjahr, quartal, fach_ID, kursartAllg, dauer,
-					auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
+			vorgabe = new DTOGostKlausurenVorgaben(ID, abi_Jahrgang, halbjahr, quartal, fach_ID, kursartAllg, dauer, auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
 			vorgabe.Bemerkungen = bemerkungen;
 			conn.transactionPersist(vorgabe);
 			if (!conn.transactionCommit())

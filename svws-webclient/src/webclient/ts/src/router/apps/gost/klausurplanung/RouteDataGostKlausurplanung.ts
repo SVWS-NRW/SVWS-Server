@@ -135,7 +135,7 @@ export class RouteDataGostKlausurplanung {
 			throw new Error("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (halbjahr === this._state.value.halbjahr)
 			return false;
-		// Lade die Liste der Blockungen
+
 		api.status.start();
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
@@ -248,6 +248,15 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const result = await api.server.deleteGostKlausurenVorgabe(api.schema, vorgabe.idVorgabe);
 		this.klausurvorgabenmanager.removeVorgabe(vorgabe);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	erzeugeKursklausurenAusVorgaben = async (quartal: number): Promise<boolean> => {
+		api.status.start();
+		const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+		this.kursklausurmanager.addKlausuren(result);
 		this.commit();
 		api.status.stop();
 		return true;
