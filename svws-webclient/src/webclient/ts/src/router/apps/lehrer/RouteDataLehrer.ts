@@ -122,7 +122,7 @@ export class RouteDataLehrer {
 		if (routeLehrer.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für Lehrer gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {

@@ -6,5 +6,6 @@ export interface LehrerAuswahlProps {
 		gotoLehrer: (value: LehrerListeEintrag | undefined) => Promise<void>;
 		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
+		aktSchulabschnitt: number;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	}

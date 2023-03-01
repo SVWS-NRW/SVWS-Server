@@ -6,6 +6,7 @@ export interface ReligionenAuswahlProps {
 		addReligion: (religion: ReligionEintrag) => Promise<void>;
 		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
+		aktSchulabschnitt: number;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 		setReligion: (religion: ReligionEintrag) => Promise<void>;
 	}

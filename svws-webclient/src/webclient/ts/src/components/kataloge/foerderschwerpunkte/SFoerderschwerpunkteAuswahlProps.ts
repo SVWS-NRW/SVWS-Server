@@ -5,6 +5,7 @@ export interface FoerderschwerpunkteAuswahlProps {
 		listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
 		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
+		aktSchulabschnitt: number;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 		setFoerderschwerpunkt: (foerderschwerpunkt: FoerderschwerpunktEintrag) => Promise<void>;
 	}

@@ -22,6 +22,7 @@ import { routeLogin } from "./RouteLogin";
 import { computed, WritableComputedRef } from "vue";
 import { api } from "./Api";
 import { ConfigElement } from "~/components/Config";
+import { routeSchuleDatenaustausch } from "./apps/schule/RouteSchuleDatenaustausch";
 
 export class RouteDataApp {
 
@@ -59,6 +60,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchule,
 			routeSchuleBenutzer,
 			routeSchuleBenutzergruppe,
+			routeSchuleDatenaustausch,
 			routeKataloge,
 			routeKatalogFaecher,
 			routeKatalogReligion,

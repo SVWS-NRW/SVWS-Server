@@ -19,6 +19,7 @@ export interface SchuelerAuswahlProps {
 	schulgliederungen: List<Schulgliederung>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
+	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	gotoSchueler: (value: SchuelerListeEintrag | undefined) => Promise<void>;
 	setFilter: (value: Filter) => void;

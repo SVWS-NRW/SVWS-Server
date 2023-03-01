@@ -3,8 +3,8 @@ import { AuswahlChildData } from "../AuswahlChildData";
 
 export interface LehrerAppProps {
 	stammdaten: LehrerStammdaten | undefined;
-	setChild: (value: AuswahlChildData) => Promise<void>;
-	child: AuswahlChildData;
-	children: AuswahlChildData[];
-	childrenHidden: boolean[];
+	setTab: (value: AuswahlChildData) => Promise<void>;
+	tab: AuswahlChildData;
+	tabs: AuswahlChildData[];
+	tabsHidden: boolean[];
 }

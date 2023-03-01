@@ -102,6 +102,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			listKlassen: this.data.listKlassen,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			setKlasse: this.data.setKlasse
 		};

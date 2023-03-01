@@ -53,6 +53,10 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		}
 		if (to.name === this.name)
 			return this.getChildRoute(this.data.stammdaten.id);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					await this.data.setView(child);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
@@ -71,32 +75,34 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 			gotoLehrer: this.data.gotoLehrer,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}
+
 	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
 			stammdaten:  this.data.auswahl === undefined ? undefined : this.data.stammdaten,
 			// Props für die Navigation
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
 		};
 	}
 
-	private getChild(): AuswahlChildData {
+	private getTab(): AuswahlChildData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getChildData(): AuswahlChildData[] {
+	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of this.children)
+		for (const c of super.children)
 			result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setChild = async (value: AuswahlChildData) => {
+	private setTab = async (value: AuswahlChildData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

@@ -93,6 +93,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 			listFoerderschwerpunkte: this.data.listFoerderschwerpunkte,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			setFoerderschwerpunkt: this.data.setFoerderschwerpunkt
 		};

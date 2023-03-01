@@ -5,6 +5,7 @@ export interface JahrgaengeAuswahlProps {
 	listJahrgaenge: List<JahrgangsListeEintrag>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
+	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	setJahrgang: (jahrgang: JahrgangsListeEintrag) => Promise<void>;
 }

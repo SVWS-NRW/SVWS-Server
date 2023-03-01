@@ -5,6 +5,7 @@ export interface FaecherAuswahlProps {
 	listFaecher: List<FaecherListeEintrag>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
+	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	setFach: (fach: FaecherListeEintrag) => Promise<void>;
 }

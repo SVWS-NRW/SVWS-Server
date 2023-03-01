@@ -84,7 +84,6 @@ export class RouteDataSchueler {
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
-		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
 		const mapSchueler = await api.getSchuelerListeAktuell(idSchuljahresabschnitt)
 		const mapKlassen = await api.getKlassenListe(idSchuljahresabschnitt);
 		const mapKurse = await api.getKursListe(idSchuljahresabschnitt);

@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { LehrerUnterrichtsdatenProps } from "~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdatenProps";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 

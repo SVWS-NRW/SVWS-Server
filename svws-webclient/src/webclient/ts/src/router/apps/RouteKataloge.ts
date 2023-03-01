@@ -46,6 +46,7 @@ export class RouteKataloge extends RouteNode<unknown, RouteApp> {
 		return {
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt
 		};
 	}

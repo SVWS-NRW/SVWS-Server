@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select :model-value="aktAbschnitt" @update:model-value="updateAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" />
+	<svws-ui-multi-select :model-value="aktAbschnitt" @update:model-value="updateAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" />
 </template>
 
 
@@ -11,6 +11,7 @@
 		abschnitte: Map<number, Schuljahresabschnitt>;
 		aktAbschnitt: Schuljahresabschnitt;
 		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+		aktSchulabschnitt: number;
 	}>();
 
 	function updateAbschnitt(value: unknown) {

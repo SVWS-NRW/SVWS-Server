@@ -100,6 +100,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			addReligion: this.data.addReligion,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			setReligion: this.data.setReligion
 		};

@@ -7,6 +7,7 @@ export interface GostAuswahlProps {
 	mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
+	aktSchulabschnitt: number;
 	apiStatus: ApiStatus;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	addAbiturjahrgang: (idJahrgang: number) => Promise<void>;

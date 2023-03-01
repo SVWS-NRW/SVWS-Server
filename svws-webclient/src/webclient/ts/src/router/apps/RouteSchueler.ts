@@ -62,6 +62,10 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		}
 		if (to.name === this.name)
 			return this.getChildRoute(this.data.stammdaten.id);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					await this.data.setView(child);
 	}
 
 
@@ -86,6 +90,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			schulgliederungen: api.schulgliederungen,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoSchueler: this.data.gotoSchueler,
 			setFilter: this.data.setFilter,
