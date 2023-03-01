@@ -255,10 +255,12 @@
 	}
 
 	async function export_laufbahnplanung() {
+		if (props.item === undefined)
+			return;
 		const gzip = await props.getLaufbahnplanung();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(gzip);
-		link.download = "Laufbahnplanung.gz";
+		link.download = "Laufbahnplanung_Schueler_" + props.item.id + "_" + props.item.nachname + "_" + props.item.vorname + ".lp";
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
