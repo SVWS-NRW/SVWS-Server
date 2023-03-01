@@ -2,7 +2,7 @@ import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, Benutze
 import { Ref, ref, ShallowRef, shallowRef, triggerRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager, router } from "~/router/RouteManager";
-import { routeSchuleBenutzer } from "../RouteSchuleBenutzer";
+import { routeSchuleBenutzer } from "../schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzerDaten } from "./RouteSchuleBenutzerDaten";
 
 export class RouteDataSchuleBenutzer {

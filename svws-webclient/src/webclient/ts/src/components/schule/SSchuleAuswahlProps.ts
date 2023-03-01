@@ -2,7 +2,7 @@ import { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchuleAuswahlProps {
 	setChild: (value: AuswahlChildData) => Promise<void>;
-	// child: AuswahlChildData;
+	child: AuswahlChildData;
 	children: AuswahlChildData[];
 	childrenHidden: boolean[];
 }

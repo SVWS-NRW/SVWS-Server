@@ -6,8 +6,8 @@ import { BenutzerAuswahlProps } from "~/components/schule/benutzer/SBenutzerAusw
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "../RouteManager";
-import { RouteDataSchuleBenutzer } from "./benutzer/RouteDataSchuleBenutzer";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")

@@ -31,7 +31,7 @@
 	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { router } from "~/router/RouteManager";
 	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
+	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;

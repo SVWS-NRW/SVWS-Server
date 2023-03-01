@@ -4,7 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 import { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
 import { api } from "~/router/Api";
-import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { router } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 

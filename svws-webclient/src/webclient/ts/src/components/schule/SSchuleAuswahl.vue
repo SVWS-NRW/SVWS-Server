@@ -17,5 +17,4 @@
 <script setup lang="ts">
 	import { SchuleAuswahlProps } from './SSchuleAuswahlProps';
 	const props = defineProps<SchuleAuswahlProps>();
-	console.log(props)
 </script>

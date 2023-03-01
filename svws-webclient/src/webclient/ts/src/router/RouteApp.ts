@@ -1,6 +1,6 @@
 import { routeSchule } from "~/router/apps/RouteSchule";
-import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
+import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";

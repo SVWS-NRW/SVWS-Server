@@ -25,7 +25,7 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+	import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 	import { BenutzerAppProps } from "./SBenutzerAppProps";
 
 	const props = defineProps<BenutzerAppProps>();

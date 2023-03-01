@@ -15,8 +15,6 @@
 </template>
 
 <script setup lang="ts">
-	const props = defineProps<{
-		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<boolean>;
-	}>();
-
+	import { SchuleDatenaustauschProps } from './SSchuleDatenaustauschAppProps';
+	const props = defineProps<SchuleDatenaustauschProps>();
 </script>

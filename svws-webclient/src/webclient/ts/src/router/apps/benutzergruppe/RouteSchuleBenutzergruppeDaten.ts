@@ -4,7 +4,7 @@ import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-rout
 import { api } from "~/router/Api";
 import { router } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../RouteSchuleBenutzergruppe";
+import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
 
 
 

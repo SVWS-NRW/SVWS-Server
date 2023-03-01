@@ -23,7 +23,7 @@
 	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
+	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
