@@ -164,6 +164,10 @@ export class RouteDataSchueler {
 		return this._state.value.mapJahrgaenge;
 	}
 
+	get mapAbiturjahrgaenge(): Map<number, GostJahrgang> {
+		return this._state.value.mapAbiturjahrgaenge;
+	}
+
 	gotoSchueler = async (value: SchuelerListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchueler.name, params: { } });

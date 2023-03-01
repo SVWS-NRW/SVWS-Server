@@ -2,7 +2,7 @@
 	<svws-ui-content-card class="pt-8">
 		<div class="router-tab-bar--subnav">
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
-			<svws-ui-button size="small" type="transparent" title="Planung exportieren">Exportieren <i-ri-download-2-line /></svws-ui-button>
+			<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung">Exportieren <i-ri-download-2-line /></svws-ui-button>
 			<svws-ui-button size="small" type="transparent" title="Planung importieren">Importieren <i-ri-upload-2-line /></svws-ui-button>
 			<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
 				Manueller Modus
@@ -197,6 +197,7 @@
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
+		getLaufbahnplanung: () => Promise<Blob>;
 		item?: SchuelerListeEintrag;
 	}>();
 
@@ -252,5 +253,17 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
+
+	async function export_laufbahnplanung() {
+		const gzip = await props.getLaufbahnplanung();
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(gzip);
+		link.download = "Laufbahnplanung.gz";
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
+
 
 </script>

@@ -73,6 +73,12 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.item.id);
 	}
 
+	getLaufbahnplanung = async (): Promise<Blob> => {
+		if (this.item == undefined)
+			throw Error("Keine Schülerauswahl zur Bestimmung des Laufbahnplaungexports vorhanden.");
+		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.item.id);
+	}
+
 }
 
 const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
@@ -84,9 +90,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {
-			if (routeSchueler.data.auswahl.value === undefined)
+			if (routeSchueler.data.auswahl === undefined)
 				return false;
-			const abiturjahr = routeSchueler.data.auswahl.value?.abiturjahrgang;
+			const abiturjahr = routeSchueler.data.auswahl?.abiturjahrgang;
 			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
 		}
 	}
@@ -148,6 +154,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,
+			getLaufbahnplanung: this.data.getLaufbahnplanung,
 			schueler: this.data.item,
 			gostJahrgangsdaten: this.data.gostJahrgangsdaten,
 			gostBelegpruefungsArt: this.data._gostBelegpruefungsArt.value,

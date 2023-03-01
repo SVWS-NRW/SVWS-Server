@@ -4,6 +4,7 @@ export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 	getPdfWahlbogen: () => Promise<Blob>;
+	getLaufbahnplanung: () => Promise<Blob>;
 	schueler: SchuelerListeEintrag | undefined,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostBelegpruefungsArt: GostBelegpruefungsArt;
