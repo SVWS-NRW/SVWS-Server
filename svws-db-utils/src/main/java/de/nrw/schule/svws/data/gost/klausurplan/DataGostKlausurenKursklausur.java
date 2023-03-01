@@ -44,7 +44,8 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		_abiturjahr = abiturjahr;
 	}
 
-	@Override public Response getAll() {
+	@Override
+	public Response getAll() {
 		return this.getList();
 	}
 
@@ -59,15 +60,20 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 	private List<GostKursklausur> getKursKlausuren(int halbjahr) {
 		List<GostKursklausur> daten = new Vector<>();
 
-		Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
+		Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn
+				.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj",
+						DTOGostKlausurenVorgaben.class)
+				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList()
+				.stream().collect(Collectors.toMap(v -> v.ID, v -> v));
 
 		if (mapVorgaben.isEmpty()) {
 			// TODO Errorhandling nötig?
 			return daten;
 		}
 
-		List<DTOGostKlausurenKursklausuren> kursklausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", mapVorgaben.keySet(), DTOGostKlausurenKursklausuren.class);
+		List<DTOGostKlausurenKursklausuren> kursklausuren = conn.queryNamed(
+				"DTOGostKlausurenKursklausuren.vorgabe_id.multiple", mapVorgaben.keySet(),
+				DTOGostKlausurenKursklausuren.class);
 
 		if (kursklausuren.isEmpty()) {
 			// TODO Errorhandling nötig?
@@ -75,7 +81,9 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		}
 
 		Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).collect(Collectors.toList()), DTOGostKlausurenSchuelerklausuren.class)
+				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple",
+						kursklausuren.stream().map(k -> k.ID).collect(Collectors.toList()),
+						DTOGostKlausurenSchuelerklausuren.class)
 				.stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
 
 		if (mapSchuelerklausuren.isEmpty()) {
@@ -84,19 +92,23 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		}
 
 		List<Long> kursIDs = kursklausuren.stream().map(k -> k.Kurs_ID).distinct().toList();
-		Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+		Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream()
+				.collect(Collectors.toMap(k -> k.ID, k -> k));
 
 		kursklausuren.stream().forEach(k -> {
 //			GostKursklausur kk = new GostKursklausur();
 			DTOGostKlausurenVorgaben v = mapVorgaben.get(k.Vorgabe_ID);
 			DTOKurs kurs = mapKurse.get(k.Kurs_ID);
-			GostKursklausur kk = dtoMapper.apply(k, DataGostKlausurenVorgabe.dtoMapper.apply(v), kurs, mapSchuelerklausuren);
+
+			GostKursklausur kk = dtoMapper.apply(k, DataGostKlausurenVorgabe.dtoMapper.apply(v), kurs,
+					mapSchuelerklausuren.get(k.ID));
 			daten.add(kk);
 		});
 		return daten;
 	}
 
-	@FunctionalInterface interface Function5<One, Two, Three, Four, Five> {
+	@FunctionalInterface
+	interface Function5<One, Two, Three, Four, Five> {
 		public Five apply(One one, Two two, Three three, Four four);
 	}
 
@@ -105,8 +117,9 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * {@link DTOGostKlausurenVorgaben} in einen Core-DTO
 	 * {@link GostKlausurvorgabe}.
 	 */
-	public static Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, Map<Long, List<DTOGostKlausurenSchuelerklausuren>>, GostKursklausur> dtoMapper = (
-			DTOGostKlausurenKursklausuren k, GostKlausurvorgabe v, DTOKurs kurs, Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren) -> {
+	public static Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, List<DTOGostKlausurenSchuelerklausuren>, GostKursklausur> dtoMapper = (
+			DTOGostKlausurenKursklausuren k, GostKlausurvorgabe v, DTOKurs kurs,
+			List<DTOGostKlausurenSchuelerklausuren> sKlausuren) -> {
 		GostKursklausur kk = new GostKursklausur();
 		kk.id = k.ID;
 		kk.idVorgabe = k.Vorgabe_ID;
@@ -131,20 +144,20 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.istMdlPruefung = v.istMdlPruefung;
 		kk.istVideoNotwendig = v.istVideoNotwendig;
 		kk.startzeit = k.Startzeit;
-		if (mapSchuelerklausuren != null) {
-			List<DTOGostKlausurenSchuelerklausuren> sKlausuren = mapSchuelerklausuren.get(k.ID);
-			if (sKlausuren != null)
-				kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).collect(Collectors.toList());
-		}
+		if (sKlausuren != null)
+			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).collect(Collectors.toList());
 		return kk;
 	};
 
-	@Override public Response get(Long halbjahr) {
+	@Override
+	public Response get(Long halbjahr) {
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(halbjahr.intValue())).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+				.entity(this.getKursKlausuren(halbjahr.intValue())).build();
 	}
 
-	@Override public Response patch(Long id, InputStream is) {
+	@Override
+	public Response patch(Long id, InputStream is) {
 		Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
@@ -175,9 +188,11 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 						Long newTermin = JSONMapper.convertToLong(value, true);
 						if (newTermin != null) {
 							DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
-							DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
+							DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class,
+									kursklausur.Vorgabe_ID);
 							if (termin.Quartal != vorgabe.Quartal)
-								throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
+								throw OperationError.CONFLICT
+										.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
 						}
 						kursklausur.Termin_ID = newTermin;
 					}
@@ -205,7 +220,8 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-	@Override public Response getList() {
+	@Override
+	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 

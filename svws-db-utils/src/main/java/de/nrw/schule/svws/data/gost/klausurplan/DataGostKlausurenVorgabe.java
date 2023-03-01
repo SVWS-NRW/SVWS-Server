@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,14 +12,17 @@ import java.util.stream.Collectors;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
+import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.utils.klausurplan.GostKlausurvorgabenManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
+import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
@@ -90,6 +94,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		List<DTOGostKlausurenKursklausuren> kursklausuren = new Vector<>();
 		List<GostKursklausur> retKlausuren = new Vector<>();
+		List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new Vector<>();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
@@ -102,7 +107,9 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
 						DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
 						kursklausuren.add(kursklausur);
-						retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, null));
+						List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausuren(hj, kursklausur, kurs);
+						schuelerklausuren.addAll(listSk);
+						retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, listSk));
 					}
 				}
 			}
@@ -110,9 +117,32 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		if (!conn.persistAll(kursklausuren))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		
+		DTODBAutoInkremente dbNmkIDsKlausuren = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Schuelerklausuren");
+		Long idNmkIDsKlausuren = dbNmkIDsKlausuren == null ? 1 : dbNmkIDsKlausuren.MaxID + 1;
+		
+		for (DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
+			sk.ID = idNmkIDsKlausuren++;		
+		if (!conn.persistAll(schuelerklausuren))
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
 
+	}
+	
+	private List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausuren(int hj, DTOGostKlausurenKursklausuren kursklausur, DTOKurs kurs) {
+		List<DTOSchuelerLernabschnittsdaten> lernDaten = conn.query("SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht", DTOSchuelerLernabschnittsdaten.class)
+				.setParameter("kursid", kurs.ID)
+				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] {"LK1", "LK2", "AB3"} : new String[] {"LK1", "LK2", "AB3", "AB4", "GKS"}))
+				.setParameter("sstatus", SchuelerStatus.AKTIV)
+				.setParameter("sgeloescht", false)
+				.getResultList();
+
+		List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new Vector<>();
+		for (DTOSchuelerLernabschnittsdaten lad : lernDaten) {
+			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1l, kursklausur.ID, lad.Schueler_ID));
+		}
+		return listSchuelerklausuren;
 	}
 
 	/**
