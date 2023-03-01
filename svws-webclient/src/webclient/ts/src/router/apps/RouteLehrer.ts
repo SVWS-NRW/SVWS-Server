@@ -1,8 +1,7 @@
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import { computed, WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteManager } from "../RouteManager";
@@ -11,6 +10,7 @@ import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
 import { api } from "../Api";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
+import { AuswahlChildData } from "~/components/AuswahlChildData";
 
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")
@@ -77,17 +77,33 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
 			stammdaten:  this.data.auswahl === undefined ? undefined : this.data.stammdaten,
+			// Props für die Navigation
+			setChild: this.setChild,
+			child: this.getChild(),
+			children: this.getChildData(),
+			childrenHidden: this.children_hidden().value,
 		};
 	}
 
-	public get childRouteSelector() : WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-			}
-		});
+	private getChild(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getChildData(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of this.children)
+			result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setChild = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await this.data.setView(node);
 	}
 
 }

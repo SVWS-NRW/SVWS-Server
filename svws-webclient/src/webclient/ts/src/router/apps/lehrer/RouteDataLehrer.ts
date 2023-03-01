@@ -2,6 +2,7 @@ import { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@svws
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "../RouteLehrer";
 import { routeLehrerIndividualdaten } from "./RouteLehrerIndividualdaten";
 
@@ -15,6 +16,7 @@ interface RouteStateLehrer {
 	// später nachzuladende Daten (Routen-abhängig)
 	personaldaten: LehrerPersonaldaten | undefined;
 	// TODO Unterrichtsdaten
+	view: RouteNode<any, any>;
 }
 
 export class RouteDataLehrer {
@@ -25,6 +27,7 @@ export class RouteDataLehrer {
 		auswahl: undefined,
 		stammdaten: undefined,
 		personaldaten: undefined,
+		view: routeLehrerIndividualdaten
 	}
 
 	private _state = shallowRef<RouteStateLehrer>(RouteDataLehrer._defaultState);
@@ -77,7 +80,8 @@ export class RouteDataLehrer {
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			mapLehrer: mapLehrer,
 			auswahl: auswahl,
-			stammdaten: stammdaten
+			stammdaten: stammdaten,
+			view: this._state.value.view
 		});
 	}
 
@@ -110,7 +114,19 @@ export class RouteDataLehrer {
 			auswahl: neueAuswahl,
 			stammdaten: stammdaten,
 			personaldaten: personaldaten,
+			view: this._state.value.view,
 		});
+	}
+
+	public async setView(view: RouteNode<any,any>) {
+		if (routeLehrer.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
 	}
 
 
