@@ -46,6 +46,7 @@ import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../core/data/gost/klausuren/GostKlausurtermin';
 import { GostKlausurvorgabe, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurvorgabe } from '../core/data/gost/klausuren/GostKlausurvorgabe';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../core/data/gost/klausuren/GostKursklausur';
+import { GostLaufbahnplanungDaten, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostStatistikFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
@@ -3982,6 +3983,64 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/daten
+	 *
+	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Laufbahndaten der gymnasialen Obertufe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostLaufbahnplanungDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Laufbahndaten der gymnasialen Obertufe
+	 */
+	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungDaten> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostLaufbahnplanungDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/daten
+	 *
+	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {GostLaufbahnplanungDaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async importGostSchuelerLaufbahnplanungsdaten(data : GostLaufbahnplanungDaten, schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = GostLaufbahnplanungDaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

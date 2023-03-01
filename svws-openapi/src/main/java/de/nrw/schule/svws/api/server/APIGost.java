@@ -23,6 +23,7 @@ import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombination;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
+import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDaten;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahl;
@@ -1954,6 +1955,64 @@ public class APIGost {
     		@Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
 	    	return (new DataGostSchuelerLaufbahnplanung(conn)).importGZip(id, multipart.data);
+    	}
+    }
+
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
+     * in Bezug auf den angegebenen Schüler.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Schülers
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Laufbahnplanungs-Daten
+     */
+    @GET
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/daten")
+    @Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler.",
+    	description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank "
+    			+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
+    			+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Laufbahndaten der gymnasialen Obertufe",
+			content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = GostLaufbahnplanungDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
+    public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
+	    	return (new DataGostSchuelerLaufbahnplanung(conn)).exportJSON(id);
+    	}
+    }
+
+    /**
+     * Die OpenAPI-Methode für den Import von Laufbahnplanungsdaten eines Schülers der gymnasialen Oberstufe
+     * mit der angegebenen ID.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Schülers
+     * @param daten         die Laufbahnplanungsdaten
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/daten")
+    @Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten.",
+               description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+    public Response importGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") String schema,
+    		@PathParam("id") long id,
+            @RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+            schema = @Schema(implementation = GostLaufbahnplanungDaten.class))) GostLaufbahnplanungDaten daten,
+    		@Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
+	    	return (new DataGostSchuelerLaufbahnplanung(conn)).importJSON(id, daten);
     	}
     }
     

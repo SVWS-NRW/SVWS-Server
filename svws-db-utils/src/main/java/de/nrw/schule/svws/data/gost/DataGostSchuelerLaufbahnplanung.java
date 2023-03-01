@@ -351,8 +351,25 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		GostUtils.pruefeSchuleMitGOSt(conn);
     	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
     	if (dtoSchueler == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw OperationError.NOT_FOUND.exception();
 		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
+	}
+	
+	/**
+	 * Erstellt den Export mit den Laufbahnplanungsdaten des 
+	 * angegebenen Schülers zur Bearbeitung in einem externen Tool. 
+	 *  
+	 * @param idSchueler   die ID des Schülers
+	 * 
+	 * @return die Response mit den Laufbahnplanungsdaten
+	 */
+	public Response exportJSON(long idSchueler) {
+		GostUtils.pruefeSchuleMitGOSt(conn);
+    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+    	if (dtoSchueler == null)
+    		throw OperationError.NOT_FOUND.exception();
+    	GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+		return Response.ok(daten).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	/**
@@ -594,7 +611,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		GostUtils.pruefeSchuleMitGOSt(conn);
     	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
     	if (dtoSchueler == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    		throw OperationError.NOT_FOUND.exception();
     	// Erstelle den Logger
     	Logger logger = new Logger();
     	LogConsumerVector log = new LogConsumerVector();
@@ -609,6 +626,36 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
     		logger.log("Fehler beim Öffnen der Datei.");
     		logger.log("Fehlernachricht: " + e.getMessage());
     	}
+    	// Führe den Import durch und erstelle die Response mit dem Log
+		SimpleOperationResponse daten = new SimpleOperationResponse();
+		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
+		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
+		daten.log = log.getStrings();
+		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();    	
+	}
+
+	
+	
+	/**
+	 * Importiert die Daten des Schülers mit der angegebenen ID aus den übergebenen 
+	 * Laufbahnplanungsdaten.
+	 *  
+	 * @param idSchueler              die ID des Schülers 
+	 * @param laufbahnplanungsdaten   die Laufbahnplanungsdaten
+	 * 
+	 * @return die HTTP-Response mit dem Log
+	 */
+	public Response importJSON(long idSchueler, GostLaufbahnplanungDaten laufbahnplanungsdaten) {
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
+		GostUtils.pruefeSchuleMitGOSt(conn);
+    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+    	if (dtoSchueler == null)
+    		throw OperationError.NOT_FOUND.exception();
+    	// Erstelle den Logger
+    	Logger logger = new Logger();
+    	LogConsumerVector log = new LogConsumerVector();
+    	logger.addConsumer(log);
+    	logger.addConsumer(new LogConsumerConsole());
     	// Führe den Import durch und erstelle die Response mit dem Log
 		SimpleOperationResponse daten = new SimpleOperationResponse();
 		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
