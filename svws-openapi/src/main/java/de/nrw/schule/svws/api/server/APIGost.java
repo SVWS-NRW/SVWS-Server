@@ -3,10 +3,13 @@ package de.nrw.schule.svws.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
+import de.nrw.schule.svws.core.data.SimpleOperationResponse;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
@@ -26,6 +29,7 @@ import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahl;
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
+import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
 import de.nrw.schule.svws.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.nrw.schule.svws.data.gost.DataGostBlockungKurs;
 import de.nrw.schule.svws.data.gost.DataGostBlockungKursLehrer;
@@ -1922,4 +1926,35 @@ public class APIGost {
     	}
     }
 
+    /**
+     * Die OpenAPI-Methode für den Import von Laufbahnplanungsdaten eines Schülers der gymnasialen Oberstufe
+     * mit der angegebenen ID.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Schülers
+     * @param multipart     Die Laufbahnplanungsdatei als GZIP-komprimiertes JSON
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/import")
+    @Operation(summary = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei.",
+               description = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+    public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") String schema,
+    		@PathParam("id") long id,
+    		@RequestBody(description = "Die Laufbahnplanungs-Datei", required = true, content = 
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm SimpleBinaryMultipartBody multipart,
+    		@Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
+	    	return (new DataGostSchuelerLaufbahnplanung(conn)).importGZip(id, multipart.data);
+    	}
+    }
+    
 }
