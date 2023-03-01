@@ -273,17 +273,13 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * Erstellt das Export-Objekt mit den Laufbahnplanungsdaten des 
 	 * angegebenen Schülers. 
 	 *  
-	 * @param idSchueler   die ID des Schülers
+	 * @param dtoSchueler   das Schüler-DTO
 	 * 
 	 * @return das Laufbahnplanungsdaten-Objekt
 	 */
-	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(long idSchueler) {
+	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(DTOSchueler dtoSchueler) {
 		// Lese die Daten aus der Datenbank
-		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (dtoSchueler == null)
-    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, idSchueler);
+    	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
 		GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
@@ -339,7 +335,11 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die Response mit der GZip-Komprimierten Laufbahnplanungs-Datei
 	 */
 	public Response exportGZip(long idSchueler) {
-		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(idSchueler), "Laufbahnplanung_Schueler_" + idSchueler + ".lp");
+		GostUtils.pruefeSchuleMitGOSt(conn);
+    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+    	if (dtoSchueler == null)
+    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
 	}
 	
 }
