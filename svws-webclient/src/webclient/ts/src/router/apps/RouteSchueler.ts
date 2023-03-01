@@ -104,32 +104,30 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			stammdaten: this.data.auswahl === undefined ? undefined : this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
 			// Props für die Navigation
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
 		};
 	}
 
-	private getChild(): AuswahlChildData {
+	private getTab(): AuswahlChildData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getChildData(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): AuswahlChildData[] {		const result: AuswahlChildData[] = [];
 		for (const c of this.children)
 			result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setChild = async (value: AuswahlChildData) => {
-		if (value.name === this.data.view.name)
-			return;
-		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
-			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-		await this.data.setView(node);
+	private setTab = async (value: AuswahlChildData) => {		if (value.name === this.data.view.name)
+		return;
+	const node = RouteNode.getNodeByName(value.name);
+	if (node === undefined)
+		throw new Error("Unbekannte Route");
+	await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+	await this.data.setView(node);
 	}
 }
 

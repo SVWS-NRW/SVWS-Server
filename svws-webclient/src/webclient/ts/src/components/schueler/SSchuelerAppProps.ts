@@ -5,8 +5,8 @@ export interface SchuelerAppProps {
 	auswahl: SchuelerListeEintrag | undefined;
 	stammdaten: SchuelerStammdaten | undefined;
 	mapKlassen: Map<Number, KlassenListeEintrag>;
-	setChild: (value: AuswahlChildData) => Promise<void>;
-	child: AuswahlChildData;
-	children: AuswahlChildData[];
-	childrenHidden: boolean[];
+	setTab: (value: AuswahlChildData) => Promise<void>;
+	tab: AuswahlChildData;
+	tabs: AuswahlChildData[];
+	tabsHidden: boolean[];
 }
