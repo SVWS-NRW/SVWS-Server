@@ -1,4 +1,4 @@
-import { SchuleStammdaten, SimpleOperationResponse } from "@svws-nrw/svws-core-ts";
+import { SchuleStammdaten } from "@svws-nrw/svws-core-ts";
 
 export interface SchuleAppProps {
 	schuleStammdaten: SchuleStammdaten;

@@ -2,9 +2,7 @@
 	<div class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
 			<svws-ui-header>
-				<span>{{
-					schuleStammdaten.bezeichnung1
-				}}</span>
+				<span>{{ schuleStammdaten.bezeichnung1 }}</span>
 			</svws-ui-header>
 			<svws-ui-tab-bar>
 				<template #tabs>

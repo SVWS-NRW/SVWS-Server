@@ -133,7 +133,7 @@ export class RouteDataSchueler {
 		if (routeSchueler.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für Scüler gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {

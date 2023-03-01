@@ -98,21 +98,12 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			auswahl: this.data.auswahl,
 			stammdaten: this.data.auswahl === undefined ? undefined : this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
+			// Props für die Navigation
 			setChild: this.setChild,
 			child: this.getChild(),
 			children: this.getChildData(),
 			childrenHidden: this.children_hidden().value,
 		};
-	}
-
-	public get childRouteSelector() : WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-			}
-		});
 	}
 
 	private getChild(): AuswahlChildData {
