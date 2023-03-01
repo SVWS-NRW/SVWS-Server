@@ -18,7 +18,8 @@
 		modelValue,
 		headless,
 		removable,
-		rounded
+		rounded,
+		danger
 	} = defineProps({
 		placeholder: {type: String, default: ""},
 		title: {type: String, default: ""},
@@ -26,6 +27,7 @@
 		autocomplete: {type: Boolean, default: false},
 		disabled: {type: Boolean, default: false},
 		statistics: {type: Boolean, default: false},
+		danger: {type: Boolean, default: false},
 		items: {
 			type: [Array, Object],
 			default() {
@@ -251,7 +253,7 @@
 <template>
 	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags }">
 		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem }">
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
 				<text-input ref="inputEl"
 					:model-value="dynModelValue"
@@ -354,6 +356,10 @@
 .multiselect-input-component--statistics {
 	@apply border-purple;
 	@apply bg-purple bg-opacity-[0.02];
+}
+
+.multiselect-input-component--danger {
+	@apply text-error;
 }
 
 
