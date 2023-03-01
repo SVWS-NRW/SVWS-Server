@@ -1,9 +1,5 @@
 import { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
-
-export interface AuswahlChildData {
-	name: string,
-	text: string,
-}
+import { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchuelerAppProps {
 	auswahl: SchuelerListeEintrag | undefined;

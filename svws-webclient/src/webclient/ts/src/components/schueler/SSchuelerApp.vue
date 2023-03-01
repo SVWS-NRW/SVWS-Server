@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeSchueler.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="children" :hidden="childrenHidden" :model-value="child" @update:model-value="setChild">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -32,14 +32,9 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { routeSchueler } from "~/router/apps/RouteSchueler";
 	import { SchuelerAppProps } from "./SSchuelerAppProps";
 
 	const props = defineProps<SchuelerAppProps>();
-
-	const selectedRoute = routeSchueler.childRouteSelector;
-	const children_hidden = routeSchueler.children_hidden();
-
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
 		return props.stammdaten?.foto ?? undefined;

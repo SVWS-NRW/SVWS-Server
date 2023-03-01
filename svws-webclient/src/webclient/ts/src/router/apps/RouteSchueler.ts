@@ -1,7 +1,8 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { AuswahlChildData, SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import { AuswahlChildData } from "~/components/AuswahlChildData";
+import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
