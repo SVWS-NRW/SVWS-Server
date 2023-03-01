@@ -26,14 +26,15 @@
 <script lang="ts" setup>
 	import { computed, onMounted, onUnmounted, onUpdated, ref, WritableComputedRef } from 'vue';
 	import { RouteRecordRaw } from "vue-router";
+	import { AuswahlChildData } from '~/types';
 
 	const props = defineProps<{
-		routes: RouteRecordRaw[]
+		routes: RouteRecordRaw[] | AuswahlChildData[]
 		hidden: boolean[] | undefined
-		modelValue: RouteRecordRaw
+		modelValue: RouteRecordRaw | AuswahlChildData
 	}>();
 
-	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw): void, }>();
+	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw | AuswahlChildData): void, }>();
 
 	type ComponentData = {
 		scrolled: boolean;
@@ -43,13 +44,9 @@
 	}
 
 	const contentEl = ref();
-	const selected: WritableComputedRef<RouteRecordRaw> = computed({
-		get() : RouteRecordRaw {
-			return props.modelValue;
-		},
-		set(value: RouteRecordRaw ) {
-			emit('update:modelValue', value);
-		}
+	const selected: WritableComputedRef<RouteRecordRaw | AuswahlChildData> = computed({
+		get: () => props.modelValue,
+		set: (value) => emit('update:modelValue', value)
 	});
 
 	function isHidden(index: number) {
@@ -100,7 +97,7 @@
 		});
 	}
 
-	function select(route: RouteRecordRaw) {
+	function select(route: RouteRecordRaw | AuswahlChildData) {
 		selected.value = route;
 	}
 

@@ -4,3 +4,4 @@ export type ButtonType = Exclude<Type, 'success' | 'highlight' | 'light'> | 'dan
 export type DropdownType = Exclude<Type, 'success' | 'highlight' | 'light'> | 'icon';
 export type InputType = "text" | "number" | "date" | "email" | "search" | "tel" | "password";
 export type Placement = "auto" | "auto-start" | "auto-end" | "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "right" | "right-start" | "right-end" | "left" | "left-start" | "left-end";
+export type AuswahlChildData = { name: string; text: string; image?: string; }

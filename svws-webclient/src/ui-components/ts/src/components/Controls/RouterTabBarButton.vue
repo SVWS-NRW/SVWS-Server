@@ -1,21 +1,22 @@
 <template>
 	<button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
-		{{ route.meta?.text }}
+		{{ text }}
 	</button>
 </template>
 
 <script lang="ts" setup>
 	import { computed, ComputedRef } from 'vue';
 	import { RouteRecordRaw } from "vue-router";
+	import { AuswahlChildData } from '~/types';
 
 	const emit = defineEmits<{
-		(e: 'select', value: RouteRecordRaw) : void
+		(e: 'select', value: RouteRecordRaw | AuswahlChildData) : void
 	}>();
 
 	const props = defineProps<{
-		route: RouteRecordRaw
+		route: RouteRecordRaw | AuswahlChildData
 		hidden: boolean
-		selected: RouteRecordRaw
+		selected: RouteRecordRaw | AuswahlChildData
 	}>();
 
 	const isSelected: ComputedRef<boolean> = computed(() => {
@@ -25,6 +26,15 @@
 	function select() {
 		emit('select', props.route);
 	}
+
+	const record = () => props.route as RouteRecordRaw;
+	const auswahl = () => props.route as AuswahlChildData;
+	const text: ComputedRef<string> = computed(()=> {
+		if ("meta" in props.route)
+			return record().meta?.text as string || "";
+		else
+			return auswahl().text;
+	})
 
 </script>
 
