@@ -98,7 +98,8 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
 		for (const c of super.children)
-			result.push({ name: c.name, text: c.text });
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 

@@ -28,8 +28,8 @@ export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> 
 		return {
 			patch: routeLehrer.data.patchStammdaten,
 			stammdaten: routeLehrer.data.stammdaten,
-			orte: routeApp.data.orte,
-			ortsteile: routeApp.data.ortsteile
+			mapOrte: routeApp.data.mapOrte,
+			mapOrtsteile: routeApp.data.mapOrtsteile
 		};
 	}
 

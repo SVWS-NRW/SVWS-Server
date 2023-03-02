@@ -116,7 +116,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	private getTabs(): AuswahlChildData[] {		const result: AuswahlChildData[] = [];
 		for (const c of this.children)
-			result.push({ name: c.name, text: c.text });
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
