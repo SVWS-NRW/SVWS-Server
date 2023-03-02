@@ -70,13 +70,14 @@
 	@apply cursor-pointer;
 }
 
-.input--schule-abschnitte {
+.input--schule-abschnitte .multiselect-input-component {
 	@apply cursor-pointer opacity-25;
-}
 
-.input--schule-abschnitte:hover,
-.input--schule-abschnitte:focus-within {
-	@apply opacity-100;
+	&:hover,
+	&:focus-within,
+	&--danger {
+		@apply opacity-100;
+	}
 }
 
 .input--schule-abschnitte .multiselect--items-wrapper {
