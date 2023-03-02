@@ -98,9 +98,7 @@ public class DataSchuelerliste extends DataManager<Long> {
 		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		eintrag.idKlasse = (aktAbschnitt == null) ? null : aktAbschnitt.Klassen_ID;
 		eintrag.jahrgang = (aktAbschnitt == null) ? null : aktAbschnitt.ASDJahrgang;
-		if ((aktAbschnitt != null) && (aktAbschnitt.Schulgliederung == null))
-			throw new NullPointerException("Cannot read field \"daten\" because \"aktAbschnitt.Schulgliederung\" is null - Schüler-Lernabschnitts-ID: " + aktAbschnitt.ID);
-		eintrag.schulgliederung = (aktAbschnitt == null) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;
+		eintrag.schulgliederung = ((aktAbschnitt == null) || (aktAbschnitt.Schulgliederung == null)) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;
 		eintrag.status = schueler.Status.bezeichnung;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 		return eintrag;		
@@ -203,12 +201,9 @@ public class DataSchuelerliste extends DataManager<Long> {
     		throw OperationError.NOT_FOUND.exception();
     	// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
     	List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
-		TypedQuery<DTOSchuelerLernabschnittsdaten> queryDtoSchuelerLernabschnitte = conn.query(
-				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-				+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class
-		);
-		List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryDtoSchuelerLernabschnitte
-				.setParameter("value", schuelerIDs).getResultList();
+		List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = 
+			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr IS NULL", 
+				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
 		Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
 		List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
