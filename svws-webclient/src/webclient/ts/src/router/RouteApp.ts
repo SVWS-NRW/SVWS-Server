@@ -170,6 +170,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to.checkSuccessorOf(this.data.view))
+			return;
+		for (const n of this.menu)
+			if (n !== this.data.view && to.checkSuccessorOf(n)) {
+				await this.data.setView(n)
+				return;
+			}
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
