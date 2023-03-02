@@ -7,7 +7,7 @@
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
-						<svws-ui-sidebar-menu-item :active="is_active(app)" @click="setApp(item)">
+						<svws-ui-sidebar-menu-item :active="is_active(item)" @click="setApp(item)">
 							<template #label> {{ item.text }} </template>
 							<template #icon> <s-app-icon :routename="item.name" /> </template>
 						</svws-ui-sidebar-menu-item>
@@ -81,13 +81,10 @@
 
 	function is_active(current: AuswahlChildData): boolean {
 		const routename = props.app.name?.toString().split('.')[0];
-		if (routename === undefined)
+		if (routename !== current.name)
 			return false;
-		if (routename === current.name) {
-			document.title = current.text + " - " + schulname.value;
-			return true;
-		}
-		return props.apps.map(r => r.name).includes(routename);
+		document.title = current.text + " - " + schulname.value;
+		return true;
 	}
 
 	async function doLogout() {
