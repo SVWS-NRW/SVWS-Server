@@ -74,17 +74,27 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 		super.text = "Fächer";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		if (to_params.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		if (abiturjahr === undefined)
+			return routeGost.getRoute();
+		return true;
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.parent === undefined)
 			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.abiturjahr === undefined) {
 			await this.data.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.abiturjahr);
-			await this.data.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
+			return routeGost.getRoute();
 		}
+		const id = parseInt(to_params.abiturjahr);
+		await this.data.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {

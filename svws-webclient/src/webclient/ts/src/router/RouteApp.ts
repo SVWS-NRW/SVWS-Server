@@ -169,14 +169,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		await this.data.setSchuljahresabschnitt(this.data.aktAbschnitt.value.id);
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (to.checkSuccessorOf(this.data.view))
-			return;
-		for (const n of this.menu)
-			if (n !== this.data.view && to.checkSuccessorOf(n)) {
-				await this.data.setView(n)
-				return;
-			}
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		let cur: RouteNode<unknown, any> = to;
+		while (cur.parent !== this)
+		  cur = cur.parent;
+		if (cur !== this.data.view)
+			await this.data.setView(cur);
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {

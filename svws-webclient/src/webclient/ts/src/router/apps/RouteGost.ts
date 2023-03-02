@@ -35,7 +35,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		return true;
+		return this.getRoute();
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -45,16 +45,26 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		const abiturjahr = (to_params.abiturjahr !== undefined) ? parseInt(to_params.abiturjahr) : -1;
+		let cur: RouteNode<unknown, any> = to;
+		while (cur.parent !== this)
+			cur = cur.parent;
+		if (cur !== this.data.view)
+			await this.data.setView(cur);
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		if (abiturjahr == undefined)
+			return this.getRoute();
 		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
 		await this.data.setAbiturjahrgang(eintrag);
+		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
 			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
 	}
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr ?? -1 }};
+		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
+			redirect = this.defaultChild!;
+		return { name: redirect.name, params: { abiturjahr: abiturjahr ?? -1 }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
