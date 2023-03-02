@@ -1,38 +1,85 @@
 <script setup lang='ts'>
-	import imageFile from "../../assets/img/avatar_placeholder.svg";
+import imageFile from "../../assets/img/avatar_placeholder.svg";
 
-	const {
-		src = '',
-		alt = '',
-		upload = false,
-		capture = false,
-	} = defineProps<{
-		src?: string;
-		alt?: string;
-		upload?: boolean;
-		capture?: boolean;
-	}>();
+const {
+	src = '',
+	alt = '',
+	upload = false,
+	capture = false,
+} = defineProps<{
+	src?: string;
+	alt?: string;
+	upload?: boolean;
+	capture?: boolean;
+}>();
 
-	defineEmits<{
-		(e: 'image:captured', val: Blob | null): void;
-	}>();
+defineEmits<{
+	(e: 'image:captured', val: Blob | null): void;
+}>();
 
-	const { videoEl, canvasEl, isCapturing, currentSnapshot, toggleCapturing, capturingError, toggleSnapshot } = useCapturing();
-	const { fileInputEl, toggleUpload, onSelectFile, uploadedImage } = useUploading();
+const {
+	videoEl,
+	canvasEl,
+	isCapturing,
+	currentSnapshot,
+	toggleCapturing,
+	capturingError,
+	toggleSnapshot
+} = useCapturing();
+const {fileInputEl, toggleUpload, onSelectFile, uploadedImage} = useUploading();
 
-	function onError(e: Event) {
-		(e.target as HTMLImageElement).src = imageFile;
-	}
+function onError(e: Event) {
+	(e.target as HTMLImageElement).src = imageFile;
+}
 </script>
 
 <template>
-	<div>
+	<div class="relative" :class="{'is-capturing': isCapturing}">
+		<div class="avatar--edit" v-if="capture || upload" tabindex="0">
+			<span class="avatar--edit-trigger w-5 h-5 p-0.5 rounded-full bg-light mt-auto ml-auto -mr-1">
+				<i-ri-camera-line class="w-full h-full opacity-50"/>
+			</span>
+
+			<Button type="icon" size="small" @click="toggleUpload" v-if="upload && !uploadedImage" tabindex="0"
+					title="Bild hochladen">
+				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
+				<i-ri-upload-2-line/>
+			</Button>
+			<Button type="icon" size="small" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0"
+					title="Bild löschen">
+				<i-ri-delete-bin-line/>
+			</Button>
+			<Button type="icon" size="small" @click="toggleCapturing" v-if="capture && !currentSnapshot"
+					tabindex="0" title="Aufnahme starten">
+				<i-ri-camera-fill/>
+			</Button>
+			<Button type="icon" size="small" @click="toggleSnapshot"
+					v-if="capture && isCapturing && currentSnapshot" tabindex="0" title="Aufnahme löschen">
+				<i-ri-delete-bin-line/>
+			</Button>
+		</div>
+		<div class="avatar--capture-control" v-if="isCapturing">
+			<Button v-if="currentSnapshot" type="icon" @click="toggleSnapshot" tabindex="0" title="Neue Aufnahme">
+				<i-ri-refresh-line />
+			</Button>
+			<Button v-if="!currentSnapshot" type="icon" @click="toggleCapturing" tabindex="0" title="Aufnahme abbrechen">
+				<i-ri-camera-off-line />
+			</Button>
+			<Button v-if="!currentSnapshot" type="primary" @click="toggleSnapshot" tabindex="0" title="Bild aufnehmen">
+				<i-ri-fullscreen-line />
+				<span>Bild aufnehmen</span>
+			</Button>
+			<Button v-if="currentSnapshot" type="primary" @click="toggleCapturing" tabindex="0" title="Bild speichern">
+				<span>Bild speichern</span>
+				<i-ri-check-line/>
+			</Button>
+		</div>
 		<div class="avatar">
 			<template v-if="isCapturing">
 				<span v-if="capturingError">{{ capturingError }}</span>
 				<template v-else>
-					<video playsinline ref="videoEl" autoplay id="video" />
-					<canvas ref="canvasEl" id="canvas" class="hidden" />
+					<video playsinline ref="videoEl" autoplay id="video"/>
+					<canvas ref="canvasEl" id="canvas" class="hidden"/>
 					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
 				</template>
 			</template>
@@ -42,27 +89,11 @@
 			<template v-else>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
 					<path
-						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
 				</svg>
+				<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
 				<img :src="src" :alt="alt" @error="onError">
 			</template>
-		</div>
-		<div class="mt-1 flex gap-1" v-if="capture">
-			<Button @click="toggleCapturing">
-				<span v-if="isCapturing">Aufnahme stoppen</span>
-				<span v-else>Aufnahme starten</span>
-			</Button>
-			<Button v-if="isCapturing" type="secondary" @click="toggleSnapshot">
-				<span v-if="!currentSnapshot">Bild aufnehmen</span>
-				<span v-else>Bild löschen</span>
-			</Button>
-		</div>
-		<div class="mt-1" v-if="upload">
-			<Button @click="toggleUpload">
-				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
-				<span v-if="!uploadedImage">Bild hochladen</span>
-				<span v-else>Bild löschen</span>
-			</Button>
 		</div>
 	</div>
 </template>
@@ -81,9 +112,72 @@
 	video {
 		@apply w-full h-full absolute top-0 left-0 object-cover object-center z-10;
 	}
+
+	video {
+		@apply bg-light;
+	}
+
+	&--edit {
+		@apply absolute top-0 left-0 z-20 w-full h-full;
+		@apply flex items-center justify-center;
+
+		.is-capturing & {
+			@apply hidden;
+		}
+
+		.button {
+			@apply hidden;
+
+			&:hover, &:focus {
+				@apply bg-opacity-100;
+			}
+		}
+
+		&:hover,
+		&:focus,
+		&:focus-within {
+			@apply outline-none;
+
+			.avatar--edit-trigger {
+				@apply hidden;
+			}
+
+			.button {
+				@apply block;
+			}
+
+			+ .avatar {
+				@apply opacity-25;
+			}
+		}
+
+		&:focus-visible {
+			+ .avatar {
+				@apply ring ring-primary;
+			}
+		}
+	}
+
+	.is-capturing & {
+		@apply opacity-100;
+	}
+
+	&--capture-control {
+		@apply flex items-center justify-center gap-1 mt-4;
+	}
 }
 
-.avatar--placeholder {
-	@apply bg-error;
+.is-capturing {
+	@apply fixed inset-0 z-[100] h-screen;
+	@apply bg-white bg-opacity-20;
+	@apply flex flex-col justify-center items-center;
+	backdrop-filter: blur(0.5rem);
+
+	.avatar {
+		@apply p-0 -order-1;
+		width: 90vmin;
+		height: 90vmin;
+		@apply md:w-[37.5rem] md:h-[37.5rem];
+	}
 }
 </style>

@@ -5,6 +5,8 @@
 
 <template>
 	<Story title="SVWS UI/Layout/Avatar">
-		<Avatar @image:captured="logEvent('Image captured', $event)" @image:uploaded="logEvent('Image Uploaded', $event)" />
+		<div class="w-20">
+			<Avatar @image:captured="logEvent('Image captured', $event)" @image:uploaded="logEvent('Image Uploaded', $event)" />
+		</div>
 	</Story>
 </template>
