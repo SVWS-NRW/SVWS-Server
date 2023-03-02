@@ -70,6 +70,18 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 		this._veraltet = tab.veraltet();
 	}
 
+	/**
+	 * Prüft, ob diese Spalte eine Änderung hat, welche eine Entwickler-Version 
+	 * des Tabellen-DTO notwendig macht.
+	 * 
+	 * @return true, falls ein Entwickler-DTO benötigt wird und ansonsten false
+	 */
+	public boolean brauchtDeveloperDTO() {
+		return (this._revision.revision > SchemaRevisionen.maxRevision.revision) ||
+			((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)) ||
+			((this._javaConverterRevision != null) && (this._javaConverterRevision.revision > SchemaRevisionen.maxRevision.revision)) ||
+			((this._javaConverterVeraltet != null) && (this._javaConverterVeraltet.revision > SchemaRevisionen.maxRevision.revision));
+	}	
 
 	/**
 	 * Setzt die Länge der Daten (z.B. bei String-Datentypen).

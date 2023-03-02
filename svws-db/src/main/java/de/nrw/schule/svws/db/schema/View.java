@@ -62,6 +62,17 @@ public class View {
 		this.sql = sql;
 	}
     
+	/**
+	 * Prüft, ob diese View eine Entwickler-Version des DTO
+	 * benötigt, indem überprüft wird, ob an der View Änderungen zwischen 
+	 * der Aktuellen Revision und der Entwickler Revision vorgenommen wurden.
+	 * 
+	 * @return true, falls ein Entwickler-DTO benötigt wird und ansonsten false
+	 */
+	public boolean brauchtDeveloperDTO() {
+		return (this.revision > SchemaRevisionen.maxRevision.revision) ||
+			((this.veraltet != null) && (this.veraltet > SchemaRevisionen.maxRevision.revision));
+	}	
 
 	/**
 	 * Fügt eine Spalte zu der View hinzu.

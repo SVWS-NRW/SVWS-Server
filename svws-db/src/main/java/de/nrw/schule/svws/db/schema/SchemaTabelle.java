@@ -85,6 +85,24 @@ public class SchemaTabelle {
 	}
 	
 	/**
+	 * Prüft, ob diese Tabelle eine Entwickler-Version des DTO
+	 * benötigt, indem überprüft wird, ob an diesem Tabellen-Objekt oder bei
+	 * einem der Spalten-Objekte Änderungen zwischen der Aktuellen Revision
+	 * und der Entwickler Revision vorgenommen wurden.
+	 * 
+	 * @return true, falls ein Entwickler-DTO benötigt wird und ansonsten false
+	 */
+	public boolean brauchtDeveloperDTO() {
+		if ((this._revision.revision > SchemaRevisionen.maxRevision.revision) ||
+			((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)))
+			return true;
+		for (SchemaTabelleSpalte spalte: this._spalten)
+			if (spalte.brauchtDeveloperDTO())
+				return true;
+		return false;
+	}
+	
+	/**
 	 * Setzt die Revision, ab wann diese Tabelle veraltet ist.
 	 * 
 	 * @param veraltet    die Revision, ab wann die Tabelle veraltet ist

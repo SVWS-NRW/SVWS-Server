@@ -92,6 +92,10 @@ public class DTOCreator {
 				logger.logLn("---");
 				continue;
 			}
+			if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!dto.tabelle.brauchtDeveloperDTO()))) {
+				logger.logLn("- nicht benötigt");
+				continue;
+			}
 			try {
 				// Erstelle das Verzeichnis für das Package
 				String fullqualifiedClassname = javaPackage + "." + dto.tabelle.getJavaKlasse(rev);
@@ -135,6 +139,10 @@ public class DTOCreator {
 			String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
 			for (View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
 				logger.log("View " + view.name + ": ");
+				if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!view.brauchtDeveloperDTO()))) {
+					logger.logLn("- nicht benötigt");
+					continue;
+				}
 				DTOCreatorView creator = new DTOCreatorView(view);
 				String javaPackage = packagename + view.packageName; 
 				String className = (rev < 0) ? view.dtoName : "Dev" + view.dtoName;
