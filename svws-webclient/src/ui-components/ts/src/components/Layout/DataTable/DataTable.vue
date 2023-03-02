@@ -264,8 +264,12 @@
 	@apply overflow-auto;
 	@apply tabular-nums;
 	@apply max-h-full;
-	--checkbox-width: 2rem;
+	--checkbox-width: 1.75rem;
 	/*--grid-template: repeat(auto-fit, minmax(8rem, 1fr));*/
+
+	@media (min-width: 2000px) {
+		--checkbox-width: 2rem;
+	}
 
 	.app-layout--secondary-container & {
 		@apply border-x-0;

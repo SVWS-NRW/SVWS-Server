@@ -2,26 +2,23 @@
 	<svws-ui-app-layout :fullwidth-content="true">
 		<template #main>
 			<div class="login-wrapper">
-				<div class="inline-flex bg-white py-2 px-3 rounded-lg absolute bottom-3 right-3">
-					<img class="h-16" src="/images/MSB_NRW_Logo.svg">
-				</div>
 				<div class="login-container">
 					<div class="login-form modal modal--sm">
-						<div class="modal--content-wrapper pt-3 pb-2 px-4">
+						<div class="modal--content-wrapper">
 							<div class="modal--content">
-								<div class="login-form-header mb-8">
-									<h1 class="leading-none py-3 text-center w-full">
+								<div class="login-form-header mb-8 px-8 py-4 mt-6">
+									<h1 class="leading-none text-center w-full">
 										<span class="font-bold">SVWS <span class="font-normal">NRW</span></span>
 									</h1>
 								</div>
-								<div class="w-full mt-1 flex flex-col gap-3 items-center">
+								<div class="w-full mt-1 flex flex-col gap-2 items-center px-8">
 									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" />
 									<svws-ui-button type="secondary" @click="connect">
 										Verbinden
 									</svws-ui-button>
 								</div>
 								<Transition>
-									<div v-if="inputDBSchemata.size() > 0" class="flex flex-col gap-3 items-center mt-16">
+									<div v-if="inputDBSchemata.size() > 0" class="flex flex-col gap-2 items-center mt-8 px-8">
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
 										<svws-ui-text-input v-model="password"
@@ -34,7 +31,7 @@
 										</svws-ui-button>
 									</div>
 								</Transition>
-								<div class="mt-16 text-center text-sm">
+								<div class="mt-12 text-center text-sm">
 									<p class="mb-2 opacity-50">
 										Powered by SVWS-NRW<br>Client Version {{ version }}
 									</p>
@@ -47,34 +44,33 @@
 											</span>
 										</a>
 									</nav>
-									<p class="text-sm opacity-50">
-										Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-										geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
-										zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
-										Geschlechter gleichermaßen zu berücksichtigen.
-									</p>
+									<div class="bg-light mt-6 px-6 pt-4 pb-5">
+										<img class="mb-4 w-2/3 mx-auto" src="/images/MSB_NRW_Logo.svg">
+										<p class="text-sm opacity-50 text-left">
+											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
+											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
+											Geschlechter gleichermaßen zu berücksichtigen.
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error">
-						<div class="flex items-center space-x-4">
-							<i-ri-lock-2-line class="text-headline" />
-							<div>
-								<div class="font-bold">Anmeldung fehlgeschlagen</div>
-								<div class="font-normal">Passwort oder Benutzername falsch.</div>
-							</div>
-						</div>
-					</svws-ui-notification>
-					<svws-ui-notification v-if="connection_failed" type="error">
-						<div class="flex items-center space-x-4">
-							<i-ri-alert-line class="text-headline" />
-							<div>
-								<div class="font-bold">Verbindung zum Server fehlgeschlagen</div>
-								<div class="font-normal">Bitte überprüfe die Server Addresse und versuche es erneut.</div>
-							</div>
-						</div>
-					</svws-ui-notification>
+					<svws-ui-notifications>
+						<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error" icon="login">
+							<template #header>
+								Anmeldung fehlgeschlagen
+							</template>
+							<p>Passwort oder Benutzername falsch.</p>
+						</svws-ui-notification>
+						<svws-ui-notification v-if="connection_failed" type="error">
+							<template #header>
+								Verbindung zum Server fehlgeschlagen
+							</template>
+							<p>Bitte überprüfe die Server Addresse und versuche es erneut.</p>
+						</svws-ui-notification>
+					</svws-ui-notifications>
 				</div>
 			</div>
 		</template>
@@ -151,10 +147,6 @@
 </script>
 
 <style lang="postcss" scoped>
-.app-layout--wrapper {
-	@apply p-4;
-}
-
 .login-wrapper {
 	@apply flex h-full flex-col justify-between;
 }
@@ -167,15 +159,11 @@
 }
 
 .modal {
-	@apply shadow-black/25;
+	@apply shadow-black/25 rounded-xl;
 }
 
-.login-input-group .wrapper {
-	@apply w-full;
-}
-
-.login-input-group {
-	@apply space-y-4 w-full text-center flex flex-col items-center;
+.login-form .modal--content {
+	@apply p-0;
 }
 
 .login-form-header {

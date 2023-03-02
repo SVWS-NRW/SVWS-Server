@@ -94,7 +94,7 @@
 	.secondary-menu--headline,
 	.secondary-menu--header,
 	.secondary-menu--content .text-headline {
-		@apply px-6;
+		@apply px-7;
 	}
 
 	.app-layout--main-container:not(.fullwidth-content) {

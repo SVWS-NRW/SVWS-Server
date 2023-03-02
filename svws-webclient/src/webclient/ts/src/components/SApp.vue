@@ -36,17 +36,20 @@
 				<main class="relative h-full">
 					<router-view :key="app.name" />
 				</main>
-				<template v-for="error of errors" :key="error.message">
-					<svws-ui-notification type="error">
-						<div class="flex items-center space-x-4">
-							<i-ri-alert-line class="text-headline" />
-							<div>
-								<div class="font-bold"> {{ error.name }} </div>
-								<div class="font-normal"> {{ error.message }} </div>
-							</div>
-						</div>
-					</svws-ui-notification>
-				</template>
+				<svws-ui-notifications>
+					<template v-for="error of errors" :key="error.message">
+						<svws-ui-notification type="error">
+							<template #header>
+								{{ error.name }}
+							</template>
+							{{ error.message }}
+							<pre>{{ error.stack }}</pre>
+							<template #stack v-if="error.stack">
+								{{ error.stack }}
+							</template>
+						</svws-ui-notification>
+					</template>
+				</svws-ui-notifications>
 			</div>
 		</template>
 	</svws-ui-app-layout>

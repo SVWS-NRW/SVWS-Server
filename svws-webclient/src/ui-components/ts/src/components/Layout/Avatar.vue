@@ -40,20 +40,20 @@ function onError(e: Event) {
 				<i-ri-camera-line class="w-full h-full opacity-50"/>
 			</span>
 
-			<Button type="icon" size="small" @click="toggleUpload" v-if="upload && !uploadedImage" tabindex="0"
+			<Button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage" tabindex="0"
 					title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
 				<i-ri-upload-2-line/>
 			</Button>
-			<Button type="icon" size="small" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0"
+			<Button type="icon" @click="toggleUpload" v-if="upload && uploadedImage" tabindex="0"
 					title="Bild löschen">
 				<i-ri-delete-bin-line/>
 			</Button>
-			<Button type="icon" size="small" @click="toggleCapturing" v-if="capture && !currentSnapshot"
+			<Button type="icon" @click="toggleCapturing" v-if="capture && !currentSnapshot"
 					tabindex="0" title="Aufnahme starten">
 				<i-ri-camera-fill/>
 			</Button>
-			<Button type="icon" size="small" @click="toggleSnapshot"
+			<Button type="icon" @click="toggleSnapshot"
 					v-if="capture && isCapturing && currentSnapshot" tabindex="0" title="Aufnahme löschen">
 				<i-ri-delete-bin-line/>
 			</Button>

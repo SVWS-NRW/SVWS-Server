@@ -89,7 +89,7 @@
 
 @media (min-width: 2000px) {
 	.sidebar--menu {
-		@apply w-24;
+		@apply w-20;
 	}
 }
 
