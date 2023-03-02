@@ -6,7 +6,7 @@
 				<br>
 				<span class="opacity-50">{{ jahrgang ? jahrgang : '–' }}</span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeGost.children_records" :hidden="children_hidden" v-model="selectedRoute" class="router--gost-kursplanung">
+			<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab" class="router--gost-kursplanung">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>
@@ -20,14 +20,9 @@
 
 	import { computed, ComputedRef } from "vue";
 	import { RouterView } from "vue-router";
-	import { routeGost } from "~/router/apps/RouteGost";
 	import { GostAppProps } from "./SGostAppProps";
 
 	const props = defineProps<GostAppProps>();
-
-	const selectedRoute = routeGost.getChildRouteSelector();
-	const children_hidden = routeGost.children_hidden();
-
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
 		return props.auswahl?.jahrgang ?? undefined;

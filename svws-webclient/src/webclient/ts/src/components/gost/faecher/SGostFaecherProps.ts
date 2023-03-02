@@ -1,7 +1,7 @@
 import { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 
 export interface GostFaecherProps {
-	getFaecherManager: () => GostFaecherManager;
+	faecherManager: GostFaecherManager;
 	patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 	patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 	addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;

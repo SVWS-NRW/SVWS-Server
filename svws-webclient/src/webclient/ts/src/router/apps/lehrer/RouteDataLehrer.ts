@@ -91,7 +91,7 @@ export class RouteDataLehrer {
 	}
 
 	/**
-	 * Setzt den ausgewählten Lehrer und lädt dessen Stammddaten.
+	 * Setzt den ausgewählten Lehrer und lädt dessen Stammdaten.
 	 *
 	 * @param lehrer   der ausgewählte Lehrer
 	 */

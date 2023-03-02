@@ -19,7 +19,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {
-			return this.checkHidden(routeGost.data.auswahl.value);
+			return this.checkHidden(routeGost.data.auswahl);
 		}
 	}
 

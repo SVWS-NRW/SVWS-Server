@@ -37,7 +37,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
-		if ((abiturjahr === undefined) || (routeGost.data.auswahl.value !== undefined) && (abiturjahr !== routeGost.data.auswahl.value.abiturjahr))
+		if ((abiturjahr === undefined) || (routeGost.data.auswahl !== undefined) && (abiturjahr !== routeGost.data.auswahl.abiturjahr))
 			return { name: routeGost.name, params: { } };
 		if ((halbjahr === undefined) || (idBlockung === undefined))
 			return routeGostKursplanung.getRouteHalbjahr(abiturjahr, (halbjahr === undefined) ? GostHalbjahr.EF1.id : halbjahr.id);
@@ -118,7 +118,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.auswahlSchueler,
 			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
-			faecherManager: routeGost.data.faecherManager.value
+			faecherManager: routeGost.data.faecherManager
 		}
 	}
 

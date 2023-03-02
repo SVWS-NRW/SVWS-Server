@@ -47,13 +47,13 @@
 	import { Fachgruppe, GostFach, GostFaecherManager, LinkedCollection, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		getFaecherManager: () => GostFaecherManager;
+		faecherManager: GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
 	}>();
 
 	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
-		return props.getFaecherManager().faecher();
+		return props.faecherManager.faecher();
 	});
 
 	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {

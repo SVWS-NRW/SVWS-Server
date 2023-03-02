@@ -23,7 +23,7 @@
 						</tr>
 					</thead>
 					<tr v-for="row in rows" :key="row.id">
-						<s-row-gost-fachkombination :kombination="row" :get-faecher-manager="getFaecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
+						<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 					</tr>
 				</table>
 				<svws-ui-button class="pl-2 pt-2" @click="add_kurskombi">Hinzufügen</svws-ui-button>
@@ -38,7 +38,7 @@
 	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		getFaecherManager: () => GostFaecherManager;
+		faecherManager: GostFaecherManager;
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
