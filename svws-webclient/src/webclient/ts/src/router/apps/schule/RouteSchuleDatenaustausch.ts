@@ -1,10 +1,15 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { SchuleDatenaustauschProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAppProps";
+import { SchuleDatenaustauschAppProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAppProps";
+import { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 import { api } from "~/router/Api";
+import { routeApp } from "~/router/RouteApp";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchule } from "../RouteSchule";
-import SSchuleDatenaustausch from "~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue"
+import { routeSchule, RouteSchule } from "../RouteSchule";
+
+const SSchuleDatenaustauschApp = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue")
+const SSchuleDatenaustauschAuswahl = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahl.vue")
 
 class RouteDataSchuleDatenaustausch {
 
@@ -21,16 +26,27 @@ class RouteDataSchuleDatenaustausch {
 export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaustausch, RouteSchule> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule_datenaustausch", "datenaustausch", SSchuleDatenaustausch, new RouteDataSchuleDatenaustausch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule_datenaustausch", "datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Datenaustausch";
+		super.setView("liste", SSchuleDatenaustauschAuswahl, (route) => this.getAuswahlProps(route));
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { }};
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschProps {
+	public getAuswahlProps(to: RouteLocationNormalized): SchuleDatenaustauschAuswahlProps {
+		return {
+			abschnitte: api.mapAbschnitte.value,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
+			setAbschnitt: routeApp.data.setAbschnitt,
+			returnToSchule: routeSchule.returnToSchule,
+		};
+	}
+
+	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschAppProps {
 		return {
 			setGostLupoImportMDBFuerJahrgang: this.data.setGostLupoImportMDBFuerJahrgang,
 		};

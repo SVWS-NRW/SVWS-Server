@@ -103,6 +103,9 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		await RouteManager.doRoute({ name: value.name, params: {} });
 		await this.data.setView(node);
 	}
+
+	returnToSchule = async () => await RouteManager.doRoute({ name: this.name, params: {} });
+
 }
 
 export const routeSchule = new RouteSchule();

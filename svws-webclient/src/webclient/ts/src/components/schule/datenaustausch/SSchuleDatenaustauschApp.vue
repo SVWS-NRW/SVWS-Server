@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuleDatenaustauschProps } from './SSchuleDatenaustauschAppProps';
-	const props = defineProps<SchuleDatenaustauschProps>();
+
+	import { SchuleDatenaustauschAppProps } from './SSchuleDatenaustauschAppProps';
+
+	const props = defineProps<SchuleDatenaustauschAppProps>();
 </script>

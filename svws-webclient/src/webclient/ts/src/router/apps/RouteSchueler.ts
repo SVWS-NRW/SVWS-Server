@@ -1,6 +1,5 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { AuswahlChildData } from "~/components/AuswahlChildData";
 import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
@@ -129,6 +128,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
 	await this.data.setView(node);
 	}
+
 }
 
 export const routeSchueler = new RouteSchueler();

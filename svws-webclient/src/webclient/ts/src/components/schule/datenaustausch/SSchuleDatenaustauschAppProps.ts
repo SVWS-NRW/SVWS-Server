@@ -1,3 +1,3 @@
-export interface SchuleDatenaustauschProps {
+export interface SchuleDatenaustauschAppProps {
 	setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<boolean>;
 }
