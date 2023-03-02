@@ -1,24 +1,30 @@
 <template>
 	<div v-if="visible">
-		<svws-ui-table :model-value="auswahlErgebnis" @update:model-value="setAuswahlErgebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10"
+		<svws-ui-table :model-value="auswahlErgebnis" @update:model-value="setAuswahlErgebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10 z-20 relative"
 			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
 			:footer="true">
 			<template #head-bewertung>
 				<th style="flex-grow: 10;">
-					<div>
-						<svws-ui-popover placement="bottom">
+					<div class="z-50">
+						<svws-ui-popover placement="top">
 							<template #trigger>
-								<span class="inline-flex items-center">
+								<span class="inline-flex items-center cursor-pointer">
 									Bewertungen
 									<svws-ui-icon class="ml-1">
-										<i-ri-information-line />
+										<i-ri-question-line />
 									</svws-ui-icon>
 								</span>
 							</template>
 							<template #content>
-								<span class="normal-case text-base font-normal">
-									Regelverletzungen, Wahlkonflikte, maximale Kursdifferenz, Fächerparallelität<br>
-								</span>
+								<div class="normal-case text-base rich-text">
+									<div class="my-1">Anzahl von Problemen durch:</div>
+									<ul class="font-bold">
+										<li>Regelverletzungen</li>
+										<li>Wahlkonflikte</li>
+										<li>max. Kursdifferenz</li>
+										<li>Fächerparallelität</li>
+									</ul>
+								</div>
 							</template>
 						</svws-ui-popover>
 					</div>

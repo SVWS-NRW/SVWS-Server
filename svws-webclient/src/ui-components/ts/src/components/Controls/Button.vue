@@ -63,7 +63,11 @@
 	}
 
 	&:focus {
-		@apply outline-none ring;
+		@apply outline-none;
+	}
+
+	&:focus-visible {
+		@apply ring;
 	}
 
 	&:active {
@@ -74,7 +78,7 @@
 .button--primary {
 	@apply bg-primary text-white border-primary;
 
-	&:focus {
+	&:focus-visible {
 		@apply ring-primary ring-opacity-50;
 	}
 }
@@ -86,7 +90,7 @@
 		@apply border-primary text-primary;
 	}
 
-	&:focus {
+	&:focus-visible {
 		@apply ring-primary ring-opacity-25 border-primary;
 	}
 
@@ -102,7 +106,7 @@
 		@apply bg-light brightness-95;
 	}
 
-	&:focus {
+	&:focus-visible {
 		@apply bg-light ring-dark-20 ring-opacity-75;
 	}
 }
@@ -115,7 +119,7 @@
 		@apply bg-error text-white;
 	}
 
-	&:focus {
+	&:focus-visible {
 		@apply ring-error ring-opacity-50;
 	}
 }
@@ -147,8 +151,11 @@
 
 	&:focus {
 		@apply bg-error;
-		@apply ring-error ring-opacity-25;
 		@apply text-white;
+	}
+
+	&:focus-visible {
+		@apply ring-error ring-opacity-25;
 	}
 }
 
@@ -188,7 +195,7 @@
 		@apply bg-dark-20 bg-opacity-50 rounded;
 	}
 
-	&:focus {
+	&:focus-visible {
 		@apply ring-dark ring-opacity-50;
 	}
 }
@@ -196,7 +203,8 @@
 .button:disabled {
 	&,
 	&:hover,
-	&:focus {
+	&:focus,
+	&:focus-visible {
 		@apply bg-black bg-opacity-25 border-black border-opacity-50 text-black;
 		@apply opacity-20;
 		@apply cursor-not-allowed pointer-events-none;
@@ -213,7 +221,8 @@
 	@apply text-error bg-error/10;
 }
 
-.button--small {
+.button--small,
+.router-tab-bar--subnav .button {
 	@apply text-sm font-medium;
 	padding: 0.3em 0.75em;
 }

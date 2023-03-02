@@ -79,4 +79,10 @@
 		--popper-theme-background-color-hover: theme("colors.purple");
 		--popper-theme-text-color: theme("colors.white");
 	}
+
+	.rich-text {
+		ul {
+			@apply list-disc list-inside;
+		}
+	}
 </style>

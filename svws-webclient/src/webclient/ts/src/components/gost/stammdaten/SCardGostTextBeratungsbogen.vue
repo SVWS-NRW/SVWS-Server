@@ -1,11 +1,7 @@
 <template>
 	<svws-ui-content-card title="Texte für die Laufbahnplanung">
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="props.jahrgangsdaten.textBeratungsbogen"
-					@update:model-value="doPatch({ textBeratungsbogen: String($event) })" resizeable="vertical" />
-			</div>
-		</div>
+		<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="props.jahrgangsdaten.textBeratungsbogen"
+								@update:model-value="doPatch({ textBeratungsbogen: String($event) })" resizeable="vertical" :autoresize="true" />
 	</svws-ui-content-card>
 </template>
 

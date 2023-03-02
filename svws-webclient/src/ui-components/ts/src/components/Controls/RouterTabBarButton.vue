@@ -58,6 +58,10 @@
 		@apply bg-primary bg-opacity-5;
 	}
 
+    .router-tab-bar-button:focus-visible {
+		@apply ring-primary ring-opacity-50;
+	}
+
     .router-tab-bar-button:focus,
     .router-tab-bar-button--active {
         @apply outline-none;

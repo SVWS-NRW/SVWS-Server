@@ -1,11 +1,7 @@
 <template>
 	<svws-ui-content-card>
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Mailversand" :model-value="props.jahrgangsdaten.textMailversand"
-					@update:model-value="doPatch({ textMailversand: String($event) })" resizeable="vertical" />
-			</div>
-		</div>
+		<svws-ui-textarea-input placeholder="Mailversand" :model-value="props.jahrgangsdaten.textMailversand"
+			@update:model-value="doPatch({ textMailversand: String($event) })" resizeable="vertical" :autoresize="true" />
 	</svws-ui-content-card>
 </template>
 

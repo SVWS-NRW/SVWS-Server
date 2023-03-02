@@ -7,15 +7,15 @@
 			<svws-ui-popover class="popper--danger" v-if="istFachkombiErforderlich" placement="bottom">
 				<template #trigger>
 					<div class="inline-flex items-center">
-						<span>{{ wahl }}</span>
-						<i-ri-error-warning-line class="text-error ml-0.5" />
+						<span>{{ wahl }}&#8203;</span>
+						<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
 					</div>
 				</template>
 				<template #content>
 					Fachkombination erforderlich
 				</template>
 			</svws-ui-popover>
-			<div class="inline-flex items-center" v-if="!moeglich && wahl">
+			<div class="inline-flex items-center" v-else-if="!moeglich && wahl">
 				<span>{{ wahl }}</span>
 				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />
 			</div>

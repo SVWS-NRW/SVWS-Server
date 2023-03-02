@@ -192,10 +192,6 @@
 		@apply border-b-2 border-light;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
 		@apply h-9 text-sm;
-
-		.button {
-			padding: .25rem .75rem;
-		}
 	}
 
 </style>
