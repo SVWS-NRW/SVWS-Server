@@ -386,7 +386,7 @@
 		&__th,
 		&__td {
 			@apply text-left;
-			@apply h-[2.75rem];
+			@apply h-[2.9rem];
 			padding: 0.8rem 0.25rem;
 
 			> div:not(.data-table__th-wrapper__sortable),
@@ -412,7 +412,7 @@
 		display: contents;
 
 		&__tr {
-			@apply h-[1.75rem];
+			@apply min-h-[1.7rem];
 
 			&:hover {
 				@apply cursor-pointer;
@@ -458,7 +458,7 @@
 
 		&__tr {
 			@apply w-full flex items-center;
-			@apply h-[2.75rem];
+			@apply h-[2.9rem];
 		}
 
 		&__th,

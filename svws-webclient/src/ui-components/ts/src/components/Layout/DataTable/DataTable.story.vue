@@ -31,62 +31,6 @@
 			email: "hallo@gmail.com",
 			age: 49,
 			isActive: true,
-		},
-		{
-			id: 5,
-			name: "A",
-			email: "test@web.de",
-			age: 16,
-			isActive: false,
-		},
-		{
-			id: 6,
-			name: "B",
-			email: "bla@gmx.de",
-			age: 31,
-			isActive: true,
-		},
-		{
-			id: 7,
-			name: "C",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
-		},
-		{
-			id: 8,
-			name: "D",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
-		},
-		{
-			id: 9,
-			name: "A",
-			email: "test@web.de",
-			age: 16,
-			isActive: false,
-		},
-		{
-			id: 10,
-			name: "B",
-			email: "bla@gmx.de",
-			age: 31,
-			isActive: true,
-		},
-		{
-			id: 11,
-			name: "C",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
-		},
-		{
-			id: 12,
-			name: "D",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
 		}
 	]);
 	const set = new Set<DataTableItem>();
