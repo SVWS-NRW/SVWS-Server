@@ -400,19 +400,20 @@ public class DBRootManager {
 	 *  
 	 * @param driver        das DBMS
 	 * @param db_location   der Ort, an dem sich die Datenbank befindet
+	 * @param user_root     der Benutzer-Name für den Benutzer der mit root-Rechten ausgestattet ist
 	 * @param pw_root       das root-Kennwort für den Datenbank-Zugriff
 	 * 
 	 * @return die Konfiguration oder null bei einem nicht unterstützten DBMS
 	 */
-	private static DBConfig getDBRootConfig(DBDriver driver, String db_location, String pw_root) {
+	private static DBConfig getDBRootConfig(DBDriver driver, String db_location, String user_root, String pw_root) {
 		switch (driver) {
 			case MARIA_DB:
 			case MYSQL:
-				return new DBConfig(driver, db_location, "mysql", false, "root", pw_root, true, false);
+				return new DBConfig(driver, db_location, "mysql", false, user_root == null ? "root" : user_root, pw_root, true, false);
 			case MDB:
 				return new DBConfig(driver, db_location, null, false, null, "", true, true);
 			case MSSQL:
-				return new DBConfig(driver, db_location, "master", false, "sa", pw_root, true, false);
+				return new DBConfig(driver, db_location, "master", false, user_root == null ? "sa" : user_root, pw_root, true, false);
 			case SQLITE:
 				return new DBConfig(driver, db_location, null, false, null, null, true, true);
 		}
@@ -426,12 +427,13 @@ public class DBRootManager {
 	 * vorhandenes Schema bzw. eine bereits vorhandene Datei wird zuvor gelöscht. 
 	 * 
 	 * @param config    die Datenbank-Konfiguration mit den Zugriffs-Informationen für den neuen Admin-Benutzer 
+	 * @param user_root der Benutzername für den Benutzer der mit den "root"-Rechten auf die Datenbank ausgestattet ist
 	 * @param pw_root   das Kennwort für den root-Zugriff auf die Datenbank
 	 * @param logger    ein Logger, welcher die jeweiligen Informationen zu den einzelnen Operationen loggt. 
 	 *                 
 	 * @return true im Erfolgsfall und false, falls ein Fehler aufgetreten ist. 
 	 */
-	public static boolean recreateDB(DBConfig config, String pw_root, Logger logger) {
+	public static boolean recreateDB(DBConfig config, String user_root, String pw_root, Logger logger) {
 		if (config.getDBDriver().isFileBased()) {
 			logger.log("-> Lösche existierende Datenbankdatei für die Ziel-DB - falls vorhanden...");
 			removeDBFile(config.getDBDriver(), config.getDBLocation());
@@ -441,7 +443,7 @@ public class DBRootManager {
 
 		if (config.getDBDriver().hasMultiSchemaSupport()) {
 			logger.logLn("-> Verbinde mit einem DB-Root-Manager zu der Ziel-DB...");
-			DBConfig rootConfig = getDBRootConfig(config.getDBDriver(), config.getDBLocation(), pw_root);
+			DBConfig rootConfig = getDBRootConfig(config.getDBDriver(), config.getDBLocation(), user_root, pw_root);
 			Benutzer rootUser = Benutzer.create(rootConfig);
 			try (DBEntityManager rootConn = rootUser.getEntityManager()) {
 				logger.modifyIndent(2);

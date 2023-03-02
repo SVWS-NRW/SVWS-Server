@@ -92,6 +92,7 @@ public class ImportDB {
 			cmdLine.addOption(new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));	
 			cmdLine.addOption(new CommandLineOption("tu", "tgtUser", true, "Der DB-Benutzer für die Ziel-DB"));
 			cmdLine.addOption(new CommandLineOption("tp", "tgtPwd", true, "Das DB-Kennwort für die Ziel-DB"));
+			cmdLine.addOption(new CommandLineOption("tq", "tgtRootUser", true, "Ein DB-Root-User für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
 			cmdLine.addOption(new CommandLineOption("tr", "tgtRootPwd", true, "Das DB-Root-Kennwort für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, in welcher der SQLite-Import liegt"));
 	    
@@ -121,6 +122,7 @@ public class ImportDB {
 			String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			String tgtUser = cmdLine.getValue("tu", "svwsadmin");
 			String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
+			String tgtRootUser = cmdLine.getValue("tq", null);
 			String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
 			DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false);
 	
@@ -143,7 +145,7 @@ public class ImportDB {
 				
 				// Führe die Migration mithilfe des Schema-Managers durch.
 				logger.modifyIndent(2);
-				srcManager.backup.importDB(tgtConfig, tgtRootPwd, maxUpdateRevision, devMode, logger);
+				srcManager.backup.importDB(tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, logger);
 				logger.modifyIndent(-2);
 			}
 		} catch (DBException e) {

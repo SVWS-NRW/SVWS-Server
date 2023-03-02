@@ -425,7 +425,7 @@ public class APISchemaRoot {
 	    	
 			DBConfig srcConfig = new DBConfig(DBDriver.MDB, mdbdirectory + "/" + mdbFilename, "PUBLIC", false, "admin", multipart.databasePassword, true, false);
 			DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true);
-			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getPassword(), -1, false, null, logger)) {
+			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
@@ -509,7 +509,7 @@ public class APISchemaRoot {
 				
 				DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
 				logger.modifyIndent(2);
-				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getPassword(), maxUpdateRevision, false, logger))
+				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), maxUpdateRevision, false, logger))
 					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));				
 				logger.modifyIndent(-2);
 			} catch(@SuppressWarnings("unused") DBException e) {
@@ -737,7 +737,7 @@ public class APISchemaRoot {
 	    	
 			DBConfig srcConfig = new DBConfig(srcDbDriver, dbMigrationInfos.srcLocation, dbMigrationInfos.srcSchema, false, dbMigrationInfos.srcUsername, dbMigrationInfos.srcPassword, true, false);
 			DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, dbMigrationInfos.schemaUsername, dbMigrationInfos.schemaUserPassword, true, true);
-			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getPassword(), -1, false, schulnummer, logger)) {
+			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, schulnummer, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}

@@ -96,6 +96,7 @@ public class MigrateDB {
 			cmdLine.addOption(new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));	
 			cmdLine.addOption(new CommandLineOption("tu", "tgtUser", true, "Der DB-Benutzer für die Ziel-DB"));
 			cmdLine.addOption(new CommandLineOption("tp", "tgtPwd", true, "Das DB-Kennwort für die Ziel-DB"));
+			cmdLine.addOption(new CommandLineOption("tq", "tgtRootUser", true, "Ein DB-Root-User für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
 			cmdLine.addOption(new CommandLineOption("tr", "tgtRootPwd", true, "Das DB-Root-Kennwort für die Ziel-DB (nur bei \"MSSQL\", \"MYSQL\", \"MARIA_DB\")"));
 	    
 			try (Scanner scan = new Scanner(System.in)) {
@@ -138,11 +139,12 @@ public class MigrateDB {
 			String tgtDB = cmdLine.getValue("ts", "svwsschema");
 			String tgtUser = cmdLine.getValue("tu", "svwsadmin");
 			String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
+			String tgtRootUser = cmdLine.getValue("tq", null);
 			String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
 			DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
 	
 			// Führe die Migration mithilfe des Schema-Managers durch.
-			DBMigrationManager.migrate(srcConfig, tgtConfig, tgtRootPwd, maxUpdateRevision, devMode, schulNr, logger);
+			DBMigrationManager.migrate(srcConfig, tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, schulNr, logger);
 		} catch (CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}		

@@ -90,6 +90,7 @@ public class DBMigrationManager {
 	
 	private final DBConfig srcConfig;
 	private final DBConfig tgtConfig;
+	private final String tgtRootUser;
 	private final String tgtRootPW;
 	private final int maxUpdateRevision;
 	private final boolean devMode;
@@ -161,15 +162,17 @@ public class DBMigrationManager {
 	 * 
 	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param tgtRootUser          der Benutzername eines "root"-Benutzers, der mit den Rechten zur Schemaverwaltung ausgestattet ist
 	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
 	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param schulNr              die Schulnummer, für welche die Daten migriert werden sollen (null, wenn alle Daten gelesen werden sollen). 
 	 * @param logger               ein Logger, welcher die Migration loggt.
 	 */
-	private DBMigrationManager(DBConfig srcConfig, DBConfig tgtConfig, String tgtRootPW, int maxUpdateRevision, boolean devMode, Integer schulNr, Logger logger) {
+	private DBMigrationManager(DBConfig srcConfig, DBConfig tgtConfig, String tgtRootUser, String tgtRootPW, int maxUpdateRevision, boolean devMode, Integer schulNr, Logger logger) {
 		this.srcConfig = srcConfig;
 		this.tgtConfig = tgtConfig;
+		this.tgtRootUser = tgtRootUser;
 		this.tgtRootPW = tgtRootPW;
 		this.maxUpdateRevision = maxUpdateRevision;
 		this.devMode = devMode;
@@ -184,6 +187,7 @@ public class DBMigrationManager {
 	 * 
 	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param tgtRootUser          der Benutzername eines Benutzers, der mit den Rechten zum Verwalten der Datenbankschemata ausgestattet ist.
 	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
 	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
@@ -192,8 +196,8 @@ public class DBMigrationManager {
 	 * 
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
-	public static boolean migrate(DBConfig srcConfig, DBConfig tgtConfig, String tgtRootPW, int maxUpdateRevision, boolean devMode, Integer schulNr, Logger logger) {
-		DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, tgtRootPW, maxUpdateRevision, devMode, schulNr, logger);
+	public static boolean migrate(DBConfig srcConfig, DBConfig tgtConfig, String tgtRootUser, String tgtRootPW, int maxUpdateRevision, boolean devMode, Integer schulNr, Logger logger) {
+		DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, tgtRootUser, tgtRootPW, maxUpdateRevision, devMode, schulNr, logger);
 		return migrationManager.doMigrate();
 	}
 
@@ -209,7 +213,7 @@ public class DBMigrationManager {
 			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
 				throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
 			
-			if (!DBRootManager.recreateDB(tgtConfig, tgtRootPW, logger))
+			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
 				throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
 			return true;
 		} catch (DBException e) {

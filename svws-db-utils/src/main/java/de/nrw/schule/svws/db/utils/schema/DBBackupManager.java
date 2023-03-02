@@ -46,6 +46,7 @@ public class DBBackupManager {
 	 * in die SVWS-Datenbank aus. Das Schema in der Zieldatenbank wird dabei neu angelegt
 	 * 
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param tgtRootUser          der Benutzername des Benutzers der mit den benötigten root-Rechten zur Schema-Verwaltung ausgestattet ist
 	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
 	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
@@ -53,7 +54,7 @@ public class DBBackupManager {
 	 * 
 	 * @return true, falls der Import erfolgreich durchgeführt wurde
 	 */
-	public boolean importDB(DBConfig tgtConfig, String tgtRootPW, long maxUpdateRevision, boolean devMode, Logger logger) {
+	public boolean importDB(DBConfig tgtConfig, String tgtRootUser, String tgtRootPW, long maxUpdateRevision, boolean devMode, Logger logger) {
 		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
 			boolean success = true;
 			long timeStart = System.currentTimeMillis();
@@ -79,7 +80,7 @@ public class DBBackupManager {
 				if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
 					throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
 				
-				if (!DBRootManager.recreateDB(tgtConfig, tgtRootPW, logger))
+				if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
 					throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
 				
 				logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
@@ -178,7 +179,7 @@ public class DBBackupManager {
 			logger.modifyIndent(2);
 			DBSchemaManager tgtManager = null;
 			try {
-				if (!DBRootManager.recreateDB(tgtConfig, null, logger))
+				if (!DBRootManager.recreateDB(tgtConfig, null, null, logger))
 					throw new DBException("Fehler beim Anlegen des Schemas in der SQlite-Export-Datei");
 	
 				logger.log("-> Verbinde zur SQLite-Export-Datenbank...");
