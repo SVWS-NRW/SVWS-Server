@@ -82,7 +82,7 @@ class Api {
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	logout = async (): Promise<void> => {
-		await this.logout();
+		await this.conn.logout();
 	}
 
 

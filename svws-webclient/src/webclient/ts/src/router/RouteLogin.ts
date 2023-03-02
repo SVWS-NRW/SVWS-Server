@@ -29,9 +29,9 @@ export class RouteLogin extends RouteNode<unknown, any> {
 	}
 
 	public logout = async () => {
-		await api.logout();
 		this.routepath = "/";
 		await RouteManager.doRoute({ name: this.name });
+		await api.logout();
 	}
 
 	public getProps() {
