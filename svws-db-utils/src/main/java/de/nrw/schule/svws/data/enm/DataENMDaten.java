@@ -173,8 +173,8 @@ public class DataENMDaten extends DataManager<Long> {
     			enmSchueler.lernabschnitt.id = schuelerabschnitt.abschnittID;
     			enmSchueler.lernabschnitt.fehlstundenGesamt = schuelerabschnitt.fehlstundenSummeGesamt;
     			enmSchueler.lernabschnitt.tsFehlstundenGesamt = schuelerabschnitt.tsFehlstundenSummeGesamt;
-    			enmSchueler.lernabschnitt.fehlstundenUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
-    			enmSchueler.lernabschnitt.tsFehlstundenUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
+    			enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
+    			enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
     			enmSchueler.lernabschnitt.pruefungsordnung = schuelerabschnitt.pruefungsordnung;
     			enmSchueler.lernabschnitt.lernbereich1note = schuelerabschnitt.lernbereich1note == null ? null : schuelerabschnitt.lernbereich1note.kuerzel;
     			enmSchueler.lernabschnitt.lernbereich2note = schuelerabschnitt.lernbereich2note == null ? null : schuelerabschnitt.lernbereich2note.kuerzel;

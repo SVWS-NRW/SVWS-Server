@@ -24,12 +24,12 @@ export class ENMLernabschnitt extends JavaObject {
 	/**
 	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
 	 */
-	public fehlstundenUnentschuldigt : number | null = null;
+	public fehlstundenGesamtUnentschuldigt : number | null = null;
 
 	/**
 	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
 	 */
-	public tsFehlstundenUnentschuldigt : string | null = null;
+	public tsFehlstundenGesamtUnentschuldigt : string | null = null;
 
 	/**
 	 * Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss 
@@ -73,8 +73,8 @@ export class ENMLernabschnitt extends JavaObject {
 		result.id = obj.id;
 		result.fehlstundenGesamt = typeof obj.fehlstundenGesamt === "undefined" ? null : obj.fehlstundenGesamt === null ? null : obj.fehlstundenGesamt;
 		result.tsFehlstundenGesamt = typeof obj.tsFehlstundenGesamt === "undefined" ? null : obj.tsFehlstundenGesamt === null ? null : obj.tsFehlstundenGesamt;
-		result.fehlstundenUnentschuldigt = typeof obj.fehlstundenUnentschuldigt === "undefined" ? null : obj.fehlstundenUnentschuldigt === null ? null : obj.fehlstundenUnentschuldigt;
-		result.tsFehlstundenUnentschuldigt = typeof obj.tsFehlstundenUnentschuldigt === "undefined" ? null : obj.tsFehlstundenUnentschuldigt === null ? null : obj.tsFehlstundenUnentschuldigt;
+		result.fehlstundenGesamtUnentschuldigt = typeof obj.fehlstundenGesamtUnentschuldigt === "undefined" ? null : obj.fehlstundenGesamtUnentschuldigt === null ? null : obj.fehlstundenGesamtUnentschuldigt;
+		result.tsFehlstundenGesamtUnentschuldigt = typeof obj.tsFehlstundenGesamtUnentschuldigt === "undefined" ? null : obj.tsFehlstundenGesamtUnentschuldigt === null ? null : obj.tsFehlstundenGesamtUnentschuldigt;
 		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : obj.pruefungsordnung;
 		result.lernbereich1note = typeof obj.lernbereich1note === "undefined" ? null : obj.lernbereich1note === null ? null : obj.lernbereich1note;
 		result.lernbereich2note = typeof obj.lernbereich2note === "undefined" ? null : obj.lernbereich2note === null ? null : obj.lernbereich2note;
@@ -88,8 +88,8 @@ export class ENMLernabschnitt extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
 		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt + '"') + ',';
-		result += '"fehlstundenUnentschuldigt" : ' + ((!obj.fehlstundenUnentschuldigt) ? 'null' : obj.fehlstundenUnentschuldigt) + ',';
-		result += '"tsFehlstundenUnentschuldigt" : ' + ((!obj.tsFehlstundenUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenUnentschuldigt + '"') + ',';
+		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
+		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenGesamtUnentschuldigt + '"') + ',';
 		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung + '"') + ',';
 		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : '"' + obj.lernbereich1note + '"') + ',';
 		result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : '"' + obj.lernbereich2note + '"') + ',';
@@ -111,11 +111,11 @@ export class ENMLernabschnitt extends JavaObject {
 		if (typeof obj.tsFehlstundenGesamt !== "undefined") {
 			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt + '"') + ',';
 		}
-		if (typeof obj.fehlstundenUnentschuldigt !== "undefined") {
-			result += '"fehlstundenUnentschuldigt" : ' + ((!obj.fehlstundenUnentschuldigt) ? 'null' : obj.fehlstundenUnentschuldigt) + ',';
+		if (typeof obj.fehlstundenGesamtUnentschuldigt !== "undefined") {
+			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
 		}
-		if (typeof obj.tsFehlstundenUnentschuldigt !== "undefined") {
-			result += '"tsFehlstundenUnentschuldigt" : ' + ((!obj.tsFehlstundenUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenUnentschuldigt + '"') + ',';
+		if (typeof obj.tsFehlstundenGesamtUnentschuldigt !== "undefined") {
+			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenGesamtUnentschuldigt + '"') + ',';
 		}
 		if (typeof obj.pruefungsordnung !== "undefined") {
 			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung + '"') + ',';
