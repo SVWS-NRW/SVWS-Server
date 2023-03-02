@@ -907,15 +907,25 @@ public class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			MigrationDTOSchuelerLernabschnittsdaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
 				entities.remove(i);
 				continue;
-			} 
+			}
+			if (daten.Jahr < 1990) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Schuljahre vor 1990 werden nicht übernommen.");
+				entities.remove(i);
+				continue;
+			}
+			if ((daten.Abschnitt < 1) || (daten.Abschnitt > 4)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Abschnitte müssen zwischen 1 und 4 liegen.");
+				entities.remove(i);
+				continue;
+			}
 			// Prüfe die Fachklasse im Lernabschnitt und setze diese ggf. auf NULL
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
 				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.");
