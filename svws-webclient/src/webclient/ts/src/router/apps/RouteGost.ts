@@ -99,7 +99,10 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of super.children)
+		let list = super.menu;
+		if (list.length < 1)
+			list = super.children;
+		for (const c of list)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;

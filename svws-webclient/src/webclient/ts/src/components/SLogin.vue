@@ -13,18 +13,21 @@
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-2 items-center px-8">
 									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" />
-									<svws-ui-button type="secondary" @click="connect">
+									<svws-ui-button type="secondary" @click="connect" :disabled="connecting">
 										Verbinden
+										<svg class="animate-spin ml-1 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" v-if="connecting">
+											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+											<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+										</svg>
+										<i-ri-plug-line class="ml-1 w-4" v-if="!connecting && inputDBSchemata.size() === 0" />
+										<i-ri-plug-fill class="ml-1 w-4" v-if="!connecting && inputDBSchemata.size() > 0" />
 									</svws-ui-button>
 								</div>
 								<Transition>
-									<div v-if="inputDBSchemata.size() > 0" class="flex flex-col gap-2 items-center mt-8 px-8">
+									<div v-if="inputDBSchemata.size() > 0 && !connecting" class="flex flex-col gap-2 items-center mt-8 px-8">
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
-										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
-										<svws-ui-text-input v-model="password"
-											type="password"
-											placeholder="Passwort"
-											@keyup.enter="login" />
+										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="login" />
+										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="login" />
 										<svws-ui-button @click="login">
 											Anmelden
 											<i-ri-login-circle-line />
@@ -68,7 +71,7 @@
 							<template #header>
 								Verbindung zum Server fehlgeschlagen
 							</template>
-							<p>Bitte überprüfe die Server Addresse und versuche es erneut.</p>
+							<p>Bitte die Serveraddresse prüfen und erneut versuchen.</p>
 						</svws-ui-notification>
 					</svws-ui-notifications>
 				</div>
@@ -96,6 +99,8 @@
 	const username = ref("Admin");
 	const password = ref("");
 
+	const connecting = ref(false);
+
 	const connection_failed: Ref<boolean> = ref(false);
 
 	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new Vector());
@@ -113,14 +118,17 @@
 	}
 
 	async function connect() {
+		connecting.value = true;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 		} catch (error) {
 			connection_failed.value = true;
+			connecting.value = false;
 			return;
 		}
 		if (inputDBSchemata.value.size() <= 0) {
 			connection_failed.value = true;
+			connecting.value = false;
 			return;
 		}
 		let hasDefault = false;
@@ -135,6 +143,7 @@
 			schema.value = inputDBSchemata.value.get(0);
 		}
 		connection_failed.value = false;
+		connecting.value = false;
 	}
 
 	async function login() {
