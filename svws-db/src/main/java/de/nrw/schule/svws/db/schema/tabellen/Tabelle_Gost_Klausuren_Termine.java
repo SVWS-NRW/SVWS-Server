@@ -48,9 +48,13 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 		.setConverter(UhrzeitConverter.class)			
 		.setJavaComment("Die Startzeit des Klausurtermins");
 
+	/** Die Definition der Tabellenspalte Bezeichnung */
+	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.TEXT, false)
+		.setJavaComment("Text für Bezeichnung des Klausurtermins");
+	
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
-		.setJavaComment("Text für Bemerkungen zur Klausurvorlage");
+		.setJavaComment("Text für Bemerkungen des Klausurtermins");
 	
 	
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Abi_Jahrgang_FK */

@@ -1,8 +1,8 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
+import { routeGostKlausurplanung, RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core-ts";
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, Vector } from "@svws-nrw/svws-core-ts";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -20,7 +20,11 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten
+			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			faecherManager: routeGostKlausurplanung.data.faecherManager,
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
+			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
+			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 		}
 	}
 

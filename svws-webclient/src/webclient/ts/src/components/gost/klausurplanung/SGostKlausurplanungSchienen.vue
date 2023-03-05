@@ -8,7 +8,7 @@
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="2" value="2" @input="chooseQuartal(2)" />
 			</svws-ui-radio-group>
 			<svws-ui-button class="secondary mx-5" @click="erzeugeKursklausurenAusVorgaben(quartal)" :disabled="quartal === -1">Erstelle Klausuren</svws-ui-button>
-			<svws-ui-button class="secondary" @click="erstelleTermin" :disabled="quartal === -1">Neuer Termin</svws-ui-button>
+			<svws-ui-button class="secondary" @click="erstelleTermin" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
 			<s-gost-klausurplanung-schienen-termin :quartal="quartal"

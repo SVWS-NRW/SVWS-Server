@@ -262,4 +262,13 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
+	patchKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, termin.id);
+		// this.klausurvorgabenmanager.updateKlausurtermin(termin);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
 }

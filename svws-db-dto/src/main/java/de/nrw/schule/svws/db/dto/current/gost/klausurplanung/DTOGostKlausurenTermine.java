@@ -48,11 +48,13 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DTOGostKlausurenTermine.datum.multiple", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Datum IN :value")
 @NamedQuery(name="DTOGostKlausurenTermine.startzeit", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Startzeit = :value")
 @NamedQuery(name="DTOGostKlausurenTermine.startzeit.multiple", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Startzeit IN :value")
+@NamedQuery(name="DTOGostKlausurenTermine.bezeichnung", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bezeichnung = :value")
+@NamedQuery(name="DTOGostKlausurenTermine.bezeichnung.multiple", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bezeichnung IN :value")
 @NamedQuery(name="DTOGostKlausurenTermine.bemerkungen", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen = :value")
 @NamedQuery(name="DTOGostKlausurenTermine.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name="DTOGostKlausurenTermine.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostKlausurenTermine.all.migration", query="SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Datum","Startzeit","Bemerkungen"})
+@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Datum","Startzeit","Bezeichnung","Bemerkungen"})
 public class DTOGostKlausurenTermine {
 
 	/** ID des Klausurtermins (generiert) */
@@ -95,7 +97,12 @@ public class DTOGostKlausurenTermine {
 	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
-	/** Text für Bemerkungen zur Klausurvorlage */
+	/** Text für Bezeichnung des Klausurtermins */
+	@Column(name = "Bezeichnung")
+	@JsonProperty
+	public String Bezeichnung;
+
+	/** Text für Bemerkungen des Klausurtermins */
 	@Column(name = "Bemerkungen")
 	@JsonProperty
 	public String Bemerkungen;
@@ -167,7 +174,7 @@ public class DTOGostKlausurenTermine {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenTermine(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Datum=" + this.Datum + ", Startzeit=" + this.Startzeit + ", Bezeichnung=" + this.Bezeichnung + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

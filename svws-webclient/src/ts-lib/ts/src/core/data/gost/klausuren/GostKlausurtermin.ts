@@ -26,17 +26,22 @@ export class GostKlausurtermin extends JavaObject {
 	/**
 	 * Das Datum des Klausurtermins, falls schon gesetzt. 
 	 */
-	public datum : string | null = "";
+	public datum : string | null = null;
 
 	/**
 	 * Die Startzeit des Klausurtermins, falls schon gesetzt. 
 	 */
-	public startzeit : string | null = "";
+	public startzeit : string | null = null;
+
+	/**
+	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt. 
+	 */
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Die textuelle Bemerkung zum Termin, sofern vorhanden. 
 	 */
-	public bemerkung : string | null = "";
+	public bemerkung : string | null = null;
 
 
 	public constructor() {
@@ -64,6 +69,7 @@ export class GostKlausurtermin extends JavaObject {
 		result.quartal = obj.quartal;
 		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
@@ -76,6 +82,7 @@ export class GostKlausurtermin extends JavaObject {
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -101,6 +108,9 @@ export class GostKlausurtermin extends JavaObject {
 		}
 		if (typeof obj.startzeit !== "undefined") {
 			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+		}
+		if (typeof obj.bezeichnung !== "undefined") {
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';

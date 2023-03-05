@@ -57,6 +57,7 @@ public class DataGostKlausurenTermin extends DataManager<Long> {
 		daten.halbjahr = z.Halbjahr.id;
 		daten.quartal = z.Quartal;
 		daten.startzeit = z.Startzeit;
+		daten.bezeichnung = z.Bezeichnung;
 		daten.bemerkung = z.Bemerkungen;
 		return daten;
 	};
@@ -118,6 +119,7 @@ public class DataGostKlausurenTermin extends DataManager<Long> {
 							throw OperationError.BAD_REQUEST.exception();
 					}
 					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
+					case "bezeichnung" -> termin.Bezeichnung = JSONMapper.convertToString(value, true, false);
 					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
 					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
 
