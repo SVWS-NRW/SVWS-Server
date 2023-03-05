@@ -1,5 +1,5 @@
 //TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
-def svwsArtifactVersion = "0.4.1"
+def svwsArtifactVersion = "0.5.6"
 def appArtifactsDir ="$projectDir/../download/svws"
 
 subprojects {
