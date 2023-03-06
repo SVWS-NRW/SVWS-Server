@@ -202,5 +202,14 @@ export class RouteDataGost {
 			view: this._state.value.view,
 		})
 	}
+
+	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
+		if (value === undefined || value === null) {
+			await RouteManager.doRoute({ name: routeGost.name, params: { } });
+			return;
+		}
+		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
+		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
+	}
 }
 
