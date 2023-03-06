@@ -12,8 +12,8 @@
 									</h1>
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-2 items-center px-8">
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" />
-									<svws-ui-button type="secondary" @click="connect" :disabled="connecting" @keyup.enter="connect">
+									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" />
+									<svws-ui-button type="secondary" @click="connect" :disabled="connecting">
 										Verbinden
 										<svg class="animate-spin ml-1 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" v-if="connecting">
 											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />

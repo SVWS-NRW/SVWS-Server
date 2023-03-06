@@ -58,12 +58,12 @@ export class RouteDataGost {
 		return mapAbiturjahrgaenge;
 	}
 
-	private ladeJahrgaengeOhneAbiJahrgang(): Map<number, JahrgangsListeEintrag> {
+	private ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>, mapJahrgaenge: Map<number, JahrgangsListeEintrag>): Map<number, JahrgangsListeEintrag> {
 		const jahrgaengeMitAbiturjahrgang = new Set();
-		for (const j of this._state.value.mapAbiturjahrgaenge.values())
+		for (const j of mapAbiturjahrgaenge.values())
 			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
 		const map = new Map<number, JahrgangsListeEintrag>();
-		for (const j of this._state.value.mapJahrgaenge.values())
+		for (const j of mapJahrgaenge.values())
 			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel))
 				map.set(j.id, j);
 		return map;
@@ -101,7 +101,7 @@ export class RouteDataGost {
 		const mapAbiturjahrgaenge = await this.ladeAbiturjahrgaenge();
 		const auswahl = this.firstAbiturjahrgang(mapAbiturjahrgaenge);
 		const mapJahrgaenge = await this.ladeJahrgaenge();
-		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang();
+		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);
 		const jahrgangsdaten = await this.ladeJahrgangsdaten();
 		const faecherManager = await this.ladeFaecherManager();
 		this.setPatchedDefaultState({
@@ -205,7 +205,8 @@ export class RouteDataGost {
 
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
 		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeGost.name, params: { } });
+			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
+			// await RouteManager.doRoute({ name: routeGost.name, params: { } });
 			return;
 		}
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
