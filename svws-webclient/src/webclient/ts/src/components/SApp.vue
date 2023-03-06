@@ -36,7 +36,7 @@
 				<main class="relative h-full">
 					<router-view :key="app.name" />
 				</main>
-				<svws-ui-notifications>
+				<svws-ui-notifications v-if="errors.length">
 					<template v-for="error of errors" :key="error.message">
 						<svws-ui-notification type="error">
 							<template #header>

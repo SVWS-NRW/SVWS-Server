@@ -56,24 +56,22 @@
 											Geschlechter gleichermaßen zu berücksichtigen.
 										</p>
 									</div>
+									<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error" icon="login" class="m-1">
+										<template #header>
+											Anmeldung fehlgeschlagen
+										</template>
+										<p>Passwort oder Benutzername falsch.</p>
+									</svws-ui-notification>
+									<svws-ui-notification v-if="connection_failed" type="error">
+										<template #header>
+											Verbindung zum Server fehlgeschlagen
+										</template>
+										<p>Bitte die Serveraddresse prüfen und erneut versuchen.</p>
+									</svws-ui-notification>
 								</div>
 							</div>
 						</div>
 					</div>
-					<svws-ui-notifications>
-						<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error" icon="login">
-							<template #header>
-								Anmeldung fehlgeschlagen
-							</template>
-							<p>Passwort oder Benutzername falsch.</p>
-						</svws-ui-notification>
-						<svws-ui-notification v-if="connection_failed" type="error">
-							<template #header>
-								Verbindung zum Server fehlgeschlagen
-							</template>
-							<p>Bitte die Serveraddresse prüfen und erneut versuchen.</p>
-						</svws-ui-notification>
-					</svws-ui-notifications>
 				</div>
 			</div>
 		</template>
