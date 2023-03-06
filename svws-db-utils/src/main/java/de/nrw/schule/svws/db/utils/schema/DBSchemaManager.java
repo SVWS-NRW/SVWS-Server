@@ -231,23 +231,25 @@ public class DBSchemaManager {
 	 */
 	private boolean executeManualSQLOnCreate(long revision) {
 		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
 			var dbms = conn.getDBDriver();
 			for (long r = 0; r <= revision; r++) {
-				SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).getUpdater(); 
+				SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).getUpdater();
+				if ((!msqlAll.runFirst(conn, logger)) && returnOnError)
+					return false;
 				for (int i = 0; i < msqlAll.size(); i++) {
 					String script = msqlAll.getSQL(dbms, i);
 					if ((script == null) || "".equals(script))
 						continue; // should not happen
 					logger.logLn(msqlAll.getKommentar(i));
 					if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
-						result = false;
 						if (returnOnError)
-							break;
+							return false;
 					}
 				}
+				if ((!msqlAll.runLast(conn, logger)) && returnOnError)
+					return false;
 			}
-			return result;
+			return true;
 		}
 	}
 

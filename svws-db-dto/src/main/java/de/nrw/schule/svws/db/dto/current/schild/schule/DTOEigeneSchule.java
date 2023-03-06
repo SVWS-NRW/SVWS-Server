@@ -81,6 +81,16 @@ import de.nrw.schule.svws.csv.converter.current.statkue.SchulformKuerzelConverte
 @NamedQuery(name="DTOEigeneSchule.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.Schuljahresabschnitts_ID IN :value")
 @NamedQuery(name="DTOEigeneSchule.anzahlabschnitte", query="SELECT e FROM DTOEigeneSchule e WHERE e.AnzahlAbschnitte = :value")
 @NamedQuery(name="DTOEigeneSchule.anzahlabschnitte.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.AnzahlAbschnitte IN :value")
+@NamedQuery(name="DTOEigeneSchule.abschnittbez", query="SELECT e FROM DTOEigeneSchule e WHERE e.AbschnittBez = :value")
+@NamedQuery(name="DTOEigeneSchule.abschnittbez.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.AbschnittBez IN :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt1", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt1 = :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt1.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt1 IN :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt2", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt2 = :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt2.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt2 IN :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt3", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt3 = :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt3.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt3 IN :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt4", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt4 = :value")
+@NamedQuery(name="DTOEigeneSchule.bezabschnitt4.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt4 IN :value")
 @NamedQuery(name="DTOEigeneSchule.fremdsprachen", query="SELECT e FROM DTOEigeneSchule e WHERE e.Fremdsprachen = :value")
 @NamedQuery(name="DTOEigeneSchule.fremdsprachen.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.Fremdsprachen IN :value")
 @NamedQuery(name="DTOEigeneSchule.jvazeigen", query="SELECT e FROM DTOEigeneSchule e WHERE e.JVAZeigen = :value")
@@ -89,20 +99,10 @@ import de.nrw.schule.svws.csv.converter.current.statkue.SchulformKuerzelConverte
 @NamedQuery(name="DTOEigeneSchule.refpaedagogikzeigen.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.RefPaedagogikZeigen IN :value")
 @NamedQuery(name="DTOEigeneSchule.anzjgs_jahr", query="SELECT e FROM DTOEigeneSchule e WHERE e.AnzJGS_Jahr = :value")
 @NamedQuery(name="DTOEigeneSchule.anzjgs_jahr.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.AnzJGS_Jahr IN :value")
-@NamedQuery(name="DTOEigeneSchule.abschnittbez", query="SELECT e FROM DTOEigeneSchule e WHERE e.AbschnittBez = :value")
-@NamedQuery(name="DTOEigeneSchule.abschnittbez.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.AbschnittBez IN :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt1", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt1 = :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt1.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt1 IN :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt2", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt2 = :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt2.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt2 IN :value")
 @NamedQuery(name="DTOEigeneSchule.isthauptsitz", query="SELECT e FROM DTOEigeneSchule e WHERE e.IstHauptsitz = :value")
 @NamedQuery(name="DTOEigeneSchule.isthauptsitz.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.IstHauptsitz IN :value")
 @NamedQuery(name="DTOEigeneSchule.notengesperrt", query="SELECT e FROM DTOEigeneSchule e WHERE e.NotenGesperrt = :value")
 @NamedQuery(name="DTOEigeneSchule.notengesperrt.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.NotenGesperrt IN :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt3", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt3 = :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt3.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt3 IN :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt4", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt4 = :value")
-@NamedQuery(name="DTOEigeneSchule.bezabschnitt4.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.BezAbschnitt4 IN :value")
 @NamedQuery(name="DTOEigeneSchule.zurueckgestelltanzahl", query="SELECT e FROM DTOEigeneSchule e WHERE e.ZurueckgestelltAnzahl = :value")
 @NamedQuery(name="DTOEigeneSchule.zurueckgestelltanzahl.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.ZurueckgestelltAnzahl IN :value")
 @NamedQuery(name="DTOEigeneSchule.zurueckgestelltweibl", query="SELECT e FROM DTOEigeneSchule e WHERE e.ZurueckgestelltWeibl = :value")
@@ -141,7 +141,7 @@ import de.nrw.schule.svws.csv.converter.current.statkue.SchulformKuerzelConverte
 @NamedQuery(name="DTOEigeneSchule.land.multiple", query="SELECT e FROM DTOEigeneSchule e WHERE e.Land IN :value")
 @NamedQuery(name="DTOEigeneSchule.primaryKeyQuery", query="SELECT e FROM DTOEigeneSchule e WHERE e.ID = ?1")
 @NamedQuery(name="DTOEigeneSchule.all.migration", query="SELECT e FROM DTOEigeneSchule e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulformNr","Schulform","SchulformBez","SchultraegerArt","SchultraegerNr","SchulNr","Bezeichnung1","Bezeichnung2","Bezeichnung3","Strassenname","HausNr","HausNrZusatz","PLZ","Ort","Telefon","Fax","Email","Ganztags","Schuljahresabschnitts_ID","AnzahlAbschnitte","Fremdsprachen","JVAZeigen","RefPaedagogikZeigen","AnzJGS_Jahr","AbschnittBez","BezAbschnitt1","BezAbschnitt2","IstHauptsitz","NotenGesperrt","BezAbschnitt3","BezAbschnitt4","ZurueckgestelltAnzahl","ZurueckgestelltWeibl","ZurueckgestelltAuslaender","ZurueckgestelltAuslaenderWeibl","ZurueckgestelltAussiedler","ZurueckgestelltAussiedlerWeibl","TeamTeaching","AbiGruppenprozess","DauerUnterrichtseinheit","Gruppen8Bis1","Gruppen13Plus","InternatsplaetzeM","InternatsplaetzeW","InternatsplaetzeNeutral","SchulLogoBase64","Einstellungen","WebAdresse","Land"})
+@JsonPropertyOrder({"ID","SchulformNr","Schulform","SchulformBez","SchultraegerArt","SchultraegerNr","SchulNr","Bezeichnung1","Bezeichnung2","Bezeichnung3","Strassenname","HausNr","HausNrZusatz","PLZ","Ort","Telefon","Fax","Email","Ganztags","Schuljahresabschnitts_ID","AnzahlAbschnitte","AbschnittBez","BezAbschnitt1","BezAbschnitt2","BezAbschnitt3","BezAbschnitt4","Fremdsprachen","JVAZeigen","RefPaedagogikZeigen","AnzJGS_Jahr","IstHauptsitz","NotenGesperrt","ZurueckgestelltAnzahl","ZurueckgestelltWeibl","ZurueckgestelltAuslaender","ZurueckgestelltAuslaenderWeibl","ZurueckgestelltAussiedler","ZurueckgestelltAussiedlerWeibl","TeamTeaching","AbiGruppenprozess","DauerUnterrichtseinheit","Gruppen8Bis1","Gruppen13Plus","InternatsplaetzeM","InternatsplaetzeW","InternatsplaetzeNeutral","SchulLogoBase64","Einstellungen","WebAdresse","Land"})
 public class DTOEigeneSchule {
 
 	/** ID des Datensatzes der eigenen Schule */
@@ -259,6 +259,31 @@ public class DTOEigeneSchule {
 	@JsonProperty
 	public Integer AnzahlAbschnitte;
 
+	/** Bezeichnung der Abschnitte */
+	@Column(name = "AbschnittBez")
+	@JsonProperty
+	public String AbschnittBez;
+
+	/** Bezeichnung des ersten Abschnitts */
+	@Column(name = "BezAbschnitt1")
+	@JsonProperty
+	public String BezAbschnitt1;
+
+	/** Bezeichnung des zweiten Abschnitts */
+	@Column(name = "BezAbschnitt2")
+	@JsonProperty
+	public String BezAbschnitt2;
+
+	/** Bezeichnung des dritten Abschnitts */
+	@Column(name = "BezAbschnitt3")
+	@JsonProperty
+	public String BezAbschnitt3;
+
+	/** Bezeichnung des vierten Abschnitts */
+	@Column(name = "BezAbschnitt4")
+	@JsonProperty
+	public String BezAbschnitt4;
+
 	/** Welche Fremdsprachen werden unterrichtet */
 	@Column(name = "Fremdsprachen")
 	@JsonProperty
@@ -288,21 +313,6 @@ public class DTOEigeneSchule {
 	@JsonProperty
 	public Integer AnzJGS_Jahr;
 
-	/** Bezeichnung der Abschnitte */
-	@Column(name = "AbschnittBez")
-	@JsonProperty
-	public String AbschnittBez;
-
-	/** Bezeichnung des ersten Abschnitts */
-	@Column(name = "BezAbschnitt1")
-	@JsonProperty
-	public String BezAbschnitt1;
-
-	/** Bezeichnung des zweiten Abschnitts */
-	@Column(name = "BezAbschnitt2")
-	@JsonProperty
-	public String BezAbschnitt2;
-
 	/** Gibt an, ob die Datenbank am Hauptsitzder Schule ist (Dependancebetrieb) */
 	@Column(name = "IstHauptsitz")
 	@JsonProperty
@@ -318,16 +328,6 @@ public class DTOEigeneSchule {
 	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
 	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NotenGesperrt;
-
-	/** Bezeichnung des dritten Abschnitts */
-	@Column(name = "BezAbschnitt3")
-	@JsonProperty
-	public String BezAbschnitt3;
-
-	/** Bezeichnung des vierten Abschnitts */
-	@Column(name = "BezAbschnitt4")
-	@JsonProperty
-	public String BezAbschnitt4;
 
 	/** Anzahl de Zurückgestellten Kinder in der Grundschule */
 	@Column(name = "ZurueckgestelltAnzahl")
@@ -477,7 +477,7 @@ public class DTOEigeneSchule {
 	 */
 	@Override
 	public String toString() {
-		return "DTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", Schulform=" + this.Schulform + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", SchulLogoBase64=" + this.SchulLogoBase64 + ", Einstellungen=" + this.Einstellungen + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ")";
+		return "DTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", Schulform=" + this.Schulform + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", SchulLogoBase64=" + this.SchulLogoBase64 + ", Einstellungen=" + this.Einstellungen + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ")";
 	}
 
 }

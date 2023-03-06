@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.DBEntityManager;
 
 /**
  * Diese Klasse ist die Basisklasse für die Definition von
@@ -172,6 +174,33 @@ public class SchemaRevisionUpdateSQL {
 			throw new ArrayIndexOutOfBoundsException();
 		return _sql.get(dbms).get(i);
 	}
+	
+	/**
+	 * Führt den Code vor den für die Revision registrierten SQL-Befehle aus.
+	 * Die Methode muss bei Bedarf überschrieben werden.
+	 * 
+	 * @param conn    die Datenbankverbindung
+	 * @param logger  der Logger
+	 * 
+	 * @return true im Erfolgsfall und ansonsten false 
+	 */
+	public boolean runFirst(DBEntityManager conn, Logger logger) {
+		return true;
+	}
 
+	
+	/**
+	 * Führt den Code nach den für die Revision registrierten SQL-Befehle aus.
+	 * Die Methode muss bei Bedarf überschrieben werden.
+	 * 
+	 * @param conn    die Datenbankverbindung
+	 * @param logger  der Logger
+	 *
+	 * @return true im Erfolgsfall und ansonsten false 
+	 */
+	public boolean runLast(DBEntityManager conn, Logger logger) {
+		return true;
+	}
+	
 }
 

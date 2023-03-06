@@ -10,6 +10,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
 import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaRevisionUpdateSQL;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
@@ -831,20 +832,18 @@ public class DBUpdater {
 				logger.log("- Fehler beim Ermitteln der Schema-Revision " + revision);
 				return false;
 			}
-			var sqlBefehle = rev.getUpdater();
+			SchemaRevisionUpdateSQL sqlBefehle = rev.getUpdater();
 			if (sqlBefehle == null) {
 				logger.log("- Fehler beim Ermitteln der SQL-Befehle für die Revision " + revision);
 				return false;
 			}
 			logger.log("- Ausführen: ");
-			if (sqlBefehle.size() == 0) {
-				logger.logLn(0, "0 Befehle");
-				return true;
-			}
-			
-			boolean result = true;
-			logger.logLn(0, sqlBefehle.size() + " Befehle...");
+			logger.logLn(0, sqlBefehle.size() + " Befehle" + ((sqlBefehle.size() > 0) ? "..." : ""));
 			logger.modifyIndent(2);
+			if (!sqlBefehle.runFirst(conn, logger) && returnOnError) {
+				logger.modifyIndent(-2);
+				return false;
+			}
 			for (int i = 0; i < sqlBefehle.size(); i++) {
 				String comment = sqlBefehle.getKommentar(i);
 				String sql = sqlBefehle.getSQL(conn.getDBDriver(), i); 
@@ -856,15 +855,20 @@ public class DBUpdater {
 				int success = conn.executeNativeUpdate(sql);
 				if (success == Integer.MIN_VALUE) {
 					logger.logLn(0, "ERROR");
-					result = false;
-					if (returnOnError)
-						break;
+					if (returnOnError) {
+						logger.modifyIndent(-2);
+						return false;
+					}
 				} else {
 					logger.logLn(0, " (" + success + ")");
 				}
 			}
+			if (!sqlBefehle.runLast(conn, logger) && returnOnError) {
+				logger.modifyIndent(-2);
+				return false;
+			}
 			logger.modifyIndent(-2);
-			return result;
+			return true;
 		}
 	}
 	

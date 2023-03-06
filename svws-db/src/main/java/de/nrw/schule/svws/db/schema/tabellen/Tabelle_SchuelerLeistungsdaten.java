@@ -61,6 +61,12 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Notenkürzel der erteilten Note");
 
+	/** Die Definition der Tabellenspalte NotenKrzQuartal */
+	public SchemaTabelleSpalte col_NotenKrzQuartal = add("NotenKrzQuartal", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+		.setConverter(NoteConverterFromKuerzel.class)
+		.setConverterRevision(SchemaRevisionen.REV_1)
+		.setJavaComment("Das Notenkürzel der Quartals-Note");
+	
 	/** Die Definition der Tabellenspalte Warnung */
 	public SchemaTabelleSpalte col_Warnung = add("Warnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")

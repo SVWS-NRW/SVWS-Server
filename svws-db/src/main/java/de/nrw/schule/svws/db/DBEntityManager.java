@@ -681,8 +681,23 @@ public class DBEntityManager implements AutoCloseable {
 
 	/**
 	 * Führt eine Native SQL-Abfrage auf die Datenbank aus und gibt das Ergebnis als
-	 * List von DTO-Objekten des Typs T zurück. 
-	 *  
+	 * List von DTO-Objekten des Typs T zurück.
+	 *
+	 * @param <T>      die DTO-Klasse
+	 * @param query    die SQL-Abfrage
+	 * 
+	 * @return die Liste mit DTO-Objekten
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> List<T> queryNative(String query) {
+		return em.createNativeQuery(query).getResultList();
+	}
+
+
+	/**
+	 * Führt eine Native SQL-Abfrage auf die Datenbank aus und gibt das Ergebnis als
+	 * List von DTO-Objekten des Typs T zurück.
+	 *
 	 * @param <T>      die DTO-Klasse
 	 * @param query    die SQL-Abfrage
 	 * @param resultSetMapping       der Name SQL-Result-Set-Mappings ({@link jakarta.persistence.SqlResultSetMapping})

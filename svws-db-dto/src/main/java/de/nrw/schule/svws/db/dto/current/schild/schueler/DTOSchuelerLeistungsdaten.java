@@ -57,6 +57,8 @@ import de.nrw.schule.svws.csv.converter.current.NoteConverterFromKuerzelDeserial
 @NamedQuery(name="DTOSchuelerLeistungsdaten.kurs_id.multiple", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Kurs_ID IN :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.notenkrz", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.NotenKrz = :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.notenkrz.multiple", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.NotenKrz IN :value")
+@NamedQuery(name="DTOSchuelerLeistungsdaten.notenkrzquartal", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal = :value")
+@NamedQuery(name="DTOSchuelerLeistungsdaten.notenkrzquartal.multiple", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal IN :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.warnung", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Warnung = :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.warnung.multiple", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Warnung IN :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.warndatum", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Warndatum = :value")
@@ -103,7 +105,7 @@ import de.nrw.schule.svws.csv.converter.current.NoteConverterFromKuerzelDeserial
 @NamedQuery(name="DTOSchuelerLeistungsdaten.umfang.multiple", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Umfang IN :value")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.primaryKeyQuery", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.ID = ?1")
 @NamedQuery(name="DTOSchuelerLeistungsdaten.all.migration", query="SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Fach_ID","Hochrechnung","Fachlehrer_ID","Kursart","KursartAllg","Kurs_ID","NotenKrz","Warnung","Warndatum","AbiFach","Wochenstunden","AbiZeugnis","Prognose","FehlStd","uFehlStd","Sortierung","Lernentw","Gekoppelt","VorherAbgeschl","AbschlussJahrgang","HochrechnungStatus","SchulNr","Zusatzkraft_ID","WochenstdZusatzkraft","Prf10Fach","AufZeugnis","Gewichtung","NoteAbschlussBA","Umfang"})
+@JsonPropertyOrder({"ID","Abschnitt_ID","Fach_ID","Hochrechnung","Fachlehrer_ID","Kursart","KursartAllg","Kurs_ID","NotenKrz","NotenKrzQuartal","Warnung","Warndatum","AbiFach","Wochenstunden","AbiZeugnis","Prognose","FehlStd","uFehlStd","Sortierung","Lernentw","Gekoppelt","VorherAbgeschl","AbschlussJahrgang","HochrechnungStatus","SchulNr","Zusatzkraft_ID","WochenstdZusatzkraft","Prf10Fach","AufZeugnis","Gewichtung","NoteAbschlussBA","Umfang"})
 public class DTOSchuelerLeistungsdaten {
 
 	/** Eine eindeutige ID für die Leistungsdaten des Schülers */
@@ -154,6 +156,14 @@ public class DTOSchuelerLeistungsdaten {
 	@JsonSerialize(using=NoteConverterFromKuerzelSerializer.class)
 	@JsonDeserialize(using=NoteConverterFromKuerzelDeserializer.class)
 	public Note NotenKrz;
+
+	/** Das Notenkürzel der Quartals-Note */
+	@Column(name = "NotenKrzQuartal")
+	@JsonProperty
+	@Convert(converter=NoteConverterFromKuerzel.class)
+	@JsonSerialize(using=NoteConverterFromKuerzelSerializer.class)
+	@JsonDeserialize(using=NoteConverterFromKuerzelDeserializer.class)
+	public Note NotenKrzQuartal;
 
 	/** gibt an, ob die Leistung gemahnt wurde bzw. gemahnt werden soll – sie Mahndatum */
 	@Column(name = "Warnung")
@@ -348,7 +358,7 @@ public class DTOSchuelerLeistungsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerLeistungsdaten(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", Fach_ID=" + this.Fach_ID + ", Hochrechnung=" + this.Hochrechnung + ", Fachlehrer_ID=" + this.Fachlehrer_ID + ", Kursart=" + this.Kursart + ", KursartAllg=" + this.KursartAllg + ", Kurs_ID=" + this.Kurs_ID + ", NotenKrz=" + this.NotenKrz + ", Warnung=" + this.Warnung + ", Warndatum=" + this.Warndatum + ", AbiFach=" + this.AbiFach + ", Wochenstunden=" + this.Wochenstunden + ", AbiZeugnis=" + this.AbiZeugnis + ", Prognose=" + this.Prognose + ", FehlStd=" + this.FehlStd + ", uFehlStd=" + this.uFehlStd + ", Sortierung=" + this.Sortierung + ", Lernentw=" + this.Lernentw + ", Gekoppelt=" + this.Gekoppelt + ", VorherAbgeschl=" + this.VorherAbgeschl + ", AbschlussJahrgang=" + this.AbschlussJahrgang + ", HochrechnungStatus=" + this.HochrechnungStatus + ", SchulNr=" + this.SchulNr + ", Zusatzkraft_ID=" + this.Zusatzkraft_ID + ", WochenstdZusatzkraft=" + this.WochenstdZusatzkraft + ", Prf10Fach=" + this.Prf10Fach + ", AufZeugnis=" + this.AufZeugnis + ", Gewichtung=" + this.Gewichtung + ", NoteAbschlussBA=" + this.NoteAbschlussBA + ", Umfang=" + this.Umfang + ")";
+		return "DTOSchuelerLeistungsdaten(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", Fach_ID=" + this.Fach_ID + ", Hochrechnung=" + this.Hochrechnung + ", Fachlehrer_ID=" + this.Fachlehrer_ID + ", Kursart=" + this.Kursart + ", KursartAllg=" + this.KursartAllg + ", Kurs_ID=" + this.Kurs_ID + ", NotenKrz=" + this.NotenKrz + ", NotenKrzQuartal=" + this.NotenKrzQuartal + ", Warnung=" + this.Warnung + ", Warndatum=" + this.Warndatum + ", AbiFach=" + this.AbiFach + ", Wochenstunden=" + this.Wochenstunden + ", AbiZeugnis=" + this.AbiZeugnis + ", Prognose=" + this.Prognose + ", FehlStd=" + this.FehlStd + ", uFehlStd=" + this.uFehlStd + ", Sortierung=" + this.Sortierung + ", Lernentw=" + this.Lernentw + ", Gekoppelt=" + this.Gekoppelt + ", VorherAbgeschl=" + this.VorherAbgeschl + ", AbschlussJahrgang=" + this.AbschlussJahrgang + ", HochrechnungStatus=" + this.HochrechnungStatus + ", SchulNr=" + this.SchulNr + ", Zusatzkraft_ID=" + this.Zusatzkraft_ID + ", WochenstdZusatzkraft=" + this.WochenstdZusatzkraft + ", Prf10Fach=" + this.Prf10Fach + ", AufZeugnis=" + this.AufZeugnis + ", Gewichtung=" + this.Gewichtung + ", NoteAbschlussBA=" + this.NoteAbschlussBA + ", Umfang=" + this.Umfang + ")";
 	}
 
 }

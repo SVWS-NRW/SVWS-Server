@@ -52,6 +52,8 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationDatumConverterDeseria
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.kurs_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Kurs_ID IN :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.notenkrz", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz = :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.notenkrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrz IN :value")
+@NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.notenkrzquartal", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal = :value")
+@NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.notenkrzquartal.multiple", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.NotenKrzQuartal IN :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.warnung", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung = :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.warnung.multiple", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warnung IN :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.warndatum", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Warndatum = :value")
@@ -104,7 +106,7 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationDatumConverterDeseria
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.zusatzkraft.multiple", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft IN :value")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = ?1")
 @NamedQuery(name="MigrationDTOSchuelerLeistungsdaten.all.migration", query="SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Fach_ID","Hochrechnung","Fachlehrer_ID","Kursart","KursartAllg","Kurs_ID","NotenKrz","Warnung","Warndatum","AbiFach","Wochenstunden","AbiZeugnis","Prognose","FehlStd","uFehlStd","Sortierung","Lernentw","Gekoppelt","VorherAbgeschl","AbschlussJahrgang","HochrechnungStatus","SchulNr","Zusatzkraft_ID","WochenstdZusatzkraft","Prf10Fach","AufZeugnis","Gewichtung","SchulnrEigner","NoteAbschlussBA","Umfang","Fachlehrer","Zusatzkraft"})
+@JsonPropertyOrder({"ID","Abschnitt_ID","Fach_ID","Hochrechnung","Fachlehrer_ID","Kursart","KursartAllg","Kurs_ID","NotenKrz","NotenKrzQuartal","Warnung","Warndatum","AbiFach","Wochenstunden","AbiZeugnis","Prognose","FehlStd","uFehlStd","Sortierung","Lernentw","Gekoppelt","VorherAbgeschl","AbschlussJahrgang","HochrechnungStatus","SchulNr","Zusatzkraft_ID","WochenstdZusatzkraft","Prf10Fach","AufZeugnis","Gewichtung","SchulnrEigner","NoteAbschlussBA","Umfang","Fachlehrer","Zusatzkraft"})
 public class MigrationDTOSchuelerLeistungsdaten {
 
 	/** Eine eindeutige ID für die Leistungsdaten des Schülers */
@@ -152,6 +154,11 @@ public class MigrationDTOSchuelerLeistungsdaten {
 	@Column(name = "NotenKrz")
 	@JsonProperty
 	public String NotenKrz;
+
+	/** Das Notenkürzel der Quartals-Note */
+	@Column(name = "NotenKrzQuartal")
+	@JsonProperty
+	public String NotenKrzQuartal;
 
 	/** gibt an, ob die Leistung gemahnt wurde bzw. gemahnt werden soll – sie Mahndatum */
 	@Column(name = "Warnung")
@@ -361,7 +368,7 @@ public class MigrationDTOSchuelerLeistungsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOSchuelerLeistungsdaten(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", Fach_ID=" + this.Fach_ID + ", Hochrechnung=" + this.Hochrechnung + ", Fachlehrer_ID=" + this.Fachlehrer_ID + ", Kursart=" + this.Kursart + ", KursartAllg=" + this.KursartAllg + ", Kurs_ID=" + this.Kurs_ID + ", NotenKrz=" + this.NotenKrz + ", Warnung=" + this.Warnung + ", Warndatum=" + this.Warndatum + ", AbiFach=" + this.AbiFach + ", Wochenstunden=" + this.Wochenstunden + ", AbiZeugnis=" + this.AbiZeugnis + ", Prognose=" + this.Prognose + ", FehlStd=" + this.FehlStd + ", uFehlStd=" + this.uFehlStd + ", Sortierung=" + this.Sortierung + ", Lernentw=" + this.Lernentw + ", Gekoppelt=" + this.Gekoppelt + ", VorherAbgeschl=" + this.VorherAbgeschl + ", AbschlussJahrgang=" + this.AbschlussJahrgang + ", HochrechnungStatus=" + this.HochrechnungStatus + ", SchulNr=" + this.SchulNr + ", Zusatzkraft_ID=" + this.Zusatzkraft_ID + ", WochenstdZusatzkraft=" + this.WochenstdZusatzkraft + ", Prf10Fach=" + this.Prf10Fach + ", AufZeugnis=" + this.AufZeugnis + ", Gewichtung=" + this.Gewichtung + ", SchulnrEigner=" + this.SchulnrEigner + ", NoteAbschlussBA=" + this.NoteAbschlussBA + ", Umfang=" + this.Umfang + ", Fachlehrer=" + this.Fachlehrer + ", Zusatzkraft=" + this.Zusatzkraft + ")";
+		return "MigrationDTOSchuelerLeistungsdaten(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", Fach_ID=" + this.Fach_ID + ", Hochrechnung=" + this.Hochrechnung + ", Fachlehrer_ID=" + this.Fachlehrer_ID + ", Kursart=" + this.Kursart + ", KursartAllg=" + this.KursartAllg + ", Kurs_ID=" + this.Kurs_ID + ", NotenKrz=" + this.NotenKrz + ", NotenKrzQuartal=" + this.NotenKrzQuartal + ", Warnung=" + this.Warnung + ", Warndatum=" + this.Warndatum + ", AbiFach=" + this.AbiFach + ", Wochenstunden=" + this.Wochenstunden + ", AbiZeugnis=" + this.AbiZeugnis + ", Prognose=" + this.Prognose + ", FehlStd=" + this.FehlStd + ", uFehlStd=" + this.uFehlStd + ", Sortierung=" + this.Sortierung + ", Lernentw=" + this.Lernentw + ", Gekoppelt=" + this.Gekoppelt + ", VorherAbgeschl=" + this.VorherAbgeschl + ", AbschlussJahrgang=" + this.AbschlussJahrgang + ", HochrechnungStatus=" + this.HochrechnungStatus + ", SchulNr=" + this.SchulNr + ", Zusatzkraft_ID=" + this.Zusatzkraft_ID + ", WochenstdZusatzkraft=" + this.WochenstdZusatzkraft + ", Prf10Fach=" + this.Prf10Fach + ", AufZeugnis=" + this.AufZeugnis + ", Gewichtung=" + this.Gewichtung + ", SchulnrEigner=" + this.SchulnrEigner + ", NoteAbschlussBA=" + this.NoteAbschlussBA + ", Umfang=" + this.Umfang + ", Fachlehrer=" + this.Fachlehrer + ", Zusatzkraft=" + this.Zusatzkraft + ")";
 	}
 
 }

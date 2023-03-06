@@ -78,6 +78,16 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationStringToIntegerConver
 @NamedQuery(name="MigrationDTOEigeneSchule.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.Schuljahresabschnitts_ID IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.anzahlabschnitte", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AnzahlAbschnitte = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.anzahlabschnitte.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AnzahlAbschnitte IN :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.abschnittbez", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AbschnittBez = :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.abschnittbez.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AbschnittBez IN :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt1", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt1 = :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt1.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt1 IN :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt2", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt2 = :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt2.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt2 IN :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt3", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt3 = :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt3.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt3 IN :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt4", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt4 = :value")
+@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt4.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt4 IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.fremdsprachen", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.Fremdsprachen = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.fremdsprachen.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.Fremdsprachen IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.jvazeigen", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.JVAZeigen = :value")
@@ -86,20 +96,10 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationStringToIntegerConver
 @NamedQuery(name="MigrationDTOEigeneSchule.refpaedagogikzeigen.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.RefPaedagogikZeigen IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.anzjgs_jahr", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AnzJGS_Jahr = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.anzjgs_jahr.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AnzJGS_Jahr IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.abschnittbez", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AbschnittBez = :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.abschnittbez.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.AbschnittBez IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt1", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt1 = :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt1.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt1 IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt2", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt2 = :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt2.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt2 IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.isthauptsitz", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.IstHauptsitz = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.isthauptsitz.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.IstHauptsitz IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.notengesperrt", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.NotenGesperrt = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.notengesperrt.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.NotenGesperrt IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt3", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt3 = :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt3.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt3 IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt4", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt4 = :value")
-@NamedQuery(name="MigrationDTOEigeneSchule.bezabschnitt4.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.BezAbschnitt4 IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.zurueckgestelltanzahl", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.ZurueckgestelltAnzahl = :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.zurueckgestelltanzahl.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.ZurueckgestelltAnzahl IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.zurueckgestelltweibl", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.ZurueckgestelltWeibl = :value")
@@ -162,7 +162,7 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationStringToIntegerConver
 @NamedQuery(name="MigrationDTOEigeneSchule.schuljahrabschnitt.multiple", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.SchuljahrAbschnitt IN :value")
 @NamedQuery(name="MigrationDTOEigeneSchule.primaryKeyQuery", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.ID = ?1")
 @NamedQuery(name="MigrationDTOEigeneSchule.all.migration", query="SELECT e FROM MigrationDTOEigeneSchule e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulformNr","Schulform","SchulformBez","SchultraegerArt","SchultraegerNr","SchulNr","Bezeichnung1","Bezeichnung2","Bezeichnung3","Strasse","Strassenname","HausNr","HausNrZusatz","PLZ","Ort","Telefon","Fax","Email","Ganztags","Schuljahresabschnitts_ID","AnzahlAbschnitte","Fremdsprachen","JVAZeigen","RefPaedagogikZeigen","AnzJGS_Jahr","AbschnittBez","BezAbschnitt1","BezAbschnitt2","IstHauptsitz","NotenGesperrt","BezAbschnitt3","BezAbschnitt4","ZurueckgestelltAnzahl","ZurueckgestelltWeibl","ZurueckgestelltAuslaender","ZurueckgestelltAuslaenderWeibl","ZurueckgestelltAussiedler","ZurueckgestelltAussiedlerWeibl","TeamTeaching","AbiGruppenprozess","DauerUnterrichtseinheit","Gruppen8Bis1","Gruppen13Plus","InternatsplaetzeM","InternatsplaetzeW","InternatsplaetzeNeutral","SchulLogo","SchulLogoBase64","SchulnrEigner","SchulleiterName","SchulleiterVorname","SchulleiterAmtsbez","SchulleiterGeschlecht","StvSchulleiterName","StvSchulleiterVorname","StvSchulleiterAmtsbez","StvSchulleiterGeschlecht","Einstellungen","WebAdresse","Land","Schuljahr","SchuljahrAbschnitt"})
+@JsonPropertyOrder({"ID","SchulformNr","Schulform","SchulformBez","SchultraegerArt","SchultraegerNr","SchulNr","Bezeichnung1","Bezeichnung2","Bezeichnung3","Strasse","Strassenname","HausNr","HausNrZusatz","PLZ","Ort","Telefon","Fax","Email","Ganztags","Schuljahresabschnitts_ID","AnzahlAbschnitte","AbschnittBez","BezAbschnitt1","BezAbschnitt2","BezAbschnitt3","BezAbschnitt4","Fremdsprachen","JVAZeigen","RefPaedagogikZeigen","AnzJGS_Jahr","IstHauptsitz","NotenGesperrt","ZurueckgestelltAnzahl","ZurueckgestelltWeibl","ZurueckgestelltAuslaender","ZurueckgestelltAuslaenderWeibl","ZurueckgestelltAussiedler","ZurueckgestelltAussiedlerWeibl","TeamTeaching","AbiGruppenprozess","DauerUnterrichtseinheit","Gruppen8Bis1","Gruppen13Plus","InternatsplaetzeM","InternatsplaetzeW","InternatsplaetzeNeutral","SchulLogo","SchulLogoBase64","SchulnrEigner","SchulleiterName","SchulleiterVorname","SchulleiterAmtsbez","SchulleiterGeschlecht","StvSchulleiterName","StvSchulleiterVorname","StvSchulleiterAmtsbez","StvSchulleiterGeschlecht","Einstellungen","WebAdresse","Land","Schuljahr","SchuljahrAbschnitt"})
 public class MigrationDTOEigeneSchule {
 
 	/** ID des Datensatzes der eigenen Schule */
@@ -282,6 +282,31 @@ public class MigrationDTOEigeneSchule {
 	@JsonProperty
 	public Integer AnzahlAbschnitte;
 
+	/** Bezeichnung der Abschnitte */
+	@Column(name = "AbschnittBez")
+	@JsonProperty
+	public String AbschnittBez;
+
+	/** Bezeichnung des ersten Abschnitts */
+	@Column(name = "BezAbschnitt1")
+	@JsonProperty
+	public String BezAbschnitt1;
+
+	/** Bezeichnung des zweiten Abschnitts */
+	@Column(name = "BezAbschnitt2")
+	@JsonProperty
+	public String BezAbschnitt2;
+
+	/** Bezeichnung des dritten Abschnitts */
+	@Column(name = "BezAbschnitt3")
+	@JsonProperty
+	public String BezAbschnitt3;
+
+	/** Bezeichnung des vierten Abschnitts */
+	@Column(name = "BezAbschnitt4")
+	@JsonProperty
+	public String BezAbschnitt4;
+
 	/** Welche Fremdsprachen werden unterrichtet */
 	@Column(name = "Fremdsprachen")
 	@JsonProperty
@@ -311,21 +336,6 @@ public class MigrationDTOEigeneSchule {
 	@JsonProperty
 	public Integer AnzJGS_Jahr;
 
-	/** Bezeichnung der Abschnitte */
-	@Column(name = "AbschnittBez")
-	@JsonProperty
-	public String AbschnittBez;
-
-	/** Bezeichnung des ersten Abschnitts */
-	@Column(name = "BezAbschnitt1")
-	@JsonProperty
-	public String BezAbschnitt1;
-
-	/** Bezeichnung des zweiten Abschnitts */
-	@Column(name = "BezAbschnitt2")
-	@JsonProperty
-	public String BezAbschnitt2;
-
 	/** Gibt an, ob die Datenbank am Hauptsitzder Schule ist (Dependancebetrieb) */
 	@Column(name = "IstHauptsitz")
 	@JsonProperty
@@ -341,16 +351,6 @@ public class MigrationDTOEigeneSchule {
 	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
 	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NotenGesperrt;
-
-	/** Bezeichnung des dritten Abschnitts */
-	@Column(name = "BezAbschnitt3")
-	@JsonProperty
-	public String BezAbschnitt3;
-
-	/** Bezeichnung des vierten Abschnitts */
-	@Column(name = "BezAbschnitt4")
-	@JsonProperty
-	public String BezAbschnitt4;
 
 	/** Anzahl de Zurückgestellten Kinder in der Grundschule */
 	@Column(name = "ZurueckgestelltAnzahl")
@@ -560,7 +560,7 @@ public class MigrationDTOEigeneSchule {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", Schulform=" + this.Schulform + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strasse=" + this.Strasse + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", SchulLogo=" + this.SchulLogo + ", SchulLogoBase64=" + this.SchulLogoBase64 + ", SchulnrEigner=" + this.SchulnrEigner + ", SchulleiterName=" + this.SchulleiterName + ", SchulleiterVorname=" + this.SchulleiterVorname + ", SchulleiterAmtsbez=" + this.SchulleiterAmtsbez + ", SchulleiterGeschlecht=" + this.SchulleiterGeschlecht + ", StvSchulleiterName=" + this.StvSchulleiterName + ", StvSchulleiterVorname=" + this.StvSchulleiterVorname + ", StvSchulleiterAmtsbez=" + this.StvSchulleiterAmtsbez + ", StvSchulleiterGeschlecht=" + this.StvSchulleiterGeschlecht + ", Einstellungen=" + this.Einstellungen + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ", Schuljahr=" + this.Schuljahr + ", SchuljahrAbschnitt=" + this.SchuljahrAbschnitt + ")";
+		return "MigrationDTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", Schulform=" + this.Schulform + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strasse=" + this.Strasse + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", SchulLogo=" + this.SchulLogo + ", SchulLogoBase64=" + this.SchulLogoBase64 + ", SchulnrEigner=" + this.SchulnrEigner + ", SchulleiterName=" + this.SchulleiterName + ", SchulleiterVorname=" + this.SchulleiterVorname + ", SchulleiterAmtsbez=" + this.SchulleiterAmtsbez + ", SchulleiterGeschlecht=" + this.SchulleiterGeschlecht + ", StvSchulleiterName=" + this.StvSchulleiterName + ", StvSchulleiterVorname=" + this.StvSchulleiterVorname + ", StvSchulleiterAmtsbez=" + this.StvSchulleiterAmtsbez + ", StvSchulleiterGeschlecht=" + this.StvSchulleiterGeschlecht + ", Einstellungen=" + this.Einstellungen + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ", Schuljahr=" + this.Schuljahr + ", SchuljahrAbschnitt=" + this.SchuljahrAbschnitt + ")";
 	}
 
 }
