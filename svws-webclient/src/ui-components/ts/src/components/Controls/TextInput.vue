@@ -94,6 +94,7 @@
 			'text-input--search': type === 'search',
 		}">
 		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
+		<i-ri-search-line v-if="type === 'search'" class="text-input--search-icon" />
 		<input ref="input"
 			v-focus
 			:class="{
@@ -109,9 +110,9 @@
 			:required="required"
 			:readonly="readonly"
 			:aria-labelledby="labelId"
-			:placeholder="headless ? placeholder : ''"
+			:placeholder="headless || type === 'search' ? placeholder : ''"
 			@input="onInput">
-		<span v-if="placeholder && !headless"
+		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"
 			:class="{
@@ -143,6 +144,10 @@
 		@apply relative;
 		@apply w-full;
 		@apply overflow-hidden whitespace-nowrap;
+
+		input::placeholder {
+			@apply text-black/25;
+		}
 	}
 
 	.text-input-component .icon {
@@ -204,6 +209,29 @@
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input-filled .text-input--control {
 		@apply border-purple;
+	}
+
+	.text-input--search {
+		@apply relative;
+
+		&-icon {
+			@apply absolute left-2 opacity-40;
+			top: 50%;
+			transform: translateY(-50%);
+
+			.text-input-component:not(.text-input-filled):not(:focus-within):not(.text-input-disabled):hover & {
+				@apply opacity-60;
+			}
+
+			.text-input-component:focus-within &,
+			.text-input-filled & {
+				@apply opacity-100;
+			}
+		}
+
+		input {
+			@apply pl-8;
+		}
 	}
 
 	/*.text-input--search:not(.text-input-filled) .text-input--placeholder {

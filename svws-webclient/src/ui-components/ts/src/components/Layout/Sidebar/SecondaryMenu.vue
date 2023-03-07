@@ -37,7 +37,7 @@
 	@apply flex-grow;
 	@apply overflow-y-auto;
 	@apply relative z-0;
-	-webkit-overflow-scrolling: touch;
+	@apply flex flex-col;
 	margin-bottom: -1px;
 }
 

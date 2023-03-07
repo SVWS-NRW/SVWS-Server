@@ -251,7 +251,7 @@
 </script>
 
 <template>
-	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags }">
+	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList }">
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
@@ -345,7 +345,7 @@
 	</div>
 </template>
 
-<style scoped lang="postcss">
+<style lang="postcss">
 .multiselect-input-component {
 	@apply flex;
 	@apply relative;
@@ -380,14 +380,17 @@
 .multiselect-tags--placeholder {
 	@apply absolute;
 	@apply pointer-events-none;
-	@apply opacity-50;
+	@apply opacity-40;
 	@apply transform;
 	@apply flex items-center;
-	@apply pl-2;
 
 	top: 0.5em;
-	left: 0.2em;
+	left: 0.7em;
 	line-height: 1.33;
+}
+
+.multiselect-input-component:not(.with-open-list):not(.with-value):not(:focus-within):hover .multiselect-tags--placeholder {
+	@apply opacity-60;
 }
 
 .multiselect-input-component:focus-within .multiselect-tags--placeholder,
@@ -439,60 +442,79 @@
 }
 
 .multiselect--items-wrapper {
-	@apply absolute z-20 w-full;
-	@apply border-black rounded-md border bg-white;
-	@apply mt-1 px-1;
+	@apply absolute z-30 w-full;
+	@apply rounded-lg border border-light bg-white;
+	@apply mt-0.5 px-2 py-1;
 	@apply overflow-y-auto overflow-x-hidden;
-	@apply shadow-lg;
-	@apply cursor-pointer;
+	@apply shadow-md;
 	-webkit-overflow-scrolling: touch;
 	max-height: 36.3ex;
 }
 
 .multiselect--item {
-	@apply text-black bg-white rounded;
+	@apply text-black bg-white rounded-md;
 	@apply text-input;
 	@apply py-2 my-1 px-2;
 }
 
 .multiselect--items-wrapper .multiselect--item.active {
 	@apply bg-primary bg-opacity-5;
-	box-shadow: inset 0 0 0 2px theme("colors.primary");
+	@apply ring ring-primary ring-opacity-50;
 }
 
 .multiselect--items-wrapper .multiselect--item:hover {
 	@apply bg-light;
 	@apply cursor-pointer;
-	@apply text-dark;
+	@apply text-black;
 }
 
 .multiselect--items-wrapper .multiselect--item.selected {
 	@apply font-bold text-primary bg-primary bg-opacity-5;
 }
 
-.wrapper--tag-list .multiselect--items-wrapper .multiselect--item {
-	@apply cursor-copy;
+.wrapper--tag-list .multiselect--items-wrapper .multiselect--item.selected {
+	&:hover,
+	&.active {
+		&:after {
+			@apply opacity-50;
+			content: ' entfernen';
+		}
+	}
 }
-
-.wrapper--tag-list .multiselect--items-wrapper .multiselect--item.selected:hover {
-	@apply cursor-pointer line-through text-black;
-}
-
-/*.wrapper--tag-list .multiselect--items-wrapper .multiselect--item.selected:after {
-	content: ' ×';
-}*/
 
 .tag-list-wrapper {
 	@apply flex w-full items-center justify-between overflow-x-auto px-1 bg-white;
 }
 
+.tag-list-wrapper {
+	@apply bg-white;
+	@apply rounded-md border border-black border-opacity-20;
+	@apply w-full;
+	@apply text-base;
+	@apply whitespace-nowrap;
+	@apply h-full;
+	@apply cursor-pointer;
+	padding: 0.3em 1.7em 0.3em 0.35em;
+	min-height: 2.25em;
+
+	&--rounded {
+		@apply rounded-full;
+		padding: 0.5em 0.7em;
+
+		.dropdown-icon {
+			@apply right-0 top-0;
+		}
+	}
+}
+
 .tag-badge {
-	@apply rounded-md bg-dark cursor-pointer text-white relative z-10;
+	@apply rounded cursor-auto relative z-10;
+	@apply bg-primary bg-opacity-5 text-primary border-primary border border-opacity-10;
 	@apply flex items-center leading-none;
 	padding: 0.2em 0.4em 0.2em 0.7em;
 
 	.tag-remove {
-		@apply text-sm;
+		@apply text-sm -mr-0.5;
 		height: 1rem;
 	}
 }
@@ -508,7 +530,7 @@
 
 .tag-remove .icon:hover,
 .remove-icon:hover .icon {
-	@apply bg-error text-white rounded-full;
+	@apply bg-black text-white rounded;
 }
 
 .remove-icon {
@@ -524,34 +546,9 @@
 	}
 }
 
-.tag-list-wrapper .dropdown-icon {
-	@apply right-2;
-	@apply items-start;
-	top: 0.8em;
-}
-
-.tag-list-wrapper {
-	@apply bg-white;
-	@apply rounded-md border border-black border-opacity-20;
-	@apply w-full;
-	@apply text-base;
-	@apply whitespace-nowrap;
-	@apply h-full;
-	@apply cursor-pointer;
-	padding: 0.25em 1.7em 0.25em 0.7em;
-	min-height: 2.25rem;
-
-	.tag-badge {
-		@apply rounded-full;
-	}
-
-	&--rounded {
-		@apply rounded-full;
-		padding: 0.5em 0.7em;
-
-		.dropdown-icon {
-			@apply right-0 top-0;
-		}
+.wrapper--tag-list .dropdown-icon {
+	.icon, svg {
+		@apply h-full;
 	}
 }
 

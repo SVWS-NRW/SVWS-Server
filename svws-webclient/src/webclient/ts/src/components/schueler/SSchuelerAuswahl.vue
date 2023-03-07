@@ -6,18 +6,18 @@
 		<template #abschnitt>
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
-		<template #header>
-			<div class="mt-1">
-				<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" />
-				<div class="input-wrapper mt-6">
+		<template #content>
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
+				:columns="cols" clickable selectable count filter :filter-open="true">
+				<template #search>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"/>
+				</template>
+				<template #filter>
+					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full mb-3" />
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" />
-				</div>
-			</div>
-			<div>
-				<div class="mt-2 flex flex-row items-center justify-between">
 					<svws-ui-button type="transparent">
 						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
 						<span class="ml-2">Erweiterte Filter</span>
@@ -26,17 +26,7 @@
 						<svws-ui-icon><i-ri-close-line /></svws-ui-icon>
 						<span class="ml-2">Filter zurücksetzen</span>
 					</svws-ui-button>
-				</div>
-			</div>
-			<div>
-				<div class="mt-6 mb-2">
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"><i-ri-search-line /></svws-ui-text-input>
-				</div>
-			</div>
-		</template>
-		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count>
+				</template>
 				<template #cell(idKlasse)="{ value }">
 					{{ mapKlassen.get(value)?.kuerzel }}
 				</template>

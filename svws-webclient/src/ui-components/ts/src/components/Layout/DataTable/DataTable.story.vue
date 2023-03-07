@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { logEvent } from "histoire/client";
-	import { ref } from "vue";
+	import {reactive, ref} from "vue";
 	import type { DataTableItem, DataTableSortingOrder } from "./types";
 
 	const data = ref([
@@ -111,6 +111,25 @@
 			}
 		}
 	}
+
+	const items = reactive([
+		{ id: 1, text: "item1" },
+		{ id: 2, text: "item2" },
+		{ id: 3, text: "item3" },
+		{ id: 3, text: "item4" },
+		{ id: 3, text: "item5" },
+		{ id: 3, text: "item6" }
+	]);
+
+	const modelValueComboBox = ref([items[0]]);
+	const modelValueComboBox1 = ref();
+	const modelValueComboBox2 = ref();
+	const modelValueComboBox3 = ref();
+	const modelValueComboBox4 = ref();
+
+	function onInput(event: Event) {
+		logEvent("input", event);
+	}
 </script>
 
 <template>
@@ -128,7 +147,104 @@
 						   count
 						   :rowActions="actions"
 						   :rowExecute="execute"
+						   :filter="true"
 				>
+					<template #search>
+						<TextInput type="search" placeholder="Suche"/>
+					</template>
+					<template #filter>
+						<ComboBox v-model="modelValueComboBox3"
+								  autocomplete
+								  title="Filter 1"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+						<ComboBox v-model="modelValueComboBox4"
+								  autocomplete
+								  title="Filter 2"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+					</template>
+					<template #footerActions>
+						<Button type="transparent">
+							Button
+						</Button>
+						<Button type="trash">
+							Button
+						</Button>
+						<Button type="icon">
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						</Button>
+					</template>
+				</DataTable>
+			</section>
+			<section class="mt-8">
+				<code><strong>Sort By:</strong> {{ sortBy }}</code><br/>
+				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br/>
+				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br/>
+				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
+			</section>
+		</Variant>
+		<Variant title="Complex Filters">
+			<section style="max-height: 50vh" class="flex flex-col complex-filters">
+				<DataTable v-model="selectedRows3"
+						   :items="data"
+						   :columns="columns"
+						   selectable
+						   v-model:sort-by="sortBy"
+						   v-model:sorting-order="sortingOrder"
+						   v-model:clicked="clickedRow"
+						   clickable
+						   count
+						   :rowActions="actions"
+						   :rowExecute="execute"
+						   :filter="true"
+						   :filter-open="true"
+				>
+					<template #search>
+						<TextInput type="search" placeholder="Suche"/>
+					</template>
+					<template #filter>
+						<ComboBox v-model="modelValueComboBox"
+								  title="Filter"
+								  :items="items"
+								  tags
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"
+								  class="col-span-full mb-3"/>
+						<ComboBox v-model="modelValueComboBox1"
+								  autocomplete
+								  title="Filter 1"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+						<ComboBox v-model="modelValueComboBox2"
+								  autocomplete
+								  title="Filter 2 Long Title"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+						<ComboBox v-model="modelValueComboBox3"
+								  autocomplete
+								  title="Filter 3"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+						<ComboBox v-model="modelValueComboBox4"
+								  autocomplete
+								  title="Filter 4"
+								  :items="items"
+								  :item-text="item => item?.text || ''"
+								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+								  @input="onInput"/>
+					</template>
 					<template #footerActions>
 						<Button type="transparent">
 							Button

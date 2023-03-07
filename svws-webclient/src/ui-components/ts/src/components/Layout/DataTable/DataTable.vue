@@ -1,4 +1,21 @@
 <template>
+	<div v-if="$slots.search || filter">
+		<div class="data-table__filter" :class="{'data-table__filter-open': filter && filterOpen}">
+			<div v-if="filter && filterOpen" class="data-table__filter__fields">
+				<slot name="filter"/>
+			</div>
+			<div class="flex-grow" v-if="$slots.search">
+				<slot name="search"/>
+			</div>
+			<div v-if="filter" class="ml-auto">
+				<Button type="transparent" @click="toggleFilterOpen" class="toggle--filter">
+					<span class="max-sm:hidden">Filter</span>
+					<i-ri-filter-line v-if="!filterOpen"/>
+					<i-ri-eye-off-line v-else/>
+				</Button>
+			</div>
+		</div>
+	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
 		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions}"
 		v-bind="computedTableAttributes">
@@ -184,6 +201,8 @@
 				action: string;
 			}>;
 			rowExecute?: (action: string, row: DataTableItem) => void;
+			filter?: boolean;
+			filterOpen?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -200,6 +219,8 @@
 			count: false,
 			rowActions: undefined,
 			rowExecute: undefined,
+			filter: false,
+			filterOpen: false,
 		}
 	);
 
@@ -223,6 +244,12 @@
 		rowsComputed,
 		props
 	);
+
+	const filterOpen = ref(props.filterOpen);
+
+	const toggleFilterOpen = () => {
+		filterOpen.value = !filterOpen.value;
+	}
 
 	const {
 		toggleBulkSelection,
@@ -265,18 +292,20 @@
 </script>
 
 <style lang="postcss">
+:root {
+	--checkbox-width: 1.75rem;
+
+	@media (min-width: 2000px) {
+		--checkbox-width: 2rem;
+	}
+}
+
 .data-table {
 	@apply flex flex-col;
 	@apply w-full border border-black/25 bg-white;
 	@apply overflow-auto;
 	@apply tabular-nums;
 	@apply max-h-full;
-	--checkbox-width: 1.75rem;
-	/*--grid-template: repeat(auto-fit, minmax(8rem, 1fr));*/
-
-	@media (min-width: 2000px) {
-		--checkbox-width: 2rem;
-	}
 
 	.app-layout--secondary-container & {
 		@apply border-x-0;
@@ -364,7 +393,7 @@
 	&__th-wrapper {
 		@apply inline-flex flex-row items-center;
 		@apply gap-0.5 pl-1;
-		@apply font-bold;
+		@apply font-bold max-md:text-sm-bold;
 
 		&__sortable {
 			@apply w-auto py-1 pr-0 pl-1;
@@ -408,7 +437,7 @@
 
 		.data-table__th-title {
 			@apply overflow-hidden text-ellipsis;
-			max-width: calc(100% - 0.75rem);
+			max-width: 100%;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
 			-webkit-line-clamp: 1;
@@ -595,5 +624,108 @@
 		}
 	}
 
+	&__filter {
+		@apply flex justify-between flex-wrap;
+		@apply py-2 gap-2 mb-1 -mb-px;
+		transition: box-shadow 0.15s ease-out;
+
+		.app-layout--secondary & {
+			@apply pl-7 4xl:pl-8 pr-2;
+		}
+
+		&-open {
+			@apply px-7 4xl:px-8 !important;
+			box-shadow: inset 0 4px 6px 2px theme("colors.light");
+		}
+
+		.text-input--search {
+			@apply py-0;
+
+			input {
+				@apply border-transparent py-1;
+			}
+
+			&:focus-within input {
+				@apply border-black/25;
+			}
+
+			&.text-input-filled {
+				.text-input--search-icon {
+					@apply text-primary;
+				}
+
+				&:focus-within input {
+					@apply border-primary;
+				}
+
+				input {
+					@apply bg-primary bg-opacity-5 text-primary border-transparent;
+				}
+			}
+
+			&:hover:not(:focus-within):not(.text-input-filled) input {
+				@apply bg-dark-20 bg-opacity-25;
+			}
+		}
+
+		.toggle--filter {
+			@apply h-full;
+		}
+
+		&__fields {
+			@apply w-full grid gap-3;
+			@apply py-6;
+			grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+
+			/*.wrapper--filled {
+				@apply -order-1 w-full;
+
+				.text-input--control {
+					@apply w-full;
+				}
+			}
+
+			.multiselect-input-component {
+				&:not(.with-value):not(.with-open-list) {
+					.text-input-component {
+						@apply inline-flex;
+						@apply cursor-pointer;
+
+						&:hover {
+							.text-input--placeholder {
+								@apply opacity-100;
+							}
+						}
+					}
+
+					.text-input--control {
+						@apply w-0 absolute p-0 border-0;
+					}
+
+					.text-input--placeholder {
+						@apply relative top-0 left-0 text-sm-bold;
+
+						&:before {
+							content: '+ ';
+						}
+					}
+
+					.dropdown-icon {
+						@apply hidden;
+					}
+				}
+
+				&.with-value,
+				&.with-open-list {
+				}
+			}*/
+		}
+	}
+
+	.complex-filters &__filter {
+		&__fields {
+			@apply md:grid-cols-4;
+		}
+	}
 }
 </style>
