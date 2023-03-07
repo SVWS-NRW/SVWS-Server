@@ -40,6 +40,13 @@ defineExpose({
 	@apply p-6 gap-1;
 	@apply flex flex-col justify-start;
 	@apply pointer-events-none;
+	@apply overflow-y-auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	.notifications__open & {
 		@apply bg-white shadow-xl;

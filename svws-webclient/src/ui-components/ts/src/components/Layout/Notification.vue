@@ -75,7 +75,7 @@ defineExpose({
 <style lang="postcss">
 .notification {
 	@apply max-h-full;
-	@apply flex flex-col;
+	@apply flex flex-col flex-shrink-0;
 	@apply w-full;
 	@apply relative z-50;
 	@apply rounded-lg overflow-hidden;

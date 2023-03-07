@@ -12,15 +12,16 @@
 									</h1>
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-2 items-center px-8">
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" />
-									<svws-ui-button type="secondary" @click="connect" :disabled="connecting">
-										Verbinden
+									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
+									<svws-ui-button type="secondary" @click="connect" :disabled="connecting" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
+										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
+										<span v-else>Verbunden</span>
 										<svg class="animate-spin ml-1 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" v-if="connecting">
 											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
 											<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
 										</svg>
-										<i-ri-plug-line class="ml-1 w-4" v-if="!connecting && inputDBSchemata.size() === 0" />
-										<i-ri-plug-fill class="ml-1 w-4" v-if="!connecting && inputDBSchemata.size() > 0" />
+										<i-ri-plug-line v-if="!connecting && inputDBSchemata.size() === 0 || inputFocus" />
+										<i-ri-check-line v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
 									</svws-ui-button>
 								</div>
 								<Transition>
@@ -56,33 +57,38 @@
 											Geschlechter gleichermaßen zu berücksichtigen.
 										</p>
 									</div>
-									<svws-ui-notification v-if="(!props.authenticated) && (!firstauth)" type="error" icon="login" class="m-1">
-										<template #header>
-											Anmeldung fehlgeschlagen
-										</template>
-										<p>Passwort oder Benutzername falsch.</p>
-									</svws-ui-notification>
-									<svws-ui-notification v-if="connection_failed" type="error">
-										<template #header>
-											Verbindung zum Server fehlgeschlagen
-										</template>
-										<p>Bitte die Serveraddresse prüfen und erneut versuchen.</p>
-									</svws-ui-notification>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<svws-ui-notifications v-if="errors.length">
+				<template v-for="error of errors.slice().reverse()" :key="error.message">
+					<svws-ui-notification type="error" :icon="error.message.includes('Passwort') ? 'login' : ''">
+						<template #header>
+							{{ error.message.includes('Passwort') ? 'Anmeldung fehlgeschlagen' : error.name }}
+						</template>
+						{{ error.message }}
+						<template #stack v-if="error.stack">
+							<pre v-html="error.stack"/>
+						</template>
+					</svws-ui-notification>
+				</template>
+			</svws-ui-notifications>
 		</template>
 	</svws-ui-app-layout>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, Ref, ref, WritableComputedRef } from "vue";
+import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
 	import { DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { version } from '../../version';
+
+	const errors: Ref<Error[]> = ref([]);
+
+	onErrorCaptured((e) => { errors.value.push(e); });
 
 	const props = defineProps<{
 		authenticated: boolean;
@@ -98,6 +104,7 @@
 	const password = ref("");
 
 	const connecting = ref(false);
+	const inputFocus = ref(false);
 
 	const connection_failed: Ref<boolean> = ref(false);
 
@@ -117,17 +124,18 @@
 
 	async function connect() {
 		connecting.value = true;
+		inputFocus.value = false;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 		} catch (error) {
 			connection_failed.value = true;
 			connecting.value = false;
-			return;
+			throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveraddresse prüfen und erneut versuchen.");
 		}
 		if (inputDBSchemata.value.size() <= 0) {
 			connection_failed.value = true;
 			connecting.value = false;
-			return;
+			throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveraddresse prüfen und erneut versuchen.");
 		}
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
@@ -145,10 +153,13 @@
 	}
 
 	async function login() {
+		inputFocus.value = false;
 		if ((schema.value === undefined) || (schema.value.name === null))
 			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
 		await props.login(schema.value.name, username.value, password.value);
 		firstauth.value = false;
+		if (!props.authenticated)
+			throw new Error("Passwort oder Benutzername falsch.");
 	}
 
 </script>

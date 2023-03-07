@@ -37,15 +37,14 @@
 					<router-view :key="app.name" />
 				</main>
 				<svws-ui-notifications v-if="errors.length">
-					<template v-for="error of errors" :key="error.message">
+					<template v-for="error of errors.slice().reverse()" :key="error.message">
 						<svws-ui-notification type="error">
 							<template #header>
 								{{ error.name }}
 							</template>
 							{{ error.message }}
-							<pre>{{ error.stack }}</pre>
 							<template #stack v-if="error.stack">
-								{{ error.stack }}
+								<pre v-html="error.stack"/>
 							</template>
 						</svws-ui-notification>
 					</template>
