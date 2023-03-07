@@ -13,6 +13,7 @@
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
 				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
+				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -81,5 +82,11 @@
 		get: () => (props.stammdaten.amtsbezeichnung === null) ? "" : props.stammdaten.amtsbezeichnung,
 		set: (value) => doPatch({ amtsbezeichnung: value })
 	});
+
+	const istSichtbar: WritableComputedRef<boolean> = computed({
+		get: () => true,
+		set: (value) => {throw new Error("Sichtbarkeit ist noch nicht implementiert")}//doPatch({ istSichtbar: value })
+	});
+
 
 </script>

@@ -8,8 +8,9 @@
 		</template>
 		<template #header>
 			<div>
-				<div class="mb-2">
+				<div class="mt-6 mb-2 flex gap-2">
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"><i-ri-search-line /></svws-ui-text-input>
+					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
 				</div>
 			</div>
 		</template>
@@ -31,6 +32,8 @@
 
 	const props = defineProps<LehrerAuswahlProps>();
 
+	const sichtbar: Ref<boolean> = ref(true);
+
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
@@ -51,7 +54,7 @@
 		const result = new Map<number, LehrerListeEintrag>();
 		for (const l of props.mapLehrer.values()) {
 			if (l.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-				l.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				l.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) && l.istSichtbar === sichtbar.value)
 				result.set(l.id, l);
 		}
 		return result;
