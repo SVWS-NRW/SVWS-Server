@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.data.lupo;
+package de.nrw.schule.svws.data.gost;
 
 import java.io.IOException;
 import java.nio.file.Files;

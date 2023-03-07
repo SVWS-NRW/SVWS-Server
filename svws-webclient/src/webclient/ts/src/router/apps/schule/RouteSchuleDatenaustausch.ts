@@ -4,7 +4,6 @@ import { SchuleDatenaustauschAppProps } from "~/components/schule/datenaustausch
 import { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/RouteApp";
-import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchule, RouteSchule } from "../RouteSchule";
 
@@ -15,12 +14,22 @@ class RouteDataSchuleDatenaustausch {
 
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData) => {
 		try {
-			const res = await api.server.setGostLupoImportMDBFuerJahrgang( formData, api.schema);
+			const res = await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema);
 			return res.success;
 		} catch(e) {
 			return false;
 		}
 	}
+
+	setGostKurs42ImportZip = async (formData: FormData) => {
+		try {
+			const res = await api.server.importKurs42Blockung(formData, api.schema);
+			return res.success;
+		} catch(e) {
+			return false;
+		}
+	}
+
 }
 
 export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaustausch, RouteSchule> {
@@ -49,6 +58,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschAppProps {
 		return {
 			setGostLupoImportMDBFuerJahrgang: this.data.setGostLupoImportMDBFuerJahrgang,
+			setGostKurs42ImportZip: this.data.setGostKurs42ImportZip,
 		};
 	}
 

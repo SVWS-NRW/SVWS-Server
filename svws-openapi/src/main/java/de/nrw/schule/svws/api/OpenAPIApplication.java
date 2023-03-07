@@ -29,7 +29,7 @@ import de.nrw.schule.svws.api.server.APIKlassen;
 import de.nrw.schule.svws.api.server.APIGostKlausuren;
 import de.nrw.schule.svws.api.server.APIKurse;
 import de.nrw.schule.svws.api.server.APILehrer;
-import de.nrw.schule.svws.api.server.APILupo;
+import de.nrw.schule.svws.api.server.APIGostDatenaustausch;
 import de.nrw.schule.svws.api.server.APISchema;
 import de.nrw.schule.svws.api.server.APISchild;
 import de.nrw.schule.svws.api.server.APISchueler;
@@ -150,7 +150,7 @@ public class OpenAPIApplication extends Application {
 		this.classes.add(APIFaecher.class);
 		this.classes.add(APISchueler.class);
 		this.classes.add(APIGesamtschule.class);
-		this.classes.add(APILupo.class);
+		this.classes.add(APIGostDatenaustausch.class);
 		this.classes.add(APIGost.class);
 		this.classes.add(APILehrer.class);
 		this.classes.add(APIErzieher.class);

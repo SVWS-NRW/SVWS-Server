@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :items="[{Daten:'Laufbahnplanung'}]" :footer="false" />
+				<svws-ui-data-table :items="[{Daten:'Laufbahnplanung'}, {Daten: 'Kurs 42'}]" :footer="false" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

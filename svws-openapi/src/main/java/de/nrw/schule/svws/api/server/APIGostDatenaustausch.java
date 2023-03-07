@@ -6,8 +6,10 @@ import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.SimpleOperationResponse;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
-import de.nrw.schule.svws.data.lupo.DataLupo;
+import de.nrw.schule.svws.data.gost.DataKurs42;
+import de.nrw.schule.svws.data.gost.DataLupo;
 import de.nrw.schule.svws.db.Benutzer;
+import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,16 +33,16 @@ import jakarta.ws.rs.core.Response;
  * aus der SVWS-Datenbank in Bezug auf die gymnasiale Oberstufe für das Program LuPO.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/gost/lupo...
  */
-@Path("/db/{schema}/gost/lupo")
+@Path("/db/{schema}/gost")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Server")
-public class APILupo {
+public class APIGostDatenaustausch {
 
     /**
      * Die OpenAPI-Methode für den Import einer LuPO-MDB-Datenbank in ein Schema mit dem angegebenen Namen.
      *  
-     * @param multipart     LuPO-MDB-Datenbank im Binärformat, DB-Username und Passwort für das neue Schema
+     * @param multipart     LuPO-MDB-Datenbank im Binärformat
      * @param schemaname    Name des Schemas, in welches die LuPO-Daten importiert werden sollen
      * @param request       die Informationen zur HTTP-Anfrage
      * 
@@ -48,7 +50,7 @@ public class APILupo {
      */
     @POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/import/mdb/jahrgang")
+    @Path("/lupo/import/mdb/jahrgang")
     @Operation(summary = "Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.",
                description = "Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
@@ -77,7 +79,7 @@ public class APILupo {
      */
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/export/mdb/jahrgang/{jahrgang}")
+    @Path("/lupo/export/mdb/jahrgang/{jahrgang}")
     @Operation(summary = "Exportiert die Laufbahndaten für den übergebenen Jahrgang in eine LuPO-Lehrerdatei.",
                description = "Exportiert die Laufbahndaten für den übergebenen Jahrgang in eine LuPO-Lehrerdatei.")
     @ApiResponse(responseCode = "200", description = "Die LuPO-Lehrerdatei",
@@ -91,5 +93,34 @@ public class APILupo {
     	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
 		return DataLupo.exportMDB(user, jahrgang);
     }
-    
+
+
+    /**
+     * Die OpenAPI-Methode für den Import einer Kurs42-Blockung, deren Daten in einer ZIP-Datei vorliegen.
+     *  
+     * @param multipart     Die Kurs42-Blockung in einer ZIP-Datei
+     * @param schemaname    Name des Schemas, in welches die Kurs 42-Blockung importiert werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/kurs42/import/zip")
+    @Operation(summary = "Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.",
+               description = "Importiert die Kurs 42-Blockung aus dem übergebenen ZIP-File in das Schema mit dem angegebenen Namen.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import der Kurs 42-Blockung",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Kurs 42-Blockung zu importieren.")
+    public Response importKurs42Blockung(@PathParam("schema") String schemaname,
+    		@RequestBody(description = "Die Zip-Datei mit den Textdateien der Kurs 42-Blockung", required = true, content = 
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm SimpleBinaryMultipartBody multipart,
+    		@Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+	    	return DataKurs42.importZip(conn, multipart);
+    	}
+    }
+
 }
