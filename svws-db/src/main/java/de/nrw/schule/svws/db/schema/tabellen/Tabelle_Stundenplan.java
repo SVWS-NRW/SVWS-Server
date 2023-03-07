@@ -42,6 +42,12 @@ public class Tabelle_Stundenplan extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Eine Beschreibung / Kommentar zu diesem Stundenplan");
 
+	/** Die Definition der Tabellenspalte WochentypModell */
+	public SchemaTabelleSpalte col_WochentypModell = add("WochentypModell", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setJavaComment("Gibt das Modell für die Wochen an, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die Anzahl der unterschiedlichen Wochentypen festgelegt.");
+	
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Schuljahreabschnitt_FK = addForeignKey(

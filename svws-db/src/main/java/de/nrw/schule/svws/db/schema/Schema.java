@@ -602,6 +602,9 @@ public class Schema {
 	/** Tabelle Stundenplan_UnterrichtRaum */
 	public static final Tabelle_Stundenplan_UnterrichtRaum tab_Stundenplan_UnterrichtRaum = add(new Tabelle_Stundenplan_UnterrichtRaum());
 
+	/** Tabelle_Stundenplan_Kalenderwochen_Zuordnung */
+	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung = add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());
+	
 	/** Tabelle Stundentafel */
 	public static final Tabelle_Stundentafel tab_Stundentafel = add(new Tabelle_Stundentafel());
 

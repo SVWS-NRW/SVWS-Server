@@ -366,6 +366,7 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogZeitraster</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplan</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanKalenderwochenZuordnung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>

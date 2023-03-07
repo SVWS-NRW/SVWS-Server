@@ -38,9 +38,11 @@ import de.nrw.schule.svws.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name="DTOStundenplan.ende.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Ende IN :value")
 @NamedQuery(name="DTOStundenplan.beschreibung", query="SELECT e FROM DTOStundenplan e WHERE e.Beschreibung = :value")
 @NamedQuery(name="DTOStundenplan.beschreibung.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Beschreibung IN :value")
+@NamedQuery(name="DTOStundenplan.wochentypmodell", query="SELECT e FROM DTOStundenplan e WHERE e.WochentypModell = :value")
+@NamedQuery(name="DTOStundenplan.wochentypmodell.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.WochentypModell IN :value")
 @NamedQuery(name="DTOStundenplan.primaryKeyQuery", query="SELECT e FROM DTOStundenplan e WHERE e.ID = ?1")
 @NamedQuery(name="DTOStundenplan.all.migration", query="SELECT e FROM DTOStundenplan e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","Beginn","Ende","Beschreibung"})
+@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","Beginn","Ende","Beschreibung","WochentypModell"})
 public class DTOStundenplan {
 
 	/** Die ID des Stundenplans */
@@ -75,6 +77,11 @@ public class DTOStundenplan {
 	@JsonProperty
 	public String Beschreibung;
 
+	/** Gibt das Modell für die Wochen an, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die Anzahl der unterschiedlichen Wochentypen festgelegt. */
+	@Column(name = "WochentypModell")
+	@JsonProperty
+	public Integer WochentypModell;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplan ohne eine Initialisierung der Attribute.
 	 */
@@ -88,8 +95,9 @@ public class DTOStundenplan {
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
+	 * @param WochentypModell   der Wert für das Attribut WochentypModell
 	 */
-	public DTOStundenplan(final Long ID, final Long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung) {
+	public DTOStundenplan(final Long ID, final Long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung, final Integer WochentypModell) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -106,6 +114,10 @@ public class DTOStundenplan {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
+		if (WochentypModell == null) { 
+			throw new NullPointerException("WochentypModell must not be null");
+		}
+		this.WochentypModell = WochentypModell;
 	}
 
 
@@ -142,7 +154,7 @@ public class DTOStundenplan {
 	 */
 	@Override
 	public String toString() {
-		return "DTOStundenplan(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", Beschreibung=" + this.Beschreibung + ")";
+		return "DTOStundenplan(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", Beschreibung=" + this.Beschreibung + ", WochentypModell=" + this.WochentypModell + ")";
 	}
 
 }

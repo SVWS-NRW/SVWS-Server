@@ -177,6 +177,7 @@ import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogPausenzeit
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogZeitraster;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich;
+import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanKalenderwochenZuordnung;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichten;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit;
@@ -414,6 +415,7 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOKatalogZeitraster.class.getSimpleName(),DTOKatalogZeitraster.class);
              mapDTOName2DTOClass.put(DTOStundenplan.class.getSimpleName(),DTOStundenplan.class);
              mapDTOName2DTOClass.put(DTOStundenplanAufsichtsbereich.class.getSimpleName(),DTOStundenplanAufsichtsbereich.class);
+             mapDTOName2DTOClass.put(DTOStundenplanKalenderwochenZuordnung.class.getSimpleName(),DTOStundenplanKalenderwochenZuordnung.class);
              mapDTOName2DTOClass.put(DTOStundenplanPausenaufsichten.class.getSimpleName(),DTOStundenplanPausenaufsichten.class);
              mapDTOName2DTOClass.put(DTOStundenplanPausenaufsichtenBereiche.class.getSimpleName(),DTOStundenplanPausenaufsichtenBereiche.class);
              mapDTOName2DTOClass.put(DTOStundenplanPausenzeit.class.getSimpleName(),DTOStundenplanPausenzeit.class);
@@ -654,6 +656,7 @@ public class DTOs {
              mapTablename2DTOClass.put("Katalog_Zeitraster",DTOKatalogZeitraster.class);
              mapTablename2DTOClass.put("Stundenplan",DTOStundenplan.class);
              mapTablename2DTOClass.put("Stundenplan_Aufsichtsbereiche",DTOStundenplanAufsichtsbereich.class);
+             mapTablename2DTOClass.put("Stundenplan_Kalenderwochen_Zuordnung",DTOStundenplanKalenderwochenZuordnung.class);
              mapTablename2DTOClass.put("Stundenplan_Pausenaufsichten",DTOStundenplanPausenaufsichten.class);
              mapTablename2DTOClass.put("Stundenplan_PausenaufsichtenBereich",DTOStundenplanPausenaufsichtenBereiche.class);
              mapTablename2DTOClass.put("Stundenplan_Pausenzeit",DTOStundenplanPausenzeit.class);
