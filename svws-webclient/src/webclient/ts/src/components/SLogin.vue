@@ -64,14 +64,14 @@
 				</div>
 			</div>
 			<svws-ui-notifications v-if="errors.length">
-				<template v-for="error of errors.slice().reverse()" :key="error.message">
-					<svws-ui-notification type="error" :icon="error.message.includes('Passwort') ? 'login' : ''">
+				<template v-for="error of errors.reverse()" :key="error.message">
+					<svws-ui-notification type="error" :icon="error.message.includes('Passwort') ? 'login' : undefined">
 						<template #header>
 							{{ error.message.includes('Passwort') ? 'Anmeldung fehlgeschlagen' : error.name }}
 						</template>
 						{{ error.message }}
 						<template #stack v-if="error.stack">
-							<pre v-html="error.stack"/>
+							<pre v-html="error.stack" />
 						</template>
 					</svws-ui-notification>
 				</template>
@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 
-import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
+	import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
 	import { DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { version } from '../../version';
 
@@ -119,7 +119,7 @@ import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
 	void connect();
 
 	function get_name(i: DBSchemaListeEintrag): string {
-		return i?.name ?? '';
+		return i.name ?? '';
 	}
 
 	async function connect() {
@@ -127,15 +127,12 @@ import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
 		inputFocus.value = false;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
+			if (inputDBSchemata.value.size() <= 0)
+				throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.");
 		} catch (error) {
 			connection_failed.value = true;
 			connecting.value = false;
-			throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveraddresse prüfen und erneut versuchen.");
-		}
-		if (inputDBSchemata.value.size() <= 0) {
-			connection_failed.value = true;
-			connecting.value = false;
-			throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveraddresse prüfen und erneut versuchen.");
+			throw error;
 		}
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
