@@ -6,18 +6,19 @@
 		<template #abschnitt>
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
-		<template #header>
-			<div>
-				<div class="mt-6 mb-2 flex gap-2">
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"><i-ri-search-line /></svws-ui-text-input>
-					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
-				</div>
-			</div>
-		</template>
 		<template #content>
 			<div class="container">
 				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
-					:columns="cols" clickable selectable :footer="true" />
+					:columns="cols" clickable selectable :footer="true" filter :filter-open="false">
+					<template #search>
+						<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"><i-ri-search-line /></svws-ui-text-input>
+					</template>
+					<template #filter>
+						<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable />
+						<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
+						<svws-ui-toggle v-model="statistikrelevant">Statistikrelevant</svws-ui-toggle>
+					</template>
+				</svws-ui-data-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -25,14 +26,12 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
-
-	const sichtbar: Ref<boolean> = ref(true);
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -47,14 +46,23 @@
 
 	const search: Ref<string> = ref("");
 	const selectedItems = ref([]);
+	const sichtbar: Ref<boolean> = ref(true);
+	const statistikrelevant: Ref<boolean> = ref(true);
+	const personaltyp: Ref<PersonalTyp | undefined> = ref(undefined);
 
 	const rowsFiltered: ComputedRef<Map<number, LehrerListeEintrag>> = computed(() => {
-		if (!search.value)
-			return props.mapLehrer;
 		const result = new Map<number, LehrerListeEintrag>();
 		for (const l of props.mapLehrer.values()) {
-			if (l.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-				l.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) && l.istSichtbar === sichtbar.value)
+			let pt = true;
+			console.log(l.personTyp, personaltyp.value?.kuerzel, l.personTyp === personaltyp.value?.kuerzel)
+			if (personaltyp.value)
+				pt = personaltyp.value.kuerzel === l.personTyp;
+			if ((l.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+				|| l.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+				|| l.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				&& l.istSichtbar === sichtbar.value
+				&& l.istRelevantFuerStatistik === statistikrelevant.value
+				&& pt)
 				result.set(l.id, l);
 		}
 		return result;
