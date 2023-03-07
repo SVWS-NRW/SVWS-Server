@@ -51,6 +51,13 @@ export class RouteDataGostKursplanung {
 
 	private _state = shallowRef<RouteStateGostKursplanung>(RouteDataGostKursplanung._defaultState);
 
+	private setPatchedDefaultState(patch: Partial<RouteStateGostKursplanung>) {
+		this._state.value = Object.assign({ ... RouteDataGostKursplanung._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateGostKursplanung>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
 
 	private commit(): void {
 		this._state.value = { ... this._state.value };
@@ -100,7 +107,7 @@ export class RouteDataGostKursplanung {
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
 		// Setze den State neu
-		this._state.value = {
+		this.setPatchedDefaultState({
 			abiturjahr: abiturjahr,
 			jahrgangsdaten: jahrgangsdaten,
 			mapSchueler: mapSchueler,
@@ -108,14 +115,7 @@ export class RouteDataGostKursplanung {
 			mapFachwahlStatistik: mapFachwahlStatistik,
 			mapLehrer: mapLehrer,
 			halbjahr: this._state.value.halbjahr,
-			mapBlockungen: new Map(),
-			auswahlBlockung: undefined,
-			datenmanager: undefined,
-			auswahlErgebnis: undefined,
-			ergebnismanager: undefined,
-			schuelerFilter: undefined,
-			auswahlSchueler: undefined,
-		};
+		});
 	}
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
@@ -168,13 +168,7 @@ export class RouteDataGostKursplanung {
 				auswahlBlockung = listBlockungen.get(0);
 		}
 		api.status.stop();
-		this._state.value = {
-			abiturjahr: this._state.value.abiturjahr,
-			jahrgangsdaten: this._state.value.jahrgangsdaten,
-			mapSchueler: this._state.value.mapSchueler,
-			faecherManager: this._state.value.faecherManager,
-			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
-			mapLehrer: this._state.value.mapLehrer,
+		this.setPatchedState({
 			halbjahr: halbjahr,
 			mapBlockungen: mapBlockungen,
 			auswahlBlockung: auswahlBlockung,
@@ -182,8 +176,7 @@ export class RouteDataGostKursplanung {
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
-			auswahlSchueler: this._state.value.auswahlSchueler,
-		};
+		});
 		return true;
 	}
 
@@ -208,22 +201,13 @@ export class RouteDataGostKursplanung {
 		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
-			this._state.value = {
-				abiturjahr: this._state.value.abiturjahr,
-				jahrgangsdaten: this._state.value.jahrgangsdaten,
-				mapSchueler: this._state.value.mapSchueler,
-				faecherManager: this._state.value.faecherManager,
-				mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
-				mapLehrer: this._state.value.mapLehrer,
-				halbjahr: this._state.value.halbjahr,
-				mapBlockungen: this._state.value.mapBlockungen,
+			this.setPatchedState({
 				auswahlBlockung: undefined,
 				datenmanager: undefined,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
-				auswahlSchueler: this._state.value.auswahlSchueler,
-			};
+			});
 			return;
 		}
 		api.status.start();
@@ -231,22 +215,13 @@ export class RouteDataGostKursplanung {
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.getErgebnisseSortiertNachBewertung();
 		api.status.stop();
-		this._state.value = {
-			abiturjahr: this._state.value.abiturjahr,
-			jahrgangsdaten: this._state.value.jahrgangsdaten,
-			mapSchueler: this._state.value.mapSchueler,
-			faecherManager: this._state.value.faecherManager,
-			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
-			mapLehrer: this._state.value.mapLehrer,
-			halbjahr: this._state.value.halbjahr,
-			mapBlockungen: this._state.value.mapBlockungen,
+		this.setPatchedState({
 			auswahlBlockung: value,
 			datenmanager: datenmanager,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
-			auswahlSchueler: this._state.value.auswahlSchueler,
-		};
+		});
 		await this.setAuswahlErgebnis(ergebnisse.size() <= 0 ? undefined : ergebnisse.get(0));
 	}
 
@@ -277,22 +252,11 @@ export class RouteDataGostKursplanung {
 		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
 		if (value === undefined) {
-			this._state.value = {
-				abiturjahr: this._state.value.abiturjahr,
-				jahrgangsdaten: this._state.value.jahrgangsdaten,
-				mapSchueler: this._state.value.mapSchueler,
-				faecherManager: this._state.value.faecherManager,
-				mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
-				mapLehrer: this._state.value.mapLehrer,
-				halbjahr: this._state.value.halbjahr,
-				mapBlockungen: this._state.value.mapBlockungen,
-				auswahlBlockung: this._state.value.auswahlBlockung,
-				datenmanager: this._state.value.datenmanager,
+			this.setPatchedState({
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
-				auswahlSchueler: this._state.value.auswahlSchueler,
-			};
+			});
 			return;
 		}
 		if (this._state.value.datenmanager === undefined)
@@ -302,22 +266,11 @@ export class RouteDataGostKursplanung {
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
 		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toVector(), this.mapSchueler)
 		api.status.stop();
-		this._state.value = {
-			abiturjahr: this._state.value.abiturjahr,
-			jahrgangsdaten: this._state.value.jahrgangsdaten,
-			mapSchueler: this._state.value.mapSchueler,
-			faecherManager: this._state.value.faecherManager,
-			mapFachwahlStatistik: this._state.value.mapFachwahlStatistik,
-			mapLehrer: this._state.value.mapLehrer,
-			halbjahr: this._state.value.halbjahr,
-			mapBlockungen: this._state.value.mapBlockungen,
-			auswahlBlockung: this._state.value.auswahlBlockung,
-			datenmanager: this._state.value.datenmanager,
+		this.setPatchedState({
 			auswahlErgebnis: value,
 			ergebnismanager: ergebnismanager,
 			schuelerFilter: schuelerFilter,
-			auswahlSchueler: this._state.value.auswahlSchueler,
-		};
+		});
 	}
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
@@ -349,12 +302,14 @@ export class RouteDataGostKursplanung {
 		if (value?.id === this._state.value.auswahlSchueler?.id)
 			return;
 		// Setze die neue Schülerauswahl im geklonten State
-		this._state.value = Object.assign({ ... this._state.value }, { auswahlSchueler: value });
+		this.setPatchedState({ auswahlSchueler: value });
 	}
 
 	addBlockung = async () => {
 		api.status.start();
 		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+		this.mapBlockungen.set(result.id, result);
+		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		api.status.stop();
 		await this.gotoBlockung(result);
 	}
@@ -364,6 +319,7 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		await api.server.deleteGostBlockung(api.schema, this.auswahlBlockung.id);
+		this._state.value.mapBlockungen.delete(this.auswahlBlockung.id);
 		await this.setAuswahlBlockung(undefined);
 		api.status.stop();
 		await this.gotoHalbjahr(this.halbjahr);
