@@ -30,7 +30,7 @@
 			</template>
 		</svws-ui-table>
 		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
-			:get-datenmanager="getDatenmanager" :remove-ergebnis="removeErgebnis" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 		<svws-ui-modal ref="modal_remove_blockung" size="small">
 			<template #modalTitle>Blockung löschen</template>
@@ -63,7 +63,6 @@
 		// ... zusätzlich für die Ergebnisauswahl
 		getDatenmanager: () => GostBlockungsdatenManager;
 		rechneGostBlockung: () => Promise<List<number>>;
-		removeErgebnis: (idErgebnis: number) => Promise<void>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;

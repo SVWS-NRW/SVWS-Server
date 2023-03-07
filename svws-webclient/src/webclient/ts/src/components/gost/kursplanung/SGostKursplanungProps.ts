@@ -5,7 +5,7 @@ import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
-	patchRegel: (data: Partial<GostBlockungRegel>, id: number) => Promise<void>;
+	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;

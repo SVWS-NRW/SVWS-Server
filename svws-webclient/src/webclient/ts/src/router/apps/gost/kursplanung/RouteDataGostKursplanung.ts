@@ -411,12 +411,16 @@ export class RouteDataGostKursplanung {
 		return result;
 	}
 
-	patchRegel = async (data: Partial<GostBlockungRegel>, idRegel: number): Promise<void> => {
+	patchRegel = async (data: GostBlockungRegel, idRegel: number): Promise<void> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		api.status.start();
 		await api.server.patchGostBlockungRegel(data, api.schema, idRegel);
-		// TODO Anpassungen an den Managern und Commit
+		this.datenmanager.removeRegelByID(idRegel);
+		this.ergebnismanager.setRemoveRegelByID(idRegel);
+		this.datenmanager.addRegel(data);
+		this.ergebnismanager.setAddRegelByID(data.id);
+		this.commit();
 		api.status.stop();
 	}
 
@@ -425,9 +429,11 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		await api.server.patchGostBlockungKurs(data, api.schema, kurs_id);
-		// TODO Anpassungen an den Managern und Commit
 		if (data.suffix !== undefined)
 			this.datenmanager.setSuffixOfKurs(kurs_id, data.suffix);
+		if (data.istKoopKurs !== undefined)
+			this.datenmanager.getKurs(kurs_id).istKoopKurs = data.istKoopKurs;
+		this.commit();
 		api.status.stop();
 	}
 
@@ -472,7 +478,8 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return
 		}
-		// TODO Anpassungen an den Managern und Commit
+		this.datenmanager.patchOfKursAddLehrkraft(kurs_id, lehrer);
+		this.commit();
 		api.status.stop();
 		return lehrer;
 	}
@@ -482,14 +489,16 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
-		// TODO Anpassungen an den Managern und Commit
+		this.datenmanager.patchOfKursRemoveLehrkraft(kurs_id, lehrer_id);
+		this.commit();
 		api.status.stop();
 	}
 
 	patchSchiene = async (data: Partial<GostBlockungSchiene>, id : number) => {
 		api.status.start();
 		await api.server.patchGostBlockungSchiene(data, api.schema, id);
-		// TODO Anpassungen an den Managern und Commit
+		const schiene = this.datenmanager.getSchiene(id);
+		Object.assign(schiene, data);
 		api.status.stop();
 	}
 
@@ -600,11 +609,15 @@ export class RouteDataGostKursplanung {
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		const reselect = ergebnisse.find(e => e.id === ergebnisid);
 		if (reselect) {
-			// TODO Wähle ein anderes, nicht ausgewähltes Ergebnis und lösche erst dann...
+			for await (const e of this.ergebnisse)
+				if (!ergebnisse.includes(e)) {
+					await this.gotoErgebnis(e);
+					break;
+				}
 		}
-		for (const ergebnis of ergebnisse) {
+		for await (const ergebnis of ergebnisse) {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
-			// TODO entferne das Blockungsergebnis aus den Managern
+			this.datenmanager.removeErgebnis(ergebnis);
 		}
 		this.commit();
 		api.status.stop();
@@ -616,23 +629,14 @@ export class RouteDataGostKursplanung {
 		try {
 			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
+			await this.setAuswahlBlockung(this.auswahlBlockung);
+			await this.gotoErgebnis(this._state.value.auswahlErgebnis)
 			api.status.stop();
 		} catch (e) {
 			api.status.stop(e instanceof Error ? e : undefined);
 			throw e;
 		}
-		// TODO Ergebnisse aktualisieren...
 		return liste;
-	}
-
-	removeErgebnis = async (idErgebnis: number) => {
-		if (this._state.value.auswahlErgebnis === undefined)
-			return;
-		api.status.start();
-		await api.server.deleteGostBlockungsergebnis(api.schema, idErgebnis);
-		// TODO entferne das Blockungsergebnis aus den Managern
-		this.commit();
-		api.status.stop();
 	}
 
 	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
@@ -665,7 +669,6 @@ export class RouteDataGostKursplanung {
 		return true;
 	}
 
-
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, value.id));
 	}
@@ -679,12 +682,17 @@ export class RouteDataGostKursplanung {
 		}
 	}
 
-	gotoErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
-		if ((value?.id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive())) {
-			if (this.hatErgebnis && this.hatSchueler && (value !== undefined)) {
-				await RouteManager.doRoute(routeGostKursplanung.getRouteSchueler(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value.id, this.auswahlSchueler.id));
-			} else if (value !== undefined) {
-				await RouteManager.doRoute(routeGostKursplanung.getRouteErgebnis(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, value.id));
+	gotoErgebnis = async (value: GostBlockungsergebnisListeneintrag | number | undefined) => {
+		let id;
+		if (value instanceof GostBlockungsergebnisListeneintrag)
+			id = value.id;
+		else
+			id = value;
+		if ((id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive())) {
+			if (this.hatErgebnis && this.hatSchueler && (id !== undefined)) {
+				await RouteManager.doRoute(routeGostKursplanung.getRouteSchueler(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, id, this.auswahlSchueler.id));
+			} else if (id !== undefined) {
+				await RouteManager.doRoute(routeGostKursplanung.getRouteErgebnis(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, id));
 			} else {
 				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id));
 			}

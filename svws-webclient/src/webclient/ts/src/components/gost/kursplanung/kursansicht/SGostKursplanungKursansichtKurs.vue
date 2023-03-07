@@ -2,12 +2,12 @@
 	<tr :style="{ 'background-color': bgColor }">
 		<td>
 			<div class="flex gap-1">
-				<template v-if="kurs === edit_name">
+				<template v-if="kurs.id === edit_name">
 					{{ kursbezeichnung }}-
-					<svws-ui-text-input :model-value="kurs.suffix" @update:model-value="setSuffix(String($event))" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="edit_name=undefined" />
+					<svws-ui-text-input :model-value="tmp_name" @update:model-value="tmp_name=String($event)" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="setSuffix" />
 				</template>
 				<template v-else>
-					<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
+					<span class="underline decoration-dashed underline-offset-2 cursor-pointer" @click="edit_name = kurs.id">
 						{{ kursbezeichnung }}</span>
 				</template>
 			</div>
@@ -82,26 +82,21 @@
 		allowRegeln: boolean;
 	}>();
 
-	const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
+	const edit_name: Ref<number | undefined> = ref(undefined);
+	const tmp_name = ref(props.kurs.suffix);
 	const kursdetail_anzeige: Ref<boolean> = ref(false)
 
 	async function setKoop(value: boolean) {
-		const kurs = props.getDatenmanager().getKurs(props.kurs.id)
-		if (!kurs)
-			return;
 		await props.patchKurs({ istKoopKurs: value }, props.kurs.id);
-		kurs.istKoopKurs = value;
 	}
 
-	async function setSuffix(value: string) {
-		const kurs = props.getDatenmanager().getKurs(props.kurs.id);
-		if (kurs === undefined)
-			return;
-		await props.patchKurs({ suffix: value }, kurs.id);
-		kurs.suffix = value;
+	async function setSuffix() {
+		await props.patchKurs({ suffix: tmp_name.value }, props.kurs.id);
+		tmp_name.value = props.kurs.suffix;
+		edit_name.value = undefined;
 	}
 
-	const kursbezeichnung: ComputedRef<String> = computed(() => get_kursbezeichnung(props.kurs.id));
+	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id))
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag | undefined> = computed(() => {
 		const liste = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id);
@@ -146,12 +141,6 @@
 		r.typ = regel_typ.typ;
 		r.parameter.add(1);
 		await props.addRegel(r);
-	}
-
-	function get_kursbezeichnung(kurs_id: number | undefined): string {
-		if (kurs_id === undefined)
-			return "";
-		return props.getDatenmanager().getNameOfKurs(kurs_id);
 	}
 
 	const anzahlSchienen: ComputedRef<number> = computed(() => props.getDatenmanager().getSchienenAnzahl());

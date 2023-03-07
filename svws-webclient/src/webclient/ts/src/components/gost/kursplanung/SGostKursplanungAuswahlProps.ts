@@ -16,7 +16,6 @@ export interface GostKursplanungAuswahlProps {
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;
 	rechneGostBlockung: () => Promise<List<number>>;
-	removeErgebnis: (idErgebnis: number) => Promise<void>;
 	removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 	ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 	setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;

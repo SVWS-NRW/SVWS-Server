@@ -118,6 +118,18 @@
 		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
 	}
 
+	function getAndereFachwahl(): GostSchuelerFachwahl | undefined {
+		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+			return;
+		const fachbelegungen = props.abiturdatenManager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
+		if (fachbelegungen !== undefined) {
+			for (const fachbelegung of fachbelegungen) {
+				if (fachbelegung.fachID !== props.fach.id)
+					return props.abiturdatenManager.getSchuelerFachwahl(fachbelegung.fachID)
+			}
+		}
+	}
 
 	function stepper() {
 		if (props.manuellerModus) {

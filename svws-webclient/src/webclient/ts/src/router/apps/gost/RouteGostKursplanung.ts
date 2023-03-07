@@ -47,7 +47,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
-		if (abiturjahr === undefined)
+		if (abiturjahr === undefined || abiturjahr === -1)
 			return this.getRoute();
 		if (halbjahr === undefined) {
 			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -143,7 +143,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	}
 
 	public getRoute() : RouteLocationRaw {
-		console.log("LEER")
 		return { name: routeGost.name, params: { abiturjahr: -1 }};
 	}
 
@@ -181,7 +180,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// ... und zusätzlich für die Ergebnisauswahl
 			getDatenmanager: () => this.data.datenmanager,
 			rechneGostBlockung: this.data.rechneGostBlockung,
-			removeErgebnis: this.data.removeErgebnis,
 			removeErgebnisse: this.data.removeErgebnisse,
 			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,
 			setAuswahlErgebnis: this.data.setAuswahlErgebnis,

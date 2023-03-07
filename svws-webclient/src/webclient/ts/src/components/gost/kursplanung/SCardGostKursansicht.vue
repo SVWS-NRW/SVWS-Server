@@ -19,7 +19,7 @@
 						</th>
 						<th v-for="s in schienen" :key="s.id" class="text-center">
 							<div v-if="allow_regeln" class="flex justify-center">
-								<template v-if="s === edit_schienenname">
+								<template v-if="s.id === edit_schienenname">
 									<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
 										@blur="edit_schienenname=undefined"
 										@keyup.enter="edit_schienenname=undefined"
@@ -27,7 +27,7 @@
 										@update:model-value="patch_schiene(s, $event.toString())" />
 								</template>
 								<template v-else>
-									<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{ s.nummer }}</span>
+									<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
 								</template>
 								<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line /></svws-ui-icon>
 							</div>
@@ -159,7 +159,7 @@
 		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	}>();
 
-	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
+	const edit_schienenname: Ref<number|undefined> = ref()
 	const dragAndDropData: Ref<{ schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined> = ref(undefined);
 
 	const sort_by: WritableComputedRef<string> = computed({

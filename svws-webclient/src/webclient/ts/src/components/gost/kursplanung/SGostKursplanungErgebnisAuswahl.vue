@@ -52,7 +52,7 @@
 					<svws-ui-popover class="popper--danger" :open-delay="200">
 						<template #trigger>
 							<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
-								@click.stop="remove_ergebnis" :disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
+								:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
 						</template>
 						<template #content>
 							Auswahl löschen
@@ -73,7 +73,6 @@
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		removeErgebnis: (idErgebnis: number) => Promise<void>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
 		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
@@ -99,7 +98,7 @@
 	async function remove_ergebnis() {
 		if (!props.auswahlErgebnis)
 			return;
-		await props.removeErgebnis(props.auswahlErgebnis.id);
+		await props.removeErgebnisse([props.auswahlErgebnis]);
 	}
 
 	async function derive_blockung() {
