@@ -67,67 +67,97 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 		int anzahlAbschnitte = rowsAnzahlAbschnitte.get(0);
 		if (anzahlAbschnitte == 4) {
 			logger.logLn("Im Anschluss - Die Schule wurde in Schild 2 im \"Quartalsmodus\" betrieben und wird im folgenden auf den Betrieb mit Halbjahren umgestellt:");
-			logger.modifyIndent(2);
 			// Bestimme den aktuellen Abschnitt, in dem sich die Schule befindet
 			List<Long> tmpSchuljahresabschnittAktuell = conn.queryNative("SELECT Schuljahresabschnitts_ID FROM EigeneSchule");
 			long schuljahresabschnittAktuell = tmpSchuljahresabschnittAktuell.get(0);
 			List<Object[]> tmpAktAbschnitt = conn.queryNative("SELECT ID, Jahr, Abschnitt, VorigerAbschnitt_ID, FolgeAbschnitt_ID FROM Schuljahresabschnitte WHERE ID = " + schuljahresabschnittAktuell);
 			Object[] aktAbschnitt = tmpAktAbschnitt.get(0);
+			int aktSchuljahr = (Integer)aktAbschnitt[1];
 			int aktQuartal = (Integer)aktAbschnitt[2];
+			int aktHalbjahr = (aktQuartal % 2 == 1) ? aktQuartal / 2 + 1 : aktQuartal / 2;
 			Long aktFolgeAbschnittID = (Long)aktAbschnitt[4];
 			// Passe das aktuelle Quartal an, falls es Quartal 1 oder 3 ist
+			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " ( Schuljahr " + aktSchuljahr + "/" + (aktSchuljahr + 1 - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
+			logger.modifyIndent(2);
 			if ((aktQuartal == 1) || (aktQuartal == 3)) {
+				logger.logLn("... also im ersten Quartal eines Halbjahres");
 				if (aktFolgeAbschnittID == null) {
+					logger.logLn("... und es existiert noch kein Folgeabschnitt");
 					// Erhöhe das Quartal in dem aktuellen Schuljahresabschnitt, so dass dies das zweite Quartal im Halbjahr wird
+					logger.logLn("- Erhöhe das Quartal in dem aktuellen Schuljahresabschnitt, so dass dies das zweite Quartal im Halbjahr wird...");
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE Schuljahresabschnitte SET Schuljahresabschnitte.Abschnitt = Schuljahresabschnitte.Abschnitt + 1 WHERE ID = " + schuljahresabschnittAktuell)) {
 						logger.logLn("Fehler beim Erhöhen des Quartals beim aktuellen Schuljahresabschnitt");
+						logger.modifyIndent(-2);
 						return false;
 					}
 					// Verschiebe die Noten-Einträge bei den Schülerleistungsdaten in das Feld für die Quartalsnoten des Halbjahres 
+					logger.logLn("- Verschiebe die Noten-Einträge bei den Schülerleistungsdaten in das Feld für die Quartalsnoten des Halbjahres...");
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerLeistungsdaten JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID AND SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell + " SET SchuelerLeistungsdaten.NotenKrzQuartal = SchuelerLeistungsdaten.NotenKrz, SchuelerLeistungsdaten.NotenKrz = NULL")) {
 						logger.logLn("Fehler beim Anpassen der Schüler-Leistungsdaten des aktuellen Schuljahresabschnittes (Noten -> Quartalsnoten)");
+						logger.modifyIndent(-2);
 						return false;
 					}
 				} else {
+					logger.logLn("... und es existiert noch ein Folgeabschnitt");
 					// Setze den Abschnitt in EigeneSchule auf den FolgeAbschnitt, die Anpassung der Schülerleistungsdaten erfolgt später automatisch
+					logger.logLn("- Setze den Abschnitt in EigeneSchule auf den FolgeAbschnitt, die Anpassung der Schülerleistungsdaten erfolgt später automatisch...");
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule JOIN Schuljahresabschnitte ON EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID SET EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 						logger.logLn("Fehler beim Anpassen des aktuellen Schuljahresabschnitt in der Tabelle EigeneSchule");
+						logger.modifyIndent(-2);
 						return false;
 					}					
 				}
 			}
 			// Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)
+			logger.logLn("- Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE Schueler JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 				logger.logLn("Fehler beim Anpassen der Schuljahresabschnitte in der Tabelle Schueler");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Ggf. Korrektur bei Einträgen in der SchuelerAbitur-Tabelle (hier sollte eigentlich immer ein zweites Quartal eingetragen sein)
+			logger.logLn("- Ggf. Korrektur bei Einträgen in der SchuelerAbitur-Tabelle (hier sollte eigentlich immer ein zweites Quartal eingetragen sein)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerAbitur JOIN Schuljahresabschnitte ON SchuelerAbitur.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET SchuelerAbitur.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 				logger.logLn("Fehler beim Anpassen der Schuljahresabschnitte in der Tabelle SchuelerAbitur");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Ggf. Korrektur bei Einträgen in der SchuelerZP10-Tabelle (hier sollte eigentlich immer ein zweites Quartal eingetragen sein)
+			logger.logLn("- Ggf. Korrektur bei Einträgen in der SchuelerZP10-Tabelle (hier sollte eigentlich immer ein zweites Quartal eingetragen sein)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerZP10 JOIN Schuljahresabschnitte ON SchuelerZP10.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET SchuelerZP10.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 				logger.logLn("Fehler beim Anpassen der Schuljahresabschnitte in der Tabelle SchuelerZP10");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Ggf. Korrektur bei Einträgen in der SchuelerBKAbschluss-Tabelle (sollte nicht relevant sein)
+			logger.logLn("- Ggf. Korrektur bei Einträgen in der SchuelerBKAbschluss-Tabelle (sollte nicht relevant sein)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerBKAbschluss JOIN Schuljahresabschnitte ON SchuelerBKAbschluss.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET SchuelerBKAbschluss.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 				logger.logLn("Fehler beim Anpassen der Schuljahresabschnitte in der Tabelle SchuelerBKAbschluss");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Ggf. Korrektur bei Einträgen in der SchuelerBKFaecher-Tabelle (sollte nicht relevant sein)
+			logger.logLn("- Ggf. Korrektur bei Einträgen in der SchuelerBKFaecher-Tabelle (sollte nicht relevant sein)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerBKFaecher JOIN Schuljahresabschnitte ON SchuelerBKFaecher.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET SchuelerBKFaecher.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 				logger.logLn("Fehler beim Anpassen der Schuljahresabschnitte in der Tabelle SchuelerBKFaecher");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Durchwandere die Schüler-Lernabschnitte zu alle Schuljahresabschnitten im 1. und im 3. Quartal
+			logger.logLn("- Durchwandere die Schüler-Lernabschnitte zu allen Schuljahresabschnitten im 1. und im 3. Quartal...");
+			logger.modifyIndent(2);
 			List<Object[]> tmpSchuljahresAbschnitte = conn.queryNative("SELECT ID, Jahr, Abschnitt, VorigerAbschnitt_ID, FolgeAbschnitt_ID FROM Schuljahresabschnitte WHERE Abschnitt IN (1,3)");
 			for (Object[] schuljahreAbschnitt : tmpSchuljahresAbschnitte) {
 				long abschnittID = (Long)schuljahreAbschnitt[0];
+				int schuljahr = (Integer)schuljahreAbschnitt[1];
+				int quartal = (Integer)schuljahreAbschnitt[2];
+				int halbjahr = (quartal % 2 == 1) ? quartal / 2 + 1 : quartal / 2;
 				Long folgeAbschnittID = (Long)schuljahreAbschnitt[4];
+				logger.logLn("- Schuljahres-Abschnitt " + abschnittID + " (Schuljahr " + schuljahr + "/" + (schuljahr + 1 - 2000) + ", " + halbjahr +". Halbjahr, Quartal " + quartal + "):");
+				logger.modifyIndent(2);
 				// Bestimme die IDs aller Schüler-Lernabschnitte, die zu diesem Schuljahresabschnitt gehören
 				List<Long> lernabschnittIDs = conn.queryNative("SELECT ID FROM SchuelerLernabschnittsdaten WHERE WechselNr IS NULL AND Schuljahresabschnitts_ID = " + abschnittID);
+				logger.logLn("- Übertragen der Leistungsdaten und der Teilleistungen der zugehörigen Schüler-Lernabschnitte in den jeweiligen Folgeabschnitt (ID des Folge-Schuljahresabschnitts: " + folgeAbschnittID +")...");
 				for (long lernabschnittID : lernabschnittIDs) {
 					String sql = "SELECT q2.ID FROM SchuelerLernabschnittsdaten q1 JOIN SchuelerLernabschnittsdaten q2 ON q1.ID = "
 						+ lernabschnittID + " AND q1.Schueler_ID = q2.Schueler_ID AND q2.Schuljahresabschnitts_ID = "
@@ -168,6 +198,7 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 				}
 				// Verschiebe die Kurse in das zweite Quartal des Halbjahres, welche im zweiten Quartal nicht entsprechend angelegt wurden
+				logger.logLn("- Verschiebe die Kurse in das zweite Quartal des Halbjahres, welche im zweiten Quartal nicht entsprechend angelegt wurden...");
 				String sql = "UPDATE Kurse SET Schuljahresabschnitts_ID = " + folgeAbschnittID + " WHERE Schuljahresabschnitts_ID = "
 					+ abschnittID + " AND ID NOT IN (SELECT k1.ID FROM Kurse k1 JOIN Kurse k2 ON " 
 					+ "k1.Schuljahresabschnitts_ID = " + abschnittID + " AND k2.Schuljahresabschnitts_ID = " + folgeAbschnittID
@@ -178,12 +209,14 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 					return false;
 				}
 				// Entferne die Schülerlernabschnitte, die zu dem Quartal gehört haben.
+				logger.logLn("- Entferne die Schülerlernabschnitte, dessen Leistungsdaten gerade in das 2. Quartal übertragen wurden...");
 				sql = "DELETE FROM SchuelerLernabschnittsdaten WHERE Schuljahresabschnitts_ID = " + abschnittID;
 				if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
 					logger.logLn("Fehler beim Löschen der Schüler-Lernabschnitte des ersten Quartals.");
 					return false;
 				}
-				// Bestimme die IDs der SchülerLeistungsdaten, wo die Kurszuordnung entfernt werden muss, da der Schüler sonst doppelt zugeordnet wird
+				// Entferne die Kurszuordnung bei Schülerleistungsdaten, wo der Schüler ansonsten einem Kurs doppelt zugeordnet wäre (Fehlerkorrektur von unstimmigen Leistungsdaten)
+				logger.logLn("- Entferne die Kurszuordnung bei Schülerleistungsdaten, wo der Schüler ansonsten einem Kurs doppelt zugeordnet wäre (Fehlerkorrektur von unstimmigen Leistungsdaten)...");
 				sql = "SELECT s.ID FROM SchuelerLeistungsdaten s "
 					+ "JOIN Kurse k1 ON s.Kurs_ID = k1.ID AND k1.Schuljahresabschnitts_ID = " + abschnittID
 					+ " JOIN Kurse k2 ON k2.Schuljahresabschnitts_ID = " + folgeAbschnittID
@@ -202,6 +235,7 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 				}
 				// Korrigiere die Kurszuordnung bei den Leistungsdaten, welche noch Kurse in diesem Schuljahresabschnitt haben
+				logger.logLn("- Korrigiere die Kurszuordnung bei den übertragenen Leistungsdaten, welche noch Kurszurodnungen zu Kursen in dem übertragenen Schuljahresabschnitt haben...");
 				sql = "UPDATE SchuelerLeistungsdaten s JOIN Kurse k1 ON s.Kurs_ID = k1.ID AND k1.Schuljahresabschnitts_ID = "
 					+ abschnittID + " JOIN Kurse k2 ON k2.Schuljahresabschnitts_ID = "
 					+ folgeAbschnittID + " AND k1.KurzBez = k2.KurzBez AND k1.Jahrgang_ID = k2.Jahrgang_ID AND k1.ASDJahrgang = k2.ASDJahrgang "
@@ -210,20 +244,28 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 					logger.logLn("Fehler bei der Korrektur der Kurszuordnungen.");
 					return false;
 				}
+				logger.modifyIndent(-2);				
 			}
+			logger.modifyIndent(-2);
 			// Nachdem die Leistungen in die Halbjahresabschnitte verschoben wurden, können die Schuljahresabschnitt mit allen daran "hängenden" Daten entfernt werden.
+			logger.logLn("- Entferne die Schuljahresabschnitt der ersten Quartal der Halbjahre mit allen daran \"hängenden\" Daten - diese werden jetzt nicht mehr benötigt...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("DELETE FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Abschnitt IN (1,3)")) {
 				logger.logLn("Fehler beim Entfernen der Schuljahresabschnitte für die Quartale 1 und 3");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Jetzt kann auch der Abschnittseintrag in der Tabelle Schuljahresabschnitte von Quartal auf Halbjahr abgeändert werden
+			logger.logLn("- Ändern des Abschnittseintrags in der Tabelle Schuljahresabschnitte von Quartal auf Halbjahr...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE Schuljahresabschnitte SET Schuljahresabschnitte.Abschnitt = Schuljahresabschnitte.Abschnitt / 2")) {
 				logger.logLn("Fehler beim Umstellen der Abschnitte bei den Schuljahresabschnitten von Quartal auf Halbjahrnummerierung");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			// Und zum Abschluss werden die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule umgestellt 
+			logger.logLn("- Stelle die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule um...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule SET EigeneSchule.AnzahlAbschnitte = 2, EigeneSchule.AbschnittBez = 'Halbjahr', EigeneSchule.BezAbschnitt1 = '1. Hj.', EigeneSchule.BezAbschnitt2 = '2. Hj.', EigeneSchule.BezAbschnitt3 = NULL, EigeneSchule.BezAbschnitt4 = NULL")) {
 				logger.logLn("Fehler biem Umstellen der Tabelle EigeneSchule auf zwei Abschnitte.");
+				logger.modifyIndent(-2);
 				return false;
 			}
 			logger.modifyIndent(-2);
