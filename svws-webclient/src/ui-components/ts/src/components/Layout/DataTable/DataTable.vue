@@ -1,7 +1,7 @@
 <template>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		 :class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions}"
-		 v-bind="computedTableAttributes">
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions}"
+		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
 			<slot name="header"
 				:all-rows-selected="allRowsSelected"
@@ -18,30 +18,30 @@
 						v-for="column in columnsComputed"
 						:key="column.key"
 						class="data-table__th data-table__thead__th"
-					 	:class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
+						:class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
 						@click.exact="column.sortable && toggleSorting(column)">
 						<div class="data-table__th-wrapper" :class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}" :title="column.label">
 							<span class="data-table__th-title">
 								<slot :name="`header(${column.key})`"
-									  :column="column">
+									:column="column">
 									{{ column.label }}
 								</slot>
 							</span>
 							<span v-if="column.sortable" :role=" column.sortable ? 'button' : undefined"
-								  class="data-table__th-sorting"
-								  :tabindex="column.sortable ? 0 : -1">
-									<span class="sorting-arrows"
-											:class="{'sorting-arrows__column': sortBy === column.name && sortingOrder}">
-										<i-ri-arrow-up-down-line class="sorting-arrows__up"
-																 :class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'asc'}"/>
-										<i-ri-arrow-up-down-line class="sorting-arrows__down"
-																 :class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'desc'}"/>
-									</span>
+								class="data-table__th-sorting"
+								:tabindex="column.sortable ? 0 : -1">
+								<span class="sorting-arrows"
+									:class="{'sorting-arrows__column': sortBy === column.name && sortingOrder}">
+									<i-ri-arrow-up-down-line class="sorting-arrows__up"
+										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'asc'}" />
+									<i-ri-arrow-up-down-line class="sorting-arrows__down"
+										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'desc'}" />
 								</span>
+							</span>
 						</div>
 					</div>
 					<div v-if="rowActions" class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions" role="none" title="Aktionen">
-						<i-ri-settings3-line/>
+						<i-ri-settings3-line />
 					</div>
 				</div>
 			</slot>
@@ -66,7 +66,8 @@
 						:key="`selectable__${row}_${index}`">
 						<Checkbox class="data-table__cell-checkbox"
 							:model-value="isRowSelected(row)"
-							@update:model-value="toggleRowSelection(row)" />
+							@update:model-value="toggleRowSelection(row)"
+							@click.stop />
 					</div>
 					<div role="cell" v-for="cell in row.cells"
 						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
@@ -78,9 +79,9 @@
 						<slot v-else name="cell" v-bind="cell">
 							<TextInput v-if="row.isEditing"
 								v-model="cell.value"
-							   	:headless="true"
+								:headless="true"
 								@update:value="(value: string) => cell.value = value"
-								@click.stop="setClickedRow(row) "/>
+								@click.stop="setClickedRow(row) " />
 							<span v-else class="data-table__td-content" :title="cell.value">
 								{{ cell.value }}
 							</span>
@@ -88,27 +89,27 @@
 					</div>
 					<div v-if="rowActions" class="data-table__row-actions data-table__td">
 						<Popover :hover="false"
-								 :disable-click-away="false"
-								 :show-delay="0"
-								 placement="auto-start"
-								 :arrow="false"
-								 class="data-table__row-actions__popover"
-								 :context="true"
-								 @click.stop>
+							:disable-click-away="false"
+							:show-delay="0"
+							placement="auto-start"
+							:arrow="false"
+							class="data-table__row-actions__popover"
+							:context="true"
+							@click.stop>
 							<template #trigger>
 								<Button type="icon" size="small" class="cursor-context-menu">
 									<Icon>
-										<i-ri-more2-fill/>
+										<i-ri-more2-fill />
 									</Icon>
 								</Button>
 							</template>
 							<template #content>
 								<div v-for="action in rowActions"
-									 :key="action.action">
+									:key="action.action">
 									<Button class="action-item"
-											type="transparent"
-											size="small"
-											@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
+										type="transparent"
+										size="small"
+										@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
 										{{ action.label }}
 									</Button>
 								</div>
@@ -127,7 +128,7 @@
 					<div role="checkbox" v-if="selectable"
 						class="data-table__th data-table__tfoot__th data-table__cell-select">
 						<Checkbox class="data-table__cell-checkbox"
-						  	:model-value="someNotAllRowsSelected ? null : allRowsSelected"
+							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>
 					<div v-if="count && modelValue" role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
@@ -135,7 +136,7 @@
 						<span v-else class="opacity-50">{{ sortedRows.length }} Einträge</span>
 					</div>
 					<div role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-actions" v-if="$slots.footerActions">
-						<slot name="footerActions"/>
+						<slot name="footerActions" />
 					</div>
 				</div>
 			</slot>
@@ -163,7 +164,6 @@
 		DataTableItem,
 		DataTableSortingOrder,
 	} from "./types";
-	import {logEvent} from "histoire/client";
 
 	const props = withDefaults(
 		defineProps<{
@@ -175,6 +175,7 @@
 			selectable?: boolean;
 			clicked?: DataTableItem | undefined;
 			clickable?: boolean;
+			allowUnclick?: boolean;
 			noDataHtml?: string;
 			uniqueKey?: string;
 			count?: boolean;
@@ -192,6 +193,7 @@
 			sortBy: undefined,
 			clicked: undefined,
 			clickable: false,
+			allowUnclick: false,
 			selectable: false,
 			noDataHtml: "Keine Einträge vorhanden",
 			uniqueKey: undefined,
@@ -205,7 +207,7 @@
 		(e: "update:modelValue", items: DataTableItem[]): void;
 		(e: "update:sortBy", sortBy: string): void;
 		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
-		(e: "update:clicked", items: DataTableItem): void;
+		(e: "update:clicked", items: DataTableItem | null): void;
 	}>();
 
 	const attrs = useAttrs();
@@ -235,7 +237,12 @@
 		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
 	});
 
-	const { isRowClicked, toggleRowClick, setClickedRow } = useClickable(props);
+	const { isRowClicked, toggleRowClick, setClickedRow } = useClickable({
+		isActive: () => props.clickable,
+		canReset: () => props.allowUnclick,
+		clickedItem: () => props.clicked,
+		emit: (v: DataTableItem | null) => emit('update:clicked', v),
+	});
 
 	const showNoDataHtml = computed(() => {
 		if (Array.isArray(props.items))

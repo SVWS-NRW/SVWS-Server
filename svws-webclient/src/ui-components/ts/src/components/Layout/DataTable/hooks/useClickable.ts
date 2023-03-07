@@ -1,28 +1,30 @@
 import { Ref } from 'vue'
 
 import type { DataTableRow, DataTableItem } from '../types'
-import useSafeVModel from './useSafeVModel'
 
-interface UseClickableProps {
-	clicked: DataTableItem | undefined
-	clickable: boolean
+interface UseClickableOptions {
+	clickedItem: () => DataTableItem | undefined,
+	emit: (v: DataTableItem | null) => void,
+	isActive: () => boolean,
+	canReset: () => boolean,
 }
 
-export default function useClickable(
-	props: UseClickableProps,
-) {
-	const clickedItem = useSafeVModel(props, null as DataTableItem | null, 'clicked');
+export default function useClickable({ clickedItem: data, emit, isActive, canReset }: UseClickableOptions) {
+	// internally, we only work with raw values so we don't run into identity hazard when comparing them
+	const clickedItemRaw = computed(() => (toRaw(data()) ?? null));
 
 	function isRowClicked(row: DataTableRow) {
-		return clickedItem.value === row.source;
+		return row.source === clickedItemRaw.value;
 	}
 
 	function resetClickedRow() {
-		clickedItem.value = null;
+		if (canReset()) {
+			emit(null)
+		}
 	}
 
 	function toggleRowClick(row: DataTableRow) {
-		if (!props.clickable) {
+		if (!isActive) {
 			return
 		}
 
@@ -34,11 +36,11 @@ export default function useClickable(
 	}
 
 	function setClickedRow(row: DataTableRow) {
-		if (!props.clickable) {
+		if (!isActive) {
 			return
 		}
 
-		clickedItem.value = row.source;
+		emit(row.source);
 	}
 
 	return {
