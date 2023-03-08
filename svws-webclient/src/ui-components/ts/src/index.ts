@@ -51,7 +51,8 @@ export {
 	SvwsUiRouterVerticalTabBar,
 	SvwsUiDragData,
 	SvwsUiDropData,
-	SvwsUiDataTable
+	SvwsUiDataTable,
+	SvwsUiSpinner
 } from './components'
 
 export type { DataTableColumn, DataTableItem } from './components/Layout/Table/types'

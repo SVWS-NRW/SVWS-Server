@@ -37,3 +37,4 @@ export { default as SvwsUiRouterVerticalTabBar } from "./Controls/RouterVertical
 export { default as SvwsUiDragData } from "./DragData.vue";
 export { default as SvwsUiDropData } from "./DropData.vue";
 export { default as SvwsUiDataTable } from "./Layout/DataTable/DataTable.vue";
+export { default as SvwsUiSpinner } from "./Spinner.vue";
