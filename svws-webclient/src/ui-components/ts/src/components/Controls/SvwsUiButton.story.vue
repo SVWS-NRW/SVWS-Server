@@ -1,8 +1,6 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiButton from "./Button.vue";
-
 	const propsVariants = {
 		Primary: { type: "primary" },
 		Secondary: { type: "secondary" },
@@ -23,7 +21,7 @@
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:title="title">
-			<SvwsUiButton v-bind="props" @click="onClick">Button</SvwsUiButton>
+			<svws-ui-button v-bind="props" @click="onClick">Button</svws-ui-button>
 		</Variant>
 	</Story>
 </template>

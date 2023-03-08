@@ -91,10 +91,10 @@
 <template>
 	<Story title="SVWS UI/Layout/Table (Deprecated)" icon="ri:alert-line" icon-color="#ccc">
 		<Variant title="Basic">
-			<Table :data="data" />
+			<svws-ui-table :data="data" />
 		</Variant>
 		<Variant title="Simple Row Click Selection">
-			<Table v-model="clickedRow" :data="data" />
+			<svws-ui-table v-model="clickedRow" :data="data" />
 			<br>
 			<svws-ui-button @click="updateSelectedRow">Update Selection</svws-ui-button>
 			<br>
@@ -103,7 +103,7 @@
 			<span v-else>{{ clickedRow }}</span>
 		</Variant>
 		<Variant title="Selection Multi">
-			<Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
+			<svws-ui-table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
 			<br>
 			<svws-ui-button @click="manipulateData">Manipulate data prop</svws-ui-button>
 			<br>
@@ -115,7 +115,7 @@
 			<span v-else>{{ clickedRow }}</span>
 		</Variant>
 		<Variant title="Selection Multi + Footer Action">
-			<Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select :footer="true">
+			<svws-ui-table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select :footer="true">
 				<template #footer>
 					<button
 						class="button button--icon">
@@ -128,7 +128,7 @@
 						<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 					</button>
 				</template>
-			</Table>
+			</svws-ui-table>
 			<br>
 			<strong>Selected:</strong>
 			<div v-if="selectedRows2.length === 0">No rows selected</div>
@@ -138,7 +138,7 @@
 			<span v-else>{{ clickedRow }}</span>
 		</Variant>
 		<Variant title="Custom everything">
-			<Table :data="data">
+			<svws-ui-table :data="data">
 				<template #head>
 					<tr><th>Fruit</th><th>More Fruit</th></tr>
 					<tr><th>Banana</th><th>Apple</th></tr>
@@ -146,17 +146,17 @@
 				<template #body="{rows}">
 					<tr v-for="row, index in rows" :key="index"><td>{{ row.name }}</td><td>{{ row.email }}</td></tr>
 				</template>
-			</Table>
+			</svws-ui-table>
 		</Variant>
 		<Variant title="Sorting + Selection + Header Labels">
-			<Table v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
+			<svws-ui-table v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
 			<br>
 			<strong>Selected:</strong>
 			<div v-if="selectedRows3.length === 0">No rows selected</div>
 			<span v-else>{{ selectedRows3 }}</span>
 		</Variant>
 		<Variant title="Basic + Custom Head Cell">
-			<Table :data="data">
+			<svws-ui-table :data="data">
 				<template #head-age="{ column }">
 					<th>
 						<svws-ui-icon>
@@ -165,10 +165,10 @@
 						{{ column.label }} 🥳
 					</th>
 				</template>
-			</Table>
+			</svws-ui-table>
 		</Variant>
 		<Variant title="Basic + Custom Cell Content">
-			<Table :data="data" :columns="columns">
+			<svws-ui-table :data="data" :columns="columns">
 				<template #cell-email="{ row }">
 					<svws-ui-text-input v-model="row.email" />
 				</template>
@@ -180,10 +180,10 @@
 						<i-ri-battery-fill />
 					</svws-ui-icon>
 				</template>
-			</Table>
+			</svws-ui-table>
 		</Variant>
 		<Variant title="Basic + Inline Editing">
-			<Table :data="data" :columns="columns2">
+			<svws-ui-table :data="data" :columns="columns2">
 				<template #cell-name="{ row }">
 					<span v-if="!row.isEditing">{{ row.name }}</span>
 					<svws-ui-text-input v-else v-model="row.name" />
@@ -217,10 +217,10 @@
 						</template>
 					</svws-ui-popover>
 				</template>
-			</Table>
+			</svws-ui-table>
 		</Variant>
 		<Variant title="Headless Inputs">
-			<Table :data="data" :columns="columns2">
+			<svws-ui-table :data="data" :columns="columns2">
 				<template #cell-name="{ row }">
 					<span v-if="!row.isEditing" class="table--cell-content">{{ row.name }}</span>
 					<svws-ui-text-input v-else v-model="row.name" headless />
@@ -258,7 +258,7 @@
 						</template>
 					</svws-ui-popover>
 				</template>
-			</Table>
+			</svws-ui-table>
 		</Variant>
 	</Story>
 </template>

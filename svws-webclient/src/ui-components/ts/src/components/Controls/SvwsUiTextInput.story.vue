@@ -1,6 +1,5 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
-	import SvwsUiTextInput from "./TextInput.vue";
 
 	function onInput(event: Event) {
 		hstEvent('input', event);
@@ -37,8 +36,9 @@
 			<div class="bg-light p-8 font-bold">
 				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid headless @input="onInput" class="bg-highlight" />
 			</div>
-			<p class="mt-2 italic">Hintergrundfarbe des Headless Inputs ist immer transparent und zeigt die Hintergrundfarbe des Parent-Elements an.
-				<br/>Mit einer spezifischen <code>bg-xyz</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
+			<p class="mt-2 italic">
+				Hintergrundfarbe des Headless Inputs ist immer transparent und zeigt die Hintergrundfarbe des Parent-Elements an.
+				<br>Mit einer spezifischen <code>bg-xyz</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
 			</p>
 		</Variant>
 	</Story>

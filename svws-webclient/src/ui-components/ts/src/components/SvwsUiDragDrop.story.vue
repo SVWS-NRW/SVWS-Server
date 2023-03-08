@@ -1,7 +1,5 @@
 <script setup lang="ts">
 	import { ref, computed } from "vue";
-	import SvwsUiDragData from "./DragData.vue";
-	import SvwsUiDropData from "./DropData.vue";
 
 	const items = ref([
 		{

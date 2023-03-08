@@ -2,8 +2,6 @@
 	import { logEvent } from "histoire/client";
 	import { ref, reactive } from "vue";
 
-	import SvwsUiMultiSelect from "./ComboBox.vue";
-
 	const items = reactive([
 		{ id: 1, text: "item1" },
 		{ id: 2, text: "item2" },

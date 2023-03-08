@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 	import { ref, h } from "vue";
-	import RouterVerticalTabBar from "./RouterVerticalTabBar.vue";
 
 	const routes = [
 		{ path: "/", name: "home", component: { render: () => h("h1", "Home") }, meta: { text: "Home" } },
@@ -23,8 +22,8 @@
 
 <template>
 	<Story title="SVWS UI/Controls/Router Vertical Tab Bar">
-		<RouterVerticalTabBar :routes="routes" :hidden="hidden" v-model="selectedRoute">
+		<svws-ui-router-vertical-tab-bar :routes="routes" :hidden="hidden" v-model="selectedRoute">
 			<component :is="selectedRoute.component" />
-		</RouterVerticalTabBar>
+		</svws-ui-router-vertical-tab-bar>
 	</Story>
 </template>

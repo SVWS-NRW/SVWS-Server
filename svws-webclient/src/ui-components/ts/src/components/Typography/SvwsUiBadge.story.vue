@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiBadge from "./Badge.vue";
 </script>
 
 <template>

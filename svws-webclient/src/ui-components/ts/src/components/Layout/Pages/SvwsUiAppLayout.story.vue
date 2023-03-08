@@ -2,13 +2,6 @@
 	import {h, ref} from "vue";
 	import {hstEvent} from 'histoire/client';
 
-	import SvwsUiAppLayout from "./AppLayout.vue";
-	import SvwsUiSecondaryMenu from "../Sidebar/SecondaryMenu.vue";
-	import SvwsUiSidebarMenu from "../Sidebar/Menu.vue";
-	import SvwsUiSidebarMenuHeader from "../Sidebar/MenuHeader.vue";
-	import SvwsUiSidebarMenuItem from "../Sidebar/MenuItem.vue";
-	import SvwsUiHeader from "../Header.vue";
-
 	const routes = [
 		{ path: "/", name: "home", component: { render: () => h("h1", "Home") }, meta: { text: "Home" } },
 		{ path: "/about", name: "about", component: { render: () => h("h1", "About") }, meta: { text: "About" } },
@@ -33,21 +26,21 @@
 	<Story title="SVWS UI/Layout/Pages/App">
 		<svws-ui-app-layout>
 			<template #sidebar>
-				<svws-ui-sidebar-menu
+				<svws-ui-menu
 					class="print:hidden">
 					<template #header>
-						<svws-ui-sidebar-menu-header>
+						<svws-ui-menu-header>
 							A
-						</svws-ui-sidebar-menu-header>
+						</svws-ui-menu-header>
 					</template>
 					<template #default>
-						<svws-ui-sidebar-menu-item active>
+						<svws-ui-menu-item active>
 							<template #label>Menu Item Label</template>
 							<template #icon>
 								<i-ri-team-line />
 							</template>
-						</svws-ui-sidebar-menu-item>
-						<svws-ui-sidebar-menu-item>
+						</svws-ui-menu-item>
+						<svws-ui-menu-item>
 							<template #label>Menu Item Label</template>
 							<template #icon>
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.2em" height="1.2em">
@@ -60,10 +53,10 @@
 									</g>
 								</svg>
 							</template>
-						</svws-ui-sidebar-menu-item>
+						</svws-ui-menu-item>
 					</template>
 					<template #footer>
-						<svws-ui-sidebar-menu-item class="print:hidden"
+						<svws-ui-menu-item class="print:hidden"
 							subline="">
 							<template #label>
 								Abmelden
@@ -71,7 +64,7 @@
 							<template #icon>
 								<i-ri-logout-circle-line />
 							</template>
-						</svws-ui-sidebar-menu-item>
+						</svws-ui-menu-item>
 					</template>
 					<template #version>
 						v0.0.1
@@ -81,7 +74,7 @@
 						<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
 						<a href="#">Datenschutz</a>
 					</template>
-				</svws-ui-sidebar-menu>
+				</svws-ui-menu>
 			</template>
 			<template #secondaryMenu>
 				<svws-ui-secondary-menu>
@@ -109,11 +102,11 @@
 					<span>Title</span><br>
 					<span class="opacity-50">Subline</span>
 				</svws-ui-header>
-				<RouterTabBar :routes="routes" :hidden="hidden" v-model="selectedRoute">
+				<svws-ui-router-tab-bar :routes="routes" :hidden="hidden" v-model="selectedRoute">
 					<component :is="selectedRoute.component" />
-				</RouterTabBar>
+				</svws-ui-router-tab-bar>
 				<!--TODO bzw. WIP, das muss noch aufgeräumt werden-->
-				<Notification>Test</Notification>
+				<svws-ui-notification>Test</svws-ui-notification>
 				<!--<Notification type="success">Success!</Notification>
 				<Notification type="highlight">Hinweis</Notification>
 				<Notification type="error">

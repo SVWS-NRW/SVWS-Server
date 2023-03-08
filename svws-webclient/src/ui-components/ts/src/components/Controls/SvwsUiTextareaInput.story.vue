@@ -1,8 +1,6 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiTextareaInput from "../../components/Controls/TextareaInput.vue";
-
 	const modelValue = ref("This is a filled textarea component");
 
 	function onInput(event: Event) {

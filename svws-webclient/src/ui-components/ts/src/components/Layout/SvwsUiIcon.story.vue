@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiIcon from "./Icon.vue";
 </script>
 
 <template>

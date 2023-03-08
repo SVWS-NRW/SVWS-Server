@@ -1,30 +1,30 @@
 <template>
 	<svws-ui-app-layout>
 		<template #sidebar>
-			<svws-ui-sidebar-menu>
+			<svws-ui-menu>
 				<template #header>
-					<svws-ui-sidebar-menu-header> {{ username }} </svws-ui-sidebar-menu-header>
+					<svws-ui-menu-header> {{ username }} </svws-ui-menu-header>
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
-						<svws-ui-sidebar-menu-item :active="is_active(item)" @click="setApp(item)">
+						<svws-ui-menu-item :active="is_active(item)" @click="setApp(item)">
 							<template #label> {{ item.text }} </template>
 							<template #icon> <s-app-icon :routename="item.name" /> </template>
-						</svws-ui-sidebar-menu-item>
+						</svws-ui-menu-item>
 					</template>
 				</template>
 				<template #footer>
-					<svws-ui-sidebar-menu-item subline="" @click="doLogout">
+					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
 						<template #icon> <i-ri-logout-circle-line /> </template>
-					</svws-ui-sidebar-menu-item>
+					</svws-ui-menu-item>
 				</template>
 				<template #version>{{ version }}</template>
 				<template #metaNavigation>
 					<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
 					<a href="#">Datenschutz</a>
 				</template>
-			</svws-ui-sidebar-menu>
+			</svws-ui-menu>
 		</template>
 		<template #secondaryMenu>
 			<router-view :key="app.name" name="liste" />

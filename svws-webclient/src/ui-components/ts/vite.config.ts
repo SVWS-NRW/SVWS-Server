@@ -5,8 +5,16 @@ import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Vue from "@vitejs/plugin-vue";
+import { HstVue } from '@histoire/plugin-vue'
 
 export default defineConfig({
+	histoire: {
+		setupFile: './src/histoire.setup.ts',
+		sandboxDarkClass: 'theme-dark',
+		plugins: [
+			HstVue(),
+		],
+	},
 	plugins: [
 		Vue({
 			reactivityTransform: true

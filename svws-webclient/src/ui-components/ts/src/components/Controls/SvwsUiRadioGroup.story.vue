@@ -1,9 +1,6 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiRadioGroup from "./SvwsUiRadioGroup.vue";
-	import SvwsUiRadioOption from "./SvwsUiRadioOption.vue";
-
 	function onInput(event: Event) {
 		hstEvent('input', event);
 	}

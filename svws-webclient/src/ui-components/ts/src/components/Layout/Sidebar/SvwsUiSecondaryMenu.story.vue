@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiSecondaryMenu from "./SecondaryMenu.vue";
 </script>
 
 <template>

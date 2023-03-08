@@ -1,12 +1,12 @@
 <template>
 	<Story title="SVWS UI/Layout/Notification">
 		<Variant title="Info">
-			<Notification type="info">
+			<svws-ui-notification type="info">
 				Info
-			</Notification>
+			</svws-ui-notification>
 		</Variant>
 		<Variant title="Error">
-			<Notification type="error">
+			<svws-ui-notification type="error">
 				<template #header>
 					Error
 				</template>
@@ -16,14 +16,17 @@
 					create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
 					@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
 				</template>
-			</Notification>
-			<div class="mb-1"></div>
-			<Notification type="error">
+			</svws-ui-notification>
+			<div class="mb-1" />
+			<svws-ui-notification type="error">
 				<p>Something went wrong.</p>
-			</Notification>
+			</svws-ui-notification>
 		</Variant>
 		<Variant title="Success">
-			<Notification type="success">Success!</Notification>
+			<svws-ui-notification type="success">Success!</svws-ui-notification>
 		</Variant>
 	</Story>
 </template>
+
+<script setup lang="ts">
+</script>

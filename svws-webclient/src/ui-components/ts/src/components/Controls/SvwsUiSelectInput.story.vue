@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiSelectInput from "./SelectInput.vue";
 
 	const selected = ref("option1");
 </script>

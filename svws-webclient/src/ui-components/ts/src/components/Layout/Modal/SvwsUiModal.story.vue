@@ -2,11 +2,6 @@
 	import { ref } from 'vue';
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiModal from "./Modal.vue";
-	import SvwsUiRadioGroup from "../../Controls/RadioGroup.vue";
-	import SvwsUiRadioOption from "../../Controls/RadioOption.vue";
-	import SvwsUiButton from "../../Controls/Button.vue";
-
 	const modal = ref<any>(null);
 	const modalDanger = ref<any>(null);
 

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiDropdownWithAction from "./DropdownWithAction.vue";
-	import SvwsUiDropdownItem from "./DropdownItem.vue";
-	import SvwsUiButton from "./Button.vue";
-
 	function onClick(event: Event) {
 		hstEvent('click', event);
 	}

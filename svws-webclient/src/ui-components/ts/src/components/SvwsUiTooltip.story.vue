@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiTooltip from "./Tooltip.vue";
 </script>
 
 <template>

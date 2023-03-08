@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import { type PropType, type ComputedRef } from "vue";
-	import { genId } from "../../../utils";
-	import TextInput from "../SvwsUiTextInput.vue";
+	import { genId } from "../../utils";
+	import TextInput from "./SvwsUiTextInput.vue";
 
 	type Item = Record<string, any>;
 

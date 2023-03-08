@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import { logEvent } from "histoire/client";
 	import {reactive, ref} from "vue";
-	import type { DataTableItem, DataTableSortingOrder } from "./types";
+	import type { DataTableColumnSource, DataTableItem, DataTableSortingOrder } from "./types";
 
 	const data = ref([
 		{
@@ -136,37 +136,36 @@
 	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
 		<Variant title="All Features">
 			<section style="max-height: 50vh" class="flex flex-col">
-				<DataTable v-model="selectedRows3"
-						   :items="data"
-						   :columns="columns"
-						   selectable
-						   v-model:sort-by="sortBy"
-						   v-model:sorting-order="sortingOrder"
-						   v-model:clicked="clickedRow"
-						   clickable
-						   count
-						   :rowActions="actions"
-						   :rowExecute="execute"
-						   :filter="true"
-				>
+				<svws-ui-data-table v-model="selectedRows3"
+					:items="data"
+					:columns="columns"
+					selectable
+					v-model:sort-by="sortBy"
+					v-model:sorting-order="sortingOrder"
+					v-model:clicked="clickedRow"
+					clickable
+					count
+					:row-actions="actions"
+					:row-execute="execute"
+					:filter="true">
 					<template #search>
-						<svws-ui-text-input type="search" placeholder="Suche"/>
+						<svws-ui-text-input type="search" placeholder="Suche" />
 					</template>
 					<template #filter>
-						<ComboBox v-model="modelValueComboBox3"
-								  autocomplete
-								  title="Filter 1"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
-						<ComboBox v-model="modelValueComboBox4"
-								  autocomplete
-								  title="Filter 2"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
+						<svws-ui-multi-select v-model="modelValueComboBox3"
+							autocomplete
+							title="Filter 1"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+						<svws-ui-multi-select v-model="modelValueComboBox4"
+							autocomplete
+							title="Filter 2"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
 					</template>
 					<template #footerActions>
 						<svws-ui-button type="transparent">
@@ -179,71 +178,70 @@
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</svws-ui-button>
 					</template>
-				</DataTable>
+				</svws-ui-data-table>
 			</section>
 			<section class="mt-8">
-				<code><strong>Sort By:</strong> {{ sortBy }}</code><br/>
-				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br/>
-				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br/>
+				<code><strong>Sort By:</strong> {{ sortBy }}</code><br>
+				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br>
+				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br>
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
 		<Variant title="Complex Filters">
 			<section style="max-height: 50vh" class="flex flex-col complex-filters">
-				<DataTable v-model="selectedRows3"
-						   :items="data"
-						   :columns="columns"
-						   selectable
-						   v-model:sort-by="sortBy"
-						   v-model:sorting-order="sortingOrder"
-						   v-model:clicked="clickedRow"
-						   clickable
-						   count
-						   :rowActions="actions"
-						   :rowExecute="execute"
-						   :filter="true"
-						   :filter-open="true"
-				>
+				<svws-ui-data-table v-model="selectedRows3"
+					:items="data"
+					:columns="columns"
+					selectable
+					v-model:sort-by="sortBy"
+					v-model:sorting-order="sortingOrder"
+					v-model:clicked="clickedRow"
+					clickable
+					count
+					:row-actions="actions"
+					:row-execute="execute"
+					:filter="true"
+					:filter-open="true">
 					<template #search>
-						<svws-ui-text-input type="search" placeholder="Suche"/>
+						<svws-ui-text-input type="search" placeholder="Suche" />
 					</template>
 					<template #filter>
-						<ComboBox v-model="modelValueComboBox"
-								  title="Filter"
-								  :items="items"
-								  tags
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"
-								  class="col-span-full mb-3"/>
-						<ComboBox v-model="modelValueComboBox1"
-								  autocomplete
-								  title="Filter 1"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
-						<ComboBox v-model="modelValueComboBox2"
-								  autocomplete
-								  title="Filter 2 Long Title"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
-						<ComboBox v-model="modelValueComboBox3"
-								  autocomplete
-								  title="Filter 3"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
-						<ComboBox v-model="modelValueComboBox4"
-								  autocomplete
-								  title="Filter 4"
-								  :items="items"
-								  :item-text="item => item?.text || ''"
-								  :item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-								  @input="onInput"/>
+						<svws-ui-multi-select v-model="modelValueComboBox"
+							title="Filter"
+							:items="items"
+							tags
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput"
+							class="col-span-full mb-3" />
+						<svws-ui-multi-select v-model="modelValueComboBox1"
+							autocomplete
+							title="Filter 1"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+						<svws-ui-multi-select v-model="modelValueComboBox2"
+							autocomplete
+							title="Filter 2 Long Title"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+						<svws-ui-multi-select v-model="modelValueComboBox3"
+							autocomplete
+							title="Filter 3"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+						<svws-ui-multi-select v-model="modelValueComboBox4"
+							autocomplete
+							title="Filter 4"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
 					</template>
 					<template #footerActions>
 						<svws-ui-button type="transparent">
@@ -256,27 +254,27 @@
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</svws-ui-button>
 					</template>
-				</DataTable>
+				</svws-ui-data-table>
 			</section>
 			<section class="mt-8">
-				<code><strong>Sort By:</strong> {{ sortBy }}</code><br/>
-				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br/>
-				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br/>
+				<code><strong>Sort By:</strong> {{ sortBy }}</code><br>
+				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br>
+				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br>
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
 		<Variant title="Basic">
-			<DataTable :items="data" />
+			<svws-ui-data-table :items="data" />
 		</Variant>
 		<Variant title="Basic Iterable">
-			<DataTable :items="set" />
+			<svws-ui-data-table :items="set" />
 		</Variant>
 		<Variant title="Simple Row Click Selection">
-			<DataTable v-model:clicked="clickedRow" :items="data" clickable />
+			<svws-ui-data-table v-model:clicked="clickedRow" :items="data" clickable />
 			<p>Clicked row: {{ clickedRow }}</p>
 		</Variant>
 		<Variant title="Selection Multi">
-			<DataTable v-model="selectedRows2"
+			<svws-ui-data-table v-model="selectedRows2"
 				:items="data"
 				selectable
 				v-model:clicked="clickedRow"
@@ -285,7 +283,7 @@
 			<p>Selected Rows: {{ selectedRows2 }}</p>
 		</Variant>
 		<Variant title="Selection Multi Iterable">
-			<DataTable v-model="selectedRows2"
+			<svws-ui-data-table v-model="selectedRows2"
 				:items="set"
 				selectable
 				v-model:clicked="clickedRow"
@@ -294,7 +292,7 @@
 			<p>Selected Rows: {{ selectedRows2 }}</p>
 		</Variant>
 		<Variant title="Selection Multi reactive-Iterable">
-			<DataTable v-model="selectedRows2"
+			<svws-ui-data-table v-model="selectedRows2"
 				:items="setReactive"
 				selectable
 				v-model:clicked="clickedRow"
@@ -303,7 +301,7 @@
 			<p>Selected Rows: {{ selectedRows4 }}</p>
 		</Variant>
 		<Variant title="Selection Multi + Footer Action">
-			<DataTable v-model="selectedRows2" :items="data" selectable>
+			<svws-ui-data-table v-model="selectedRows2" :items="data" selectable>
 				<template #footerActions>
 					<button class="button button--icon">
 						<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
@@ -315,10 +313,10 @@
 						<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 					</button>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Custom everything">
-			<DataTable :items="data">
+			<svws-ui-data-table :items="data">
 				<template #header>
 					<tr class="data-table__tr">
 						<th class="data-table__th">Fruit</th>
@@ -337,10 +335,10 @@
 						<td class="data-table__td">{{ row.source.email }}</td>
 					</tr>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Sorting + Selection + Header Labels">
-			<DataTable v-model="selectedRows3"
+			<svws-ui-data-table v-model="selectedRows3"
 				:items="data"
 				:columns="columns"
 				selectable
@@ -350,7 +348,7 @@
 			<p>Sorting Order: {{ sortingOrder }}</p>
 		</Variant>
 		<Variant title="Basic + Custom Head Cell">
-			<DataTable :items="data">
+			<svws-ui-data-table :items="data">
 				<template #header(age)="{ column: { label } }">
 					<div class="flex">
 						<svws-ui-icon>
@@ -359,10 +357,10 @@
 						{{ label }} 🥳
 					</div>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Basic + Custom Cell Content">
-			<DataTable :items="data" :columns="columns">
+			<svws-ui-data-table :items="data" :columns="columns">
 				<template #cell(email)="{ value }">
 					{{ value }}
 				</template>
@@ -374,10 +372,10 @@
 						<i-ri-battery-fill />
 					</svws-ui-icon>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Basic + Inline Editing">
-			<DataTable :items="data" :columns="columns2">
+			<svws-ui-data-table :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
 					<svws-ui-text-input v-else v-model="rowData.name" />
@@ -415,10 +413,10 @@
 						</template>
 					</svws-ui-popover>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Headless Inputs">
-			<DataTable :items="data" :columns="columns2">
+			<svws-ui-data-table :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
 					<svws-ui-text-input v-else v-model="rowData.name" headless />
@@ -456,7 +454,7 @@
 						</template>
 					</svws-ui-popover>
 				</template>
-			</DataTable>
+			</svws-ui-data-table>
 		</Variant>
 	</Story>
 </template>

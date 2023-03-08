@@ -1,7 +1,5 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
-
-	import SvwsUiProgressBar from "./ProgressBar.vue";
 </script>
 
 <template>

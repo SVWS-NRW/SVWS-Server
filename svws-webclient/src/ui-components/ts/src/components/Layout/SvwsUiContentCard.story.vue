@@ -1,8 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiContentCard from "./ContentCard.vue";
-	import SvwsUiTextInput from "../Controls/TextInput.vue";
-	import SvwsUiButton from "../Controls/Button.vue";
-	import SvwsUiAvatar from "./Avatar.vue";
 </script>
 
 <template>

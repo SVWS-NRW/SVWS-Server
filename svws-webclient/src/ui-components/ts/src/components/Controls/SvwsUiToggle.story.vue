@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiToggle from "./Toggle.vue";
 
 	const value = ref(true);
 	const value2 = ref(false);

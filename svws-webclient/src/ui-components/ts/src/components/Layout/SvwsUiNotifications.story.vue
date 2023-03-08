@@ -1,8 +1,8 @@
 <template>
 	<Story title="SVWS UI/Layout/Notifications">
-		<AppLayout>
+		<svws-ui-app-layout>
 			<template #secondaryMenu>
-				<SecondaryMenu>
+				<svws-ui-secondary-menu>
 					<template #headline>Sidebar</template>
 					<template #content>
 						<div class="px-6">
@@ -13,38 +13,40 @@
 							</div>
 						</div>
 					</template>
-				</SecondaryMenu>
+				</svws-ui-secondary-menu>
 			</template>
 			<template #main>
 				<!--<div class="app-layout--main--placeholder">
 					<i-ri-archive-line/>
 				</div>-->
-				<Header>
+				<svws-ui-menu-header>
 					<span>Title</span>
-				</Header>
+				</svws-ui-menu-header>
 				<div class="px-9">
 					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam, atque
 					earum est, explicabo in iste laudantium maiores molestiae necessitatibus quaerat
 					quod ratione reprehenderit sapiente sit sunt temporibus tenetur voluptatum!
 				</div>
-				<Notifications>
-					<Notification type="error">
+				<svws-ui-notifications>
+					<svws-ui-notification type="error">
 						Error
-					</Notification>
-					<Notification>
+					</svws-ui-notification>
+					<svws-ui-notification>
 						Info
-					</Notification>
-					<Notification type="error">
+					</svws-ui-notification>
+					<svws-ui-notification type="error">
 						Error
-					</Notification>
-					<Notification type="error">
+					</svws-ui-notification>
+					<svws-ui-notification type="error">
 						Error
-					</Notification>
-				</Notifications>
+					</svws-ui-notification>
+				</svws-ui-notifications>
 			</template>
-		</AppLayout>
+		</svws-ui-app-layout>
 	</Story>
 </template>
+
+<script setup lang="ts"></script>
 
 <style>
 html {

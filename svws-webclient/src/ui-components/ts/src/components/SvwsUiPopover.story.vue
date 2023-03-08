@@ -1,6 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiPopover from "./Popover.vue";
-	import SvwsUiTooltip from "./Tooltip.vue";
 </script>
 
 <template>

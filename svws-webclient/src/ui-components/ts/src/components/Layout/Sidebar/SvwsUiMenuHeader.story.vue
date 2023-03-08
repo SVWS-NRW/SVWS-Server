@@ -10,6 +10,6 @@
 
 <template>
 	<Story title="SVWS UI/Layout/Sidebar/Menu Header">
-		<svws-ui-sidebar-menu-header @click="onClick">Menu Header</svws-ui-sidebar-menu-header>
+		<svws-ui-menu-header @click="onClick">Menu Header</svws-ui-menu-header>
 	</Story>
 </template>

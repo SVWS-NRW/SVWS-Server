@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiHeader from "./Header.vue";
 </script>
 
 <template>

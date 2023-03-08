@@ -1,8 +1,6 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiSidebarMenuItem from "./MenuItem.vue";
-
 	const propsVariants = {
 		Default: { icon: "team", active: false, collapsed: false, subline: "" },
 		Active: { icon: "team", active: true, collapsed: false, subline: "" },
@@ -20,7 +18,7 @@
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:title="title">
-			<svws-ui-sidebar-menu-item v-bind="props" @click="onClick">Menu Item</svws-ui-sidebar-menu-item>
+			<svws-ui-menu-item v-bind="props" @click="onClick">Menu Item</svws-ui-menu-item>
 		</Variant>
 	</Story>
 </template>

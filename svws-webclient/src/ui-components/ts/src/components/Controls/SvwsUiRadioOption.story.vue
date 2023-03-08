@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import SvwsUiRadioOption from "./RadioOption.vue";
 
 	const checked = ref('value');
 </script>
