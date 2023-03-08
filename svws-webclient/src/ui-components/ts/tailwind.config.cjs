@@ -4,7 +4,4 @@ const config = require("../../../tailwind.config-base.cjs");
 config.content = [
 	"./src/components/**/*.{vue,js,ts,jsx,tsx}"
 ]
-config.plugins = [
-	require('autoprefixer')
-]
 module.exports = config;

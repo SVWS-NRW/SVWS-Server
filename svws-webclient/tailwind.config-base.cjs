@@ -92,8 +92,8 @@ module.exports = {
 		},
 		extend: {
 			screens: {
-				"3xl": "1800px",
-				"4xl": "2000px"
+				"3xl": "1920px",
+				"4xl": "2160px"
 			},
 			colors: {
 				transparent: "transparent",
@@ -153,5 +153,7 @@ module.exports = {
 	variants: {
 		extend: {}
 	},
-	plugins: [],
+	plugins: [
+		require('autoprefixer')
+	],
 };

@@ -1,17 +1,8 @@
-module.exports = {
-	content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
-	theme: {
-		extend: {
-			screens: {
-				"3xl": "1920px",
-				"4xl": "2160px"
-			}
-		}
-	},
-	variants: {
-		extend: {}
-	},
-	plugins: [{
-		tailwindcss: {config: '../../webclient/tailwind.config-base.cjs'},
-	}]
-};
+const config = require("../../../tailwind.config-base.cjs");
+
+config.content = [
+	"./src/components/**/*.{vue,js,ts,jsx,tsx}",
+	"./index.html",
+	"../../ui-components/ts/src/**/*.{vue,js,ts,jsx,tsx}"
+]
+module.exports = config;

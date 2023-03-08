@@ -4,6 +4,7 @@ import Vue from "@vitejs/plugin-vue";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
+import AutoImport from "unplugin-auto-import/vite";
 import Markdown from "vite-plugin-md";
 import { resolve } from "path";
 import { ComponentResolver } from 'unplugin-vue-components/types';
@@ -24,12 +25,28 @@ export default defineConfig({
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		    types: [
 				{
-					"from": "@svws-nrw/svws-ui",
+					from: process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui',
 					names: SVWSComponentNames()
 				}
 			]
 		}),
-		Icons()
+		Icons(),
+		AutoImport({
+			dts: true,
+			eslintrc: {
+				enabled: true,
+			},
+			include: [
+				/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+				/\.vue$/, /\.vue\?vue/, // .vue
+			],
+			imports: [
+				"vue"
+			],
+			dirs: [
+				'./src/composables'
+			]
+		}),
 	],
 	resolve: {
 		// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,
@@ -38,7 +55,8 @@ export default defineConfig({
 		dedupe: ["vue"],
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
-			"~": resolve(__dirname, "src")
+			"~": resolve(__dirname, "src"),
+			'@svws-nrw/svws-ui': process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui'
 		}
 	},
 	build: {
@@ -65,7 +83,7 @@ function SvwsUiResolver (): ComponentResolver {
 			if (name.startsWith('SvwsUi') ) {
 				return {
 					name,
-					from: "@svws-nrw/svws-ui"
+					from: process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui'
 				}
 			}
 		}
