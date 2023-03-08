@@ -39,6 +39,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOProtokoll
 import de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUsers;
 import de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOFachklassen;
 import de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKFach;
+import de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherLernplattform;
 import de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerErzieherAdresse;
 import de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFach;
 import de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten;
@@ -71,11 +72,13 @@ import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerF
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerGrundschuldaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLeistungsdaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernabschnittsdaten;
+import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernplattform;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerPSFachBemerkungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbiturFach;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials;
+import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
@@ -120,9 +123,12 @@ public class DBMigrationManager {
 	// Eine Liste zum Zwischenspeichern der User-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
 	private HashSet<Long> userIDs = new HashSet<>();
 	
-	// Eine Liste zum Zwischenspeichern der Credetial-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
+	// Eine Liste zum Zwischenspeichern der Credential-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
 	private HashSet<Long> credentialsIDs = new HashSet<>();
 
+	// Eine Liste zum Zwischenspeichern der Credential-IDs bei Lernplattformen, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
+	private HashSet<Long> credentialsLernplattformenIDs = new HashSet<>();
+	
 	// Eine Liste zum Zwischenspeichern der Schüler-Lernabschnitts-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
 	private HashSet<Long> schuelerLernabschnittsIDs = new HashSet<>();
 	
@@ -807,6 +813,37 @@ public class DBMigrationManager {
 				entities.remove(i);
 			} else
 				credentialsIDs.add(daten.ID);
+		}
+		return true;
+	}			
+
+	
+	/**
+	 * Prüft die Entitäten der Tabelle "CredentialsLernplattformen".
+	 * Hierbei wird überprüft, ob die Kombination von Lernplattform-ID und Benutzername eindeutig ist.
+	 * Doppelte Vorkommen werden entfernt.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkCredentialsLernplattformen(List<MigrationDTOCredentialsLernplattformen> entities) {
+		HashSet<String> credsUC1 = new HashSet<>();
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOCredentialsLernplattformen daten = entities.get(i); 
+			if ((daten.Benutzername == null) || ("".equals(daten.Benutzername.trim()))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Benutzername darf nicht leer sein.");
+				entities.remove(i);
+				continue;
+			}
+			String uc1 = daten.LernplattformID + "-" + daten.Benutzername;
+			if (credsUC1.contains(uc1)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die Kombination auf Lernplattform und Benutzername ist nicht eindeutig (ID " + daten.ID + ").");
+				entities.remove(i);
+				continue;
+			}
+			credsUC1.add(uc1);
+			credentialsLernplattformenIDs.add(daten.ID);
 		}
 		return true;
 	}			
@@ -1500,6 +1537,11 @@ public class DBMigrationManager {
 			if ((daten.LehrerID == null) || (!lehrerIDs.contains(daten.LehrerID))) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
+				continue;
+			}
+			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
+				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				daten.CredentialID = null;
 			}
 		}
 		return true;
@@ -1507,6 +1549,55 @@ public class DBMigrationManager {
 	
 
 	
+	/**
+	 * Prüft die Entitäten der Tabelle "SchuelerLernplattform".
+	 * Hierbei wird geprüft, ob der zugeordnete Schüler mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkSchuelerLernplattform(List<MigrationDTOSchuelerLernplattform> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOSchuelerLernplattform daten = entities.get(i);
+			if ((daten.SchuelerID == null) || (!schuelerIDs.contains(daten.SchuelerID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+				continue;
+			}
+			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
+				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				daten.CredentialID = null;
+			}
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Prüft die Entitäten der Tabelle "ErzieherLernplattform".
+	 * Hierbei wird geprüft, ob der zugeordnete Erzieher mit der angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkErzieherLernplattform(List<MigrationDTOErzieherLernplattform> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOErzieherLernplattform daten = entities.get(i);
+			if ((daten.ErzieherID == null) || (!erzieherIDs.contains(daten.ErzieherID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Erzieher mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+				continue;
+			}
+			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
+				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				daten.CredentialID = null;
+			}
+		}
+		return true;
+	}
+
 	
 	/**
 	 * Prüft die Entitäten der Tabelle "Schueler". 
@@ -1796,6 +1887,8 @@ public class DBMigrationManager {
 			return checkSchuelerListeInhalt((List<MigrationDTOSchuelerIndividuelleGruppeSchueler>)entities);
 		if (firstObject instanceof MigrationDTOCredentials)
 			return checkCredentials((List<MigrationDTOCredentials>)entities);
+		if (firstObject instanceof MigrationDTOCredentialsLernplattformen)
+			return checkCredentialsLernplattformen((List<MigrationDTOCredentialsLernplattformen>)entities);
 		if (firstObject instanceof MigrationDTOFachklassen)
 			return checkEigeneSchuleFachklassen((List<MigrationDTOFachklassen>)entities);
 		if (firstObject instanceof MigrationDTOUsers)
@@ -1838,6 +1931,10 @@ public class DBMigrationManager {
 			return checkLehrerDatenschutz((List<MigrationDTOLehrerDatenschutz>)entities);
 		if (firstObject instanceof MigrationDTOLehrerLernplattform)
 			return checkLehrerLernplattform((List<MigrationDTOLehrerLernplattform>)entities);
+		if (firstObject instanceof MigrationDTOSchuelerLernplattform)
+			return checkSchuelerLernplattform((List<MigrationDTOSchuelerLernplattform>)entities);
+		if (firstObject instanceof MigrationDTOErzieherLernplattform)
+			return checkErzieherLernplattform((List<MigrationDTOErzieherLernplattform>)entities);
 		if (firstObject instanceof MigrationDTOLehrerFoto)
 			return checkLehrerFoto((List<MigrationDTOLehrerFoto>)entities);
 		if (firstObject instanceof MigrationDTOLehrerFunktion)
