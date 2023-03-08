@@ -458,31 +458,31 @@ public class ENMDatenManager {
 	/**
 	 * Fügt die Leistungsdaten mit den übergebenen Informationen zu den Leistungsdaten eines Schülers hinzu
 	 * 
-	 * @param schueler                    der Schüler
-	 * @param leistungID                  die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956)
-	 * @param lerngruppenID               die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. 
-	 *                                    (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
-	 * @param note                        das Kürzel der Note, die vergeben wurde
-	 * @param tsNote                      der Zeitstempe der letzten Änderung an der Note
-	 * @param istSchriftlich              gibt an, ob das Fach schriftlich belegt wurde oder nicht
-	 * @param abiturfach                  gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
-	 * @param fehlstundenGesamt           gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
-	 * @param tsFehlstundenGesamt         der Zeitstempel der letzten Änderung an den gesamten Fehlstunden, sofern 
-	 *                                    diese fachbezogen ermittel werden
-	 * @param fehlstundenUnentschuldigt   gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden
-	 * @param tsFehlstundenUnentschuldigt der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden, 
-	 *                                    sofern diese fachbezogen ermittel werden
-	 * @param fachbezogeneBemerkungen     die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen
-	 * @param tsFachbezogeneBemerkungen   der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen
-	 * @param neueZuweisungKursart        die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt 
-	 *                                    (z.B. E oder G-Kurs, z.B. an der Gesamtschule)
-	 * @param istGemahnt                  gibt an, ob ein Fach gemahnt wurde oder nicht
-	 * @param tsIstGemahnt                der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht 
-	 * @param mahndatum                   das Mahndatum bei erfolgter Mahnung
+	 * @param schueler                        der Schüler
+	 * @param leistungID                      die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956)
+	 * @param lerngruppenID                   die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. 
+	 *                                        (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
+	 * @param note                            das Kürzel der Note, die vergeben wurde
+	 * @param tsNote                          der Zeitstempe der letzten Änderung an der Note
+	 * @param istSchriftlich                  gibt an, ob das Fach schriftlich belegt wurde oder nicht
+	 * @param abiturfach                      gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
+	 * @param fehlstundenFach                 gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param tsFehlstundenFach               der Zeitstempel der letzten Änderung an den gesamten Fehlstunden, sofern 
+	 *                                    	  diese fachbezogen ermittel werden
+	 * @param fehlstundenUnentschuldigtFach   gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param tsFehlstundenUnentschuldigtFach der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden, 
+	 *                                        sofern diese fachbezogen ermittel werden
+	 * @param fachbezogeneBemerkungen         die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen
+	 * @param tsFachbezogeneBemerkungen       der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen
+	 * @param neueZuweisungKursart            die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt 
+	 *                                        (z.B. E oder G-Kurs, z.B. an der Gesamtschule)
+	 * @param istGemahnt                      gibt an, ob ein Fach gemahnt wurde oder nicht
+	 * @param tsIstGemahnt                    der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht 
+	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
 	 */
 	public void addSchuelerLeistungsdaten(@NotNull ENMSchueler schueler, long leistungID, long lerngruppenID, String note, 
-				String tsNote, boolean istSchriftlich, Integer abiturfach, Integer fehlstundenGesamt, String tsFehlstundenGesamt, 
-				Integer fehlstundenUnentschuldigt, String tsFehlstundenUnentschuldigt, String fachbezogeneBemerkungen,  
+				String tsNote, boolean istSchriftlich, Integer abiturfach, Integer fehlstundenFach, String tsFehlstundenFach, 
+				Integer fehlstundenUnentschuldigtFach, String tsFehlstundenUnentschuldigtFach, String fachbezogeneBemerkungen,  
 				String tsFachbezogeneBemerkungen, String neueZuweisungKursart, boolean istGemahnt, String tsIstGemahnt, String mahndatum) {
 		@NotNull ENMLeistung enmLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
@@ -491,10 +491,10 @@ public class ENMDatenManager {
 		enmLeistung.tsNote = tsNote;
 		enmLeistung.istSchriftlich = istSchriftlich;
 		enmLeistung.abiturfach = abiturfach;
-		enmLeistung.fehlstundenGesamt = fehlstundenGesamt;
-		enmLeistung.tsFehlstundenGesamt = tsFehlstundenGesamt; 
-		enmLeistung.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
-		enmLeistung.tsFehlstundenUnentschuldigt = tsFehlstundenUnentschuldigt; 
+		enmLeistung.fehlstundenFach = fehlstundenFach;
+		enmLeistung.tsFehlstundenFach = tsFehlstundenFach; 
+		enmLeistung.fehlstundenUnentschuldigtFach = fehlstundenUnentschuldigtFach;
+		enmLeistung.tsFehlstundenUnentschuldigtFach = tsFehlstundenUnentschuldigtFach; 
 		enmLeistung.fachbezogeneBemerkungen = fachbezogeneBemerkungen;
 		enmLeistung.tsFachbezogeneBemerkungen = tsFachbezogeneBemerkungen;
 		enmLeistung.neueZuweisungKursart = neueZuweisungKursart;

@@ -46,19 +46,19 @@ public class ENMLeistung {
 
     /** Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden. */
 	@Schema(required = false, description = "Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden.", example="23")
-    public Integer fehlstundenGesamt;
+    public Integer fehlstundenFach;
 	
 	/** Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
 	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example="2013-11-14 13:12:48.774")
-    public String tsFehlstundenGesamt;
+    public String tsFehlstundenFach;
 
     /** Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden. */
 	@Schema(required = false, description = "Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden.", example="0")
-    public Integer fehlstundenUnentschuldigt;
+    public Integer fehlstundenUnentschuldigtFach;
 
 	/** Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
 	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example="2013-11-14 13:12:48.774")
-    public String tsFehlstundenUnentschuldigt;
+    public String tsFehlstundenUnentschuldigtFach;
 
     /** Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen */
 	@Schema(required = false, description = "Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen.", example="Text zum Fach")
