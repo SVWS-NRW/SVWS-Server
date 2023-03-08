@@ -10,8 +10,11 @@
 				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
 
 			<div class="input-wrapper-3-cols">
-				<div> TODO: Klassenlehrer / Tutor </div>
-				<div> TODO: Stellvertretender Klassenlehrer / Tutor </div>
+				<div>
+					Klassenlehrer:
+					<div v-for="kl in klassenlehrer" :key="kl.id"> {{ getLehrerText(kl) }}  </div>
+				</div>
+				<svws-ui-multi-select title="Tutor" v-model="tutor" :items="props.mapLehrer.values()" :item-text="getLehrerText" autocomplete />
 				<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="props.mapLehrer.values()"
 					:item-text="getLehrerText" autocomplete />
 				<svws-ui-text-input placeholder="Maximale Fehlstunden" :model-value="data.fehlstundenGrenzwert || undefined"
@@ -23,7 +26,7 @@
 			</div>
 
 			<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
-			<div> TODO: Prüfungsordnung </div>
+			<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="data.pruefungsOrdnung || undefined" />
 			<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => `${i.beschreibung}`" autocomplete />
 			<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
 
@@ -88,6 +91,11 @@
 		set: (value) => emit('patch', { sonderpaedagogeID: value === undefined ? null : value.id })
 	});
 
+	const tutor: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+		get: () => props.data.tutorID === null ? undefined : props.mapLehrer.get(props.data.tutorID),
+		set: (value) => emit('patch', { tutorID: value === undefined ? null : value.id })
+	});
+
 	const jahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get: () => props.mapJahrgaenge.get(props.data.jahrgangID),
 		set: (value) => {
@@ -102,6 +110,19 @@
 			if (value !== undefined)
 				emit('patch', { klassenID: value.id });
 		}
+	});
+
+	const klassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
+		const k = klasse.value;
+		if ((k === undefined) || (k.klassenLehrer === null))
+			return [];
+		const result: LehrerListeEintrag[] = [];
+		for (const lid of k.klassenLehrer) {
+			const l = props.mapLehrer.get(lid);
+			if (l !== undefined)
+				result.push(l);
+		}
+		return result;
 	});
 
 	const foerderschwerpunkt: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
