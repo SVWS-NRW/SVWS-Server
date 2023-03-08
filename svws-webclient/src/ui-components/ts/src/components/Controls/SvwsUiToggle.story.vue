@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+	import { ref } from 'vue';
 	const value = ref(true);
 	const value2 = ref(false);
 </script>

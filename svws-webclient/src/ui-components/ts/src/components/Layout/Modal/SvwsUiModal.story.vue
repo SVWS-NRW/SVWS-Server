@@ -1,12 +1,12 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { hstEvent } from 'histoire/client';
+	import { logEvent } from 'histoire/client';
 
 	const modal = ref<any>(null);
 	const modalDanger = ref<any>(null);
 
 	function onClick(event: Event) {
-		hstEvent('click', event);
+		logEvent('click', event);
 	}
 </script>
 

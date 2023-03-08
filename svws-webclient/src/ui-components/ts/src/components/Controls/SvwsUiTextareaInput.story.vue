@@ -1,10 +1,11 @@
 <script setup lang="ts">
-	import { hstEvent } from 'histoire/client';
+	import { logEvent } from 'histoire/client';
+	import { ref } from 'vue';
 
 	const modelValue = ref("This is a filled textarea component");
 
 	function onInput(event: Event) {
-		hstEvent('input', event);
+		logEvent('input', event);
 	}
 </script>
 

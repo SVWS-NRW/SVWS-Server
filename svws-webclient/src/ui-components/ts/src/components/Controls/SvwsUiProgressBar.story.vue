@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { hstEvent } from 'histoire/client';
+	import { logEvent } from 'histoire/client';
 </script>
 
 <template>

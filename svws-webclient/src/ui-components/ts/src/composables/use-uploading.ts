@@ -1,3 +1,5 @@
+import { getCurrentInstance, ref } from "vue";
+
 export default function useCapturing() {
 	const vm = getCurrentInstance();
 	// @ts-expect-error mis-alignment with @vue/composition-api

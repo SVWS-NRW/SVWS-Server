@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 	import { computed, onMounted, onUnmounted, onUpdated, ref, WritableComputedRef } from 'vue';
 	import { RouteRecordRaw } from "vue-router";
-	import { AuswahlChildData } from '~/types';
+	import { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
 		routes: RouteRecordRaw[] | AuswahlChildData[]

@@ -30,10 +30,6 @@ export default defineConfig({
 		// sonst gibt es Probleme, die evtl durch andere Build-Methoden korrigiert
 		// werden könn. Diese Methode funktioniert aber.
 		dedupe: ["vue"],
-		alias: {
-			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
-			"~": resolve(__dirname, "./src/components")
-		}
 	},
 	build: {
 		lib: {

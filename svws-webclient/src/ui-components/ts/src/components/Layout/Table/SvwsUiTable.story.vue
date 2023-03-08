@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { hstEvent } from 'histoire/client';
+	import { logEvent } from 'histoire/client';
 	import { ref } from 'vue';
 	import { type DataTableItem } from './types';
 
@@ -76,7 +76,7 @@
 	}
 
 	function execute(action: string, row: DataTableItem) {
-		hstEvent(action, row);
+		logEvent(action, row);
 
 		if (action === 'edit') {
 			row.isEditing = !row.isEditing;

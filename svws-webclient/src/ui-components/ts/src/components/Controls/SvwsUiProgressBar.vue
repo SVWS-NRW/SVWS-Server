@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { Size } from '~/types';
+	import { Size } from '../../types';
 
 	const {
 		size = 'normal',

@@ -4,9 +4,7 @@
 		"rootDir": ".",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {
-			"~/*": ["src/*"]
-		},
+		"paths": {},
 		"types": [
 			"vite/client",
 			"vue/ref-macros"
@@ -18,6 +16,5 @@
 		"src/**/*",
 		"src/**/*.vue",
 		"components.d.ts",
-		"auto-imports.d.ts"
 	]
 }

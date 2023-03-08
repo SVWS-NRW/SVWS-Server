@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 	import { computed, ComputedRef } from 'vue';
 	import { RouteRecordRaw } from "vue-router";
-	import { AuswahlChildData } from '~/types';
+	import { AuswahlChildData } from '../../types';
 
 	const emit = defineEmits<{
 		(e: 'select', value: RouteRecordRaw | AuswahlChildData) : void

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+	import { computed } from 'vue';
+
 	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined;
 

@@ -1,16 +1,12 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { hstEvent } from 'histoire/client';
-
-	import SvwsUiSidebarMenu from "./Menu.vue";
-	import SvwsUiSidebarMenuHeader from "./MenuHeader.vue";
-	import SvwsUiSidebarMenuItem from "./MenuItem.vue";
+	import { logEvent } from 'histoire/client';
 
 	const isCollapsed = ref(false);
 
 	function onToggle(event: Event) {
 		isCollapsed.value = !isCollapsed.value;
-		hstEvent("toggle", event);
+		logEvent("toggle", event);
 	}
 </script>
 

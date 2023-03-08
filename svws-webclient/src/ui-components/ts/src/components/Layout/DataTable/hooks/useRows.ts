@@ -1,4 +1,4 @@
-import { Ref, computed } from 'vue'
+import { Ref, computed, toRaw } from 'vue'
 
 import type {
 	DataTableColumnInternal,

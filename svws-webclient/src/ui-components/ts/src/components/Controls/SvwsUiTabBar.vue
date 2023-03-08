@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { TabGroup, TabList, TabPanels } from '@headlessui/vue';
+	import { ref, computed, onMounted, onUnmounted, onUpdated } from 'vue';
 
 	const {
 		modelValue = 0,

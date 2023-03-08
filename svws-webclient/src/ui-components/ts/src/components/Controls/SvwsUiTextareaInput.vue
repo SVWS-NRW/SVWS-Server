@@ -1,4 +1,6 @@
 <script setup lang="ts">
+	import { ref, computed, onMounted, watch } from 'vue';
+
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
 	const props = withDefaults(defineProps<{

@@ -1,6 +1,7 @@
 import getKeys from "../utils/get-keys";
 import capitalizeFirstLetter from "../utils/capitalize-first-letter";
 import type { DataTableColumn, DataTableItem } from "../types";
+import { computed } from "vue";
 
 export const buildTableColumn = (
 	source: DataTableColumn | string

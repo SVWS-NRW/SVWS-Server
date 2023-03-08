@@ -1,4 +1,5 @@
 <script setup lang="ts">
+	import { ref, onMounted, watch } from "vue";
 	import useColumns from "./features/use-columns";
 	import type { DataTableItem, DataTableColumn } from "./types";
 

@@ -1,4 +1,6 @@
 <script setup lang='ts'>
+	import { computed, ref, onMounted } from 'vue';
+
 	type Option = {
 		index: string;
 		label: string;

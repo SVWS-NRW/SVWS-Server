@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang='ts'>
-	import {TransitionRoot, TransitionChild} from "@headlessui/vue";
 	import {ref} from "vue";
 
 	const {

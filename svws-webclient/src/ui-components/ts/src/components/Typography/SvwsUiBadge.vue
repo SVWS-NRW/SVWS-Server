@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { Size, Type } from '~/types';
+	import { Size, Type } from '../../types';
 
 	const {
 		type = 'light',

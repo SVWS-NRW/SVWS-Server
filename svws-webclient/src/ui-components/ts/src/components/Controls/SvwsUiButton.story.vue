@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { hstEvent } from 'histoire/client';
+	import { logEvent } from 'histoire/client';
 
 	const propsVariants = {
 		Primary: { type: "primary" },
@@ -12,7 +12,7 @@
 	} as const;
 
 	function onClick(event: Event) {
-		hstEvent('Click', event);
+		logEvent('Click', event);
 	}
 </script>
 

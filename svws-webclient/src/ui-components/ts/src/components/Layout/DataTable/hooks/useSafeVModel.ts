@@ -1,3 +1,5 @@
+import { getCurrentInstance, ref, computed } from "vue";
+
 export default function useSafeVModel<P extends object, F, K extends keyof P>(props: P, fallbackValue: F, key?: K) {
 	const instance = getCurrentInstance();
 	const emit = instance?.emit;
