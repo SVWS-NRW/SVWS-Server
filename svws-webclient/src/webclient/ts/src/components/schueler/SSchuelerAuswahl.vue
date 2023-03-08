@@ -10,7 +10,7 @@
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count filter :filter-open="true">
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"/>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse" />
 				</template>
 				<template #filter>
 					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full mb-3" />
@@ -28,7 +28,7 @@
 					</svws-ui-button>
 				</template>
 				<template #cell(idKlasse)="{ value }">
-					{{ mapKlassen.get(value)?.kuerzel }}
+					{{ value === null ? "--" : mapKlassen.get(value)?.kuerzel }}
 				</template>
 				<template #footerActions>
 					<button class="button button--icon" @click="addLine()">
