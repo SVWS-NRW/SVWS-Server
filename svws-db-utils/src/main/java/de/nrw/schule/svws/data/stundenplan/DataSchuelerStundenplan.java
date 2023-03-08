@@ -65,7 +65,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 				DTOSchuelerLernabschnittsdaten.class).setParameter("sja", stundenplan.Schuljahresabschnitts_ID)
 				.setParameter("sid", idSchueler).getResultList();
 		if ((lernabschnittsdaten == null) || (lernabschnittsdaten.size() != 1))
-			throw OperationError.NOT_FOUND.exception();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan()).build();
 		DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
 		Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
@@ -76,7 +76,6 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
 		if ((leistungsdaten == null) || (leistungsdaten.isEmpty()))
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan()).build();
-			//throw OperationError.NOT_FOUND.exception();
 
 		List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
 		Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream()
