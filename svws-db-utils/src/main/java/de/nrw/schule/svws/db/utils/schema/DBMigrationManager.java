@@ -155,6 +155,10 @@ public class DBMigrationManager {
 	
 	// Eine Liste zum Zwischenspeichern der Fachklassen-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private HashSet<Long> fachklassenIDs = new HashSet<>();
+
+	// Eine Liste zum Zwischenspeichern der Erzieher-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind. 
+	private HashSet<Long> erzieherIDs = new HashSet<>();
+
 		
 	
 	
@@ -1567,7 +1571,7 @@ public class DBMigrationManager {
 				daten.ErzHausNr = aufgeteilt[1];
 				daten.ErzHausNrZusatz = aufgeteilt[2];
 			}
-			schuelerIDs.add(daten.ID);
+			erzieherIDs.add(daten.ID);
 		}
 		return true;
 	}
@@ -1603,7 +1607,7 @@ public class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			MigrationDTOSchuelerGrundschuldaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID (" + daten.Schueler_ID + ") in der Datenbank.");
 				entities.remove(i);
 			}
 		}
