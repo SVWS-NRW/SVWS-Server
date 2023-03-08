@@ -70,6 +70,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerD
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoto;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerGrundschuldaten;
+import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerKAoADaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLeistungsdaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernplattform;
@@ -1707,6 +1708,37 @@ public class DBMigrationManager {
 	
 	
 	/**
+	 * Prüft die Entitäten der Tabelle "SchuelerKAoADaten". 
+	 * Hierbei wird geprüft, ob der Schüler in der DB existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkSchuelerKAoADaten(List<MigrationDTOSchuelerKAoADaten> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOSchuelerKAoADaten daten = entities.get(i);
+			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Schüler mit der angebenen ID (" + daten.Schueler_ID + ") in der Datenbank.");
+				entities.remove(i);
+				continue;
+			}
+			if ((daten.Abschnitt_ID == null) || (!schuelerLeistungsdatenIDs.contains(daten.Abschnitt_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Lernabschnitt mit der angebenen ID (" + daten.Abschnitt_ID + ") in der Datenbank.");
+				entities.remove(i);
+				continue;
+			}
+			if (daten.KategorieID == null) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Kategorie muss zugeordnet sein.");
+				entities.remove(i);
+				continue;
+			}
+		}
+		return true;
+	}
+	
+	
+	/**
 	 * Prüft die Entitäten der Tabelle "K_AllgAdresse". 
 	 * 
 	 * @param entities   die Entitäten
@@ -1947,6 +1979,8 @@ public class DBMigrationManager {
 			return checkSchuelerDatenschutz((List<MigrationDTOSchuelerDatenschutz>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerGrundschuldaten)
 			return checkSchuelerGSDaten((List<MigrationDTOSchuelerGrundschuldaten>)entities);
+		if (firstObject instanceof MigrationDTOSchuelerKAoADaten)
+			return checkSchuelerKAoADaten((List<MigrationDTOSchuelerKAoADaten>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerBKFach)
 			return checkSchuelerBKFaecher((List<MigrationDTOSchuelerBKFach>)entities);
 		if (firstObject instanceof MigrationDTOKatalogAllgemeineAdresse)
