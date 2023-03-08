@@ -103,7 +103,7 @@
 				<tr>
 					<th v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--head-content">
-							<Checkbox v-if="isMultiSelect && rows.length"
+							<svws-ui-checkbox v-if="isMultiSelect && rows.length"
 								:model-value="allRowsSelected ? allRowsSelected : (selection.length > 0 ? undefined : false)"
 								@update:model-value="proxyUpdate(toggleAllRows)" />
 						</span>
@@ -119,15 +119,15 @@
 								<div class="w-full">
 									<span class="column--title" :title="column.label">{{ column.label }}</span>
 									<span>
-										<Icon v-show="sortOrder === 0">
+										<svws-ui-icon v-show="sortOrder === 0">
 											<i-ri-arrow-up-down-line />
-										</Icon>
-										<Icon v-show="sortOrder === 1">
+										</svws-ui-icon>
+										<svws-ui-icon v-show="sortOrder === 1">
 											<i-ri-sort-asc />
-										</Icon>
-										<Icon v-show="sortOrder === -1">
+										</svws-ui-icon>
+										<svws-ui-icon v-show="sortOrder === -1">
 											<i-ri-sort-desc />
-										</Icon>
+										</svws-ui-icon>
 									</span>
 								</div>
 							</VTh>
@@ -149,7 +149,7 @@
 					@click="emit('update:modelValue', row)">
 					<td v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--cell-content">
-							<Checkbox :model-value="isSelected === row"
+							<svws-ui-checkbox :model-value="isSelected === row"
 								@click.stop
 								@update:model-value="proxyUpdate(toggle)" />
 						</span>
@@ -170,7 +170,7 @@
 		<template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows, rows }">
 			<tr class="table--footer">
 				<td class="table--footer-checkbox column--checkbox">
-					<Checkbox v-if="isMultiSelect && rows.length" :model-value="allRowsSelected ? allRowsSelected : (selection.length > 0 ? undefined : false)" @update:model-value="proxyUpdate(toggleAllRows)" />
+					<svws-ui-checkbox v-if="isMultiSelect && rows.length" :model-value="allRowsSelected ? allRowsSelected : (selection.length > 0 ? undefined : false)" @update:model-value="proxyUpdate(toggleAllRows)" />
 				</td>
 				<td class="table--footer--actions" :class="{ 'table--footer--has-actions': footer }">
 					<slot v-if="footer" name="footer" />

@@ -150,7 +150,7 @@
 						   :filter="true"
 				>
 					<template #search>
-						<TextInput type="search" placeholder="Suche"/>
+						<svws-ui-text-input type="search" placeholder="Suche"/>
 					</template>
 					<template #filter>
 						<ComboBox v-model="modelValueComboBox3"
@@ -169,15 +169,15 @@
 								  @input="onInput"/>
 					</template>
 					<template #footerActions>
-						<Button type="transparent">
+						<svws-ui-button type="transparent">
 							Button
-						</Button>
-						<Button type="trash">
+						</svws-ui-button>
+						<svws-ui-button type="trash">
 							Button
-						</Button>
-						<Button type="icon">
+						</svws-ui-button>
+						<svws-ui-button type="icon">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-						</Button>
+						</svws-ui-button>
 					</template>
 				</DataTable>
 			</section>
@@ -205,7 +205,7 @@
 						   :filter-open="true"
 				>
 					<template #search>
-						<TextInput type="search" placeholder="Suche"/>
+						<svws-ui-text-input type="search" placeholder="Suche"/>
 					</template>
 					<template #filter>
 						<ComboBox v-model="modelValueComboBox"
@@ -246,15 +246,15 @@
 								  @input="onInput"/>
 					</template>
 					<template #footerActions>
-						<Button type="transparent">
+						<svws-ui-button type="transparent">
 							Button
-						</Button>
-						<Button type="trash">
+						</svws-ui-button>
+						<svws-ui-button type="trash">
 							Button
-						</Button>
-						<Button type="icon">
+						</svws-ui-button>
+						<svws-ui-button type="icon">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-						</Button>
+						</svws-ui-button>
 					</template>
 				</DataTable>
 			</section>
@@ -353,9 +353,9 @@
 			<DataTable :items="data">
 				<template #header(age)="{ column: { label } }">
 					<div class="flex">
-						<Icon>
+						<svws-ui-icon>
 							<i-ri-alarm-line />
-						</Icon>
+						</svws-ui-icon>
 						{{ label }} 🥳
 					</div>
 				</template>
@@ -367,12 +367,12 @@
 					{{ value }}
 				</template>
 				<template #cell(age)="{ value }">
-					<Icon v-if="value < 18">
+					<svws-ui-icon v-if="value < 18">
 						<i-ri-battery-low-fill />
-					</Icon>
-					<Icon v-else>
+					</svws-ui-icon>
+					<svws-ui-icon v-else>
 						<i-ri-battery-fill />
-					</Icon>
+					</svws-ui-icon>
 				</template>
 			</DataTable>
 		</Variant>
@@ -380,40 +380,40 @@
 			<DataTable :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.name" />
+					<svws-ui-text-input v-else v-model="rowData.name" />
 				</template>
 				<template #cell(email)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.email" />
+					<svws-ui-text-input v-else v-model="rowData.email" />
 				</template>
 				<template #cell(age)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.name.age" />
+					<svws-ui-text-input v-else v-model="rowData.name.age" />
 				</template>
 				<template #cell(actions)="{ rowData }">
-					<Popover :hover="false"
+					<svws-ui-popover :hover="false"
 						placement="left-end"
 						:disable-click-away="false">
 						<template #trigger>
-							<Button class="action-button">
-								<Icon>
+							<svws-ui-button class="action-button">
+								<svws-ui-icon>
 									<i-ri-more-2-fill />
-								</Icon>
-							</Button>
+								</svws-ui-icon>
+							</svws-ui-button>
 						</template>
 						<template #content>
 							<div class="action-items">
 								<div v-for="action in actions"
 									:key="action.action">
-									<Button class="action-item"
+									<svws-ui-button class="action-item"
 										type="transparent"
 										@click="execute(action.action, rowData)">
 										{{ action.label }}
-									</Button>
+									</svws-ui-button>
 								</div>
 							</div>
 						</template>
-					</Popover>
+					</svws-ui-popover>
 				</template>
 			</DataTable>
 		</Variant>
@@ -421,40 +421,40 @@
 			<DataTable :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.name" headless />
+					<svws-ui-text-input v-else v-model="rowData.name" headless />
 				</template>
 				<template #cell(email)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.email" headless />
+					<svws-ui-text-input v-else v-model="rowData.email" headless />
 				</template>
 				<template #cell(age)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
-					<TextInput v-else v-model="rowData.age" headless />
+					<svws-ui-text-input v-else v-model="rowData.age" headless />
 				</template>
 				<template #cell(actions)="{ rowData }">
-					<Popover :hover="false"
+					<svws-ui-popover :hover="false"
 						placement="left-end"
 						:disable-click-away="false">
 						<template #trigger>
-							<Button class="action-button">
-								<Icon>
+							<svws-ui-button class="action-button">
+								<svws-ui-icon>
 									<i-ri-more-2-fill />
-								</Icon>
-							</Button>
+								</svws-ui-icon>
+							</svws-ui-button>
 						</template>
 						<template #content>
 							<div class="action-items">
 								<div v-for="action in actions"
 									:key="action.action">
-									<Button class="action-item"
+									<svws-ui-button class="action-item"
 										type="transparent"
 										@click="execute(action.action, rowData)">
 										{{ action.label }}
-									</Button>
+									</svws-ui-button>
 								</div>
 							</div>
 						</template>
-					</Popover>
+					</svws-ui-popover>
 				</template>
 			</DataTable>
 		</Variant>

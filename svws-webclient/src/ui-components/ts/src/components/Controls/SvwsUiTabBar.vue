@@ -84,9 +84,9 @@
 		<TabList as="div" class="tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="tab-bar--scroll-button-background tab-bar--scroll-button-background-left">
 				<button class="tab-bar--scroll-button" @click="scroll('left')">
-					<Icon>
+					<svws-ui-icon>
 						<i-ri-arrow-left-line />
-					</Icon>
+					</svws-ui-icon>
 				</button>
 			</div>
 			<div ref="contentEl" class="tab-bar">
@@ -95,9 +95,9 @@
 			<div v-if="!state.scrolledMax"
 				class="tab-bar--scroll-button-background tab-bar--scroll-button-background-right">
 				<button class="tab-bar--scroll-button" @click="scroll('right')">
-					<Icon>
+					<svws-ui-icon>
 						<i-ri-arrow-right-line />
-					</Icon>
+					</svws-ui-icon>
 				</button>
 			</div>
 		</TabList>

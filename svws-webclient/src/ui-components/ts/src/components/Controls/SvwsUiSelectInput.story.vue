@@ -7,7 +7,7 @@
 <template>
 	<Story title="SVWS UI/Controls/Select Input">
 		<Variant title="Default">
-			<svws-ui-select-input placeholder="Select Input Placeholder" :valid="true" :options="[
+			<svws-ui-select-input placeholder="Select Input Placeholder" :valid-input="true" :options="[
 				{
 					index: 'option1', label: 'Option 1'
 				}, { index: 'option2', label: 'Option 2' }, {
@@ -15,7 +15,7 @@
 				}]" />
 		</Variant>
 		<Variant title="Selected">
-			<svws-ui-select-input v-model="selected" placeholder="Select Input Placeholder" :valid="true" :options="[
+			<svws-ui-select-input v-model="selected" placeholder="Select Input Placeholder" :valid-input="true" :options="[
 				{
 					index: 'option1', label: 'Option 1'
 				}, { index: 'option2', label: 'Option 2' }, {

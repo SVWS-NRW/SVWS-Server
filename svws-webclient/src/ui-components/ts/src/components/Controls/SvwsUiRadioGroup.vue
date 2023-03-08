@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const {
-	row = false,
-} = defineProps<{
-	row?: boolean;
-}>();
+	const {
+		row = false,
+	} = defineProps<{
+		row?: boolean;
+	}>();
 </script>
 <template>
 	<div class="radio" :class="{'radio--row': row}">

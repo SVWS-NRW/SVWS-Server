@@ -1,18 +1,7 @@
 <script setup lang="ts">
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
-	const {
-		modelValue = "",
-		placeholder = "",
-		valid = true,
-		statistics = false,
-		required = false,
-		disabled = false,
-		resizeable = "both",
-		autoresize = false,
-		cols = 80,
-		rows = 3
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		modelValue?: string | null;
 		placeholder?: string;
 		valid?: boolean;
@@ -23,7 +12,18 @@
 		autoresize?: boolean;
 		cols?: number;
 		rows?: number;
-	}>();
+	}>(), {
+		modelValue: "",
+		placeholder: "",
+		valid: true,
+		statistics: false,
+		required: false,
+		disabled: false,
+		resizeable: "both",
+		autoresize: false,
+		cols: 80,
+		rows: 3
+	})
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", value: string): void;
@@ -36,31 +36,31 @@
 
 	const focused = ref(false);
 	const element = ref<HTMLElement | null>(null);
-	const tag = computed(() => (autoresize ? "span" : "textarea"));
+	const tag = computed(() => (props.autoresize ? "span" : "textarea"));
 	const bindings = computed(() => {
 		return {
-			required: required,
-			disabled: disabled,
+			required: props.required,
+			disabled: props.disabled,
 			onInput,
 			onFocus,
 			onBlur,
 			onClick,
 			onMousedown,
 			onKeydown,
-			...(autoresize
+			...(props.autoresize
 				? {
-					contenteditable: !disabled
+					contenteditable: !props.disabled
 				}
 				: {
-					rows,
-					cols,
-					value: modelValue,
+					rows: props.rows,
+					cols: props.cols,
+					value: props.modelValue,
 				}),
 		};
 	});
 
 	function onInput(event: Event) {
-		const field = autoresize ? "innerText" : "value";
+		const field = props.autoresize ? "innerText" : "value";
 		emit("update:modelValue", (event.target as HTMLInputElement)[field]);
 	}
 
@@ -93,15 +93,15 @@
 	}
 
 	onMounted(() => {
-		if (autoresize) {
-			updateContent(modelValue ?? "");
+		if (props.autoresize) {
+			updateContent(props.modelValue ?? "");
 		}
 	});
 
 	watch(
-		() => modelValue,
+		() => props.modelValue,
 		newval => {
-			if (autoresize) {
+			if (props.autoresize) {
 				const currentText = element.value?.innerText ?? "";
 				if (newval !== currentText) {
 					updateContent(newval ?? "");
@@ -116,7 +116,7 @@
 		:class="{
 			'textarea-input-focus': focused,
 			'textarea-input-filled': !!modelValue,
-			'textarea-input-invalid': !valid,
+			'textarea-input-invalid': valid === false,
 			'textarea-input-disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
@@ -131,14 +131,14 @@
 				'textarea-input--placeholder--required': required
 			}">
 			{{ placeholder }}
-			<Popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
-			<template #trigger>
-				<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
-			</template>
-			<template #content>
-				Relevant für die Statistik
-			</template>
-			</Popover>
+			<svws-ui-popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
+				<template #trigger>
+					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
+				</template>
+				<template #content>
+					Relevant für die Statistik
+				</template>
+			</svws-ui-popover>
 		</span>
 	</label>
 </template>

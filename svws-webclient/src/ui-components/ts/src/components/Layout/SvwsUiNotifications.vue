@@ -1,36 +1,36 @@
 <template>
-<!--	<Button type="icon" class="notifications&#45;&#45;trigger" @click="toggleModal">
+	<!--	<svws-ui-button type="icon" class="notifications&#45;&#45;trigger" @click="toggleModal">
 		<i-ri-notification-3-line/>
-	</Button>-->
+	</svws-ui-button>-->
 	<Dialog class="notifications--wrapper" :initial-focus="null" :open="true">
-		<slot/>
+		<slot />
 	</Dialog>
 </template>
 
 <script setup lang='ts'>
-import {Dialog} from "@headlessui/vue";
-import {ref} from "vue";
+	import {Dialog} from "@headlessui/vue";
+	import {ref} from "vue";
 
-const isOpen = ref(false);
+	const isOpen = ref(false);
 
-function closeModal() {
-	isOpen.value = false;
-}
+	function closeModal() {
+		isOpen.value = false;
+	}
 
-function openModal() {
-	isOpen.value = true;
-}
+	function openModal() {
+		isOpen.value = true;
+	}
 
-function toggleModal() {
-	isOpen.value = !isOpen.value;
-}
+	function toggleModal() {
+		isOpen.value = !isOpen.value;
+	}
 
-defineExpose({
-	openModal,
-	closeModal,
-	toggleModal,
-	isOpen
-});
+	defineExpose({
+		openModal,
+		closeModal,
+		toggleModal,
+		isOpen
+	});
 </script>
 
 <style lang="postcss">

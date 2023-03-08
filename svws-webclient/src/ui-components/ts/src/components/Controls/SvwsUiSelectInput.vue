@@ -88,10 +88,10 @@
 		<span v-if="placeholder" class="select-input--placeholder">{{
 			placeholder
 		}}</span>
-		<Icon class="dropdown--icon">
+		<svws-ui-icon class="dropdown--icon">
 			<i-ri-arrow-up-s-line v-if="focused" />
 			<i-ri-arrow-down-s-line v-else />
-		</Icon>
+		</svws-ui-icon>
 	</label>
 </template>
 

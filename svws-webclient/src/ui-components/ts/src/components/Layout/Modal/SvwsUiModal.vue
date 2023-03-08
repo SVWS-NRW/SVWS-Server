@@ -33,10 +33,9 @@
 	<TransitionRoot appear :show="isOpen">
 		<Dialog class="modal--wrapper" @close="closeModal">
 			<div class="modal--pageWrapper"
-				 :class="{
+				:class="{
 					'modal--pageWrapper--help': size === 'help',
-				 }"
-			>
+				}">
 				<TransitionChild as="template"
 					enter="ease-out duration-200"
 					enter-from="opacity-0"
@@ -44,9 +43,8 @@
 					leave="ease-in duration-100"
 					leave-from="opacity-100"
 					leave-to="opacity-0"
-				 	v-if="size !== 'help'">
-					<Overlay @click="closeModal"/>
-				</TransitionChild>
+					v-if="size !== 'help'" />
+				<div class="modal--overlay" />
 				<TransitionChild as="div"
 					enter="ease-out duration-200"
 					enter-from="opacity-0 scale-95"
@@ -67,11 +65,11 @@
 							<i-ri-alert-fill v-if="type === 'danger'" class="text-error" />
 							<slot name="modalTitle" />
 						</DialogTitle>
-						<Button type="icon" @click="closeModal">
-							<Icon class="modal--closeIcon">
+						<svws-ui-button type="icon" @click="closeModal">
+							<svws-ui-icon class="modal--closeIcon">
 								<i-ri-close-line />
-							</Icon>
-						</Button>
+							</svws-ui-icon>
+						</svws-ui-button>
 					</div>
 					<div class="modal--content-wrapper">
 						<DialogDescription v-if="$slots.modalDescription" class="modal--description">
@@ -190,5 +188,12 @@
 .modal--description + .modal--actions,
 .modal--content + .modal--actions{
 	@apply pt-0;
+}
+
+.modal--overlay {
+	@apply bg-dark-20 bg-opacity-80;
+	@apply absolute top-0 left-0;
+	@apply h-full w-full;
+	@apply z-50;
 }
 </style>

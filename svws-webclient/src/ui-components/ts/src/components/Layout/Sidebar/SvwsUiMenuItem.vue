@@ -25,9 +25,9 @@
 	}" href="#" @click.prevent="onClick"
 		:title="($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
-			<Icon>
+			<svws-ui-icon>
 				<slot name="icon" />
-			</Icon>
+			</svws-ui-icon>
 		</span>
 		<span class="sidebar--menu-item--label">
 			<slot name="label" />

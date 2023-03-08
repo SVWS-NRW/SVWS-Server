@@ -22,10 +22,10 @@
 			'dropdown-with-action--button--error':
 				type === 'error'
 		}" :disabled="dropdownDisabled">
-			<Icon class="dropdown-with-action--icon">
+			<svws-ui-icon class="dropdown-with-action--icon">
 				<i-ri-arrow-up-s-line v-if="open" />
 				<i-ri-arrow-down-s-line v-else />
-			</Icon>
+			</svws-ui-icon>
 		</menu-button>
 		<menu-items as="div" class="dropdown--items" :class="{
 			'dropdown--items--primary': type === 'primary',

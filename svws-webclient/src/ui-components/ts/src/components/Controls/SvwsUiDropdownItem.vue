@@ -10,9 +10,9 @@
 			:class="{
 				'dropdown--item--active': active === true
 			}">
-			<Icon class="dropdown--item--icon">
+			<svws-ui-icon class="dropdown--item--icon">
 				<slot name="icon" />
-			</Icon>
+			</svws-ui-icon>
 			<slot />
 		</button>
 	</menu-item-headless>

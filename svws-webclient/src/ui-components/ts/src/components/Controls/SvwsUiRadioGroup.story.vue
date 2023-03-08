@@ -1,8 +1,8 @@
 <script setup lang="ts">
 	import { hstEvent } from 'histoire/client';
 
-	import SvwsUiRadioGroup from "./RadioGroup.vue";
-	import SvwsUiRadioOption from "./RadioOption.vue";
+	import SvwsUiRadioGroup from "./SvwsUiRadioGroup.vue";
+	import SvwsUiRadioOption from "./SvwsUiRadioOption.vue";
 
 	function onInput(event: Event) {
 		hstEvent('input', event);
@@ -20,7 +20,7 @@
 			</svws-ui-radio-option>
 			<svws-ui-radio-option value="option4" name="radioInputExample" label="Option 4" @input="onInput" :icon="false" />
 		</svws-ui-radio-group>
-		<div class="h-8"></div>
+		<div class="h-8" />
 		<svws-ui-radio-group :row="true">
 			<svws-ui-radio-option value="option1" name="radioInputExample" label="Option 1" @input="onInput" />
 			<svws-ui-radio-option value="option2" name="radioInputExample" label="Option 2" disabled @input="onInput" />

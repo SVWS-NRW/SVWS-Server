@@ -30,9 +30,7 @@
 			<router-view :key="app.name" name="liste" />
 		</template>
 		<template #main>
-			<!-- <svws-ui-overlay v-if="showOverlay || initializing" />-->
 			<div class="page-wrapper" :class="app.name">
-				<!-- <svws-ui-overlay v-if="showOverlay || initializing" />-->
 				<main class="relative h-full">
 					<router-view :key="app.name" />
 				</main>

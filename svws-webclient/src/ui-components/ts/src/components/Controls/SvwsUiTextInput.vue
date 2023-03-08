@@ -7,20 +7,7 @@
 	import { InputType } from "../../types";
 	import { genId } from "../../utils";
 
-	const {
-		type = "text",
-		modelValue = "",
-		placeholder = "",
-		statistics = false,
-		valid = true,
-		disabled = false,
-		required = false,
-		readonly = false,
-		headless = false,
-		focus = false,
-		rounded = false,
-		url = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		type?: InputType;
 		modelValue?: string | number | null;
 		placeholder?: string;
@@ -33,7 +20,20 @@
 		focus?: boolean;
 		rounded?: boolean;
 		url?: boolean;
-	}>();
+	}>(), {
+		type: "text",
+		modelValue: "",
+		placeholder: "",
+		statistics: false,
+		valid: true,
+		disabled: false,
+		required: false,
+		readonly: false,
+		headless: false,
+		focus: false,
+		rounded: false,
+		url: false,
+	});
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", value: string | number): void;
@@ -44,31 +44,29 @@
 	const input = ref<null | HTMLElement>(null);
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
-			if (focus) el.focus();
+			if (props.focus) el.focus();
 		}
 	};
 
 	const emailValid = computed(() => {
-		if (type !== "email" || !modelValue) return true;
-		else {
+		if (props.type !== "email" || !props.modelValue)
+			return true;
+		else
 			return (
 				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(modelValue as string) ||
+				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(props.modelValue as string) ||
 				// eslint-disable-next-line no-useless-escape
 				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-					modelValue as string
+					props.modelValue as string
 				)
 			);
-		}
 	});
+
 	const hasIcon = computed(() => !!slots.default);
 
-	const hasContent = ref(!!modelValue);
-	watch(
-		() => modelValue,
-		value => {
-			hasContent.value = !!value;
-		}
+	const hasContent = ref(!!props.modelValue);
+	watch(() => props.modelValue,
+		value => { hasContent.value = !!value; }
 	);
 	function onInput(event: Event) {
 		hasContent.value = (event.target as HTMLInputElement)?.value.trim() != "";
@@ -86,7 +84,7 @@
 	<label class="text-input-component"
 		:class="{
 			'text-input-filled': hasContent,
-			'text-input-invalid': !valid || !emailValid,
+			'text-input-invalid': (valid === false) || (emailValid === false),
 			'text-input-disabled': disabled,
 			'text-input-readonly': readonly,
 			'text-input--icon': hasIcon,
@@ -120,21 +118,21 @@
 				'text-input--placeholder--prefix': url
 			}">
 			{{ placeholder }}
-			<Popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
+			<svws-ui-popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
 				<template #trigger>
 					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
 				</template>
 				<template #content>
 					Relevant für die Statistik
 				</template>
-			</Popover>
+			</svws-ui-popover>
 		</span>
-		<Icon v-if="type !== 'date' && hasIcon">
+		<svws-ui-icon v-if="type !== 'date' && hasIcon">
 			<slot />
-		</Icon>
-		<Icon v-else-if="type === 'date'" class="text-input--calendar-icon">
+		</svws-ui-icon>
+		<svws-ui-icon v-else-if="type === 'date'" class="text-input--calendar-icon">
 			<i-ri-calendar-line />
-		</Icon>
+		</svws-ui-icon>
 	</label>
 </template>
 
@@ -390,8 +388,6 @@
 			}
 		}
 	}
-</style>
-<style lang="postcss">
 	.text-input--inline {
 		@apply cursor-text underline decoration-dashed underline-offset-2;
 	}

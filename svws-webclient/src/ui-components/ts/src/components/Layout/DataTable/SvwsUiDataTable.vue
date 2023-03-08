@@ -2,17 +2,17 @@
 	<div v-if="$slots.search || filter">
 		<div class="data-table__filter" :class="{'data-table__filter-open': filter && filterOpen}">
 			<div v-if="filter && filterOpen" class="data-table__filter__fields">
-				<slot name="filter"/>
+				<slot name="filter" />
 			</div>
 			<div class="flex-grow" v-if="$slots.search">
-				<slot name="search"/>
+				<slot name="search" />
 			</div>
 			<div v-if="filter" class="ml-auto">
-				<Button type="transparent" @click="toggleFilterOpen" class="toggle--filter">
+				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="toggle--filter">
 					<span class="max-sm:hidden">Filter</span>
-					<i-ri-filter-line v-if="!filterOpen"/>
-					<i-ri-eye-off-line v-else/>
-				</Button>
+					<i-ri-filter-line v-if="!filterOpen" />
+					<i-ri-eye-off-line v-else />
+				</svws-ui-button>
 			</div>
 		</div>
 	</div>
@@ -27,7 +27,7 @@
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="checkbox" aria-label="Alle auswählen" v-if="selectable"
 						class="data-table__th data-table__thead__th data-table__cell-select">
-						<Checkbox class="data-table__cell-checkbox"
+						<svws-ui-checkbox class="data-table__cell-checkbox"
 							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>
@@ -81,7 +81,7 @@
 					<div role="cell" v-if="selectable"
 						class="data-table__td data-table__cell-select"
 						:key="`selectable__${row}_${index}`">
-						<Checkbox class="data-table__cell-checkbox"
+						<svws-ui-checkbox class="data-table__cell-checkbox"
 							:model-value="isRowSelected(row)"
 							@update:model-value="toggleRowSelection(row)"
 							@click.stop />
@@ -94,7 +94,7 @@
 							:name="`cell(${cell.column.key})`"
 							v-bind="cell" />
 						<slot v-else name="cell" v-bind="cell">
-							<TextInput v-if="row.isEditing"
+							<svws-ui-text-input v-if="row.isEditing"
 								v-model="cell.value"
 								:headless="true"
 								@update:value="(value: string) => cell.value = value"
@@ -105,7 +105,7 @@
 						</slot>
 					</div>
 					<div v-if="rowActions" class="data-table__row-actions data-table__td">
-						<Popover :hover="false"
+						<svws-ui-popover :hover="false"
 							:disable-click-away="false"
 							:show-delay="0"
 							placement="auto-start"
@@ -114,24 +114,24 @@
 							:context="true"
 							@click.stop>
 							<template #trigger>
-								<Button type="icon" size="small" class="cursor-context-menu">
-									<Icon>
+								<svws-ui-button type="icon" size="small" class="cursor-context-menu">
+									<svws-ui-icon>
 										<i-ri-more2-fill />
-									</Icon>
-								</Button>
+									</svws-ui-icon>
+								</svws-ui-button>
 							</template>
 							<template #content>
 								<div v-for="action in rowActions"
 									:key="action.action">
-									<Button class="action-item"
+									<svws-ui-button class="action-item"
 										type="transparent"
 										size="small"
 										@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
 										{{ action.label }}
-									</Button>
+									</svws-ui-button>
 								</div>
 							</template>
-						</Popover>
+						</svws-ui-popover>
 					</div>
 				</div>
 			</slot>
@@ -144,7 +144,7 @@
 				<div role="row" class="data-table__tr data-table__tfoot__tr">
 					<div role="checkbox" v-if="selectable"
 						class="data-table__th data-table__tfoot__th data-table__cell-select">
-						<Checkbox class="data-table__cell-checkbox"
+						<svws-ui-checkbox class="data-table__cell-checkbox"
 							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>

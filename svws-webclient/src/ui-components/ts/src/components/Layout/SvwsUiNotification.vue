@@ -1,25 +1,25 @@
 <template>
 	<div v-if="isOpen" class="notification inline-flex transform overflow-hidden"
-		 :class="{
-							'notification--info': type === 'info',
-							'notification--success': type === 'success',
-							'notification--error': type === 'error',
-							'notification--warning': type === 'warning',
-						 }">
+		:class="{
+			'notification--info': type === 'info',
+			'notification--success': type === 'success',
+			'notification--error': type === 'error',
+			'notification--warning': type === 'warning',
+		}">
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
-				<Icon v-if="icon || type" class="notification--icon">
+				<svws-ui-icon v-if="icon || type" class="notification--icon">
 					<i-ri-lock-2-line v-if="icon === 'login'" />
 					<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
 					<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
 					<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
 					<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
-				</Icon>
+				</svws-ui-icon>
 				<div class="notification--header" v-if="$slots.header">
-					<slot name="header"/>
+					<slot name="header" />
 				</div>
 				<div class="notification--text">
-					<slot/>
+					<slot />
 				</div>
 				<button v-if="$slots.stack" @click="toggleStackOpen" class="mt-4 inline-flex items-center text-sm-bold opacity-50 hover:opacity-100">
 					<span>Details</span>
@@ -31,45 +31,45 @@
 				</div>
 			</div>
 			<div class="absolute top-0 right-0 p-1">
-				<Button type="icon" @click="isOpen = false" tabindex="-1">
-					<Icon class="notification--closeIcon">
-						<i-ri-close-line/>
-					</Icon>
-				</Button>
+				<svws-ui-button type="icon" @click="isOpen = false" tabindex="-1">
+					<svws-ui-icon class="notification--closeIcon">
+						<i-ri-close-line />
+					</svws-ui-icon>
+				</svws-ui-button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang='ts'>
-import {TransitionRoot, TransitionChild} from "@headlessui/vue";
-import {ref} from "vue";
+	import {TransitionRoot, TransitionChild} from "@headlessui/vue";
+	import {ref} from "vue";
 
-const {
-	type = 'info',
-	icon = null,
-} = defineProps<{
-	type?: 'info' | 'error' | 'success' | 'warning';
-	icon?: 'error' | 'login' | 'success' | 'warning' | 'info';
-}>();
+	const {
+		type = 'info',
+		icon = null,
+	} = defineProps<{
+		type?: 'info' | 'error' | 'success' | 'warning';
+		icon?: 'error' | 'login' | 'success' | 'warning' | 'info';
+	}>();
 
-const isOpen = ref(true)
-const stackOpen = ref(false)
+	const isOpen = ref(true)
+	const stackOpen = ref(false)
 
-function setIsOpen(value: boolean) {
-	isOpen.value = value
-}
+	function setIsOpen(value: boolean) {
+		isOpen.value = value
+	}
 
-function toggleStackOpen () {
-	stackOpen.value = !stackOpen.value
-}
+	function toggleStackOpen () {
+		stackOpen.value = !stackOpen.value
+	}
 
-defineExpose({
-	setIsOpen,
-	toggleStackOpen,
-	isOpen,
-	stackOpen,
-});
+	defineExpose({
+		setIsOpen,
+		toggleStackOpen,
+		isOpen,
+		stackOpen,
+	});
 </script>
 
 <style lang="postcss">

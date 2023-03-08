@@ -44,7 +44,7 @@ export default defineConfig({
 				"vue"
 			],
 			dirs: [
-				'./src/composables'
+				'../../ui-components/ts/src/composables'
 			]
 		}),
 	],
@@ -113,7 +113,6 @@ function SVWSComponentNames() {
 		"SvwsUiHeader",
 		"SvwsUiIcon",
 		"SvwsUiModal",
-		"SvwsUiOverlay",
 		"SvwsUiAppLayout",
 		"SvwsUiSidebarMenu",
 		"SvwsUiSidebarMenuHeader",

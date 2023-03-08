@@ -37,10 +37,10 @@
 		'button--dropdown-action': dropdownAction === true,
 	}" :disabled="disabled" @click="onClick">
 		<slot v-if="type !== 'trash'" />
-		<Icon v-if="type === 'trash'" class="button--trash-icon">
+		<svws-ui-icon v-if="type === 'trash'" class="button--trash-icon">
 			<i-ri-delete-bin-line class="icon--line" />
 			<i-ri-delete-bin-fill class="icon--fill" />
-		</Icon>
+		</svws-ui-icon>
 	</button>
 </template>
 

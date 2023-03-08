@@ -10,7 +10,7 @@
 
 <template>
 	<Story title="SVWS UI/Controls/Tab Bar">
-		<Button @click="additionalTab = !additionalTab">Hide/Show additional Tab</Button>
+		<svws-ui-button @click="additionalTab = !additionalTab">Hide/Show additional Tab</svws-ui-button>
 		<TabBar v-model="selectedTab">
 			<template #tabs>
 				<TabButton>Tab A</TabButton>

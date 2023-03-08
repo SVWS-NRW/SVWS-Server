@@ -20,10 +20,10 @@
 			}"
 			:disabled="disabled">
 			<slot name="dropdownButton" />
-			<Icon class="dropdown--icon">
+			<svws-ui-icon class="dropdown--icon">
 				<i-ri-arrow-up-s-line v-if="open" />
 				<i-ri-arrow-down-s-line v-else />
-			</Icon>
+			</svws-ui-icon>
 		</MenuButton>
 		<MenuItems as="div"
 			class="dropdown--items"

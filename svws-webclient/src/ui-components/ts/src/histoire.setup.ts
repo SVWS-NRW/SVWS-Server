@@ -1,5 +1,5 @@
 import { defineSetupVue3 } from '@histoire/plugin-vue'
-import SvwsUiIcon from './components/Layout/Icon.vue';
+import SvwsUiIcon from './components/Layout/SvwsUiIcon.vue';
 import SmartTable from "vuejs-smart-table";
 
 import "./assets/styles/index.css";

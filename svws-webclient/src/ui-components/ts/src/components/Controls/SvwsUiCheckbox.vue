@@ -43,21 +43,21 @@
 			'checkbox--indeterminate': modelValue === undefined || modelValue === null
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<Icon v-if="modelValue === null" role="checkbox">
+		<svws-ui-icon v-if="modelValue === null" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
-		</Icon>
-		<Icon v-else-if="modelValue" role="checkbox">
+		</svws-ui-icon>
+		<svws-ui-icon v-else-if="modelValue" role="checkbox">
 			<i-ri-checkbox-line v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
-		</Icon>
-		<Icon v-else-if="!modelValue" role="checkbox">
+		</svws-ui-icon>
+		<svws-ui-icon v-else-if="!modelValue" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />
-		</Icon>
+		</svws-ui-icon>
 		<span class="checkbox--label" v-if="$slots.default || statistics">
 			<slot />
-			<Icon v-if="statistics" class="ml-1">
+			<svws-ui-icon v-if="statistics" class="ml-1">
 				<i-ri-bar-chart-fill />
-			</Icon>
+			</svws-ui-icon>
 		</span>
 	</label>
 </template>

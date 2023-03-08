@@ -92,12 +92,13 @@
 		}
 	});
 
+//text-gray-600
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 	td {
-		@apply whitespace-nowrap px-1 py-2 text-sm font-medium text-gray-600
+		@apply whitespace-nowrap px-1 py-2 text-sm font-medium
 	}
 
 </style>

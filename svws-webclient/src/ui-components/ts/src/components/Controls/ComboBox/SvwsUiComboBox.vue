@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import { type PropType, type ComputedRef } from "vue";
 	import { genId } from "../../../utils";
-	import TextInput from "../TextInput.vue";
+	import TextInput from "../SvwsUiTextInput.vue";
 
 	type Item = Record<string, any>;
 
@@ -255,7 +255,7 @@
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
-				<text-input ref="inputEl"
+				<svws-ui-text-input ref="inputEl"
 					:model-value="dynModelValue"
 					:readonly="!autocomplete || !showInput"
 					:placeholder="title"
@@ -292,9 +292,9 @@
 						<span class="tag-badge">
 							<span>{{ itemText(item) }}</span>
 							<span class="tag-remove ml-1" @click="removeTag(item)">
-								<Icon>
+								<svws-ui-icon>
 									<i-ri-close-line />
-								</Icon>
+								</svws-ui-icon>
 							</span>
 						</span>
 					</div>
@@ -305,15 +305,15 @@
 				</span>
 			</div>
 			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
-				<Icon>
+				<svws-ui-icon>
 					<i-ri-close-line />
-				</Icon>
+				</svws-ui-icon>
 			</div>
 			<div class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
-				<Icon>
+				<svws-ui-icon>
 					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5" />
 					<i-ri-arrow-down-s-line v-else class="pt-0.5" />
-				</Icon>
+				</svws-ui-icon>
 			</div>
 		</div>
 		<ul v-show="showList"
@@ -345,7 +345,7 @@
 	</div>
 </template>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .multiselect-input-component {
 	@apply flex;
 	@apply relative;

@@ -96,7 +96,7 @@
 		<Variant title="Simple Row Click Selection">
 			<Table v-model="clickedRow" :data="data" />
 			<br>
-			<Button @click="updateSelectedRow">Update Selection</Button>
+			<svws-ui-button @click="updateSelectedRow">Update Selection</svws-ui-button>
 			<br>
 			<strong>Clicked:</strong>
 			<div v-if="Object.keys(clickedRow).length === 0">No row clickd</div>
@@ -105,7 +105,7 @@
 		<Variant title="Selection Multi">
 			<Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
 			<br>
-			<Button @click="manipulateData">Manipulate data prop</Button>
+			<svws-ui-button @click="manipulateData">Manipulate data prop</svws-ui-button>
 			<br>
 			<strong>Selected:</strong>
 			<div v-if="selectedRows2.length === 0">No rows selected</div>
@@ -159,9 +159,9 @@
 			<Table :data="data">
 				<template #head-age="{ column }">
 					<th>
-						<Icon>
+						<svws-ui-icon>
 							<i-ri-alarm-line />
-						</Icon>
+						</svws-ui-icon>
 						{{ column.label }} 🥳
 					</th>
 				</template>
@@ -170,15 +170,15 @@
 		<Variant title="Basic + Custom Cell Content">
 			<Table :data="data" :columns="columns">
 				<template #cell-email="{ row }">
-					<TextInput v-model="row.email" />
+					<svws-ui-text-input v-model="row.email" />
 				</template>
 				<template #cell-age="{ row }">
-					<Icon v-if="row.age < 18">
+					<svws-ui-icon v-if="row.age < 18">
 						<i-ri-battery-low-fill />
-					</Icon>
-					<Icon v-else>
+					</svws-ui-icon>
+					<svws-ui-icon v-else>
 						<i-ri-battery-fill />
-					</Icon>
+					</svws-ui-icon>
 				</template>
 			</Table>
 		</Variant>
@@ -186,36 +186,36 @@
 			<Table :data="data" :columns="columns2">
 				<template #cell-name="{ row }">
 					<span v-if="!row.isEditing">{{ row.name }}</span>
-					<TextInput v-else v-model="row.name" />
+					<svws-ui-text-input v-else v-model="row.name" />
 				</template>
 				<template #cell-email="{ row }">
 					<span v-if="!row.isEditing">{{ row.email }}</span>
-					<TextInput v-else v-model="row.email" />
+					<svws-ui-text-input v-else v-model="row.email" />
 				</template>
 				<template #cell-age="{ row }">
 					<span v-if="!row.isEditing">{{ row.age }}</span>
-					<TextInput v-else v-model="row.age" />
+					<svws-ui-text-input v-else v-model="row.age" />
 				</template>
 				<template #cell-actions="{ row }">
-					<Popover :hover="false" placement="left-end" :disable-click-away="false">
+					<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
 						<template #trigger>
-							<Button class="action-button">
-								<Icon>
+							<svws-ui-button class="action-button">
+								<svws-ui-icon>
 									<i-ri-more-2-fill />
-								</Icon>
-							</Button>
+								</svws-ui-icon>
+							</svws-ui-button>
 						</template>
 						<template #content>
 							<div class="action-items">
 								<div v-for="action in actions" :key="action.action">
-									<Button class="action-item" type="transparent" @click="execute(action.action, row)">
+									<svws-ui-button class="action-item" type="transparent" @click="execute(action.action, row)">
 										{{ action.label
 										}}
-									</Button>
+									</svws-ui-button>
 								</div>
 							</div>
 						</template>
-					</Popover>
+					</svws-ui-popover>
 				</template>
 			</Table>
 		</Variant>
@@ -223,11 +223,11 @@
 			<Table :data="data" :columns="columns2">
 				<template #cell-name="{ row }">
 					<span v-if="!row.isEditing" class="table--cell-content">{{ row.name }}</span>
-					<TextInput v-else v-model="row.name" headless />
+					<svws-ui-text-input v-else v-model="row.name" headless />
 				</template>
 				<template #cell-email="{ row }">
 					<span v-if="!row.isEditing" class="table--cell-content">{{ row.email }}</span>
-					<TextInput v-else v-model="row.email" headless />
+					<svws-ui-text-input v-else v-model="row.email" headless />
 				</template>
 				<template #cell-age="{ row }">
 					<span v-if="!row.isEditing" class="table--cell-content">{{ row.age }}</span>
@@ -238,25 +238,25 @@
 					<Toggle v-else v-model="row.isActive" headless />
 				</template>
 				<template #cell-actions="{ row }">
-					<Popover :hover="false" placement="left-end" :disable-click-away="false">
+					<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
 						<template #trigger>
-							<Button class="action-button">
-								<Icon>
+							<svws-ui-button class="action-button">
+								<svws-ui-icon>
 									<i-ri-more-2-fill />
-								</Icon>
-							</Button>
+								</svws-ui-icon>
+							</svws-ui-button>
 						</template>
 						<template #content>
 							<div class="action-items">
 								<div v-for="action in actions" :key="action.action">
-									<Button class="action-item" type="transparent" @click="execute(action.action, row)">
+									<svws-ui-button class="action-item" type="transparent" @click="execute(action.action, row)">
 										{{ action.label
 										}}
-									</Button>
+									</svws-ui-button>
 								</div>
 							</div>
 						</template>
-					</Popover>
+					</svws-ui-popover>
 				</template>
 			</Table>
 		</Variant>

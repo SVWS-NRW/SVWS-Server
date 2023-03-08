@@ -17,7 +17,7 @@
 <template>
 	<a class="sidebar--menu--initials"
 		href="#" @click.prevent="onClick">
-		<Popover>
+		<svws-ui-popover>
 			<template #trigger>
 				<div class="sidebar--menu-header--icon">
 					A
@@ -28,7 +28,7 @@
 					Angemeldet als <slot />
 				</div>
 			</template>
-		</Popover>
+		</svws-ui-popover>
 	</a>
 </template>
 

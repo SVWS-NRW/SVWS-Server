@@ -3,17 +3,17 @@
 		<div class="router-tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
 				<button class="router-tab-bar--scroll-button" @click="scroll('left')">
-					<Icon> <i-ri-arrow-left-s-line /> </Icon>
+					<svws-ui-icon> <i-ri-arrow-left-s-line /> </svws-ui-icon>
 				</button>
 			</div>
 			<div ref="contentEl" class="router-tab-bar--content">
-				<router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
+				<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
 					:hidden="isHidden(index)" @select="select(route)" :key="index" />
 			</div>
 			<div v-if="!state.scrolledMax"
 				class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
 				<button class="router-tab-bar--scroll-button" @click="scroll('right')">
-					<Icon> <i-ri-arrow-right-s-line /> </Icon>
+					<svws-ui-icon> <i-ri-arrow-right-s-line /> </svws-ui-icon>
 				</button>
 			</div>
 		</div>

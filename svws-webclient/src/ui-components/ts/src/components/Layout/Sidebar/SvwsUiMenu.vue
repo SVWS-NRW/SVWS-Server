@@ -15,19 +15,19 @@
 					:title="isDarkTheme ? 'Zum Light Theme wechseln' : 'Zum Dark Theme wechseln (Work in progress!)'"
 					@click="toggleDarkTheme">
 					<template v-if="isDarkTheme">
-						<Icon><i-ri-sun-line /></Icon>
+						<svws-ui-icon><i-ri-sun-line /></svws-ui-icon>
 					</template>
 					<template v-if="!isDarkTheme">
-						<Icon><i-ri-moon-line /></Icon>
+						<svws-ui-icon><i-ri-moon-line /></svws-ui-icon>
 					</template>
 				</button>
 				<button>
-					<Icon><i-ri-font-size-2 /></Icon>
+					<svws-ui-icon><i-ri-font-size-2 /></svws-ui-icon>
 				</button>
 			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center mb-3">
 				<div class="opacity-25 text-sm mt-3 mb-1 text-center">Powered by SVWS NRW</div>
-				<Popover :hover="false">
+				<svws-ui-popover :hover="false">
 					<template #trigger>
 						<div class="inline-flex justify-center items-center cursor-pointer opacity-50 hover:opacity-100 focus:opacity-100">Info</div>
 					</template>
@@ -41,7 +41,7 @@
 							</div>
 						</div>
 					</template>
-				</Popover>
+				</svws-ui-popover>
 			</div>
 		</div>
 	</div>

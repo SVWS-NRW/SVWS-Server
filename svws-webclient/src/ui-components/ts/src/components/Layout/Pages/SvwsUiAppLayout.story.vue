@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {h, ref} from "vue";
+	import {h, ref} from "vue";
 	import {hstEvent} from 'histoire/client';
 
 	import SvwsUiAppLayout from "./AppLayout.vue";
@@ -8,12 +8,6 @@ import {h, ref} from "vue";
 	import SvwsUiSidebarMenuHeader from "../Sidebar/MenuHeader.vue";
 	import SvwsUiSidebarMenuItem from "../Sidebar/MenuItem.vue";
 	import SvwsUiHeader from "../Header.vue";
-	import SvwsUiOverlay from "../Modal/Overlay.vue";
-	import SvwsUiBadge from "../../Typography/Badge.vue";
-	import SvwsUiTabBar from "../../Controls/TabBar.vue";
-	import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
-	import SvwsUiNotification from "../Modal/Notification.vue";
-	import SvwsUiTabButton from "../../Controls/TabButton.vue";
 
 	const routes = [
 		{ path: "/", name: "home", component: { render: () => h("h1", "Home") }, meta: { text: "Home" } },
@@ -125,7 +119,7 @@ import {h, ref} from "vue";
 				<Notification type="error">
 					<div class="py-1 mb-1">Error Notification</div>
 					<div class="font-normal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab at commodi cumque, esse eum fugit hic inventore magnam, minus nihil possimus praesentium ratione repellendus soluta temporibus vitae voluptatibus. Aspernatur, itaque!</div>
-					<Button type="transparent" class="inline-flex items-center -ml-2 my-2"><i-ri-bug-line/>Fehler melden</Button>
+					<svws-ui-button type="transparent" class="inline-flex items-center -ml-2 my-2"><i-ri-bug-line/>Fehler melden</svws-ui-button>
 				</Notification>-->
 			</template>
 		</svws-ui-app-layout>
