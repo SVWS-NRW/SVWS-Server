@@ -38,6 +38,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuel
 import de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
 import de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUsers;
 import de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOFachklassen;
+import de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKFach;
 import de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerErzieherAdresse;
 import de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFach;
 import de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten;
@@ -1007,6 +1008,37 @@ public class DBMigrationManager {
 	
 	
 	/**
+	 * Prüft die Entitäten der Tabelle "SchuelerBKFaecher".
+	 * Hierbei wird geprüft, ob Abschnitt existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkSchuelerBKFaecher(List<MigrationDTOSchuelerBKFach> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOSchuelerBKFach daten = entities.get(i);
+			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+				continue;
+			}
+			if (!faecherIDs.contains(daten.Fach_ID)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Fächer-ID muss in der Tabelle EigeneSchule_Faecher definiert sein.");
+				entities.remove(i);
+				continue;
+			}
+			if (daten.ID < 0) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die ID darf nicht kleiner als 0 sein.");
+				entities.remove(i);
+				continue;
+			}
+		}
+		return true;
+	}
+	
+	
+	/**
 	 * Prüft die Entitäten der Tabelle "SchuelerFoerderempfehlungen".
 	 * Hierbei wird geprüft, ob Abschnitt existiert. Doppelte Einträge für den gleichen Abschnitt werden auch entfernt.
 	 * 
@@ -1814,6 +1846,8 @@ public class DBMigrationManager {
 			return checkSchuelerDatenschutz((List<MigrationDTOSchuelerDatenschutz>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerGrundschuldaten)
 			return checkSchuelerGSDaten((List<MigrationDTOSchuelerGrundschuldaten>)entities);
+		if (firstObject instanceof MigrationDTOSchuelerBKFach)
+			return checkSchuelerBKFaecher((List<MigrationDTOSchuelerBKFach>)entities);
 		if (firstObject instanceof MigrationDTOKatalogAllgemeineAdresse)
 			return checkKatalogAllgAdresse((List<MigrationDTOKatalogAllgemeineAdresse>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerAllgemeineAdresse)
