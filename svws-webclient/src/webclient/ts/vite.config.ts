@@ -31,22 +31,6 @@ export default defineConfig({
 			]
 		}),
 		Icons(),
-		AutoImport({
-			dts: true,
-			eslintrc: {
-				enabled: true,
-			},
-			include: [
-				/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-				/\.vue$/, /\.vue\?vue/, // .vue
-			],
-			imports: [
-				"vue"
-			],
-			dirs: [
-				'../../ui-components/ts/src/composables'
-			]
-		}),
 	],
 	resolve: {
 		// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,

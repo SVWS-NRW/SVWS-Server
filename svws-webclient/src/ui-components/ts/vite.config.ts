@@ -3,7 +3,6 @@ import { resolve } from "path";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
-import AutoImport from "unplugin-auto-import/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
 
@@ -25,22 +24,6 @@ export default defineConfig({
 			resolvers: [IconsResolver()]
 		}),
 		Icons(),
-		AutoImport({
-			dts: true,
-			eslintrc: {
-				enabled: true,
-			},
-			include: [
-				/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-				/\.vue$/, /\.vue\?vue/, // .vue
-			],
-			imports: [
-				"vue"
-			],
-			dirs: [
-				'./src/composables'
-			]
-		})
 	],
 	resolve: {
 		// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,
