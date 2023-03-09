@@ -5,51 +5,51 @@ plugins {
 }
 
 configurations {
-    ts_lib
-    ts_lib_test
-    ui_components
-	webclient
-	webclient_test
+	core
+	core_test
+	ui
+	client
+	client_test
 	package_json
 }
 
 dependencies {
-	ts_lib files(
-		'config/ts-lib/package-template.json'
+	core files(
+		'config/core/package-template.json'
 	)
-	ts_lib_test files(
-		'config/ts-lib/package-template.json', 
-		'config/ts-lib/vite.config-template.ts', 
-		'config/ts-lib/vitest.config-template.ts'
+	core_test files(
+		'config/core/package-template.json', 
+		'config/core/vite.config-template.ts', 
+		'config/core/vitest.config-template.ts'
 	)
-	ui_components files(
-		'config/ui-components/package-template.json', 
+	ui files(
+		'config/ui/package-template.json', 
 	)
-	webclient files(
-		'config/webclient/package-template.json', 
-		'config/webclient/version-template.ts',
+	client files(
+		'config/client/package-template.json', 
+		'config/client/version-template.ts',
 	)
-	webclient_test files(
-		'config/webclient/package-template.json', 
+	client_test files(
+		'config/client/package-template.json', 
 	)
 	package_json files(
 		'package.json',
-		'src/ts-lib/ts/package.json',
-		'src/ts-lib-test/ts/package.json',
-		'src/ui-components/ts/package.json',
-		'src/webclient/ts/package.json',
-		'src/webclient-test/ts/package.json'
+		'src/core/ts/package.json',
+		'src/core-test/ts/package.json',
+		'src/ui/package.json',
+		'src/client/ts/package.json',
+		'src/client-test/ts/package.json'
 	)
 }
 
 project.ext.npm_properties = [
 	npm_organization: "svws-nrw",
-	npm_packagename_ts_lib: "svws-core-ts",
-	npm_packagename_ui_components: "svws-ui",
-	npm_packagename_webclient: "svws-client",
-	npm_description_webclient: "SVWS-Server-Projekt: Webclient",
-	npm_description_ui_components: "SVWS-Server-Projekt: UI-Komponenten",
-	npm_description_ts_lib: "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients",
+	npm_packagename_core: "svws-core",
+	npm_packagename_ui: "svws-ui",
+	npm_packagename_client: "svws-client",
+	npm_description_client: "SVWS-Server-Projekt: client",
+	npm_description_ui: "SVWS-Server-Projekt: UI-Komponenten",
+	npm_description_core: "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients",
 	npm_author: "MSB NRW",
 	npm_license: "BSD-3-Clause",
 	ts_out: ".",
@@ -57,18 +57,18 @@ project.ext.npm_properties = [
 	version: "$project.version"
 ]
 
-task copyConfigTsLib(type: Copy) {
+task copyConfigCore(type: Copy) {
 	group "build"
-	from configurations.ts_lib
-	into "$projectDir/src/ts-lib/ts"
-	inputs.files configurations.ts_lib.files
+	from configurations.core
+	into "$projectDir/src/core/ts"
+	inputs.files configurations.core.files
 	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
 		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_ts_lib.toString(),
-		npm_description: project.ext.npm_properties.npm_description_ts_lib.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_core.toString(),
+		npm_description: project.ext.npm_properties.npm_description_core.toString(),
 		npm_author: project.ext.npm_properties.npm_author.toString(),
 		npm_license: project.ext.npm_properties.npm_license.toString(),
 		ts_out: project.ext.npm_properties.ts_out.toString(),
@@ -76,38 +76,38 @@ task copyConfigTsLib(type: Copy) {
 	])
 }
 
-task copyConfigTsLibTest(type: Copy) {
+task copyConfigCoreTest(type: Copy) {
 	group "build"
-	from configurations.ts_lib_test
-	into "$projectDir/src/ts-lib-test/ts"
-	inputs.files configurations.ts_lib_test.files
+	from configurations.core_test
+	into "$projectDir/src/core-test/ts"
+	inputs.files configurations.core_test.files
 	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
 		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_ts_lib.toString() + '-test',
-		npm_description: project.ext.npm_properties.npm_description_ts_lib.toString() + ' (Tests)',
+		npm_package: project.ext.npm_properties.npm_packagename_core.toString() + '-test',
+		npm_description: project.ext.npm_properties.npm_description_core.toString() + ' (Tests)',
 		npm_author: project.ext.npm_properties.npm_author,
 		npm_license: project.ext.npm_properties.npm_license,
 		ts_out: project.ext.npm_properties.ts_out,
-		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_ts_lib.toString(),
+		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_core.toString(),
 		version: project.ext.npm_properties.version.toString()
 	])
 }
 
-task copyConfigUiComponents(type: Copy) {
+task copyConfigUi(type: Copy) {
 	group "build"
-	from configurations.ui_components
-	into "$projectDir/src/ui-components/ts"
-	inputs.files configurations.ui_components.files
+	from configurations.ui
+	into "$projectDir/src/ui/ts"
+	inputs.files configurations.ui.files
 	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
 		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_ui_components.toString(),
-		npm_description: project.ext.npm_properties.npm_description_ui_components.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_ui.toString(),
+		npm_description: project.ext.npm_properties.npm_description_ui.toString(),
 		npm_author: project.ext.npm_properties.npm_author.toString(),
 		npm_license: project.ext.npm_properties.npm_license.toString(),
 		ts_out: project.ext.npm_properties.ts_out.toString(),
@@ -115,18 +115,18 @@ task copyConfigUiComponents(type: Copy) {
 	])
 }
 
-task copyConfigWebclient(type: Copy) {
+task copyConfigClient(type: Copy) {
 	group "build"
-	from configurations.webclient
-	into "$projectDir/src/webclient/ts"
-	inputs.files configurations.webclient.files
+	from configurations.client
+	into "$projectDir/src/client/ts"
+	inputs.files configurations.client.files
 	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
 		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_webclient.toString(),
-		npm_description: project.ext.npm_properties.npm_description_webclient.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_client.toString(),
+		npm_description: project.ext.npm_properties.npm_description_client.toString(),
 		npm_author: project.ext.npm_properties.npm_author.toString(),
 		npm_license: project.ext.npm_properties.npm_license.toString(),
 		ts_out: project.ext.npm_properties.ts_out.toString(),
@@ -134,29 +134,29 @@ task copyConfigWebclient(type: Copy) {
 	])
 }
 
-task copyConfigWebclientTest(type: Copy) {
+task copyConfigClientTest(type: Copy) {
 	group "build"
-	from configurations.webclient_test
-	into "$projectDir/src/webclient-test/ts"
-	inputs.files configurations.webclient_test.files
+	from configurations.client_test
+	into "$projectDir/src/client-test/ts"
+	inputs.files configurations.client_test.files
 	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
 		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_webclient.toString() + '-test',
-		npm_description: project.ext.npm_properties.npm_description_webclient.toString() + " (Tests)",
+		npm_package: project.ext.npm_properties.npm_packagename_client.toString() + '-test',
+		npm_description: project.ext.npm_properties.npm_description_client.toString() + " (Tests)",
 		npm_author: project.ext.npm_properties.npm_author.toString(),
 		npm_license: project.ext.npm_properties.npm_license.toString(),
 		ts_out: project.ext.npm_properties.ts_out.toString(),
-		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_webclient.toString(),
+		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_client.toString(),
 		version: project.ext.npm_properties.version.toString()
 	])
 }
 
 task copyConfig {
 	group "build"
-    dependsOn copyConfigTsLib, copyConfigTsLibTest, copyConfigUiComponents, copyConfigWebclient, copyConfigWebclientTest
+    dependsOn copyConfigCore, copyConfigCoreTest, copyConfigUi, copyConfigClient, copyConfigClientTest
 }
 
 task npmInstallDev(type: NpmInstall) {
@@ -164,66 +164,66 @@ task npmInstallDev(type: NpmInstall) {
     inputs.files configurations.package_json.files
 }
 
-task assembleTSLib(type: NpmRun) {
-	dependsOn npmInstallDev, ':svws-transpile:assemble', copyConfigTsLib
+task assembleCore(type: NpmRun) {
+	dependsOn npmInstallDev, ':svws-transpile:assemble', copyConfigCore
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir/src/ts-lib/ts").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
-	outputs.dir file("$projectDir/src/ts-lib/ts/dist")
-	workingDir = file("$projectDir/src/ts-lib/ts")
+	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
+	outputs.dir file("$projectDir/src/core/ts/dist")
+	workingDir = file("$projectDir/src/core/ts")
 }
 
-task assembleUIComponents(type: NpmRun) {
-	dependsOn npmInstallDev, copyConfigUiComponents
+task assembleUi(type: NpmRun) {
+	dependsOn npmInstallDev, copyConfigUi
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir/src/ui-components/ts").matching { exclude "dist", ".histoire" } 
-	outputs.dir file("$projectDir/src/ui-components/ts/dist")
-	workingDir = file("$projectDir/src/ui-components/ts")
+	inputs.files fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/src/ui/ts/dist")
+	workingDir = file("$projectDir/src/ui/ts")
 }
 
-task assembleUIComponentsHistoire(type: NpmRun) {
-	dependsOn assembleUIComponents
+task assembleUiHistoire(type: NpmRun) {
+	dependsOn assembleUi
 	group "build"
 	args = ['story:build']
-	inputs.files fileTree("$projectDir/src/ui-components/ts").matching { exclude "dist", ".histoire" } 
-	outputs.dir file("$projectDir/src/ui-components/ts/.histoire")
-	workingDir = file("$projectDir/src/ui-components/ts")
+	inputs.files fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/src/ui/ts/.histoire")
+	workingDir = file("$projectDir/src/ui/ts")
 }
 
-task assembleWebClient(type: NpmRun) {
-	dependsOn assembleTSLib
-	dependsOn assembleUIComponents
-	dependsOn assembleUIComponentsHistoire
-	dependsOn copyConfigWebclient
+task assembleClient(type: NpmRun) {
+	dependsOn assembleCore
+	dependsOn assembleUi
+	dependsOn assembleUiHistoire
+	dependsOn copyConfigClient
 	group "build"
 	args = ['build']
-	inputs.files file("$projectDir/src/webclient/ts")
+	inputs.files file("$projectDir/src/client/ts")
 	outputs.dir file("$buildDir/output")
-	workingDir = file("$projectDir/src/webclient/ts")
+	workingDir = file("$projectDir/src/client/ts")
 }
 
-assemble.dependsOn assembleTSLib
-assemble.dependsOn assembleUIComponents
-assemble.dependsOn assembleWebClient
+assemble.dependsOn assembleCore
+assemble.dependsOn assembleUi
+assemble.dependsOn assembleClient
 
-task testTSLib(type: NpmRun) {
+task testCore(type: NpmRun) {
 	group "svws"
-	dependsOn assembleTSLib, copyConfigTsLibTest
-	inputs.files file("$projectDir/src/ts-lib-test/ts/src")
-	outputs.dir file("$projectDir/build/coverage/ts-lib")
+	dependsOn assembleCore, copyConfigCoreTest
+	inputs.files file("$projectDir/src/core-test/ts/src")
+	outputs.dir file("$projectDir/build/coverage/core")
 	args = [ 'test:run' ]
-	workingDir = file("$projectDir/src/ts-lib-test/ts")
+	workingDir = file("$projectDir/src/core-test/ts")
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
-		mkdir file("$projectDir/build/coverage/ts-lib")
+		mkdir file("$projectDir/build/coverage/core")
 	}
 }
 
-test.dependsOn testTSLib
+test.dependsOn testCore
 
 task doZip(type: Zip) {
-	dependsOn assembleWebClient
+	dependsOn assembleClient
     archiveFileName = "SVWS-Client.zip"
     destinationDirectory = file("$buildDir")
     from "$buildDir/output"
@@ -232,21 +232,21 @@ task doZip(type: Zip) {
 assemble.dependsOn doZip
 
 
-task cleanTsLib(type: Delete) {
-	delete 'src/ts-lib/ts/dist'
+task cleanCore(type: Delete) {
+	delete 'src/core/ts/dist'
 }
 
-task cleanUIComponents(type: Delete) {
-	delete 'src/ui-components/ts/dist'
+task cleanUi(type: Delete) {
+	delete 'src/ui/ts/dist'
 }
 
-task cleanWebClient(type: Delete) {
-	delete 'src/webclient/ts/dist'
+task cleanClient(type: Delete) {
+	delete 'src/client/ts/dist'
 }
 
-clean.dependsOn cleanTsLib
-clean.dependsOn cleanUIComponents
-clean.dependsOn cleanWebClient
+clean.dependsOn cleanCore
+clean.dependsOn cleanUi
+clean.dependsOn cleanClient
 
 
 task copyNexusNpmrc(type: Copy) {
@@ -259,30 +259,30 @@ task copyNexusNpmrc(type: Copy) {
 	rename(".npmrc.nexus", ".npmrc")
 }
 
-task publishNexusTsLib(type: NpmPublish) {
+task publishNexusCore(type: NpmPublish) {
 	dependsOn copyNexusNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/ts-lib/ts")
+	workingDir = file("$projectDir/src/core/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
 	scopePublic = false
 }
 
-task publishNexusUiComponents(type: NpmPublish) {
+task publishNexusUi(type: NpmPublish) {
 	dependsOn copyNexusNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/ui-components/ts")
+	workingDir = file("$projectDir/src/ui/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
 	scopePublic = false
 }
 
-task publishNexusWebClient(type: NpmPublish) {
+task publishNexusClient(type: NpmPublish) {
 	dependsOn copyNexusNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/webclient/ts")
+	workingDir = file("$projectDir/src/client/ts")
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
@@ -290,7 +290,7 @@ task publishNexusWebClient(type: NpmPublish) {
 }
 
 task copyNpmNpmrc(type: Copy) {
-	dependsOn publishNexusTsLib, publishNexusUiComponents, publishNexusWebClient
+	dependsOn publishNexusCore, publishNexusUi, publishNexusClient
 	group "build"
 	from "$projectDir/.npmrc.npm"
 	into "$projectDir/"
@@ -299,42 +299,42 @@ task copyNpmNpmrc(type: Copy) {
 	rename(".npmrc.npm", ".npmrc")
 }
 
-task publishNpmTsLib(type: NpmPublish) {
+task publishNpmCore(type: NpmPublish) {
 	dependsOn copyNpmNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/ts-lib/ts")
+	workingDir = file("$projectDir/src/core/ts")
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
 	tokenOnly = true
 }
 
-task publishNpmUiComponents(type: NpmPublish) {
+task publishNpmUi(type: NpmPublish) {
 	dependsOn copyNpmNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/ui-components/ts")
+	workingDir = file("$projectDir/src/ui/ts")
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
 	tokenOnly = true
 }
 
-task publishNpmWebClient(type: NpmPublish) {
+task publishNpmClient(type: NpmPublish) {
 	dependsOn copyNpmNpmrc
 	group "publishing"
-	workingDir = file("$projectDir/src/webclient/ts")
+	workingDir = file("$projectDir/src/client/ts")
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
 	tokenOnly = true
 }
 
-publishReleaseAll.dependsOn publishNexusTsLib
-publishReleaseAll.dependsOn publishNexusUiComponents
-publishReleaseAll.dependsOn publishNexusWebClient
-publishReleaseAll.dependsOn publishNpmTsLib
-publishReleaseAll.dependsOn publishNpmUiComponents
-publishReleaseAll.dependsOn publishNpmWebClient
+publishReleaseAll.dependsOn publishNexusCore
+publishReleaseAll.dependsOn publishNexusUi
+publishReleaseAll.dependsOn publishNexusClient
+publishReleaseAll.dependsOn publishNpmCore
+publishReleaseAll.dependsOn publishNpmUi
+publishReleaseAll.dependsOn publishNpmClient
 
 
 publishing {

@@ -1,0 +1,21 @@
+import { RuntimeException } from "./RuntimeException";
+
+export class IndexOutOfBoundsException extends RuntimeException {
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return [
+            'java.lang.IndexOutOfBoundsException',
+            'java.lang.RuntimeException',
+            'java.lang.Exception',
+            'java.lang.Throwable',
+            'java.lang.Object',
+            'java.lang.Serializable',
+        ].includes(name);
+	}
+
+}
+
+
+export function cast_java_lang_IndexOutOfBoundsException(obj : unknown) : IndexOutOfBoundsException {
+	return obj as IndexOutOfBoundsException;
+}

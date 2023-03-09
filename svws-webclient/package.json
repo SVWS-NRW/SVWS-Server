@@ -1,11 +1,11 @@
 {
 	"name": "svws-monorepo",
 	"workspaces": [
-		"src/ts-lib/ts",
-		"src/ts-lib-test/ts",
-		"src/ui-components/ts",
-		"src/webclient/ts",
-		"src/webclient-test/ts"
+		"src/core/ts",
+		"src/core-test/ts",
+		"src/ui/ts",
+		"src/client/ts",
+		"src/client-test/ts"
 	],
 	"devDependencies": {
 		"@histoire/plugin-vue": "^0.15.4",
