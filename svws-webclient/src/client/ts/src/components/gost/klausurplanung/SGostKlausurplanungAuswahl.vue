@@ -1,17 +1,7 @@
 <template>
 	<div class="mt-10">
-		<svws-ui-table :model-value="halbjahr" @update:model-value="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
-			:data="GostHalbjahr.values()" class="mb-10">
-			<template #body="{rows}: {rows: GostHalbjahr[]}">
-				<template v-for="row in rows" :key="row.id">
-					<tr :class="{'vt-clicked': row.id === halbjahr.id}" @click="gotoHalbjahr(row)">
-						<td>
-							{{ row.kuerzel }}
-						</td>
-					</tr>
-				</template>
-			</template>
-		</svws-ui-table>
+		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
+			:items="GostHalbjahr.values()" class="mb-10" />
 	</div>
 	<div>
 		<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable :footer="false" />

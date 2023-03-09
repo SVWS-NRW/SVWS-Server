@@ -1,17 +1,11 @@
 <template>
 	<div v-if="visible" class="mt-10">
-		<svws-ui-table :model-value="halbjahr" @update:model-value="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
-			<template #body="{rows}: {rows: GostHalbjahr[]}">
-				<template v-for="row in rows" :key="row.id">
-					<tr :class="{'vt-clicked': row.id === halbjahr.id}" @click="select_hj(row)">
-						<td>
-							{{ row.kuerzel }}
-							<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
-						</td>
-					</tr>
-				</template>
+		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
+			<template #cell(kuerzel)="{ value }">
+				{{ value }}
+				<svws-ui-button type="secondary" v-if="allow_add_blockung(value)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 			</template>
-		</svws-ui-table>
+		</svws-ui-data-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
@@ -22,21 +16,26 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from "@svws-nrw/svws-core";
+	import { DataTableItem } from "@ui";
 	import { computed, ComputedRef } from 'vue';
 	import { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
 
-	const allow_add_blockung = (row: GostHalbjahr): boolean => {
+	const allow_add_blockung = (kuerzel: string): boolean => {
+		const row: GostHalbjahr | null = GostHalbjahr.fromKuerzel(kuerzel);
+		if (row === null)
+			return false;
 		const curr_hj = row.id === props.halbjahr.id;
 		if (!curr_hj || props.jahrgangsdaten === undefined)
 			return false;
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	async function select_hj(halbjahr: GostHalbjahr) {
-		await props.setHalbjahr(halbjahr);
+	async function select_hj(halbjahr: DataTableItem | null) {
+		if (halbjahr != null)
+			await props.setHalbjahr(halbjahr as unknown as GostHalbjahr);
 	}
 
 	async function blockung_hinzufuegen() {
