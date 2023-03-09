@@ -1,34 +1,32 @@
 <template>
 	<div v-if="visible">
-		<svws-ui-table :model-value="auswahlBlockung" @update:model-value="setAuswahlBlockung" :columns="[{ key: 'name', label: 'Blockung' }]" :data="rows" class="mt-10">
-			<template #body>
-				<template v-for="row in mapBlockungen.values()" :key="row.hashCode()">
-					<tr :class="{'vt-clicked': row === auswahlBlockung}" @click="select_blockungauswahl(row)">
-						<td v-if=" row === auswahlBlockung ">
-							<div class="flex">
-								<span v-if="(!edit_blockungsname && row === auswahlBlockung)" class="text-input--inline" @click.stop="edit_blockungsname = true">
-									{{ row.name }}
-								</span>
-								<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
-									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), row.id)" />
-							</div>
-							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
-							<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
-								<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
-								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
-							</div>
-						</td>
-						<td v-else>
-							<div class="flex justify-between w-full">
-								<span>{{ row.name }}</span>
-								<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
-							</div>
-						</td>
-					</tr>
-					<auswahl-blockung-api-status v-if="isPending(row.id)" :blockung="row" :api-status="apiStatus" />
-				</template>
+		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
+			<template #cell(kuerzel)="{ value, row }">
+				<div v-if="row as unknown as GostBlockungListeneintrag === auswahlBlockung">
+					<div class="flex">
+						<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
+							{{ value }}
+						</span>
+						<svws-ui-text-input v-else :model-value="value" style="width: 10rem" headless focus
+							@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), (row as unknown as GostBlockungListeneintrag).id)" />
+					</div>
+					<svws-ui-icon v-if="(row as unknown as GostBlockungListeneintrag).istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
+					<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
+						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
+						<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
+					</div>
+				</div>
+				<div v-else>
+					<div class="flex justify-between w-full">
+						<span>{{ value }}</span>
+						<svws-ui-icon v-if="(row as unknown as GostBlockungListeneintrag).istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
+					</div>
+				</div>
 			</template>
-		</svws-ui-table>
+			<template #footer>
+				<auswahl-blockung-api-status v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" :blockung="auswahlBlockung" :api-status="apiStatus" />
+			</template>
+		</svws-ui-data-table>
 		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
@@ -48,6 +46,7 @@
 <script setup lang="ts">
 
 	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
+	import { DataTableItem } from "@ui";
 	import { computed, ComputedRef, ref, Ref } from 'vue';
 	import { ApiStatus } from '~/components/ApiStatus';
 
@@ -86,9 +85,10 @@
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	async function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
-		if (!props.apiStatus.pending)
-			await props.setAuswahlBlockung(blockung);
+	async function select_blockungauswahl(blockung: DataTableItem | null) {
+		if ((blockung === null) || props.apiStatus.pending)
+			return;
+		await props.setAuswahlBlockung(blockung as unknown as GostBlockungListeneintrag);
 	}
 
 	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
