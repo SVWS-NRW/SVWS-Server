@@ -23,31 +23,23 @@ dependencies {
 		'config/ts-lib/vitest.config-template.ts'
 	)
 	ui_components files(
-        'config/ui-components/package-template.json', 
-        'config/postcss.config-template.js',
-        'config/vueconfig-template.json'
-    )
+		'config/ui-components/package-template.json', 
+	)
 	webclient files(
-        'config/webclient/package-template.json', 
-        'config/webclient/vite.config-template.ts',
-				'config/webclient/version-template.ts',
-        'config/postcss.config-template.js',
-        'config/vueconfig-template.json'
-    )
+		'config/webclient/package-template.json', 
+		'config/webclient/version-template.ts',
+	)
 	webclient_test files(
-        'config/webclient/package-template.json', 
-        'config/webclient/vite.config-template.ts',
-        'config/postcss.config-template.js',
-        'config/vueconfig-template.json'
-    )
-    package_json files(
-    	'package.json',
-    	'src/ts-lib/ts/package.json',
-    	'src/ts-lib-test/ts/package.json',
-    	'src/ui-components/ts/package.json',
-    	'src/webclient/ts/package.json',
-    	'src/webclient-test/ts/package.json'
-    )
+		'config/webclient/package-template.json', 
+	)
+	package_json files(
+		'package.json',
+		'src/ts-lib/ts/package.json',
+		'src/ts-lib-test/ts/package.json',
+		'src/ui-components/ts/package.json',
+		'src/webclient/ts/package.json',
+		'src/webclient-test/ts/package.json'
+	)
 }
 
 project.ext.npm_properties = [
