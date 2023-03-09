@@ -18,6 +18,7 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(250)
+		.setNotNull()
 		.setJavaComment("Eine kurze Bezeichnung des DSGVO-Merkmals");
 
 	/** Die Definition der Tabellenspalte Sichtbar */

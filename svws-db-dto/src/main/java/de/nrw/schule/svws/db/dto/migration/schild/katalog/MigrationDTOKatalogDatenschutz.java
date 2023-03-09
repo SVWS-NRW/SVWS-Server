@@ -103,15 +103,20 @@ public class MigrationDTOKatalogDatenschutz {
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOKatalogDatenschutz ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
+	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param Sichtbar   der Wert für das Attribut Sichtbar
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
-	public MigrationDTOKatalogDatenschutz(final Long ID, final Boolean Sichtbar, final Integer SchulnrEigner, final Integer Sortierung) {
+	public MigrationDTOKatalogDatenschutz(final Long ID, final String Bezeichnung, final Boolean Sichtbar, final Integer SchulnrEigner, final Integer Sortierung) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
+		if (Bezeichnung == null) { 
+			throw new NullPointerException("Bezeichnung must not be null");
+		}
+		this.Bezeichnung = Bezeichnung;
 		if (Sichtbar == null) { 
 			throw new NullPointerException("Sichtbar must not be null");
 		}

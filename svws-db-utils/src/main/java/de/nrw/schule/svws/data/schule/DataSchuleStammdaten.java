@@ -17,8 +17,11 @@ import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung;
@@ -356,6 +359,7 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         conn.persist(schulgliederung);
         
 		// TODO Grundlegende Fächer - je nach Schulform - einrichten
+        
 		// TODO Kursarten - je nach Schulform - einrichten
         
 		// Einrichten der Jahrgänge - je nach Schulform
@@ -381,12 +385,31 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         }
         conn.persistRange(dtoJahrgaenge, 0, dtoJahrgaenge.size() - 1);
 		
-		// TODO K_Addressart mit Betrieb füllen
+		// TODO K_Adressart mit Betrieb füllen
+        DTOKatalogAdressart addressart = new DTOKatalogAdressart(1L, "Betrieb");
+        addressart.Sortierung = 1;
+        conn.persist(addressart);
+        
 		// TODO K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
+        Vector<DTOBeschaeftigungsart> beschaeftigungsart = new Vector<>();
+        beschaeftigungsart.add(new DTOBeschaeftigungsart(1L, "Ausbildung"));
+        beschaeftigungsart.add(new DTOBeschaeftigungsart(2L, "Praktikum"));
+        for (int i = 0; i < beschaeftigungsart.size(); i++)
+          	beschaeftigungsart.get(i).Sortierung = i+1;
+        conn.persistRange(beschaeftigungsart, 0, 1);
+        
 		// TODO K_Datenschutz mit Verwendung Foto
+        DTOKatalogDatenschutz foto = new DTOKatalogDatenschutz(1L, "Verwendung Foto", true, 32000);
+        foto.Schluessel = "FOTO";
+        foto.PersonArt = "S";
+        conn.persist(foto);
+        
+        
 		// TODO K_EinschulgungsArt normal, vorzeitig und zurückgestellt
+        
 		// TODO K_Entlassgrund mit "Schulpflicht endet", "Normales Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
 		
+        // K_Erzieherart mit den Vorgaben von Schild-NRW befüllen
 		Vector<DTOErzieherart> erzieherarten = new Vector<>(); 
 		erzieherarten.add(new DTOErzieherart(1L, "Vater"));
         erzieherarten.add(new DTOErzieherart(2L, "Mutter"));
@@ -399,9 +422,12 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         conn.persistRange(erzieherarten, 0, 5);
         
         // TODO K-Ort aus der Default-Daten-Tabelle befüllen
+        
         // TODO K_Religion aus dem Core-Type befüllen
+        
         // TODO K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
         
+        // K_Schwerpunkte befüllen
         Vector<DTOSchwerpunkt> schwerpunkte = new Vector<>();
         schwerpunkte.add(new DTOSchwerpunkt(1L, "naturwissenschaftlich-technisch"));
         schwerpunkte.add(new DTOSchwerpunkt(2L, "sozialwissenschaftlich"));
@@ -411,10 +437,12 @@ public class DataSchuleStammdaten extends DataManager<Long> {
             schwerpunkte.get(i).Sortierung = i+1;
         conn.persistRange(schwerpunkte, 0, 3);
 		
+        //K_Sportbefreiung mit einem Beispiel befüllen
         DTOSportbefreiung sportbefreiung = new DTOSportbefreiung(1L, "temporär - Schwimmen");
         sportbefreiung.Sortierung = 1;
         conn.persist(sportbefreiung);
         
+        // K_Telefonart mit den Schild-NRW-Vorgaben befüllen
         Vector<DTOTelefonArt> telefonArten = new Vector<>();
         telefonArten.add(new DTOTelefonArt(1L, "Eltern"));
         telefonArten.add(new DTOTelefonArt(2L, "Mutter"));
@@ -429,6 +457,7 @@ public class DataSchuleStammdaten extends DataManager<Long> {
             telefonArten.get(i).Sortierung = i+1;
         conn.persistRange(telefonArten, 0, 8);
         
+        // K_Vermerkart mit einem Beispiel befüllen
         DTOVermerkArt vermerkArt = new DTOVermerkArt(1L, "allgemeine Bemerkung");
         vermerkArt.Sortierung = 1;
         conn.persist(vermerkArt);

@@ -19,6 +19,7 @@ public class Tabelle_K_BeschaeftigungsArt extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
+		.setNotNull()
 		.setJavaComment("Bezeichnung der Beschäftigungsart");
 
 	/** Die Definition der Tabellenspalte Sortierung */
