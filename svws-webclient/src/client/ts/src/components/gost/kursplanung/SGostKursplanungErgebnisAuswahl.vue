@@ -1,10 +1,9 @@
 <template>
 	<div v-if="visible">
-		<svws-ui-table :model-value="auswahlErgebnis" @update:model-value="setAuswahlErgebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10 z-20 relative"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
-			:footer="true">
-			<template #head-bewertung>
-				<th style="flex-grow: 10;">
+		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse" footer>
+			<template #header(bewertung)>
+				<div style="flex-grow: 10;">
 					<div class="z-50">
 						<svws-ui-popover placement="top">
 							<template #trigger>
@@ -28,9 +27,9 @@
 							</template>
 						</svws-ui-popover>
 					</div>
-				</th>
+				</div>
 			</template>
-			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
+			<template #cell(bewertung)="{ rowData: row }">
 				<span class="flex gap-1 cell--bewertung items-center text-sm">
 					<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
 					<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
@@ -60,7 +59,7 @@
 					</svws-ui-popover>
 				</div>
 			</template>
-		</svws-ui-table>
+		</svws-ui-data-table>
 	</div>
 </template>
 

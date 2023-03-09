@@ -13,7 +13,6 @@
 		fachlehrer: number,
 		mapLehrer: Map<number, LehrerListeEintrag>
 	}>();
-	console.log(props.fachlehrer, props.mapLehrer)
 	const id: ComputedRef<number | undefined> = computed(() => props.fachlehrer ?? undefined);
 	const lehrer: ComputedRef<LehrerListeEintrag | undefined> = computed(() => id.value === undefined ? undefined : props.mapLehrer.get(id.value));
 	const lehrer_kuerzel: ComputedRef<string | undefined> = computed(() => lehrer.value?.kuerzel ?? undefined);

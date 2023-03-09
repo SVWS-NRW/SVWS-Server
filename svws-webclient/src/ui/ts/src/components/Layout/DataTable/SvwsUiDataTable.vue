@@ -92,8 +92,8 @@
 						:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
 						<slot v-if="`cell(${cell.column.key})` in $slots"
 							:name="`cell(${cell.column.key})`"
-							v-bind="cell" :row="row" />
-						<slot v-else name="cell" v-bind="cell" :row="row">
+							v-bind="cell" />
+						<slot v-else name="cell" v-bind="cell">
 							<svws-ui-text-input v-if="row.isEditing"
 								v-model="cell.value"
 								:headless="true"

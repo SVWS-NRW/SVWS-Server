@@ -1,16 +1,16 @@
 <template>
 	<div v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
-			<template #cell(kuerzel)="{ value, row }">
-				<div v-if="row as unknown as GostBlockungListeneintrag === auswahlBlockung">
+			<template #cell(name)="{ rowData: row }">
+				<div v-if="row === auswahlBlockung">
 					<div class="flex">
 						<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
-							{{ value }}
+							{{ row.name }}
 						</span>
-						<svws-ui-text-input v-else :model-value="value" style="width: 10rem" headless focus
+						<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
 							@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), (row as unknown as GostBlockungListeneintrag).id)" />
 					</div>
-					<svws-ui-icon v-if="(row as unknown as GostBlockungListeneintrag).istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
+					<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 					<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
 						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
 						<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
@@ -18,8 +18,8 @@
 				</div>
 				<div v-else>
 					<div class="flex justify-between w-full">
-						<span>{{ value }}</span>
-						<svws-ui-icon v-if="(row as unknown as GostBlockungListeneintrag).istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
+						<span>{{ row.name }}</span>
+						<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 					</div>
 				</div>
 			</template>
