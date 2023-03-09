@@ -1,0 +1,337 @@
+.v-table {
+	@apply border-dark-20 flex w-full flex-col border-l bg-white;
+
+	tr {
+		@apply border-dark-20 relative flex w-full items-center border-b;
+	}
+
+	th,
+	td {
+		@apply border-dark-20 flex h-full w-0 grow items-center overflow-hidden border-r leading-none;
+		padding: 0.3rem 0.5rem 0.25rem;
+		line-height: 1.25;
+	}
+
+	td:not(.column--checkbox) {
+		@apply overflow-visible;
+
+		.table--cell-content {
+			@apply overflow-hidden;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			word-break: break-all;
+
+			&:hover {
+				@apply relative z-10 block overflow-visible whitespace-nowrap bg-white;
+			}
+		}
+	}
+
+	thead {
+		@apply sticky top-0 left-0 z-10 w-full bg-white;
+		@apply border-dark-20 shadow-black/25 text-sm-bold border-t uppercase shadow-sm;
+		position: -webkit-sticky;
+
+		tr {
+			@apply border-b-0;
+		}
+
+		th {
+			@apply text-left;
+			padding: 0.8rem 0.5rem;
+
+			> div,
+			> div > span {
+				@apply w-full;
+			}
+
+			&.v-th {
+				div {
+					@apply inline-flex flex-row items-center;
+					@apply cursor-pointer select-none;
+					@apply space-x-1;
+					@apply text-sm-bold;
+				}
+			}
+
+			&.column--key-id {
+				@apply tabular-nums;
+			}
+		}
+
+		.column--checkbox {
+			min-height: 2.6rem;
+		}
+	}
+
+	tbody {
+		tr {
+			@apply bg-white;
+			height: 1.72rem;
+
+			&:hover {
+				@apply cursor-pointer;
+			}
+
+			&:focus {
+				@apply outline-none;
+			}
+
+			&.vt-clicked {
+				@apply text-primary bg-primary bg-opacity-5 font-bold;
+			}
+
+			&:last-child {
+				@apply border-b-0;
+			}
+		}
+
+		td {
+			@apply justify-between;
+
+			.button {
+				@apply h-auto;
+				@apply rounded;
+				font-size: 0.833rem;
+				padding: 0.2em 0.6em;
+
+				&.button--secondary {
+					@apply border-dark border-opacity-50;
+				}
+			}
+
+			&.column--key-id {
+				@apply tabular-nums;
+			}
+		}
+
+		.text-input-component input {
+			@apply h-auto w-full border-0 p-0;
+		}
+	}
+
+	tfoot {
+		@apply sticky bottom-0 left-0 z-20 flex w-full bg-white;
+		@apply border-dark-20 border-t;
+		position: -webkit-sticky;
+		box-shadow: 0 -6px 12px -12px rgba(var(--color-black), 0.25);
+	}
+
+	.column--checkbox,
+	.table--footer-checkbox {
+		@apply flex items-center justify-center p-0;
+		flex-grow: 0.25;
+		min-width: 2rem;
+		max-width: 2rem;
+	}
+
+	.table--footer-checkbox {
+		@apply border-r-0;
+	}
+
+	tr.table--footer {
+		@apply flex justify-between;
+		@apply w-full;
+		min-height: 2rem;
+
+		@apply overflow-visible;
+	}
+
+	.table--footer--actions {
+		@apply flex flex-row items-center justify-end space-x-1 overflow-visible;
+
+		.button--icon {
+			@apply h-8 w-8 p-2;
+		}
+
+		.dropdown--button {
+			@apply border-0;
+		}
+	}
+
+	.table--footer--has-actions {
+		min-height: 2.7rem;
+	}
+}
+
+.column--title {
+	@apply overflow-hidden text-ellipsis;
+	max-width: calc(100% - 1.25rem);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	word-break: break-all;
+	min-width: 1.6rem;
+	line-height: 1.25;
+}
+
+.secondary-menu--content .v-table,
+.secondary-menu--content table 	{
+	@apply border-l-0;
+}
+
+.table--row-indent {
+	@apply pl-2;
+
+	&:before {
+		@apply bg-dark-20 block w-4;
+		content: "";
+		height: 1px;
+	}
+}
+
+.v-table--rows-white {
+	tr {
+		@apply bg-white;
+	}
+
+	.v-table--complex tr {
+		&.selected {
+			@apply bg-white bg-opacity-100;
+		}
+	}
+}
+
+.v-table--complex {
+	@apply w-full border-collapse;
+	--table-border-color: rgba(0, 0, 0, 0.25);
+	border-color: var(--table-border-color);
+
+	tr {
+		@apply border;
+		border-color: var(--table-border-color);
+
+		&.selected {
+			@apply text-primary bg-primary bg-opacity-5 font-bold;
+		}
+	}
+
+	th,
+	td {
+		@apply h-full whitespace-nowrap border px-2;
+		line-height: 1.25;
+		border-color: var(--table-border-color);
+	}
+
+	thead,
+	tfoot {
+		@apply sticky top-px left-0 z-10;
+		@apply shadow-black/25 text-sm-bold uppercase shadow bg-dark-20;
+		position: -webkit-sticky;
+
+		tr {
+			height: 1.72rem;
+
+			&:first-child {
+				box-shadow: 0 -1px 0 rgb(var(--color-dark-20)), inset -1px 0 rgb(var(--color-dark-20));
+			}
+		}
+
+		th,
+		td {
+			@apply bg-white;
+			@apply sticky top-0;
+			padding: 0.15rem 0.5rem 0.1rem;
+			background-clip: padding-box;
+
+			&.table--th-padding {
+				padding: .8rem .5rem;
+			}
+		}
+
+		th:not(.text-center):not(.text-right) {
+			@apply text-left;
+		}
+	}
+
+	tfoot {
+		@apply top-auto bottom-0;
+		box-shadow: 0 -8px 10px -8px rgba(var(--color-black), 0.2);
+
+		th, td {
+			@apply top-auto -bottom-px;
+		}
+	}
+
+	tbody {
+		tr {
+			@apply w-full;
+			height: 1.72rem;
+
+			&.row--kursdifferenz {
+				@apply hidden;
+			}
+
+			&:focus {
+				@apply outline-none;
+			}
+		}
+
+		td {
+			.button {
+				font-size: 0.833rem;
+				padding: 0.1em 0.7em;
+			}
+		}
+
+		.text-input-component input {
+			@apply h-auto w-full border-0 p-0;
+		}
+
+		input.text-input--headless {
+			@apply bg-transparent;
+		}
+
+		.cell--has-multiselect {
+			@apply p-0;
+
+			.multiselect-input-component {
+				@apply pl-2;
+			}
+		}
+
+		.multiselect-input-component .dropdown-icon {
+			@apply p-0;
+
+			.icon {
+				font-size: 1em;
+				padding-top: 0.2rem;
+				padding-bottom: 0.2rem;
+			}
+		}
+
+		.checkbox--headless {
+			@apply relative;
+			top: 0.1rem;
+		}
+
+		.multiselect--items-wrapper {
+			@apply mt-2 ml-2 text-left;
+			min-width: 8rem;
+		}
+
+		.multiselect-input-component .dropdown-icon:hover span.icon {
+			@apply rounded-none;
+		}
+	}
+}
+
+.cell--padding-sm {
+	@apply p-1 !important;
+}
+
+.-ml-4 {
+	.v-table--complex th, .v-table--complex thead th.table--th-padding, .v-table--complex td {
+		@apply pl-6;
+	}
+}
+
+/*.table--highlight-rows tr:hover,
+.table--highlight-rows tr:hover ~ tr:not(.blockung--kursdifferenz) {
+	filter: brightness(0.8) saturate(200%);
+}
+
+.table--highlight-rows tr:hover ~ tr.blockung--kursdifferenz ~ tr {
+	filter: none;
+}*/
