@@ -19,13 +19,17 @@
 	<div role="table" aria-label="Tabelle" class="data-table"
 		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions}"
 		v-bind="computedTableAttributes">
-		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
+		<div role="rowgroup"
+			aria-label="Tabellenkopf"
+			class="data-table__thead">
 			<slot name="header"
 				:all-rows-selected="allRowsSelected"
 				:toggle-all-rows="toggleBulkSelection"
 				:columns="columnsComputed">
 				<div role="row" class="data-table__tr data-table__thead__tr">
-					<div role="checkbox" aria-label="Alle auswählen" v-if="selectable"
+					<div role="checkbox"
+						aria-label="Alle auswählen"
+						v-if="selectable"
 						class="data-table__th data-table__thead__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
 							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
@@ -37,122 +41,196 @@
 						class="data-table__th data-table__thead__th"
 						:class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
 						@click.exact="column.sortable && toggleSorting(column)">
-						<div class="data-table__th-wrapper" :class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}" :title="column.label">
+						<div class="data-table__th-wrapper"
+							:class="{
+								'data-table__th-wrapper__sortable':
+									column.sortable,
+								'data-table__th-wrapper__sortable-column':
+									sortBy === column.name && sortingOrder,
+							}"
+							:title="column.label">
 							<span class="data-table__th-title">
 								<slot :name="`header(${column.key})`"
 									:column="column">
 									{{ column.label }}
 								</slot>
 							</span>
-							<span v-if="column.sortable" :role=" column.sortable ? 'button' : undefined"
+							<span v-if="column.sortable"
+								:role="column.sortable ? 'button' : undefined"
 								class="data-table__th-sorting"
 								:tabindex="column.sortable ? 0 : -1">
 								<span class="sorting-arrows"
-									:class="{'sorting-arrows__column': sortBy === column.name && sortingOrder}">
+									:class="{
+										'sorting-arrows__column':
+											sortBy === column.name &&
+											sortingOrder,
+									}">
 									<i-ri-arrow-up-down-line class="sorting-arrows__up"
-										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'asc'}" />
+										:class="{
+											'sorting-arrows__active':
+												sortBy === column.name &&
+												sortingOrder === 'asc',
+										}" />
 									<i-ri-arrow-up-down-line class="sorting-arrows__down"
-										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'desc'}" />
+										:class="{
+											'sorting-arrows__active':
+												sortBy === column.name &&
+												sortingOrder === 'desc',
+										}" />
 								</span>
 							</span>
 						</div>
 					</div>
-					<div v-if="rowActions" class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions" role="none" title="Aktionen">
+					<div v-if="rowActions"
+						class="data-table__th data-table__thead__th data-table__th__row-actions text-black/25"
+						role="none"
+						title="Aktionen">
 						<i-ri-settings3-line />
 					</div>
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Tabelleninhalt" class="data-table__tbody">
-			<slot name="body" :rows="sortedRows">
+		<div role="rowgroup"
+			aria-label="Tabelleninhalt"
+			class="data-table__tbody">
+			<slot name="body" :rows="rowsComputed">
 				<div role="row" v-if="showNoDataHtml" key="showNoDataHtml">
-					<div role="cell" class="no-data data-table__td data-table__tbody__td"
+					<div role="cell"
+						class="no-data data-table__td data-table__tbody__td"
 						:colspan="columnsComputed.length + (selectable ? 1 : 0)"
 						v-html="noDataHtml" />
 				</div>
-				<div role="row" v-for="(row, index) in sortedRows"
+				<svws-ui-drag-data class="drag-el"
+					v-for="(row, index) in rowsComputed"
 					:key="`table-row_${row}_${index}`"
-					class="data-table__tr data-table__tbody__tr"
-					:class="[
-						{ 'data-table__tr--selected': isRowSelected(row) },
-						{ 'data-table__tr--clicked': isRowClicked(row) },
-					]"
-					@click="toggleRowClick(row)">
-					<div role="cell" v-if="selectable"
-						class="data-table__td data-table__cell-select"
-						:key="`selectable__${row}_${index}`">
-						<svws-ui-checkbox class="data-table__cell-checkbox"
-							:model-value="isRowSelected(row)"
-							@update:model-value="toggleRowSelection(row)"
-							@click.stop />
-					</div>
-					<div role="cell" v-for="cell in row.cells"
-						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
-						class="data-table__td"
-						:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
-						<slot v-if="`cell(${cell.column.key})` in $slots"
-							:name="`cell(${cell.column.key})`"
-							v-bind="cell" />
-						<slot v-else name="cell" v-bind="cell">
-							<svws-ui-text-input v-if="row.isEditing"
-								v-model="cell.value"
-								:headless="true"
-								@update:value="(value: string) => cell.value = value"
-								@click.stop="setClickedRow(row) " />
-							<span v-else class="data-table__td-content" :title="cell.value">
-								{{ cell.value }}
-							</span>
-						</slot>
-					</div>
-					<div v-if="rowActions" class="data-table__row-actions data-table__td">
-						<svws-ui-popover :hover="false"
-							:disable-click-away="false"
-							:show-delay="0"
-							placement="auto-start"
-							:arrow="false"
-							class="data-table__row-actions__popover"
-							:context="true"
-							@click.stop>
-							<template #trigger>
-								<svws-ui-button type="icon" size="small" class="cursor-context-menu">
-									<svws-ui-icon>
-										<i-ri-more2-fill />
-									</svws-ui-icon>
-								</svws-ui-button>
-							</template>
-							<template #content>
-								<div v-for="action in rowActions"
-									:key="action.action">
-									<svws-ui-button class="action-item"
-										type="transparent"
-										size="small"
-										@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
-										{{ action.label }}
-									</svws-ui-button>
-								</div>
-							</template>
-						</svws-ui-popover>
-					</div>
-				</div>
+					:data="{ index, row }"
+					draggable>
+					<svws-ui-drop-data class="drop-zone" @drop="onDrop($event, index)">
+						<div role="row"
+							class="data-table__tr data-table__tbody__tr"
+							@dragenter="addDroppableStyles"
+							@dragleave="removeDroppableStyles"
+							@drop="removeDroppableStyles"
+							:class="[
+								{
+									'data-table__tr--selected':
+										isRowSelected(row),
+								},
+								{
+									'data-table__tr--clicked':
+										isRowClicked(row),
+								},
+							]"
+							@click="toggleRowClick(row)">
+							<div role="cell"
+								v-if="selectable"
+								class="data-table__td data-table__cell-select"
+								:key="`selectable__${row}_${index}`">
+								<svws-ui-checkbox class="data-table__cell-checkbox"
+									:model-value="isRowSelected(row)"
+									@update:model-value="
+										toggleRowSelection(row)
+									"
+									@click.stop />
+							</div>
+							<div role="cell"
+								v-for="cell in row.cells"
+								:key="`table-cell_${
+									cell.column.key + cell.rowIndex
+								}`"
+								class="data-table__td"
+								:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
+								<slot v-if="`cell(${cell.column.key})` in $slots"
+									:name="`cell(${cell.column.key})`"
+									v-bind="cell" />
+								<slot v-else name="cell" v-bind="cell">
+									<svws-ui-text-input v-if="row.isEditing"
+										v-model="cell.value"
+										:headless="true"
+										@update:value="(value: string) => cell.value = value"
+										@click.stop="setClickedRow(row)" />
+									<span v-else
+										class="data-table__td-content"
+										:title="cell.value">
+										{{ cell.value }}
+									</span>
+								</slot>
+							</div>
+							<div v-if="rowActions"
+								class="data-table__row-actions data-table__td">
+								<svws-ui-popover :hover="false"
+									:disable-click-away="false"
+									:show-delay="0"
+									placement="auto-start"
+									:arrow="false"
+									class="data-table__row-actions__popover"
+									:context="true"
+									@click.stop>
+									<template #trigger>
+										<svws-ui-button type="icon"
+											size="small"
+											class="cursor-context-menu">
+											<svws-ui-icon>
+												<i-ri-more2-fill />
+											</svws-ui-icon>
+										</svws-ui-button>
+									</template>
+									<template #content>
+										<div v-for="action in rowActions"
+											:key="action.action">
+											<svws-ui-button class="action-item"
+												type="transparent"
+												size="small"
+												@click="
+													() => {
+														rowExecute
+															? rowExecute(
+																action.action,
+																row
+															)
+															: null;
+													}
+												">
+												{{ action.label }}
+											</svws-ui-button>
+										</div>
+									</template>
+								</svws-ui-popover>
+							</div>
+						</div>
+					</svws-ui-drop-data>
+				</svws-ui-drag-data>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" v-if="selectable || $slots.footer || $slots.footerActions || count">
+		<div role="rowgroup"
+			aria-label="Fußzeile"
+			class="data-table__tfoot"
+			v-if="selectable || $slots.footer || $slots.footerActions || count">
 			<slot name="footer"
 				:all-rows-selected="allRowsSelected"
 				:toggle-all-rows="toggleBulkSelection"
-				:rows="sortedRows">
+				:rows="rowsComputed">
 				<div role="row" class="data-table__tr data-table__tfoot__tr">
-					<div role="checkbox" v-if="selectable"
+					<div role="checkbox"
+						v-if="selectable"
 						class="data-table__th data-table__tfoot__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
 							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>
-					<div v-if="count && modelValue" role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
-						<span v-if="someNotAllRowsSelected || allRowsSelected" class="font-bold opacity-50">{{ modelValue.length }}/{{ sortedRows.length }} ausgewählt</span>
-						<span v-else class="opacity-50">{{ sortedRows.length }} Einträge</span>
+					<div v-if="count && modelValue"
+						role="cell"
+						class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
+						<span v-if="someNotAllRowsSelected || allRowsSelected"
+							class="font-bold opacity-50">{{ modelValue.length }}/{{
+								rowsComputed.length
+							}}
+							ausgewählt</span>
+						<span v-else class="opacity-50">{{ rowsComputed.length }} Einträge</span>
 					</div>
-					<div role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-actions" v-if="$slots.footerActions">
+					<div role="cell"
+						class="data-table__th data-table__tfoot__th data-table__tfoot-actions"
+						v-if="$slots.footerActions">
 						<slot name="footerActions" />
 					</div>
 				</div>
@@ -203,6 +281,7 @@
 			rowExecute?: (action: string, row: DataTableItem) => void;
 			filter?: boolean;
 			filterOpen?: boolean;
+			draggable?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -221,6 +300,7 @@
 			rowExecute: undefined,
 			filter: false,
 			filterOpen: false,
+			draggable: false,
 		}
 	);
 
@@ -229,15 +309,58 @@
 		(e: "update:sortBy", sortBy: string): void;
 		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
 		(e: "update:clicked", items: DataTableItem | null): void;
+		(e: "items:reorder", items: DataTableItem[]): void;
 	}>();
 
 	const attrs = useAttrs();
 
 	const { columnsComputed, gridTemplateColumns } = useColumns(props);
 
-	const gridTemplateColumnsComputed = ref(gridTemplateColumns.value || 'repeat(auto-fit, minmax(8rem, 1fr))')
+	const gridTemplateColumnsComputed = ref(
+		gridTemplateColumns.value || "repeat(auto-fit, minmax(8rem, 1fr))"
+	);
 
 	const { rowsComputed } = useRows(columnsComputed, props);
+
+	const reorder = (array, sourceIndex, destinationIndex) => {
+		const smallerIndex = Math.min(sourceIndex, destinationIndex);
+		const largerIndex = Math.max(sourceIndex, destinationIndex);
+
+		return [
+			...array.slice(0, smallerIndex),
+			...(sourceIndex < destinationIndex
+				? array.slice(smallerIndex + 1, largerIndex + 1)
+				: []),
+			array[sourceIndex],
+			...(sourceIndex > destinationIndex
+				? array.slice(smallerIndex, largerIndex)
+				: []),
+			...array.slice(largerIndex + 1),
+		].map((item) => item.source);
+	};
+
+	function onDrop(evt, index) {
+		console.log("onDrop", evt.index, index);
+		emit(
+			"items:reorder",
+			reorder(
+				rowsComputed.value,
+				evt.index,
+				evt.index > index ? index + 1 : index
+			)
+		);
+	}
+
+	function addDroppableStyles(event) {
+		console.log(event);
+		event.target.closest(".data-table__tbody__tr").style.borderBottom =
+			"2px solid black";
+	}
+
+	function removeDroppableStyles(event) {
+		event.target.closest(".data-table__tbody__tr").style.borderBottom =
+			"inherit";
+	}
 
 	const { sortBy, sortingOrder, toggleSorting, sortedRows } = useSortable(
 		columnsComputed,
@@ -261,22 +384,21 @@
 		isActive: () => props.selectable,
 		sortedRows,
 		selectedItems: () => props.modelValue,
-		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
+		emit: (v: DataTableItem[]) => emit("update:modelValue", v),
 	});
 
 	const { isRowClicked, toggleRowClick, setClickedRow } = useClickable({
 		isActive: () => props.clickable,
 		canReset: () => props.allowUnclick,
 		clickedItem: () => props.clicked,
-		emit: (v: DataTableItem | null) => emit('update:clicked', v),
+		emit: (v: DataTableItem | null) => emit("update:clicked", v),
 	});
 
 	const showNoDataHtml = computed(() => {
-		if (Array.isArray(props.items))
-			return props.items.length === 0;
+		if (Array.isArray(props.items)) return props.items.length === 0;
 		const iterator = props.items[Symbol.iterator]();
 		const res = iterator.next();
-		return res.done !== true && res.value === undefined
+		return res.done !== true && res.value === undefined;
 	});
 
 	const computedTableAttributes = computed(
@@ -360,19 +482,25 @@
 
 	&__selectable {
 		.data-table__tr {
-			grid-template-columns: var(--checkbox-width) v-bind(gridTemplateColumnsComputed);
+			grid-template-columns: var(--checkbox-width) v-bind(
+					gridTemplateColumnsComputed
+				);
 		}
 	}
 
 	&__has-row-actions {
 		.data-table__tr {
-			grid-template-columns: v-bind(gridTemplateColumnsComputed) var(--checkbox-width);
+			grid-template-columns: v-bind(gridTemplateColumnsComputed) var(
+					--checkbox-width
+				);
 		}
 	}
 
 	&__has-row-actions.data-table__selectable {
 		.data-table__tr {
-			grid-template-columns: var(--checkbox-width) v-bind(gridTemplateColumnsComputed) var(--checkbox-width);
+			grid-template-columns:
+				var(--checkbox-width) v-bind(gridTemplateColumnsComputed)
+				var(--checkbox-width);
 		}
 	}
 
@@ -381,7 +509,7 @@
 		@apply sticky left-0 z-10 bg-white;
 
 		.checkbox:before {
-			content: '';
+			content: "";
 			@apply absolute inset-0;
 		}
 	}
@@ -400,7 +528,7 @@
 			@apply cursor-pointer select-none;
 
 			&:hover {
-				@apply bg-dark-20 bg-opacity-25 rounded;
+				@apply rounded bg-dark-20 bg-opacity-25;
 			}
 
 			&-column,
@@ -420,7 +548,7 @@
 
 	&__thead {
 		@apply w-full bg-white;
-		@apply font-bold text-button;
+		@apply text-button font-bold;
 		@apply sticky top-0 z-20;
 
 		&__th,
@@ -494,10 +622,10 @@
 	&__tfoot {
 		@apply w-full bg-white;
 		@apply sticky bottom-0 left-0 z-20;
-		@apply border-t border-black/25 -mt-px;
+		@apply -mt-px border-t border-black/25;
 
 		&__tr {
-			@apply w-full flex items-center;
+			@apply flex w-full items-center;
 			@apply h-[2.9rem];
 		}
 
@@ -512,7 +640,7 @@
 		}
 
 		&-actions {
-			@apply flex flex-row items-center justify-end gap-1 overflow-visible ml-auto;
+			@apply ml-auto flex flex-row items-center justify-end gap-1 overflow-visible;
 
 			.dropdown--button {
 				@apply border-0;
@@ -521,13 +649,13 @@
 	}
 
 	&__row-actions {
-		@apply px-0 justify-center overflow-hidden;
+		@apply justify-center overflow-hidden px-0;
 
 		&__popover {
-			@apply border-0 m-0 !important;
+			@apply m-0 border-0 !important;
 
 			.popper {
-				@apply text-sm flex flex-col gap-1;
+				@apply flex flex-col gap-1 text-sm;
 				margin-right: -0.5rem !important;
 
 				.button {
@@ -568,7 +696,7 @@
 		@apply border-black/10;
 
 		.data-table__thead {
-			@apply text-black/25 pointer-events-none;
+			@apply pointer-events-none text-black/25;
 		}
 
 		.data-table__th,
@@ -590,8 +718,8 @@
 	}
 
 	.sorting-arrows {
-		@apply flex justify-center border-0 items-center;
-		@apply relative w-6 h-6 -my-3 transform scale-90;
+		@apply flex items-center justify-center border-0;
+		@apply relative -my-3 h-6 w-6 scale-90 transform;
 
 		&__column {
 			@apply scale-100;
@@ -607,12 +735,12 @@
 
 		&__up,
 		&__down {
-			@apply absolute top-1 left-0.5 w-4 h-4;
+			@apply absolute top-1 left-0.5 h-4 w-4;
 			@apply opacity-25;
 		}
 
 		&__active {
-			@apply opacity-100 text-primary;
+			@apply text-primary opacity-100;
 		}
 
 		&__up {
