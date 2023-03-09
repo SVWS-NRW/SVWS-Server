@@ -3,7 +3,8 @@ import { SvwsUiPlugin } from "@svws-nrw/svws-ui";
 import { router } from "./router/RouteManager";
 
 import "./tailwind.css";
-// import "@svws-nrw/svws-ui/dist/style.css";
+if (process.env.NODE_ENV === 'production')
+	import("@svws-nrw/svws-ui/style.css");
 import SWrapper from "~/components/SWrapper.vue";
 
 

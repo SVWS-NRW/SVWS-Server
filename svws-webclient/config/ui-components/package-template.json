@@ -22,6 +22,16 @@
   ],
   "main": "./dist/svws-ui.umd.cjs",
   "module": "./dist/svws-ui.js",
+  "exports": {
+    ".": {
+      "import": "./dist/svws-ui.js",
+      "require": "./dist/svws-ui.umd.cjs"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
   "type": "module",
   "types": "./dist/index.d.ts",
   "dependencies": {
