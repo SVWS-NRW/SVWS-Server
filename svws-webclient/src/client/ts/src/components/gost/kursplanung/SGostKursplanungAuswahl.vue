@@ -1,9 +1,9 @@
 <template>
 	<div v-if="visible" class="mt-10">
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
-			<template #cell(kuerzel)="{ value }">
-				{{ value }}
-				<svws-ui-button type="secondary" v-if="allow_add_blockung(value)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+			<template #cell(kuerzel)="{ rowData: row }">
+				{{ row.kuerzel }}
+				<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
@@ -23,10 +23,7 @@
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
 
-	const allow_add_blockung = (kuerzel: string): boolean => {
-		const row: GostHalbjahr | null = GostHalbjahr.fromKuerzel(kuerzel);
-		if (row === null)
-			return false;
+	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = row.id === props.halbjahr.id;
 		if (!curr_hj || props.jahrgangsdaten === undefined)
 			return false;
