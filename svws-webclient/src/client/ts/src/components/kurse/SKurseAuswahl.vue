@@ -28,7 +28,7 @@
 <script setup lang="ts">
 
 	import { Vector } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@ui";
 	import { Ref, ref, computed } from "vue";
 	import { KurseAuswahlProps } from "./SKurseAuswahlProps";
 

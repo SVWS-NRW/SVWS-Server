@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 	import { SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core";
-	import { DataTableItem } from "@svws-nrw/svws-ui";
+	import { DataTableItem } from "@ui";
 	import { ref } from "vue";
 	import { SchuelerAbschnittAuswahlProps } from "./SSchuelerAbschnittAuswahlProps";
 

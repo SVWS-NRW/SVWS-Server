@@ -45,7 +45,7 @@
 <script setup lang="ts">
 
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@ui";
 	import { computed, ComputedRef, reactive, ref } from "vue";
 	import { router } from "~/router/RouteManager";
 	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";

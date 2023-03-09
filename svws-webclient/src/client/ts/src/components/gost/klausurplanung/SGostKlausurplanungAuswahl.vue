@@ -21,7 +21,7 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from '@svws-nrw/svws-ui';
+	import { DataTableColumn } from '@ui';
 	import { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();

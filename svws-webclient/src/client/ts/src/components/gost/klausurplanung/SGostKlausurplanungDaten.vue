@@ -117,7 +117,7 @@
 <script setup lang="ts">
 
 	import { GostKursklausurManager, GostKursklausur, List, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, KursListeEintrag, SchuelerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostKlausurvorgabe, GostFach } from "@svws-nrw/svws-core";
-	import { DataTableItem } from '@svws-nrw/svws-ui';
+	import { DataTableItem } from '@ui';
 	import { computed, ref, ComputedRef, WritableComputedRef } from 'vue';
 	import type { Ref } from 'vue'
 

@@ -1,0 +1,41 @@
+{
+	"name": "@@npm_organization@/@npm_package@",
+	"description": "@npm_description@",
+	"author": "@npm_author@",
+	"license": "@npm_license@",
+	"version": "@version@",
+  "scripts": {
+    "format": "prettier --write ./src/main/ts ./*.config.js",
+    "build": "npm run build-lib && npm run build-dts",
+    "build-lib": "vite build", 
+    "build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+    "lint-tsc": "vue-tsc --noEmit",
+    "lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
+    "story:dev": "histoire dev",
+    "story:build": "histoire build",
+    "story:preview": "histoire preview",
+    "check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/svws-components.umd.cjs",
+  "module": "./dist/svws-components.js",
+  "exports": {
+    ".": {
+      "import": "./dist/svws-components.js",
+      "require": "./dist/svws-components.umd.cjs"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+		"@headlessui/vue": "^1.7.7",
+    "vuejs-smart-table": "github:antony-k1208/vuejs-smart-table#next"
+  }
+}

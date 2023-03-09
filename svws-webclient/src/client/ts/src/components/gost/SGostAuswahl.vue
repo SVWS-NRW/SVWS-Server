@@ -33,7 +33,7 @@
 <script setup lang="ts">
 
 	import { GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@ui";
 	import { computed, ComputedRef } from "vue";
 	import { GostAuswahlProps } from "./SGostAuswahlProps";
 

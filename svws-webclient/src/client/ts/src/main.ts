@@ -1,15 +1,12 @@
 import { createApp } from "vue";
-import { SvwsUiPlugin } from "@svws-nrw/svws-ui";
 import { router } from "./router/RouteManager";
 
+import "../../../ui/ts/src/assets/styles/index.css";
 import "./tailwind.css";
-if (process.env.NODE_ENV === 'production')
-	import("@svws-nrw/svws-ui/style.css");
+
 import SWrapper from "~/components/SWrapper.vue";
 
-
 const app = createApp(SWrapper);
-app.use(SvwsUiPlugin);
 app.use(router);
 
 app.mixin({

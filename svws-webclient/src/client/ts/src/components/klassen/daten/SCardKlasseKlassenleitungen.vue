@@ -12,7 +12,7 @@
 
 	import { computed, ComputedRef } from "vue";
 	import { KlassenDaten, LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core";
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 
 	type Lehrer = {
 		kuerzel?: string;

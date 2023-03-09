@@ -27,7 +27,7 @@
 <script setup lang="ts">
 
 	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core";
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
@@ -54,7 +54,6 @@
 		const result = new Map<number, LehrerListeEintrag>();
 		for (const l of props.mapLehrer.values()) {
 			let pt = true;
-			console.log(l.personTyp, personaltyp.value?.kuerzel, l.personTyp === personaltyp.value?.kuerzel)
 			if (personaltyp.value)
 				pt = personaltyp.value.kuerzel === l.personTyp;
 			if ((l.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())

@@ -6,19 +6,6 @@ import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import Markdown from "vite-plugin-md";
 import { resolve } from "path";
-import { ComponentResolver } from 'unplugin-vue-components/types';
-
-const dev = process.env.NODE_ENV === 'development';
-const svwsUi = dev ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui';
-const svwsComponents = [ 'src/components' ];
-const svwsResolvers: ComponentResolver[] = [ IconsResolver() ];
-if (dev) {
-	svwsComponents.push(resolve(__dirname, '../../ui-components/ts/src/components'));
-} else {
-	svwsResolvers.push({
-		type: 'component', resolve: (name: string) => { if (name.startsWith('SvwsUi') ) { return {	name,	from: svwsUi } } }
-	});
-}
 
 export default defineConfig({
 	test: {},
@@ -30,8 +17,12 @@ export default defineConfig({
 		}),
 		Markdown(),
 		Components({
-			resolvers: svwsResolvers,
-			dirs: svwsComponents,
+			resolvers: [IconsResolver()],
+			dirs: [
+				'src/components',
+				resolve(__dirname, '../../ui/ts/src/components'),
+				resolve(__dirname, '../../components/ts/src/components')
+			],
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		}),
@@ -41,7 +32,8 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
-			'@svws-nrw/svws-ui': svwsUi
+			"@comp": resolve(__dirname, '../../components/ts/src/index.ts'),
+			"@ui": resolve(__dirname, '../../ui/ts/src/index.ts'),
 		}
 	},
 	build: {

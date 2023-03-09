@@ -68,7 +68,7 @@
 
 	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
+	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@ui';
 	import { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

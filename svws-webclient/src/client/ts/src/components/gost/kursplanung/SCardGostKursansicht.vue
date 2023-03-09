@@ -129,7 +129,7 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { SvwsUiButton, SvwsUiContentCard, SvwsUiIcon, SvwsUiModal, SvwsUiTextInput } from "@svws-nrw/svws-ui";
+	import { SvwsUiButton, SvwsUiContentCard, SvwsUiIcon, SvwsUiModal, SvwsUiTextInput } from "@ui";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { Config } from "~/components/Config";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";

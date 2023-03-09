@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@ui";
 	import { computed, ref, Ref } from "vue";
 	import { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 

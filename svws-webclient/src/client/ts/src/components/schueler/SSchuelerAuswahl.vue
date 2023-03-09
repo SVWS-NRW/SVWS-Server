@@ -51,7 +51,7 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@ui";
 	import { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 

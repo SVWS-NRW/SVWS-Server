@@ -4,10 +4,10 @@ import {
 } from "@svws-nrw/svws-core";
 import { shallowRef, ShallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerLaufbahnplanungProps } from "~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanungProps";
 import { api } from "~/router/Api";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
+import { SSchuelerLaufbahnplanung, SchuelerLaufbahnplanungProps } from "@comp";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -80,8 +80,6 @@ export class RouteDataSchuelerLaufbahnplanung {
 	}
 
 }
-
-const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 

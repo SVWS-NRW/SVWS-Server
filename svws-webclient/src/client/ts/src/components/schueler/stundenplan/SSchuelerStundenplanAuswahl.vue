@@ -5,7 +5,7 @@
 <script setup lang="ts">
 
 	import { StundenplanListeEintrag } from "@svws-nrw/svws-core";
-	import { DataTableColumn, DataTableItem } from "@svws-nrw/svws-ui";
+	import { DataTableColumn, DataTableItem } from "@ui";
 	import { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
 
 	const props = defineProps<SchuelerStundenplanAuswahlProps>();

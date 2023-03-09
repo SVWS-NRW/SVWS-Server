@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 	import { router } from "~/router/RouteManager";
 	import { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
 

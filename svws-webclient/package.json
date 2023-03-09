@@ -4,6 +4,7 @@
 		"src/core/ts",
 		"src/core-test/ts",
 		"src/ui/ts",
+		"src/components/ts",
 		"src/client/ts",
 		"src/client-test/ts"
 	],
