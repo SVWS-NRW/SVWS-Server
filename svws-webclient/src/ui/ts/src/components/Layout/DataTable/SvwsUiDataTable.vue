@@ -294,7 +294,7 @@
 			rowExecute?: (action: string, row: DataTableItem) => void;
 			filterOpen?: boolean;
 			filterHide?: boolean;
-			filtered?: number;
+			filtered?: boolean;
 			filterReset?: () => void;
 			draggable?: boolean;
 		}>(),
@@ -315,7 +315,7 @@
 			rowExecute: undefined,
 			filterOpen: false,
 			filterHide: true,
-			filtered: 0,
+			filtered: false,
 			filterReset: () => {},
 			draggable: false,
 		}
