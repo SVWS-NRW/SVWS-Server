@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanblockungManager {
 
+	// Sub-Manager
+	
 	private final @NotNull StundenplanblockungManagerSchule _manager_sc;
 	private final @NotNull StundenplanblockungManagerFachMenge _manager_fa;
 	private final @NotNull StundenplanblockungManagerKlasseMenge _manager_kl;
