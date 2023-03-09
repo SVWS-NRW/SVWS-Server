@@ -26,7 +26,7 @@
 
 <template>
 	<button class="button" :class="{
-		'button--primary': type === 'primary',
+		'button--primary': type === 'primary' || !type,
 		'button--secondary': type === 'secondary',
 		'button--danger': type === 'error' || type === 'danger',
 		'button--transparent': type === 'transparent',

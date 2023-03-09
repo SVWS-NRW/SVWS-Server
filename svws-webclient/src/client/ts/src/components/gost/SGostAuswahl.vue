@@ -14,30 +14,40 @@
 							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
 					<template #footerActions>
-						<svws-ui-dropdown type="icon" class="">
-							<template #dropdownButton>Abiturjahr hinzufügen</template>
-							<template #dropdownItems>
-								<svws-ui-dropdown-item v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" class="px-2" @click="abiturjahr_hinzufuegen(jahrgang)">
-									{{ jahrgang.kuerzel }}
-								</svws-ui-dropdown-item>
-							</template>
-						</svws-ui-dropdown>
+						<svws-ui-button @click="modalAdd.openModal()" type="icon" title="Abiturjahr hinzufügen">
+							<i-ri-add-line />
+						</svws-ui-button>
 					</template>
 				</svws-ui-data-table>
 				<router-view name="gost_child_auswahl" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
+	<svws-ui-modal ref="modalAdd" size="medium">
+		<template #modalTitle>Abiturjahr hinzufügen</template>
+		<template #modalContent>
+			<div class="flex flex-col items-center gap-1">
+				<svws-ui-button type="transparent" v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" @click="abiturjahr_hinzufuegen(jahrgang)">
+					{{ jahrgang.kuerzel }}
+				</svws-ui-button>
+			</div>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="modalAdd.closeModal"> Abbrechen </svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
 	import { GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core";
 	import { DataTableColumn } from "@ui";
-	import { computed, ComputedRef } from "vue";
+	import {computed, ComputedRef, ref} from "vue";
 	import { GostAuswahlProps } from "./SGostAuswahlProps";
 
 	const props = defineProps<GostAuswahlProps>();
+
+	const modalAdd = ref();
 
 	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },

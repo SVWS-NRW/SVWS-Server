@@ -151,10 +151,10 @@
 	.app-layout--main--placeholder {
 		@apply w-full h-full flex justify-center items-center;
 		/*background: radial-gradient(ellipse 50% 50%, rgba(var(--color-dark-20), 1) 0%, rgba(var(--color-dark-20), 0) 100%);*/
-		background-image: radial-gradient(ellipse 25% 4% at 50% 58%, rgba(var(--color-dark-20), 0.6) 0%, rgba(var(--color-dark-20), 0) 100%);
+		/*background-image: radial-gradient(ellipse 25% 4% at 50% 58%, rgba(var(--color-dark-20), 0.6) 0%, rgba(var(--color-dark-20), 0) 100%);*/
 
 		svg {
-			@apply w-full h-1/5 text-dark-20;
+			@apply w-full h-1/5 text-light;
 			max-width: 20vw;
 		}
 	}

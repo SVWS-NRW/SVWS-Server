@@ -8,24 +8,20 @@
 		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count filter :filter-open="true">
+				:columns="cols" clickable selectable count :filterOpen="true" :filtered="filtered" :filterReset="filterReset">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse" />
 				</template>
 				<template #filter>
 					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full mb-3" />
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" />
-					<svws-ui-button type="transparent">
-						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
-						<span class="ml-2">Erweiterte Filter</span>
-					</svws-ui-button>
-					<svws-ui-button v-show="filtered" type="transparent" @click="filterReset">
-						<svws-ui-icon><i-ri-close-line /></svws-ui-icon>
-						<span class="ml-2">Filter zurücksetzen</span>
-					</svws-ui-button>
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" removable />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" removable />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" removable />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" removable />
+<!--					<svws-ui-button type="transparent" class="justify-center">
+						<i-ri-filter-line />
+						Erweiterte Filter
+					</svws-ui-button>-->
 				</template>
 				<template #cell(idKlasse)="{ value }">
 					{{ value === null ? "--" : mapKlassen.get(value)?.kuerzel }}

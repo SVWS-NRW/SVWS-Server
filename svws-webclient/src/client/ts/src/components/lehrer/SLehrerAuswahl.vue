@@ -7,19 +7,17 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
-					:columns="cols" clickable selectable :footer="true" filter :filter-open="false">
-					<template #search>
-						<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"><i-ri-search-line /></svws-ui-text-input>
-					</template>
-					<template #filter>
-						<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable />
-						<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
-						<svws-ui-toggle v-model="statistikrelevant">Statistikrelevant</svws-ui-toggle>
-					</template>
-				</svws-ui-data-table>
-			</div>
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
+								:columns="cols" clickable selectable count>
+				<template #search>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"></svws-ui-text-input>
+				</template>
+				<template #filter>
+					<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable class="col-span-full" />
+					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
+					<svws-ui-toggle v-model="statistikrelevant">Statistikrelevant</svws-ui-toggle>
+				</template>
+			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>

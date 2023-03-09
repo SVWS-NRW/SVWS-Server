@@ -1,18 +1,31 @@
 <template>
-	<div v-if="$slots.search || filter">
-		<div class="data-table__filter" :class="{'data-table__filter-open': filter && filterOpen}">
-			<div v-if="filter && filterOpen" class="data-table__filter__fields">
+	<div v-if="$slots.search || $slots.filter">
+		<div class="data-table__filter" :class="{'data-table__filter-open': $slots.filter && filterOpen}">
+			<div class="flex w-full gap-2">
+				<div class="flex-grow" v-if="$slots.search">
+					<slot name="search" />
+				</div>
+				<div v-if="$slots.filterSimple">
+					<slot name="filterSimple"/>
+				</div>
+				<div v-if="$slots.filter && filterHide" class="ml-auto flex flex-shrink-0">
+					<div :class="{'opacity-40 hover:opacity-100': filterOpen}" class="toggle--filter" v-if="filterHide">
+						<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full">
+							<i-ri-filter-line v-if="!filterOpen" />
+							<i-ri-eye-off-line v-else />
+							<span class="max-sm:hidden">Filter</span>
+						</svws-ui-button>
+					</div>
+				</div>
+			</div>
+			<div v-if="$slots.filter && filterOpen" class="data-table__filter__fields">
 				<slot name="filter" />
-			</div>
-			<div class="flex-grow" v-if="$slots.search">
-				<slot name="search" />
-			</div>
-			<div v-if="filter" class="ml-auto">
-				<svws-ui-button type="transparent" @click="toggleFilterOpen" class="toggle--filter">
-					<span class="max-sm:hidden">Filter</span>
-					<i-ri-filter-line v-if="!filterOpen" />
-					<i-ri-eye-off-line v-else />
-				</svws-ui-button>
+				<template v-if="filtered && filterReset">
+					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen" class="justify-center">
+						<i-ri-filter-off-line />
+						Zurücksetzen
+					</svws-ui-button>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -279,8 +292,10 @@
 				action: string;
 			}>;
 			rowExecute?: (action: string, row: DataTableItem) => void;
-			filter?: boolean;
 			filterOpen?: boolean;
+			filterHide?: boolean;
+			filtered?: number;
+			filterReset?: () => void;
 			draggable?: boolean;
 		}>(),
 		{
@@ -298,8 +313,10 @@
 			count: false,
 			rowActions: undefined,
 			rowExecute: undefined,
-			filter: false,
 			filterOpen: false,
+			filterHide: true,
+			filtered: 0,
+			filterReset: () => {},
 			draggable: false,
 		}
 	);
@@ -441,6 +458,12 @@
 
 		&:last-child {
 			@apply border-r-0;
+		}
+
+		&:first-child:not(.data-table__cell-select) {
+			.app-layout--secondary-container & {
+				@apply pl-7 4xl:pl-8;
+			}
 		}
 
 		&__id {
@@ -589,7 +612,9 @@
 			&:focus {
 				@apply outline-none;
 			}
+		}
 
+		.drag-el {
 			&:last-child {
 				.data-table__td {
 					@apply border-b-0;
@@ -713,7 +738,7 @@
 		}
 
 		.no-data {
-			@apply border-0;
+			@apply border-0 py-2;
 		}
 	}
 
@@ -754,16 +779,15 @@
 
 	&__filter {
 		@apply flex justify-between flex-wrap;
-		@apply py-2 gap-2 mb-1 -mb-px;
+		@apply pb-2 gap-2 mb-1 -mb-px;
 		transition: box-shadow 0.15s ease-out;
 
 		.app-layout--secondary & {
-			@apply pl-7 4xl:pl-8 pr-2;
+			@apply px-7 4xl:px-8;
 		}
 
 		&-open {
-			@apply px-7 4xl:px-8 !important;
-			box-shadow: inset 0 4px 6px 2px theme("colors.light");
+			/*box-shadow: inset 0 4px 6px 2px theme("colors.light");*/
 		}
 
 		.text-input--search {
@@ -802,51 +826,8 @@
 
 		&__fields {
 			@apply w-full grid gap-3;
-			@apply py-6;
+			@apply pt-5 pb-2;
 			grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-
-			/*.wrapper--filled {
-				@apply -order-1 w-full;
-
-				.text-input--control {
-					@apply w-full;
-				}
-			}
-
-			.multiselect-input-component {
-				&:not(.with-value):not(.with-open-list) {
-					.text-input-component {
-						@apply inline-flex;
-						@apply cursor-pointer;
-
-						&:hover {
-							.text-input--placeholder {
-								@apply opacity-100;
-							}
-						}
-					}
-
-					.text-input--control {
-						@apply w-0 absolute p-0 border-0;
-					}
-
-					.text-input--placeholder {
-						@apply relative top-0 left-0 text-sm-bold;
-
-						&:before {
-							content: '+ ';
-						}
-					}
-
-					.dropdown-icon {
-						@apply hidden;
-					}
-				}
-
-				&.with-value,
-				&.with-open-list {
-				}
-			}*/
 		}
 	}
 

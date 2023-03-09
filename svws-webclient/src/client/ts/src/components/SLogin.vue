@@ -17,7 +17,6 @@
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
 										<svws-ui-spinner :spinning="connecting" />
-										<i-ri-plug-line v-if="!connecting && inputDBSchemata.size() === 0 || inputFocus" />
 										<i-ri-check-line v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
 									</svws-ui-button>
 								</div>

@@ -106,7 +106,7 @@
 
 <style lang="postcss">
     .router-tab-bar--area {
-        @apply flex flex-col items-start overflow-hidden;
+        @apply flex flex-col items-start overflow-hidden pt-1.5;
     }
 
     .router-tab-bar--panel {
@@ -115,7 +115,6 @@
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
 		@apply py-8;
 		@apply relative;
-		-webkit-overflow-scrolling: touch;
     }
 
 	.router-tab-bar--area {

@@ -4,23 +4,21 @@
 		<template #abschnitt>
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
-		<template #header>
-			<div class="mt-6 mb-2 flex gap-2">
-				<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs"><i-ri-search-line /></svws-ui-text-input>
-				<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
-			</div>
-		</template>
 		<template #content>
-			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="setKurs" :items="rowsFiltered" :columns="cols" clickable :footer="false">
-					<template #cell(lehrer)="{ value }">
-						{{ mapLehrer.get(value)?.kuerzel ?? "" }}
-					</template>
-					<template #cell(idJahrgaenge)="{ value }">
-						{{ getJahrgangsKuerzel(value) }}
-					</template>
-				</svws-ui-data-table>
-			</div>
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="setKurs" :items="rowsFiltered" :columns="cols" clickable>
+				<template #search>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs"></svws-ui-text-input>
+				</template>
+				<template #filterSimple>
+					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
+				</template>
+				<template #cell(lehrer)="{ value }">
+					{{ mapLehrer.get(value)?.kuerzel ?? "" }}
+				</template>
+				<template #cell(idJahrgaenge)="{ value }">
+					{{ getJahrgangsKuerzel(value) }}
+				</template>
+			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
