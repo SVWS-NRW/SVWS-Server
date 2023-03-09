@@ -1,10 +1,10 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { StundenplanInputSimpleLehrkraft, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleLehrkraft } from './StundenplanInputSimpleLehrkraft';
-import { StundenplanInputSimpleFach, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleFach } from './StundenplanInputSimpleFach';
-import { StundenplanInputSimpleRaum, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleRaum } from './StundenplanInputSimpleRaum';
-import { StundenplanInputSimpleKopplung, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleKopplung } from './StundenplanInputSimpleKopplung';
+import { StundenplanInputSimpleLehrkraft, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleLehrkraft';
+import { StundenplanInputSimpleFach, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleFach } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleFach';
+import { StundenplanInputSimpleRaum, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
+import { StundenplanInputSimpleKopplung, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { StundenplanInputSimpleKlasse, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleKlasse } from './StundenplanInputSimpleKlasse';
+import { StundenplanInputSimpleKlasse, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimpleKurs extends JavaObject {
 

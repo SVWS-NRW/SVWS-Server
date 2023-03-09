@@ -1,18 +1,14 @@
 {
 	"extends": "../../../tsconfig.base.json",
 	"compilerOptions": {
-		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"],
-			"tslib": ["../../../node_modules/tslib"],
-			"@svws-nrw/svws-ui": ["../../ui-components/ts/src"],
-			"@svws-nrw/svws-core-ts": ["../../ts-lib/ts/src"]
+			"~/*": ["./src/*"]
 		}
 	},
 	"include": [
+		"*.ts",
 		"src/**/*",
-		"components.d.ts"
 	]
 }

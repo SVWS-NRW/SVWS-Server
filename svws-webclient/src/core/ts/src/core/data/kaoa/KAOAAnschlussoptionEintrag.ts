@@ -1,10 +1,10 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Schulstufe, cast_de_nrw_schule_svws_core_types_schule_Schulstufe } from '../../types/schule/Schulstufe';
+import { Schulstufe, cast_de_nrw_schule_svws_core_types_schule_Schulstufe } from '../../../core/types/schule/Schulstufe';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmal } from '../../types/kaoa/KAOAZusatzmerkmal';
+import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAAnschlussoptionEintrag extends JavaObject {
 

@@ -1,13 +1,13 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../data/abschluss/GEAbschlussFach';
-import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../data/abschluss/AbschlussErgebnis';
-import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../data/abschluss/GEAbschlussFaecher';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../types/schule/SchulabschlussAllgemeinbildend';
+import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../core/data/abschluss/GEAbschlussFach';
+import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../../core/data/abschluss/AbschlussErgebnis';
+import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher';
+import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { StringBuilder, cast_java_lang_StringBuilder } from '../../java/lang/StringBuilder';
 import { List, cast_java_util_List } from '../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { JavaBoolean, cast_java_lang_Boolean } from '../../java/lang/JavaBoolean';
-import { GELeistungsdifferenzierteKursart, cast_de_nrw_schule_svws_core_types_ge_GELeistungsdifferenzierteKursart } from '../types/ge/GELeistungsdifferenzierteKursart';
+import { GELeistungsdifferenzierteKursart, cast_de_nrw_schule_svws_core_types_ge_GELeistungsdifferenzierteKursart } from '../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
 import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
 

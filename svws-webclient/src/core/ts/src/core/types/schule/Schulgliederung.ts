@@ -1,11 +1,11 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from './SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from './Schulform';
-import { BerufskollegAnlage, cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage } from './BerufskollegAnlage';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { BerufskollegAnlage, cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { SchulgliederungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulgliederungKatalogEintrag } from '../../data/schule/SchulgliederungKatalogEintrag';
-import { SchulabschlussBerufsbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussBerufsbildend } from './SchulabschlussBerufsbildend';
+import { SchulgliederungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulgliederungKatalogEintrag } from '../../../core/data/schule/SchulgliederungKatalogEintrag';
+import { SchulabschlussBerufsbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';

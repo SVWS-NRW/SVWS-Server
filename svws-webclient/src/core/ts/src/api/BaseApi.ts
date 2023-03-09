@@ -1,4 +1,4 @@
-import { OpenApiError } from './OpenApiError';
+import { OpenApiError } from '../api/OpenApiError';
 
 export class BaseApi {
 

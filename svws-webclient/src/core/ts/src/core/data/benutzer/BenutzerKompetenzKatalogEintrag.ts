@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { BenutzerKompetenzGruppe, cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe } from '../../types/benutzer/BenutzerKompetenzGruppe';
+import { BenutzerKompetenzGruppe, cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 
 export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 

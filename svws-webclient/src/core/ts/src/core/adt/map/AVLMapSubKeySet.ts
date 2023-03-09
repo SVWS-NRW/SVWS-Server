@@ -4,7 +4,7 @@ import { Collection, cast_java_util_Collection } from '../../../java/util/Collec
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { SortedSet, cast_java_util_SortedSet } from '../../../java/util/SortedSet';
-import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from './AVLMapSubMap';
+import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
 export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K> {

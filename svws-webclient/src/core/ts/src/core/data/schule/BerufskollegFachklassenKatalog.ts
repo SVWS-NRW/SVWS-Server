@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { BerufskollegFachklassenKatalogIndex, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogIndex } from './BerufskollegFachklassenKatalogIndex';
+import { BerufskollegFachklassenKatalogIndex, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class BerufskollegFachklassenKatalog extends JavaObject {

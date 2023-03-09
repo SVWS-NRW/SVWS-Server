@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from './KursblockungDynDaten';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../logger/Logger';
+import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 
 export abstract class KursblockungAlgorithmusK extends JavaObject {
 

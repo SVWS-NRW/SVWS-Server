@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from './StundenplanblockungRegel';
-import { StundenplanblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelParameterTyp } from './StundenplanblockungRegelParameterTyp';
+import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
+import { StundenplanblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';

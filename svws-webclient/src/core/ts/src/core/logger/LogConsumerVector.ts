@@ -1,11 +1,11 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from './LogData';
+import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from '../../core/logger/LogData';
 import { Consumer, cast_java_util_function_Consumer } from '../../java/util/function/Consumer';
 import { StringBuilder, cast_java_lang_StringBuilder } from '../../java/lang/StringBuilder';
 import { List, cast_java_util_List } from '../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from './LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 

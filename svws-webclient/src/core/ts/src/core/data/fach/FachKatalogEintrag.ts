@@ -1,14 +1,14 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchulformSchulgliederung, cast_de_nrw_schule_svws_core_data_schule_SchulformSchulgliederung } from '../schule/SchulformSchulgliederung';
-import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../types/jahrgang/Jahrgaenge';
-import { Fachgruppe, cast_de_nrw_schule_svws_core_types_fach_Fachgruppe } from '../../types/fach/Fachgruppe';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../types/schule/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../types/schule/Schulgliederung';
+import { SchulformSchulgliederung, cast_de_nrw_schule_svws_core_data_schule_SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
+import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
+import { Fachgruppe, cast_de_nrw_schule_svws_core_types_fach_Fachgruppe } from '../../../core/types/fach/Fachgruppe';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../adt/Pair';
+import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/Pair';
 
 export class FachKatalogEintrag extends JavaObject {
 

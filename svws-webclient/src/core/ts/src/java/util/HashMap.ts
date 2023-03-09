@@ -5,10 +5,10 @@ import { JavaSet } from './JavaSet';
 import { HashMapCollection } from './HashMapCollection';
 import { HashSet } from './HashSet';
 
-import { Cloneable } from '../lang/Cloneable';
-import { JavaObject } from '../lang/JavaObject';
+import { Cloneable } from '../../java/lang/Cloneable';
+import { JavaObject } from '../../java/lang/JavaObject';
 
-import { Serializable } from '../io/Serializable';
+import { Serializable } from '../../java/io/Serializable';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
 
 export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneable, Serializable {

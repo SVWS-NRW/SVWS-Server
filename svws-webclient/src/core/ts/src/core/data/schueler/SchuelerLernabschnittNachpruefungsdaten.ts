@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { SchuelerLernabschnittNachpruefung, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefung } from './SchuelerLernabschnittNachpruefung';
+import { SchuelerLernabschnittNachpruefung, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefung } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 

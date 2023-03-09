@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { BerufskollegAnlageKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegAnlageKatalogEintrag } from '../../data/schule/BerufskollegAnlageKatalogEintrag';
+import { BerufskollegAnlageKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegAnlageKatalogEintrag } from '../../../core/data/schule/BerufskollegAnlageKatalogEintrag';
 
 export class BerufskollegAnlage extends JavaObject {
 

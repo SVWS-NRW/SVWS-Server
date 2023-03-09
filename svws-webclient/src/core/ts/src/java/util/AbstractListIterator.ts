@@ -5,8 +5,8 @@ import { NoSuchElementException } from './NoSuchElementException';
 
 import { Consumer } from './function/Consumer';
 
-import { IllegalStateException } from '../lang/IllegalStateException';
-import { JavaObject } from '../lang/JavaObject';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
+import { JavaObject } from '../../java/lang/JavaObject';
 
 
 export class AbstractListIterator<E> extends JavaObject implements JavaIterator<E> {

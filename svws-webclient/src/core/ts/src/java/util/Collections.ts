@@ -3,7 +3,7 @@ import { JavaSet } from './JavaSet';
 import { List } from './List';
 import { Vector } from './Vector';
 
-import { JavaObject } from '../lang/JavaObject';
+import { JavaObject } from '../../java/lang/JavaObject';
 
 
 export class Collections extends JavaObject {

@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { BenutzerConfigElement, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerConfigElement } from './BenutzerConfigElement';
+import { BenutzerConfigElement, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerConfigElement } from '../../../core/data/benutzer/BenutzerConfigElement';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class BenutzerConfig extends JavaObject {

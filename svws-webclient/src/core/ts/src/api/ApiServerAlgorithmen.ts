@@ -1,4 +1,4 @@
-import { BaseApi } from './BaseApi';
+import { BaseApi } from '../api/BaseApi';
 import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../core/data/abschluss/AbschlussErgebnis';
 import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';

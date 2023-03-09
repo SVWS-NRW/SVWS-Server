@@ -1,4 +1,4 @@
-import { JavaObject } from '../lang/JavaObject';
+import { JavaObject } from '../../java/lang/JavaObject';
 
 export abstract class JavaMapEntry<K, V> extends JavaObject {
     abstract getKey() : K;

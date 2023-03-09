@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { LehrerKatalogMehrleistungsartEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogMehrleistungsartEintrag } from '../../data/lehrer/LehrerKatalogMehrleistungsartEintrag';
+import { LehrerKatalogMehrleistungsartEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogMehrleistungsartEintrag } from '../../../core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class LehrerMehrleistungArt extends JavaObject {

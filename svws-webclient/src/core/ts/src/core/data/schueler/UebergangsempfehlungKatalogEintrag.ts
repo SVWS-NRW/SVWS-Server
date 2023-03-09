@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../types/schule/Schulform';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class UebergangsempfehlungKatalogEintrag extends JavaObject {

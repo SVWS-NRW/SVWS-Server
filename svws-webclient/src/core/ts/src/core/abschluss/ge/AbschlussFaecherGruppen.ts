@@ -1,9 +1,9 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../data/abschluss/GEAbschlussFach';
+import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder, cast_java_lang_StringBuilder } from '../../../java/lang/StringBuilder';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { AbschlussFaecherGruppe, cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppe } from './AbschlussFaecherGruppe';
+import { AbschlussFaecherGruppe, cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
 import { Predicate, cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
 
 export class AbschlussFaecherGruppen extends JavaObject {

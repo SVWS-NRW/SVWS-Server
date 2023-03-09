@@ -1,5 +1,5 @@
 import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { MinHeapIterator, cast_de_nrw_schule_svws_core_adt_tree_MinHeapIterator } from './MinHeapIterator';
+import { MinHeapIterator, cast_de_nrw_schule_svws_core_adt_tree_MinHeapIterator } from '../../../core/adt/tree/MinHeapIterator';
 import { StringBuilder, cast_java_lang_StringBuilder } from '../../../java/lang/StringBuilder';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { System, cast_java_lang_System } from '../../../java/lang/System';

@@ -1,10 +1,10 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KursblockungAlgorithmusS, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusS } from './KursblockungAlgorithmusS';
-import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_KursblockungStatic } from './KursblockungStatic';
+import { KursblockungAlgorithmusS, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusS } from '../../core/kursblockung/KursblockungAlgorithmusS';
+import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from './KursblockungDynDaten';
-import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from './KursblockungDynSchueler';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../logger/Logger';
+import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
+import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 
 export class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 

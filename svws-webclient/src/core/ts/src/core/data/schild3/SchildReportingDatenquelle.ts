@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { SchildReportingDatenquelleAttribut, cast_de_nrw_schule_svws_core_data_schild3_SchildReportingDatenquelleAttribut } from './SchildReportingDatenquelleAttribut';
+import { SchildReportingDatenquelleAttribut, cast_de_nrw_schule_svws_core_data_schild3_SchildReportingDatenquelleAttribut } from '../../../core/data/schild3/SchildReportingDatenquelleAttribut';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';

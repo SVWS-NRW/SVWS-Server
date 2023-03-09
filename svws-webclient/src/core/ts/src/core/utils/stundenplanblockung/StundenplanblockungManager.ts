@@ -1,12 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { StundenplanblockungManagerFachMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFachMenge } from './StundenplanblockungManagerFachMenge';
-import { StundenplanblockungManagerLehrkraftMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraftMenge } from './StundenplanblockungManagerLehrkraftMenge';
-import { StundenplanblockungManagerLerngruppeMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppeMenge } from './StundenplanblockungManagerLerngruppeMenge';
-import { StundenplanblockungManagerRaumMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaumMenge } from './StundenplanblockungManagerRaumMenge';
-import { StundenplanblockungManagerKopplungMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplungMenge } from './StundenplanblockungManagerKopplungMenge';
-import { StundenplanblockungManagerSchule, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerSchule } from './StundenplanblockungManagerSchule';
-import { StundenplanblockungManagerStatistik, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerStatistik } from './StundenplanblockungManagerStatistik';
-import { StundenplanblockungManagerKlasseMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKlasseMenge } from './StundenplanblockungManagerKlasseMenge';
+import { StundenplanblockungManagerFachMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFachMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFachMenge';
+import { StundenplanblockungManagerLehrkraftMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraftMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraftMenge';
+import { StundenplanblockungManagerLerngruppeMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppeMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppeMenge';
+import { StundenplanblockungManagerRaumMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaumMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaumMenge';
+import { StundenplanblockungManagerKopplungMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplungMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplungMenge';
+import { StundenplanblockungManagerSchule, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerSchule } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
+import { StundenplanblockungManagerStatistik, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerStatistik } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
+import { StundenplanblockungManagerKlasseMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKlasseMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasseMenge';
 
 export class StundenplanblockungManager extends JavaObject {
 

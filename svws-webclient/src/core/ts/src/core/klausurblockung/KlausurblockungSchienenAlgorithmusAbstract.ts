@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KlausurblockungSchienenDynDaten, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenDynDaten } from './KlausurblockungSchienenDynDaten';
+import { KlausurblockungSchienenDynDaten, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenDynDaten } from '../../core/klausurblockung/KlausurblockungSchienenDynDaten';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../logger/Logger';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 
 export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObject {
 

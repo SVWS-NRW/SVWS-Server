@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { SchuleAbschnitte, cast_de_nrw_schule_svws_core_data_schule_SchuleAbschnitte } from './SchuleAbschnitte';
+import { SchuleAbschnitte, cast_de_nrw_schule_svws_core_data_schule_SchuleAbschnitte } from '../../../core/data/schule/SchuleAbschnitte';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Schuljahresabschnitt, cast_de_nrw_schule_svws_core_data_schule_Schuljahresabschnitt } from './Schuljahresabschnitt';
+import { Schuljahresabschnitt, cast_de_nrw_schule_svws_core_data_schule_Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuleStammdaten extends JavaObject {

@@ -25,11 +25,6 @@
 		"@headlessui/vue": "^1.7.7",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
-		"vue-simple-calendar": "^6.3.1",
-		"@svws-nrw/svws-core": "*",
-		"@svws-nrw/svws-ui": "*"
-	},
-	"devDependencies": {
-		"@vueuse/core": "^9.9.0"
+		"vue-simple-calendar": "^6.3.1"
 	}
 }

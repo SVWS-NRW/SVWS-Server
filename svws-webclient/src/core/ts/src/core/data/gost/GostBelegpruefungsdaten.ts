@@ -1,8 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBeratungslehrer, cast_de_nrw_schule_svws_core_data_gost_GostBeratungslehrer } from './GostBeratungslehrer';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from './GostFach';
+import { GostBeratungslehrer, cast_de_nrw_schule_svws_core_data_gost_GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer';
+import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from './Abiturdaten';
+import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 
 export class GostBelegpruefungsdaten extends JavaObject {
 

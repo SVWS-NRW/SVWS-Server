@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { KlausurblockungSchienenOutput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutput } from './KlausurblockungSchienenOutput';
+import { KlausurblockungSchienenOutput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutput } from '../../../core/data/klausurblockung/KlausurblockungSchienenOutput';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurblockungSchienenOutputs extends JavaObject {

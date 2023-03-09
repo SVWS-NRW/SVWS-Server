@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { BildungsgangTypKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BildungsgangTypKatalogEintrag } from '../../data/schule/BildungsgangTypKatalogEintrag';
+import { BildungsgangTypKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BildungsgangTypKatalogEintrag } from '../../../core/data/schule/BildungsgangTypKatalogEintrag';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class WeiterbildungskollegBildungsgangTyp extends JavaObject {

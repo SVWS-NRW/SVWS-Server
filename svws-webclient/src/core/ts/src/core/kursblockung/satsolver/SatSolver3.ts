@@ -1,15 +1,15 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { AVLSet, cast_de_nrw_schule_svws_core_adt_set_AVLSet } from '../../adt/set/AVLSet';
-import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from './Variable';
+import { AVLSet, cast_de_nrw_schule_svws_core_adt_set_AVLSet } from '../../../core/adt/set/AVLSet';
+import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { SatSolverA, cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverA } from './SatSolverA';
+import { SatSolverA, cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../adt/collection/LinkedCollection';
-import { Clause, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Clause } from './Clause';
+import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { Clause, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Clause } from '../../../core/kursblockung/satsolver/Clause';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Heap, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Heap } from './Heap';
+import { Heap, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Heap } from '../../../core/kursblockung/satsolver/Heap';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class SatSolver3 extends SatSolverA {

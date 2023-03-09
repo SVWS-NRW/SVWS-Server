@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereich } from '../../types/gost/GostFachbereich';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../data/gost/GostFach';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../types/gost/GostHalbjahr';
+import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereich } from '../../../core/types/gost/GostFachbereich';
+import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class GostFachManager extends JavaObject {

@@ -1,9 +1,9 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { AVLMapNode, cast_de_nrw_schule_svws_core_adt_map_AVLMapNode } from './AVLMapNode';
+import { AVLMapNode, cast_de_nrw_schule_svws_core_adt_map_AVLMapNode } from '../../../core/adt/map/AVLMapNode';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from './AVLMapSubMap';
+import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
 export class AVLMapSubCollectionIterator<K, V> extends JavaObject implements JavaIterator<V> {
 

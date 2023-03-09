@@ -1,13 +1,13 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchuelerStundenplanUnterricht, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplanUnterricht } from '../../data/stundenplan/SchuelerStundenplanUnterricht';
+import { SchuelerStundenplanUnterricht, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { IntegerComparator, cast_de_nrw_schule_svws_core_utils_stundenplan_IntegerComparator } from './IntegerComparator';
+import { IntegerComparator, cast_de_nrw_schule_svws_core_utils_stundenplan_IntegerComparator } from '../../../core/utils/stundenplan/IntegerComparator';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../../data/stundenplan/StundenplanZeitraster';
-import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplan } from '../../data/stundenplan/SchuelerStundenplan';
+import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplan } from '../../../core/data/stundenplan/SchuelerStundenplan';
 
 export class SchuelerStundenplanManager extends JavaObject {
 

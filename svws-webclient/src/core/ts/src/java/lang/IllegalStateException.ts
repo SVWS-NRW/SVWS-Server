@@ -1,4 +1,4 @@
-import { RuntimeException } from "./RuntimeException";
+import { RuntimeException } from "../../java/lang/RuntimeException";
 
 export class IllegalStateException extends RuntimeException {
 

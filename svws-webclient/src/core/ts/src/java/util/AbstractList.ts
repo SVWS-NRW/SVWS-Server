@@ -6,9 +6,9 @@ import { JavaIterator } from './JavaIterator';
 import { List } from './List';
 import { ListIterator } from './ListIterator';
 
-import { IndexOutOfBoundsException } from '../lang/IndexOutOfBoundsException';
-import { JavaObject } from '../lang/JavaObject';
-import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
+import { IndexOutOfBoundsException } from '../../java/lang/IndexOutOfBoundsException';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
 import { Comparator } from './Comparator';
 import { NullPointerException } from '../lang/NullPointerException';
 

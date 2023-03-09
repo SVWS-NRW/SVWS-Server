@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { KAOABerufsfeldEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOABerufsfeldEintrag } from '../../data/kaoa/KAOABerufsfeldEintrag';
+import { KAOABerufsfeldEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOABerufsfeldEintrag } from '../../../core/data/kaoa/KAOABerufsfeldEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';

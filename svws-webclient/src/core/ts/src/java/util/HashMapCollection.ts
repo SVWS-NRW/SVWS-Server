@@ -1,10 +1,10 @@
 import { Collection } from './Collection';
 import { JavaIterator } from './JavaIterator';
 
-import { Class } from '../lang/Class';
-import { JavaObject } from '../lang/JavaObject';
-import { TranspiledObject } from '../lang/TranspiledObject';
-import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
+import { Class } from '../../java/lang/Class';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { TranspiledObject } from '../../java/lang/TranspiledObject';
+import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
 
 
 export class HashMapCollection<K, V> implements Collection<V> {

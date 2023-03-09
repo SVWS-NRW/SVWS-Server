@@ -1,8 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../../../java/lang/JavaObject';
-import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../../Service';
+import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../../../core/Service';
 import { JavaBoolean, cast_java_lang_Boolean } from '../../../../../java/lang/JavaBoolean';
-import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../../../../data/gost/Abiturdaten';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../../logger/LogLevel';
+import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../../../core/logger/LogLevel';
 
 export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, boolean | null> {
 

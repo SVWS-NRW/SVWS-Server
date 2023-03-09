@@ -1,12 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { ENMLeistung, cast_de_nrw_schule_svws_core_data_enm_ENMLeistung } from './ENMLeistung';
-import { ENMLernabschnitt, cast_de_nrw_schule_svws_core_data_enm_ENMLernabschnitt } from './ENMLernabschnitt';
-import { ENMLeistungBemerkungen, cast_de_nrw_schule_svws_core_data_enm_ENMLeistungBemerkungen } from './ENMLeistungBemerkungen';
-import { ENMZP10, cast_de_nrw_schule_svws_core_data_enm_ENMZP10 } from './ENMZP10';
+import { ENMLeistung, cast_de_nrw_schule_svws_core_data_enm_ENMLeistung } from '../../../core/data/enm/ENMLeistung';
+import { ENMLernabschnitt, cast_de_nrw_schule_svws_core_data_enm_ENMLernabschnitt } from '../../../core/data/enm/ENMLernabschnitt';
+import { ENMLeistungBemerkungen, cast_de_nrw_schule_svws_core_data_enm_ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerkungen';
+import { ENMZP10, cast_de_nrw_schule_svws_core_data_enm_ENMZP10 } from '../../../core/data/enm/ENMZP10';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { ENMBKAbschluss, cast_de_nrw_schule_svws_core_data_enm_ENMBKAbschluss } from './ENMBKAbschluss';
+import { ENMBKAbschluss, cast_de_nrw_schule_svws_core_data_enm_ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { ENMSprachenfolge, cast_de_nrw_schule_svws_core_data_enm_ENMSprachenfolge } from './ENMSprachenfolge';
+import { ENMSprachenfolge, cast_de_nrw_schule_svws_core_data_enm_ENMSprachenfolge } from '../../../core/data/enm/ENMSprachenfolge';
 
 export class ENMSchueler extends JavaObject {
 

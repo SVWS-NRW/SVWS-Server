@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NationalitaetenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NationalitaetenKatalogEintrag } from '../../data/schule/NationalitaetenKatalogEintrag';
+import { NationalitaetenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NationalitaetenKatalogEintrag } from '../../../core/data/schule/NationalitaetenKatalogEintrag';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Nationalitaeten extends JavaObject {

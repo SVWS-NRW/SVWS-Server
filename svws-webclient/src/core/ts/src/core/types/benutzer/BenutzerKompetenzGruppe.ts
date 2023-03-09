@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { BenutzerKompetenzGruppenKatalogEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerKompetenzGruppenKatalogEintrag } from '../../data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
+import { BenutzerKompetenzGruppenKatalogEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerKompetenzGruppenKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 
 export class BenutzerKompetenzGruppe extends JavaObject {
 

@@ -3,7 +3,7 @@ import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { StundenplanblockungManagerLerngruppe, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from './StundenplanblockungManagerLerngruppe';
+import { StundenplanblockungManagerLerngruppe, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {

@@ -1,11 +1,11 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HerkunftKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftKatalogEintrag } from '../../data/schule/HerkunftKatalogEintrag';
+import { HerkunftKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftKatalogEintrag } from '../../../core/data/schule/HerkunftKatalogEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { HerkunftBildungsgang, cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgang } from './HerkunftBildungsgang';
-import { HerkunftSchulform, cast_de_nrw_schule_svws_core_types_schueler_HerkunftSchulform } from './HerkunftSchulform';
-import { HerkunftBildungsgangsTyp, cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgangsTyp } from './HerkunftBildungsgangsTyp';
+import { HerkunftBildungsgang, cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgang } from '../../../core/types/schueler/HerkunftBildungsgang';
+import { HerkunftSchulform, cast_de_nrw_schule_svws_core_types_schueler_HerkunftSchulform } from '../../../core/types/schueler/HerkunftSchulform';
+import { HerkunftBildungsgangsTyp, cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgangsTyp } from '../../../core/types/schueler/HerkunftBildungsgangsTyp';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { HerkunftSonstige, cast_de_nrw_schule_svws_core_types_schueler_HerkunftSonstige } from './HerkunftSonstige';
+import { HerkunftSonstige, cast_de_nrw_schule_svws_core_types_schueler_HerkunftSonstige } from '../../../core/types/schueler/HerkunftSonstige';
 
 export class Herkunft extends JavaObject {
 

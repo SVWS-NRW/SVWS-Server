@@ -53,8 +53,9 @@ module.exports = {
 	overrides: [
 		{
 			files: [
-				"src/ui-components/ts/src/**/*.{ts,js,cjs,mjs}",
-				"src/web-client/ts/src/**/*.{ts,js,cjs,mjs}",
+				"src/components/ts/src/**/*.{ts,js,cjs,mjs}",
+				"src/ui/ts/src/**/*.{ts,js,cjs,mjs}",
+				"src/client/ts/src/**/*.{ts,js,cjs,mjs}",
 			],
 			env: {
 				// diese Packages haben keinen zugriff auf Node APIs da er im Browser läuft.

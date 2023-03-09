@@ -1,4 +1,4 @@
-import { Exception } from '../lang/Exception';
+import { Exception } from '../../java/lang/Exception';
 
 export class IOException extends Exception {
     

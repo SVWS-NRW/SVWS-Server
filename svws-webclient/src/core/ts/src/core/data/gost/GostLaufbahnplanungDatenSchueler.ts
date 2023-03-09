@@ -1,9 +1,9 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostLaufbahnplanungDatenFachbelegung, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDatenFachbelegung } from './GostLaufbahnplanungDatenFachbelegung';
+import { GostLaufbahnplanungDatenFachbelegung, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/GostLaufbahnplanungDatenFachbelegung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../schueler/Sprachendaten';
+import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 

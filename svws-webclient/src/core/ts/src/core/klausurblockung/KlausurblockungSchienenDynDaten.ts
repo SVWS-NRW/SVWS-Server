@@ -1,19 +1,19 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KlausurblockungSchienenOutput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutput } from '../data/klausurblockung/KlausurblockungSchienenOutput';
+import { KlausurblockungSchienenOutput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutput } from '../../core/data/klausurblockung/KlausurblockungSchienenOutput';
 import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
-import { KlausurblockungSchienenInput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInput } from '../data/klausurblockung/KlausurblockungSchienenInput';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../adt/collection/LinkedCollection';
+import { KlausurblockungSchienenInput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInput } from '../../core/data/klausurblockung/KlausurblockungSchienenInput';
+import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../logger/Logger';
-import { KlausurblockungException, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungException } from './KlausurblockungException';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../logger/LogLevel';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
+import { KlausurblockungException, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungException } from '../../core/klausurblockung/KlausurblockungException';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { JavaMapEntry, cast_java_util_Map_Entry } from '../../java/util/JavaMapEntry';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KlausurblockungSchienenOutputKlausur, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutputKlausur } from '../data/klausurblockung/KlausurblockungSchienenOutputKlausur';
+import { KlausurblockungSchienenOutputKlausur, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutputKlausur } from '../../core/data/klausurblockung/KlausurblockungSchienenOutputKlausur';
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
-import { KlausurblockungSchienenInputSchueler, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInputSchueler } from '../data/klausurblockung/KlausurblockungSchienenInputSchueler';
+import { KlausurblockungSchienenInputSchueler, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInputSchueler } from '../../core/data/klausurblockung/KlausurblockungSchienenInputSchueler';
 
 export class KlausurblockungSchienenDynDaten extends JavaObject {
 

@@ -4,7 +4,7 @@ import { ConcurrentModificationException } from './ConcurrentModificationExcepti
 import { ListIterator } from './ListIterator';
 import { NoSuchElementException } from './NoSuchElementException';
 
-import { IllegalStateException } from '../lang/IllegalStateException';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
 
 
 export class AbstractListListIterator<E> extends AbstractListIterator<E> implements ListIterator<E> {

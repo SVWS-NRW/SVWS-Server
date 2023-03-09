@@ -3,7 +3,7 @@ import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIt
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { SortedSet, cast_java_util_SortedSet } from '../../../java/util/SortedSet';
-import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from '../map/AVLMap';
+import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
 export class AVLSet<E> extends JavaObject implements NavigableSet<E> {

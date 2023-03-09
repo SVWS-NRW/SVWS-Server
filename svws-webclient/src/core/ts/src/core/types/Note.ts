@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { NotenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NotenKatalogEintrag } from '../data/schule/NotenKatalogEintrag';
+import { NotenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NotenKatalogEintrag } from '../../core/data/schule/NotenKatalogEintrag';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 
 export class Note extends JavaObject {

@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { LehrerKatalogLeitungsfunktionenEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLeitungsfunktionenEintrag } from '../../data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
+import { LehrerKatalogLeitungsfunktionenEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLeitungsfunktionenEintrag } from '../../../core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class LehrerLeitungsfunktion extends JavaObject {

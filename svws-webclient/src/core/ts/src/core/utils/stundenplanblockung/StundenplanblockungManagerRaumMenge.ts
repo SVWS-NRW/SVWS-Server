@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { StundenplanblockungManagerRaum, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaum } from './StundenplanblockungManagerRaum';
+import { StundenplanblockungManagerRaum, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaum } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaum';
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';

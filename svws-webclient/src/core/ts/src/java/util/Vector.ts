@@ -9,10 +9,10 @@ import { VectorEnumerator } from './VectorEnumerator';
 
 import { Consumer } from './function/Consumer';
 
-import { ArrayIndexOutOfBoundsException } from '../lang/ArrayIndexOutOfBoundsException';
-import { Cloneable } from '../lang/Cloneable';
-import { IndexOutOfBoundsException } from '../lang/IndexOutOfBoundsException';
-import { JavaObject } from '../lang/JavaObject';
+import { ArrayIndexOutOfBoundsException } from '../../java/lang/ArrayIndexOutOfBoundsException';
+import { Cloneable } from '../../java/lang/Cloneable';
+import { IndexOutOfBoundsException } from '../../java/lang/IndexOutOfBoundsException';
+import { JavaObject } from '../../java/lang/JavaObject';
 import { NullPointerException } from '../lang/NullPointerException';
 
 

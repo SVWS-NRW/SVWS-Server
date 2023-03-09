@@ -1,9 +1,9 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException, cast_java_util_ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from './LinkedCollection';
+import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { LinkedCollectionElement, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionElement } from './LinkedCollectionElement';
+import { LinkedCollectionElement, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
 import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class LinkedCollectionDescendingIterator<E> extends JavaObject implements JavaIterator<E> {

@@ -1,4 +1,4 @@
-import { JavaObject } from '../lang/JavaObject';
+import { JavaObject } from '../../java/lang/JavaObject';
 
 export class Random extends JavaObject {
 

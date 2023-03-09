@@ -4,10 +4,10 @@ import { HashSetIterator } from './HashSetIterator';
 import { JavaIterator } from './JavaIterator';
 import { JavaSet } from './JavaSet';
 
-import { Cloneable } from '../lang/Cloneable';
-import { JavaObject } from '../lang/JavaObject';
+import { Cloneable } from '../../java/lang/Cloneable';
+import { JavaObject } from '../../java/lang/JavaObject';
 
-import { Serializable } from '../io/Serializable';
+import { Serializable } from '../../java/io/Serializable';
 
 
 export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable, Serializable {

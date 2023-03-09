@@ -2,24 +2,24 @@ import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaM
 import { NavigableSet, cast_java_util_NavigableSet } from '../../../java/util/NavigableSet';
 import { JavaSet, cast_java_util_Set } from '../../../java/util/JavaSet';
 import { NavigableMap, cast_java_util_NavigableMap } from '../../../java/util/NavigableMap';
-import { AVLMapSubCollection, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubCollection } from './AVLMapSubCollection';
-import { AVLMapIntervall, cast_de_nrw_schule_svws_core_adt_map_AVLMapIntervall } from './AVLMapIntervall';
-import { AVLMapSubEntrySetIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySetIterator } from './AVLMapSubEntrySetIterator';
-import { AVLMapSubKeySet, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubKeySet } from './AVLMapSubKeySet';
+import { AVLMapSubCollection, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubCollection } from '../../../core/adt/map/AVLMapSubCollection';
+import { AVLMapIntervall, cast_de_nrw_schule_svws_core_adt_map_AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
+import { AVLMapSubEntrySetIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySetIterator } from '../../../core/adt/map/AVLMapSubEntrySetIterator';
+import { AVLMapSubKeySet, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubKeySet } from '../../../core/adt/map/AVLMapSubKeySet';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { SortedSet, cast_java_util_SortedSet } from '../../../java/util/SortedSet';
-import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from './AVLMap';
+import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { AVLMapNode, cast_de_nrw_schule_svws_core_adt_map_AVLMapNode } from './AVLMapNode';
+import { AVLMapNode, cast_de_nrw_schule_svws_core_adt_map_AVLMapNode } from '../../../core/adt/map/AVLMapNode';
 import { SortedMap, cast_java_util_SortedMap } from '../../../java/util/SortedMap';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
-import { AVLMapSubKeySetIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubKeySetIterator } from './AVLMapSubKeySetIterator';
+import { AVLMapSubKeySetIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubKeySetIterator } from '../../../core/adt/map/AVLMapSubKeySetIterator';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { AVLMapSubEntrySet, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySet } from './AVLMapSubEntrySet';
+import { AVLMapSubEntrySet, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySet } from '../../../core/adt/map/AVLMapSubEntrySet';
 import { JavaMap, cast_java_util_Map } from '../../../java/util/JavaMap';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { AVLMapSubCollectionIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubCollectionIterator } from './AVLMapSubCollectionIterator';
+import { AVLMapSubCollectionIterator, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubCollectionIterator } from '../../../core/adt/map/AVLMapSubCollectionIterator';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V> {

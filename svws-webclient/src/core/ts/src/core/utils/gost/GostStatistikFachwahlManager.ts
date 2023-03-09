@@ -1,8 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostStatistikFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahl } from '../../data/gost/GostStatistikFachwahl';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../types/gost/GostHalbjahr';
+import { GostStatistikFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahl } from '../../../core/data/gost/GostStatistikFachwahl';
+import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GostStatistikFachwahlHalbjahr, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahlHalbjahr } from '../../data/gost/GostStatistikFachwahlHalbjahr';
+import { GostStatistikFachwahlHalbjahr, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahlHalbjahr } from '../../../core/data/gost/GostStatistikFachwahlHalbjahr';
 
 export class GostStatistikFachwahlManager extends JavaObject {
 

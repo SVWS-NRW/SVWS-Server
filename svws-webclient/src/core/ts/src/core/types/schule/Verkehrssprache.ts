@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { VerkehrsspracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_VerkehrsspracheKatalogEintrag } from '../../data/schule/VerkehrsspracheKatalogEintrag';
+import { VerkehrsspracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_VerkehrsspracheKatalogEintrag } from '../../../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Verkehrssprache extends JavaObject {

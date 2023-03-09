@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { ENMFloskel, cast_de_nrw_schule_svws_core_data_enm_ENMFloskel } from './ENMFloskel';
+import { ENMFloskel, cast_de_nrw_schule_svws_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 

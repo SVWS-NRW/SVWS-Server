@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HerkunftBildungsgangKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangKatalogEintrag } from '../../data/schule/HerkunftBildungsgangKatalogEintrag';
+import { HerkunftBildungsgangKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangKatalogEintrag } from '../../../core/data/schule/HerkunftBildungsgangKatalogEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../schule/Schulgliederung';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class HerkunftBildungsgang extends JavaObject {

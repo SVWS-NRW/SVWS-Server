@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException, cast_java_util_ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
-import { MinHeap, cast_de_nrw_schule_svws_core_adt_tree_MinHeap } from './MinHeap';
+import { MinHeap, cast_de_nrw_schule_svws_core_adt_tree_MinHeap } from '../../../core/adt/tree/MinHeap';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';

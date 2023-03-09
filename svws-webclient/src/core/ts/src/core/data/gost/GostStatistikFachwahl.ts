@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GostStatistikFachwahlHalbjahr, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahlHalbjahr } from './GostStatistikFachwahlHalbjahr';
+import { GostStatistikFachwahlHalbjahr, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahlHalbjahr } from '../../../core/data/gost/GostStatistikFachwahlHalbjahr';
 
 export class GostStatistikFachwahl extends JavaObject {
 

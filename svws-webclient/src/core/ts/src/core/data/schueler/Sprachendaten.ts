@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung } from './Sprachbelegung';
-import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung } from './Sprachpruefung';
+import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
+import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class Sprachendaten extends JavaObject {

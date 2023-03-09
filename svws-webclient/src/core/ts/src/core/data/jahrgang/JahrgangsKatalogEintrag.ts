@@ -3,7 +3,7 @@ import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInte
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { JahrgangsKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintragBezeichnung } from './JahrgangsKatalogEintragBezeichnung';
+import { JahrgangsKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
 
 export class JahrgangsKatalogEintrag extends JavaObject {
 

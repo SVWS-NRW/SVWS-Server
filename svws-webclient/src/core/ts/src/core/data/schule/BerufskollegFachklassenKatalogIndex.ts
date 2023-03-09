@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { BerufskollegFachklassenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogEintrag } from './BerufskollegFachklassenKatalogEintrag';
+import { BerufskollegFachklassenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 

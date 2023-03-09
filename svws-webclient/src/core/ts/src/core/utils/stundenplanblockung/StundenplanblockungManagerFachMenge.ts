@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { StundenplanblockungManagerFach, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFach } from './StundenplanblockungManagerFach';
+import { StundenplanblockungManagerFach, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFach } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFach';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';

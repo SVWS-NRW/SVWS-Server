@@ -1,8 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { BerufskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp } from '../schule/BerufskollegBildungsgangTyp';
-import { HerkunftBildungsgangTypKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangTypKatalogEintrag } from '../../data/schule/HerkunftBildungsgangTypKatalogEintrag';
-import { WeiterbildungskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../schule/WeiterbildungskollegBildungsgangTyp';
+import { BerufskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp } from '../../../core/types/schule/BerufskollegBildungsgangTyp';
+import { HerkunftBildungsgangTypKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangTypKatalogEintrag } from '../../../core/data/schule/HerkunftBildungsgangTypKatalogEintrag';
+import { WeiterbildungskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class HerkunftBildungsgangsTyp extends JavaObject {

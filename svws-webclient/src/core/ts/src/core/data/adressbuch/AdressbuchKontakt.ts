@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { AdressbuchEintrag, cast_de_nrw_schule_svws_core_data_adressbuch_AdressbuchEintrag } from './AdressbuchEintrag';
-import { Telefonnummer, cast_de_nrw_schule_svws_core_data_adressbuch_Telefonnummer } from './Telefonnummer';
+import { AdressbuchEintrag, cast_de_nrw_schule_svws_core_data_adressbuch_AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
+import { Telefonnummer, cast_de_nrw_schule_svws_core_data_adressbuch_Telefonnummer } from '../../../core/data/adressbuch/Telefonnummer';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';

@@ -1,10 +1,10 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchuelerLeistungsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLeistungsdaten } from './SchuelerLeistungsdaten';
+import { SchuelerLeistungsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { SchuelerLernabschnittNachpruefungsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefungsdaten } from './SchuelerLernabschnittNachpruefungsdaten';
+import { SchuelerLernabschnittNachpruefungsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefungsdaten } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefungsdaten';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { SchuelerLernabschnittBemerkungen, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittBemerkungen } from './SchuelerLernabschnittBemerkungen';
+import { SchuelerLernabschnittBemerkungen, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittBemerkungen } from '../../../core/data/schueler/SchuelerLernabschnittBemerkungen';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerLernabschnittsdaten extends JavaObject {

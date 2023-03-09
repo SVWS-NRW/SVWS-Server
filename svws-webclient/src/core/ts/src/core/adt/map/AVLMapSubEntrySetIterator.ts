@@ -3,7 +3,7 @@ import { IllegalStateException, cast_java_lang_IllegalStateException } from '../
 import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from './AVLMapSubMap';
+import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
 export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaIterator<JavaMapEntry<K, V>> {
 

@@ -1,9 +1,9 @@
 import { Collection } from './Collection';
 import { JavaIterator } from './JavaIterator';
 
-import { JavaObject } from '../lang/JavaObject';
-import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
-import { NullPointerException } from '../lang/NullPointerException';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
+import { NullPointerException } from '../../java/lang/NullPointerException';
 import { Consumer } from './function/Consumer';
 
 

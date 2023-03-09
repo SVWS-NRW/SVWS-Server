@@ -1,4 +1,4 @@
-import { JavaIterator } from '../util/JavaIterator';
+import { JavaIterator } from '../../java/util/JavaIterator';
 
 import { TranspiledObject } from './TranspiledObject';
 

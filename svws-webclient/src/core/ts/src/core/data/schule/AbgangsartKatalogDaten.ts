@@ -2,7 +2,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { SchulformGliederungJahrgaenge, cast_de_nrw_schule_svws_core_data_schule_SchulformGliederungJahrgaenge } from './SchulformGliederungJahrgaenge';
+import { SchulformGliederungJahrgaenge, cast_de_nrw_schule_svws_core_data_schule_SchulformGliederungJahrgaenge } from '../../../core/data/schule/SchulformGliederungJahrgaenge';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class AbgangsartKatalogDaten extends JavaObject {

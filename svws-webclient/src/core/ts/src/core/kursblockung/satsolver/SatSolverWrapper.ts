@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SatSolverA, cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverA } from './SatSolverA';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../adt/collection/LinkedCollection';
+import { SatSolverA, cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
+import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 

@@ -6,11 +6,11 @@
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["../../ts-lib/ts/src/*"]
+			"~/*": ["../../core/ts/src/*"]
 		}
 	},
 	"include": [
 		"src/**/*",
-		"../../ts-lib/ts/src/**/*"
+		"../../core/ts/src/**/*"
 	]
 }

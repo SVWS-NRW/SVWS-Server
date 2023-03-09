@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { LehrerKatalogLehramtAnerkennungEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehramtAnerkennungEintrag } from '../../data/lehrer/LehrerKatalogLehramtAnerkennungEintrag';
+import { LehrerKatalogLehramtAnerkennungEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehramtAnerkennungEintrag } from '../../../core/data/lehrer/LehrerKatalogLehramtAnerkennungEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';

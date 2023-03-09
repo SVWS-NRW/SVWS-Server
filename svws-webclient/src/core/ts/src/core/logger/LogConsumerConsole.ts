@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from './LogData';
+import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from '../../core/logger/LogData';
 import { Consumer, cast_java_util_function_Consumer } from '../../java/util/function/Consumer';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { System, cast_java_lang_System } from '../../java/lang/System';

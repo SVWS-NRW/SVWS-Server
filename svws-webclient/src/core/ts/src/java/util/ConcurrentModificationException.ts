@@ -1,4 +1,4 @@
-import { RuntimeException } from "../lang/RuntimeException";
+import { RuntimeException } from "../../java/lang/RuntimeException";
 
 export class ConcurrentModificationException extends RuntimeException {
 

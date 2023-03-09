@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Service, cast_de_nrw_schule_svws_core_Service } from '../Service';
-import { StundenplanblockungManager, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManager } from '../utils/stundenplanblockung/StundenplanblockungManager';
+import { Service, cast_de_nrw_schule_svws_core_Service } from '../../core/Service';
+import { StundenplanblockungManager, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManager } from '../../core/utils/stundenplanblockung/StundenplanblockungManager';
 
 export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungManager, StundenplanblockungManager> {
 

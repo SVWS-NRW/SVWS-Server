@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from './Variable';
+import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';

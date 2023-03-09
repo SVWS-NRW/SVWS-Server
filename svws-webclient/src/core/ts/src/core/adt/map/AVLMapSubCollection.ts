@@ -2,7 +2,7 @@ import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIt
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from './AVLMapSubMap';
+import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<V> {

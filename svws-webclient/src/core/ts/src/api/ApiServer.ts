@@ -1,4 +1,4 @@
-import { BaseApi } from './BaseApi';
+import { BaseApi } from '../api/BaseApi';
 import { AbgangsartKatalog, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';

@@ -3,8 +3,8 @@ import { Collection, cast_java_util_Collection } from './Collection';
 import { JavaIterator } from './JavaIterator';
 import { JavaSet } from './JavaSet';
 
-import { JavaObject } from '../lang/JavaObject';
-import { NullPointerException } from '../lang/NullPointerException';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { NullPointerException } from '../../java/lang/NullPointerException';
 
 
 export abstract class AbstractSet<E> extends AbstractCollection<E> implements JavaSet<E> {

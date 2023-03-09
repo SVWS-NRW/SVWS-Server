@@ -1,12 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HerkunftsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintrag } from '../../data/schule/HerkunftsartKatalogEintrag';
+import { HerkunftsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintrag } from '../../../core/data/schule/HerkunftsartKatalogEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../schule/Schulform';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { HerkunftsartKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintragBezeichnung } from '../../data/schule/HerkunftsartKatalogEintragBezeichnung';
+import { HerkunftsartKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class Herkunftsarten extends JavaObject {

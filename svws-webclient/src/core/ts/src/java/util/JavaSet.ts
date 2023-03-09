@@ -1,4 +1,4 @@
-import { JavaIterable } from '../lang/JavaIterable';
+import { JavaIterable } from '../../java/lang/JavaIterable';
 
 import { JavaIterator } from './JavaIterator';
 import { Collection } from './Collection';

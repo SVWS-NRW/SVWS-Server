@@ -1,12 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung } from '../../data/schueler/Sprachbelegung';
-import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung } from '../../data/schueler/Sprachpruefung';
-import { Sprachpruefungniveau, cast_de_nrw_schule_svws_core_types_fach_Sprachpruefungniveau } from '../../types/fach/Sprachpruefungniveau';
+import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
+import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
+import { Sprachpruefungniveau, cast_de_nrw_schule_svws_core_types_fach_Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
 import { NumberFormatException, cast_java_lang_NumberFormatException } from '../../../java/lang/NumberFormatException';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../data/schueler/Sprachendaten';
+import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
