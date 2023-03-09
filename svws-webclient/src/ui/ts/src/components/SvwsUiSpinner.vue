@@ -7,9 +7,7 @@
 
 <script setup lang="ts">
 
-	const {
-		spinning = false,
-	} = defineProps<{
+	defineProps<{
 		spinning: boolean;
 	}>();
 
