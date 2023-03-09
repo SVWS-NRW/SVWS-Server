@@ -8,6 +8,18 @@ import Markdown from "vite-plugin-md";
 import { resolve } from "path";
 import { ComponentResolver } from 'unplugin-vue-components/types';
 
+const dev = process.env.NODE_ENV === 'development';
+const svwsUi = dev ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui';
+const svwsComponents = [ 'src/components' ];
+const svwsResolvers: ComponentResolver[] = [ IconsResolver() ];
+if (dev) {
+	svwsComponents.push(resolve(__dirname, '../../ui-components/ts/src/components'));
+} else {
+	svwsResolvers.push({
+		type: 'component', resolve: (name: string) => { if (name.startsWith('SvwsUi') ) { return {	name,	from: svwsUi } } }
+	});
+}
+
 export default defineConfig({
 	test: {},
 	server: { port: 3000 },
@@ -18,28 +30,18 @@ export default defineConfig({
 		}),
 		Markdown(),
 		Components({
-			resolvers: [IconsResolver(), SvwsUiResolver()],
-			dirs: ['src/components'],
+			resolvers: svwsResolvers,
+			dirs: svwsComponents,
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-		    types: [
-				{
-					from: process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui',
-					names: SVWSComponentNames()
-				}
-			]
 		}),
 		Icons(),
 	],
 	resolve: {
-		// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,
-		// sonst gibt es Probleme, die evtl durch andere Build-Methoden korrigiert
-		// werden könn. Diese Methode funktioniert aber.
-		dedupe: ["vue"],
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
-			'@svws-nrw/svws-ui': process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui'
+			'@svws-nrw/svws-ui': svwsUi
 		}
 	},
 	build: {
@@ -57,59 +59,3 @@ export default defineConfig({
 		}
 	}
 });
-
-function SvwsUiResolver (): ComponentResolver {
-	return {
-		type: 'component',
-		resolve: (name: string) => {
-			// name = pascalCase(name)
-			if (name.startsWith('SvwsUi') ) {
-				return {
-					name,
-					from: process.env.NODE_ENV === 'development' ? resolve(__dirname, "../../ui-components/ts/src/index.ts") : '@svws-nrw/svws-ui'
-				}
-			}
-		}
-	}
-}
-
-function SVWSComponentNames() {
-	return [
-		"SvwsUiButton",
-		"SvwsUiCheckbox",
-		"SvwsUiDropdown",
-		"SvwsUiDropdownItem",
-		"SvwsUiDropdownWithAction",
-		"SvwsUiMultiSelect",
-		"SvwsUiProgressBar",
-		"SvwsUiRadioGroup",
-		"SvwsUiRadioOption",
-		"SvwsUiSelectInput",
-		"SvwsUiTabBar",
-		"SvwsUiTabButton",
-		"SvwsUiTabPanel",
-		"SvwsUiTextareaInput",
-		"SvwsUiTextInput",
-		"SvwsUiToggle",
-		"SvwsUiAvatar",
-		"SvwsUiContentCard",
-		"SvwsUiHeader",
-		"SvwsUiIcon",
-		"SvwsUiModal",
-		"SvwsUiAppLayout",
-		"SvwsUiSidebarMenu",
-		"SvwsUiSidebarMenuHeader",
-		"SvwsUiSidebarMenuItem",
-		"SvwsUiSecondaryMenu",
-		"SvwsUiBadge",
-		"SvwsUiTooltip",
-		"SvwsUiPopover",
-		"SvwsUiTable",
-		"SvwsUiRouterTabBar",
-		"SvwsUiRouterTabBarButton",
-		"SvwsUiRouterVerticalTabBar",
-		"SvwsUiDragData",
-		"SvwsUiDropData",
-		"SvwsUiSpinner"
-	]
-}
