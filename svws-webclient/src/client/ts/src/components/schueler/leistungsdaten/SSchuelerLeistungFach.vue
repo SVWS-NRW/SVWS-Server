@@ -10,13 +10,11 @@
 	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: SchuelerLernabschnittsdaten;
-		leistungsdaten: SchuelerLeistungsdaten,
+		fach: number,
 		mapFaecher: Map<number, FaecherListeEintrag>
 	}>();
 
-	const id: ComputedRef<number> = computed(() => props.leistungsdaten.fachID);
-	const fach: ComputedRef<FaecherListeEintrag | undefined> = computed(() => props.mapFaecher.get(id.value));
+	const fach: ComputedRef<FaecherListeEintrag | undefined> = computed(() => props.mapFaecher.get(props.fach));
 	const fach_bezeichnung: ComputedRef<string | undefined> = computed(() => fach.value?.bezeichnung ?? undefined);
 
 	const zul_fach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {

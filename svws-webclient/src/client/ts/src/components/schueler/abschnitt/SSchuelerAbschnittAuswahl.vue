@@ -1,23 +1,17 @@
 <template>
-	<svws-ui-table :model-value="lernabschnitt" @update:model-value="setLernabschnitt" :columns="cols" :data="(lernabschnitte.toArray() as SchuelerLernabschnittListeEintrag[])" :footer="false">
-		<template #cell-schuljahresabschnitt="{row}">
+	<svws-ui-data-table :clicked="lernabschnitt" @update:clicked="setLernabschnitt" clickable :columns="cols" :items="lernabschnitte" :footer="false">
+		<template #cell="{rowData: row}">
 			{{ row.schuljahr + "." + row.abschnitt + (row.wechselNr === null ? "" : " (alt)") }}
 		</template>
-	</svws-ui-table>
+	</svws-ui-data-table>
 </template>
 
 <script setup lang="ts">
 
-	import { SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core";
-	import { DataTableItem } from "@ui";
 	import { ref } from "vue";
 	import { SchuelerAbschnittAuswahlProps } from "./SSchuelerAbschnittAuswahlProps";
 
 	const props = defineProps<SchuelerAbschnittAuswahlProps>();
-
-	async function setLernabschnitt(value: DataTableItem) {
-		return await props.setLernabschnitt(value as SchuelerLernabschnittListeEintrag | undefined);
-	}
 
 	const cols = ref([
 		{ key: "schuljahresabschnitt", label: "Abschnitt" },

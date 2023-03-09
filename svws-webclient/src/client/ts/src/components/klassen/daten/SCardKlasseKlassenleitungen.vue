@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Klassenleitungen">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-table :columns="cols" :data="liste" :footer="false" />
+				<svws-ui-data-table :columns="cols" :items="liste" :footer="false" />
 			</div>
 		</div>
 	</svws-ui-content-card>
