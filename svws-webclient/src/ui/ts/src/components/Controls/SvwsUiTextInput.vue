@@ -4,7 +4,7 @@
 	};
 </script>
 <script setup lang="ts">
-	import { useSlots, ref, computed, readonly, watch } from "vue";
+	import { useSlots, ref, computed, watch } from "vue";
 	import { InputType } from "../../types";
 	import { genId } from "../../utils";
 
