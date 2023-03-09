@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="mt-10">
+	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
 			<template #cell(kuerzel)="{ rowData: row }">
 				{{ row.kuerzel }}
@@ -10,7 +10,7 @@
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung" />
-	</div>
+	</template>
 </template>
 
 <script setup lang="ts">

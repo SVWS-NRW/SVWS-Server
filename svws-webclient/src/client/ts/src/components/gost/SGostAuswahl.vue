@@ -4,14 +4,13 @@
 		<template #abschnitt>
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
-		<template #header />
 		<template #content>
-			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols" footer>
+			<div class="flex flex-col gap-12">
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
 					<template #cell(abiturjahr)="{ value }">
 						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
 						<span v-if="(pending && value.abiturjahr === auswahl?.abiturjahr)" class="loading-spinner-dimensions">
-							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
+								<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
 					<template #footerActions>
 						<svws-ui-button @click="modalAdd.openModal()" type="icon" title="Abiturjahr hinzufügen">

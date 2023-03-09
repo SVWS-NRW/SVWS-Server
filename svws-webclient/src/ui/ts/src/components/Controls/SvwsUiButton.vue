@@ -222,9 +222,15 @@
 }
 
 .button--small,
+.data-table__tbody .button,
 .router-tab-bar--subnav .button {
 	@apply text-sm font-medium;
 	padding: 0.3em 0.75em;
+}
+
+.data-table__tbody .button {
+	@apply -my-2;
+	padding: 0.1em 0.5em;
 }
 
 .button--big {
