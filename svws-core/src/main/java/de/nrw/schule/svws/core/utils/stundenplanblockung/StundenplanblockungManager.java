@@ -5,8 +5,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zur Manipulation der Stundenplandaten. Der Manager dient: <br>
  *     (1) Zur Berechnung eines Stundenplanes. <br>
- *     (2) Zur Manipulation von der Datenbank. <br>
- *     (3) Zur Manipulation von der GUI. <br>
+ *     (2) Zur Manipulation von der GUI. <br>
  * 
  * @author Benjamin A. Bartsch 
  */

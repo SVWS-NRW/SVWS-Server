@@ -473,6 +473,7 @@ export { StundenplanblockungManagerRaum } from './core/utils/stundenplanblockung
 export { StundenplanblockungManagerRaumMenge } from './core/utils/stundenplanblockung/StundenplanblockungManagerRaumMenge';
 export { StundenplanblockungManagerSchule } from './core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
 export { StundenplanblockungManagerStatistik } from './core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
+export { StundenplanblockungManagerStundenelement } from './core/utils/stundenplanblockung/StundenplanblockungManagerStundenelement';
 export { IOException } from './java/io/IOException';
 export { Serializable } from './java/io/Serializable';
 export { AbstractStringBuilder } from './java/lang/AbstractStringBuilder';

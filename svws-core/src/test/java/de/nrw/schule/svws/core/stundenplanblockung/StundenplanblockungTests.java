@@ -36,7 +36,7 @@ public class StundenplanblockungTests {
 	/** 
 	 * Diese Klasse testet den {@link StundenplanblockungManager} mit randomisierten Daten.
 	 */
-	@DisplayName("Diese Klasse testet den {@link StundenplanblockungManager} mit randomisierten Daten.")
+	@DisplayName("testManagerRandom")
 	@Test
 	public void testManagerRandom() {
 		Random lRandom = new Random(_SEED);
@@ -61,7 +61,6 @@ public class StundenplanblockungTests {
 		subTestKopplungen(pMan, pRandom);
 		subTestLerngruppen(pMan, pRandom);
 	}
-
 
 	private static void subTestLehrkraefte(StundenplanblockungManager pMan, Random pRandom) {
 		// exists, removeOrException, addOrException
@@ -100,7 +99,7 @@ public class StundenplanblockungTests {
 			kl.setKuerzel("Klasse " + kl.getID() + "-" + pRandom.nextInt(_MAX_KLASSEN));
 		}
 	}
-	
+
 	private static void subTestFaecher(StundenplanblockungManager pMan, Random pRandom) {
 		// exists, removeOrException, addOrException
 		long fachID = pRandom.nextLong(_MAX_FAECHER);
@@ -197,94 +196,229 @@ public class StundenplanblockungTests {
 	}
 
 	/** 
-	 * Erstellt Pseudo-Daten für den Stundenplanblockungs-Algorithmus.
+	 * Diese Klasse testet den {@link StundenplanblockungManager} mit echten Testdaten.
 	 */
-	@DisplayName("Erstellt Pseudo-Daten für den Stundenplanblockungs-Algorithmus.")
+	@DisplayName("testEchteDaten1")
 	@Test
-	public void testStundenplanblockungsAlgorithmus() {
+	public void testEchteDaten1() {
 		StundenplanblockungManager man = new StundenplanblockungManager();
+
+		// Alle Lehrkräfte hinzufügen.
+		man.getLehrkraefte().addOrException(18, "BCS");
+		man.getLehrkraefte().addOrException(12, "BMC");
+		man.getLehrkraefte().addOrException(36, "BQQ");
+		man.getLehrkraefte().addOrException(37, "CBDI");
+		man.getLehrkraefte().addOrException(24, "CBS");
+		man.getLehrkraefte().addOrException(28, "CIS");
+		man.getLehrkraefte().addOrException(77, "CPA");
+		man.getLehrkraefte().addOrException(16, "EFB");
+		man.getLehrkraefte().addOrException(17, "FIBT");
+		man.getLehrkraefte().addOrException(38, "GFIS");
+		man.getLehrkraefte().addOrException(21, "GHST");
+		man.getLehrkraefte().addOrException(1, "GSPI");
+		man.getLehrkraefte().addOrException(22, "HFXB1");
+		man.getLehrkraefte().addOrException(27, "HPFS");
+		man.getLehrkraefte().addOrException(39, "HSF");
+		man.getLehrkraefte().addOrException(23, "HST");
+		man.getLehrkraefte().addOrException(30, "HZXB1");
+		man.getLehrkraefte().addOrException(33, "HZXB2");
+		man.getLehrkraefte().addOrException(67, "HZXB3");
+		man.getLehrkraefte().addOrException(40, "IBZ");
+		man.getLehrkraefte().addOrException(2, "IP");
+		man.getLehrkraefte().addOrException(6, "IPF");
+		man.getLehrkraefte().addOrException(41, "IPS");
+		man.getLehrkraefte().addOrException(42, "IVFO");
+		man.getLehrkraefte().addOrException(7, "IA");
+		man.getLehrkraefte().addOrException(71, "IA2");
+		man.getLehrkraefte().addOrException(43, "JIN");
+		man.getLehrkraefte().addOrException(31, "JMC");
+		man.getLehrkraefte().addOrException(4, "LJF");
+		man.getLehrkraefte().addOrException(44, "LMT");
+		man.getLehrkraefte().addOrException(45, "LVO");
+		man.getLehrkraefte().addOrException(29, "MBOH");
+		man.getLehrkraefte().addOrException(25, "MFJ");
+		man.getLehrkraefte().addOrException(32, "MFU");
+		man.getLehrkraefte().addOrException(34, "MHF");
+		man.getLehrkraefte().addOrException(46, "MPX");
+		man.getLehrkraefte().addOrException(20, "MVE");
+		man.getLehrkraefte().addOrException(47, "NSN");
+		man.getLehrkraefte().addOrException(76, "OFF");
+		man.getLehrkraefte().addOrException(48, "PGH");
+		man.getLehrkraefte().addOrException(49, "QVOH");
+		man.getLehrkraefte().addOrException(50, "SFOL");
+		man.getLehrkraefte().addOrException(8, "SPTU");
+		man.getLehrkraefte().addOrException(19, "TBFG");
+		man.getLehrkraefte().addOrException(13, "TBHP");
+		man.getLehrkraefte().addOrException(35, "TBI");
+		man.getLehrkraefte().addOrException(51, "TDIF");
+		man.getLehrkraefte().addOrException(52, "TDIS");
+		man.getLehrkraefte().addOrException(9, "TNS");
+		man.getLehrkraefte().addOrException(53, "TSG");
+		man.getLehrkraefte().addOrException(10, "TUI");
+		man.getLehrkraefte().addOrException(26, "UBV");
+		man.getLehrkraefte().addOrException(65, "UBV2");
+		man.getLehrkraefte().addOrException(54, "UBVI");
+		man.getLehrkraefte().addOrException(55, "UIFJ");
+		man.getLehrkraefte().addOrException(66, "UJF");
+		man.getLehrkraefte().addOrException(56, "VUC");
+		man.getLehrkraefte().addOrException(57, "WPPS");
+		man.getLehrkraefte().addOrException(5, "XBMU");
+		man.getLehrkraefte().addOrException(3, "XCT");
+		man.getLehrkraefte().addOrException(58, "XJO");
+		man.getLehrkraefte().addOrException(59, "XPMG");
+		man.getLehrkraefte().addOrException(60, "XVF");
+		man.getLehrkraefte().addOrException(75, "ACSY");
+		man.getLehrkraefte().addOrException(74, "AHFO");
+		man.getLehrkraefte().addOrException(73, "ALZB");
+		man.getLehrkraefte().addOrException(72, "ATCM");
+		man.getLehrkraefte().addOrException(68, "_QI6");
+		man.getLehrkraefte().addOrException(69, "_QI8");
+		man.getLehrkraefte().addOrException(70, "_QI9");
+
+		// Alle Klassen hinzufügen.
+		man.getKlassen().addOrException(18, "05a");
+		man.getKlassen().addOrException(19, "05b");
+		man.getKlassen().addOrException(20, "05c");
+		man.getKlassen().addOrException(21, "05d");
+		man.getKlassen().addOrException(17, "06a");
+		man.getKlassen().addOrException(16, "06b");
+		man.getKlassen().addOrException(15, "06c");
+		man.getKlassen().addOrException(11, "07a");
+		man.getKlassen().addOrException(12, "07b");
+		man.getKlassen().addOrException(13, "07c");
+		man.getKlassen().addOrException(14, "07d");
+		man.getKlassen().addOrException(8, "08a");
+		man.getKlassen().addOrException(9, "08b");
+		man.getKlassen().addOrException(10, "08c");
+		man.getKlassen().addOrException(4, "09a");
+		man.getKlassen().addOrException(5, "09b");
+		man.getKlassen().addOrException(6, "09c");
+		man.getKlassen().addOrException(7, "09d");
+		man.getKlassen().addOrException(22, "AUF");
+		man.getKlassen().addOrException(3, "EF");
+		man.getKlassen().addOrException(2, "Q1");
+		man.getKlassen().addOrException(1, "Q2");
+
+		// Alle Fächer hinzufügen.
+		man.getFaecher().addOrException(40, "AG");
+		man.getFaecher().addOrException(5, "BI");
+		man.getFaecher().addOrException(15, "CH");
+		man.getFaecher().addOrException(1, "D");
+		man.getFaecher().addOrException(38, "Dummy");
+		man.getFaecher().addOrException(2, "E5");
+		man.getFaecher().addOrException(6, "EK");
+		man.getFaecher().addOrException(10, "ER");
+		man.getFaecher().addOrException(21, "F0");
+		man.getFaecher().addOrException(16, "F6");
+		man.getFaecher().addOrException(33, "F7");
+		man.getFaecher().addOrException(42, "För");
+		man.getFaecher().addOrException(3, "GE");
+		man.getFaecher().addOrException(29, "GEbi");
+		man.getFaecher().addOrException(30, "GeWi");
+		man.getFaecher().addOrException(18, "IF");
+		man.getFaecher().addOrException(36, "KL");
+		man.getFaecher().addOrException(11, "KR");
+		man.getFaecher().addOrException(12, "KU");
+		man.getFaecher().addOrException(22, "L0");
+		man.getFaecher().addOrException(17, "L6");
+		man.getFaecher().addOrException(34, "L7");
+		man.getFaecher().addOrException(20, "LI");
+		man.getFaecher().addOrException(43, "LZ");
+		man.getFaecher().addOrException(4, "M");
+		man.getFaecher().addOrException(28, "MI");
+		man.getFaecher().addOrException(23, "MU");
+		man.getFaecher().addOrException(41, "Mia");
+		man.getFaecher().addOrException(31, "NW");
+		man.getFaecher().addOrException(7, "PA");
+		man.getFaecher().addOrException(8, "PH");
+		man.getFaecher().addOrException(13, "PL");
+		man.getFaecher().addOrException(32, "PPL");
+		man.getFaecher().addOrException(35, "RE");
+		man.getFaecher().addOrException(19, "S0");
+		man.getFaecher().addOrException(9, "SP");
+		man.getFaecher().addOrException(14, "SW");
+		man.getFaecher().addOrException(39, "Schwi");
+		man.getFaecher().addOrException(24, "VE");
+		man.getFaecher().addOrException(25, "VE_K");
+		man.getFaecher().addOrException(26, "VM");
+		man.getFaecher().addOrException(27, "VM_I");
+		man.getFaecher().addOrException(37, "WP");
+
+		// Alle Räume hinzufügen.
+		man.getRaeume().addOrException(20, "AO1");
+		man.getRaeume().addOrException(7, "Aula");
+		man.getRaeume().addOrException(5, "BK04");
+		man.getRaeume().addOrException(8, "BK05");
+		man.getRaeume().addOrException(21, "Bereit1");
+		man.getRaeume().addOrException(16, "Bi-HS");
+		man.getRaeume().addOrException(15, "Bi-Ü");
+		man.getRaeume().addOrException(10, "Ch-Alt");
+		man.getRaeume().addOrException(11, "Ch-Neu");
+		man.getRaeume().addOrException(12, "MiaR1");
+		man.getRaeume().addOrException(13, "MiaR2");
+		man.getRaeume().addOrException(14, "MiaR3");
+		man.getRaeume().addOrException(17, "Ph-A");
+		man.getRaeume().addOrException(18, "Ph-B");
+		man.getRaeume().addOrException(9, "S2");
+		man.getRaeume().addOrException(19, "S3");
+		man.getRaeume().addOrException(1, "Schwi1");
+		man.getRaeume().addOrException(2, "Schwi2");
+		man.getRaeume().addOrException(3, "SpH1");
+		man.getRaeume().addOrException(4, "SpH2");
+		man.getRaeume().addOrException(6, "Z. Saal");
 		
-		// Lehrkräfte anonymisiert erstellen.
-		for (int leID = 1; leID <= 58; leID++)
-			man.getLehrkraefte().addOrException(leID, "");
+		// Alle Kopplungen hinzufügen.
+		man.getKopplungen().addOrException(46, "5För");
+		man.getKopplungen().addOrException(45, "5RE");
+		man.getKopplungen().addOrException(47, "6För");
+		man.getKopplungen().addOrException(44, "6RE");
+		man.getKopplungen().addOrException(43, "7FL");
+		man.getKopplungen().addOrException(48, "7För");
+		man.getKopplungen().addOrException(42, "7RE");
+		man.getKopplungen().addOrException(41, "8FL");
+		man.getKopplungen().addOrException(49, "8För");
+		man.getKopplungen().addOrException(40, "8RE");
+		man.getKopplungen().addOrException(39, "9FL");
+		man.getKopplungen().addOrException(50, "9För");
+		man.getKopplungen().addOrException(38, "9RE");
+		man.getKopplungen().addOrException(37, "9WPL");
+		man.getKopplungen().addOrException(24, "EFB01");
+		man.getKopplungen().addOrException(25, "EFB02");
+		man.getKopplungen().addOrException(26, "EFB03");
+		man.getKopplungen().addOrException(27, "EFB04");
+		man.getKopplungen().addOrException(28, "EFB05");
+		man.getKopplungen().addOrException(29, "EFB06");
+		man.getKopplungen().addOrException(30, "EFB07");
+		man.getKopplungen().addOrException(31, "EFB08");
+		man.getKopplungen().addOrException(32, "EFB09");
+		man.getKopplungen().addOrException(33, "EFB10");
+		man.getKopplungen().addOrException(34, "EFB11");
+		man.getKopplungen().addOrException(35, "EFB12");
+		man.getKopplungen().addOrException(36, "EFB13");
+		man.getKopplungen().addOrException(15, "Q1B01");
+		man.getKopplungen().addOrException(16, "Q1B02");
+		man.getKopplungen().addOrException(17, "Q1B03");
+		man.getKopplungen().addOrException(18, "Q1B04");
+		man.getKopplungen().addOrException(19, "Q1B05");
+		man.getKopplungen().addOrException(20, "Q1B06");
+		man.getKopplungen().addOrException(21, "Q1B07");
+		man.getKopplungen().addOrException(22, "Q1B08");
+		man.getKopplungen().addOrException(23, "Q1B09");
+		man.getKopplungen().addOrException(13, "Q1LK01");
+		man.getKopplungen().addOrException(14, "Q1LK02");
+		man.getKopplungen().addOrException(3, "Q2B01");
+		man.getKopplungen().addOrException(4, "Q2B02");
+		man.getKopplungen().addOrException(5, "Q2B03");
+		man.getKopplungen().addOrException(6, "Q2B04");
+		man.getKopplungen().addOrException(7, "Q2B05");
+		man.getKopplungen().addOrException(8, "Q2B06");
+		man.getKopplungen().addOrException(9, "Q2B07");
+		man.getKopplungen().addOrException(10, "Q2B08");
+		man.getKopplungen().addOrException(11, "Q2B09");
+		man.getKopplungen().addOrException(12, "Q2B10");
+		man.getKopplungen().addOrException(1, "Q2LK01");
+		man.getKopplungen().addOrException(2, "Q2LK02");
 		
-		// Klassen erstellen.
-		man.getKlassen().addOrException( 1, "05a");
-		man.getKlassen().addOrException( 2, "05b");
-		man.getKlassen().addOrException( 3, "05c");
-		man.getKlassen().addOrException( 4, "05d");
-		man.getKlassen().addOrException( 5, "06a");
-		man.getKlassen().addOrException( 6, "06b");
-		man.getKlassen().addOrException( 7, "06c");
-		man.getKlassen().addOrException( 8, "07a");
-		man.getKlassen().addOrException( 9, "07b");
-		man.getKlassen().addOrException(10, "07c");
-		man.getKlassen().addOrException(11, "07d");
-		man.getKlassen().addOrException(12, "08a");
-		man.getKlassen().addOrException(13, "08b");
-		man.getKlassen().addOrException(14, "08c");
-		man.getKlassen().addOrException(15, "09a");
-		man.getKlassen().addOrException(16, "09b");
-		man.getKlassen().addOrException(17, "09c");
-		man.getKlassen().addOrException(18, "09d");
-		man.getKlassen().addOrException(19, "EF");
-		man.getKlassen().addOrException(20, "Q1");
-		man.getKlassen().addOrException(21, "Q2");
-		
-		// Fächer erstellen.
-		man.getFaecher().addOrException(1,  "BI");
-		man.getFaecher().addOrException(2,  "M");
-		man.getFaecher().addOrException(3,  "MU");
-		man.getFaecher().addOrException(4,  "E");
-		
-		// Klassen erstellen.
-		man.getRaeume().addOrException( 1, "AM1");
-		man.getRaeume().addOrException( 2, "AM2");
-		man.getRaeume().addOrException( 3, "AM3");
-		man.getRaeume().addOrException( 4, "AO1");
-		man.getRaeume().addOrException( 5, "AO2");
-		man.getRaeume().addOrException( 6, "AO3");
-		man.getRaeume().addOrException( 7, "AU1");
-		man.getRaeume().addOrException( 8, "AU3");
-		man.getRaeume().addOrException( 9, "BK4");
-		man.getRaeume().addOrException(10, "BK5");
-		man.getRaeume().addOrException(12, "BM2");
-		man.getRaeume().addOrException(13, "BM3");
-		man.getRaeume().addOrException(14, "BO1");
-		man.getRaeume().addOrException(15, "BO2");
-		man.getRaeume().addOrException(16, "BO3");
-		man.getRaeume().addOrException(17, "BU1");
-		man.getRaeume().addOrException(18, "BU3");
-		man.getRaeume().addOrException(19, "CM1");
-		man.getRaeume().addOrException(20, "CM2");
-		man.getRaeume().addOrException(21, "CM3");
-		man.getRaeume().addOrException(22, "CM4");
-		man.getRaeume().addOrException(23, "CO1");
-		man.getRaeume().addOrException(24, "CO2");
-		man.getRaeume().addOrException(25, "CO3");
-		man.getRaeume().addOrException(26, "CO4/5");
-		man.getRaeume().addOrException(27, "CO6");
-		man.getRaeume().addOrException(28, "CO7");
-		man.getRaeume().addOrException(29, "CU2");
-		man.getRaeume().addOrException(30, "CU3");
-		man.getRaeume().addOrException(31, "CU5");
-		man.getRaeume().addOrException(33, "Aula");
-		man.getRaeume().addOrException(36, "CH-Alt");
-		man.getRaeume().addOrException(37, "CH-Neu");
-		man.getRaeume().addOrException(38, "Ph-A");
-		man.getRaeume().addOrException(39, "Ph-B");
-		
-		// Objekte sammeln
-		StundenplanblockungManagerLehrkraft le55 = man.getLehrkraefte().getOrException(55);
-		// StundenplanblockungManagerLehrkraft le27 = man.getLehrkraefte().getOrException(27);
-		
-		StundenplanblockungManagerKlasse kl05a = man.getKlassen().getOrException(1);
-		
-		// Lerngruppen erstellen
-		// TODO BAR
-		StundenplanblockungManagerLerngruppe gr001 = man.getLerngruppen().createOrException(1); 
-		gr001.addLehrkraftOrException(le55);
-		gr001.addKlasseOrException(kl05a);
 		
 	}
 
