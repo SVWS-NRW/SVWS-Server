@@ -6,6 +6,9 @@
 	</div>
 </template>
 
+<script setup lang="ts">
+</script>
+
 <style>
 	.header--wrapper {
 		@apply flex flex-row items-center justify-start;

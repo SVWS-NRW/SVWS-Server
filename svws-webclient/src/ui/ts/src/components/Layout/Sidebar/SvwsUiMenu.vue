@@ -34,7 +34,7 @@
 					<template #content>
 						<div class="py-1">
 							<div class="text-ellipsis-line-clamp">
-								SVWS-Client <slot name="version"/>
+								SVWS-Client <slot name="version" />
 							</div>
 							<div class="flex flex-wrap gap-2 meta-navigation">
 								<slot name="metaNavigation" />
