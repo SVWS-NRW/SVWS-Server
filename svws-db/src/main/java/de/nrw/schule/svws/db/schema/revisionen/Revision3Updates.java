@@ -60,11 +60,11 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 			return false;
 		}
 		List<Integer> rowsAnzahlAbschnitte = conn.queryNative("SELECT AnzahlAbschnitte FROM EigeneSchule");
-		if ((rowsAnzahlAbschnitte.size() != 1) || (rowsAnzahlAbschnitte.get(0) == null)) {
+		int anzahlAbschnitte = -1;
+		if ((rowsAnzahlAbschnitte.size() != 1) || (rowsAnzahlAbschnitte.get(0) == null))
 			logger.logLn("Konnte die Anzahl der Abschnitte nicht bestimmen.");
-			return false;
-		}
-		int anzahlAbschnitte = rowsAnzahlAbschnitte.get(0);
+		else
+			anzahlAbschnitte = rowsAnzahlAbschnitte.get(0);
 		if (anzahlAbschnitte == 4) {
 			logger.logLn("Im Anschluss - Die Schule wurde in Schild 2 im \"Quartalsmodus\" betrieben und wird im folgenden auf den Betrieb mit Halbjahren umgestellt:");
 			// Bestimme den aktuellen Abschnitt, in dem sich die Schule befindet
