@@ -322,7 +322,7 @@
 
 	const { rowsComputed } = useRows(columnsComputed, props);
 
-	const reorder = (array, sourceIndex, destinationIndex) => {
+	const reorder = (array: any[], sourceIndex: number, destinationIndex: number) => {
 		const smallerIndex = Math.min(sourceIndex, destinationIndex);
 		const largerIndex = Math.max(sourceIndex, destinationIndex);
 
@@ -339,7 +339,7 @@
 		].map((item) => item.source);
 	};
 
-	function onDrop(evt, index) {
+	function onDrop(evt: any, index: any) {
 		console.log("onDrop", evt.index, index);
 		emit(
 			"items:reorder",
@@ -351,13 +351,13 @@
 		);
 	}
 
-	function addDroppableStyles(event) {
+	function addDroppableStyles(event: any) {
 		console.log(event);
 		event.target.closest(".data-table__tbody__tr").style.borderBottom =
 			"2px solid black";
 	}
 
-	function removeDroppableStyles(event) {
+	function removeDroppableStyles(event: any) {
 		event.target.closest(".data-table__tbody__tr").style.borderBottom =
 			"inherit";
 	}
