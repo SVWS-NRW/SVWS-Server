@@ -32,7 +32,7 @@ public class Tabelle_EigeneSchule_Abt_Kl extends SchemaTabelle {
 		.setJavaComment("ID der Klasse die zur Abteilung gehört");
 
 	/** Die Definition der Tabellenspalte Klasse */
-	public SchemaTabelleSpalte col_Klasse = add("Klasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
+	public SchemaTabelleSpalte col_Klasse = add("Klasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(15)
 		.setNotNull()
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaComment("DEPRECATED: Klassenbezeichnung die zur Abteilung gehört");
