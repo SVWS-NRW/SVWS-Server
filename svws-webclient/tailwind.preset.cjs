@@ -12,14 +12,6 @@ module.exports = {
 	layers: ["components", "utilities"],
 	safelist: ["theme-dark"],
 	theme: {
-		colors: {
-			disabled: {
-				light: "#F3F3F3",
-				DEFAULT: "#D9D9D9",
-				medium: "#C0C0C0",
-				dark: "#959595"
-			}
-		},
 		fontFamily: {
 			sans: [
 				"ui-sans-serif",
@@ -102,6 +94,12 @@ module.exports = {
 				"4xl": "2160px"
 			},
 			colors: {
+				disabled: {
+					light: "#F3F3F3",
+					DEFAULT: "#D9D9D9",
+					medium: "#C0C0C0",
+					dark: "#959595"
+				},
 				transparent: "transparent",
 				current: "currentColor",
 
