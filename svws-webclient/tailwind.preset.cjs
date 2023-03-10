@@ -7,6 +7,7 @@ function withOpacity(cssVariale) {
 	};
 }
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
 	layers: ["components", "utilities"],
 	safelist: ["theme-dark"],
@@ -52,7 +53,7 @@ module.exports = {
 				lineHeight: '1.33',
 				fontWeight: '500',
 			}],
-			'headline-sm': ['1.125rem', {
+			'headline-sm': ['1rem', {
 				lineHeight: '1.33',
 				fontWeight: '700',
 			}],
@@ -79,6 +80,11 @@ module.exports = {
 			caption: ["0.625rem", { lineHeight: "1.5" }], // Deprecated
 			body: ["0.875rem", { lineHeight: "1.5" }], // Deprecated
 			input: ["1rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-5": ["1rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-4": ["1.25rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-3": ["1.5rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-2": ["2.125rem", { lineHeight: "1.2" }], // Deprecated
+			"headline-1": ["3rem", { lineHeight: "1.125" }] // Deprecated
 		},
 		fontWeight: {
 			normal: "400",
@@ -137,8 +143,8 @@ module.exports = {
 			maxWidth: {
 				116: "29rem",
 				"modal-sm": "28rem",
-				"modal-md": "48rem",
-				"modal-lg": "90rem"
+				"modal-md": "76rem",
+				"modal-lg": "116rem"
 			},
 			minWidth: {
 				64: "16rem",
@@ -153,7 +159,5 @@ module.exports = {
 	variants: {
 		extend: {}
 	},
-	plugins: [
-		require('autoprefixer')
-	],
+	plugins: [],
 };
