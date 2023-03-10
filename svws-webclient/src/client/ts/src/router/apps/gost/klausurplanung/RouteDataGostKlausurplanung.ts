@@ -198,6 +198,7 @@ export class RouteDataGostKlausurplanung {
 	}
 
 	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
+		console.log("klappt");
 		api.status.start();
 		const termin = await api.server.createGostKlausurenKlausurtermin(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
 		this.kursklausurmanager.addTermin(termin);
@@ -229,7 +230,7 @@ export class RouteDataGostKlausurplanung {
 		vorgabe.abiJahrgang = this.abiturjahr;
 		vorgabe.halbjahr = this.halbjahr.id;
 		const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
-		this.klausurvorgabenmanager.updateKlausurvorgabe(vorgabe);
+		this.klausurvorgabenmanager.addKlausurvorgabe(neueVorgabe);
 		this.commit();
 		api.status.stop();
 		return neueVorgabe;

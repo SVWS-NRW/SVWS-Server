@@ -10,9 +10,9 @@
 						{{ faecherManager.get(value)?.bezeichnung }}
 					</template>
 					<template #cell(features)="value">
-						<svws-ui-popover>
+						<svws-ui-popover v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0">
 							<template #trigger>
-								<i-ri-information-line v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0" />
+								<i-ri-information-line class="cursor-help" />
 							</template>
 							<template #content>
 								<svws-ui-tooltip>
@@ -20,9 +20,9 @@
 								</svws-ui-tooltip>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover>
+						<svws-ui-popover v-if="value.rowData.auswahlzeit > 0">
 							<template #trigger>
-								<i-ri-time-line class="cursor-help" v-if="value.rowData.auswahlzeit > 0" />
+								<i-ri-time-line class="cursor-help" />
 							</template>
 							<template #content>
 								<svws-ui-tooltip>
@@ -30,9 +30,9 @@
 								</svws-ui-tooltip>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover>
+						<svws-ui-popover v-if="value.rowData.istMdlPruefung">
 							<template #trigger>
-								<i-ri-kakao-talk-line class="cursor-help" v-if="value.rowData.istMdlPruefung" />
+								<i-ri-kakao-talk-line class="cursor-help" />
 							</template>
 							<template #content>
 								<svws-ui-tooltip>
@@ -40,9 +40,9 @@
 								</svws-ui-tooltip>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover>
+						<svws-ui-popover v-if="value.rowData.istAudioNotwendig">
 							<template #trigger>
-								<i-ri-music-line class="cursor-help" v-if="value.rowData.istAudioNotwendig" />
+								<i-ri-music-line class="cursor-help" />
 							</template>
 							<template #content>
 								<svws-ui-tooltip>
@@ -50,9 +50,9 @@
 								</svws-ui-tooltip>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover>
+						<svws-ui-popover v-if="value.rowData.istVideoNotwendig">
 							<template #trigger>
-								<i-ri-video-add-line class="cursor-help" v-if="value.rowData.istVideoNotwendig" />
+								<i-ri-video-add-line class="cursor-help" />
 							</template>
 							<template #content>
 								<svws-ui-tooltip>
@@ -78,7 +78,7 @@
 									<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursartAllg" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 								</svws-ui-radio-group>
 							</div>
-							<svws-ui-multi-select :items="props.faecherManager.values()" :item-text="(fach) => fach.bezeichnung" v-model="inputVorgabeFach" />
+							<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung" v-model="inputVorgabeFach" />
 							<div class="flex flex-row items-center">
 								<label for="rbgQuartal">Quartal: </label>
 								<svws-ui-radio-group id="rbgQuartal" :row="true">
@@ -134,7 +134,7 @@
 
 	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgaben());
 
-	const selectedVorgabeRow = ref<DataTableItem[]>();
+	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());
 
 	const formKursarten = computed(() => ["GK", "LK"]);
@@ -157,6 +157,10 @@
 
 	const saveKlausurvorgabe = async () => {
 		let result;
+		if (activeVorgabe.value.idFach == -1 || activeVorgabe.value.kursartAllg == "" || activeVorgabe.value.quartal == -1) {
+			console.log("Eingabefehler");
+			return;
+		}
 		if (activeVorgabe.value.idVorgabe > 0) {
 			result = await props.patchKlausurvorgabe(activeVorgabe.value);
 			activeVorgabe.value = new GostKlausurvorgabe();
@@ -168,7 +172,10 @@
 	};
 
 	const loescheKlausurvorgabe = async () => {
-		const result = await props.loescheKlausurvorgabe(activeVorgabe.value);
+		const vorgabe = props.klausurvorgabenmanager().gibGostKlausurvorgabe(activeVorgabe.value.idVorgabe);
+		if (vorgabe === null)
+			return;
+		const result = await props.loescheKlausurvorgabe(vorgabe);
 		selectedVorgabeRow.value = undefined;
 		activeVorgabe.value = new GostKlausurvorgabe();
 	};
@@ -179,9 +186,9 @@
 	};
 
 	const startEdit = () => {
-		const v = props.klausurvorgabenmanager().gibGostKlausurvorgabe({...selectedVorgabeRow.value as DataTableItem}.idVorgabe);
-		if (v !== null) {
-			activeVorgabe.value = v;
+		if (selectedVorgabeRow.value != null) {
+			const v = props.klausurvorgabenmanager().gibGostKlausurvorgabe(selectedVorgabeRow.value.idVorgabe);
+			activeVorgabe.value = v !== null ? v : new GostKlausurvorgabe();
 		}
 	};
 

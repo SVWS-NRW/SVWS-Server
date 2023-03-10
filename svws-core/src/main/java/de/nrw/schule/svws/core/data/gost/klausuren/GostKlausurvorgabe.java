@@ -40,11 +40,11 @@ public class GostKlausurvorgabe {
 
 	/** Die Dauer der Klausur in Minuten. */
 	@Schema(required = false, description = "die Dauer der Klausur in Minuten", example="135")
-	public int dauer = -1;
+	public int dauer = 0;
 	
 	/** Die Auswahlzeit in Minuten, sofern vorhanden. */
 	@Schema(required = false, description = "die Auswahlzeit in Minuten, sofern vorhanden", example="30")
-	public int auswahlzeit = -1;
+	public int auswahlzeit = 0;
 	
 	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
 	@Schema(required = false, description = "die Information, ob es sich um eine mündliche Prüfung handelt", example="false")

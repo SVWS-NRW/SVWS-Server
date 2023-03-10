@@ -87,6 +87,18 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		this.addVorgabeToInternalMaps(vorgabe);
 	}
 
+	/**
+	 * Fügt die Klausurvorgabe den internen Strukturen hinzu.
+	 * 
+	 * @param vorgabe das GostKlausurvorgabe-Objekt
+	 */
+	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
+		this._vorgaben.add(vorgabe);
+		this._mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
+		this.removeUpdateKlausurvorgabeCommons(vorgabe);
+		this.addVorgabeToInternalMaps(vorgabe);
+	}
+
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
 		let listKlausurvorgabenMapQuartalKlausurvorgaben : Vector<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben !== null) {

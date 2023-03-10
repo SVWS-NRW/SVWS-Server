@@ -1,5 +1,5 @@
 <template>
-	<div class="rounded bg-gray-200 p-2">
+	<div class="rounded bg-dark-20 p-2">
 		<div class="justify-between py-1">
 			<h3 class="text-sm">{{ props.termin.bezeichnung !== null && props.termin.bezeichnung !== undefined ? props.termin.bezeichnung : "Unbenannte Klausurschiene" }}</h3>
 		</div>

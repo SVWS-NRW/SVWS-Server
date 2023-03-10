@@ -36,12 +36,12 @@ export class GostKlausurvorgabe extends JavaObject {
 	/**
 	 * Die Dauer der Klausur in Minuten. 
 	 */
-	public dauer : number = -1;
+	public dauer : number = 0;
 
 	/**
 	 * Die Auswahlzeit in Minuten, sofern vorhanden. 
 	 */
-	public auswahlzeit : number = -1;
+	public auswahlzeit : number = 0;
 
 	/**
 	 * Die Information, ob es sich um eine mündliche Prüfung handelt. 

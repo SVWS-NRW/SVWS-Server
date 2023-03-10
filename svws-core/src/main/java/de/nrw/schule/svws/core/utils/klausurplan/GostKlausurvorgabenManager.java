@@ -93,6 +93,18 @@ public class GostKlausurvorgabenManager {
 		addVorgabeToInternalMaps(vorgabe);
 
 	}
+	
+	/**
+	 * Fügt die Klausurvorgabe den internen Strukturen hinzu.
+	 * 
+	 * @param vorgabe das GostKlausurvorgabe-Objekt
+	 */
+	public void addKlausurvorgabe(@NotNull GostKlausurvorgabe vorgabe) {
+		_vorgaben.add(vorgabe);
+		_mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
+		removeUpdateKlausurvorgabeCommons(vorgabe);
+		addVorgabeToInternalMaps(vorgabe);
+	}
 
 	private void removeUpdateKlausurvorgabeCommons(@NotNull GostKlausurvorgabe vorgabe) {
 		// aus _mapQuartalKlausurvorgaben löschen

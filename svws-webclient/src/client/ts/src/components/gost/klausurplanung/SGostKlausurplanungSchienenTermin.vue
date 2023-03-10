@@ -1,9 +1,9 @@
 <template>
-	<div class="flex flex-col border border-blue-900 border-solid w-52">
-		<div class="flex flex-row-reverse">
-			<svws-ui-badge class="-m-2 z-10" v-if="konflikteTerminDragKlausur > 0 || konflikteTermin > 0" type="error" size="big"><span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span></svws-ui-badge>
-		</div>
-		<svws-ui-drop-data @drop="setKlausurToTermin">
+	<div class="flex flex-col border border-blue-900 border-solid w-52 h-full">
+		<svws-ui-drop-data @drop="setKlausurToTermin" class="h-full">
+			<div class="flex flex-row-reverse">
+				<svws-ui-badge class="-m-2 z-10" v-if="konflikteTerminDragKlausur > 0 || konflikteTermin > 0" type="error" size="big"><span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span></svws-ui-badge>
+			</div>
 			<table class="w-full">
 				<thead>
 					<tr>
@@ -28,6 +28,9 @@
 								</template>
 							</svws-ui-popover>
 						</td>
+					</tr>
+					<tr>
+						<th colspan="5"><svws-ui-text-input placeholder="Bezeichnung" :model-value="termin?.bezeichnung" /></th>
 					</tr>
 					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->
 				</thead>
@@ -65,8 +68,8 @@
 		props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTermin(props.quartal)) : props.kursklausurmanager().getKursklausuren(props.termin.id)
 	);
 
-	const setKlausurToTermin = async (id: number) => {
-		const klausur = props.kursklausurmanager().gibKursklausur(id)!;
+	const setKlausurToTermin = async (pKlausur: GostKursklausur) => {
+		const klausur = props.kursklausurmanager().gibKursklausur(pKlausur.id)!;
 		const terminNeu = props.termin !== null ? props.termin.id : null;
 		if (props.termin !== null && props.termin.quartal != klausur.quartal)
 			return;
@@ -104,5 +107,9 @@
 		if (props.loescheKlausurtermin != undefined && props.termin != null)
 			await props.loescheKlausurtermin(props.termin);
 	};
+
+	const updateTermin = async() => {
+		console.log("Hallo");
+	}
 
 </script>

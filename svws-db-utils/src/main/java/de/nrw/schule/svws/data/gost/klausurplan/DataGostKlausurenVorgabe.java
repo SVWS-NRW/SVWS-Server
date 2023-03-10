@@ -66,6 +66,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 */
 	public Response createKlausuren(int hj, int quartal) {
 		GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
+		List<GostKursklausur> retKlausuren = new Vector<>();
 
 		List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(v -> dtoMapper.apply(v))
@@ -73,6 +74,9 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 				.collect(Collectors.toList());
 		if (vorgaben == null)
 			throw new NullPointerException();
+		if (vorgaben.isEmpty()) 
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
+		
 		GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
 		List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
@@ -93,7 +97,6 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 				.setParameter("jg", halbjahr.jahrgang).getResultList();
 
 		List<DTOGostKlausurenKursklausuren> kursklausuren = new Vector<>();
-		List<GostKursklausur> retKlausuren = new Vector<>();
 		List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new Vector<>();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird

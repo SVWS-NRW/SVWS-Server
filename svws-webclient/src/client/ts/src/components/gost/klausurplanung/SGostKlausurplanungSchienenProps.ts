@@ -12,7 +12,7 @@ export interface GostKlausurplanungSchienenProps {
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
-	erzeugeKlausurtermin: (quartal: number) => Promise<GostKlausurtermin>;
+	erzeugeKlausurtermin: (quartal: number) => Promise<boolean>;
 	loescheKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<boolean>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
