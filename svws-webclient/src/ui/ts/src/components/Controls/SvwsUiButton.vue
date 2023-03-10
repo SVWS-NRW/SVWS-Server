@@ -1,24 +1,26 @@
 <script lang="ts" setup>
 	import { Size, ButtonType } from '../../types';
 
-	const {
-		type = 'primary',
-		disabled = false,
-		dropdownAction = false,
-		size = 'normal'
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
 		dropdownAction?: boolean;
-		size?: Extract<Size, 'small' | 'normal' | 'big'>;
-	}>();
+		// Typfehler beim Extract...?
+		//Extract<Size, 'small' | 'normal' | 'big'>;
+		size?: 'small' | 'normal' | 'big'
+	}>(),{
+		type: 'primary',
+		disabled: false,
+		dropdownAction: false,
+		size: 'normal'
+	});
 
 	const emit = defineEmits<{
 		(e: 'click', event: MouseEvent): void;
 	}>();
 
 	function onClick(event: MouseEvent) {
-		if (!disabled) {
+		if (!props.disabled) {
 			emit("click", event);
 		}
 	}
