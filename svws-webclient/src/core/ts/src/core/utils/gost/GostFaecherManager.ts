@@ -63,8 +63,11 @@ export class GostFaecherManager extends JavaObject {
 	 * @param fach   das hinzuzufügende Fach
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde
+	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
 	 */
 	private addInternal(fach : GostFach) : boolean {
+		if (fach.id < 0) 
+			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!")
 		let old : GostFach | null = this._map.put(fach.id, fach);
 		if (old !== null) 
 			return false;

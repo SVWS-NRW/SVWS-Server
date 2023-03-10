@@ -58,8 +58,11 @@ public class GostFaecherManager {
 	 * @param fach   das hinzuzufügende Fach
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde
+	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
 	 */
-	private boolean addInternal(@NotNull GostFach fach) {
+	private boolean addInternal(@NotNull GostFach fach) throws DeveloperNotificationException {
+		if (fach.id < 0) 
+			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!");
 		GostFach old = _map.put(fach.id, fach);
 		if (old != null)
 			return false;
