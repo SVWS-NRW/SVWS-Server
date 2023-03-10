@@ -31,7 +31,7 @@
 		(e: 'keydown', event: Event): void,
 	}>();
 
-	const value: ComputedRef<string | undefined> = computed({
+	const value = computed({
 		get: () => props.modelValue,
 		set: (value: string) => emit('update:modelValue', value)
 	})
