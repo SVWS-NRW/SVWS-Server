@@ -1011,13 +1011,18 @@ public class DBMigrationManager {
 			if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
-			} else {
-				schuelerLeistungsdatenIDs.add(daten.ID);
-				if (daten.Kursart != null)
-					daten.Kursart = mapKursart(daten.Kursart);
-				if (daten.KursartAllg != null)
-					daten.KursartAllg = mapKursart(daten.KursartAllg);
+				continue;
 			}
+			if (!faecherIDs.contains(daten.Fach_ID)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Fächer-ID (hier " + daten.Fach_ID + ") muss in der Tabelle EigeneSchule_Faecher definiert sein.");
+				entities.remove(i);
+				continue;
+			}
+			schuelerLeistungsdatenIDs.add(daten.ID);
+			if (daten.Kursart != null)
+				daten.Kursart = mapKursart(daten.Kursart);
+			if (daten.KursartAllg != null)
+				daten.KursartAllg = mapKursart(daten.KursartAllg);
 		}
 		return true;
 	}
