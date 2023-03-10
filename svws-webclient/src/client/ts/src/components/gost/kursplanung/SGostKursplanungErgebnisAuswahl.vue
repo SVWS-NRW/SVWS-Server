@@ -66,8 +66,8 @@
 <script setup lang="ts">
 
 	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
+	import { DataTableItem } from "@ui";
 	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@ui';
 	import { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
@@ -106,19 +106,19 @@
 		await props.ergebnisZuNeueBlockung(props.auswahlErgebnis.id);
 	}
 
-	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color1(ergebnis: DataTableItem): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color2(ergebnis: DataTableItem): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color3(ergebnis: DataTableItem): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function color4(ergebnis: DataTableItem): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function colorMix(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	function colorMix(ergebnis: DataTableItem): string {
 		const combined = (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id))
 			+ (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id))
 			+ (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id))

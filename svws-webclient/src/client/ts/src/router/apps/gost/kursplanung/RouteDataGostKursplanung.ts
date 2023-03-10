@@ -575,7 +575,6 @@ export class RouteDataGostKursplanung {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
 			this.datenmanager.removeErgebnis(ergebnis);
 		}
-		this.commit();
 		api.status.stop();
 	}
 
