@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 	import { MenuItem as MenuItemHeadless } from "@headlessui/vue";
 
-	const { disabled = false } = defineProps<{ disabled?: boolean; }>();
+	const props = withDefaults(defineProps<{ disabled?: boolean; }>(), { disabled: false });
 </script>
 
 <template>

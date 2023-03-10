@@ -1,15 +1,15 @@
 <script setup lang='ts'>
 	import { computed } from 'vue';
 
-	const {
-		modelValue = false,
-		statistics = false,
-		headless = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		modelValue?: boolean;
 		statistics?: boolean;
 		headless?: boolean;
-	}>();
+	}>(), {
+		modelValue: false,
+		statistics: false,
+		headless: false,
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', value: boolean): void;
@@ -17,7 +17,7 @@
 
 	const value = computed({
 		get() {
-			return modelValue;
+			return props.modelValue;
 		},
 		set(value: boolean) {
 			emit('update:modelValue', value);

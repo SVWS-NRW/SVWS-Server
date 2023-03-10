@@ -2,11 +2,11 @@
 	import { TabGroup, TabList, TabPanels } from '@headlessui/vue';
 	import { ref, computed, onMounted, onUnmounted, onUpdated } from 'vue';
 
-	const {
-		modelValue = 0,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		modelValue?: number;
-	}>();
+	}>(), {
+		modelValue: 0,
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', value: number): void,
@@ -23,7 +23,7 @@
 	const contentEl = ref();
 	const selected = computed({
 		get() {
-			return modelValue;
+			return props.modelValue;
 		},
 		set(value: number) {
 			emit('update:modelValue', value);

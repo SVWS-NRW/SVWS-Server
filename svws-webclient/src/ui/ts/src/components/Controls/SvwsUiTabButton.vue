@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 	import { Tab } from '@headlessui/vue';
 
-	const {
-		disabled = false,
-		hidden = false
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		disabled?: boolean;
 		hidden?: boolean;
-	}>();
+	}>(), {
+		disabled: false,
+		hidden: false
+	});
 </script>
 
 <template>

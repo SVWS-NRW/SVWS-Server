@@ -6,7 +6,7 @@
 					<slot name="search" />
 				</div>
 				<div v-if="$slots.filterSimple">
-					<slot name="filterSimple"/>
+					<slot name="filterSimple" />
 				</div>
 				<div v-if="$slots.filter && filterHide" class="ml-auto flex flex-shrink-0">
 					<div :class="{'opacity-40 hover:opacity-100': filterOpen}" class="toggle--filter" v-if="filterHide">

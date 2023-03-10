@@ -1,9 +1,9 @@
 <script setup lang='ts'>
-	const {
-		title = '',
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		title?: string;
-	}>();
+	}>(), {
+		title: '',
+	});
 </script>
 
 <template>

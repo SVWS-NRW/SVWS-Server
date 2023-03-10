@@ -2,10 +2,10 @@
 	import { Menu as MenuHeadless, MenuButton, MenuItems } from "@headlessui/vue";
 	import type { DropdownType } from "../../types";
 
-	const { type = "primary", disabled = false } = defineProps<{
+	const props = withDefaults(defineProps<{
 		type?: DropdownType;
 		disabled?: boolean;
-	}>();
+	}>(), { type: "primary", disabled: false });
 </script>
 
 <template>

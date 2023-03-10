@@ -1,9 +1,9 @@
 <script setup lang='ts'>
-	const {
-		collapsed = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		collapsed?: boolean;
-	}>();
+	}>(), {
+		collapsed: false,
+	});
 
 	const emit = defineEmits<{
 		(e: 'click', event: MouseEvent): void;

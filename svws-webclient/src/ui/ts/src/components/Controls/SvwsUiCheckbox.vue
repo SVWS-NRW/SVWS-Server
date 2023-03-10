@@ -4,21 +4,20 @@
 	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined;
 
-	const {
-		value = '',
-		statistics = false,
-		disabled = false,
-		circle = false,
-		modelValue,
-		headless = false
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		value?: CheckboxValue;
 		modelValue: ModelValue | null;
 		statistics?: boolean;
 		disabled?: boolean;
 		circle?: boolean;
 		headless?: boolean;
-	}>();
+	}>(), {
+		value: '',
+		statistics: false,
+		disabled: false,
+		circle: false,
+		headless: false
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: ModelValue): void;
@@ -26,7 +25,7 @@
 
 	const model = computed({
 		get(): ModelValue {
-			return modelValue ?? undefined;
+			return props.modelValue ?? undefined;
 		},
 		set(value: ModelValue) {
 			emit("update:modelValue", value);

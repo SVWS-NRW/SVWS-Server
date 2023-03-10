@@ -4,13 +4,13 @@
 	import { Size } from "../../../types";
 	import {ref} from "vue";
 
-	const {
-		size = 'small',
-		type = 'default'
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
 		type?: 'default' | 'danger';
-	}>();
+	}>(), {
+		size: 'small',
+		type: 'default'
+	});
 
 	const isOpen = ref(false);
 

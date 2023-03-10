@@ -1,13 +1,13 @@
 <script setup lang='ts'>
 	import { Size, Type } from '../../types';
 
-	const {
-		type = 'light',
-		size = 'normal',
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		type?: Type;
 		size?: Size;
-	}>();
+	}>(), {
+		type: 'light',
+		size: 'normal',
+	});
 </script>
 
 <template>

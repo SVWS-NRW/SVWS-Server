@@ -44,13 +44,13 @@
 <script setup lang='ts'>
 	import {ref} from "vue";
 
-	const {
-		type = 'info',
-		icon = null,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		type?: 'info' | 'error' | 'success' | 'warning';
 		icon?: 'error' | 'login' | 'success' | 'warning' | 'info';
-	}>();
+	}>(), {
+		type: 'info',
+		icon: undefined,
+	});
 
 	const isOpen = ref(true)
 	const stackOpen = ref(false)

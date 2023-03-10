@@ -2,15 +2,7 @@
 	import Popper from "vue3-popper";
 	import { Placement } from "../types";
 
-	const {
-		placement = "auto",
-		disableClickAway = false,
-		offsetX = '0',
-		offsetY = '0',
-		openDelay = 0,
-		hover = true,
-		context = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		placement?: Placement;
 		disableClickAway?: boolean;
 		offsetX?: string;
@@ -18,7 +10,15 @@
 		openDelay?: number;
 		hover?: boolean;
 		context?: boolean;
-	}>();
+	}>(), {
+		placement: "auto",
+		disableClickAway: false,
+		offsetX: '0',
+		offsetY: '0',
+		openDelay: 0,
+		hover: true,
+		context: false,
+	});
 </script>
 
 <template>

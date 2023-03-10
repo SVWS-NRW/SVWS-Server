@@ -1,13 +1,14 @@
 <script setup lang='ts'>
 	import { Size } from '../../types';
 
-	const {
-		size = 'normal',
-		progress = 0,
-	} = defineProps<{
-		size?: Extract<Size, 'normal' | 'small'>;
+	const props = withDefaults(defineProps<{
+		// size?: Extract<Size, 'normal' | 'small'>;
+		size?: 'normal' | 'small';
 		progress?: number;
-	}>();
+	}>(), {
+		size: 'normal',
+		progress: 0,
+	});
 </script>
 
 <template>

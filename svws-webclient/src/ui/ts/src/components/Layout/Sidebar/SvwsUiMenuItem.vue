@@ -1,13 +1,13 @@
 <script setup lang='ts'>
-	const {
-		active = false,
-		collapsed = false,
-		subline = '',
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		active?: boolean;
 		collapsed?: boolean;
 		subline?: string;
-	}>();
+	}>(), {
+		active: false,
+		collapsed: false,
+		subline: '',
+	});
 
 	const emit = defineEmits<{
 		(e: 'click', event: MouseEvent): void;

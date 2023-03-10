@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { computed, ref, onMounted } from 'vue';
+	import { computed, ref, onMounted, ComputedRef } from 'vue';
 
 	type Option = {
 		index: string;
@@ -8,19 +8,19 @@
 		disabled?: boolean;
 	}
 
-	const {
-		placeholder = '',
-		options = [],
-		valid = true,
-		disabled = false,
-		modelValue = ''
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		placeholder?: string;
 		options?: Array<Option>;
 		valid?: boolean;
 		disabled?: boolean;
 		modelValue?: string;
-	}>();
+	}>(), {
+		placeholder: '',
+		options: undefined,
+		valid: true,
+		disabled: false,
+		modelValue: ''
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', value: string): void,
@@ -31,18 +31,16 @@
 		(e: 'keydown', event: Event): void,
 	}>();
 
-	const value = computed({
-		get() {
-			return modelValue;
-		},
-		set(value: string) {
-			emit('update:modelValue', value);
-		}
+	const value: ComputedRef<string | undefined> = computed({
+		get: () => props.modelValue,
+		set: (value: string) => emit('update:modelValue', value)
 	})
 	const focused = ref(false);
 
 	onMounted(() => {
-		options.forEach(option => {
+		if (props.options === undefined)
+			return;
+		props.options.forEach(option => {
 			if ("selected" in option) {
 				value.value = option.index;
 			}

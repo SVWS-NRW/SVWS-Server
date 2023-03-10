@@ -5,22 +5,7 @@
 
 	type Item = Record<string, any>;
 
-	const {
-		placeholder,
-		tags,
-		autocomplete,
-		disabled,
-		statistics,
-		items,
-		itemText,
-		itemSort,
-		itemFilter,
-		modelValue,
-		headless,
-		removable,
-		rounded,
-		danger
-	} = defineProps({
+	const props = defineProps({
 		placeholder: {type: String, default: ""},
 		title: {type: String, default: ""},
 		tags: {type: Boolean, default: false},
@@ -65,9 +50,9 @@
 		switch (true) {
 			default:
 				return true;
-			case tags && !autocomplete:
+			case props.tags && !props.autocomplete:
 				return false;
-			case tags && autocomplete && !showList.value:
+			case props.tags && props.autocomplete && !showList.value:
 				return false;
 		}
 	});
@@ -91,16 +76,16 @@
 		switch (true) {
 			default:
 				return generateInputText() ?? '';
-			case showList.value && autocomplete:
+			case showList.value && props.autocomplete:
 				return searchText.value;
 		}
 	});
 
 	function generateInputText() {
-		return tags
-			? [...selectedItemList].map(item => itemText(item)).join(", ")
+		return props.tags
+			? [...selectedItemList].map(item => props.itemText(item)).join(", ")
 			: selectedItem.value
-				? itemText(selectedItem.value)
+				? props.itemText(selectedItem.value)
 				: "";
 	}
 
@@ -109,12 +94,12 @@
 		searchText.value = "" + value;
 	}
 
-	const selectedItem = shallowRef(Array.isArray(modelValue) ? modelValue[0] : modelValue);
+	const selectedItem = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
 	const selectedItemList = shallowReactive(
-		new Set<Item>(Array.isArray(modelValue) ? modelValue : modelValue ? [modelValue] : [])
+		new Set<Item>(Array.isArray(props.modelValue) ? props.modelValue : props.modelValue ? [props.modelValue] : [])
 	);
 	watch(
-		() => modelValue,
+		() => props.modelValue,
 		newVal => {
 			selectedItem.value = Array.isArray(newVal) ? newVal[0] : newVal;
 			selectedItemList.clear();
@@ -131,24 +116,24 @@
 	}
 
 	const sortedList: ComputedRef<Item[]> = computed(() => {
-		if (!isIterable(items)) return [];
+		if (!isIterable(props.items)) return [];
 		let arr
-		if (Array.isArray(items))
-			arr = items;
-		else if (items instanceof Map)
-			arr = [...items.values()];
+		if (Array.isArray(props.items))
+			arr = props.items;
+		else if (props.items instanceof Map)
+			arr = [...props.items.values()];
 		else
-			arr = [...items];
-		if (itemSort) return arr.sort(itemSort);
+			arr = [...props.items];
+		if (props.itemSort) return arr.sort(props.itemSort);
 		return arr;
 	});
 
 	const filteredList: ComputedRef<Array<Item>> = computed(() => {
-		if (autocomplete) {
-			if (itemFilter) return itemFilter(sortedList.value, searchText.value);
+		if (props.autocomplete) {
+			if (props.itemFilter) return props.itemFilter(sortedList.value, searchText.value);
 			else
 				return sortedList.value.filter(i => {
-					return itemText(i).startsWith(searchText.value ?? "");
+					return props.itemText(i).startsWith(searchText.value ?? "");
 				});
 		} else {
 			return sortedList.value;
@@ -173,13 +158,13 @@
 	function selectCurrentActiveItem() {
 		if (!showList.value) return;
 		selectItem(filteredList.value[activeItemIndex.value]);
-		if (!tags) closeListbox();
+		if (!props.tags) closeListbox();
 	}
 
 	function selectItem(item: Item | undefined) {
 		selectedItem.value = item;
 		if (item) {
-			if (tags) {
+			if (props.tags) {
 				if (selectedItemList.has(item)) {
 					selectedItemList.delete(item);
 				} else selectedItemList.add(item);
@@ -188,7 +173,7 @@
 				selectedItemList.add(item);
 			}
 		}
-		emit("update:modelValue", tags ? [...selectedItemList] : selectedItem.value);
+		emit("update:modelValue", props.tags ? [...selectedItemList] : selectedItem.value);
 	}
 
 	function removeTag(item: Item) {
@@ -228,7 +213,7 @@
 	}
 
 	function onSpace (e: InputEvent) {
-		if (!autocomplete)	{
+		if (!props.autocomplete)	{
 			e.preventDefault();
 			if (!showList.value) {
 				openListbox();

@@ -3,17 +3,17 @@
 	import useUploading from "../../composables/use-uploading";
 	import imageFile from "../../assets/img/avatar_placeholder.svg";
 
-	const {
-		src = '',
-		alt = '',
-		upload = false,
-		capture = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		src?: string;
 		alt?: string;
 		upload?: boolean;
 		capture?: boolean;
-	}>();
+	}>(), {
+		src: '',
+		alt: '',
+		upload: false,
+		capture: false,
+	});
 
 	defineEmits<{
 		(e: 'image:captured', val: Blob | null): void;

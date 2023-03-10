@@ -1,15 +1,7 @@
 <script setup lang='ts'>
 	import { computed } from 'vue';
 
-	const {
-		name = '',
-		label = '',
-		value = '',
-		disabled = false,
-		statistics = false,
-		icon = true,
-		modelValue = '',
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		name?: string;
 		label?: string;
 		value?: string;
@@ -17,7 +9,15 @@
 		statistics?: boolean;
 		icon?: boolean;
 		modelValue?: string;
-	}>();
+	}>(), {
+		name: '',
+		label: '',
+		value: '',
+		disabled: false,
+		statistics: false,
+		icon: true,
+		modelValue: '',
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', value: string): void,
@@ -25,7 +25,7 @@
 
 	const checked = computed({
 		get() {
-			return modelValue;
+			return props.modelValue;
 		},
 		set(value: string) {
 			emit('update:modelValue', value);

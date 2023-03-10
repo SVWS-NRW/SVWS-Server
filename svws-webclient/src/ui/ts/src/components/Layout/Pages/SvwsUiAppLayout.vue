@@ -1,11 +1,11 @@
 <script setup lang='ts'>
 	import {ref} from "vue";
 
-	const {
-		fullwidthContent = false,
-	} = defineProps<{
+	const props = withDefaults(defineProps<{
 		fullwidthContent?: boolean;
-	}>();
+	}>(), {
+		fullwidthContent: false,
+	});
 
 	const contentIsFullscreen = ref(false);
 
