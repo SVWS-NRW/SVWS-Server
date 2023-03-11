@@ -84,7 +84,6 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
 				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
 		
-		// TODO Quartalsmodus
 		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
 		// noch nicht angelegt.
 		DTOSchuljahresabschnitte sja = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
@@ -294,7 +293,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					case "istAudioNotwendig" -> istAudioNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "istVideoNotwendig" -> istVideoNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true);
-					case "idVorgabe" -> key = key;
+					case "idVorgabe" -> {/*do nothing*/}
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}

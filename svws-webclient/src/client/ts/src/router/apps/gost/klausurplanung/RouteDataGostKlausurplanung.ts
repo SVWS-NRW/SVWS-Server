@@ -218,6 +218,7 @@ export class RouteDataGostKlausurplanung {
 
 	setTerminToKursklausur = async (idTermin: number | null, klausur: GostKursklausur): Promise<boolean> => {
 		api.status.start();
+		klausur.idTermin = idTermin;
 		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
 		this.kursklausurmanager.updateKursklausur(klausur);
 		this.commit();

@@ -73,7 +73,6 @@
 		const terminNeu = props.termin !== null ? props.termin.id : null;
 		if (props.termin !== null && props.termin.quartal != klausur.quartal)
 			return;
-		klausur.idTermin = terminNeu;
 		const result = await props.setTerminToKursklausur(terminNeu, klausur);
 	}
 

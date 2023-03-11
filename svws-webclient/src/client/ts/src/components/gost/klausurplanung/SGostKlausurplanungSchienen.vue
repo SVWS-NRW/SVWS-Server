@@ -1,14 +1,15 @@
 <template>
 	<div>
-		<div class="flex flex-row items-center">
+		<div class="flex flex-row items-center gap-x-5">
 			<label for="rgQuartalAuswahl">Quartalauswahl: </label>
 			<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="beide" value="0" @input="chooseQuartal(0)" model-value="0" />
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="1" value="1" @input="chooseQuartal(1)" />
 				<svws-ui-radio-option name="rgQuartalAuswahl" label="2" value="2" @input="chooseQuartal(2)" />
 			</svws-ui-radio-group>
-			<svws-ui-button class="secondary mx-5" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
+			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
+			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0">Automatisch blocken</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
 			<s-gost-klausurplanung-schienen-termin :quartal="quartal"
@@ -40,7 +41,7 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin } from "@svws-nrw/svws-core";
+	import { GostKursklausur, GostKlausurtermin, Vector, List } from "@svws-nrw/svws-core";
 	import { computed, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -59,6 +60,21 @@
 	});
 
 	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
+
+	const blocken = async () => {
+		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
+		// Aufruf von Blockungsalgorithmus
+		const klausurTermine: List<List<number>> = new Vector();
+		for (const klausurList of klausurTermine) {
+			const termin = await props.erzeugeKlausurtermin(quartal.value);
+			for (const klausurId of klausurList) {
+				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
+				if (klausur !== null) {
+					await props.setTerminToKursklausur(termin.id, klausur);
+				}
+			}
+		}
+	};
 
 
 </script>

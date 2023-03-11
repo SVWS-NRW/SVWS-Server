@@ -371,8 +371,9 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public List<@NotNull GostKlausurtermin> getKlausurtermine(int quartal) {
-		return _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine(int quartal) {
+		List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+		return termine != null ? termine : new Vector<>();
 	}
 
 	/**

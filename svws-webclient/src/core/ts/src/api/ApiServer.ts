@@ -3564,6 +3564,86 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenKalenderinformation für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kalenderinformationen/{id : \d+}
+	 *
+	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in den Klausurtermin integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.
+	 *   Code 404: Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostKlausurenKalenderinformation>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchGostKlausurenKalenderinformation(data : Partial<GostKlausurenKalenderinformation>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/kalenderinformationen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = GostKlausurenKalenderinformation.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostKlausurenKalenderinformation für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kalenderinformationen/delete/{id : \d+}
+	 *
+	 * Löscht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 */
+	public async deleteGostKlausurenKalenderinformation(schema : string, id : number) : Promise<number | null> {
+		const path = "/db/{schema}/gost/klausuren/kalenderinformationen/delete/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return parseFloat(JSON.parse(text));
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createGostKlausurenKalenderinformation für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kalenderinformationen/new
+	 *
+	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurvorgabe wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurvorgabe
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostKlausurenKalenderinformation} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Gost-Klausurvorgabe wurde erfolgreich angelegt.
+	 */
+	public async createGostKlausurenKalenderinformation(data : GostKlausurenKalenderinformation, schema : string) : Promise<GostKlausurvorgabe> {
+		const path = "/db/{schema}/gost/klausuren/kalenderinformationen/new"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = GostKlausurenKalenderinformation.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurvorgabe.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}
 	 *
 	 * Patcht einen Gost-Kursklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.

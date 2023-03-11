@@ -364,17 +364,18 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public getKlausurtermine(quartal : number) : List<GostKlausurtermin> | null;
+	public getKlausurtermine(quartal : number) : List<GostKlausurtermin>;
 
 	/**
 	 * Implementation for method overloads of 'getKlausurtermine'
 	 */
-	public getKlausurtermine(__param0? : number) : List<GostKlausurtermin> | null {
+	public getKlausurtermine(__param0? : number) : List<GostKlausurtermin> {
 		if ((typeof __param0 === "undefined")) {
 			return this._termine;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
-			return this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+			let termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+			return termine !== null ? termine : new Vector();
 		} else throw new Error('invalid method overload');
 	}
 
