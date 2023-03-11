@@ -108,7 +108,6 @@
 			const lehrer = await props.addKursLehrer(props.kurs.id, value.id);
 			if (lehrer === undefined)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
-			props.getDatenmanager().patchOfKursAddLehrkraft(props.kurs.id, lehrer);
 			await add_lehrer_regel();
 		} else {
 			await remove_kurslehrer();
@@ -119,7 +118,6 @@
 		if (!props.kurs || !kurslehrer.value)
 			return;
 		await props.removeKursLehrer(props.kurs.id, kurslehrer.value.id);
-		props.getDatenmanager().patchOfKursRemoveLehrkraft(props.kurs.id, kurslehrer.value.id);
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {

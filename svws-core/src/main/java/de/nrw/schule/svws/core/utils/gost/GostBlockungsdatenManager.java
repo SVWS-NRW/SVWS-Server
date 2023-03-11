@@ -863,13 +863,12 @@ public class GostBlockungsdatenManager {
 	 */
 	public void patchOfKursRemoveLehrkraft(long pKursID, long pLehrkraftID) throws DeveloperNotificationException {
 		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		@NotNull List<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
+		@NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		for (int i = 0 ; i < lehrer.size() ; i++)
 			if (lehrer.get(i).id == pLehrkraftID) {
-				lehrer.remove(lehrer.get(i));
+				lehrer.removeElementAt(i);
 				return;
 			}
-		// lehrer.sort(compLehrkraefte);
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID+")!");
 	}
 	

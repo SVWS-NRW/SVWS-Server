@@ -46,6 +46,6 @@ public class GostBlockungKurs {
 	public int anzahlSchienen = 1;
 
 	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
-	public @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = new Vector<>();
+	public @NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = new Vector<>();
 
 }

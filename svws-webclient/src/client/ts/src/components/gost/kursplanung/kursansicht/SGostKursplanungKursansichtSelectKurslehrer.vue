@@ -55,14 +55,9 @@
 		return result;
 	})
 
-	async function remove_kurslehrer(lehrer: LehrerListeEintrag) {
-		await props.removeKursLehrer(props.kurs.id, lehrer.id);
-		props.getDatenmanager().patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
-	}
-
 	async function update_kurslehrer(lehrer: unknown, lehrer_alt?: LehrerListeEintrag) {
 		if ((lehrer === undefined) && lehrer_alt) {
-			await remove_kurslehrer(lehrer_alt);
+			await props.removeKursLehrer(props.kurs.id, lehrer_alt.id);
 			return;
 		}
 		if (lehrer instanceof LehrerListeEintrag) {
@@ -70,7 +65,6 @@
 			if (!kurslehrer)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
 			await add_lehrer_regel();
-			props.getDatenmanager().patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
 			new_kurs_lehrer.value = false;
 		}
 	}

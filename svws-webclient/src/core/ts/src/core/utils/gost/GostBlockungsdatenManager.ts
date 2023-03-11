@@ -889,10 +889,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public patchOfKursRemoveLehrkraft(pKursID : number, pLehrkraftID : number) : void {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
-		let lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
+		let lehrer : Vector<GostBlockungKursLehrer> = kurs.lehrer;
 		for (let i : number = 0; i < lehrer.size(); i++)
 			if (lehrer.get(i).id === pLehrkraftID) {
-				lehrer.remove(i);
+				lehrer.removeElementAt(i);
 				return;
 			}
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!")

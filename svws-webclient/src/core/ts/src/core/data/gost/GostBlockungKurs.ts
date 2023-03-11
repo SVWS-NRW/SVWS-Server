@@ -1,6 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
-import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
@@ -49,7 +48,7 @@ export class GostBlockungKurs extends JavaObject {
 	/**
 	 * Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. 
 	 */
-	public lehrer : List<GostBlockungKursLehrer> = new Vector();
+	public lehrer : Vector<GostBlockungKursLehrer> = new Vector();
 
 
 	public constructor() {
