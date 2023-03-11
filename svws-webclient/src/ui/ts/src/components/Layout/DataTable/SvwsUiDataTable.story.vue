@@ -31,26 +31,14 @@
 			email: "hallo@gmail.com",
 			age: 49,
 			isActive: true,
-		},
+		}
 	]);
 	const set = new Set<DataTableItem>();
 	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
 	set.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
 	const setReactive = reactive(new Set<DataTableItem>());
-	setReactive.add({
-		id: 1,
-		name: "A",
-		email: "test@web.de",
-		age: 16,
-		isActive: false,
-	});
-	setReactive.add({
-		id: 2,
-		name: "B",
-		email: "bla@gmx.de",
-		age: 31,
-		isActive: true,
-	});
+	setReactive.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
+	setReactive.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
 	const columns = ref([
 		{
 			key: "id",
@@ -122,10 +110,6 @@
 				row.isEditing = true;
 			}
 		}
-	}
-
-	function updateData(newItems) {
-		data.value = newItems;
 	}
 
 	const items = reactive([
@@ -273,9 +257,6 @@
 				</svws-ui-data-table>
 			</section>
 			<section class="mt-8">
-				<code><strong>Sort By:</strong> {{ sortBy }}</code><br>
-				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br>
-				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br>
 				<code><strong>Sort By:</strong> {{ sortBy }}</code><br>
 				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br>
 				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br>
@@ -474,10 +455,6 @@
 					</svws-ui-popover>
 				</template>
 			</svws-ui-data-table>
-		</Variant>
-		<Variant title="Draggable">
-			<svws-ui-data-table @items:reorder="updateData"
-				:items="data" />
 		</Variant>
 	</Story>
 </template>
