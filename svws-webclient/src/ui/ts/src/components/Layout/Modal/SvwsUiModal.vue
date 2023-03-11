@@ -36,7 +36,7 @@
 				:class="{
 					'modal--pageWrapper--help': size === 'help',
 				}">
-				<TransitionChild as="template"
+				<TransitionChild as="div"
 					enter="ease-out duration-200"
 					enter-from="opacity-0"
 					enter-to="opacity-100"
