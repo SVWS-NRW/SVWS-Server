@@ -1,16 +1,15 @@
-package de.nrw.schule.svws.core.klausurblockung;
+package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Vector;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInput;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInputSchueler;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutput;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutputKlausur;
-import de.nrw.schule.svws.core.logger.LogLevel;
-import de.nrw.schule.svws.core.logger.Logger;
+import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /** Eine dynamische Datenstruktur zum Speichern der aktuellen Lage der Klausuren auf ihren Schienen.
@@ -22,12 +21,6 @@ public class KlausurblockungSchienenDynDaten {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
-
-	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	private final @NotNull Logger _logger;
-
-	/** Die Datenbank-ID der zugehörigen Klausurblockung. Sie muss positiv sein, sonst wird ein Fehler erzeugt. */
-	private final long _datenbankID;
 
 	/** Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _mapKlausurZuNummer = new HashMap<>();
@@ -64,16 +57,9 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). */
-	KlausurblockungSchienenDynDaten(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KlausurblockungSchienenInput pInput) {
+	KlausurblockungSchienenDynDaten(@NotNull Random pRandom, @NotNull List<@NotNull GostKursklausur> pInput) {
 		// Parameter
 		_random = pRandom;
-		_logger = pLogger;
-		_datenbankID = pInput.datenbankID;
-
-		// Check: _datenbankID >= 0
-		if (_datenbankID < 0)
-			throw fehler("Die Datenbank-ID der Klausurblockung darf nicht negativ (" + _datenbankID + ") sein!");
 
 		initialisiereMapSchueler(pInput);
 		initialisiereMapKlausuren(pInput);
@@ -91,27 +77,60 @@ public class KlausurblockungSchienenDynDaten {
 
 		aktionKlausurenAusSchienenEntfernen();
 	}
+	
 
-	/** Teilt dem Logger einen Fehler mit. <br>
-	 * TODO BAR Datenstruktur leeren.
-	 * 
-	 * @param fehlermeldung Die Fehlermeldung. */
-	private KlausurblockungException fehler(@NotNull String fehlermeldung) {
-		_logger.logLn(LogLevel.ERROR, fehlermeldung);
-		return new KlausurblockungException(fehlermeldung);
+	private void initialisiereMapSchueler(@NotNull List<@NotNull GostKursklausur> pInput) {
+		@NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
+		for (@NotNull GostKursklausur gostKursklausur : pInput) {
+			for (@NotNull Long schuelerID : gostKursklausur.schuelerIds) {
+				if (schuelerID < 0) // Check: Ungültige Schüler-ID
+					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
+				if (setSchueler.add(schuelerID)) {
+					int schuelerNummer = _mapSchuelerZuNummer.size(); // Mapping: schuelerID --> laufende Nummer
+					_mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
+				}
+			}
+		}
 	}
 
-	private void initialisiereMatrixVerboten(@NotNull KlausurblockungSchienenInput pInput) {
+	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
+		for (@NotNull GostKursklausur gostKursklausur : pInput) {
+			if (gostKursklausur.id < 0) // Check: Ungültige Klausur-ID
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
+			int klausurNummer = _mapKlausurZuNummer.size();
+			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer); // Mapping: datenbankKlausurID --> laufende Nummer
+		}
+	}
+	
+	private void initialisiereMatrixVerboten(@NotNull List<@NotNull GostKursklausur> pInput) {
+		
+		@NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Long>> mapSchuelerKlausuren = new HashMap<>();
 
-		for (@NotNull KlausurblockungSchienenInputSchueler schueler : pInput.schueler) {
-			for (@NotNull Long klausurID1 : schueler.klausuren) {
-				for (@NotNull Long klausurID2 : schueler.klausuren) {
+		for (@NotNull GostKursklausur gostKursklausur : pInput) {
+			for (@NotNull Long schuelerID : gostKursklausur.schuelerIds) {
+				// Liste des Schülers holen
+				LinkedCollection<@NotNull Long> list = mapSchuelerKlausuren.get(schuelerID);
+				if (list == null) {
+					list = new LinkedCollection<>();
+					mapSchuelerKlausuren.put(schuelerID, list);
+				}
+				// Liste des Schülers füllen
+				list.addLast(gostKursklausur.id);
+			}
+		}
+		
+		for (@NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
+			LinkedCollection<@NotNull Long> list = mapSchuelerKlausuren.get(schuelerID);
+			if (list == null)
+				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
+			for (@NotNull Long klausurID1 : list) {
+				for (@NotNull Long klausurID2 : list) {
 					Integer klausurNr1 = _mapKlausurZuNummer.get(klausurID1);
 					Integer klausurNr2 = _mapKlausurZuNummer.get(klausurID2);
 					if (klausurNr1 == null)
-						throw fehler("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1);
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1);
 					if (klausurNr2 == null)
-						throw fehler("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2);
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2);
 					_verboten[klausurNr1][klausurNr2] = true;
 				}
 			}
@@ -143,29 +162,7 @@ public class KlausurblockungSchienenDynDaten {
 
 	}
 
-	private void initialisiereMapSchueler(@NotNull KlausurblockungSchienenInput pInput) {
-		for (@NotNull KlausurblockungSchienenInputSchueler schueler : pInput.schueler) {
-			long schuelerID = schueler.id;
-			if (schuelerID < 0) // Check: Ungültige Schüler-ID
-				throw fehler("pInput.schueler.id=" + schuelerID + " ist negativ!");
-			if (_mapSchuelerZuNummer.containsKey(schuelerID)) // Check: Doppelte Schüler-ID
-				throw fehler("pInput.schueler.id=" + schuelerID + " wurde doppelt definiert!");
-			int schuelerNummer = _mapSchuelerZuNummer.size(); // Mapping: schuelerID --> laufende Nummer
-			_mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
-		}
-	}
 
-	private void initialisiereMapKlausuren(@NotNull KlausurblockungSchienenInput pInput) {
-		for (@NotNull KlausurblockungSchienenInputSchueler schueler : pInput.schueler)
-			for (@NotNull Long klausurID : schueler.klausuren) {
-				if (klausurID < 0) // Check: Ungültige Klausur-ID
-					throw fehler("pInput.schueler.klausuren hat eine negative Klausur-ID=" + klausurID + "!");
-				if (_mapKlausurZuNummer.containsKey(klausurID))
-					continue;
-				int klausurNummer = _mapKlausurZuNummer.size();
-				_mapKlausurZuNummer.put(klausurID, klausurNummer); // Mapping: datenbankKlausurID --> laufende Nummer
-			}
-	}
 
 	/** Liefert ein Array aller Klausurnummern in aufsteigender Reihenfolge ihrer Nummer.
 	 * 
@@ -182,32 +179,32 @@ public class KlausurblockungSchienenDynDaten {
 	/** Liefert ein Ausgabe-Objekt, welches jeder Klausur genau eine Schiene zuordnet.
 	 * 
 	 * @return ein Ausgabe-Objekt, welches jeder Klausur genau eine Schiene zuordnet. */
-	@NotNull KlausurblockungSchienenOutput gibErzeugeOutput() {
-		KlausurblockungSchienenOutput out = new KlausurblockungSchienenOutput();
-		out.datenbankID = _datenbankID;
-		out.schienenAnzahl = _schienenAnzahl;
-
+	@NotNull List<@NotNull List<@NotNull Long>> gibErzeugeOutput() {
+		
+		@NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
+		for (int i = 0; i < _schienenAnzahl; i++) {
+			out.add(new Vector<>());
+		}
+		
+	
 		for (Entry<Long, Integer> e : _mapKlausurZuNummer.entrySet()) {
 			Long klausurID = e.getKey();
 			Integer klausurNr = e.getValue();
 
 			if (klausurID == null) 
-				throw fehler("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");
 			
 			if (klausurNr == null) 
-				throw fehler("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!");
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!");
 
 			int schiene = _klausurZuSchiene[klausurNr];
 			if (schiene < 0) 
-				throw fehler("gibErzeugeOutput(): negativer Wert bei 'schiene'!");
+				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'schiene'!");
 			if (schiene >= _schienenAnzahl) 
-				throw fehler("gibErzeugeOutput(): zu großer Wert bei 'schiene'!");
+				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'schiene'!");
 
 			// Klausur-Schienen-Zuordnung
-			KlausurblockungSchienenOutputKlausur klausur = new KlausurblockungSchienenOutputKlausur();
-			klausur.id = klausurID;
-			klausur.schiene = schiene;
-			out.klausuren.add(klausur);
+			out.get(schiene).add(klausurID);
 		}
 
 		return out;
@@ -549,10 +546,10 @@ public class KlausurblockungSchienenDynDaten {
 	boolean aktionSetzeKlausurInSchiene(int nr, int s) {
 
 		if (s < 0)
-			throw fehler("aktionSetzeKlausurInSchiene("+nr+", "+s+") --> Schiene zu klein!");
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene("+nr+", "+s+") --> Schiene zu klein!");
 			
 		if (s >= _schienenAnzahl)
-			throw fehler("aktionSetzeKlausurInSchiene("+nr+", "+s+") --> Schiene zu groß!");
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene("+nr+", "+s+") --> Schiene zu groß!");
 
 		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
 			if (_klausurZuSchiene[nr2] == s)
@@ -570,7 +567,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param klausurNr die Nummer der Klausur, die entfernt werden soll. */
 	void aktionEntferneKlausurAusSchiene(int klausurNr) {
 		if (_klausurZuSchiene[klausurNr] < 0) 
-			throw fehler("aktionEntferneKlausurAusSchiene("+klausurNr+") --> Die Klausur hatte gar keine Schiene!");
+			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene("+klausurNr+") --> Die Klausur hatte gar keine Schiene!");
 		_klausurZuSchiene[klausurNr] = -1;
 	}
 
@@ -582,7 +579,7 @@ public class KlausurblockungSchienenDynDaten {
 	int aktionSetzeKlausurInNeueSchiene(int klausurNr) {
 		int schiene = _schienenAnzahl;
 		if (_klausurZuSchiene[klausurNr] >= 0)
-			throw fehler("aktionSetzeKlausurInNeueSchiene("+klausurNr+") --> Die Klausur ist bereits in einer Schiene!");
+			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene("+klausurNr+") --> Die Klausur ist bereits in einer Schiene!");
 		_klausurZuSchiene[klausurNr] = _schienenAnzahl;
 		_schienenAnzahl++;
 		return schiene;
@@ -722,5 +719,4 @@ public class KlausurblockungSchienenDynDaten {
 		}
 	}
 
-	// TODO BAR gibAnzahlNichtverteilterKlausuren --> beschleunigen?
 }

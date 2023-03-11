@@ -1,15 +1,15 @@
-package de.nrw.schule.svws.core.klausurblockung;
+package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Die Klausuren werden rekursiv mit Backtracking auf die Schienen verteilt. Pro Rekursionsschritt wird die freie
  * Klausur gewählt, die die meisten Nachbarsfarben hat. Anschließend wird die Klausur in aufsteigender Reihenfolge auf
  * die Schienen verteilt.
  * 
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch
+ */
 public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Die kleinste Schienenanzahl, die bisher gefunden wurde. */
@@ -24,11 +24,9 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	/** Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. */
-	public KlausurblockungSchienenAlgorithmusGreedy3(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KlausurblockungSchienenDynDaten pDynDaten) {
-		super(pRandom, pLogger, pDynDaten);
+	public KlausurblockungSchienenAlgorithmusGreedy3(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+		super(pRandom, pDynDaten);
 	}
 
 	@Override

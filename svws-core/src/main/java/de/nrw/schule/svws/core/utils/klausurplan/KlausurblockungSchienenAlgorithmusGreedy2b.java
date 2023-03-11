@@ -1,24 +1,23 @@
-package de.nrw.schule.svws.core.klausurblockung;
+package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy2}, nur werden bei dieser
  * Strategie die Schienen nacheinander aufgefüllt.
  * 
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch 
+ */
 public class KlausurblockungSchienenAlgorithmusGreedy2b extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. */
-	public KlausurblockungSchienenAlgorithmusGreedy2b(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KlausurblockungSchienenDynDaten pDynDaten) {
-		super(pRandom, pLogger, pDynDaten);
+	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 */
+	public KlausurblockungSchienenAlgorithmusGreedy2b(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+		super(pRandom, pDynDaten);
 	}
 
 	@Override

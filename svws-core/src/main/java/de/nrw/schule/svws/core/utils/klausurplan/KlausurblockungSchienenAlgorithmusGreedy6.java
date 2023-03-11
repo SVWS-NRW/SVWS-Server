@@ -1,9 +1,8 @@
-package de.nrw.schule.svws.core.klausurblockung;
+package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.Random;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
-import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Die Strategie implementiert den Algorithmus "Recursive Largest First (RLF)".
@@ -14,11 +13,9 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	/** Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. */
-	public KlausurblockungSchienenAlgorithmusGreedy6(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KlausurblockungSchienenDynDaten pDynDaten) {
-		super(pRandom, pLogger, pDynDaten);
+	public KlausurblockungSchienenAlgorithmusGreedy6(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+		super(pRandom, pDynDaten);
 	}
 
 	@Override

@@ -869,12 +869,9 @@ public class GostBlockungsdatenManager {
 				lehrer.remove(i);
 				return;
 			}
+		// lehrer.sort(compLehrkraefte);
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID+")!");
 	}
-
-	
-
-
 	
 	private void addSchieneOhneSortierung(@NotNull GostBlockungSchiene pSchiene) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.

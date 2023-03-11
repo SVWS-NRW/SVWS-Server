@@ -1,19 +1,17 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KlausurblockungSchienenOutput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutput } from '../../core/data/klausurblockung/KlausurblockungSchienenOutput';
-import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
-import { KlausurblockungSchienenInput, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInput } from '../../core/data/klausurblockung/KlausurblockungSchienenInput';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { KlausurblockungException, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungException } from '../../core/klausurblockung/KlausurblockungException';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
-import { System, cast_java_lang_System } from '../../java/lang/System';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { JavaMapEntry, cast_java_util_Map_Entry } from '../../java/util/JavaMapEntry';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KlausurblockungSchienenOutputKlausur, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenOutputKlausur } from '../../core/data/klausurblockung/KlausurblockungSchienenOutputKlausur';
-import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
-import { KlausurblockungSchienenInputSchueler, cast_de_nrw_schule_svws_core_data_klausurblockung_KlausurblockungSchienenInputSchueler } from '../../core/data/klausurblockung/KlausurblockungSchienenInputSchueler';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { System, cast_java_lang_System } from '../../../java/lang/System';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
+import { Random, cast_java_util_Random } from '../../../java/util/Random';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 
 export class KlausurblockungSchienenDynDaten extends JavaObject {
 
@@ -23,16 +21,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
 	 */
 	private readonly _random : Random;
-
-	/**
-	 * Logger für Benutzerhinweise, Warnungen und Fehler. 
-	 */
-	private readonly _logger : Logger;
-
-	/**
-	 * Die Datenbank-ID der zugehörigen Klausurblockung. Sie muss positiv sein, sonst wird ein Fehler erzeugt. 
-	 */
-	private readonly _datenbankID : number;
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
@@ -92,13 +80,9 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
 	 */
-	constructor(pRandom : Random, pLogger : Logger, pInput : KlausurblockungSchienenInput) {
+	constructor(pRandom : Random, pInput : List<GostKursklausur>) {
 		super();
 		this._random = pRandom;
-		this._logger = pLogger;
-		this._datenbankID = pInput.datenbankID;
-		if (this._datenbankID < 0) 
-			throw this.fehler("Die Datenbank-ID der Klausurblockung darf nicht negativ (" + this._datenbankID + ") sein!")
 		this.initialisiereMapSchueler(pInput);
 		this.initialisiereMapKlausuren(pInput);
 		this._klausurenAnzahl = this._mapKlausurZuNummer.size();
@@ -113,27 +97,53 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		this.aktionKlausurenAusSchienenEntfernen();
 	}
 
-	/**
-	 *Teilt dem Logger einen Fehler mit. <br>
-	 * TODO BAR Datenstruktur leeren.
-	 * 
-	 * @param fehlermeldung Die Fehlermeldung. 
-	 */
-	private fehler(fehlermeldung : string) : KlausurblockungException | null {
-		this._logger.logLn(LogLevel.ERROR, fehlermeldung);
-		return new KlausurblockungException(fehlermeldung);
+	private initialisiereMapSchueler(pInput : List<GostKursklausur>) : void {
+		let setSchueler : HashSet<number> = new HashSet();
+		for (let gostKursklausur of pInput) {
+			for (let schuelerID of gostKursklausur.schuelerIds) {
+				if (schuelerID < 0) 
+					throw new DeveloperNotificationException("Schüler-ID " + schuelerID! + " ist negativ!")
+				if (setSchueler.add(schuelerID)) {
+					let schuelerNummer : number = this._mapSchuelerZuNummer.size();
+					this._mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
+				}
+			}
+		}
 	}
 
-	private initialisiereMatrixVerboten(pInput : KlausurblockungSchienenInput) : void {
-		for (let schueler of pInput.schueler) {
-			for (let klausurID1 of schueler.klausuren) {
-				for (let klausurID2 of schueler.klausuren) {
+	private initialisiereMapKlausuren(pInput : List<GostKursklausur>) : void {
+		for (let gostKursklausur of pInput) {
+			if (gostKursklausur.id < 0) 
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
+			let klausurNummer : number = this._mapKlausurZuNummer.size();
+			this._mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
+		}
+	}
+
+	private initialisiereMatrixVerboten(pInput : List<GostKursklausur>) : void {
+		let mapSchuelerKlausuren : HashMap<number, LinkedCollection<number>> = new HashMap();
+		for (let gostKursklausur of pInput) {
+			for (let schuelerID of gostKursklausur.schuelerIds) {
+				let list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
+				if (list === null) {
+					list = new LinkedCollection();
+					mapSchuelerKlausuren.put(schuelerID, list);
+				}
+				list.addLast(gostKursklausur.id);
+			}
+		}
+		for (let schuelerID of mapSchuelerKlausuren.keySet()) {
+			let list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
+			if (list === null) 
+				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.")
+			for (let klausurID1 of list) {
+				for (let klausurID2 of list) {
 					let klausurNr1 : number | null = this._mapKlausurZuNummer.get(klausurID1);
 					let klausurNr2 : number | null = this._mapKlausurZuNummer.get(klausurID2);
 					if (klausurNr1 === null) 
-						throw this.fehler("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1!)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1!)
 					if (klausurNr2 === null) 
-						throw this.fehler("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2!)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2!)
 					this._verboten[klausurNr1.valueOf()][klausurNr2.valueOf()] = true;
 				}
 			}
@@ -159,30 +169,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			}
 	}
 
-	private initialisiereMapSchueler(pInput : KlausurblockungSchienenInput) : void {
-		for (let schueler of pInput.schueler) {
-			let schuelerID : number = schueler.id;
-			if (schuelerID < 0) 
-				throw this.fehler("pInput.schueler.id=" + schuelerID + " ist negativ!")
-			if (this._mapSchuelerZuNummer.containsKey(schuelerID)) 
-				throw this.fehler("pInput.schueler.id=" + schuelerID + " wurde doppelt definiert!")
-			let schuelerNummer : number = this._mapSchuelerZuNummer.size();
-			this._mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
-		}
-	}
-
-	private initialisiereMapKlausuren(pInput : KlausurblockungSchienenInput) : void {
-		for (let schueler of pInput.schueler) 
-			for (let klausurID of schueler.klausuren) {
-				if (klausurID < 0) 
-					throw this.fehler("pInput.schueler.klausuren hat eine negative Klausur-ID=" + klausurID! + "!")
-				if (this._mapKlausurZuNummer.containsKey(klausurID)) 
-					continue;
-				let klausurNummer : number = this._mapKlausurZuNummer.size();
-				this._mapKlausurZuNummer.put(klausurID, klausurNummer);
-			}
-	}
-
 	/**
 	 *Liefert ein Array aller Klausurnummern in aufsteigender Reihenfolge ihrer Nummer.
 	 * 
@@ -200,26 +186,24 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * 
 	 * @return ein Ausgabe-Objekt, welches jeder Klausur genau eine Schiene zuordnet. 
 	 */
-	gibErzeugeOutput() : KlausurblockungSchienenOutput {
-		let out : KlausurblockungSchienenOutput | null = new KlausurblockungSchienenOutput();
-		out.datenbankID = this._datenbankID;
-		out.schienenAnzahl = this._schienenAnzahl;
+	gibErzeugeOutput() : List<List<number>> {
+		let out : List<List<number>> = new Vector();
+		for (let i : number = 0; i < this._schienenAnzahl; i++){
+			out.add(new Vector());
+		}
 		for (let e of this._mapKlausurZuNummer.entrySet()) {
 			let klausurID : number | null = e.getKey();
 			let klausurNr : number | null = e.getValue();
 			if (klausurID === null) 
-				throw this.fehler("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
 			if (klausurNr === null) 
-				throw this.fehler("gibErzeugeOutput(): NULL-Wert bei \'klausurNr\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurNr\'!")
 			let schiene : number = this._klausurZuSchiene[klausurNr.valueOf()];
 			if (schiene < 0) 
-				throw this.fehler("gibErzeugeOutput(): negativer Wert bei \'schiene\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei \'schiene\'!")
 			if (schiene >= this._schienenAnzahl) 
-				throw this.fehler("gibErzeugeOutput(): zu großer Wert bei \'schiene\'!")
-			let klausur : KlausurblockungSchienenOutputKlausur | null = new KlausurblockungSchienenOutputKlausur();
-			klausur.id = klausurID.valueOf();
-			klausur.schiene = schiene;
-			out.klausuren.add(klausur);
+				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei \'schiene\'!")
+			out.get(schiene).add(klausurID);
 		}
 		return out;
 	}
@@ -545,9 +529,9 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionSetzeKlausurInSchiene(nr : number, s : number) : boolean {
 		if (s < 0) 
-			throw this.fehler("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!")
 		if (s >= this._schienenAnzahl) 
-			throw this.fehler("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!")
 		for (let nr2 : number = 0; nr2 < this._klausurenAnzahl; nr2++)
 			if (this._klausurZuSchiene[nr2] === s) 
 				if (this._verboten[nr][nr2]) 
@@ -564,7 +548,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionEntferneKlausurAusSchiene(klausurNr : number) : void {
 		if (this._klausurZuSchiene[klausurNr] < 0) 
-			throw this.fehler("aktionEntferneKlausurAusSchiene(" + klausurNr + ") --> Die Klausur hatte gar keine Schiene!")
+			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene(" + klausurNr + ") --> Die Klausur hatte gar keine Schiene!")
 		this._klausurZuSchiene[klausurNr] = -1;
 	}
 
@@ -578,7 +562,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	aktionSetzeKlausurInNeueSchiene(klausurNr : number) : number {
 		let schiene : number = this._schienenAnzahl;
 		if (this._klausurZuSchiene[klausurNr] >= 0) 
-			throw this.fehler("aktionSetzeKlausurInNeueSchiene(" + klausurNr + ") --> Die Klausur ist bereits in einer Schiene!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene(" + klausurNr + ") --> Die Klausur ist bereits in einer Schiene!")
 		this._klausurZuSchiene[klausurNr] = this._schienenAnzahl;
 		this._schienenAnzahl++;
 		return schiene;
@@ -717,11 +701,11 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.klausurblockung.KlausurblockungSchienenDynDaten'].includes(name);
+		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenDynDaten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenDynDaten(obj : unknown) : KlausurblockungSchienenDynDaten {
+export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenDynDaten(obj : unknown) : KlausurblockungSchienenDynDaten {
 	return obj as KlausurblockungSchienenDynDaten;
 }

@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.core.klausurblockung;
+package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.Random;
 
@@ -15,21 +15,16 @@ public abstract class KlausurblockungSchienenAlgorithmusAbstract {
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	protected final @NotNull Random _random;
 
-	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	protected final @NotNull Logger _logger;
-
 	/** Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. */
 	protected final @NotNull KlausurblockungSchienenDynDaten _dynDaten;
 
 	/** Der Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. */
-	public KlausurblockungSchienenAlgorithmusAbstract(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
+	 */
+	public KlausurblockungSchienenAlgorithmusAbstract(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		_random = pRandom;
-		_logger = pLogger;
 		_dynDaten = pDynDaten;
 	}
 

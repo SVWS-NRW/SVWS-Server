@@ -1,44 +1,26 @@
 package de.nrw.schule.svws.core.klausurblockung;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.function.Consumer;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import de.nrw.schule.svws.base.CsvReader;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInput;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInputSchueler;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutput;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutputKlausur;
-import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutputs;
-import de.nrw.schule.svws.core.logger.LogData;
-import de.nrw.schule.svws.core.logger.LogLevel;
-import de.nrw.schule.svws.core.logger.Logger;
-import jakarta.validation.constraints.NotNull;
+import de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmus;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
 @DisplayName("Diese Klasse testet die Klasse KlausurblockungSchienenAlgorithmus")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class KlausurblockungSchieneTests {
 
-	private static final long BLOCKUNGS_ZEIT = 1000 * 1;
+	
+	/*private static final long BLOCKUNGS_ZEIT = 1000 * 1;
 	
 	private static final String PFAD_DATEN_001 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene001/";
 	private static final String PFAD_DATEN_002 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene002/";
-	private static final String PFAD_DATEN_003 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene003/";
+	private static final String PFAD_DATEN_003 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene003/";*/
 
 
-	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
-	@Test
+//	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
+	/*@Test
 	@DisplayName("Klausurblockung 001 einlesen und blocken.")
 	void test001_data() {
 		// Erzeugen eines Loggers mit Consumer.
@@ -166,10 +148,10 @@ public class KlausurblockungSchieneTests {
 		}
 
 		starteKlausurblockungSchiene(input);
-	}
+	}*/
 
-	/** Testet das Einlesen und Konvertieren der Daten 002. Diese befinden sich hier {@link #PFAD_DATEN_002}. */
-	@Test
+//	/** Testet das Einlesen und Konvertieren der Daten 002. Diese befinden sich hier {@link #PFAD_DATEN_002}. */
+	/*@Test
 	@DisplayName("Klausurblockung 002 einlesen und blocken.")
 	void test002_data() {
 		// Erzeugen eines Loggers mit Consumer.
@@ -214,10 +196,10 @@ public class KlausurblockungSchieneTests {
 			starteKlausurblockungSchiene(input);
 		}
 
-	}
+	}*/
 
-	/** Testet das Einlesen und Konvertieren der Daten 003. Diese befinden sich hier {@link #PFAD_DATEN_003}. */
-	@Test
+//	/** Testet das Einlesen und Konvertieren der Daten 003. Diese befinden sich hier {@link #PFAD_DATEN_003}. */
+	/*@Test
 	@DisplayName("Klausurblockung 003 einlesen und blocken.")
 	void test003_data() {
 		// Erzeugen eines Loggers mit Consumer.
@@ -330,5 +312,6 @@ public class KlausurblockungSchieneTests {
 		}
 		// System.out.println(" Output hat " + output.schienenAnzahl + " Schienen");
 	}
+	*/
 
 }

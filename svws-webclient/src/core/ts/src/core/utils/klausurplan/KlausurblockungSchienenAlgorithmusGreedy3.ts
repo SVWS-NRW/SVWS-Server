@@ -1,10 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KlausurblockungSchienenAlgorithmusAbstract, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusAbstract } from '../../core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';
-import { KlausurblockungSchienenDynDaten, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenDynDaten } from '../../core/klausurblockung/KlausurblockungSchienenDynDaten';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { KlausurblockungSchienenAlgorithmusAbstract, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusAbstract';
+import { KlausurblockungSchienenDynDaten, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenDynDaten } from '../../../core/utils/klausurplan/KlausurblockungSchienenDynDaten';
+import { Random, cast_java_util_Random } from '../../../java/util/Random';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSchienenAlgorithmusAbstract {
 
@@ -28,11 +27,10 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	 *Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
 	 */
-	public constructor(pRandom : Random, pLogger : Logger, pDynDaten : KlausurblockungSchienenDynDaten) {
-		super(pRandom, pLogger, pDynDaten);
+	public constructor(pRandom : Random, pDynDaten : KlausurblockungSchienenDynDaten) {
+		super(pRandom, pDynDaten);
 	}
 
 	public toString() : string {
@@ -75,11 +73,11 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.klausurblockung.KlausurblockungSchienenAlgorithmusGreedy3', 'de.nrw.schule.svws.core.klausurblockung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
+		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusGreedy3', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusGreedy3(obj : unknown) : KlausurblockungSchienenAlgorithmusGreedy3 {
+export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy3(obj : unknown) : KlausurblockungSchienenAlgorithmusGreedy3 {
 	return obj as KlausurblockungSchienenAlgorithmusGreedy3;
 }
