@@ -14,13 +14,14 @@
 			</div>
 		</template>
 		<template #content>
-			<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
+			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
+				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl()?.id)">
+				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footerActions>
-					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0"
-						:create-benutzergruppe="createBenutzergruppe"
-						:delete-benutzergruppe_n="deleteBenutzergruppe_n" />
+					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
+						:delete-benutzergruppe_n="deleteMultipleGroup" />
 				</template>
-			</svws-ui-table>
+			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -32,15 +33,11 @@
 	import { router } from "~/router/RouteManager";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
+	import { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
-	const props = defineProps<{
-		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
-		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
-		// eslint-disable-next-line vue/prop-name-casing
-		deleteBenutzergruppe_n : () => Promise<void>;
-	}>();
+	const props = defineProps<BenutzergruppeAuswahlProps>();
 
-	const selected = routeSchuleBenutzergruppe.auswahl;
+	const selectedItems: Ref<BenutzergruppeListeEintrag[]> = ref([]);
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -49,21 +46,22 @@
 
 	const search: Ref<string> = ref("");
 
-	const rows: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		return routeSchuleBenutzergruppe.liste.liste;
-	});
-
-	const rowsFiltered: ComputedRef<BenutzergruppeListeEintrag[]> = computed(() =>
-		(rows.value === undefined) ? [] : (search.value)
-			? rows.value.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
-			: rows.value
-	);
-
-	const selectedItems: WritableComputedRef<BenutzergruppeListeEintrag[]> = computed({
-		get: () => routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe,
-		set: (items: BenutzergruppeListeEintrag[]) => {
-			routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe = items;
+	const rowsFiltered: ComputedRef<Map<number, BenutzergruppeListeEintrag>> = computed(() => {
+		console.log("rowsFiltered--");
+		if (!search.value)
+			return props.mapBenutzergruppe;
+		const result = new Map<number, BenutzergruppeListeEintrag>();
+		for (const l of props.mapBenutzergruppe.values()) {
+			if (l.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				result.set(l.id, l);
 		}
+		return result;
 	});
+
+	async function deleteMultipleGroup() {
+		const items = selectedItems.value;
+		selectedItems.value = [];
+		await props.deleteBenutzergruppe_n(items);
+	}
 
 </script>

@@ -15,7 +15,7 @@
 			<td> {{ kompetenzgruppe.daten.bezeichnung }} </td>
 		</tr>
 		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :data="data"
+			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin"
 				:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
 		</template>
 	</template>
@@ -27,14 +27,13 @@
 	import { ref, Ref, computed,WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: BenutzergruppeDaten;
 		getBenutzergruppenManager: () => BenutzergruppenManager;
 		kompetenzgruppe: BenutzerKompetenzGruppe;
 		istAdmin: boolean;
-		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
-		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
-		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>,
-		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<void>
+		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
+		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
+		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>,
+		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>
 	}>();
 
 	const collapsed: Ref<boolean> = ref(true);

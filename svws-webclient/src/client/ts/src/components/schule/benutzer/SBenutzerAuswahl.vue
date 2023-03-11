@@ -14,12 +14,12 @@
 			</div>
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="setBenutzer" :model-value="auswahlGruppe" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
-				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl?.id)">
+			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
+				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl()?.id)">
 				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footerActions>
-					<s-modal-benutzer-neu :show-delete-icon="auswahlGruppe.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
-						:delete-benutzer-allgemein="deleteBenutzerAllgemein" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
+						:delete-benutzer-allgemein="deleteMultipleUser" />
 				</template>
 			</svws-ui-data-table>
 		</template>
@@ -34,6 +34,8 @@
 	import { router } from "~/router/RouteManager";
 	import { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
 
+	const selectedItems: Ref<BenutzerListeEintrag[]> = ref([]);
+
 	const props = defineProps<BenutzerAuswahlProps>();
 
 	const cols = [
@@ -44,16 +46,23 @@
 
 	const search: Ref<string> = ref("");
 
-	const rowsFiltered: ComputedRef<Map<number, BenutzerListeEintrag> | List<BenutzerListeEintrag>> = computed(() => {
+	const rowsFiltered: ComputedRef<Map<number, BenutzerListeEintrag>> = computed(() => {
+		console.log("rowsFiltered--");
 		if (!search.value)
-			return props.listBenutzer;
+			return props.mapBenutzer;
 		const result = new Map<number, BenutzerListeEintrag>();
-		for (const l of props.listBenutzer) {
+		for (const l of props.mapBenutzer.values()) {
 			if (l.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
 				l.anzeigename.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				result.set(l.id, l);
 		}
 		return result;
 	});
+
+	async function deleteMultipleUser() {
+		const items = selectedItems.value;
+		selectedItems.value = [];
+		await props.deleteBenutzerAllgemein(items);
+	}
 
 </script>

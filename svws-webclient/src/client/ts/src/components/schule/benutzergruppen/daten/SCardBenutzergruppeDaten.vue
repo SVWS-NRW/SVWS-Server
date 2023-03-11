@@ -9,11 +9,10 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerListeEintrag } from "@svws-nrw/svws-core";
+	import {BenutzergruppenManager} from "@svws-nrw/svws-core";
 	import { computed, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: BenutzergruppeDaten;
 		getBenutzergruppenManager: () => BenutzergruppenManager;
 		setBezeichnung : (anzeigename: string) => Promise<void>;
 		setIstAdmin : (istAdmin:boolean) => Promise<void>;

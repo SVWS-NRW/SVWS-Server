@@ -14,7 +14,7 @@ export class RouteDataSchuleBenutzerDaten {
 	auswahl: BenutzerListeEintrag | undefined = undefined;
 }
 
-export class RouteSchuleBenutzerDaten extends RouteNode<RouteDataSchuleBenutzerDaten, RouteSchuleBenutzer> {
+export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenutzer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer_daten", "daten", SBenutzer, new RouteDataSchuleBenutzerDaten());
@@ -23,34 +23,17 @@ export class RouteSchuleBenutzerDaten extends RouteNode<RouteDataSchuleBenutzerD
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.id === undefined) {
-			await this.setBenutzer(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.setBenutzer(this.parent.data.mapBenutzer.get(id));
-		}
-	}
-
-	protected async setBenutzer(item?: BenutzerListeEintrag) {
-		if (item === undefined) {
-			routeSchuleBenutzer.data.daten = undefined;
-			return;
-		}
-		if ((routeSchuleBenutzer.data.hatDaten) || (item.id === routeSchuleBenutzer.data.daten.id))
-			routeSchuleBenutzer.data.daten = await api.server.getBenutzerDaten(api.schema, item.id);
+		console.log("benutzer_daten->update");
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id: id }};
 	}
 
+
 	public getProps(to: RouteLocationNormalized): BenutzerProps {
 		return {
-			listBenutzergruppen: routeSchuleBenutzer.data.listBenutzergruppen.value,
+			listBenutzergruppen: routeSchuleBenutzer.data.listBenutzergruppen,
 			getBenutzerManager : routeSchuleBenutzer.data.getBenutzerManager,
 			setAnzeigename : routeSchuleBenutzer.data.setAnzeigename,
 			setAnmeldename : routeSchuleBenutzer.data.setAnmeldename,

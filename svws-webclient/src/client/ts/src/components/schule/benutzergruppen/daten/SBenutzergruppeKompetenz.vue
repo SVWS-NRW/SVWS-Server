@@ -7,16 +7,15 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerKompetenz } from "@svws-nrw/svws-core";
+	import {BenutzergruppenManager, BenutzerKompetenz } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
-		data: BenutzergruppeDaten;
 		getBenutzergruppenManager: () => BenutzergruppenManager;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
-		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
-		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<void>;
+		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
+		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
 	}>();
 
 	const aktiviert : ComputedRef<boolean> = computed(() => props.istAdmin);

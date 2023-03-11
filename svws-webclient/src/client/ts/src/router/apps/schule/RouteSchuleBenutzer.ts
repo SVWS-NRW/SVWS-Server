@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
@@ -8,6 +8,7 @@ import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
+import { findSourceMap } from "module";
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
@@ -26,43 +27,45 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		if (id !== undefined)
+			return routeSchuleBenutzer.getRoute(id);
 		return true;
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if ((to.name === this.name) && (to_params.id === undefined)) {
-			await this.data.ladeListe();
-			if (this.data.mapBenutzer.size === 0)
-				// TODO Handhabung bei neuer Schule -> Liste leer
-				return this.getRoute(-1);
-			return this.getRoute(this.data.mapBenutzer.values().next().value.id);
-		}
-		await this.data.ladeListe();
+
 	}
 
-
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any>{
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
-			await this.data.setBenutzer(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.setBenutzer(this.data.mapBenutzer.get(id));
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		await this.data.ladeListe();
+		if (to.name === this.name) {
+			if (this.data.mapBenutzer.size === 0)
+				return;
+			return this.getRoute(this.data.mapBenutzer.values().next().value.id);
 		}
+		//Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
+		if(id !== undefined && !this.data.mapBenutzer.has(id))
+			return this.getRoute(this.data.mapBenutzer.values().next().value.id);
+		const eintrag = (id !== undefined) ? this.data.mapBenutzer.get(id) : undefined;
+		await this.data.setBenutzer(eintrag);
+
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
+	public getRoute(id?: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzerAuswahlProps {
 		return {
-			auswahl: this.data.auswahl.value,
-			auswahlGruppe: this.data.auswahlGruppe.value,
-			listBenutzer: this.data.listBenutzer,
-			setBenutzer: this.data.gotoBenutzer,
-			setAuswahlGruppe: this.data.setAuswahlGruppe,
+			auswahl: () => this.data.auswahl,
+			mapBenutzer: this.data.mapBenutzer,
+			gotoBenutzer: this.data.gotoBenutzer,
 			createBenutzerAllgemein : this.data.createBenutzerAllgemein,
 			deleteBenutzerAllgemein : this.data.deleteBenutzerAllgemein
 		};
@@ -70,7 +73,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 
 	public getProps(to: RouteLocationNormalized): BenutzerAppProps {
 		return {
-			auswahl: this.data.auswahl.value,
+			auswahl:()=> this.data.auswahl
 		};
 	}
 	public get childRouteSelector() : WritableComputedRef<RouteRecordRaw> {
@@ -78,7 +81,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 			get: () => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl.value?.id } });
+				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
 			}
 		});
 	}

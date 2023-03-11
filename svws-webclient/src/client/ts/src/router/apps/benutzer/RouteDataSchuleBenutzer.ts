@@ -1,68 +1,174 @@
-import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, List, Vector } from "@svws-nrw/svws-core";
+import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Collections, Credentials, List, Vector } from "@svws-nrw/svws-core";
 import { Ref, ref, ShallowRef, shallowRef, triggerRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager, router } from "~/router/RouteManager";
 import { routeSchuleBenutzer } from "../schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzerDaten } from "./RouteSchuleBenutzerDaten";
 
+
+interface RouteStateSchuleBenutzer {
+	auswahl: BenutzerListeEintrag | undefined;
+	listBenutzer: List<BenutzerListeEintrag> ;
+	mapBenutzer: Map<number, BenutzerListeEintrag>;
+	benutzerManager: BenutzerManager;
+	listBenutzergruppen: List<BenutzergruppeListeEintrag>;
+	daten: BenutzerDaten | undefined;
+}
 export class RouteDataSchuleBenutzer {
-	auswahl: ShallowRef<BenutzerListeEintrag | undefined> = shallowRef(undefined);
-	auswahlGruppe: ShallowRef<BenutzerListeEintrag[]> = shallowRef([]);
-	listBenutzer: List<BenutzerListeEintrag> = new Vector();
-	mapBenutzer: Map<number, BenutzerListeEintrag> = new Map();
-	benutzerManager: ShallowRef<BenutzerManager> = shallowRef(new BenutzerManager(new BenutzerDaten()));
-	listBenutzergruppen: Ref<List<BenutzergruppeListeEintrag>> = ref(new Vector());
-	_daten: BenutzerDaten | undefined = undefined;
+
+	private static _defaultState : RouteStateSchuleBenutzer = {
+		auswahl: undefined,
+		listBenutzer: new Vector(),
+		mapBenutzer: new Map<number, BenutzerListeEintrag>,
+		benutzerManager: new BenutzerManager(new BenutzerDaten()),
+		listBenutzergruppen: new Vector(),
+		daten: undefined,
+	}
+
+	private _state = shallowRef<RouteStateSchuleBenutzer>(RouteDataSchuleBenutzer._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateSchuleBenutzer>) {
+		this._state.value = Object.assign({ ... RouteDataSchuleBenutzer._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateSchuleBenutzer>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	private firstBenutzer(mapBenutzer: Map<number, BenutzerListeEintrag>): BenutzerListeEintrag | undefined {
+		if (mapBenutzer.size === 0)
+			return undefined;
+		return mapBenutzer.values().next().value;
+	}
+
+	private async ladeBenutzerDaten(eintrag: BenutzerListeEintrag | undefined): Promise<BenutzerDaten | undefined> {
+		if (eintrag === undefined)
+			return undefined;
+		const result = await api.server.getBenutzerDaten(api.schema, eintrag.id);
+		return result;
+	}
 
 	public async ladeListe() {
-		this.listBenutzer = await api.server.getBenutzerliste(api.schema);
+		this._state.value.listBenutzer = await api.server.getBenutzerliste(api.schema);
 		const mapBenutzer = new Map<number, BenutzerListeEintrag>();
 		for (const l of this.listBenutzer)
 			mapBenutzer.set(l.id, l);
 		this.mapBenutzer = mapBenutzer;
+		this.setPatchedState({
+			mapBenutzer : this._state.value.mapBenutzer,
+			listBenutzer: this._state.value.listBenutzer
+		})
 	}
 
-	public async setBenutzer(item?: BenutzerListeEintrag) {
-		if (item === this.auswahl.value)
-			return;
-		if (item === undefined) {
-			this.auswahl.value = undefined;
-			this._daten = undefined;
-			this.benutzerManager.value = new BenutzerManager(new BenutzerDaten());
-		} else {
-			this.auswahl.value = item;
-			this._daten = await api.server.getBenutzerDaten(api.schema, item.id);
-			this.benutzerManager.value = new BenutzerManager(this._daten);
+	public async setBenutzer(benutzer: BenutzerListeEintrag | undefined ) {
+		//await this.ladeListe();
+		console.log("setBenutzer:"+benutzer)
+		console.log("auswahl_id"+this._state.value.auswahl?.id)
+		if (benutzer?.id === this._state.value.auswahl?.id)
+		 	return;
+		if ((benutzer === undefined) || (this.mapBenutzer.size === 0)) {
+			this.setPatchedDefaultState({
+				auswahl: undefined,
+				listBenutzer: new Vector(),
+				mapBenutzer: new Map(),
+				benutzerManager: new BenutzerManager(new BenutzerDaten()),
+				listBenutzergruppen: new Vector(),
+				daten: undefined,
+
+			})
+			await this.ladeListe();
 		}
+		console.log("in Bneutzer");
+		const neueAuswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
+		const daten = await this.ladeBenutzerDaten(neueAuswahl);
+		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
+		const benutzerManager = daten=== undefined ? undefined : new BenutzerManager(daten);
+		this.setPatchedState({
+			auswahl: neueAuswahl,
+			benutzerManager: benutzerManager,
+			listBenutzergruppen: listBenutzergruppen,
+			daten: daten
+		})
 	}
 
 	gotoBenutzer = async (value: BenutzerListeEintrag | undefined) => {
+		console.log("gotoBentuzer"+ value);
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchuleBenutzer.name, params: { } });
 			return;
 		}
 		const redirect_name: string = (routeSchuleBenutzer.selectedChild === undefined) ? routeSchuleBenutzerDaten.name : routeSchuleBenutzer.selectedChild.name;
+		console.log("redirect--"+redirect_name)
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
-	}
-	setAuswahlGruppe = (value: BenutzerListeEintrag[]) => this.auswahlGruppe.value = value;
-
-	get hatDaten(): boolean {
-		return this._daten !== undefined;
-	}
-
-	get daten(): BenutzerDaten {
-		if(this._daten === undefined)
-			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
-		return this._daten;
-	}
-
-	set daten(value: BenutzerDaten | undefined) {
-		this._daten = value;
 	}
 
 	getBenutzerManager = () => {
-		return this.benutzerManager.value;
+		return this._state.value.benutzerManager;
 	}
+	get auswahl(): BenutzerListeEintrag | undefined {
+		return this._state.value.auswahl;
+	}
+
+	set auswahl(value: BenutzerListeEintrag | undefined) {
+		this._state.value.auswahl = value;
+	}
+
+	get listBenutzer(): List<BenutzerListeEintrag>{
+		return this._state.value.listBenutzer;
+	}
+
+	set listBenutzer(value: List<BenutzerListeEintrag>) {
+		this._state.value.listBenutzer = value;
+	}
+	get hatDaten(): boolean {
+		return this._state.value.daten !== undefined;
+	}
+
+	get daten(): BenutzerDaten {
+		if(this._state.value.daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._state.value.daten;
+	}
+
+	set daten(value: BenutzerDaten | undefined) {
+		this._state.value.daten = value;
+	}
+
+	get benutzerManager(): BenutzerManager {
+		if(this._state.value.benutzerManager === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._state.value.benutzerManager
+	}
+
+	set benutzerManager(value: BenutzerManager) {
+		this._state.value.benutzerManager = value;
+	}
+
+	get listBenutzergruppen(): List<BenutzergruppeListeEintrag> {
+		if(this._state.value.listBenutzergruppen === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._state.value.listBenutzergruppen
+	}
+
+	set listBenutzergruppen(value: List<BenutzergruppeListeEintrag>) {
+		this._state.value.listBenutzergruppen = value;
+	}
+
+	get mapBenutzer(): Map<number, BenutzerListeEintrag> {
+		if(this._state.value.mapBenutzer === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._state.value.mapBenutzer
+	}
+
+	set mapBenutzer(value: Map<number, BenutzerListeEintrag>) {
+		this._state.value.mapBenutzer = value;
+	}
+
+
 	/**
 	 * Setzt den Anzeigenamen eines Benutzernamens
 	 *
@@ -71,15 +177,15 @@ export class RouteDataSchuleBenutzer {
 	 * @returns {Promise<void>}
 	 */
 	setAnzeigename = async (anzeigename : string) => {
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return;
-		await api.server.setAnzeigename(anzeigename,api.schema,this.getBenutzerManager().getID());
-		for (const benutzer of routeSchuleBenutzer.data.listBenutzer){
+		await api.server.setAnzeigename(anzeigename,api.schema,this.benutzerManager.getID());
+		for (const benutzer of this.listBenutzer){
 			if (benutzer.id === this.daten.id)
 				benutzer.anzeigename = anzeigename;
 		}
-		this.getBenutzerManager().setAnzeigename(anzeigename);
-		triggerRef(this.benutzerManager);
+		this.benutzerManager.setAnzeigename(anzeigename);
+		this.commit();
 	}
 
 	/**
@@ -90,15 +196,19 @@ export class RouteDataSchuleBenutzer {
 	 * @returns {Promise<void>}
 	 */
 	setAnmeldename =  async (anmeldename: string)=> {
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return;
-		await api.server.setAnmeldename(anmeldename, api.schema, this.getBenutzerManager().getID());
-		for (const benutzer of routeSchuleBenutzer.data.listBenutzer){
-			if (benutzer.id === this.daten.id)
-				benutzer.name = anmeldename;
-		}
-		this.getBenutzerManager().setAnmeldename(anmeldename);
-		triggerRef(this.benutzerManager);
+		await api.server.setAnmeldename(anmeldename, api.schema, this.benutzerManager.getID());
+		console.log("Eingabe:"+anmeldename)
+		this.benutzerManager.setAnmeldename(anmeldename);
+		const neueAuswahl = this.mapBenutzer.get(this.daten.id);
+		console.log("Benutzermanager:"+this.benutzerManager.getAnmeldename());
+		this.mapBenutzer.set(this.daten.id,this.daten);
+		this.setPatchedState({
+			auswahl: neueAuswahl,
+			mapBenutzer : this.mapBenutzer,
+			benutzerManager : this.benutzerManager
+		})
 	}
 
 	/**
@@ -109,14 +219,14 @@ export class RouteDataSchuleBenutzer {
 	 * @returns {Promise<void>}
 	 */
 	setIstAdmin = async (istAdmin: boolean) => {
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return;
 		if(istAdmin)
-			await api.server.addBenutzerAdmin(api.schema, this.getBenutzerManager().getID());
+			await api.server.addBenutzerAdmin(api.schema, this.benutzerManager.getID());
 		else
-			await api.server.removeBenutzerAdmin(api.schema, this.getBenutzerManager().getID());
-		this.getBenutzerManager().setAdmin(istAdmin);
-		triggerRef(this.benutzerManager);
+			await api.server.removeBenutzerAdmin(api.schema, this.benutzerManager.getID());
+		this.benutzerManager.setAdmin(istAdmin);
+		this.commit();
 	}
 
 	/**
@@ -126,9 +236,9 @@ export class RouteDataSchuleBenutzer {
 	 */
 
 	setPassword = async( passwort : string ) => {
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return false;
-		await api.server.setBenutzerPasswort(passwort,api.schema,this.getBenutzerManager().getID());
+		await api.server.setBenutzerPasswort(passwort,api.schema,this.benutzerManager.getID());
 		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert!!" ); }, 300 );
 	}
 
@@ -142,25 +252,26 @@ export class RouteDataSchuleBenutzer {
 	 */
 	addBenutzerToBenutzergruppe = async(bg_id: number) => {
 		if(bg_id != -1){
-			if (!this.getBenutzerManager())
+			if (!this.benutzerManager)
 				return;
 			const bg_ids = new Vector<number>();
-			bg_ids.add(this.getBenutzerManager().getID());
+			bg_ids.add(this.benutzerManager.getID());
 			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
-			this.getBenutzerManager().addToGruppe(result);
-			triggerRef(this.benutzerManager);
+			this.benutzerManager.addToGruppe(result);
 		}else{
 			const benutzer_id = new Vector<number>();
-			benutzer_id.add(this.getBenutzerManager()?.getID() ?? null);
-			for(const bg of this.listBenutzergruppen.value){
-				if (!this.getBenutzerManager()?.IstInGruppe(bg.id)) {
-					api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema,bg.id)
-						.then((result: any) => { this.getBenutzerManager()?.addToGruppe(result)
-							triggerRef(this.benutzerManager);})
-						.catch((e: any) => {throw e});
+			benutzer_id.add(this.benutzerManager?.getID() ?? null);
+			for(const bg of this.listBenutzergruppen){
+				if (!this.benutzerManager?.IstInGruppe(bg.id)) {
+					const result = await api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema, bg.id);
+					this.benutzerManager?.addToGruppe(result);
 				}
 			}
 		}
+		this.setPatchedState({
+			benutzerManager: this._state.value.benutzerManager,
+			listBenutzergruppen: this._state.value.listBenutzergruppen
+		})
 	}
 
 	/**
@@ -172,23 +283,25 @@ export class RouteDataSchuleBenutzer {
 	 * @returns {Promise<void>}
 	 */
 	removeBenutzerFromBenutzergruppe = async (bg_id: number): Promise<void> => {
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return;
 		const ids = new Vector<number>();
-		ids.add(this.getBenutzerManager().getID());
+		ids.add(this.benutzerManager.getID());
 		if (bg_id !== -1) {
 			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id) as BenutzergruppeDaten;
-			this.getBenutzerManager().removeFromGruppe(result);
-			triggerRef(this.benutzerManager);
+			this.benutzerManager.removeFromGruppe(result);
 		} else {
-			for (const eintrag of this.listBenutzergruppen.value) {
-				if (this.getBenutzerManager()?.IstInGruppe(eintrag.id)) {
+			for (const eintrag of this.listBenutzergruppen) {
+				if (this.benutzerManager?.IstInGruppe(eintrag.id)) {
 					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,eintrag.id);
-					this.getBenutzerManager()?.removeFromGruppe(result);
+					this.benutzerManager?.removeFromGruppe(result);
 				}
 			}
-			triggerRef(this.benutzerManager);
 		}
+		this.setPatchedState({
+			benutzerManager: this.benutzerManager,
+			listBenutzergruppen: this._state.value.listBenutzergruppen
+		})
 	}
 
 	/**
@@ -199,13 +312,15 @@ export class RouteDataSchuleBenutzer {
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new Vector<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return false;
-		if (this.getBenutzerManager().hatKompetenz(kompetenz))
+		if (this.benutzerManager.hatKompetenz(kompetenz))
 			return false;
-		await api.server.addBenutzerKompetenzen(kid, api.schema, this.getBenutzerManager().getID());
-		this.getBenutzerManager().addKompetenz(kompetenz);
-		triggerRef(this.benutzerManager);
+		await api.server.addBenutzerKompetenzen(kid, api.schema, this.benutzerManager.getID());
+		this.benutzerManager.addKompetenz(kompetenz);
+		this.setPatchedState({
+			benutzerManager: this._state.value.benutzerManager,
+		})
 		return true;
 	}
 
@@ -217,13 +332,15 @@ export class RouteDataSchuleBenutzer {
 	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new Vector<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return false;
-		if (!this.getBenutzerManager().hatKompetenz(kompetenz))
+		if (!this.benutzerManager.hatKompetenz(kompetenz))
 			return false;
-		await api.server.removeBenutzerKompetenzen(kid, api.schema, this.getBenutzerManager().getID());
-		this.getBenutzerManager().removeKompetenz(kompetenz);
-		triggerRef(this.benutzerManager);
+		await api.server.removeBenutzerKompetenzen(kid, api.schema, this.benutzerManager.getID());
+		this.benutzerManager.removeKompetenz(kompetenz);
+		this.setPatchedState({
+			benutzerManager: this._state.value.benutzerManager,
+		})
 		return true;
 	}
 
@@ -234,25 +351,27 @@ export class RouteDataSchuleBenutzer {
 	 */
 	addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new Vector<number>();
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return false;
-		if (!this.getBenutzerManager().istAdmin()) {
+		if (!this.benutzerManager.istAdmin()) {
 			//Es werden nur die IDs der Kompetenzen in kids gespreichert, welche dem Benutzer direkt zugordnet sind.
 			// Sie sind also nicht über Benutzergruppen vererbt.
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.getBenutzerManager().getGruppen(komp).size() === 0)
+				if (this.benutzerManager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
 			}
-			await api.server.addBenutzerKompetenzen(kids,api.schema,this.getBenutzerManager().getID());
+			await api.server.addBenutzerKompetenzen(kids,api.schema,this.benutzerManager.getID());
 			//Den obigen Schritten entsprechende Anpassung des Client-Objekts mithilfe des Managers
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.getBenutzerManager().getGruppen(komp).size() === 0) {
-					if (!this.getBenutzerManager()?.hatKompetenz(komp))
-						this.getBenutzerManager()?.addKompetenz(komp);
+				if (this.benutzerManager.getGruppen(komp).size() === 0) {
+					if (!this.benutzerManager?.hatKompetenz(komp))
+						this.benutzerManager?.addKompetenz(komp);
 				}
 			}
-			triggerRef(this.benutzerManager);
 		}
+		this.setPatchedState({
+			benutzerManager: this._state.value.benutzerManager,
+		})
 		return true;
 	}
 
@@ -263,21 +382,23 @@ export class RouteDataSchuleBenutzer {
 	 */
 	 removeBenutzerKompetenzGruppe = async(kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new Vector<number>();
-		if (!this.getBenutzerManager())
+		if (!this.benutzerManager)
 			return false;
-		if (!this.getBenutzerManager().istAdmin()) {
+		if (!this.benutzerManager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
-				if (this.getBenutzerManager().getGruppen(komp).size() === 0)
+				if (this.benutzerManager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
-			await api.server.removeBenutzerKompetenzen(kids,api.schema,this.getBenutzerManager().getID());
+			await api.server.removeBenutzerKompetenzen(kids,api.schema,this.benutzerManager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.getBenutzerManager().getGruppen(komp).size() === 0) {
-					if (this.getBenutzerManager()?.hatKompetenz(komp))
-						this.getBenutzerManager()?.removeKompetenz(komp);
+				if (this.benutzerManager.getGruppen(komp).size() === 0) {
+					if (this.benutzerManager?.hatKompetenz(komp))
+						this.benutzerManager?.removeKompetenz(komp);
 				}
 			}
-			triggerRef(this.benutzerManager);
 		}
+		this.setPatchedState({
+			benutzerManager: this._state.value.benutzerManager,
+		})
 		return true;
 	}
 
@@ -297,30 +418,34 @@ export class RouteDataSchuleBenutzer {
 		ble.name = result.name;
 		ble.istAdmin= result.istAdmin;
 		ble.idCredentials = result.idCredentials;
-		routeSchuleBenutzer.data.listBenutzer.add(ble);
-		routeSchuleBenutzer.data.auswahl.value = result;
-		await router.push({ name: routeSchuleBenutzer.name, params: { id : ble.id } });
+		this.listBenutzer.add(ble);
+		this.mapBenutzer.set(ble.id,ble);
+		this.auswahl = ble;
+		this.commit();
+		await this.gotoBenutzer(ble);
 	}
 
 	/**
 	 * Entfernt die ausgewählten Benutzer
 	 */
-	deleteBenutzerAllgemein = async () => {
-		const benutzer = routeSchuleBenutzer.data.auswahlGruppe;
+	deleteBenutzerAllgemein = async (selectedItems: BenutzerListeEintrag[]) => {
 		const bids = new Vector<number>();
-		for (const b of benutzer.value) {
+		let auswahl_gewaehlt = false;
+		if(this.auswahl !== undefined)
+			auswahl_gewaehlt= selectedItems.includes(this.auswahl);
+		for (const b of selectedItems) {
 			bids.add(b.id)
 		}
 		await api.server.removeBenutzerAllgemein(bids,api.schema);
-		routeSchuleBenutzer.data.auswahlGruppe.value = [];
-		for (const b of routeSchuleBenutzer.data.listBenutzer) {
-			for(const i of bids){
-				if(b.id === i)
-					routeSchuleBenutzer.data.listBenutzer.remove(b);
-			}
+		for (const i of bids) {
+			this.mapBenutzer.delete(i);
 		}
-		alert("Benutzer gelöscht!!!");
-		await router.push({ name: routeSchuleBenutzer.name});
+		//TODO Der Benutzer wird in der Auswahl nicht entfernt, erst beim Reload.
+		this.setPatchedState({
+			mapBenutzer: this._state.value.mapBenutzer,
+		})
+		if(auswahl_gewaehlt)
+			 await this.gotoBenutzer(this.listBenutzer.get(0));
 	}
 
 	/**
@@ -331,8 +456,8 @@ export class RouteDataSchuleBenutzer {
 	getGruppen4Kompetenz = ( kompetenz : BenutzerKompetenz ) : string =>{
 		let text="";
 		let i = 0;
-		if (this.getBenutzerManager()?.getGruppen(kompetenz)) {
-			for (const bg of this.getBenutzerManager().getGruppen(kompetenz)) {
+		if (this.benutzerManager?.getGruppen(kompetenz)) {
+			for (const bg of this.benutzerManager.getGruppen(kompetenz)) {
 				if (i !== 0)
 					text += ", ";
 				text += bg.bezeichnung;

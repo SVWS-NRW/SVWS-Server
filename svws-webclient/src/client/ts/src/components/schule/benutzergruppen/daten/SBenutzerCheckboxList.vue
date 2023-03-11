@@ -11,7 +11,7 @@
 		</div>
 
 		<ul class=" divide-y divide-gray-100  ">
-			<template v-for="benutzer in props.listBenutzer" :key="benutzer.id">
+			<template v-for="benutzer in listBenutzer()" :key="benutzer.id">
 				<s-benutzer-checkbox :benutzer="benutzer"
 					v-model="aktiv" :spalte-links="spalteLinks"
 					:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
@@ -27,7 +27,7 @@
 	import { BenutzerListeEintrag, List } from "@svws-nrw/svws-core";
 	import { computed, WritableComputedRef } from "vue";
 	const props = defineProps<{
-		listBenutzer: List<BenutzerListeEintrag>;
+		listBenutzer: () => List<BenutzerListeEintrag>;
 		title : string;
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;

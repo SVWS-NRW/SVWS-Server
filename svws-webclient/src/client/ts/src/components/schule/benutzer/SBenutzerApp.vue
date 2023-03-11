@@ -33,10 +33,10 @@
 	const selectedRoute = routeSchuleBenutzer.childRouteSelector;
 	const children_hidden = routeSchuleBenutzer.children_hidden();
 
-	const id: ComputedRef<number | string> = computed(() => props.auswahl?.id ?? "?");
-	const anzeigename: ComputedRef<string> = computed(() => props.auswahl?.anzeigename ?? "---");
-	const name: ComputedRef<string> = computed(() => props.auswahl?.name ?? "---");
+	const id: ComputedRef<number | string> = computed(() => props.auswahl()?.id ?? "?");
+	const anzeigename: ComputedRef<string> = computed(() => props.auswahl()?.anzeigename ?? "---");
+	const name: ComputedRef<string> = computed(() => props.auswahl()?.name ?? "---");
 
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl() !== undefined);
 
 </script>

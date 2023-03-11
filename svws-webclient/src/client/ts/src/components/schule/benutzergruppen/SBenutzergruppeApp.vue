@@ -20,21 +20,19 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 
 	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
+	import { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
 
-	const props = defineProps<{
-		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
-	}>();
+	const props = defineProps<BenutzergruppeAppProps>();
 
 	const selectedRoute = routeSchuleBenutzergruppe.childRouteSelector;
 	const children_hidden = routeSchuleBenutzergruppe.children_hidden();
 
-	const id: ComputedRef<string> = computed(() => "ID: " + props.item.value?.id);
-	const bezeichnung: ComputedRef<string> = computed(() => props.item.value?.bezeichnung ?? "");
+	const id: ComputedRef<string> = computed(() => "ID: " + props.auswahl()?.id ?? "?");
+	const bezeichnung: ComputedRef<string> = computed(() => props.auswahl()?.bezeichnung ?? "-----");
 
-	const visible: ComputedRef<boolean> = computed(() => props.item !== undefined);
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>
