@@ -43,6 +43,7 @@ import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } fro
 import { GostJahrgang, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangFachkombination, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
 import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
+import { GostKlausurenKalenderinformation, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurenKalenderinformation } from '../core/data/gost/klausuren/GostKlausurenKalenderinformation';
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../core/data/gost/klausuren/GostKlausurtermin';
 import { GostKlausurvorgabe, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurvorgabe } from '../core/data/gost/klausuren/GostKlausurvorgabe';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../core/data/gost/klausuren/GostKursklausur';
@@ -3532,6 +3533,33 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostJahrgangFachkombination.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenKalenderinformationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kalenderinformationen
+	 *
+	 * Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Klausurvorgaben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurenKalenderinformation>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste der Klausurvorgaben.
+	 */
+	public async getGostKlausurenKalenderinformationen(schema : string) : Promise<List<GostKlausurenKalenderinformation>> {
+		const path = "/db/{schema}/gost/klausuren/kalenderinformationen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new Vector<GostKlausurenKalenderinformation>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurenKalenderinformation.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

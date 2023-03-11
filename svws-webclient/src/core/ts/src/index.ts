@@ -145,6 +145,7 @@ export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl'
 export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
+export { GostKlausurenKalenderinformation } from './core/data/gost/klausuren/GostKlausurenKalenderinformation';
 export { GostKlausurtermin } from './core/data/gost/klausuren/GostKlausurtermin';
 export { GostKlausurvorgabe } from './core/data/gost/klausuren/GostKlausurvorgabe';
 export { GostKursklausur } from './core/data/gost/klausuren/GostKursklausur';
