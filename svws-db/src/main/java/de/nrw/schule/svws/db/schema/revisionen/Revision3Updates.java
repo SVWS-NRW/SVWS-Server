@@ -168,7 +168,7 @@ public class Revision3Updates extends SchemaRevisionUpdateSQL {
 						// Kopiere die Quartalsnoten und die Teilleistungen, wenn sich die Leistungsdaten zuordnen lassen
 						sql = "UPDATE SchuelerLeistungsdaten q1 JOIN SchuelerLeistungsdaten q2 "
 							+ "ON q1.Abschnitt_ID = " + lernabschnittID + " AND q2.Abschnitt_ID = " + folgeLernabschnittID + " AND q1.Fach_ID = q2.Fach_ID AND q1.Kursart = q2.Kursart "
-							+ "SET q2.NotenKrzQuartal = q1.NotenKrz, q2.FehlStd = q1.FehlStd + q2.FehlStd, q2.uFehlStd = q1.uFehlStd + q2.uFehlStd"; 
+							+ "SET q2.NotenKrzQuartal = q1.NotenKrz"; 
 						if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
 							logger.logLn("Fehler beim Kopieren der Quartalsnoten");
 							return false;
