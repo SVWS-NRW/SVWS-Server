@@ -62,8 +62,6 @@
 		dragKlausur?: GostKursklausur | null;
 	}>();
 
-	//const { doPatch } = useDebouncedPatch(computed(() => props.termin), props.patchKlausurtermin);
-
 	const terminHeader = computed(()=>
 		props.termin === null ? "Zu verplanen:" : (props.termin.datum === null ? "Noch kein Datum" : new Date(props.termin.datum).toLocaleString("de-DE").split(",")[0])
 	);
