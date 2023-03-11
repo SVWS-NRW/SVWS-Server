@@ -96,6 +96,11 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	private getChildData(): GostKlausurplanungAuswahlChildData[] {
 		const result: GostKlausurplanungAuswahlChildData[] = [];
+		if (this.data.abiturjahr === -1) {
+			result.push({ name: routeGostKlausurplanungKlausurdaten.name, text: routeGostKlausurplanungKlausurdaten.text });
+			result.push({ name: routeGostKlausurplanungKalender.name, text: routeGostKlausurplanungKalender.text });
+			return result;
+		}
 		for (const c of this.children)
 			result.push({ name: c.name, text: c.text });
 		return result;

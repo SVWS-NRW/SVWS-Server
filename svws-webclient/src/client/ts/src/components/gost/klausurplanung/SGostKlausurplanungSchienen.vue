@@ -9,7 +9,7 @@
 			</svws-ui-radio-group>
 			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0">Automatisch blocken</svws-ui-button>
+			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" v-if="loading" /> Automatisch blocken</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
 			<s-gost-klausurplanung-schienen-termin :quartal="quartal"
@@ -41,11 +41,12 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin, Vector, List } from "@svws-nrw/svws-core";
+	import { GostKursklausur, GostKlausurtermin, Vector, List, KlausurblockungSchienenAlgorithmus } from "@svws-nrw/svws-core";
 	import { computed, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
+	const loading = ref<boolean>(false);
 
 	const quartal = ref(0);
 	const chooseQuartal = (q: number) => quartal.value = q;
@@ -62,9 +63,11 @@
 	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
 
 	const blocken = async () => {
+		loading.value = true;
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
-		const klausurTermine: List<List<number>> = new Vector();
+		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
+		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, 1000);
 		for (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(quartal.value);
 			for (const klausurId of klausurList) {
@@ -74,6 +77,7 @@
 				}
 			}
 		}
+		loading.value = false;
 	};
 
 

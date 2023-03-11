@@ -5,6 +5,7 @@
 		<td><!--{{ props.klausur.kursKurzbezeichnung!.match(/(\d+)/)!.slice(-1)[0] }}--></td>
 		<td>{{ mapLehrer.get(props.klausur.idLehrer)?.kuerzel }}</td>
 		<td>{{ props.klausur.schuelerIds.size() }}</td>
+		<td>{{ props.klausur.kursSchiene }}</td>
 	</svws-ui-drag-data>
 </template>
 

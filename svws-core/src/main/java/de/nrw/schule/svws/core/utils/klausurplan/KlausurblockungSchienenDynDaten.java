@@ -3,7 +3,6 @@ package de.nrw.schule.svws.core.utils.klausurplan;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
 
@@ -190,9 +189,9 @@ public class KlausurblockungSchienenDynDaten {
 		}
 		
 	
-		for (Entry<Long, Integer> e : _mapKlausurZuNummer.entrySet()) {
-			Long klausurID = e.getKey();
-			Integer klausurNr = e.getValue();
+		for (@NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {
+//			Long klausurID = e.getKey();
+			Integer klausurNr = _mapKlausurZuNummer.get(klausurID);
 
 			if (klausurID == null) 
 				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");

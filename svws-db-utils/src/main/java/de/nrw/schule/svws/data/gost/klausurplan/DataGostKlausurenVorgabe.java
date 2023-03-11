@@ -75,7 +75,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (vorgaben == null)
 			throw new NullPointerException();
 		if (vorgaben.isEmpty()) 
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
+			return OperationError.NOT_FOUND.getResponse("Noch keine Klausurvorgaben für dieses Halbjahr definiert.");
 		
 		GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
@@ -86,11 +86,14 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		
 		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
 		// noch nicht angelegt.
-		DTOSchuljahresabschnitte sja = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
+		List<DTOSchuljahresabschnitte> sjaList = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
 				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
 				.setParameter("abschnitt", halbjahr.id % 2 + 1)
-				.getSingleResult();
+				.getResultList();
+		if (sjaList == null || sjaList.size() != 1)
+			return OperationError.NOT_FOUND.getResponse("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
+		DTOSchuljahresabschnitte sja = sjaList.get(0);
 		// Kurse ermitteln
 		List<DTOKurs> kurse = conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID) // TODO Quartalsmodus
 				.setParameter("jg", halbjahr.jahrgang).getResultList();

@@ -7,7 +7,7 @@
 			<table class="w-full">
 				<thead>
 					<tr>
-						<th colspan="4">{{ terminHeader }}</th>
+						<th colspan="5">{{ terminHeader }}</th>
 						<td class="float-right">
 							<svws-ui-popover v-if="loescheKlausurtermin != undefined" :hover="false" placement="left-end" :disable-click-away="false">
 								<template #trigger>
@@ -30,7 +30,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th colspan="5"><svws-ui-text-input placeholder="Bezeichnung" :model-value="termin?.bezeichnung" /></th>
+						<th colspan="6"><svws-ui-text-input placeholder="Bezeichnung" :model-value="termin?.bezeichnung" /></th>
 					</tr>
 					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->
 				</thead>

@@ -241,9 +241,10 @@ public class GostKursklausurManager {
 
 		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(termin.id);
 		if (listKlausurenZuTermin != null) {
+			listKlausurenZuTermin = new Vector<>(listKlausurenZuTermin);
 			for (@NotNull GostKursklausur k : listKlausurenZuTermin) {
 				k.idTermin = null;
-				addKlausurToInternalMaps(k);
+				updateKursklausur(k);
 			}
 		}
 		_termine.remove(termin);
@@ -289,7 +290,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin() {
-		return getKursklausuren(-1L);
+		return getKursklausurenOhneTermin(-1);
 	}
 
 	/**
@@ -300,13 +301,14 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public List<@NotNull GostKursklausur> getKursklausurenOhneTermin(int quartal) {
+	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin(int quartal) {
 		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapTerminKursklausuren == null) {
 			// TODO Fehlerbehandlung?
 			return new Vector<>();
 		}
-		return mapTerminKursklausuren.get(-1L);
+		List<@NotNull GostKursklausur> klausuren = mapTerminKursklausuren.get(-1L);
+		return klausuren != null ? klausuren : new Vector<>();
 	}
 
 	/**

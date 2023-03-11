@@ -6,7 +6,6 @@ import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
@@ -193,9 +192,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (let i : number = 0; i < this._schienenAnzahl; i++){
 			out.add(new Vector());
 		}
-		for (let e of this._mapKlausurZuNummer.entrySet()) {
-			let klausurID : number | null = e.getKey();
-			let klausurNr : number | null = e.getValue();
+		for (let klausurID of this._mapKlausurZuNummer.keySet()) {
+			let klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
 			if (klausurID === null) 
 				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
 			if (klausurNr === null) 

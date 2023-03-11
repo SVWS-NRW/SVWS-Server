@@ -81,9 +81,9 @@ export class RouteDataGostKlausurplanung {
 		const faecherManager = new GostFaecherManager(listFaecher);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+		let view: RouteNode<any, any> = this._state.value.view;
 		if (abiturjahr !== -1) {
 			const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
-
 			// Lade die Schülerliste des Abiturjahrgangs
 			for (const s of listSchueler)
 				mapSchueler.set(s.id, s);
@@ -92,6 +92,9 @@ export class RouteDataGostKlausurplanung {
 			const listLehrer = await api.server.getLehrer(api.schema);
 			for (const l of listLehrer)
 				mapLehrer.set(l.id, l);
+		} else {
+			if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungKlausurdaten))
+				view = routeGostKlausurplanungKlausurdaten;
 		}
 		// Setze den State neu
 		this._state.value = {
@@ -103,7 +106,7 @@ export class RouteDataGostKlausurplanung {
 			halbjahr: this._state.value.halbjahr,
 			kursklausurmanager: undefined,
 			klausurvorgabenmanager: undefined,
-			view: this._state.value.view,
+			view: view,
 		};
 	}
 

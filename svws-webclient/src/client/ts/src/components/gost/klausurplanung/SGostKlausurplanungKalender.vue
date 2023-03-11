@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="flex flex-row h-full">
-			<svws-ui-drop-data tag="div" :class="dropOverCssClasses()" class="w-1/4 mr-2 p-2" @drop="onDrop($event, null)">
+			<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr === -1" tag="div" :class="dropOverCssClasses()" class="w-1/4 mr-2 p-2" @drop="onDrop($event, null)">
 				<ul class="flex flex-col gap-y-1">
 					<svws-ui-drag-data tag="li" v-for="termin in termineOhne" :key="termin.id" :data="{termin}" @drag-start="dragStatus(termin)" @drag-end="dragStatus(null)">
 						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :termin="termin" />
