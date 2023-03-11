@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import de.nrw.schule.svws.core.data.schueler.SchuelerLeistungsdaten;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -51,7 +52,7 @@ public class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.lernabschnittID = dto.Abschnitt_ID;
 		daten.fachID = dto.Fach_ID;
 		daten.kursID = dto.Kurs_ID;
-		daten.kursart = dto.Kursart;
+		daten.kursart = dto.Kursart == null ? ZulaessigeKursart.PUK.daten.kuerzel : dto.Kursart;
 		daten.abifach = dto.AbiFach;
 		daten.istZP10oderZK10 = dto.Prf10Fach == null ? false : dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
@@ -67,10 +68,10 @@ public class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.geholtJahrgangAbgeschlossen = dto.AbschlussJahrgang;
 		daten.gewichtungAllgemeinbildend = dto.Gewichtung == null ? 1 : dto.Gewichtung;
 		daten.noteBerufsabschluss = dto.NoteAbschlussBA; 
-		daten.textFachbezogeneLernentwicklung = dto.Lernentw;
-		daten.umfangLernstandsbericht = dto.Umfang;
-		daten.fehlstundenGesamt = dto.FehlStd;
-		daten.fehlstundenUnentschuldigt = dto.uFehlStd;
+		daten.textFachbezogeneLernentwicklung = dto.Lernentw == null ? "" : dto.Lernentw;
+		daten.umfangLernstandsbericht = dto.Umfang == null ? "" : dto.Umfang;
+		daten.fehlstundenGesamt = dto.FehlStd == null ? 0 : dto.FehlStd;
+		daten.fehlstundenUnentschuldigt = dto.uFehlStd == null ? 0 : dto.uFehlStd;
 		return daten;
 	};
 	
