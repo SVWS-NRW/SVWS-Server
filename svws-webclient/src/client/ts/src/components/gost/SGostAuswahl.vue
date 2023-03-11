@@ -10,7 +10,7 @@
 					<template #cell(abiturjahr)="{ value }">
 						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
 						<span v-if="(pending && value.abiturjahr === auswahl?.abiturjahr)" class="loading-spinner-dimensions">
-								<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
+							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
 					<template #footerActions>
 						<svws-ui-button @click="modalAdd.openModal()" type="icon" title="Abiturjahr hinzufügen">

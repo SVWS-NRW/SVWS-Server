@@ -498,6 +498,8 @@ export class RouteDataGostKursplanung {
 		await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneAlt, false);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneNeu, true);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.updateErgebnisBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -516,6 +518,8 @@ export class RouteDataGostKursplanung {
 			await api.server.createGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKursNeu);
 		}
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKursNeu, true);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.updateErgebnisBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -528,6 +532,8 @@ export class RouteDataGostKursplanung {
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
 		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKurs);
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKurs, false);
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.updateErgebnisBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -553,6 +559,8 @@ export class RouteDataGostKursplanung {
 				}
 			}
 		}
+		const ergebnis = this.ergebnismanager.getErgebnis();
+		this.datenmanager.updateErgebnisBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return;

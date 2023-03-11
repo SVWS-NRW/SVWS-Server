@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse" footer>
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse.toArray()" footer>
 			<template #header(bewertung)>
 				<div style="flex-grow: 10;">
 					<div class="z-50">

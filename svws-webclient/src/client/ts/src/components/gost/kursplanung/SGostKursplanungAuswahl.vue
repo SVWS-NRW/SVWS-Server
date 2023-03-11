@@ -25,7 +25,7 @@
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
 
-	const allow_add_blockung = (row: GostHalbjahr): boolean => {
+	const allow_add_blockung = (row: DataTableItem): boolean => {
 		const curr_hj = row.id === props.halbjahr.id;
 		if (!curr_hj || props.jahrgangsdaten === undefined)
 			return false;
