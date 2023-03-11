@@ -273,7 +273,8 @@ export class GostKursklausurManager extends JavaObject {
 	public getKursklausuren(__param0? : null | number) : List<GostKursklausur> | null {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
 			let idTermin : number | null = __param0;
-			return this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
+			let klausuren : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
+			return klausuren !== null ? klausuren : new Vector();
 		} else if ((typeof __param0 === "undefined")) {
 			return this._klausuren;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
@@ -305,7 +306,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public getKursklausurenOhneTermin(__param0? : number) : List<GostKursklausur> {
 		if ((typeof __param0 === "undefined")) {
-			return this.getKursklausurenOhneTermin(-1);
+			return this.getKursklausuren(-1);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
 			let mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);

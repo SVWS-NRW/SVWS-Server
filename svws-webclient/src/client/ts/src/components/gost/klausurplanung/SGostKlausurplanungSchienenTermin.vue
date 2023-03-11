@@ -29,7 +29,7 @@
 							</svws-ui-popover>
 						</td>
 					</tr>
-					<tr>
+					<tr v-if="termin !== null">
 						<th colspan="6"><svws-ui-text-input placeholder="Bezeichnung" :model-value="termin?.bezeichnung" /></th>
 					</tr>
 					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->

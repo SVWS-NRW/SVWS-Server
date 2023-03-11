@@ -260,7 +260,8 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(Long idTermin) {
-		return _mapTerminKursklausuren.get(idTermin == null ? -1 : idTermin);
+		List<@NotNull GostKursklausur> klausuren = _mapTerminKursklausuren.get(idTermin == null ? -1 : idTermin);
+		return klausuren != null ? klausuren : new Vector<>();
 	}
 
 	/**
@@ -290,7 +291,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin() {
-		return getKursklausurenOhneTermin(-1);
+		return getKursklausuren(-1L);
 	}
 
 	/**
