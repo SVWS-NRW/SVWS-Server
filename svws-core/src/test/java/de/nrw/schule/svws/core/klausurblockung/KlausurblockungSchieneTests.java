@@ -1,10 +1,23 @@
 package de.nrw.schule.svws.core.klausurblockung;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
 
+import de.nrw.schule.svws.base.CsvReader;
+import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmus;
+import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
 @DisplayName("Diese Klasse testet die Klasse KlausurblockungSchienenAlgorithmus")
@@ -12,28 +25,17 @@ import de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorith
 public class KlausurblockungSchieneTests {
 
 	
-	/*private static final long BLOCKUNGS_ZEIT = 1000 * 1;
+	private static final long BLOCKUNGS_ZEIT = 1000 * 1;
 	
 	private static final String PFAD_DATEN_001 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene001/";
 	private static final String PFAD_DATEN_002 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene002/";
-	private static final String PFAD_DATEN_003 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene003/";*/
+	private static final String PFAD_DATEN_003 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene003/";
 
 
-//	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
-	/*@Test
+	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
+	@Test
 	@DisplayName("Klausurblockung 001 einlesen und blocken.")
 	void test001_data() {
-		// Erzeugen eines Loggers mit Consumer.
-		Logger log = new Logger();
-
-		// Hinzufügen des Consumers, der im kritischen Fall 'fail' aufruft.
-		log.addConsumer(new Consumer<LogData>() {
-			@Override
-			public void accept(LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
-					fail(t.getText());
-			}
-		});
 
 		// Einlesen der Kurs-Datensätze
 		HashMap<Integer, EsserFormatKurs> mapKurs = new HashMap<>();
@@ -42,15 +44,13 @@ public class KlausurblockungSchieneTests {
 
 		// Einlesen der SuS-Datensätze
 		HashMap<Integer, EsserFormatSchueler> mapSuS = new HashMap<>();
-		for (EsserFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt",
-				EsserFormatSchueler.class))
+		for (EsserFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt", EsserFormatSchueler.class))
 			mapSuS.put(schueler.id, schueler);
 
-		// Einlesen der SuS-Fachwahl-Datensätze (nur diejenigen, die es schriftlich haben.
+		// Einlesen der SuS-Fachwahl-Datensätze (nur diejenigen, die es schriftlich haben).
 		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS1 = new HashMap<>();
 		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS2 = new HashMap<>();
-		for (EsserFormatFachwahl fachwahl : CsvReader.fromResource(PFAD_DATEN_001 + "fachwahl.txt",
-				EsserFormatFachwahl.class)) {
+		for (EsserFormatFachwahl fachwahl : CsvReader.fromResource(PFAD_DATEN_001 + "fachwahl.txt", EsserFormatFachwahl.class)) {
 			if (mapKursSuS1.get(fachwahl.kurs) == null)
 				mapKursSuS1.put(fachwahl.kurs, new LinkedList<>());
 			if (mapKursSuS2.get(fachwahl.kurs) == null)
@@ -72,8 +72,7 @@ public class KlausurblockungSchieneTests {
 		HashMap<Integer, EsserFormatKlausur> mapKlausur = new HashMap<>();
 		HashMap<Integer, EsserFormatKurs> mapKlausurZuKurs = new HashMap<>();
 		HashMap<Integer, HashMap<Integer, HashMap<String, LinkedList<EsserFormatKlausur>>>> mapQuartalZuKlausuren = new HashMap<>();
-		for (EsserFormatKlausur klausur : CsvReader.fromResource(PFAD_DATEN_001 + "klausur.txt",
-				EsserFormatKlausur.class)) {
+		for (EsserFormatKlausur klausur : CsvReader.fromResource(PFAD_DATEN_001 + "klausur.txt", EsserFormatKlausur.class)) {
 			mapKlausur.put(klausur.id, klausur);
 
 			EsserFormatKurs kurs = mapKurs.get(klausur.kurs);
@@ -101,17 +100,16 @@ public class KlausurblockungSchieneTests {
 						termine.add(klausur.termin);
 
 					// Welche Klausuren müssen geschrieben werden?
-					LinkedList<EsserFormatKlausur> klausuren = mapQuartalZuKlausuren.get(halbjahr).get(klausnr)
-							.get(stufe);
+					LinkedList<EsserFormatKlausur> klausuren = mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe);
 
 					// Blockungsalgorithmus...
-					klausurblockung(halbjahr, klausnr, stufe, klausuren, mapKursSuS1, mapKursSuS2);
-
+					klausurblockung(halbjahr, stufe, klausuren, mapKursSuS1, mapKursSuS2);
 				}
 
 	}
 
-	private static void klausurblockung(int halbjahr, int klausnr, String stufe, 
+	
+	private static void klausurblockung(int halbjahr, String stufe, 
 			LinkedList<EsserFormatKlausur> klausuren,
 			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
 			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
@@ -123,96 +121,77 @@ public class KlausurblockungSchieneTests {
 		// System.out.println(halbjahr + "," + klausnr + "," + stufe + " --> " + klausuren.size() + " Klausuren, auf " +
 		// termine + " Termine");
 
+		// Wähle die richtige Map.
+		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
+		if (stufe.equals("Q2") && (halbjahr == 2))
+			mapSchriftlich = mapKursSuSschriftlich2;
+					
 		// Input-Erzeugen
-		KlausurblockungSchienenInput input = new KlausurblockungSchienenInput();
-		input.datenbankID = halbjahr * 10 + klausnr;
-		input.maxTimeMillis = BLOCKUNGS_ZEIT;
-		// System.out.println(" Starte Blockung mit 10 Sekunden.");
-
-		HashMap<Integer, KlausurblockungSchienenInputSchueler> mapInputSchueler = new HashMap<>();
+		@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
+		
+		// Für alle Klausuren ... 
 		for (EsserFormatKlausur klausur : klausuren) {
-			// Wähle die richtige Map.
-			HashMap<Integer, LinkedList<EsserFormatSchueler>> map = mapKursSuSschriftlich1;
-			if (stufe.equals("Q2") && (halbjahr == 2))
-				map = mapKursSuSschriftlich2;
-			// Erzeuge KlausurblockungSchienenInput.schueler.klausuren
-			for (EsserFormatSchueler schueler : map.get(klausur.kurs)) {
-				if (mapInputSchueler.get(schueler.id) == null) {
-					KlausurblockungSchienenInputSchueler iSchueler = new KlausurblockungSchienenInputSchueler();
-					iSchueler.id = schueler.id;
-					mapInputSchueler.put(schueler.id, iSchueler);
-					input.schueler.add(iSchueler);
-				}
-				mapInputSchueler.get(schueler.id).klausuren.add((long) klausur.id);
+			@NotNull GostKursklausur gostKlausur = new GostKursklausur();
+			gostKlausur.id = klausur.id;
+			
+			// Für alle schriftlichen Schüler ...
+			for (EsserFormatSchueler schueler : mapSchriftlich.get(klausur.kurs)) {
+				gostKlausur.schuelerIds.add(Long.parseLong(""+schueler.id));
 			}
+			
+			input.add(gostKlausur);
 		}
 
 		starteKlausurblockungSchiene(input);
-	}*/
+	}
 
-//	/** Testet das Einlesen und Konvertieren der Daten 002. Diese befinden sich hier {@link #PFAD_DATEN_002}. */
-	/*@Test
+	/** Testet das Einlesen und Konvertieren der Daten 002. 
+	 * Diese befinden sich hier {@link #PFAD_DATEN_002}. 
+	 */
+	@Test
 	@DisplayName("Klausurblockung 002 einlesen und blocken.")
 	void test002_data() {
-		// Erzeugen eines Loggers mit Consumer.
-		Logger log = new Logger();
-
-		// Hinzufügen des Consumers, der im kritischen Fall 'fail' aufruft.
-		log.addConsumer(new Consumer<LogData>() {
-			@Override
-			public void accept(LogData t) {
-				assert t.getLevel().compareTo(LogLevel.APP) == 0 : t.getText();
-			}
-		});
 
 		// Einlesen der Kurs-Datensätze
 		TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
-		for (PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_002 + "StufeSchuelerKurs.txt",
-				PluemperFormatStufeSchuelerKurs.class)) {
-
+		for (PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_002 + "StufeSchuelerKurs.txt", PluemperFormatStufeSchuelerKurs.class)) {
 			if (map.get(daten.stufe) == null)
 				map.put(daten.stufe, new HashMap<>());
-
 			if (map.get(daten.stufe).get(daten.schuelerid) == null)
 				map.get(daten.stufe).put(daten.schuelerid, new LinkedList<>());
-
 			map.get(daten.stufe).get(daten.schuelerid).push(daten.kursid);
 		}
 
 		// Blocken pro Stufe
 		for (String stufe : map.keySet()) {
-			KlausurblockungSchienenInput input = new KlausurblockungSchienenInput();
-			input.datenbankID = 1;
-			input.maxTimeMillis = BLOCKUNGS_ZEIT;
+			// Input-Erzeugen
+			@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
+			
+			
+			HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
+			for (long schuelerID : map.get(stufe).keySet()) {
 
-			for (Long schuelerID : map.get(stufe).keySet()) {
-				KlausurblockungSchienenInputSchueler schueler = new KlausurblockungSchienenInputSchueler();
-				schueler.id = schuelerID;
-				for (Long klausurID : map.get(stufe).get(schuelerID))
-					schueler.klausuren.add(klausurID);
-				input.schueler.add(schueler);
+				for (long klausurID : map.get(stufe).get(schuelerID)) {
+					if (!mapKlausur.containsKey(klausurID)) {
+						GostKursklausur gostKlausur = new GostKursklausur();
+						gostKlausur.id = klausurID;
+						mapKlausur.put(klausurID, gostKlausur);
+						input.add(gostKlausur);
+					}
+					mapKlausur.get(klausurID).schuelerIds.add(schuelerID);
+				}
 			}
 
 			starteKlausurblockungSchiene(input);
 		}
 
-	}*/
+	}
 
-//	/** Testet das Einlesen und Konvertieren der Daten 003. Diese befinden sich hier {@link #PFAD_DATEN_003}. */
-	/*@Test
+	/** Testet das Einlesen und Konvertieren der Daten 003. Diese befinden sich hier {@link #PFAD_DATEN_003}. */
+	@Test
 	@DisplayName("Klausurblockung 003 einlesen und blocken.")
 	void test003_data() {
-		// Erzeugen eines Loggers mit Consumer.
-		Logger log = new Logger();
-
-		// Hinzufügen des Consumers, der im kritischen Fall 'fail' aufruft.
-		log.addConsumer(new Consumer<LogData>() {
-			@Override
-			public void accept(LogData t) {
-				assert t.getLevel().compareTo(LogLevel.APP) == 0 : t.getText();
-			}
-		});
-
+		
 		// Einlesen der Kurs-Datensätze
 		TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
 		for (PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_003 + "Westphal_EF.txt",
@@ -229,89 +208,66 @@ public class KlausurblockungSchieneTests {
 
 		// Blocken pro Stufe
 		for (String stufe : map.keySet()) {
-			// System.out.println("Stufe " + stufe);
+			// Input-Erzeugen
+			@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
+			
+			
+			HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
+			for (long schuelerID : map.get(stufe).keySet()) {
 
-			KlausurblockungSchienenInput input = new KlausurblockungSchienenInput();
-			input.datenbankID = 1;
-			input.maxTimeMillis = BLOCKUNGS_ZEIT;
-
-			for (Long schuelerID : map.get(stufe).keySet()) {
-				KlausurblockungSchienenInputSchueler schueler = new KlausurblockungSchienenInputSchueler();
-				schueler.id = schuelerID;
-				for (Long klausurID : map.get(stufe).get(schuelerID))
-					schueler.klausuren.add(klausurID);
-				input.schueler.add(schueler);
+				for (long klausurID : map.get(stufe).get(schuelerID)) {
+					if (!mapKlausur.containsKey(klausurID)) {
+						GostKursklausur gostKlausur = new GostKursklausur();
+						gostKlausur.id = klausurID;
+						mapKlausur.put(klausurID, gostKlausur);
+						input.add(gostKlausur);
+					}
+					mapKlausur.get(klausurID).schuelerIds.add(schuelerID);
+				}
 			}
 
-			starteKlausurblockungSchiene(input);
+			starteKlausurblockungSchiene(input);					
 		}
 
 	}
 
 	
-	private static void starteKlausurblockungSchiene(KlausurblockungSchienenInput input) {
+	private static void starteKlausurblockungSchiene(@NotNull List<@NotNull GostKursklausur> pInput) {
 		// Algorithmus-Objekt erzeugen.
 		KlausurblockungSchienenAlgorithmus alg = new KlausurblockungSchienenAlgorithmus();
 
-		// Blockung starten (Service).
-		KlausurblockungSchienenOutputs outputs = alg.handle(input);
+		// Blockung starten
+		@NotNull List<@NotNull List<@NotNull Long>> output = alg.berechne(pInput, BLOCKUNGS_ZEIT);
 
 		// Gibt es Ergebnisse?
-		assert !outputs.ergebnisse.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";
+		assert !output.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";
 
-		int max = 0;
-		for (KlausurblockungSchienenInputSchueler schueler : input.schueler)
-			if (schueler.klausuren.size() > max)
-				max = schueler.klausuren.size();
 
-		// Jedes Ergebnis überprüfen.
-		for (KlausurblockungSchienenOutput output : outputs.ergebnisse)
-			check(input, output);
-
+		// Ergebnis überprüfen.
+		check(pInput, output);
 	}
 
-	private static void check(KlausurblockungSchienenInput input, KlausurblockungSchienenOutput output) {
-		// Überprüfe 'output.datenbankID'.
-		assert output.datenbankID >= 0 : "'KlausurblockungSchienenOutput.datenbankID' ist negativ --> " + output.datenbankID;
+	private static void check(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull List<@NotNull List<@NotNull Long>> pOutput) {
 
-		// Überprüfe 'output.schienenAnzahl'.
-		assert output.schienenAnzahl >= 0 : "'KlausurblockungSchienenOutput.schienenAnzahl' ist negativ --> " + output.datenbankID;
-
-		// Überprüfe 'output.klausuren'.
-		assert !output.klausuren.isEmpty() : "'KlausurblockungSchienenOutput.klausuren' ist leer.";
-
-		// Überprüfe jede einzelne Klausur...
-		HashMap<Long, Integer> mapKlausurZuSchiene = new HashMap<>();
-		for (KlausurblockungSchienenOutputKlausur klausur : output.klausuren) {
-			// Überprüfe 'klausur.id'.
-		    assert klausur.id >= 0 : "'KlausurblockungSchienenOutputKlausur.id' ist negativ --> " + klausur.id;
-
-			// Überprüfe 'klausur.schiene'.
-			assert klausur.schiene >= 0 : "'KlausurblockungSchienenOutputKlausur.schiene' ist zu klein --> " + klausur.schiene;
-
-			// Überprüfe 'klausur.schiene'.
-			assert klausur.schiene < output.schienenAnzahl : "'KlausurblockungSchienenOutputKlausur.schiene' ist zu groß --> " + klausur.schiene;
-
-			// Map füllen.
-			assert !mapKlausurZuSchiene.containsKey(klausur.id) : "'KlausurblockungSchienenOutputKlausur' --> Zwei Klausuren haben die selbe ID.";
-			mapKlausurZuSchiene.put(klausur.id, klausur.schiene);
+		// Map: Klausur-ID --> Klausur-Objekt
+		HashMap<@NotNull Long, @NotNull GostKursklausur> mapKlausur = new HashMap<>();
+		for (@NotNull GostKursklausur klausur : pInput) {
+			mapKlausur.put(klausur.id, klausur);
 		}
-
-		// Überprüfe die Konsistent von 'input' vs. 'output'.
-		for (KlausurblockungSchienenInputSchueler schueler : input.schueler) {
-			@NotNull Vector<@NotNull Long> klausuren = schueler.klausuren;
-			for (int i1 = 0; i1 < klausuren.size(); i1++)
-				for (int i2 = i1 + 1; i2 < klausuren.size(); i2++) {
-					// Pro Klausur-Paar des Schülers müssen die Klausur-Schienen verschieden sein.
-					Integer schiene1 = mapKlausurZuSchiene.get(klausuren.get(i1));
-					Integer schiene2 = mapKlausurZuSchiene.get(klausuren.get(i2));
-					assert schiene1 != null : "Klausur " + klausuren.get(i1) + " hat keine zugeordnete Schiene!";
-					assert schiene2 != null : "Klausur " + klausuren.get(i2) + " hat keine zugeordnete Schiene!";
-					assert !schiene1.equals(schiene2) : "Schüler " + schueler.id + " hat zwei Klausuruen in der selben Schiene.";
+		
+		for (int schiene = 0 ; schiene < pOutput.size() ; schiene++) {
+			@NotNull List<@NotNull Long> klausuren = pOutput.get(schiene);
+			TreeSet<Long> schueler = new TreeSet<>();
+			for (long klausurID : klausuren) {
+				for (long susID : mapKlausur.get(klausurID).schuelerIds) {
+					if (schueler.add(susID) == false) {
+						fail("Doppelter Schüler an einem Termin!");
+					}
 				}
+			}
 		}
-		// System.out.println(" Output hat " + output.schienenAnzahl + " Schienen");
+		
 	}
-	*/
+	
 
 }

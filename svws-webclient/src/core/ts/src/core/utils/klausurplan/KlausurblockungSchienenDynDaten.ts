@@ -115,6 +115,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (let gostKursklausur of pInput) {
 			if (gostKursklausur.id < 0) 
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
+			if (this._mapKlausurZuNummer.containsKey(gostKursklausur.id)) 
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!")
 			let klausurNummer : number = this._mapKlausurZuNummer.size();
 			this._mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
 		}

@@ -95,10 +95,13 @@ public class KlausurblockungSchienenDynDaten {
 
 	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
 		for (@NotNull GostKursklausur gostKursklausur : pInput) {
-			if (gostKursklausur.id < 0) // Check: Ungültige Klausur-ID
+			if (gostKursklausur.id < 0)
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
+			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id))
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");				
+			// Mapping: datenbankKlausurID --> laufende Nummer
 			int klausurNummer = _mapKlausurZuNummer.size();
-			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer); // Mapping: datenbankKlausurID --> laufende Nummer
+			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
 		}
 	}
 	
