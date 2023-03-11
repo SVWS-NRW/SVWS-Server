@@ -128,7 +128,7 @@
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		erzeugeKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<GostKlausurvorgabe>;
-		patchKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
+		patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<boolean>;
 		loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
 	}>();
 
@@ -162,7 +162,7 @@
 			return;
 		}
 		if (activeVorgabe.value.idVorgabe > 0) {
-			result = await props.patchKlausurvorgabe(activeVorgabe.value);
+			result = await props.patchKlausurvorgabe({...activeVorgabe.value}, activeVorgabe.value.idVorgabe);
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;
 		} else {

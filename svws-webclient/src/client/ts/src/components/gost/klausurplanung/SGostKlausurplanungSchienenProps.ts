@@ -16,4 +16,5 @@ export interface GostKlausurplanungSchienenProps {
 	loescheKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<boolean>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
+	patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 }

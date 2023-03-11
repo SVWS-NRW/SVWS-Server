@@ -9,7 +9,8 @@
 			</svws-ui-radio-group>
 			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" v-if="loading" /> Automatisch blocken</svws-ui-button>
+			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+			<svws-ui-button class="secondary" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
 			<s-gost-klausurplanung-schienen-termin :quartal="quartal"
@@ -19,7 +20,8 @@
 				:map-lehrer="mapLehrer"
 				:set-termin-to-kursklausur="setTerminToKursklausur"
 				:drag-status="dragStatus"
-				:map-schueler="mapSchueler" />
+				:map-schueler="mapSchueler"
+				:patch-klausurtermin="patchKlausurtermin" />
 			<div class="flex flex-col">
 				<div class="flex flex-row flex-wrap gap-4 items-start">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
@@ -32,7 +34,8 @@
 						:drag-status="dragStatus"
 						:drag-klausur="dragKlausur"
 						:map-schueler="mapSchueler"
-						:loesche-klausurtermin="loescheKlausurtermin" />
+						:loesche-klausurtermin="loescheKlausurtermin"
+						:patch-klausurtermin="patchKlausurtermin" />
 				</div>
 			</div>
 		</div>
@@ -41,7 +44,7 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin, Vector, List, KlausurblockungSchienenAlgorithmus } from "@svws-nrw/svws-core";
+	import { GostKursklausur, GostKlausurtermin, KlausurblockungSchienenAlgorithmus } from "@svws-nrw/svws-core";
 	import { computed, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -67,10 +70,10 @@
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
-		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, 1000);
-		for (const klausurList of klausurTermine) {
+		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, 2500);
+		for await (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(quartal.value);
-			for (const klausurId of klausurList) {
+			for await (const klausurId of klausurList) {
 				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
 				if (klausur !== null) {
 					await props.setTerminToKursklausur(termin.id, klausur);
@@ -79,6 +82,12 @@
 		}
 		loading.value = false;
 	};
+
+	const loescheTermine = async () => {
+		for (const termin of termine.value.toArray()) {
+			await props.loescheKlausurtermin(termin as GostKlausurtermin);
+		}
+	}
 
 
 </script>

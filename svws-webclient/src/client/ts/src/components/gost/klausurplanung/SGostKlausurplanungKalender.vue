@@ -24,7 +24,7 @@
 					</template>
 					<template #item="{value, top}">
 						<svws-ui-drag-data :class="dropOverCssClasses()" tag="div" :data="value" @drag-start="dragStatus(value.originalItem)" @drag-end="dragStatus(null)">
-							<s-gost-klausurplanung-kalender-termin :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
+							<s-gost-klausurplanung-kalender-termin :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
 						</svws-ui-drag-data>
 					</template>
 				</calendar-view>
@@ -45,7 +45,7 @@
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		patchKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
+		patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 	}>();
 
 	const displayPeriodUom = ref("month");
@@ -82,7 +82,7 @@
 			} else {
 				termin.datum = null;
 			}
-			await props.patchKlausurtermin(termin);
+			await props.patchKlausurtermin({datum: termin.datum}, termin.id);
 		}
 	};
 

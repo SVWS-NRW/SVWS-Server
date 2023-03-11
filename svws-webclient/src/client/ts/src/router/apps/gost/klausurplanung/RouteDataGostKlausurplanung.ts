@@ -240,9 +240,10 @@ export class RouteDataGostKlausurplanung {
 		return neueVorgabe;
 	}
 
-	patchKlausurvorgabe = async (vorgabe: GostKlausurvorgabe): Promise<boolean> => {
+	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number): Promise<boolean> => {
 		api.status.start();
-		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, vorgabe.idVorgabe);
+		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, id);
+		Object.assign(this.klausurvorgabenmanager.gibGostKlausurvorgabe(id), vorgabe);
 		this.klausurvorgabenmanager.updateKlausurvorgabe(vorgabe);
 		this.commit();
 		api.status.stop();
@@ -267,9 +268,10 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	patchKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
+	patchKlausurtermin = async (termin: Partial<GostKlausurtermin>, id: number): Promise<boolean> => {
 		api.status.start();
-		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, termin.id);
+		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
+		Object.assign(this.kursklausurmanager.gibKlausurtermin(id), termin);
 		// this.klausurvorgabenmanager.updateKlausurtermin(termin);
 		this.commit();
 		api.status.stop();

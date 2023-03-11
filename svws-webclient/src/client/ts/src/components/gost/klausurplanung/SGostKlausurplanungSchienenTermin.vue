@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col border border-blue-900 border-solid w-52 h-full">
+	<div class="flex flex-col border border-blue-900 border-solid w-52">
 		<svws-ui-drop-data @drop="setKlausurToTermin" class="h-full">
 			<div class="flex flex-row-reverse">
 				<svws-ui-badge class="-m-2 z-10" v-if="konflikteTerminDragKlausur > 0 || konflikteTermin > 0" type="error" size="big"><span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span></svws-ui-badge>
@@ -30,7 +30,7 @@
 						</td>
 					</tr>
 					<tr v-if="termin !== null">
-						<th colspan="6"><svws-ui-text-input placeholder="Bezeichnung" :model-value="termin?.bezeichnung" /></th>
+						<th colspan="6"><svws-ui-text-input placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin({ bezeichnung: String($event) }, termin!.id)" /></th>
 					</tr>
 					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->
 				</thead>
@@ -46,6 +46,7 @@
 
 	import { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core";
 	import { computed } from 'vue';
+	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin | null;
@@ -56,12 +57,15 @@
 		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
 		loescheKlausurtermin?: (termin: GostKlausurtermin) => Promise<boolean>;
 		dragStatus: (klausur: GostKursklausur | null) => void;
+		patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 		quartal?: number;
 		dragKlausur?: GostKursklausur | null;
 	}>();
 
+	//const { doPatch } = useDebouncedPatch(computed(() => props.termin), props.patchKlausurtermin);
+
 	const terminHeader = computed(()=>
-		props.termin === null ? "Zu verplanen:" : (props.termin.datum === null ? "Noch kein Datum" : props.termin.datum)
+		props.termin === null ? "Zu verplanen:" : (props.termin.datum === null ? "Noch kein Datum" : new Date(props.termin.datum).toLocaleString("de-DE").split(",")[0])
 	);
 
 	const klausuren = computed(() =>
