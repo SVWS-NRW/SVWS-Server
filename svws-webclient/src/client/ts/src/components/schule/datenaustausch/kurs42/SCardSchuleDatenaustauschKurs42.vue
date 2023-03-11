@@ -16,7 +16,8 @@
 				Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs 42 gut zu den Daten der Schild-Datenbank passen!
 				Ist dies nicht der Fall, so schlägt der Import fehl.
 			</p>
-			<br><input type="file" accept=".zip" @change="import_file">
+			<br><input type="file" accept=".zip" @change="import_file" :disabled="loading">
+			<svws-ui-spinner :spinning="loading" />
 			<br>{{
 				status === false
 					? "Fehler beim Upload"
@@ -36,15 +37,20 @@
 	}>();
 
 	const status = ref<boolean | undefined>(undefined);
+	const loading = ref<boolean>(false);
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (!target.files?.length) return;
+		if (!target.files?.length)
+			return;
 		const file = target.files.item(0);
-		if (!file) return;
+		if (!file)
+			return;
+		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);
-		status.value = await props.setGostKurs42ImportZip(formData)
+		status.value = await props.setGostKurs42ImportZip(formData);
+		loading.value = false;
 	}
 
 	defineExpose({
