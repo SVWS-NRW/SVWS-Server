@@ -195,10 +195,10 @@ export class RouteDataGostKursplanung {
 		return this._state.value.auswahlBlockung;
 	}
 
-	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined) => {
+	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined, force?: boolean) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
+		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
 			this.setPatchedState({
@@ -584,7 +584,7 @@ export class RouteDataGostKursplanung {
 		try {
 			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
-			await this.setAuswahlBlockung(this.auswahlBlockung);
+			await this.setAuswahlBlockung(this.auswahlBlockung, true);
 			await this.gotoErgebnis(this._state.value.auswahlErgebnis)
 			api.status.stop();
 		} catch (e) {

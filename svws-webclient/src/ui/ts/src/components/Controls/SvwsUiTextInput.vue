@@ -65,9 +65,13 @@
 
 	const hasIcon = computed(() => !!slots.default);
 
-	const hasContent = ref(!!props.modelValue);
+	const hasContent = ref(typeof props.modelValue === 'string'
+		? props.modelValue.length > 0 : typeof props.modelValue === 'number'
+			? true : false);
 	watch(() => props.modelValue,
-		value => { hasContent.value = !!value; }
+		value => { hasContent.value = typeof props.modelValue === 'string'
+			? props.modelValue.length > 0 : typeof props.modelValue === 'number'
+				? true : false; }
 	);
 	function onInput(event: Event) {
 		hasContent.value = (event.target as HTMLInputElement)?.value.trim() != "";

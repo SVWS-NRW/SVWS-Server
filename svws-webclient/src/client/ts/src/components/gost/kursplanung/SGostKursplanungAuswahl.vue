@@ -2,8 +2,10 @@
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
 			<template #cell(kuerzel)="{ rowData: row }">
-				{{ row.kuerzel }}
-				<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+				<div class="flex justify-between w-full">
+					{{ row.kuerzel }}
+					<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+				</div>
 			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
