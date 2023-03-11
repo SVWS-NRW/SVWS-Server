@@ -11,7 +11,7 @@ export interface GostKursplanungAuswahlProps {
 	removeBlockung: () => Promise<void>;
 	setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
-	mapBlockungen: Map<number, GostBlockungListeneintrag>;
+	mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
 	apiStatus: ApiStatus;
 	// ... zusätzlich für die Ergebnisauswahl
 	getDatenmanager: () => GostBlockungsdatenManager;

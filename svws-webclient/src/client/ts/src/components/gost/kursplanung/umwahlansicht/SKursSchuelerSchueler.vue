@@ -26,7 +26,7 @@
 								<svws-ui-icon> <i-ri-forbid-2-line /> </svws-ui-icon>
 							</template>
 							<template #content>
-								<span>Nichtwahl</span>
+								<span>Nichtverteilt</span>
 							</template>
 						</svws-ui-popover>
 						<svws-ui-popover v-else-if="kollision && nichtwahl" class="popper--danger">
@@ -34,7 +34,7 @@
 								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
 							</template>
 							<template #content>
-								<span>Kollision und Nichtwahl</span>
+								<span>Kollision und Nichtverteilt</span>
 							</template>
 						</svws-ui-popover>
 						<svws-ui-icon v-else class="opacity-25"> <i-ri-check-fill /> </svws-ui-icon>

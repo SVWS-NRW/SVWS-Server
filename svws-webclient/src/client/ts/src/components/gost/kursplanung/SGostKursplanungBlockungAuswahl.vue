@@ -55,7 +55,7 @@
 		removeBlockung: () => Promise<void>;
 		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 		auswahlBlockung: GostBlockungListeneintrag | undefined;
-		mapBlockungen: Map<number, GostBlockungListeneintrag>;
+		mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
@@ -71,7 +71,7 @@
 
 	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {
 		const result: GostBlockungListeneintrag[] = [];
-		for (const bl of props.mapBlockungen.values())
+		for (const bl of props.mapBlockungen().values())
 			result.push(bl);
 		return result;
 	});
@@ -117,7 +117,7 @@
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return props.mapBlockungen.size > 0;
+		return props.mapBlockungen().size > 0;
 	});
 
 </script>
