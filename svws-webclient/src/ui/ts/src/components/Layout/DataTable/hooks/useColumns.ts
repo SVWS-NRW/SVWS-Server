@@ -2,23 +2,15 @@ import { computed } from 'vue'
 import getKeys from "../utils/get-keys";
 import capitalizeFirstLetter from "../utils/capitalize-first-letter";
 
-import type {
-	DataTableColumnSource,
-	DataTableColumnInternal,
-	DataTableItem,
-} from '../types'
+import type { DataTableColumnSource, DataTableColumnInternal, DataTableItem } from '../types'
 
 type UseColumnProps = {
 	columns: DataTableColumnSource[];
 	items: Iterable<DataTableItem>;
 }
 
-export const buildTableColumn = (
-	source: DataTableColumnSource,
-	initialIndex: number,
-): DataTableColumnInternal => {
-	const input = typeof source === 'string' ? { key: source } : source
-
+export const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
+	const input = typeof source === 'string' ? { key: source } : source;
 	return {
 		source,
 		initialIndex,
@@ -41,26 +33,17 @@ const buildNormalizedColumns = (props: UseColumnProps) => {
 }
 
 export default function useColumns(props: UseColumnProps) {
-	const columnsComputed = computed(() => {
-		if (props.columns.length === 0) {
-			return buildColumnsFromItems(props)
-		} else {
-			return buildNormalizedColumns(props)
-		}
-	})
-
+	const columnsComputed = computed(() =>
+		(props.columns.length === 0) ? buildColumnsFromItems(props) : buildNormalizedColumns(props)
+	)
 	const gridTemplateColumns = computed(() => {
-		return columnsComputed.value.map(column => {
-			return `minmax(${
+		return columnsComputed.value.map(column =>
+			`minmax(${
 				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : '4rem'
 			}, ${
 				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
 			})`
-		}).join(' ')
+		).join(' ');
 	})
-
-	return {
-		columnsComputed,
-		gridTemplateColumns,
-	}
+	return { columnsComputed, gridTemplateColumns };
 }

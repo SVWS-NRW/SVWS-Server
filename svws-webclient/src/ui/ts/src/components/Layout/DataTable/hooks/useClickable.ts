@@ -18,34 +18,24 @@ export default function useClickable({ clickedItem: data, emit, isActive, canRes
 	}
 
 	function resetClickedRow() {
-		if (canReset()) {
-			emit(null)
-		}
+		if (canReset())
+			emit(null);
 	}
 
 	function toggleRowClick(row: DataTableRow) {
-		if (!isActive) {
-			return
-		}
-
-		if (isRowClicked(row)) {
+		if (!isActive)
+			return;
+		if (isRowClicked(row))
 			resetClickedRow();
-		} else {
+		else
 			setClickedRow(row);
-		}
 	}
 
 	function setClickedRow(row: DataTableRow) {
-		if (!isActive) {
-			return
-		}
-
+		if (!isActive)
+			return;
 		emit(row.source);
 	}
 
-	return {
-		isRowClicked,
-		toggleRowClick,
-		setClickedRow
-	}
+	return { isRowClicked, toggleRowClick, setClickedRow };
 }

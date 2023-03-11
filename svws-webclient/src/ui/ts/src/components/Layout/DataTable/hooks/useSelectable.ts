@@ -8,25 +8,12 @@ interface UseSelectableOptions {
 	isActive: () => boolean
 }
 
-export default function useSelectable({
-	selectedItems: data, emit, sortedRows, isActive,
-}: UseSelectableOptions) {
+export default function useSelectable({ selectedItems: data, emit, sortedRows, isActive }: UseSelectableOptions) {
 	// internally, we only work with raw values so we don't run into identity hazard when comparing them
 	const selectedItemsRaw = computed(() => (data() ?? []).map(i => toRaw(i)))
-
-	const noRowsSelected = computed(() => (
-		!sortedRows.value.some(isRowSelected)
-	))
-
-	const allRowsSelected = computed(() => {
-		if (sortedRows.value.length === 0) { return false }
-		return sortedRows.value.every(isRowSelected)
-	})
-
-	const someNotAllRowsSelected = computed(() => {
-		if (sortedRows.value.length === 0) { return false }
-		return sortedRows.value.some(isRowSelected) && !allRowsSelected.value
-	})
+	const noRowsSelected = computed(() => (!sortedRows.value.some(isRowSelected)))
+	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.every(isRowSelected));
+	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
 
 	function isRowSelected(row: DataTableRow) {
 		return selectedItemsRaw.value.includes(row.source)
@@ -52,31 +39,20 @@ export default function useSelectable({
 	}
 
 	function toggleRowSelection(row: DataTableRow) {
-		if (!isActive()) {
-			return
-		}
-
-		if (isRowSelected(row)) {
+		if (!isActive())
+			return;
+		if (isRowSelected(row))
 			unselectRow(row)
-		} else {
+		else
 			selectRow(row)
-		}
 	}
 
 	function toggleBulkSelection() {
-		if (allRowsSelected.value) {
+		if (allRowsSelected.value)
 			unselectAllRows()
-		} else {
+		else
 			selectAllRows()
-		}
 	}
 
-	return {
-		toggleRowSelection,
-		toggleBulkSelection,
-		isRowSelected,
-		noRowsSelected,
-		allRowsSelected,
-		someNotAllRowsSelected,
-	}
+	return { toggleRowSelection, toggleBulkSelection, isRowSelected, noRowsSelected, allRowsSelected, someNotAllRowsSelected };
 }

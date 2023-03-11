@@ -264,17 +264,9 @@
 
 	const filterOpen = ref(props.filterOpen);
 
-	const toggleFilterOpen = () => {
-		filterOpen.value = !filterOpen.value;
-	}
+	const toggleFilterOpen = () => { filterOpen.value = !filterOpen.value; }
 
-	const {
-		toggleBulkSelection,
-		isRowSelected,
-		allRowsSelected,
-		someNotAllRowsSelected,
-		toggleRowSelection,
-	} = useSelectable({
+	const { toggleBulkSelection, isRowSelected, allRowsSelected, someNotAllRowsSelected, toggleRowSelection } = useSelectable({
 		isActive: () => props.selectable,
 		sortedRows,
 		selectedItems: () => props.modelValue,
@@ -288,24 +280,12 @@
 		emit: (v: DataTableItem | null) => emit('update:clicked', v),
 	});
 
-	const showNoDataHtml = computed(() => {
-		if (Array.isArray(props.items))
-			return props.items.length === 0;
-		const iterator = props.items[Symbol.iterator]();
-		const res = iterator.next();
-		return res.done !== true && res.value === undefined
-	});
+	const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
 
-	const computedTableAttributes = computed(
-		() =>
-			({
-				...Object.fromEntries(
-					Object.entries(attrs).filter(
-						([key]) => !["class", "style"].includes(key)
-					)
-				),
-			} as TableHTMLAttributes)
-	);
+	const computedTableAttributes = computed(() => ({
+		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
+	} as TableHTMLAttributes));
+
 </script>
 
 <style lang="postcss">
