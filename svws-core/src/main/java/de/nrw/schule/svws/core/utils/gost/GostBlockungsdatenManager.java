@@ -866,7 +866,7 @@ public class GostBlockungsdatenManager {
 		@NotNull List<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		for (int i = 0 ; i < lehrer.size() ; i++)
 			if (lehrer.get(i).id == pLehrkraftID) {
-				lehrer.remove(i);
+				lehrer.remove(lehrer.get(i));
 				return;
 			}
 		// lehrer.sort(compLehrkraefte);
