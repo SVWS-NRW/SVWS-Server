@@ -70,6 +70,7 @@
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
+		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, 2500);
 		for await (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(quartal.value);
