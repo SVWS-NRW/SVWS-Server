@@ -11,6 +11,7 @@ import java.util.function.Function;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
+import de.nrw.schule.svws.core.types.schule.Religion;
 import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
@@ -22,6 +23,7 @@ import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung;
@@ -424,6 +426,16 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         // TODO K-Ort aus der Default-Daten-Tabelle befüllen
         
         // TODO K_Religion aus dem Core-Type befüllen
+        Vector<DTOKonfession> dtoKonfession = new Vector<>();
+        Religion[] konfession = Religion.values();
+        for (int i = 0; i < konfession.length; i++) {
+            Religion kon = konfession[i];
+            DTOKonfession dto = new DTOKonfession((long)i + 1, kon.daten.bezeichnung);
+            dto.StatistikKrz = kon.daten.kuerzel;
+            dto.Sortierung = i + 1;
+            dtoKonfession.add(dto);
+        }
+        conn.persistRange(dtoKonfession, 0, dtoKonfession.size() - 1);
         
         // TODO K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
         
