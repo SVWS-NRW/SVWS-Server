@@ -26,15 +26,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="DTOStundenplanUnterricht.zeitraster_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN :value")
 @NamedQuery(name="DTOStundenplanUnterricht.wochentyp", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp = :value")
 @NamedQuery(name="DTOStundenplanUnterricht.wochentyp.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.klasse_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Klasse_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.klasse_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Klasse_ID IN :value")
 @NamedQuery(name="DTOStundenplanUnterricht.kurs_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID = :value")
 @NamedQuery(name="DTOStundenplanUnterricht.kurs_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID IN :value")
 @NamedQuery(name="DTOStundenplanUnterricht.fach_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID = :value")
 @NamedQuery(name="DTOStundenplanUnterricht.fach_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID IN :value")
 @NamedQuery(name="DTOStundenplanUnterricht.primaryKeyQuery", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID = ?1")
 @NamedQuery(name="DTOStundenplanUnterricht.all.migration", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Zeitraster_ID","Wochentyp","Klasse_ID","Kurs_ID","Fach_ID"})
+@JsonPropertyOrder({"ID","Zeitraster_ID","Wochentyp","Kurs_ID","Fach_ID"})
 public class DTOStundenplanUnterricht {
 
 	/** Die eindeutige ID für diese Zuordnung des Untericht-Eintrages zu einem Stundenplan */
@@ -52,11 +50,6 @@ public class DTOStundenplanUnterricht {
 	@Column(name = "Wochentyp")
 	@JsonProperty
 	public Integer Wochentyp;
-
-	/** Die Klasse, in welcher der Unterricht stattfindet. Bei Kursen entfällt dieser Eintrag und es ist eine ID des Kurses gesetzt */
-	@Column(name = "Klasse_ID")
-	@JsonProperty
-	public Long Klasse_ID;
 
 	/** Die ID des Kurses, falls der Unterricht nicht im Klassenverband stattfindet */
 	@Column(name = "Kurs_ID")
@@ -135,7 +128,7 @@ public class DTOStundenplanUnterricht {
 	 */
 	@Override
 	public String toString() {
-		return "DTOStundenplanUnterricht(ID=" + this.ID + ", Zeitraster_ID=" + this.Zeitraster_ID + ", Wochentyp=" + this.Wochentyp + ", Klasse_ID=" + this.Klasse_ID + ", Kurs_ID=" + this.Kurs_ID + ", Fach_ID=" + this.Fach_ID + ")";
+		return "DTOStundenplanUnterricht(ID=" + this.ID + ", Zeitraster_ID=" + this.Zeitraster_ID + ", Wochentyp=" + this.Wochentyp + ", Kurs_ID=" + this.Kurs_ID + ", Fach_ID=" + this.Fach_ID + ")";
 	}
 
 }

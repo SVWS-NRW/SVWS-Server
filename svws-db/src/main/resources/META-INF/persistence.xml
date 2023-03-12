@@ -372,6 +372,7 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanRaum</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>

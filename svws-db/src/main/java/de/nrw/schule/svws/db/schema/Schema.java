@@ -596,6 +596,9 @@ public class Schema {
 	/** Tabelle Stundenplan_Unterricht */
 	public static final Tabelle_Stundenplan_Unterricht tab_Stundenplan_Unterricht = add(new Tabelle_Stundenplan_Unterricht());
 
+	/** Tabelle Stundenplan_UnterrichtKlasse */
+	public static final Tabelle_Stundenplan_UnterrichtKlasse tab_Stundenplan_UnterrichtKlasse = add(new Tabelle_Stundenplan_UnterrichtKlasse());
+
 	/** Tabelle Stundenplan_UnterrichtLehrer */
 	public static final Tabelle_Stundenplan_UnterrichtLehrer tab_Stundenplan_UnterrichtLehrer = add(new Tabelle_Stundenplan_UnterrichtLehrer());
 

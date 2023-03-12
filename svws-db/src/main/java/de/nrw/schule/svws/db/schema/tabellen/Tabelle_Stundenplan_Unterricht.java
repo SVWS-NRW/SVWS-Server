@@ -7,7 +7,6 @@ import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -31,10 +30,6 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Gibt an, ob es sich um einen Eintrag für jede Woche handelt (0) oder ob es sich um einen unterschiedlichen (!) Eintrag für eine A- bzw. B-Wochen (1 bzw. 2) handelt");
 
-	/** Die Definition der Tabellenspalte Klasse_ID */
-	public SchemaTabelleSpalte col_Klasse_ID = add("Klasse_ID", SchemaDatentypen.BIGINT, false)
-		.setJavaComment("Die Klasse, in welcher der Unterricht stattfindet. Bei Kursen entfällt dieser Eintrag und es ist eine ID des Kurses gesetzt");
-
 	/** Die Definition der Tabellenspalte Kurs_ID */
 	public SchemaTabelleSpalte col_Kurs_ID = add("Kurs_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("Die ID des Kurses, falls der Unterricht nicht im Klassenverband stattfindet");
@@ -44,14 +39,6 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Die ID des Faches, in dem der Unterricht stattfindet");
 
-
-	/** Die Definition des Fremdschlüssels Stundenplan_Unterricht_Klassen_FK */
-	public SchemaTabelleFremdschluessel fk_Stundenplan_Unterricht_Klassen_FK = addForeignKey(
-			"Stundenplan_Unterricht_Klassen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
-			new Pair<>(col_Klasse_ID, Schema.tab_Klassen.col_ID)
-		);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Unterricht_EigeneSchule_Faecher_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Unterricht_EigeneSchule_Faecher_FK = addForeignKey(
@@ -78,14 +65,6 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 		);
 
 
-	/** Die Definition des Unique-Index Stundenplan_Unterricht_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundenplan_Unterricht_UC1 = addUniqueIndex("Stundenplan_Unterricht_UC1", 
-			col_Kurs_ID, 
-			col_Klasse_ID, 
-			col_Zeitraster_ID
-		);
-
-
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Stundenplan_Unterricht.
 	 */
@@ -96,7 +75,7 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.stundenplan");
 		setJavaClassName("DTOStundenplanUnterricht");
-		setJavaComment("Enthält die Zuordnung der Unterrichte (Klasse, Kurs, Fach) zu einem Zeitraster-Eintrag. Über das Zeitraster ist diese Zuordnung auch immer eindeutig einem Stundenplan zugeordnet. Die Zuordnung von Lehrern und Räumen erfolgt über die Tabellen Stundenplan_UnterrichtLehrer und Stundenplan_UnterrichtRaum");
+		setJavaComment("Enthält die Zuordnung der Unterrichte (Kurs, Fach) zu einem Zeitraster-Eintrag. Über das Zeitraster ist diese Zuordnung auch immer eindeutig einem Stundenplan zugeordnet. Die Zuordnung von Lehrern und Räumen erfolgt über die Tabellen Stundenplan_UnterrichtLehrer und Stundenplan_UnterrichtRaum");
 	}
 
 }
