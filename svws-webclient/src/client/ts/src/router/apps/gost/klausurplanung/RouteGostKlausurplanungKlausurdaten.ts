@@ -20,7 +20,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
 			klausurvorgabenmanager: () => { return routeGostKlausurplanung.data.hatKlausurvorgabenManager ? routeGostKlausurplanung.data.klausurvorgabenmanager : new GostKlausurvorgabenManager(new Vector())},
