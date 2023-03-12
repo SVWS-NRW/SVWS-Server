@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 configurations {
 	implementation.extendsFrom(crypto, database, jackson, resteasy, swagger)
 }
@@ -74,3 +76,54 @@ task generateSQLScripts(type: JavaExec) {
     jvmArgs "-Dfile.encoding=UTF-8"
     args "-a"
 }
+
+
+task createScripts {
+	group = 'svws'
+	dependsOn compileJava
+	doLast {
+		if (OperatingSystem.current().isLinux()) {
+			file("./migrate_db.sh").text = 
+			  '#! /bin/bash\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.MigrateDB $@\n'
+			file("./lupo_import.sh").text = 
+			  '#! /bin/bash\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB $@\n'
+			file("./kurs42_import.sh").text = 
+			  '#! /bin/bash\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung $@\n'
+			project.exec {
+				commandLine('chmod',  '+x', './migrate_db.sh')
+				commandLine('chmod',  '+x', './lupo_import.sh')
+				commandLine('chmod',  '+x', './kurs42_import.sh')
+			}		
+		} else if (OperatingSystem.current().isWindows()) {
+			file("./migrate_db.cmd").text = 
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.MigrateDB %*\n'
+			file("./lupo_import.cmd").text = 
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB %*\n'
+			file("./kurs42_import.cmd").text = 
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung %*\n'
+		} else if (OperatingSystem.current().isMacOsX()) {
+			file("./migrate_db.sh").text = 
+			  '#! /bin/zsh\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.MigrateDB $@\n'
+			file("./lupo_import.sh").text = 
+			  '#! /bin/zsh\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB $@\n'
+			file("./kurs42_import.sh").text = 
+			  '#! /bin/zsh\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung $@\n'
+			project.exec {
+				commandLine('chmod',  '+x', './migrate_db.sh')
+				commandLine('chmod',  '+x', './lupo_import.sh')
+				commandLine('chmod',  '+x', './kurs42_import.sh')
+			}		
+		} else {
+			// TODO
+		}
+	}
+}
+
+
+assemble.dependsOn createScripts
