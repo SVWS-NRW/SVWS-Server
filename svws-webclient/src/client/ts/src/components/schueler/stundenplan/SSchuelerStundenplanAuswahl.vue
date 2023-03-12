@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :model-value="stundenplan" @update:model-value="setStundenplan" :columns="cols" :data="getStundenplaene()" :footer="false" />
+	<svws-ui-data-table clickable :clicked="stundenplan" @update:clicked="setStundenplan" :columns="cols" :items="getStundenplaene()" />
 </template>
 
 <script setup lang="ts">
