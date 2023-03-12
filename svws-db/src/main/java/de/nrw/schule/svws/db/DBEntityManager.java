@@ -582,6 +582,7 @@ public class DBEntityManager implements AutoCloseable {
 	 * 
 	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
 	 */
+	@SuppressWarnings("resource")
 	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, int indexFirst, int indexLast) {
 		if ((entities == null) || (colnames == null) || (tablename == null) ||
 				(colnames.size() == 0) || (entities.size() == 0))
@@ -591,29 +592,28 @@ public class DBEntityManager implements AutoCloseable {
 		try {
 			this.lock();
 			this.transactionBegin();
-			try (Connection conn = em.unwrap(Connection.class)) {
-				String sql = "INSERT INTO " + tablename + "("
-						+ colnames.stream().collect(Collectors.joining(", ")) 
-						+ ") VALUES ("
-						+ colnames.stream().map(col -> "?").collect(Collectors.joining(", "))
-						+ ")";
-				try (PreparedStatement prepared = conn.prepareStatement(sql)) {
-					for (int i = first; i <= last; i++) {
-						Object[] data = entities.get(i);
-						for (int j = 0; j < colnames.size(); j++) {
-							if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Timestamp)) {
-								prepared.setString(j+1, datetime_formatter.format(((Timestamp)data[j]).toLocalDateTime()));
-							} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Date)) {
-								prepared.setString(j+1, date_formatter.format(((Date)data[j]).toLocalDate()));
-							} else {
-								prepared.setObject(j+1, data[j]);
-							}
+			Connection conn = em.unwrap(Connection.class);
+			String sql = "INSERT INTO " + tablename + "("
+					+ colnames.stream().collect(Collectors.joining(", ")) 
+					+ ") VALUES ("
+					+ colnames.stream().map(col -> "?").collect(Collectors.joining(", "))
+					+ ")";
+			try (PreparedStatement prepared = conn.prepareStatement(sql)) {
+				for (int i = first; i <= last; i++) {
+					Object[] data = entities.get(i);
+					for (int j = 0; j < colnames.size(); j++) {
+						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Timestamp)) {
+							prepared.setString(j+1, datetime_formatter.format(((Timestamp)data[j]).toLocalDateTime()));
+						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Date)) {
+							prepared.setString(j+1, date_formatter.format(((Date)data[j]).toLocalDate()));
+						} else {
+							prepared.setObject(j+1, data[j]);
 						}
-						prepared.addBatch();
 					}
-					prepared.executeBatch();
-					prepared.close();
+					prepared.addBatch();
 				}
+				prepared.executeBatch();
+				prepared.close();
 			}
 			if (this.transactionCommit())
 				return true;
@@ -626,8 +626,8 @@ public class DBEntityManager implements AutoCloseable {
 			this.unlock();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Erzeugt eine TypedQuery gemäß der Methode {@link EntityManager#createQuery(String, Class)}
 	 * 

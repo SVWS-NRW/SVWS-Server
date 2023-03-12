@@ -259,74 +259,74 @@ public class DBBackupManager {
 			if (!tab.importExport())
 				continue;
 
-			try (DBEntityManager srcConn = schemaManager.getUser().getEntityManager()) {
-				logger.logLn("Tabelle " + tab.name() + ":");
-				logger.modifyIndent(2);
-				
-				// Lese alle Datensätze aus der Quell-Tabelle
-				logger.log("- Lese Datensätze: ");
-				String sql = tab.getSpalten(rev).stream()
-						.map(t -> t.name())
-						.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
-				List<Object[]> entities = srcConn.query(sql);
-				if (entities == null) {
-					logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
-					continue;
-				}
-				logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
-				
-				// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
-				if (entities.size() == 0) {
-					logger.modifyIndent(-2);				
-					continue;
-				}
-				
-				// Schreibe die Datensätze in die Zieltabelle
-				logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
-				logger.modifyIndent(2);
-				try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
-					// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
-					int write_errors = 0;
-					LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>(); 
-					for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
-						int first = i * 10000;
-						int last = (i+1)*10000 - 1;
-						if (last >= entities.size())
-							last = entities.size() - 1;
-						ranges.add(Map.entry(first, last));
-					}
-					while (!ranges.isEmpty()) {
-						Map.Entry<Integer, Integer> range = ranges.removeFirst();
-						if (tgtConn.insertRangeNative(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).collect(Collectors.toList()), entities, range.getKey(), range.getValue())) {
-							if (range.getKey().equals(range.getValue())) 
-								logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");						
-							else 
-								logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
-						} else {
-							if (range.getKey().equals(range.getValue())) { 
-								logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
-								logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
-								write_errors++;
-							} else {
-								logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
-								// Teile den Block auf
-								int step = (range.getValue() - range.getKey() + 1) / 10;
-								if (step < 1)
-									step = 1;
-								for (int last = range.getValue(); last >= range.getKey(); last -= step) {
-									int first = last - step + 1;
-									ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
-								}
-							}
+			@SuppressWarnings("resource")
+			DBEntityManager srcConn = schemaManager.getUser().getEntityManager();
+			logger.logLn("Tabelle " + tab.name() + ":");
+			logger.modifyIndent(2);
+			
+			// Lese alle Datensätze aus der Quell-Tabelle
+			logger.log("- Lese Datensätze: ");
+			String sql = tab.getSpalten(rev).stream()
+					.map(t -> t.name())
+					.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
+			List<Object[]> entities = srcConn.query(sql);
+			if (entities == null) {
+				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
+				continue;
+			}
+			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+			
+			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
+			if (entities.size() == 0) {
+				logger.modifyIndent(-2);				
+				continue;
+			}
+			
+			// Schreibe die Datensätze in die Zieltabelle
+			logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
+			logger.modifyIndent(2);
+			@SuppressWarnings("resource")
+			DBEntityManager tgtConn = tgtManager.getUser().getEntityManager();
+			// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
+			int write_errors = 0;
+			LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>(); 
+			for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
+				int first = i * 10000;
+				int last = (i+1)*10000 - 1;
+				if (last >= entities.size())
+					last = entities.size() - 1;
+				ranges.add(Map.entry(first, last));
+			}
+			while (!ranges.isEmpty()) {
+				Map.Entry<Integer, Integer> range = ranges.removeFirst();
+				if (tgtConn.insertRangeNative(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).collect(Collectors.toList()), entities, range.getKey(), range.getValue())) {
+					if (range.getKey().equals(range.getValue())) 
+						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");						
+					else 
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
+				} else {
+					if (range.getKey().equals(range.getValue())) { 
+						logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
+						logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
+						write_errors++;
+					} else {
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
+						// Teile den Block auf
+						int step = (range.getValue() - range.getKey() + 1) / 10;
+						if (step < 1)
+							step = 1;
+						for (int last = range.getValue(); last >= range.getKey(); last -= step) {
+							int first = last - step + 1;
+							ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
 						}
 					}
-					logger.modifyIndent(-2);
-					logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
-					logger.modifyIndent(-2);
-					entities = null;
-					System.gc();
 				}
 			}
+			logger.modifyIndent(-2);
+			logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
+			logger.modifyIndent(-2);
+			entities = null;
+			System.gc();
 		}
 		return true;
 	}
