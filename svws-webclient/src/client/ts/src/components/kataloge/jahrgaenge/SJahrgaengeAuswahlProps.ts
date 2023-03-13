@@ -1,11 +1,12 @@
-import { JahrgangsListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import { JahrgangsListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface JahrgaengeAuswahlProps {
 	auswahl: JahrgangsListeEintrag | undefined;
-	listJahrgaenge: List<JahrgangsListeEintrag>;
+	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
+	gotoEintrag: (religion: JahrgangsListeEintrag) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	setJahrgang: (jahrgang: JahrgangsListeEintrag) => Promise<void>;
+	returnToKataloge: () => Promise<void>;
 }

@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<a @click="returnToKataloge">Kataloge</a>
 				<span>Religionen</span>
 			</nav>
 		</template>
@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="setReligion" :items="listReligionen"
+				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()"
 					:columns="cols" clickable :footer="true">
 					<template #footerActions>
 						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">
@@ -47,7 +47,6 @@
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core";
 	import { DataTableColumn } from "@ui";
 	import { computed, ComputedRef, reactive, ref } from "vue";
-	import { router } from "~/router/RouteManager";
 	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 
 	const props = defineProps<ReligionenAuswahlProps>();

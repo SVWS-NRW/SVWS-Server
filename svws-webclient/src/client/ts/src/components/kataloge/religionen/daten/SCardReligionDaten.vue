@@ -14,11 +14,11 @@
 
 <script setup lang="ts">
 
+	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { Religion, ReligionEintrag} from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		data: ReligionEintrag;
+		auswahl: ReligionEintrag;
 	}>();
 
 	const emit = defineEmits<{
@@ -32,22 +32,22 @@
 	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzel ?? undefined,
+		get: () => props.auswahl.kuerzel ?? undefined,
 		set: (value) => doPatch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.text ?? undefined,
+		get: () => props.auswahl.text ?? undefined,
 		set: (value) => doPatch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.textZeugnis ?? undefined,
+		get: () => props.auswahl.textZeugnis ?? undefined,
 		set: (value) => doPatch({ textZeugnis: value })
 	});
 
 	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
-		get: () => Religion.getByKuerzel(props.data.kuerzel || null) || undefined,
+		get: () => Religion.getByKuerzel(props.auswahl.kuerzel || null) || undefined,
 		set: (value) => doPatch({ kuerzel: value?.daten.kuerzel || null })
 	});
 

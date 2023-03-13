@@ -1,6 +1,6 @@
 <template>
 	<div class="app-container">
-		<s-card-religion-daten :data="data" @patch="doPatch" />
+		<s-card-religion-daten :auswahl="auswahl" @patch="doPatch" />
 	</div>
 </template>
 
@@ -12,5 +12,5 @@
 
 	const props = defineProps<ReligionDatenProps>();
 
-	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
+	const { doPatch } = useDebouncedPatch(computed(() => props.auswahl), props.patch)
 </script>

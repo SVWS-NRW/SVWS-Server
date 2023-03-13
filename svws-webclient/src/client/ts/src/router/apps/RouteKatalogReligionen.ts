@@ -1,49 +1,93 @@
-import { BenutzerKompetenz, List, ReligionEintrag, Schulform, Vector } from "@svws-nrw/svws-core";
-import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp, RouteApp } from "~/router/RouteApp";
-import { RouteManager } from "../RouteManager";
+import { BenutzerKompetenz, ReligionEintrag, Schulform } from "@svws-nrw/svws-core";
+import { t } from "@vitest/runner/dist/tasks-e1fc71d1";
+import { shallowRef } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { AuswahlChildData } from "~/components/AuswahlChildData";
 import { ReligionenAppProps } from "~/components/kataloge/religionen/SReligionenAppProps";
 import { ReligionenAuswahlProps } from "~/components/kataloge/religionen/SReligionenAuswahlPops";
+import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
+import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
+import { RouteManager } from "../RouteManager";
+import { routeKataloge } from "./RouteKataloge";
 
+interface RouteStateKatalogeReligionen {
+	auswahl: ReligionEintrag | undefined;
+	mapKatalogeintraege: Map<number, ReligionEintrag>;
+	view: RouteNode<any, any>;
+}
 export class RouteDataKatalogReligionen {
-	auswahl: ShallowRef<ReligionEintrag | undefined> = shallowRef(undefined);
-	listReligionen: List<ReligionEintrag> = new Vector();
-	mapReligionen: Map<number, ReligionEintrag> = new Map();
+
+	private static _defaultState: RouteStateKatalogeReligionen = {
+		auswahl: undefined,
+		mapKatalogeintraege: new Map(),
+		view: routeKatalogReligionDaten,
+	}
+	private _state = shallowRef(RouteDataKatalogReligionen._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateKatalogeReligionen>) {
+		this._state.value = Object.assign({ ... RouteDataKatalogReligionen._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateKatalogeReligionen>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	public async setView(view: RouteNode<any,any>) {
+		if (routeKatalogReligion.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
+
+	get auswahl(): ReligionEintrag | undefined {
+		return this._state.value.auswahl;
+	}
+
+	get mapKatalogeintraege(): Map<number, ReligionEintrag> {
+		return this._state.value.mapKatalogeintraege;
+	}
 
 	public async ladeListe() {
-		this.listReligionen = await api.server.getReligionen(api.schema);
-		const mapKurse = new Map<number, ReligionEintrag>();
-		for (const l of this.listReligionen)
-			mapKurse.set(l.id, l);
-		this.mapReligionen = mapKurse;
+		const listKatalogeintraege = await api.server.getReligionen(api.schema);
+		const mapKatalogeintraege = new Map<number, ReligionEintrag>();
+		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		for (const l of listKatalogeintraege)
+			mapKatalogeintraege.set(l.id, l);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
 	}
 
-	public async onSelect(item?: ReligionEintrag) {
-		if (item === this.auswahl.value)
-			return;
-		if (item === undefined) {
-			this.auswahl.value = undefined;
-		} else {
-			this.auswahl.value = item;
-		}
+	setEintrag = (eintrag: ReligionEintrag) => {
+		this.setPatchedState({
+			auswahl: this.mapKatalogeintraege.get(eintrag.id)
+		})
 	}
 
-	setReligion = async (value: ReligionEintrag | undefined) => {
-		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeKatalogReligion.name, params: { } });
-			return;
-		}
-		const redirect_name: string = (routeKatalogReligion.selectedChild === undefined) ? routeKatalogReligionDaten.name : routeKatalogReligion.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
+	gotoEintrag = async (eintrag: ReligionEintrag) => {
+		await RouteManager.doRoute(routeKatalogReligion.getRoute(eintrag.id));
 	}
 
-	addReligion = async (religion: ReligionEintrag) => {
-		const res = await api.server.createReligion(religion, api.schema);
+	addEintrag = async (eintrag: ReligionEintrag) => {
+		const res = await api.server.createReligion(eintrag, api.schema);
+		const mapKatalogeintraege = this.mapKatalogeintraege;
+		mapKatalogeintraege.set(res.id, res);
+		this.setPatchedState({ mapKatalogeintraege });
 		await RouteManager.doRoute({ name: routeKatalogReligionDaten.name, params: { id: res.id } });
+	}
+
+	patch = async (data : Partial<ReligionEintrag>) => {
+		if (this.auswahl === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		await api.server.patchReligion(data, api.schema, this.auswahl.id)
 	}
 }
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
@@ -52,9 +96,9 @@ const SReligionenApp = () => import("~/components/kataloge/religionen/SReligione
 export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Religion";
+		super.text = "Religionen";
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten
@@ -67,59 +111,77 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if ((to.name === this.name) && (to_params.id === undefined)) {
-			await this.data.ladeListe();
-			if (this.data.mapReligionen.size === 0)
-				// TODO Handhabung bei neuer Schule -> Liste leer
-				return this.getRoute(-1);
-			return this.getRoute(this.data.mapReligionen.values().next().value.id);
-		}
 		await this.data.ladeListe();
 	}
 
-
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
+			await this.data.ladeListe();
 		} else {
 			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.data.mapReligionen.get(id));
+			const eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined && this.data.auswahl !== undefined) {
+				await this.data.ladeListe();
+				return this.getRoute(this.data.auswahl.id);
+			}
+			else if (eintrag)
+				this.data.setEintrag(eintrag);
 		}
+		if (to.name === this.name && this.data.auswahl !== undefined)
+			return this.getRoute(this.data.auswahl.id);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
+	public getRoute(id: number|undefined) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): ReligionenAuswahlProps {
 		return {
-			auswahl: this.data.auswahl.value,
-			listReligionen: this.data.listReligionen,
-			addReligion: this.data.addReligion,
+			auswahl: this.data.auswahl,
+			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			addEintrag: this.data.addEintrag,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
-			setReligion: this.data.setReligion
+			gotoEintrag: this.data.gotoEintrag,
+			returnToKataloge: routeKataloge.returnToKataloge
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): ReligionenAppProps {
 		return {
-			auswahl: this.data.auswahl.value,
+			auswahl: this.data.auswahl,
+			// Props für die Navigation
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
 		};
 	}
 
-	public get childRouteSelector() : WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl.value?.id } });
-			}
-		});
+	private getTab(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getTabs(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of super.children)
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setTab = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await this.data.setView(node);
 	}
 }
 

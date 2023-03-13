@@ -6,10 +6,10 @@
 		</template>
 		<template #header />
 		<template #content>
-			<template v-for="item in routeKataloge.menu" :key="item.name">
+			<template v-for="child_item in children" :key="child_item.name">
 				<div class="secondary-menu--navigation container">
-					<svws-ui-menu-item v-if="item.hatSchulform() && item.hatEineKompetenz()" @click="router.push({ name: item.name })">
-						<template #label> <span>{{ item.text }}</span> </template>
+					<svws-ui-menu-item @click="setChild(child_item)">
+						<template #label> <span>{{ child_item.text }}</span> </template>
 					</svws-ui-menu-item>
 				</div>
 			</template>
@@ -19,8 +19,6 @@
 
 <script setup lang="ts">
 
-	import { router } from "~/router/RouteManager";
-	import { routeKataloge } from "~/router/apps/RouteKataloge";
 	import { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
 
 	const props = defineProps<KatalogeAuswahlProps>();

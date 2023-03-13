@@ -3,5 +3,5 @@ import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core";
 export interface JahrgangDatenProps {
 	patch: (data : Partial<JahrgangsDaten>) => Promise<void>;
 	data: JahrgangsDaten;
-	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
 }

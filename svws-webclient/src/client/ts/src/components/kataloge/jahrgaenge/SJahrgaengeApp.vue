@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogJahrgaenge.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -24,13 +24,9 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 	import { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
 
 	const props = defineProps<JahrgaengeAppProps>();
-
-	const selectedRoute = routeKatalogJahrgaenge.childRouteSelector;
-	const children_hidden = routeKatalogJahrgaenge.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 

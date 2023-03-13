@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -24,13 +24,9 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 	import { ReligionenAppProps } from "./SReligionenAppProps";
 
 	const props = defineProps<ReligionenAppProps>();
-
-	const selectedRoute = routeKatalogReligion.childRouteSelector;
-	const children_hidden = routeKatalogReligion.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 </script>
