@@ -445,6 +445,7 @@ export { KlausurblockungSchienenAlgorithmusGreedy3 } from './core/utils/klausurp
 export { KlausurblockungSchienenAlgorithmusGreedy4 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy4';
 export { KlausurblockungSchienenAlgorithmusGreedy5 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy5';
 export { KlausurblockungSchienenAlgorithmusGreedy6 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy6';
+export { KlausurblockungSchienenAlgorithmusGreedy7 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy7';
 export { KlausurblockungSchienenDynDaten } from './core/utils/klausurplan/KlausurblockungSchienenDynDaten';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';

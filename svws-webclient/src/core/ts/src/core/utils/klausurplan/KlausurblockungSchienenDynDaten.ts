@@ -9,6 +9,7 @@ import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInte
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 
@@ -164,9 +165,9 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereMatrixBevorzugt(pInput : List<GostKursklausur>) : void {
-		for (let gostKursklausur1 of pInput) {
-			for (let gostKursklausur2 of pInput) {
-				if (gostKursklausur1.kursSchiene === gostKursklausur2.kursSchiene) {
+		for (let gostKursklausur1 of pInput) 
+			for (let gostKursklausur2 of pInput) 
+				if (KlausurblockungSchienenDynDaten.hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					let klausurNr1 : number | null = this._mapKlausurZuNummer.get(gostKursklausur1.id);
 					let klausurNr2 : number | null = this._mapKlausurZuNummer.get(gostKursklausur2.id);
 					if (klausurNr1 === null) 
@@ -174,10 +175,15 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 					if (klausurNr2 === null) 
 						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id)
 					this._bevorzugt[klausurNr1.valueOf()][klausurNr2.valueOf()]++;
-					this._bevorzugt[klausurNr2.valueOf()][klausurNr1.valueOf()]++;
 				}
-			}
-		}
+	}
+
+	private static hatGemeinsameSchiene(kursSchiene1 : Array<number>, kursSchiene2 : Array<number>) : boolean {
+		for (let schiene1 of kursSchiene1) 
+			for (let schiene2 of kursSchiene2) 
+				if (schiene1 === schiene2) 
+					return true;
+		return false;
 	}
 
 	private initialisiereKnotenGrad() : void {
@@ -255,6 +261,31 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			let save2 : number = temp[i2];
 			temp[i1] = save2;
 			temp[i2] = save1;
+		}
+		return temp;
+	}
+
+	/**
+	 *
+	 * Liefert ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
+	 * 
+	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
+	 */
+	gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage() : Array<number> {
+		let temp : Array<number> | null = this.gibErzeugeKlausurenInZufaelligerReihenfolge();
+		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++){
+			let nr1 : number = temp[i1];
+			let iTausch : number = i1 + 1;
+			for (let i2 : number = iTausch; i2 < this._klausurenAnzahl; i2++){
+				let nr2 : number = temp[i2];
+				if (this._bevorzugt[nr1][nr2] > 0) {
+					let save1 : number = temp[iTausch];
+					let save2 : number = temp[i2];
+					temp[iTausch] = save2;
+					temp[i2] = save1;
+					break;
+				}
+			}
 		}
 		return temp;
 	}
@@ -703,15 +734,16 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		console.log();
 		console.log(JSON.stringify(header));
 		for (let s : number = 0; s < this._schienenAnzahl; s++){
-			console.log(JSON.stringify("    Schiene " + (s + 1) + ": "));
+			let line : string | null = "";
+			line += "    Schiene " + (s + 1) + ": ";
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuSchiene[nr] === s) {
 					let gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null) 
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
-					console.log(JSON.stringify(" " + (nr + 1) + "/" + gostKlausur.kursSchiene));
+					line += " " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene)!;
 				}
-			console.log();
+			console.log(JSON.stringify(line));
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 			if (this._klausurZuSchiene[nr] < 0) 
@@ -780,6 +812,22 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		while (klausurNr >= 0) {
 			this.aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(klausurNr);
 			klausurNr = this.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben();
+		}
+	}
+
+	/**
+	 *
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen,
+	 * füllt dann die Schienen nacheinander auf
+	 * und wählt die Klausuren so, dass bevorzugte Klausuren-Paare sequentiell durchlaufen werden.   
+	 */
+	aktion_EntferneAlles_TermineNacheinander_KlausurenBevorzugterLage() : void {
+		this.aktionKlausurenAusSchienenEntfernen();
+		while (this.gibAnzahlNichtverteilterKlausuren() > 0) {
+			let schienenNr : number = this.gibErzeugeNeueSchiene();
+			for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage()) 
+				if (this.gibIstKlausurUnverteilt(klausurNr)) 
+					this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
 		}
 	}
 

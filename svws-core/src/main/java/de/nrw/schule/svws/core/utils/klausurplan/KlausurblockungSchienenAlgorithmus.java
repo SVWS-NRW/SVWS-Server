@@ -47,15 +47,12 @@ public class KlausurblockungSchienenAlgorithmus {
 				new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), // Klausuren nach Knotengrad & Schienen nacheinander
 				new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), // Simulated Annealing
 				new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), // Recursive Largest First (RLF)
+				new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten), // Termine aufsteigend, Klausuren zufällig
 				// ... Ende der Algorithmen.
 		};
 
-		// Sammeln der Ausgaben
-		
-		//@NotNull LinkedCollection<@NotNull List<@NotNull List<@NotNull Long>>> outputs = new LinkedCollection<>();
 		
 		// Blockungsschleife
-		// System.out.println("----------------------------------------------------");
 		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		
@@ -67,7 +64,6 @@ public class KlausurblockungSchienenAlgorithmus {
 			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
 				long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
-				//outputs.addLast(dynDaten.gibErzeugeOutput());
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.
@@ -76,33 +72,6 @@ public class KlausurblockungSchienenAlgorithmus {
 		// Lade besten globalen Zustand
 		dynDaten.aktionZustand2Laden();
 
-		/*
-		while (outputs.size() >= 2) {
-			List<@NotNull List<@NotNull Long>> e1 = outputs.pollFirst();
-			if (e1 == null) throw new DeveloperNotificationException("Should not happen: e1 ist NULL!");
-			List<@NotNull List<@NotNull Long>> e2 = outputs.pollFirst();
-			if (e2 == null) throw new DeveloperNotificationException("Should not happen: e2 ist NULL!");
-			if (e1.size() < e2.size()) {
-				outputs.addLast(e1);
-				continue;
-			}
-			if (e1.size() > e2.size()) {
-				outputs.addLast(e2);
-				continue;
-			}
-			if (random.nextBoolean()) {
-				outputs.addLast(e1);
-			} else {
-				outputs.addLast(e2);
-			}
-		}
-
-		List<@NotNull List<@NotNull Long>> out = outputs.pollFirst();
-		if (out == null) throw new DeveloperNotificationException("Should not happen: out ist NULL!");
-		return out;
-		
-		*/
-		
 		return dynDaten.gibErzeugeOutput();
 	}
 

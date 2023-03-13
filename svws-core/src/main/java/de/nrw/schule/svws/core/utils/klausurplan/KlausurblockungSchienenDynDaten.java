@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.utils.klausurplan;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -144,22 +145,24 @@ public class KlausurblockungSchienenDynDaten {
 	}
 	
 	private void initialisiereMatrixBevorzugt(@NotNull List<@NotNull GostKursklausur> pInput) {
-		// Gehe alle Klausur-Paare durch ...
-		for (@NotNull GostKursklausur gostKursklausur1 : pInput) {
-			for (@NotNull GostKursklausur gostKursklausur2 : pInput) {
-				// Bestimme, ob das Klausur-Paar am gleichen Termin bevorzugt wird ...
-				if (gostKursklausur1.kursSchiene == gostKursklausur2.kursSchiene) {
+		for (@NotNull GostKursklausur gostKursklausur1 : pInput) 
+			for (@NotNull GostKursklausur gostKursklausur2 : pInput) 
+				if (hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					Integer klausurNr1 = _mapKlausurZuNummer.get(gostKursklausur1.id);
 					Integer klausurNr2 = _mapKlausurZuNummer.get(gostKursklausur2.id);
 					if (klausurNr1 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id);
 					if (klausurNr2 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id);
 					_bevorzugt[klausurNr1][klausurNr2]++;
-					_bevorzugt[klausurNr2][klausurNr1]++;
 				}
-			}
-		}
 	}
-
+	
+	private static boolean hatGemeinsameSchiene(@NotNull int[] kursSchiene1, @NotNull int[] kursSchiene2) {
+		for (int schiene1 : kursSchiene1) 
+			for (int schiene2 : kursSchiene2) 
+				if (schiene1 == schiene2)
+					return true;
+		return false;
+	}
 
 	private void initialisiereKnotenGrad() {
 
@@ -253,6 +256,35 @@ public class KlausurblockungSchienenDynDaten {
 		return temp;
 	}
 
+	/** 
+	 * Liefert ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
+	 * 
+	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
+	 */
+	@NotNull int[] gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage() {
+		int[] temp = gibErzeugeKlausurenInZufaelligerReihenfolge(); 
+		
+		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
+			int nr1 = temp[i1];
+			int iTausch = i1 + 1;
+
+			// Suche Tausch-Parter und tausche dann mit Index iTausch (i1 + 1)
+			for (int i2 = iTausch; i2 < _klausurenAnzahl; i2++) {
+				int nr2 = temp[i2];
+				if (_bevorzugt[nr1][nr2] > 0) {
+					int save1 = temp[iTausch];
+					int save2 = temp[i2];
+					temp[iTausch] = save2;
+					temp[i2] = save1;
+					break;
+				}
+			} 
+			
+		}
+		
+		return temp;
+	}
+	
 	/** 
 	 * Liefert ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 * 
@@ -582,7 +614,7 @@ public class KlausurblockungSchienenDynDaten {
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
 			_klausurZuSchiene2[nr] = _klausurZuSchiene[nr];
 		
-		//debug("BESSER, bevorzugtSumme = "+gibSchienenBevorzugt(_klausurZuSchiene));
+		// debug("BESSER, bevorzugtSumme = "+gibSchienenBevorzugt(_klausurZuSchiene));
 	}
 
 	/** 
@@ -728,15 +760,16 @@ public class KlausurblockungSchienenDynDaten {
 		System.out.println(header);
 
 		for (int s = 0; s < _schienenAnzahl; s++) {
-			System.out.print("    Schiene " + (s + 1) + ": ");
+			String line = "";
+			line += "    Schiene " + (s + 1) + ": ";
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuSchiene[nr] == s) {
 					GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr); 
 					if (gostKlausur == null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get("+nr+") ist NULL!");
-					System.out.print(" " + (nr + 1) + "/" + gostKlausur.kursSchiene);
+					line += " " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene);
 				}
-			System.out.println();
+			System.out.println(line);
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
@@ -816,5 +849,24 @@ public class KlausurblockungSchienenDynDaten {
 			klausurNr = gibKlausurDieFreiIstMitDenMeistenNachbarsfarben();
 		}
 	}
+	
+	/** 
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen,
+	 * füllt dann die Schienen nacheinander auf
+	 * und wählt die Klausuren so, dass bevorzugte Klausuren-Paare sequentiell durchlaufen werden.   
+	 */
+	void aktion_EntferneAlles_TermineNacheinander_KlausurenBevorzugterLage() {
+		aktionKlausurenAusSchienenEntfernen();
+	
+		while (gibAnzahlNichtverteilterKlausuren() > 0) {
+			int schienenNr = gibErzeugeNeueSchiene();
+	
+			for (int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage())
+				if (gibIstKlausurUnverteilt(klausurNr))
+					aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
+		}
+	}
+
+
 
 }
