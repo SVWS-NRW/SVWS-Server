@@ -84,7 +84,7 @@ export class GostKursklausur extends JavaObject {
 	/**
 	 * Die Schiene des Kurses. 
 	 */
-	public kursSchiene : number = -1;
+	public kursSchiene : Array<number> = [];
 
 	/**
 	 * Die ID des Kurslehrers. 
@@ -159,9 +159,9 @@ export class GostKursklausur extends JavaObject {
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
 		result.kursKurzbezeichnung = typeof obj.kursKurzbezeichnung === "undefined" ? null : obj.kursKurzbezeichnung === null ? null : obj.kursKurzbezeichnung;
-		if (typeof obj.kursSchiene === "undefined")
-			 throw new Error('invalid json format, missing attribute kursSchiene');
-		result.kursSchiene = obj.kursSchiene;
+		for (let i : number = 0; i < obj.kursSchiene.length; i++) {
+			result.kursSchiene[i] = obj.kursSchiene[i];
+		}
 		if (typeof obj.idLehrer === "undefined")
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
@@ -192,7 +192,18 @@ export class GostKursklausur extends JavaObject {
 		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
 		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
-		result += '"kursSchiene" : ' + obj.kursSchiene + ',';
+		if (!obj.kursSchiene) {
+			result += '"kursSchiene" : []';
+		} else {
+			result += '"kursSchiene" : [ ';
+			for (let i : number = 0; i < obj.kursSchiene.length; i++) {
+				let elem = obj.kursSchiene[i];
+				result += JSON.stringify(elem);
+				if (i < obj.kursSchiene.length - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result += '"idLehrer" : ' + obj.idLehrer + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
@@ -261,7 +272,19 @@ export class GostKursklausur extends JavaObject {
 			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
 		}
 		if (typeof obj.kursSchiene !== "undefined") {
-			result += '"kursSchiene" : ' + obj.kursSchiene + ',';
+			let a = obj.kursSchiene;
+			if (!a) {
+				result += '"kursSchiene" : []';
+			} else {
+				result += '"kursSchiene" : [ ';
+				for (let i : number = 0; i < a.length; i++) {
+					let elem = a[i];
+					result += JSON.stringify(elem);
+					if (i < a.length - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		if (typeof obj.idLehrer !== "undefined") {
 			result += '"idLehrer" : ' + obj.idLehrer + ',';

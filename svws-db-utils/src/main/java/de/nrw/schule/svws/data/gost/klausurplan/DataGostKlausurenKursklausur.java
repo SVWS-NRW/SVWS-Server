@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
@@ -135,7 +136,10 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.kursKurzbezeichnung = kurs.KurzBez;
 		kk.idLehrer = kurs.Lehrer_ID;
 		try {
-			kk.kursSchiene = Integer.parseInt(kurs.Schienen);
+			kk.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
+//			String ss[] = kurs.Schienen.split(",");
+//			for (int i = 0; i < ss.length; i++)
+//				kk.kursSchiene[i] = Integer.parseInt(ss[i]);			
 		} catch (NumberFormatException nfe) {
 			// TODO ExceptionHandling?
 		}

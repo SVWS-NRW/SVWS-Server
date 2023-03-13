@@ -78,8 +78,8 @@ public class GostKursklausur {
 	public String kursKurzbezeichnung = "";
 	
 	/** Die Schiene des Kurses. */
-	@Schema(required = true, description = "die Schiene des Kurses", example="8")
-	public int kursSchiene = -1;
+	@Schema(required = true, description = "die Schienen des Kurses", example="{5, 4, 1}")
+	public @NotNull int[] kursSchiene = {};
 	
 	/** Die ID des Kurslehrers. */
 	@Schema(required = true, description = "die ID des Kurslehrers", example="175")
