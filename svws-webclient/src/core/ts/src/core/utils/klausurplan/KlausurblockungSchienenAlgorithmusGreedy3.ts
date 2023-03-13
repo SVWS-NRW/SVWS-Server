@@ -49,15 +49,17 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	}
 
 	private berechneRekursiv() : void {
-		if (this._dynDaten.gibAnzahlSchienen() >= this._minSchienen) 
+		if (this._dynDaten.gibAnzahlSchienen() > this._minSchienen) 
 			return;
 		if ((this._saved) && (System.currentTimeMillis() > this._zeitEnde)) 
 			return;
 		let klausurNr : number = this._dynDaten.gibAnzahlSchienen() === 0 ? this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : this._dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben();
 		if (klausurNr < 0) {
-			this._minSchienen = this._dynDaten.gibAnzahlSchienen();
-			this._dynDaten.aktionZustand1Speichern();
-			this._saved = true;
+			if (!this._saved || this._dynDaten.gibIstBesserAlsZustand1()) {
+				this._minSchienen = this._dynDaten.gibAnzahlSchienen();
+				this._dynDaten.aktionZustand1Speichern();
+				this._saved = true;
+			}
 			return;
 		}
 		for (let schiene : number = 0; schiene < this._minSchienen; schiene++){

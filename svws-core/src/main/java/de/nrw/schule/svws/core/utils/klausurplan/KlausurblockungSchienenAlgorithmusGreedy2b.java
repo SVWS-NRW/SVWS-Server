@@ -27,11 +27,11 @@ public class KlausurblockungSchienenAlgorithmusGreedy2b extends KlausurblockungS
 
 	@Override
 	public void berechne(long pZeitEnde) {
-		_dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAufHoherGradZuerst();
+		_dynDaten.aktion_EntferneAlles_SchienenNacheinande_KlausurenHoherGradZuerst();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {
-			_dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAufHoherGradZuerst();
+			_dynDaten.aktion_EntferneAlles_SchienenNacheinande_KlausurenHoherGradZuerst();
 
 			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();

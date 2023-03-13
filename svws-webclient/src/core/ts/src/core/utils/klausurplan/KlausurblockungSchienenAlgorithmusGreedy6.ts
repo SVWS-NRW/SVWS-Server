@@ -5,13 +5,15 @@ import { KlausurblockungSchienenDynDaten, cast_de_nrw_schule_svws_core_utils_kla
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSchienenAlgorithmusAbstract {
 
 
 	/**
-	 *Konstruktor.
+	 *
+	 * Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
@@ -56,7 +58,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				while (nr2 >= 0) {
 					setS.addLast(nr2);
 					if (this._dynDaten.aktionSetzeKlausurInSchiene(nr2, s) === false) 
-						console.log(JSON.stringify("FEHLER"));
+						throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!")
 					nr2 = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				}
 			}

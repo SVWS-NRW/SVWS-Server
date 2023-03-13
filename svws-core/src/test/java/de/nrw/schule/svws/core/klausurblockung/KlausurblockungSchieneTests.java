@@ -109,42 +109,6 @@ public class KlausurblockungSchieneTests {
 	}
 
 	
-	private static void klausurblockung(int halbjahr, String stufe, 
-			LinkedList<EsserFormatKlausur> klausuren,
-			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
-			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
-
-		if (stufe.equals("EF"))
-			return;
-
-		// System.out.println();
-		// System.out.println(halbjahr + "," + klausnr + "," + stufe + " --> " + klausuren.size() + " Klausuren, auf " +
-		// termine + " Termine");
-
-		// Wähle die richtige Map.
-		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
-		if (stufe.equals("Q2") && (halbjahr == 2))
-			mapSchriftlich = mapKursSuSschriftlich2;
-					
-		// Input-Erzeugen
-		@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
-		
-		// Für alle Klausuren ... 
-		for (EsserFormatKlausur klausur : klausuren) {
-			@NotNull GostKursklausur gostKlausur = new GostKursklausur();
-			gostKlausur.id = klausur.id;
-			
-			// Für alle schriftlichen Schüler ...
-			for (EsserFormatSchueler schueler : mapSchriftlich.get(klausur.kurs)) {
-				gostKlausur.schuelerIds.add(Long.parseLong(""+schueler.id));
-			}
-			
-			input.add(gostKlausur);
-		}
-
-		starteKlausurblockungSchiene(input);
-	}
-
 	/** Testet das Einlesen und Konvertieren der Daten 002. 
 	 * Diese befinden sich hier {@link #PFAD_DATEN_002}. 
 	 */
@@ -194,8 +158,7 @@ public class KlausurblockungSchieneTests {
 		
 		// Einlesen der Kurs-Datensätze
 		TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
-		for (PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_003 + "Westphal_EF.txt",
-				PluemperFormatStufeSchuelerKurs.class)) {
+		for (PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_003 + "Westphal_EF.txt", PluemperFormatStufeSchuelerKurs.class)) {
 
 			if (map.get(daten.stufe) == null)
 				map.put(daten.stufe, new HashMap<>());
@@ -210,7 +173,6 @@ public class KlausurblockungSchieneTests {
 		for (String stufe : map.keySet()) {
 			// Input-Erzeugen
 			@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
-			
 			
 			HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
 			for (long schuelerID : map.get(stufe).keySet()) {
@@ -232,6 +194,43 @@ public class KlausurblockungSchieneTests {
 	}
 
 	
+	private static void klausurblockung(int halbjahr, String stufe, 
+			LinkedList<EsserFormatKlausur> klausuren,
+			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
+			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
+	
+		if (stufe.equals("EF"))
+			return;
+	
+		// System.out.println();
+		// System.out.println(halbjahr + "," + klausnr + "," + stufe + " --> " + klausuren.size() + " Klausuren, auf " +
+		// termine + " Termine");
+	
+		// Wähle die richtige Map.
+		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
+		if (stufe.equals("Q2") && (halbjahr == 2))
+			mapSchriftlich = mapKursSuSschriftlich2;
+					
+		// Input-Erzeugen
+		@NotNull List<@NotNull GostKursklausur> input = new Vector<>();
+		
+		// Für alle Klausuren ... 
+		for (EsserFormatKlausur klausur : klausuren) {
+			@NotNull GostKursklausur gostKlausur = new GostKursklausur();
+			gostKlausur.id = klausur.id;
+			
+			// Für alle schriftlichen Schüler ...
+			for (EsserFormatSchueler schueler : mapSchriftlich.get(klausur.kurs)) {
+				gostKlausur.schuelerIds.add(Long.parseLong(""+schueler.id));
+			}
+			
+			input.add(gostKlausur);
+		}
+	
+		starteKlausurblockungSchiene(input);
+	}
+
+
 	private static void starteKlausurblockungSchiene(@NotNull List<@NotNull GostKursklausur> pInput) {
 		// Algorithmus-Objekt erzeugen.
 		KlausurblockungSchienenAlgorithmus alg = new KlausurblockungSchienenAlgorithmus();

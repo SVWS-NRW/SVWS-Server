@@ -4,12 +4,16 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Die Strategie implementiert den DSatur-Algorithmus. Der Algorithmus "degree of saturation (DSatur)" selektiert die
- * Klausuren nacheinander und priorisiert die Klausuren dynamisch. Von allen Klausuren die noch nicht einer Schiene
- * zugeordnet sind, wird diejenige gewählt, die die meisten bereits zugeordneten Nachbarn hat.
+/** 
+ * Die Strategie implementiert den DSatur-Algorithmus. Der Algorithmus "degree of saturation (DSatur)" 
+ * selektiert die Klausuren nacheinander und priorisiert die Klausuren dynamisch. <br>
+ *  
+ * Von allen Klausuren die noch nicht einer Schiene zugeordnet sind, 
+ * wird diejenige gewählt, die die meisten bereits zugeordneten Nachbarn hat.
  * 
  * @see    <a href= "https://en.wikipedia.org/wiki/DSatur">Wikipedia - DSatur</a>
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch 
+ */
 public class KlausurblockungSchienenAlgorithmusGreedy4 extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Konstruktor.
@@ -27,11 +31,11 @@ public class KlausurblockungSchienenAlgorithmusGreedy4 extends KlausurblockungSc
 
 	@Override
 	public void berechne(long pZeitEnde) {
-		_dynDaten.aktionEntferneAllesSetzeKlausurenMitDenMeistenNachbarsfarbenAufSchienenZufaellig();
+		_dynDaten.aktion_EntferneAlles_KlausurenMitDenMeistenNachbarsfarben_SchienenZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {
-			_dynDaten.aktionEntferneAllesSetzeKlausurenMitDenMeistenNachbarsfarbenAufSchienenZufaellig();
+			_dynDaten.aktion_EntferneAlles_KlausurenMitDenMeistenNachbarsfarben_SchienenZufaellig();
 
 			if (_dynDaten.gibIstBesserAlsZustand1() == true)
 				_dynDaten.aktionZustand1Speichern();

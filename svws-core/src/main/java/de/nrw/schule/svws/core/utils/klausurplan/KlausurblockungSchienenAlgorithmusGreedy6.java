@@ -3,17 +3,22 @@ package de.nrw.schule.svws.core.utils.klausurplan;
 import java.util.Random;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
-/** Die Strategie implementiert den Algorithmus "Recursive Largest First (RLF)".
+/** 
+ * Die Strategie implementiert den Algorithmus "Recursive Largest First (RLF)".
  * 
- * @author Benjamin A. Bartsch */
+ * @author Benjamin A. Bartsch 
+ */
 public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSchienenAlgorithmusAbstract {
 
-	/** Konstruktor.
+	/** 
+	 * Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. */
+	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 */
 	public KlausurblockungSchienenAlgorithmusGreedy6(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
 	}
@@ -60,7 +65,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 			while (nr2 >= 0) {
 				setS.addLast(nr2);
 				if (_dynDaten.aktionSetzeKlausurInSchiene(nr2, s) == false)
-					System.out.println("FEHLER");
+					throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!");
 				nr2 = _dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 			}
 		}

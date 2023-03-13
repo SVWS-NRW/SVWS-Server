@@ -2,12 +2,12 @@ package de.nrw.schule.svws.core.utils.klausurplan;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
-/** Ein Algorithmus der diese Klasse erweitert dient dazu Klausuren auf Schienen zu verteilen. Ziel ist es die minimale
- * Anzahl an Schienen zu verwenden. In einer Schiene dürfen nicht zwei Klausuren landen, die dem selben Schüler
- * zugeordnet sind.
+/** 
+ * Ein Algorithmus der diese Klasse erweitert dient dazu Klausuren auf Schienen zu verteilen. 
+ * Ziel ist es die minimale Anzahl an Schienen zu verwenden. In einer Schiene dürfen nicht zwei 
+ * Klausuren landen, die dem selben Schüler zugeordnet sind.
  * 
  * @author Benjamin A. Bartsch */
 public abstract class KlausurblockungSchienenAlgorithmusAbstract {

@@ -6,8 +6,6 @@ import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostK
 import { KlausurblockungSchienenAlgorithmusGreedy5, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy5 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy5';
 import { KlausurblockungSchienenAlgorithmusGreedy4, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy4 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy4';
 import { KlausurblockungSchienenAlgorithmusGreedy1, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy1 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy1';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { KlausurblockungSchienenAlgorithmusGreedy6, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy6 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy6';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 import { KlausurblockungSchienenAlgorithmusGreedy1b, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy1b';
@@ -38,41 +36,18 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		let random : Random = new Random(seed);
 		let dynDaten : KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(random, pInput);
 		let algorithmen : Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten)];
-		let outputs : LinkedCollection<List<List<number>>> = new LinkedCollection();
+		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
+		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;
 		do {
 			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++){
 				let zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
-				outputs.addLast(dynDaten.gibErzeugeOutput());
 			}
 			zeitProAlgorithmus *= 2;
 		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt);
-		while (outputs.size() >= 2) {
-			let e1 : List<List<number>> | null = outputs.pollFirst();
-			if (e1 === null) 
-				throw new DeveloperNotificationException("Should not happen: e1 ist NULL!")
-			let e2 : List<List<number>> | null = outputs.pollFirst();
-			if (e2 === null) 
-				throw new DeveloperNotificationException("Should not happen: e2 ist NULL!")
-			if (e1.size() < e2.size()) {
-				outputs.addLast(e1);
-				continue;
-			}
-			if (e1.size() > e2.size()) {
-				outputs.addLast(e2);
-				continue;
-			}
-			if (random.nextBoolean()) {
-				outputs.addLast(e1);
-			} else {
-				outputs.addLast(e2);
-			}
-		}
-		let out : List<List<number>> | null = outputs.pollFirst();
-		if (out === null) 
-			throw new DeveloperNotificationException("Should not happen: out ist NULL!")
-		return out;
+		dynDaten.aktionZustand2Laden();
+		return dynDaten.gibErzeugeOutput();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -3,9 +3,7 @@ package de.nrw.schule.svws.core.utils.klausurplan;
 import java.util.List;
 import java.util.Random;
 
-import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
-import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -54,10 +52,13 @@ public class KlausurblockungSchienenAlgorithmus {
 
 		// Sammeln der Ausgaben
 		
-		@NotNull LinkedCollection<@NotNull List<@NotNull List<@NotNull Long>>> outputs = new LinkedCollection<>();
+		//@NotNull LinkedCollection<@NotNull List<@NotNull List<@NotNull Long>>> outputs = new LinkedCollection<>();
 		
 		// Blockungsschleife
 		// System.out.println("----------------------------------------------------");
+		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
+		dynDaten.aktionZustand2Speichern();
+		
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
 		do {
 			// System.out.println("zeitProAlgorithmus --> " + zeitProAlgorithmus);
@@ -66,20 +67,21 @@ public class KlausurblockungSchienenAlgorithmus {
 			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
 				long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
-				outputs.addLast(dynDaten.gibErzeugeOutput());
+				//outputs.addLast(dynDaten.gibErzeugeOutput());
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.
 		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt); // noch Zeit?
-
 		
+		// Lade besten globalen Zustand
+		dynDaten.aktionZustand2Laden();
+
+		/*
 		while (outputs.size() >= 2) {
 			List<@NotNull List<@NotNull Long>> e1 = outputs.pollFirst();
-			if (e1 == null)
-				throw new DeveloperNotificationException("Should not happen: e1 ist NULL!");
+			if (e1 == null) throw new DeveloperNotificationException("Should not happen: e1 ist NULL!");
 			List<@NotNull List<@NotNull Long>> e2 = outputs.pollFirst();
-			if (e2 == null)
-				throw new DeveloperNotificationException("Should not happen: e2 ist NULL!");
+			if (e2 == null) throw new DeveloperNotificationException("Should not happen: e2 ist NULL!");
 			if (e1.size() < e2.size()) {
 				outputs.addLast(e1);
 				continue;
@@ -96,10 +98,12 @@ public class KlausurblockungSchienenAlgorithmus {
 		}
 
 		List<@NotNull List<@NotNull Long>> out = outputs.pollFirst();
-		if (out == null)
-			throw new DeveloperNotificationException("Should not happen: out ist NULL!");
-		
+		if (out == null) throw new DeveloperNotificationException("Should not happen: out ist NULL!");
 		return out;
+		
+		*/
+		
+		return dynDaten.gibErzeugeOutput();
 	}
 
 }

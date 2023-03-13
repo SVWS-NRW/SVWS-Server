@@ -4,8 +4,9 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy1}, nur werden bei dieser
- * Strategie die Schienen nacheinander aufgefüllt.
+/** 
+ * Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy1}, 
+ * nur werden bei dieser Strategie die Schienen nacheinander aufgefüllt.
  * 
  * @author Benjamin A. Bartsch */
 public class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungSchienenAlgorithmusAbstract {
@@ -26,11 +27,11 @@ public class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungS
 
 	@Override
 	public void berechne(long pZeitEnde) {
-		_dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAuf();
+		_dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {
-			_dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAuf();
+			_dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 
 			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();

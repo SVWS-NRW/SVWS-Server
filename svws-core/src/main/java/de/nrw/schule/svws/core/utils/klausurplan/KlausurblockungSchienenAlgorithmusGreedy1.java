@@ -4,8 +4,9 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Die Strategie 'Greedy1' verteilt die Klausuren in zufälliger Reihenfolge auf bereits existierende Schienen in
- * zufälliger Reihenfolge. Ist dies nicht möglich, wird eine neue Schiene erzeugt.
+/** 
+ * Die Strategie 'Greedy1' verteilt die Klausuren in zufälliger Reihenfolge auf bereits 
+ * existierende Schienen in zufälliger Reihenfolge. Ist dies nicht möglich, wird eine neue Schiene erzeugt.
  * 
  * @author Benjamin A. Bartsch */
 public class KlausurblockungSchienenAlgorithmusGreedy1 extends KlausurblockungSchienenAlgorithmusAbstract {
@@ -26,11 +27,11 @@ public class KlausurblockungSchienenAlgorithmusGreedy1 extends KlausurblockungSc
 
 	@Override
 	public void berechne(long pZeitEnde) {
-		_dynDaten.aktionEntferneAllesSetzeKlausurenZufaelligAufSchienenZufaellig();
+		_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {
-			_dynDaten.aktionEntferneAllesSetzeKlausurenZufaelligAufSchienenZufaellig();
+			_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
 
 			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();

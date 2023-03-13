@@ -27,7 +27,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy5 extends KlausurblockungSc
 	public void berechne(long pZeitEnde) {
 
 		// _dynDaten.aktionZustand2Laden();
-		_dynDaten.aktionEntferneAllesSetzeKlausurenZufaelligAufSchienenZufaellig();
+		_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {

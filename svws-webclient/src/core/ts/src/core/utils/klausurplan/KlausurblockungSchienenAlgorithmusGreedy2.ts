@@ -23,10 +23,10 @@ export class KlausurblockungSchienenAlgorithmusGreedy2 extends KlausurblockungSc
 	}
 
 	public berechne(pZeitEnde : number) : void {
-		this._dynDaten.aktionEntferneAllesSetzeKlausurenHoherGradAufSchienenZufaellig();
+		this._dynDaten.aktion_EntferneAlles_KlausurenHoherGradZuerst_SchienenZufaellig();
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
-			this._dynDaten.aktionEntferneAllesSetzeKlausurenHoherGradAufSchienenZufaellig();
+			this._dynDaten.aktion_EntferneAlles_KlausurenHoherGradZuerst_SchienenZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1()) 
 				this._dynDaten.aktionZustand1Speichern(); else 
 				this._dynDaten.aktionZustand1Laden();

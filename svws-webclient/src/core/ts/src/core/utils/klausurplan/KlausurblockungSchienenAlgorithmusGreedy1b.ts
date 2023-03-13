@@ -23,10 +23,10 @@ export class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungS
 	}
 
 	public berechne(pZeitEnde : number) : void {
-		this._dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAuf();
+		this._dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
-			this._dynDaten.aktionEntferneAllesFuelleSchienenNacheinandeAuf();
+			this._dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1()) 
 				this._dynDaten.aktionZustand1Speichern(); else 
 				this._dynDaten.aktionZustand1Laden();

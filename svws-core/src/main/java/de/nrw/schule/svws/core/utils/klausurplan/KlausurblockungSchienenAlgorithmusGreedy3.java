@@ -4,9 +4,10 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Die Klausuren werden rekursiv mit Backtracking auf die Schienen verteilt. Pro Rekursionsschritt wird die freie
- * Klausur gewählt, die die meisten Nachbarsfarben hat. Anschließend wird die Klausur in aufsteigender Reihenfolge auf
- * die Schienen verteilt.
+/** 
+ * Die Klausuren werden rekursiv mit Backtracking auf die Schienen verteilt. 
+ * Pro Rekursionsschritt wird die freie Klausur gewählt, die die meisten Nachbarsfarben hat.
+ * Anschließend wird die Klausur in aufsteigender Reihenfolge auf die Schienen verteilt.
  * 
  * @author Benjamin A. Bartsch
  */
@@ -52,7 +53,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	private void berechneRekursiv() {
 
 		// Kann das Ergebnis überhaupt noch besser werden?
-		if (_dynDaten.gibAnzahlSchienen() >= _minSchienen)
+		if (_dynDaten.gibAnzahlSchienen() > _minSchienen)
 			return;
 
 		// Zeit abgelaufen (aber mindestens eine Speicherung)?
@@ -66,9 +67,11 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 		
 		// Alle Klausuren gesetzt?
 		if (klausurNr < 0) {
-			_minSchienen = _dynDaten.gibAnzahlSchienen();
-			_dynDaten.aktionZustand1Speichern();
-			_saved = true;
+			if (!_saved || _dynDaten.gibIstBesserAlsZustand1()) {
+				_minSchienen = _dynDaten.gibAnzahlSchienen();
+				_dynDaten.aktionZustand1Speichern();
+				_saved = true;
+			}
 			return;
 		}
 
