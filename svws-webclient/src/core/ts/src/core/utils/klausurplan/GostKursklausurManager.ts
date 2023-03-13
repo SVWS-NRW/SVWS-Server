@@ -107,10 +107,8 @@ export class GostKursklausurManager extends JavaObject {
 			listKursklausurenMapQuartalKursKlausuren.add(kk);
 			if (kk.idTermin !== null) {
 				let listSchuelerIds : Vector<number> | null = this._mapTerminSchuelerids.get(kk.idTermin);
-				if (listSchuelerIds === null) {
-					listSchuelerIds = new Vector();
-					this._mapTerminSchuelerids.put(kk.idTermin, listSchuelerIds);
-				}
+				if (listSchuelerIds === null) 
+					this._mapTerminSchuelerids.put(kk.idTermin, listSchuelerIds = new Vector());
 				listSchuelerIds.addAll(kk.schuelerIds);
 			}
 		}
@@ -163,10 +161,10 @@ export class GostKursklausurManager extends JavaObject {
 					listOldQuartalTerminKursklausuren.remove(klausur);
 			} else {
 			}
+			this.addKlausurToInternalMaps(klausur);
 			this.updateSchuelerIdsZuTermin(oldTerminId);
 			if (klausur.idTermin !== null) 
 				this.updateSchuelerIdsZuTermin(klausur.idTermin);
-			this.addKlausurToInternalMaps(klausur);
 		}
 	}
 
