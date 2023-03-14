@@ -397,28 +397,80 @@ export class GostKursklausurManager extends JavaObject {
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
 	 * 
+	 * @param termin  der zu prüfende Klausurtermin
+	 * @param klausur die zu prüfende Kursklausur
+	 * 
+	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
+	 */
+	public gibKonfliktTerminInternKursklausur(termin : GostKlausurtermin, klausur : GostKursklausur) : List<number> {
+		let konflikte : List<number> = new Vector();
+		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(termin.id);
+		if (listKlausurenZuTermin === null) 
+			return konflikte;
+		for (let klausurInTermin of listKlausurenZuTermin) {
+			konflikte.addAll(this.gibKonfliktKursklausurKursklausur(klausur, klausurInTermin));
+		}
+		return konflikte;
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
+	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
+	 * gibt es keinen Konflikt.
+	 * 
+	 * @param termin  der zu prüfende Klausurtermin
+	 * @param klausur die zu prüfende Kursklausur
+	 * 
+	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
+	 */
+	public gibKonfliktTerminKursklausur(termin : GostKlausurtermin, klausur : GostKursklausur) : List<number>;
+
+	/**
+	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
+	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
+	 * gibt es keinen Konflikt.
+	 * 
 	 * @param idTermin      die ID des zu prüfenden Klausurtermins
 	 * @param idKursklausur die ID der zu prüfenden Kursklausur
 	 * 
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
-	public gibKonfliktTerminKursklausur(idTermin : number, idKursklausur : number) : List<number> {
-		let schuelerIds : List<number> | null = this.gibSchuelerIDsZuTermin(idTermin);
-		if (schuelerIds === null) {
-			return new Vector();
-		}
-		let klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
-		if (klausur === null) {
-			return new Vector();
-		}
-		let konflikte : List<number> = new Vector(schuelerIds);
-		konflikte.retainAll(klausur.schuelerIds);
-		return konflikte;
+	public gibKonfliktTerminKursklausur(idTermin : number, idKursklausur : number) : List<number>;
+
+	/**
+	 * Implementation for method overloads of 'gibKonfliktTerminKursklausur'
+	 */
+	public gibKonfliktTerminKursklausur(__param0 : GostKlausurtermin | number, __param1 : GostKursklausur | number) : List<number> {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
+			let termin : GostKlausurtermin = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin(__param0);
+			let klausur : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+			if (klausur.idTermin === termin.id) {
+				return new Vector();
+			}
+			let schuelerIds : List<number> | null = this.gibSchuelerIDsZuTermin(termin.id);
+			if (schuelerIds === null) {
+				return new Vector();
+			}
+			let konflikte : List<number> = new Vector(schuelerIds);
+			konflikte.retainAll(klausur.schuelerIds);
+			return konflikte;
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			let idTermin : number = __param0 as number;
+			let idKursklausur : number = __param1 as number;
+			let klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
+			let termin : GostKlausurtermin | null = this._mapIdKlausurtermin.get(idTermin);
+			if (klausur === null || termin === null) {
+				return new Vector();
+			}
+			return this.gibKonfliktTerminKursklausur(termin, klausur);
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
 	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
-	 * wird die Anzahl der Konflikte zurückgegeben..
+	 * wird die Anzahl der Konflikte zurückgegeben.
 	 * 
 	 * @param idTermin die ID des zu prüfenden Klausurtermins
 	 * 
@@ -460,22 +512,25 @@ export class GostKursklausurManager extends JavaObject {
 	 * 
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
-	public gibKonfliktKursklausurKursklausur(klausur1 : GostKursklausur | null, klausur2 : GostKursklausur | null) : List<number>;
+	public gibKonfliktKursklausurKursklausur(klausur1 : GostKursklausur, klausur2 : GostKursklausur) : List<number>;
 
 	/**
 	 * Implementation for method overloads of 'gibKonfliktKursklausurKursklausur'
 	 */
-	public gibKonfliktKursklausurKursklausur(__param0 : GostKursklausur | null | number, __param1 : GostKursklausur | null | number) : List<number> {
+	public gibKonfliktKursklausurKursklausur(__param0 : GostKursklausur | number, __param1 : GostKursklausur | number) : List<number> {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let idKursklausur1 : number = __param0 as number;
 			let idKursklausur2 : number = __param1 as number;
 			let klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
 			let klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
-			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))) || (__param1 === null))) {
-			let klausur1 : GostKursklausur | null = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
-			let klausur2 : GostKursklausur | null = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur1 === null || klausur2 === null) {
+				return new Vector();
+			}
+			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
+			let klausur1 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
+			let klausur2 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+			if (klausur1 as unknown === klausur2 as unknown) {
 				return new Vector();
 			}
 			let konflikte : List<number> | null = new Vector(klausur1.schuelerIds);

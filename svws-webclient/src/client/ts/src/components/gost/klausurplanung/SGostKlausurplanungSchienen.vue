@@ -16,18 +16,19 @@
 			<s-gost-klausurplanung-schienen-termin :quartal="quartal"
 				:kursklausurmanager="kursklausurmanager"
 				:termin="null"
+				:alle-termine="termine"
 				:faecher-manager="faecherManager"
 				:map-lehrer="mapLehrer"
 				:set-termin-to-kursklausur="setTerminToKursklausur"
 				:drag-status="dragStatus"
-				:map-schueler="mapSchueler"
-				:patch-klausurtermin="patchKlausurtermin" />
+				:map-schueler="mapSchueler" />
 			<div class="flex flex-col">
 				<div class="flex flex-row flex-wrap gap-4 items-start">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
 						:class="dropOverCssClasses(termin)"
 						:kursklausurmanager="kursklausurmanager"
 						:termin="termin"
+						:alle-termine="termine"
 						:faecher-manager="faecherManager"
 						:map-lehrer="mapLehrer"
 						:set-termin-to-kursklausur="setTerminToKursklausur"

@@ -19,7 +19,7 @@
 									Bemerkung: {{ value.rowData.bemerkungVorgabe }}
 								</svws-ui-tooltip>
 							</template>
-						</svws-ui-popover>
+						</svws-ui-popover>&nbsp;
 						<svws-ui-popover v-if="value.rowData.auswahlzeit > 0">
 							<template #trigger>
 								<i-ri-time-line class="cursor-help" />
@@ -29,7 +29,7 @@
 									Auswahlzeit: {{ value.rowData.auswahlzeit }} Minuten
 								</svws-ui-tooltip>
 							</template>
-						</svws-ui-popover>
+						</svws-ui-popover>&nbsp;
 						<svws-ui-popover v-if="value.rowData.istMdlPruefung">
 							<template #trigger>
 								<i-ri-kakao-talk-line class="cursor-help" />
@@ -39,7 +39,7 @@
 									Dies ist eine mündliche Prüfung.
 								</svws-ui-tooltip>
 							</template>
-						</svws-ui-popover>
+						</svws-ui-popover>&nbsp;
 						<svws-ui-popover v-if="value.rowData.istAudioNotwendig">
 							<template #trigger>
 								<i-ri-music-line class="cursor-help" />
@@ -49,7 +49,7 @@
 									inkl. Audioteil
 								</svws-ui-tooltip>
 							</template>
-						</svws-ui-popover>
+						</svws-ui-popover>&nbsp;
 						<svws-ui-popover v-if="value.rowData.istVideoNotwendig">
 							<template #trigger>
 								<i-ri-video-add-line class="cursor-help" />
