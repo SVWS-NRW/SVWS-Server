@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
@@ -8,7 +8,6 @@ import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
-import { findSourceMap } from "module";
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")

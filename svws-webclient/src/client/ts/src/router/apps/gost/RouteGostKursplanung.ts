@@ -97,6 +97,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		const blockungsEintrag = this.data.mapBlockungen.get(idBlockung);
 		if (blockungsEintrag === undefined) {
 			// ... eine Blockung mit der ID ist nicht vorhanden. Die Route wird abgelehnt und es findet eine Umleitung statt
+			// TODO sollte z.B. nach Anlegen einer Ableitung die neue ID trotzdem erreichen können
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		}
 		if (!this.data.hatBlockung || (this.data.auswahlBlockung.id !== blockungsEintrag.id)) {

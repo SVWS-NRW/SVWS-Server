@@ -1,4 +1,5 @@
 import { Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface SchuleDatenaustauschAuswahlProps {
 	abschnitte: Map<number, Schuljahresabschnitt>;
@@ -6,4 +7,8 @@ export interface SchuleDatenaustauschAuswahlProps {
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	returnToSchule: () => Promise<void>;
+	setChild: (value: AuswahlChildData) => Promise<void>;
+	child: AuswahlChildData;
+	children: AuswahlChildData[];
+	childrenHidden: boolean[];
 }

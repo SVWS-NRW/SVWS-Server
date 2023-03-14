@@ -8,9 +8,9 @@
 		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
-								:columns="cols" clickable selectable count>
+				:columns="cols" clickable selectable count>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"></svws-ui-text-input>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
 				</template>
 				<template #filter>
 					<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable class="col-span-full" />

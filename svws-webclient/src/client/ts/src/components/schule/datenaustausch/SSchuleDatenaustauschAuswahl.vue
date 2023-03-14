@@ -11,9 +11,13 @@
 		</template>
 		<template #header />
 		<template #content>
-			<div class="container">
-				<svws-ui-data-table :items="[{Daten:'Laufbahnplanung'}, {Daten: 'Kurs 42'}]" :footer="false" />
-			</div>
+			<template v-for="child_item in children" :key="child_item.name">
+				<div class="secondary-menu--navigation container">
+					<svws-ui-menu-item @click="setChild(child_item)">
+						<template #label> <span>{{ child_item.text }}</span> </template>
+					</svws-ui-menu-item>
+				</div>
+			</template>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
