@@ -9,7 +9,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
 import { routeApp, RouteApp } from "../RouteApp";
 import { RouteManager } from "../RouteManager";
-import { routeKataloge } from "./RouteKataloge";
 
 interface RouteStateKurse {
 	auswahl: KursListeEintrag | undefined;
@@ -175,7 +174,6 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeKataloge.returnToKataloge
 		};
 	}
 

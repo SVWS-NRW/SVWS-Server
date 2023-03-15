@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<a @click="returnToKataloge">Kataloge</a>
 				<span>Jahrgänge</span>
 			</nav>
 		</template>
@@ -21,7 +21,6 @@
 <script setup lang="ts">
 
 	import { DataTableColumn } from "@ui";
-	import { router } from "~/router/RouteManager";
 	import { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();

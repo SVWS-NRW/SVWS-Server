@@ -1,11 +1,12 @@
-import { FaecherListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import { FaecherListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface FaecherAuswahlProps {
 	auswahl: FaecherListeEintrag | undefined;
-	listFaecher: List<FaecherListeEintrag>;
+	mapKatalogeintraege: Map<number, FaecherListeEintrag>;
+	gotoEintrag: (eintrag: FaecherListeEintrag) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	setFach: (fach: FaecherListeEintrag) => Promise<void>;
+	returnToKataloge: () => Promise<void>;
 }

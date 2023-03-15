@@ -66,7 +66,7 @@
 	async function saveEntries() {
 		if (reli_neu.kuerzel) {
 			modalAdd.value.closeModal();
-			await props.addReligion(reli_neu);
+			await props.addEintrag(reli_neu);
 		} else {
 			alert("Kürzel darf nicht leer sein");
 		}

@@ -10,5 +10,4 @@ export interface KurseAuswahlProps {
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	returnToKataloge: () => Promise<void>;
 }

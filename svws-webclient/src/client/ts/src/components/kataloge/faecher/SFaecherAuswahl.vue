@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<a @click="returnToKataloge">Kataloge</a>
 				<span>Fächer</span>
 			</nav>
 		</template>
@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="setFach" :items="listFaecher" :columns="cols" />
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -21,7 +21,6 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { router } from "~/router/RouteManager";
 	import { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
 
 	const props = defineProps<FaecherAuswahlProps>();

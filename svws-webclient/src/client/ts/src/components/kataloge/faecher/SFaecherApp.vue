@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogFaecher.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -25,13 +25,9 @@
 
 	import { computed, ComputedRef } from "vue";
 	import { RouterView } from "vue-router";
-	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 	import { FaecherAppProps } from "./SFaecherAppProps";
 
 	const props = defineProps<FaecherAppProps>();
-
-	const selectedRoute = routeKatalogFaecher.childRouteSelector;
-	const children_hidden = routeKatalogFaecher.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return props.auswahl !== undefined;
