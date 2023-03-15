@@ -34,7 +34,9 @@
 		modelValue: RouteRecordRaw | AuswahlChildData
 	}>();
 
-	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw | AuswahlChildData): void, }>();
+	const emit = defineEmits<{
+		(e: 'update:modelValue', value: any): any,
+	}>();
 
 	type ComponentData = {
 		scrolled: boolean;

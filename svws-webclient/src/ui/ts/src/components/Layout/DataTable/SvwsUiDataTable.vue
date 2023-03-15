@@ -242,10 +242,10 @@
 	);
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: DataTableItem[]): void;
+		(e: "update:modelValue", items: any[]): void;
 		(e: "update:sortBy", sortBy: string): void;
 		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
-		(e: "update:clicked", items: DataTableItem | null): void;
+		(e: "update:clicked", items: any | null): void;
 	}>();
 
 	const attrs = useAttrs();
