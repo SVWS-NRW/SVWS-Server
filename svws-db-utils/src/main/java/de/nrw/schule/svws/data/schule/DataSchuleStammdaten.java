@@ -24,8 +24,11 @@ import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
@@ -407,10 +410,25 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         conn.persist(foto);
         
         
-		// TODO K_EinschulgungsArt normal, vorzeitig und zurückgestellt
+		// K_EinschulgungsArt normal, vorzeitig und zurückgestellt
+        Vector<DTOEinschulungsart> einschulungsart = new Vector<>();
+        einschulungsart.add(new DTOEinschulungsart(1L, "normal"));
+        einschulungsart.add(new DTOEinschulungsart(2L, "vorzeitig"));
+        einschulungsart.add(new DTOEinschulungsart(3L, "zurückgestellt"));
+        for (int i = 0; i < einschulungsart.size(); i++)
+            einschulungsart.get(i).Sortierung = i+1;
+        conn.persistRange(einschulungsart, 0, 2);
         
-		// TODO K_Entlassgrund mit "Schulpflicht endet", "Normales Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
-		
+		// K_Entlassgrund mit "Schulpflicht endet", "Normaler Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
+        Vector<DTOEntlassarten> entlassart = new Vector<>();
+        entlassart.add(new DTOEntlassarten(1L, "Schulpflicht endet"));
+        entlassart.add(new DTOEntlassarten(2L, "Normaler Abschluss"));
+        entlassart.add(new DTOEntlassarten(3L, "Ohne Angabe"));
+        entlassart.add(new DTOEntlassarten(4L, "Wechsel zu anderer Schule"));
+        for (int i = 0; i < entlassart.size(); i++)
+            entlassart.get(i).Sortierung = i+1;
+        conn.persistRange(entlassart, 0, 3);
+        
         // K_Erzieherart mit den Vorgaben von Schild-NRW befüllen
 		Vector<DTOErzieherart> erzieherarten = new Vector<>(); 
 		erzieherarten.add(new DTOErzieherart(1L, "Vater"));
@@ -424,8 +442,8 @@ public class DataSchuleStammdaten extends DataManager<Long> {
         conn.persistRange(erzieherarten, 0, 5);
         
         // TODO K-Ort aus der Default-Daten-Tabelle befüllen
-        
-        // TODO K_Religion aus dem Core-Type befüllen
+                
+        // K_Religion aus dem Core-Type befüllen
         Vector<DTOKonfession> dtoKonfession = new Vector<>();
         Religion[] konfession = Religion.values();
         for (int i = 0; i < konfession.length; i++) {
