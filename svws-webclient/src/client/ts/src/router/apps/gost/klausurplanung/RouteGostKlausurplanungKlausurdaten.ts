@@ -28,6 +28,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 			erzeugeKlausurvorgabe: routeGostKlausurplanung.data.erzeugeKlausurvorgabe,
 			patchKlausurvorgabe: routeGostKlausurplanung.data.patchKlausurvorgabe,
 			loescheKlausurvorgabe: routeGostKlausurplanung.data.loescheKlausurvorgabe,
+			erzeugeVorgabenAusVorlage: routeGostKlausurplanung.data.erzeugeVorgabenAusVorlage,
 		}
 	}
 

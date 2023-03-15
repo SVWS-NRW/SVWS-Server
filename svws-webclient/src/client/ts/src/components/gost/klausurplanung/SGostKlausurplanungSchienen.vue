@@ -9,7 +9,21 @@
 			</svws-ui-radio-group>
 			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-			<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+			<!--<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>-->
+			<svws-ui-dropdown type="primary" :disabled="quartal <= 0 || termine.size() > 0">
+				<template #dropdownButton>
+					<svws-ui-spinner :spinning="loading" />&nbsp;Automatisch blocken
+				</template>
+				<template #dropdownItems>
+					<SvwsUiDropdownItem
+						@click="blocken">
+						Kursarten mischen
+					</SvwsUiDropdownItem>
+					<SvwsUiDropdownItem @click="blockenKursart">
+						Kursarten trennen
+					</SvwsUiDropdownItem>
+				</template>
+			</svws-ui-dropdown>
 			<svws-ui-button class="secondary" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
@@ -79,6 +93,27 @@
 				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
 				if (klausur !== null) {
 					await props.setTerminToKursklausur(termin.id, klausur);
+				}
+			}
+		}
+		loading.value = false;
+	};
+
+	const blockenKursart = async () => {
+		loading.value = true;
+		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenKursartOhneTermin(quartal.value);
+		// Aufruf von Blockungsalgorithmus
+		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
+		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
+		for (const klausurenKursart of klausurenUngeblockt) {
+			const klausurTermine = blockAlgo.berechne(klausurenKursart, 2500);
+			for await (const klausurList of klausurTermine) {
+				const termin = await props.erzeugeKlausurtermin(quartal.value);
+				for await (const klausurId of klausurList) {
+					const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
+					if (klausur !== null) {
+						await props.setTerminToKursklausur(termin.id, klausur);
+					}
 				}
 			}
 		}

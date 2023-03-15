@@ -4,6 +4,7 @@ import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostK
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
 
@@ -38,6 +39,11 @@ export class GostKursklausurManager extends JavaObject {
 	 * Eine Map quartal, idTermin -> Liste von GostKursklausuren 
 	 */
 	private readonly _mapQuartalTerminKursklausuren : HashMap<number, HashMap<number, Vector<GostKursklausur>>> = new HashMap();
+
+	/**
+	 * Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren 
+	 */
+	private readonly _mapQuartalKursartTerminKursklausuren : HashMap<number, HashMap<string, HashMap<number, Vector<GostKursklausur>>>> = new HashMap();
 
 	/**
 	 * Eine Map quartal -> Liste von GostKursklausuren 
@@ -100,10 +106,8 @@ export class GostKursklausurManager extends JavaObject {
 			this._mapIdKursklausur.put(kk.id, kk);
 			this.addKlausurToInternalMaps(kk);
 			let listKursklausurenMapQuartalKursKlausuren : Vector<GostKursklausur> | null = this._mapQuartalKursKlausuren.get(kk.quartal);
-			if (listKursklausurenMapQuartalKursKlausuren === null) {
-				listKursklausurenMapQuartalKursKlausuren = new Vector();
-				this._mapQuartalKursKlausuren.put(kk.quartal, listKursklausurenMapQuartalKursKlausuren);
-			}
+			if (listKursklausurenMapQuartalKursKlausuren === null) 
+				this._mapQuartalKursKlausuren.put(kk.quartal, listKursklausurenMapQuartalKursKlausuren = new Vector());
 			listKursklausurenMapQuartalKursKlausuren.add(kk);
 			if (kk.idTermin !== null) {
 				let listSchuelerIds : Vector<number> | null = this._mapTerminSchuelerids.get(kk.idTermin);
@@ -116,22 +120,26 @@ export class GostKursklausurManager extends JavaObject {
 
 	private addKlausurToInternalMaps(kk : GostKursklausur) : void {
 		let listKursklausurenMapTermine : Vector<GostKursklausur> | null = this._mapTerminKursklausuren.get(kk.idTermin === null ? -1 : kk.idTermin);
-		if (listKursklausurenMapTermine === null) {
-			listKursklausurenMapTermine = new Vector();
-			this._mapTerminKursklausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapTermine);
-		}
+		if (listKursklausurenMapTermine === null) 
+			this._mapTerminKursklausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapTermine = new Vector());
 		listKursklausurenMapTermine.add(kk);
 		let mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(kk.quartal);
-		if (mapTerminKursklausuren === null) {
-			mapTerminKursklausuren = new HashMap();
-			this._mapQuartalTerminKursklausuren.put(kk.quartal, mapTerminKursklausuren);
-		}
+		if (mapTerminKursklausuren === null) 
+			this._mapQuartalTerminKursklausuren.put(kk.quartal, mapTerminKursklausuren = new HashMap());
 		let listKursklausurenMapQuartalmapTermine : Vector<GostKursklausur> | null = mapTerminKursklausuren.get(kk.idTermin === null ? -1 : kk.idTermin);
-		if (listKursklausurenMapQuartalmapTermine === null) {
-			listKursklausurenMapQuartalmapTermine = new Vector();
-			mapTerminKursklausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapQuartalmapTermine);
-		}
+		if (listKursklausurenMapQuartalmapTermine === null) 
+			mapTerminKursklausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapQuartalmapTermine = new Vector());
 		listKursklausurenMapQuartalmapTermine.add(kk);
+		let mapKursartTerminKursklausuren : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(kk.quartal);
+		if (mapKursartTerminKursklausuren === null) 
+			this._mapQuartalKursartTerminKursklausuren.put(kk.quartal, mapKursartTerminKursklausuren = new HashMap());
+		let mapKursklausurenMapQuartalKursartTerminKursKlausuren : HashMap<number, Vector<GostKursklausur>> | null = mapKursartTerminKursklausuren.get(kk.kursartAllg);
+		if (mapKursklausurenMapQuartalKursartTerminKursKlausuren === null) 
+			mapKursartTerminKursklausuren.put(kk.kursartAllg, mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap());
+		let listKursklausurenMapQuartalKursartmapTermine : Vector<GostKursklausur> | null = mapKursklausurenMapQuartalKursartTerminKursKlausuren.get(kk.idTermin === null ? -1 : kk.idTermin);
+		if (listKursklausurenMapQuartalKursartmapTermine === null) 
+			mapKursklausurenMapQuartalKursartTerminKursKlausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapQuartalKursartmapTermine = new Vector());
+		listKursklausurenMapQuartalKursartmapTermine.add(kk);
 	}
 
 	/**
@@ -159,6 +167,17 @@ export class GostKursklausurManager extends JavaObject {
 				let listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
 				if (listOldQuartalTerminKursklausuren !== null) 
 					listOldQuartalTerminKursklausuren.remove(klausur);
+			} else {
+			}
+			let quartalKursartMap : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
+			if (quartalKursartMap !== null) {
+				let kursartMap : HashMap<number, Vector<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursartAllg);
+				if (kursartMap !== null) {
+					let listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
+					if (listOldQuartalTerminKursklausuren !== null) 
+						listOldQuartalTerminKursklausuren.remove(klausur);
+				} else {
+				}
 			} else {
 			}
 			this.addKlausurToInternalMaps(klausur);
@@ -314,6 +333,26 @@ export class GostKursklausurManager extends JavaObject {
 			let klausuren : List<GostKursklausur> | null = mapTerminKursklausuren.get(-1);
 			return klausuren !== null ? klausuren : new Vector();
 		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
+	 * die noch kein Termin / Schiene gesetzt wurde
+	 * 
+	 * @param quartal die Nummer des Quartals
+	 * 
+	 * @return die Liste von GostKursklausur-Objekten
+	 */
+	public getKursklausurenKursartOhneTermin(quartal : number) : List<List<GostKursklausur>> {
+		let retList : List<List<GostKursklausur>> | null = new Vector();
+		let mapKursartTerminKursklausuren : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
+		if (mapKursartTerminKursklausuren !== null) {
+			for (let mapKursarten of mapKursartTerminKursklausuren.values()) {
+				if (mapKursarten !== null) 
+					retList.add(mapKursarten.get(-1));
+			}
+		}
+		return retList;
 	}
 
 	/**

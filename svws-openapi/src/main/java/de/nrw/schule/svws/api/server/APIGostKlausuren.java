@@ -32,6 +32,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
@@ -123,6 +124,31 @@ public class APIGostKlausuren {
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
 			return (new DataGostKlausurenVorgabe(conn, -1)).create(is);
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurvorgabe.
+	 * 
+	 * @param schema     das Datenbankschema, in welchem die Klausurvorgabe erstellt
+	 *                   wird
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr         JSON-Objekt mit den Daten
+	 * @return die HTTP-Antwort mit der neuen Blockung
+	 */
+	@POST
+	@Path("/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\\d+}")
+	@Operation(summary = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.", description = "Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe " + "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurvorgabe wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response copyGostKlausurenVorgaben(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
+			if (new DataGostKlausurenVorgabe(conn, abiturjahr).copyVorgabenToJahrgang()) {
+				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(true).build();
+			}
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(false).build();
 		}
 	}
 	

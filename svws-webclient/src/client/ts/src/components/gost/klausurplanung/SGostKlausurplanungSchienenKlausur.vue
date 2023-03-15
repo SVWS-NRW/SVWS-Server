@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-drag-data tag="tr" class="bg" :class="klausurCssClasses()" :key="props.klausur.id" :data="{...klausur}" @drag-start="dragStatus(klausur)" @drag-end="dragStatus(null)">
+	<svws-ui-drag-data tag="tr" :class="klausurCssClasses()" :key="props.klausur.id" :data="{...klausur}" @drag-start="dragStatus(klausur)" @drag-end="dragStatus(null)">
 		<td>{{ props.klausur.kursartAllg }}</td>
 		<td>{{ faecherManager.get(props.klausur.idFach)?.kuerzelAnzeige }}</td>
 		<td><!--{{ props.klausur.kursKurzbezeichnung!.match(/(\d+)/)!.slice(-1)[0] }}--></td>
@@ -33,8 +33,7 @@
 		}
 		const konfliktZuEigenemTermin = props.termin === undefined || props.termin === null || props.klausur === null ? false : props.kursklausurmanager().gibKonfliktTerminInternKursklausur(props.termin, props.klausur).size() > 0;
 		return {
-			"bg-lime-100": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			"bg-yellow-100": !konfliktZuEigenemTermin && !konfliktfreiZuFremdtermin,
+			"bg-success": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			"bg-error": konfliktZuEigenemTermin,
 		}
 	};

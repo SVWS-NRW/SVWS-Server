@@ -51,7 +51,8 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		_abiturjahr = abiturjahr;
 	}
 
-	@Override public Response getAll() {
+	@Override
+	public Response getAll() {
 		return this.getList();
 	}
 
@@ -74,22 +75,20 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 				.collect(Collectors.toList());
 		if (vorgaben == null)
 			throw new NullPointerException();
-		if (vorgaben.isEmpty()) 
+		if (vorgaben.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("Noch keine Klausurvorgaben für dieses Halbjahr definiert.");
-		
+
 		GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
 		List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
 				vorgaben.stream().map(v -> v.idVorgabe).collect(Collectors.toList()), DTOGostKlausurenKursklausuren.class);
 		Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
 				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
-		
+
 		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
 		// noch nicht angelegt.
 		List<DTOSchuljahresabschnitte> sjaList = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
-				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
-				.setParameter("abschnitt", halbjahr.id % 2 + 1)
-				.getResultList();
+				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr)).setParameter("abschnitt", halbjahr.id % 2 + 1).getResultList();
 		if (sjaList == null || sjaList.size() != 1)
 			return OperationError.NOT_FOUND.getResponse("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
@@ -122,26 +121,25 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		if (!conn.persistAll(kursklausuren))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		
+
 		DTODBAutoInkremente dbNmkIDsKlausuren = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Schuelerklausuren");
 		Long idNmkIDsKlausuren = dbNmkIDsKlausuren == null ? 1 : dbNmkIDsKlausuren.MaxID + 1;
-		
+
 		for (DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
-			sk.ID = idNmkIDsKlausuren++;		
+			sk.ID = idNmkIDsKlausuren++;
 		if (!conn.persistAll(schuelerklausuren))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
 
 	}
-	
+
 	private List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausuren(int hj, DTOGostKlausurenKursklausuren kursklausur, DTOKurs kurs) {
-		List<DTOSchuelerLernabschnittsdaten> lernDaten = conn.query("SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht", DTOSchuelerLernabschnittsdaten.class)
-				.setParameter("kursid", kurs.ID)
-				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] {"LK1", "LK2", "AB3"} : new String[] {"LK1", "LK2", "AB3", "AB4", "GKS"}))
-				.setParameter("sstatus", SchuelerStatus.AKTIV)
-				.setParameter("sgeloescht", false)
-				.getResultList();
+		List<DTOSchuelerLernabschnittsdaten> lernDaten = conn.query(
+				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht",
+				DTOSchuelerLernabschnittsdaten.class).setParameter("kursid", kurs.ID)
+				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
+				.setParameter("sstatus", SchuelerStatus.AKTIV).setParameter("sgeloescht", false).getResultList();
 
 		List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new Vector<>();
 		for (DTOSchuelerLernabschnittsdaten lad : lernDaten) {
@@ -189,12 +187,14 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return daten;
 	}
 
-	@Override public Response get(Long halbjahr) {
+	@Override
+	public Response get(Long halbjahr) {
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
 	}
 
-	@Override public Response patch(Long id, InputStream is) {
+	@Override
+	public Response patch(Long id, InputStream is) {
 		Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
@@ -248,7 +248,8 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-	@Override public Response getList() {
+	@Override
+	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -296,7 +297,8 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					case "istAudioNotwendig" -> istAudioNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "istVideoNotwendig" -> istVideoNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true);
-					case "idVorgabe" -> {/*do nothing*/}
+					case "idVorgabe" -> {
+						/* do nothing */}
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}
@@ -335,6 +337,37 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		// Entferne den Termin
 		conn.remove(vorgabe);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
+	}
+
+	public boolean copyVorgabenToJahrgang() {
+		List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
+		List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
+
+		if (vorgabenVorlage == null)
+			throw new NullPointerException();
+		if (vorgabenVorlage.size() > 0) {
+			Vector<DTOGostKlausurenVorgaben> gostVorgaben = new Vector<>();
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
+			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
+			for (DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
+				boolean exists = false;
+				for (DTOGostKlausurenVorgaben v : vorgabenJg) {
+					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal.equals(v.Quartal) && vorgabe.Fach_ID.equals(v.Fach_ID) && vorgabe.KursartAllg.equals(v.KursartAllg)) {
+						exists = true;
+						break;
+					}
+				}
+				if (!exists) {
+					DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, _abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.KursartAllg, vorgabe.Dauer,
+							vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
+					k.Bemerkungen = vorgabe.Bemerkungen;
+					gostVorgaben.add(k);
+				}
+			}
+			return conn.persistAll(gostVorgaben);
+		}
+		return true;
 	}
 
 }

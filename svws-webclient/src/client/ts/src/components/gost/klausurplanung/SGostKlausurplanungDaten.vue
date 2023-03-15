@@ -1,7 +1,8 @@
 <template>
 	<div class="flex flex-col">
-		<div>
+		<div class="flex flex-row gap-x-5">
 			<svws-ui-button class="secondary mb-5" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
+			<svws-ui-button class="secondary mb-5" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
 		</div>
 		<div class="flex flex-row flex-wrap gap-4 w-full">
 			<div class="w-3/4">
@@ -130,6 +131,7 @@
 		erzeugeKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<GostKlausurvorgabe>;
 		patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<boolean>;
 		loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
+		erzeugeVorgabenAusVorlage: () => Promise<boolean>;
 	}>();
 
 	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgaben());
