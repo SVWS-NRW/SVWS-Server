@@ -19,7 +19,6 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { RouterView } from "vue-router";
 	import { GostAppProps } from "./SGostAppProps";
 
 	const props = defineProps<GostAppProps>();

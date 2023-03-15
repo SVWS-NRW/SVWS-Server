@@ -24,7 +24,6 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { RouterView } from "vue-router";
 	import { FaecherAppProps } from "./SFaecherAppProps";
 
 	const props = defineProps<FaecherAppProps>();
