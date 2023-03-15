@@ -7,7 +7,7 @@
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="setKlasse" clickable :columns="cols" :items="rowsFiltered">
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse"></svws-ui-text-input>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse" />
 				</template>
 				<template #filterSimple>
 					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>

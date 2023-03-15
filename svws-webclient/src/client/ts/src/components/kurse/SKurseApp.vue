@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -24,13 +24,9 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { routeKurse } from "~/router/apps/RouteKurse";
 	import { KurseAppProps } from "./SKurseAppProps";
 
 	const props = defineProps<KurseAppProps>();
-
-	const selectedRoute = routeKurse.childRouteSelector;
-	const children_hidden = routeKurse.children_hidden();
 
 	const kuerzel: ComputedRef<string> = computed(() => props.auswahl?.kuerzel ?? "");
 

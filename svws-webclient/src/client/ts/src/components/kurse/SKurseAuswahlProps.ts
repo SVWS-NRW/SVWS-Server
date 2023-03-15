@@ -1,13 +1,14 @@
-import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface KurseAuswahlProps {
 	auswahl: KursListeEintrag | undefined;
-	listKurse: List<KursListeEintrag>;
+	mapKatalogeintraege: Map<number, KursListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	gotoEintrag: (eintrag: JahrgangsListeEintrag) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	setKurs: (value: KursListeEintrag) => Promise<void>;
+	returnToKataloge: () => Promise<void>;
 }

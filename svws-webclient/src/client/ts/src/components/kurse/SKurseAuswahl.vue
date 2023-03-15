@@ -5,9 +5,9 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="setKurs" :items="rowsFiltered" :columns="cols" clickable>
+			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs"></svws-ui-text-input>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" />
 				</template>
 				<template #filterSimple>
 					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
@@ -37,7 +37,7 @@
 
 	const rowsFiltered = computed(() => {
 		const res = [];
-		for (const k of props.listKurse)
+		for (const k of props.mapKatalogeintraege.values())
 			if (k.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) && k.istSichtbar === sichtbar.value)
 				res.push(k);
 		return res;

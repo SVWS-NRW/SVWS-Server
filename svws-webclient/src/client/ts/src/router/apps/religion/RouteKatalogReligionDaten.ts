@@ -26,7 +26,7 @@ export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogRe
 	public getProps(to: RouteLocationNormalized): ReligionDatenProps {
 		return {
 			patch: routeKatalogReligion.data.patch,
-			auswahl: routeKatalogReligion.data.auswahl
+			auswahl: routeKatalogReligion.data.auswahl!
 		};
 	}
 
