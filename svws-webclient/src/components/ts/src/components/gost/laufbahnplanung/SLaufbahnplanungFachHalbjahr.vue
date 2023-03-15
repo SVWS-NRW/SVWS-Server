@@ -283,13 +283,27 @@
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
-						wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q11) {
+							if (wahl.EF2 === null && andereWahl?.EF2 == undefined) {
+								wahl.Q11 = 'ZK'
+								wahl.Q12 = 'ZK'
+							}
+						}
 					}
 				}
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q11) {
+							if (wahl.EF2 === null && andereWahl?.EF2 == undefined) {
+								wahl.Q11 = 'ZK'
+								wahl.Q12 = 'ZK'
+							}
+						}
+					}
 					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
 						wahl.Q11 = "ZK";
 						wahl.Q12 = "ZK";
@@ -351,16 +365,39 @@
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
-						if (beginn === GostHalbjahr.Q11)
-							wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q21 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q11) {
+							if (wahl.EF2 === null && andereWahl?.EF2 == undefined) {
+								wahl.Q11 = 'ZK'
+								wahl.Q12 = 'ZK'
+							}
+						}
+						if (beginn === GostHalbjahr.Q12) {
+							if (wahl.Q11 === null && andereWahl?.Q11 == undefined) {
+								wahl.Q12 = 'ZK'
+								wahl.Q21 = 'ZK'
+							}
+						}
 					}
 				}
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q11) {
+							if (wahl.EF2 === null && andereWahl?.EF2 == undefined) {
+								wahl.Q11 = 'ZK'
+								wahl.Q12 = 'ZK'
+							}
+						}
+						if (beginn === GostHalbjahr.Q12) {
+							if (wahl.Q11 === null && andereWahl?.Q11 == undefined) {
+								wahl.Q12 = 'ZK'
+								wahl.Q21 = 'ZK'
+							}
+						}
+					}
 					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
 						if (beginn === GostHalbjahr.Q11)
 							wahl.Q11 = "ZK";
@@ -416,22 +453,38 @@
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q12 = "ZK";
-						wahl.Q21 = "ZK";
-						if (beginn === GostHalbjahr.Q21)
-							wahl.Q22 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q12) {
+							if (wahl.Q11 === null && andereWahl?.Q11 == undefined) {
+								wahl.Q12 = 'ZK'
+								wahl.Q21 = 'ZK'
+							}
+						}
+						if (beginn === GostHalbjahr.Q21) {
+							if (wahl.Q12 === null && andereWahl?.Q12 == undefined) {
+								wahl.Q21 = 'ZK'
+								wahl.Q22 = 'ZK'
+							}
+						}
 					}
 				}
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q12 = "ZK";
-						wahl.Q21 = "ZK";
-						if (beginn === GostHalbjahr.Q21)
-							wahl.Q22 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q12) {
+							if (wahl.Q11 === null && andereWahl?.Q11 == undefined) {
+								wahl.Q12 = 'ZK'
+								wahl.Q21 = 'ZK'
+							}
+						}
+						if (beginn === GostHalbjahr.Q21) {
+							if (wahl.Q12 === null && andereWahl?.Q12 == undefined) {
+								wahl.Q21 = 'ZK'
+								wahl.Q22 = 'ZK'
+							}
+						}
 					}
 				}
 				break;
@@ -476,16 +529,26 @@
 				wahl.Q22 = "M";
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
-						wahl.Q21 = "ZK";
-						wahl.Q22 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q21) {
+							if (wahl.Q12 === null && andereWahl?.Q12 == undefined) {
+								wahl.Q21 = 'ZK'
+								wahl.Q22 = 'ZK'
+							}
+						}
 					}
 				}
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
-						wahl.Q21 = "ZK";
-						wahl.Q22 = "ZK";
+					if (beginn !== null) {
+						const andereWahl = getAndereFachwahl();
+						if (beginn === GostHalbjahr.Q21) {
+							if (wahl.Q12 === null && andereWahl?.Q12 == undefined) {
+								wahl.Q21 = 'ZK'
+								wahl.Q22 = 'ZK'
+							}
+						}
 					}
 				}
 				break;
