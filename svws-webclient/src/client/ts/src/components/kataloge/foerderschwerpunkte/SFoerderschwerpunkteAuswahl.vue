@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a title="Kataloge" @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<a @click="returnToKataloge">Kataloge</a>
 				<span title="Förderschwerpunkte">Förderschwerpunkte</span>
 			</nav>
 		</template>
@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="setFoerderschwerpunkt" :items="listFoerderschwerpunkte" :columns="cols" />
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -21,7 +21,6 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { router } from "~/router/RouteManager";
 	import { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();

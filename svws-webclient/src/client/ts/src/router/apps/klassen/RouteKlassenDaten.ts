@@ -41,7 +41,7 @@ const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue
 export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen_daten", "daten", SKlassenDaten, new RouteDataKlassenDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen.daten", "daten", SKlassenDaten, new RouteDataKlassenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

@@ -9,7 +9,7 @@ const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.
 export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "faecher_daten", "daten", SFachDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher.daten", "daten", SFachDaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

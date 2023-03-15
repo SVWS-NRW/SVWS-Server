@@ -9,7 +9,7 @@ const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJah
 export class RouteKatalogJahrgaengeDaten extends RouteNode<unknown, RouteKatalogJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "jahrgaenge_daten", "daten", SJahrgangDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge.daten", "daten", SJahrgangDaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

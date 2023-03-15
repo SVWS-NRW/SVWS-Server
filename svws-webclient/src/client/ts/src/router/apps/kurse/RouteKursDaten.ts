@@ -9,7 +9,7 @@ const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse_daten", "daten", SKursDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse.daten", "daten", SKursDaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}

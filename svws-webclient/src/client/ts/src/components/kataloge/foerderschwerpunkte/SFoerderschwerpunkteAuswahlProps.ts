@@ -1,11 +1,12 @@
-import { FoerderschwerpunktEintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import { FoerderschwerpunktEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface FoerderschwerpunkteAuswahlProps {
-		auswahl: FoerderschwerpunktEintrag | undefined;
-		listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
-		abschnitte: Map<number, Schuljahresabschnitt>;
-		aktAbschnitt: Schuljahresabschnitt;
-		aktSchulabschnitt: number;
-		setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-		setFoerderschwerpunkt: (foerderschwerpunkt: FoerderschwerpunktEintrag) => Promise<void>;
-	}
+	auswahl: FoerderschwerpunktEintrag | undefined;
+	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
+	gotoEintrag: (eintrag: FoerderschwerpunktEintrag) => Promise<void>;
+	abschnitte: Map<number, Schuljahresabschnitt>;
+	aktAbschnitt: Schuljahresabschnitt;
+	aktSchulabschnitt: number;
+	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	returnToKataloge: () => Promise<void>;
+}

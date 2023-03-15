@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -24,13 +24,9 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 	import { FoerderschwerpunkteAppProps } from "./SFoerderschwerpunkteAppProps";
 
 	const props = defineProps<FoerderschwerpunkteAppProps>();
-
-	const selectedRoute = routeKatalogFoerderschwerpunkte.childRouteSelector;
-	const children_hidden = routeKatalogFoerderschwerpunkte.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
