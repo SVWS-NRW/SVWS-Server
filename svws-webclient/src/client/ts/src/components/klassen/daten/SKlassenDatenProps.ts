@@ -4,5 +4,5 @@ export interface KlassenDatenProps {
 	patch: (data : Partial<KlassenDaten>) => Promise<void>;
 	data: KlassenDaten,
 	mapLehrer: Map<number, LehrerListeEintrag>,
-	mapJahrgaenge: Map<Number, JahrgangsListeEintrag>,
+	mapJahrgaenge: Map<number, JahrgangsListeEintrag>,
 }

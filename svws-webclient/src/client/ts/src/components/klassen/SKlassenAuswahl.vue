@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="setKlasse" clickable :columns="cols" :items="rowsFiltered">
+			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse" />
 				</template>
@@ -24,13 +24,12 @@
 	import { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 
 	const props = defineProps<KlassenAuswahlProps>();
-
 	const sichtbar: Ref<boolean> = ref(true);
 	const search: Ref<string> = ref("");
 
 	const rowsFiltered = computed(() => {
 		const res = [];
-		for (const k of props.listKlassen)
+		for (const k of props.mapKatalogeintraege.values())
 			if (k.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) && k.istSichtbar === sichtbar.value)
 				res.push(k);
 		return res;

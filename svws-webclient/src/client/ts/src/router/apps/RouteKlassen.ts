@@ -1,45 +1,116 @@
-import { BenutzerKompetenz, KlassenListeEintrag, LehrerListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core";
-import { computed, ShallowRef, shallowRef, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp, RouteApp } from "~/router/RouteApp";
-import { RouteManager } from "../RouteManager";
+import { BenutzerKompetenz, JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schulform } from "@svws-nrw/svws-core";
+import { shallowRef } from "vue";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { AuswahlChildData } from "~/components/AuswahlChildData";
 import { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
+import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+import { routeApp, RouteApp } from "~/router/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
+import { RouteManager } from "../RouteManager";
+
+
+interface RouteStateKlassen {
+	auswahl: KlassenListeEintrag | undefined;
+	daten: KlassenDaten | undefined;
+	mapKatalogeintraege: Map<number, KlassenListeEintrag>;
+	mapLehrer: Map<number, LehrerListeEintrag>;
+	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	view: RouteNode<any, any>;
+}
 
 export class RouteDataKlassen {
-	auswahl: ShallowRef<KlassenListeEintrag | undefined> = shallowRef(undefined);
-	listKlassen: List<KlassenListeEintrag> = new Vector();
-	mapKlassen: Map<number, KlassenListeEintrag> = new Map();
-	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+
+	private static _defaultState: RouteStateKlassen = {
+		auswahl: undefined,
+		daten: undefined,
+		mapKatalogeintraege: new Map(),
+		mapLehrer: new Map(),
+		mapJahrgaenge: new Map(),
+		view: routeKlasseDaten,
+	}
+	private _state = shallowRef(RouteDataKlassen._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateKlassen>) {
+		this._state.value = Object.assign({ ...RouteDataKlassen._defaultState }, patch);
+	}
+
+
+	private setPatchedState(patch: Partial<RouteStateKlassen>) {
+		this._state.value = Object.assign({ ...this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ...this._state.value };
+	}
+
+	public async setView(view: RouteNode<any,any>) {
+		if (routeKlassen.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
+
+	get auswahl(): KlassenListeEintrag | undefined {
+		return this._state.value.auswahl;
+	}
+
+	get mapKatalogeintraege(): Map<number, KlassenListeEintrag> {
+		return this._state.value.mapKatalogeintraege;
+	}
+
+	get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
+	}
+
+	get mapJahrgaenge(): Map<number, JahrgangsListeEintrag> {
+		return this._state.value.mapJahrgaenge;
+	}
+
+	get daten(): KlassenDaten {
+		if (this._state.value.daten === undefined)
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		return this._state.value.daten;
+	}
 
 	public async ladeListe() {
-		this.listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
-		const mapKurse = new Map<number, KlassenListeEintrag>();
-		for (const l of this.listKlassen)
-			mapKurse.set(l.id, l);
-		this.mapKlassen = mapKurse;
+		const listKatalogeintraege = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
+		const mapKatalogeintraege = new Map<number, KlassenListeEintrag>();
+		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		for (const l of listKatalogeintraege)
+			mapKatalogeintraege.set(l.id, l);
+		// Laden der Jahrgänge
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const mapJahrgaenge = new Map();
+		for (const j of listJahrgaenge)
+			mapJahrgaenge.set(j.id, j);
+		// Laden des Lehrer-Katalogs
+		const listLehrer = await api.server.getLehrer(api.schema);
+		const mapLehrer = new Map();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge })
 	}
 
-	public async onSelect(item?: KlassenListeEintrag) {
-		if (item === this.auswahl.value)
-			return;
-		if (item === undefined) {
-			this.auswahl.value = undefined;
-		} else {
-			this.auswahl.value = item;
-		}
+	setEintrag = async (auswahl: KlassenListeEintrag) => {
+		const daten = await api.server.getKlasse(api.schema, auswahl.id)
+		this.setPatchedState({ auswahl, daten })
 	}
 
-	setKlasse = async (value: KlassenListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeKlassen.name, params: { } });
-			return;
-		}
-		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlassenDaten.name : routeKlassen.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
+	gotoEintrag = async (eintrag: KlassenListeEintrag) => {
+		await RouteManager.doRoute(routeKlassen.getRoute(eintrag.id));
+	}
+
+	patch = async (data : Partial<KlassenDaten>) => {
+		if (this.auswahl === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		console.log("TODO: Implementierung patchKlassenDaten", data);
+		//await api.server.patchKursDaten(data, api.schema, this.item.id);
 	}
 }
 
@@ -54,9 +125,9 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKlassenDaten
+			routeKlasseDaten
 		];
-		super.defaultChild = routeKlassenDaten;
+		super.defaultChild = routeKlasseDaten;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
@@ -64,65 +135,80 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if ((to.name === this.name) && (to_params.id === undefined)) {
-			await this.data.ladeListe();
-			if (this.data.mapKlassen.size === 0)
-				// TODO Handhabung bei neuer Schule -> Liste leer
-				return this.getRoute(-1);
-			return this.getRoute(this.data.mapKlassen.values().next().value.id);
-		}
-		// Laden des Lehrer-Katalogs
-		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		this.data.mapLehrer = mapLehrer;
-		// Die Auswahlliste wird als letztes geladen
 		await this.data.ladeListe();
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.data.mapKlassen.get(id));
+		if (this.data.mapKatalogeintraege.size < 1)
+			return;
+		let eintrag: KlassenListeEintrag | undefined;
+		if (!to_params.id && this.data.auswahl)
+			return this.getRoute(this.data.auswahl.id);
+		if (!to_params.id) {
+			eintrag = this.data.mapKatalogeintraege.get(0);
+			return this.getRoute(eintrag?.id);
 		}
+		else {
+			const id = parseInt(to_params.id);
+			eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined) {
+				return;
+			}
+		}
+		if (eintrag !== undefined)
+			await this.data.setEintrag(eintrag);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+	public getRoute(id: number | undefined) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
 		return {
-			auswahl: this.data.auswahl.value,
-			listKlassen: this.data.listKlassen,
+			auswahl: this.data.auswahl,
+			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
-			setKlasse: this.data.setKlasse
+			gotoEintrag: this.data.gotoEintrag,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
-			auswahl: this.data.auswahl.value,
-			mapLehrer: this.data.mapLehrer
+			auswahl: this.data.auswahl,
+			mapLehrer: this.data.mapLehrer,
+			// Props für die Navigation
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
 		};
 	}
 
-	public get childRouteSelector() : WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl.value?.id } });
-			}
-		});
+	private getTab(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getTabs(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of super.children)
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setTab = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await this.data.setView(node);
 	}
 
 }

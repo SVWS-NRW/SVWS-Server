@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKlassen.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -27,13 +27,9 @@
 
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
-	import { routeKlassen } from "~/router/apps/RouteKlassen";
 	import { KlassenAppProps } from "./SKlassenAppProps";
 
 	const props = defineProps<KlassenAppProps>();
-
-	const selectedRoute = routeKlassen.childRouteSelector;
-	const children_hidden = routeKlassen.children_hidden();
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
 		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
