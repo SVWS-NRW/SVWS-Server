@@ -1,5 +1,6 @@
 import { GostJahrgang, GostJahrgangsdaten, GostFaecherManager, Vector, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
+import { RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -7,6 +8,7 @@ import { routeGost } from "../RouteGost";
 import { routeGostJahrgangsdaten } from "./RouteGostJahrgangsdaten";
 
 interface RouteStateGost {
+	params: RouteParams;
 	idSchuljahresabschnitt: number,
 	auswahl: GostJahrgang | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
@@ -20,6 +22,7 @@ interface RouteStateGost {
 export class RouteDataGost {
 
 	private static _defaultState : RouteStateGost = {
+		params: {abiturjahr: '-1'},
 		idSchuljahresabschnitt: -1,
 		auswahl: undefined,
 		jahrgangsdaten: undefined,
@@ -129,10 +132,21 @@ export class RouteDataGost {
 			throw new Error("Diese für die Gost gewählte Ansicht wird nicht unterstützt.");
 	}
 
+	get params() {
+		return this._state.value.params;
+	}
+
+	set params(value) {
+		this.setPatchedState({params: value})
+	}
+
+	public get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
 	public get view(): RouteNode<any,any> {
 		return this._state.value.view;
 	}
-
 
 	get auswahl(): GostJahrgang | undefined {
 		return this._state.value.auswahl;
