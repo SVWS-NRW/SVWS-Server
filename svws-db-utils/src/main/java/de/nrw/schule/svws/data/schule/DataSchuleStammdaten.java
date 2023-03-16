@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.function.Function;
 
+import de.nrw.schule.svws.base.CsvReader;
+import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrte;
+import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrtsteile;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
@@ -25,6 +28,7 @@ import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrt;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart;
@@ -441,8 +445,18 @@ public class DataSchuleStammdaten extends DataManager<Long> {
             erzieherarten.get(i).Sortierung = i+1;
         conn.persistRange(erzieherarten, 0, 5);
         
-        // TODO K-Ort aus der Default-Daten-Tabelle befüllen
-                
+        
+        // K-Ort aus der Default-Daten-Tabelle befüllen
+        Vector<DTOOrt> dtoOrt = new Vector<>();
+        List<KatalogEintragOrte> katalog = CsvReader.fromResource("daten/csv/Orte.csv", KatalogEintragOrte.class);
+        for (int i = 0; i < katalog.size(); i++) {
+            KatalogEintragOrte ort = katalog.get(i);
+            DTOOrt dto = new DTOOrt((long)i + 1, ort.PLZ, ort.Ort);
+            dtoOrt.add(dto);
+        }
+        conn.persistRange(dtoOrt, 0, dtoOrt.size() - 1);
+        
+         
         // K_Religion aus dem Core-Type befüllen
         Vector<DTOKonfession> dtoKonfession = new Vector<>();
         Religion[] konfession = Religion.values();

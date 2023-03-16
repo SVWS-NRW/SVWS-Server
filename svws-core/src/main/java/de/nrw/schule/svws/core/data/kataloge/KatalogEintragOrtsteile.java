@@ -35,7 +35,7 @@ public class KatalogEintragOrtsteile {
 	public @NotNull String Ort = "";
 
 	/** Katalog von IT.NRW PLZ Ortsteile: die Bezeichnung des Ortsteils */
-	@Schema(required = true, description = "die Bezeichnung des Ortsbezeichnung", example="Bezeichnung des ")
+	@Schema(required = true, description = "die Bezeichnung des Ortsteils", example="Unterherford")
 	public @NotNull String Ortsteil = "";
 
     /** Katalog von IT.NRW PLZ Ortsteile: der Stand des Katalog-Eintrags */
