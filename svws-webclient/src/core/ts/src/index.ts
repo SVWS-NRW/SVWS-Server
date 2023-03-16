@@ -447,6 +447,11 @@ export { KlausurblockungSchienenAlgorithmusGreedy5 } from './core/utils/klausurp
 export { KlausurblockungSchienenAlgorithmusGreedy6 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy6';
 export { KlausurblockungSchienenAlgorithmusGreedy7 } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy7';
 export { KlausurblockungSchienenDynDaten } from './core/utils/klausurplan/KlausurblockungSchienenDynDaten';
+export { KlausurterminblockungAlgorithmus } from './core/utils/klausurplan/KlausurterminblockungAlgorithmus';
+export { KlausurterminblockungAlgorithmusAbstract } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
+export { KlausurterminblockungAlgorithmusConfig } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
+export { KlausurterminblockungAlgorithmusGreedy1 } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1';
+export { KlausurterminblockungDynDaten } from './core/utils/klausurplan/KlausurterminblockungDynDaten';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';

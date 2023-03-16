@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmus;
+import de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmus;
+import de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusConfig;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
@@ -233,10 +235,13 @@ public class KlausurblockungSchieneTests {
 
 	private static void starteKlausurblockungSchiene(@NotNull List<@NotNull GostKursklausur> pInput) {
 		// Algorithmus-Objekt erzeugen.
-		KlausurblockungSchienenAlgorithmus alg = new KlausurblockungSchienenAlgorithmus();
+		KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
+		
+		KlausurterminblockungAlgorithmusConfig cfg = new KlausurterminblockungAlgorithmusConfig();
+		cfg.set_max_time_millis(BLOCKUNGS_ZEIT);
 
 		// Blockung starten
-		@NotNull List<@NotNull List<@NotNull Long>> output = alg.berechne(pInput, BLOCKUNGS_ZEIT);
+		@NotNull List<@NotNull List<@NotNull Long>> output = alg.berechne(pInput, cfg);
 
 		// Gibt es Ergebnisse?
 		assert !output.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";

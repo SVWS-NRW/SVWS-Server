@@ -26,6 +26,7 @@ public class KlausurblockungSchienenAlgorithmus {
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
 	public @NotNull List<@NotNull List<@NotNull Long>> berechne(@NotNull List<@NotNull GostKursklausur> pInput, long pMaxTimeMillis) {
+		
 		// End-Zeitpunkt berechnet.
 		long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;
 
