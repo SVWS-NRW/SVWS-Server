@@ -1,5 +1,5 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { computed, shallowRef, WritableComputedRef } from "vue";
+import { shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { AuswahlChildData } from "~/components/AuswahlChildData";
 import { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
@@ -65,16 +65,11 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 			// TODO { title: "Haltestellen", value: "haltestellen" },
 			// TODO { title: "Betriebe", value: "betriebe" }
 		];
-		super.defaultChild = routeKatalogFaecher;
+		super.defaultChild = undefined;
 	}
 
-	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
-		// TODO
-		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+	public getRoute(id?: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KatalogeAuswahlProps {
@@ -103,8 +98,6 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 	}
 
 	private setChild = async (value: AuswahlChildData) => {
-		if (value.name === this.data.view?.name)
-			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");

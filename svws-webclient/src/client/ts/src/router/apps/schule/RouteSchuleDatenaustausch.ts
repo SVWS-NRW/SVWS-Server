@@ -1,5 +1,5 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/RouteApp";
@@ -75,8 +75,16 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		super.defaultChild = routeSchuleDatenaustauschLaufbahnplanung;
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { }};
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		return this.getRoute();
+	}
+
+	public async enter() {
+		return this.setChild(this.defaultChild!);
+	}
+
+	public getRoute() : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: {}};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleDatenaustauschAuswahlProps {

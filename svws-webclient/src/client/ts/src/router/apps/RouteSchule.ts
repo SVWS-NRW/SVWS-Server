@@ -66,7 +66,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleDatenaustausch,
 			// TODO { title: "Hilfe", value: "hilfe" }
 		];
-		super.defaultChild = routeSchuleBenutzer;
+		super.defaultChild = undefined;
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -95,8 +95,6 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	}
 
 	private setChild = async (value: AuswahlChildData) => {
-		if (value.name === this.data.view?.name)
-			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
