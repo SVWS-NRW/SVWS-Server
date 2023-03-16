@@ -121,7 +121,7 @@
 			return;
 		}
 		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
-			if (fixier_regeln.value)
+			if (fixier_regeln.value && props.allowRegeln)
 				await fixieren_regel_entfernen();
 			await props.updateKursSchienenZuordnung(drag_data.kurs.id, drag_data.schiene.id, schiene.id);
 		}
