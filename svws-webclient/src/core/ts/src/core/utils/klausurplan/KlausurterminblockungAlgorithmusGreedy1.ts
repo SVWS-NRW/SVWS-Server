@@ -9,7 +9,8 @@ export class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 
 
 	/**
-	 *Konstruktor.
+	 *
+	 * Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
@@ -19,14 +20,14 @@ export class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 	}
 
 	public toString() : string {
-		return "Klausuren zufällig & Schienen zufällig";
+		return "Klausuren zufällig --> Termine zufällig";
 	}
 
 	public berechne(pZeitEnde : number) : void {
-		this._dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
+		this._dynDaten.aktion_Clear_KlausurenZufaellig_TermineZufaellig();
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
-			this._dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
+			this._dynDaten.aktion_Clear_KlausurenZufaellig_TermineZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1()) 
 				this._dynDaten.aktionZustand1Speichern(); else 
 				this._dynDaten.aktionZustand1Laden();

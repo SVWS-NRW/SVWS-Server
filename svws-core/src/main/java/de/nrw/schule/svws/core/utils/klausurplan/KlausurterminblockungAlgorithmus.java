@@ -78,7 +78,7 @@ public class KlausurterminblockungAlgorithmus {
 		@NotNull Random random = new Random(seed);
 
 		// Erstellung eines Objektes, welches sich um alle dynamischen Daten während des Blockungsvorgangs kümmert.
-		KlausurterminblockungDynDaten dynDaten = new KlausurterminblockungDynDaten(random, pInput);
+		KlausurterminblockungDynDaten dynDaten = new KlausurterminblockungDynDaten(random, pInput, pConfig);
 
 		// Algorithmen erzeugen
 		@NotNull KlausurterminblockungAlgorithmusAbstract @NotNull [] algorithmen = new KlausurterminblockungAlgorithmusAbstract @NotNull [] {

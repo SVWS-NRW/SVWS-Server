@@ -5,13 +5,20 @@ import java.util.Random;
 import jakarta.validation.constraints.NotNull;
 
 /** 
- * Die Strategie 'Greedy1' verteilt die Klausuren in zufälliger Reihenfolge auf bereits 
- * existierende Schienen in zufälliger Reihenfolge. Ist dies nicht möglich, wird eine neue Schiene erzeugt.
+ * Dieser Algorithmus hat folgende Strategie - Pseudocode:
+ * <pre>
+ * Gehe die Klausuren in zufälliger Reihenfolge durch.
+ *     Gehe die Termine in zufälliger Reihenfolge durch.
+ *         Versuche die Klausur hinzuzufügen.
+ *     Keinen Termin gefunden?
+ *         Erzeuge einen neuen Termin und füge Klausur hinzu.
+ * </pre>
  * 
  * @author Benjamin A. Bartsch */
 public class KlausurterminblockungAlgorithmusGreedy1 extends KlausurterminblockungAlgorithmusAbstract {
 
-	/** Konstruktor.
+	/** 
+	 * Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
@@ -22,16 +29,16 @@ public class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 
 	@Override
 	public @NotNull String toString() {
-		return "Klausuren zufällig & Schienen zufällig";
+		return "Klausuren zufällig --> Termine zufällig";
 	}
 
 	@Override
 	public void berechne(long pZeitEnde) {
-		_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
+		_dynDaten.aktion_Clear_KlausurenZufaellig_TermineZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 
 		while (System.currentTimeMillis() < pZeitEnde) {
-			_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
+			_dynDaten.aktion_Clear_KlausurenZufaellig_TermineZufaellig();
 
 			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();

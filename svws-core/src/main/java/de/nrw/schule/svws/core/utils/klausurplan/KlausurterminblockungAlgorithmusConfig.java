@@ -11,23 +11,6 @@ import java.util.List;
 public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
-	 * Der normale Algorithmus minimiert die Anzahl der Termine.
-	 */
-	public static final int ALGORITHMUS_NORMAL = 1;
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static final int ALGORITHMUS_FAECHERWEISE = 2;
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static final int ALGORITHMUS_SCHIENENWEISE = 3;
-
-	/**
 	 * Dieser LK-GK-Modus blockt beide Kursarten gemischt.
 	 */
 	public static final int LK_GK_MODUS_BEIDE = 0;
@@ -47,6 +30,23 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public static final int LK_GK_MODUS_GETRENNT = 3;
 	
+	/**
+	 * Der normale Algorithmus minimiert die Anzahl der Termine.
+	 */
+	public static final int ALGORITHMUS_NORMAL = 1;
+
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public static final int ALGORITHMUS_FAECHERWEISE = 2;
+
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public static final int ALGORITHMUS_SCHIENENWEISE = 3;
+
 	private long max_time_millis;
 	private int algorithmus;
 	private int lk_gk_modus;

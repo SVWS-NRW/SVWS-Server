@@ -3,23 +3,6 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
-	 *  Der normale Algorithmus minimiert die Anzahl der Termine.
-	 */
-	public static readonly ALGORITHMUS_NORMAL : number = 1;
-
-	/**
-	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
-	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static readonly ALGORITHMUS_FAECHERWEISE : number = 2;
-
-	/**
-	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
-	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static readonly ALGORITHMUS_SCHIENENWEISE : number = 3;
-
-	/**
 	 *  Dieser LK-GK-Modus blockt beide Kursarten gemischt.
 	 */
 	public static readonly LK_GK_MODUS_BEIDE : number = 0;
@@ -38,6 +21,23 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	 *  Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
 	 */
 	public static readonly LK_GK_MODUS_GETRENNT : number = 3;
+
+	/**
+	 *  Der normale Algorithmus minimiert die Anzahl der Termine.
+	 */
+	public static readonly ALGORITHMUS_NORMAL : number = 1;
+
+	/**
+	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public static readonly ALGORITHMUS_FAECHERWEISE : number = 2;
+
+	/**
+	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
+	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public static readonly ALGORITHMUS_SCHIENENWEISE : number = 3;
 
 	private max_time_millis : number = 0;
 
