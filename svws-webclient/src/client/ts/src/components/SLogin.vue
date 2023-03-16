@@ -27,7 +27,8 @@
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="login" />
 										<svws-ui-button @click="login" type="primary">
 											Anmelden
-											<i-ri-login-circle-line />
+											<svws-ui-spinner v-if="authenticating" spinning />
+											<i-ri-login-circle-line v-else />
 										</svws-ui-button>
 									</div>
 								</Transition>
@@ -100,6 +101,7 @@
 	const password = ref("");
 
 	const connecting = ref(false);
+	const authenticating = ref(false);
 	const inputFocus = ref(false);
 
 	const connection_failed: Ref<boolean> = ref(false);
@@ -149,7 +151,9 @@
 		inputFocus.value = false;
 		if ((schema.value === undefined) || (schema.value.name === null))
 			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
+		authenticating.value = true;
 		await props.login(schema.value.name, username.value, password.value);
+		authenticating.value = false;
 		firstauth.value = false;
 		if (!props.authenticated)
 			throw new Error("Passwort oder Benutzername falsch.");
