@@ -50,8 +50,8 @@
 	@apply mb-0;
 }
 
-.sidebar--menu--body .sidebar--menu-item--active,
-.sidebar--menu--footer .sidebar--menu-item--active {
+.sidebar--menu-item--active,
+.sidebar--menu-item--active {
 	@apply bg-dark-20;
 }
 

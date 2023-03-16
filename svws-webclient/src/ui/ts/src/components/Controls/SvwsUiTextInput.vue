@@ -4,7 +4,7 @@
 	};
 </script>
 <script setup lang="ts">
-	import { useSlots, ref, computed, watch } from "vue";
+	import { useSlots, ref, computed } from "vue";
 	import { InputType } from "../../types";
 	import { genId } from "../../utils";
 
@@ -42,6 +42,7 @@
 
 	const slots = useSlots();
 
+	const tmp = ref<string | number | null>(props.modelValue)
 	const input = ref<null | HTMLElement>(null);
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
@@ -50,15 +51,15 @@
 	};
 
 	const emailValid = computed(() => {
-		if (props.type !== "email" || !props.modelValue)
+		if (props.type !== "email" || !tmp.value)
 			return true;
 		else
 			return (
 				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(props.modelValue as string) ||
+				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(tmp.value as string) ||
 				// eslint-disable-next-line no-useless-escape
 				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-					props.modelValue as string
+					tmp.value as string
 				)
 			);
 	});
@@ -66,6 +67,7 @@
 	const hasIcon = computed(() => !!slots.default);
 
 	function onInput(event: Event) {
+		tmp.value = (event.target as HTMLInputElement).value;
 		emit("update:modelValue", (event.target as HTMLInputElement).value);
 	}
 
@@ -79,7 +81,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input-filled': `${modelValue}`.length > 0,
+			'text-input-filled': `${tmp}`.length > 0,
 			'text-input-invalid': (valid === false) || (emailValid === false),
 			'text-input-disabled': disabled,
 			'text-input-readonly': readonly,
@@ -99,7 +101,7 @@
 			}"
 			v-bind="{ ...$attrs }"
 			:type="type"
-			:value="modelValue"
+			:value="tmp"
 			:disabled="disabled"
 			:required="required"
 			:readonly="readonly"

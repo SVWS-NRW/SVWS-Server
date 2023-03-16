@@ -330,7 +330,8 @@ export class RouteDataGostKursplanung {
 			throw new Error("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
-		// TODO Anpassungen an den Managern und Commit
+		if (data.name)
+			this.datenmanager.setName(data.name)
 		api.status.stop();
 		return true;
 	}

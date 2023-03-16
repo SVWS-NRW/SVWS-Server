@@ -20,6 +20,10 @@
 			<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Text Input Placeholder" :valid="false" @input="onInput" />
 		</Variant>
 
+		<Variant title="eMail">
+			<svws-ui-text-input type="email" model-value="buergermeister@bielefeld.de" placeholder="eMail-Adresse" @input="onInput" />
+		</Variant>
+
 		<Variant title="Disabled">
 			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid disabled @input="onInput" />
 		</Variant>
