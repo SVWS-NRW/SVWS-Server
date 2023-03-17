@@ -42,7 +42,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public static final int ALGORITHMUS_FAECHERWEISE = 2;
 
 	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
 	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public static final int ALGORITHMUS_SCHIENENWEISE = 3;
@@ -85,13 +85,82 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public int get_algorithmus() {
 		return algorithmus;
 	}
+	
+	/**
+	 * Der normale Algorithmus minimiert die Anzahl der Termine.
+	 */
+	public void set_algorithmus_normal() {
+		algorithmus = ALGORITHMUS_NORMAL;
+	}
+
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public void set_algorithmus_faecherweise() {
+		algorithmus = ALGORITHMUS_FAECHERWEISE;
+	}
+	
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public void set_algorithmus_schienenweise() {
+		algorithmus = ALGORITHMUS_SCHIENENWEISE;
+	}
 
 	/**
 	 * Setzt den zu verwendenden Algorithmus.
 	 * @param pAlgorithmus den zu verwendenden Algorithmus.
 	 */
+	@Deprecated
 	public void set_algorithmus(int pAlgorithmus) {
 		algorithmus = pAlgorithmus;
+	}
+
+	/**
+	 * Liefert den LK-GK-Modus.
+	 * @return den LK-GK-Modus.
+	 */
+	public int get_lk_gk_modus() {
+		return lk_gk_modus;
+	}
+	
+	/**
+	 * 	Dieser LK-GK-Modus blockt beide Kursarten gemischt.
+	 */
+	public void set_lk_gk_modus_beide() {
+		lk_gk_modus = LK_GK_MODUS_BEIDE;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt nur die Kursart LK.
+	 */
+	public void set_lk_gk_modus_nur_lk() {
+		lk_gk_modus = LK_GK_MODUS_NUR_LK;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
+	 */
+	public void set_lk_gk_modus_nur_gk() {
+		lk_gk_modus = LK_GK_MODUS_NUR_GK;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 */
+	public void set_lk_gk_modus_getrennt() {
+		lk_gk_modus = LK_GK_MODUS_GETRENNT;
+	}
+
+	/**
+	 * Setzt den LK-GK-Modus.
+	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
+	 */
+	@Deprecated
+	public void set_lk_gk_modus(int lk_gk_modus) {
+		this.lk_gk_modus = lk_gk_modus;
 	}
 
 	/**
@@ -109,22 +178,6 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(
 			boolean pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin) {
 		regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
-	}
-
-	/**
-	 * Liefert den LK-GK-Modus.
-	 * @return den LK-GK-Modus.
-	 */
-	public int get_lk_gk_modus() {
-		return lk_gk_modus;
-	}
-
-	/**
-	 * Setzt den LK-GK-Modus.
-	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
-	 */
-	public void set_lk_gk_modus(int lk_gk_modus) {
-		this.lk_gk_modus = lk_gk_modus;
 	}
 
 }

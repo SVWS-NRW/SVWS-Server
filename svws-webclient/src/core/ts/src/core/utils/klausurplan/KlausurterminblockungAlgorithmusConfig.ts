@@ -34,7 +34,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public static readonly ALGORITHMUS_FAECHERWEISE : number = 2;
 
 	/**
-	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen.
+	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
 	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public static readonly ALGORITHMUS_SCHIENENWEISE : number = 3;
@@ -84,11 +84,78 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	}
 
 	/**
+	 * Der normale Algorithmus minimiert die Anzahl der Termine.
+	 */
+	public set_algorithmus_normal() : void {
+		this.algorithmus = KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL;
+	}
+
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public set_algorithmus_faecherweise() : void {
+		this.algorithmus = KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE;
+	}
+
+	/**
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
+	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
+	 */
+	public set_algorithmus_schienenweise() : void {
+		this.algorithmus = KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE;
+	}
+
+	/**
 	 * Setzt den zu verwendenden Algorithmus.
 	 * @param pAlgorithmus den zu verwendenden Algorithmus.
 	 */
 	public set_algorithmus(pAlgorithmus : number) : void {
 		this.algorithmus = pAlgorithmus;
+	}
+
+	/**
+	 * Liefert den LK-GK-Modus.
+	 * @return den LK-GK-Modus.
+	 */
+	public get_lk_gk_modus() : number {
+		return this.lk_gk_modus;
+	}
+
+	/**
+	 * 	Dieser LK-GK-Modus blockt beide Kursarten gemischt.
+	 */
+	public set_lk_gk_modus_beide() : void {
+		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt nur die Kursart LK.
+	 */
+	public set_lk_gk_modus_nur_lk() : void {
+		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
+	 */
+	public set_lk_gk_modus_nur_gk() : void {
+		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK;
+	}
+
+	/**
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 */
+	public set_lk_gk_modus_getrennt() : void {
+		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT;
+	}
+
+	/**
+	 * Setzt den LK-GK-Modus.
+	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
+	 */
+	public set_lk_gk_modus(lk_gk_modus : number) : void {
+		this.lk_gk_modus = lk_gk_modus;
 	}
 
 	/**
@@ -105,22 +172,6 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	 */
 	public set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin : boolean) : void {
 		this.regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
-	}
-
-	/**
-	 * Liefert den LK-GK-Modus.
-	 * @return den LK-GK-Modus.
-	 */
-	public get_lk_gk_modus() : number {
-		return this.lk_gk_modus;
-	}
-
-	/**
-	 * Setzt den LK-GK-Modus.
-	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
-	 */
-	public set_lk_gk_modus(lk_gk_modus : number) : void {
-		this.lk_gk_modus = lk_gk_modus;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

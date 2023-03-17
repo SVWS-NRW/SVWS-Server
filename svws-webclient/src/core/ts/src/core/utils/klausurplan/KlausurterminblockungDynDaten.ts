@@ -1,13 +1,16 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { KlausurterminblockungAlgorithmusConfig, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { System, cast_java_lang_System } from '../../../java/lang/System';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurterminblockungDynDaten extends JavaObject {
@@ -378,6 +381,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._terminAnzahl2 = this._terminAnzahl;
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 			this._klausurZuTermin2[nr] = this._klausurZuTermin[nr];
+		this.debug("BESSER");
 	}
 
 	/**
@@ -416,6 +420,32 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				if (this.gibIstKlausurgruppeUnverteilt(gruppe)) 
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
+	}
+
+	/**
+	 *
+	 * Ausgabe zum Debuggen der Tests.
+	 * 
+	 * @param header Überschrift der Debug-Ausgabe. 
+	 */
+	debug(header : string | null) : void {
+		console.log();
+		console.log(JSON.stringify(header));
+		for (let s : number = 0; s < this._terminAnzahl; s++){
+			let line : string | null = "";
+			line += "    Schiene " + (s + 1) + ": ";
+			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
+				if (this._klausurZuTermin[nr] === s) {
+					let gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
+					if (gostKlausur === null) 
+						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
+					line += " " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!;
+				}
+			console.log(JSON.stringify(line));
+		}
+		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
+			if (this._klausurZuTermin[nr] < 0) 
+				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!")
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

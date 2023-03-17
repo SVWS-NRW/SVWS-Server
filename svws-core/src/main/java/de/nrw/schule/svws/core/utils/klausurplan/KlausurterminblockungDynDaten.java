@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.utils.klausurplan;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -388,7 +389,7 @@ public class KlausurterminblockungDynDaten {
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
 			_klausurZuTermin2[nr] = _klausurZuTermin[nr];
 		
-		// debug("BESSER, bevorzugtSumme = "+gibSchienenBevorzugt(_klausurZuSchiene));
+		debug("BESSER");
 	}
 
 	/** 
@@ -428,6 +429,32 @@ public class KlausurterminblockungDynDaten {
 				if (gibIstKlausurgruppeUnverteilt(gruppe))
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
+	}
+
+	/** 
+	 * Ausgabe zum Debuggen der Tests.
+	 * 
+	 * @param header Überschrift der Debug-Ausgabe. 
+	 */
+	void debug(String header) {
+		System.out.println();
+		System.out.println(header);
+
+		for (int s = 0; s < _terminAnzahl; s++) {
+			String line = "";
+			line += "    Schiene " + (s + 1) + ": ";
+			for (int nr = 0; nr < _klausurenAnzahl; nr++)
+				if (_klausurZuTermin[nr] == s) {
+					GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr); 
+					if (gostKlausur == null) throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get("+nr+") ist NULL!");
+					line += " "+gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene);
+				}
+			System.out.println(line);
+		}
+
+		for (int nr = 0; nr < _klausurenAnzahl; nr++)
+			if (_klausurZuTermin[nr] < 0)
+				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!");
 	}
 
 
