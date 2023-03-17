@@ -31,6 +31,7 @@ allprojects {
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
 	version = config.project.version
+	project.ext.latestRelease = config.project.'latest-release'
 	group = 'de.nrw.schule.svws'
 
 	svwsmavenrepo {
