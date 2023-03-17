@@ -4,11 +4,13 @@
 			<s-benutzer-checkbox-list :list-benutzer="listBenutzergruppenBenutzer"
 				title="Entfernen" :spalte-links="true"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" />
+				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+				:go-to-benutzer="goToBenutzer" />
 			<s-benutzer-checkbox-list class="pl-4"
 				:list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="false"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" />
+				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+				:go-to-benutzer="goToBenutzer" />
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -24,6 +26,7 @@
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		aktualisiereListeBenutzerGruppenBenutzer: (benutzer: BenutzerListeEintrag) => Promise<void>;
+		goToBenutzer: (b_id: number) => Promise<void>;
 	}>();
 
 	const benutzer_nicht_in_gruppe: ComputedRef<List<BenutzerListeEintrag>> = computed(() => {

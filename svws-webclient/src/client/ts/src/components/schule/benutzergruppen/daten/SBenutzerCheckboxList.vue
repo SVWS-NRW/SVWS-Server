@@ -15,7 +15,8 @@
 				<s-benutzer-checkbox :benutzer="benutzer"
 					v-model="aktiv" :spalte-links="spalteLinks"
 					:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-					:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" />
+					:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+					:go-to-benutzer="goToBenutzer" />
 			</template>
 		</ul>
 		<slot />
@@ -32,6 +33,7 @@
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
+		goToBenutzer: (b_id: number) => Promise<void>;
 	}>();
 
 	const aktiv: WritableComputedRef<boolean> = computed({

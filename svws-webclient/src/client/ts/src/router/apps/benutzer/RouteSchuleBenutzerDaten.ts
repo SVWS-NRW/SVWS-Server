@@ -2,6 +2,7 @@ import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/sv
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
@@ -41,10 +42,12 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 			removeKompetenz : routeSchuleBenutzer.data.removeKompetenz,
 			addBenutzerKompetenzGruppe : routeSchuleBenutzer.data.addBenutzerKompetenzGruppe,
 			removeBenutzerKompetenzGruppe : routeSchuleBenutzer.data.removeBenutzerKompetenzGruppe,
-			getGruppen4Kompetenz : routeSchuleBenutzer.data.getGruppen4Kompetenz
+			getGruppen4Kompetenz : routeSchuleBenutzer.data.getGruppen4Kompetenz,
+			goToBenutzergruppe: this.gotToBenutzergruppe
 		};
 	}
 
+	public gotToBenutzergruppe = async (b_id: number) => await RouteManager.doRoute({ name: "benutzergruppe_daten", params: { id: b_id} });
 }
 
 export const routeSchuleBenutzerDaten = new RouteSchuleBenutzerDaten();

@@ -1,6 +1,6 @@
 <template>
 	<li class="flex flex-row place-items-center justify-between ">
-		<svws-ui-icon title="Zeige Benutzer"> <i-ri-external-link-fill @click="doRoute()" class="flex-initial cursor-pointer align-botton ml-3 " /> </svws-ui-icon>
+		<svws-ui-icon title="Zeige Benutzer"> <i-ri-external-link-fill @click="goToBenutzer(benutzer.id)" class="flex-initial cursor-pointer align-botton ml-3 " /> </svws-ui-icon>
 		<label class=" cursor-pointer p-2 hover:bg-sky-300 flex flex-1 rounded-lg"
 			@mouseover="showIcon=true" @mouseout="showIcon=false"
 			@click.prevent="add()"
@@ -15,16 +15,15 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzerListeEintrag } from "@svws-nrw/svws-core";
+	import {BenutzerListeEintrag } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
-	import { router } from "~/router/RouteManager";
-	import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 
 	const props = defineProps<{
 		benutzer: BenutzerListeEintrag;
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
+		goToBenutzer: (b_id: number) => Promise<void>;
 	}>();
 
 	const showIcon = ref(false);
@@ -33,10 +32,6 @@
 		props.spalteLinks
 			? await props.removeBenutzerFromBenutzergruppe(props.benutzer)
 			: await props.addBenutzerToBenutzergruppe(props.benutzer)
-	}
-
-	function doRoute() {
-		void router.push({ name: routeSchuleBenutzerDaten.name, params: { id: props.benutzer.id } });
 	}
 
 </script>

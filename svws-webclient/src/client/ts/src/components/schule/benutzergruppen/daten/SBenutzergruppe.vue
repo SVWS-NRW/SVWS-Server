@@ -6,7 +6,8 @@
 				:list-benutzergruppen-benutzer="listBenutzergruppenBenutzer"
 				:aktualisiere-liste-benutzer-gruppen-benutzer="aktualisiereListeBenutzerGruppenBenutzer"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" />
+				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+				:go-to-benutzer="goToBenutzer" />
 		</div>
 
 		<div class="w-3/5">

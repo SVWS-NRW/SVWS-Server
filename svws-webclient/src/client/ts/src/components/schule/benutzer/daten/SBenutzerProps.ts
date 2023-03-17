@@ -15,5 +15,6 @@ export interface BenutzerProps{
 		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
+		goToBenutzergruppe: (b_id: number) => Promise<void>;
 }
 

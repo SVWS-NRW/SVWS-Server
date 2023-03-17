@@ -15,4 +15,5 @@ export interface BenutzergruppeProps{
     create: ( bezeichnung : string, istAdmin : boolean) => Promise<void>;
     addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
     removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>
+    goToBenutzer: (b_id: number) => Promise<void>;
 }
