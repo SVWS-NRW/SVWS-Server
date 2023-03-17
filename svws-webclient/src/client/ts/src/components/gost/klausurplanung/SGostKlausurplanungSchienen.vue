@@ -16,11 +16,17 @@
 				</template>
 				<template #dropdownItems>
 					<SvwsUiDropdownItem
-						@click="blocken">
-						Kursarten mischen
+						@click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
+						Normal - Kursarten mischen
 					</SvwsUiDropdownItem>
-					<SvwsUiDropdownItem @click="blockenKursart">
-						Kursarten trennen
+					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT)">
+						Normal - Kursarten trennen
+					</SvwsUiDropdownItem>
+					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
+						Schienenweise
+					</SvwsUiDropdownItem>
+					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
+						Fächerweise
 					</SvwsUiDropdownItem>
 				</template>
 			</svws-ui-dropdown>
@@ -80,41 +86,23 @@
 
 	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
 
-	const blocken = async () => {
+	const blocken = async (mode: number, lkgk: number) => {
 		loading.value = true;
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
-		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
+		KlausurterminblockungAlgorithmusConfig
+		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
+		blockConfig.set_algorithmus(mode);
+		blockConfig.set_lk_gk_modus(lkgk);
+		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, 2500);
+		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
 		for await (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(quartal.value);
 			for await (const klausurId of klausurList) {
 				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
 				if (klausur !== null) {
 					await props.setTerminToKursklausur(termin.id, klausur);
-				}
-			}
-		}
-		loading.value = false;
-	};
-
-	const blockenKursart = async () => {
-		loading.value = true;
-		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenKursartOhneTermin(quartal.value);
-		// Aufruf von Blockungsalgorithmus
-		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		const blockAlgo = new KlausurterminblockungAlgorithmus();
-		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		for (const klausurenKursart of klausurenUngeblockt) {
-			const klausurTermine = blockAlgo.berechne(klausurenKursart, blockConfig);
-			for await (const klausurList of klausurTermine) {
-				const termin = await props.erzeugeKlausurtermin(quartal.value);
-				for await (const klausurId of klausurList) {
-					const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
-					if (klausur !== null) {
-						await props.setTerminToKursklausur(termin.id, klausur);
-					}
 				}
 			}
 		}
