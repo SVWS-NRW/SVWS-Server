@@ -60,7 +60,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	private static filter(pInput : List<GostKursklausur>, pLK : boolean) : List<GostKursklausur> {
 		let temp : List<GostKursklausur> = new Vector();
 		for (let gostKursklausur of pInput) 
-			if (JavaObject.equalsTranspiler(gostKursklausur.kursartAllg, ("LK")) === pLK) 
+			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === pLK) 
 				temp.add(gostKursklausur);
 		return temp;
 	}

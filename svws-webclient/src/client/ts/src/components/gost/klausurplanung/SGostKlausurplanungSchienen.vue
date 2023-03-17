@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin, KlausurblockungSchienenAlgorithmus } from "@svws-nrw/svws-core";
+	import { GostKursklausur, GostKlausurtermin, KlausurblockungSchienenAlgorithmus, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
 	import { computed, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -103,10 +103,11 @@
 		loading.value = true;
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenKursartOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
-		const blockAlgo = new KlausurblockungSchienenAlgorithmus();
+		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
+		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
 		for (const klausurenKursart of klausurenUngeblockt) {
-			const klausurTermine = blockAlgo.berechne(klausurenKursart, 2500);
+			const klausurTermine = blockAlgo.berechne(klausurenKursart, blockConfig);
 			for await (const klausurList of klausurTermine) {
 				const termin = await props.erzeugeKlausurtermin(quartal.value);
 				for await (const klausurId of klausurList) {
