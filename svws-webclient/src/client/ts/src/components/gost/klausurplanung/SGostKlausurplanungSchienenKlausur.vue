@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-drag-data tag="tr" :class="klausurCssClasses()" :key="props.klausur.id" :data="{...klausur}" @drag-start="dragStatus(klausur)" @drag-end="dragStatus(null)">
-		<td>{{ props.klausur.kursartAllg }}</td>
+		<td>{{ props.klausur.kursart }}</td>
 		<td>{{ faecherManager.get(props.klausur.idFach)?.kuerzelAnzeige }}</td>
 		<td><!--{{ props.klausur.kursKurzbezeichnung!.match(/(\d+)/)!.slice(-1)[0] }}--></td>
 		<td>{{ mapLehrer.get(props.klausur.idLehrer)?.kuerzel }}</td>

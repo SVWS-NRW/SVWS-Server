@@ -64,7 +64,7 @@ public class KlausurterminblockungAlgorithmus {
 	private static @NotNull List<@NotNull GostKursklausur> filter(@NotNull List<@NotNull GostKursklausur> pInput, boolean pLK) {
 		@NotNull List<@NotNull GostKursklausur> temp = new Vector<>();
 		for (GostKursklausur gostKursklausur : pInput) 
-			if (gostKursklausur.kursartAllg.equals("LK") == pLK) 
+			if (gostKursklausur.kursart.equals("LK") == pLK) 
 				temp.add(gostKursklausur);
 		return temp;
 	}

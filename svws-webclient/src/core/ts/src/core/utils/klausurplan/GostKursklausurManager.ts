@@ -133,9 +133,9 @@ export class GostKursklausurManager extends JavaObject {
 		let mapKursartTerminKursklausuren : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(kk.quartal);
 		if (mapKursartTerminKursklausuren === null) 
 			this._mapQuartalKursartTerminKursklausuren.put(kk.quartal, mapKursartTerminKursklausuren = new HashMap());
-		let mapKursklausurenMapQuartalKursartTerminKursKlausuren : HashMap<number, Vector<GostKursklausur>> | null = mapKursartTerminKursklausuren.get(kk.kursartAllg);
+		let mapKursklausurenMapQuartalKursartTerminKursKlausuren : HashMap<number, Vector<GostKursklausur>> | null = mapKursartTerminKursklausuren.get(kk.kursart);
 		if (mapKursklausurenMapQuartalKursartTerminKursKlausuren === null) 
-			mapKursartTerminKursklausuren.put(kk.kursartAllg, mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap());
+			mapKursartTerminKursklausuren.put(kk.kursart, mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap());
 		let listKursklausurenMapQuartalKursartmapTermine : Vector<GostKursklausur> | null = mapKursklausurenMapQuartalKursartTerminKursKlausuren.get(kk.idTermin === null ? -1 : kk.idTermin);
 		if (listKursklausurenMapQuartalKursartmapTermine === null) 
 			mapKursklausurenMapQuartalKursartTerminKursKlausuren.put(kk.idTermin === null ? -1 : kk.idTermin, listKursklausurenMapQuartalKursartmapTermine = new Vector());
@@ -171,7 +171,7 @@ export class GostKursklausurManager extends JavaObject {
 			}
 			let quartalKursartMap : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
 			if (quartalKursartMap !== null) {
-				let kursartMap : HashMap<number, Vector<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursartAllg);
+				let kursartMap : HashMap<number, Vector<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursart);
 				if (kursartMap !== null) {
 					let listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren !== null) 

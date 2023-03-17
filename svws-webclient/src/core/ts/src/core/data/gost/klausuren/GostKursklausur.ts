@@ -39,7 +39,7 @@ export class GostKursklausur extends JavaObject {
 	/**
 	 * Das Kürzel einer verallgemeinerten Kursart. 
 	 */
-	public kursartAllg : string = "";
+	public kursart : string = "";
 
 	/**
 	 * Die Dauer der Klausur in Minuten. 
@@ -136,9 +136,9 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.idFach === "undefined")
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if (typeof obj.kursartAllg === "undefined")
-			 throw new Error('invalid json format, missing attribute kursartAllg');
-		result.kursartAllg = obj.kursartAllg;
+		if (typeof obj.kursart === "undefined")
+			 throw new Error('invalid json format, missing attribute kursart');
+		result.kursart = obj.kursart;
 		if (typeof obj.dauer === "undefined")
 			 throw new Error('invalid json format, missing attribute dauer');
 		result.dauer = obj.dauer;
@@ -183,7 +183,7 @@ export class GostKursklausur extends JavaObject {
 		result += '"halbjahr" : ' + obj.halbjahr + ',';
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"kursartAllg" : ' + '"' + obj.kursartAllg! + '"' + ',';
+		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
 		result += '"dauer" : ' + obj.dauer + ',';
 		result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
@@ -244,8 +244,8 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.idFach !== "undefined") {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
-		if (typeof obj.kursartAllg !== "undefined") {
-			result += '"kursartAllg" : ' + '"' + obj.kursartAllg + '"' + ',';
+		if (typeof obj.kursart !== "undefined") {
+			result += '"kursart" : ' + '"' + obj.kursart + '"' + ',';
 		}
 		if (typeof obj.dauer !== "undefined") {
 			result += '"dauer" : ' + obj.dauer + ',';

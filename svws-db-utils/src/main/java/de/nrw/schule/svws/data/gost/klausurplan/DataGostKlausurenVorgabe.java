@@ -14,6 +14,7 @@ import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.klausurplan.GostKlausurvorgabenManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
@@ -158,7 +159,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		daten.idVorgabe = z.ID;
 		daten.abiJahrgang = z.Abi_Jahrgang;
 		daten.idFach = z.Fach_ID;
-		daten.kursartAllg = z.KursartAllg;
+		daten.kursart = z.Kursart.kuerzel;
 		daten.halbjahr = z.Halbjahr.id;
 		daten.quartal = z.Quartal;
 		daten.bemerkungVorgabe = z.Bemerkungen;
@@ -223,7 +224,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					}
 					case "quartal" -> vorgabe.Quartal = JSONMapper.convertToInteger(value, false);
 					case "idFach" -> vorgabe.Fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursartAllg" -> vorgabe.KursartAllg = JSONMapper.convertToString(value, false, false);
+					case "kursart" -> vorgabe.Kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false));
 					case "dauer" -> vorgabe.Dauer = JSONMapper.convertToInteger(value, false);
 					case "auswahlzeit" -> vorgabe.Auswahlzeit = JSONMapper.convertToInteger(value, false);
 					case "istMdlPruefung" -> vorgabe.IstMdlPruefung = JSONMapper.convertToBoolean(value, false);
@@ -272,7 +273,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 			GostHalbjahr halbjahr = GostHalbjahr.EF1;
 			int quartal = -1;
 			long fach_ID = -1;
-			String kursartAllg = "";
+			GostKursart kursart = GostKursart.GK;
 			int dauer = 0;
 			int auswahlzeit = 0;
 			boolean istMdlPruefung = false;
@@ -290,7 +291,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					case "halbjahr" -> halbjahr = GostHalbjahr.fromID(JSONMapper.convertToInteger(value, false));
 					case "quartal" -> quartal = JSONMapper.convertToInteger(value, false);
 					case "idFach" -> fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursartAllg" -> kursartAllg = JSONMapper.convertToString(value, false, false);
+					case "kursart" -> kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false));
 					case "dauer" -> dauer = JSONMapper.convertToInteger(value, false);
 					case "auswahlzeit" -> auswahlzeit = JSONMapper.convertToInteger(value, false);
 					case "istMdlPruefung" -> istMdlPruefung = JSONMapper.convertToBoolean(value, false);
@@ -303,7 +304,7 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 					}
 				}
 			}
-			vorgabe = new DTOGostKlausurenVorgaben(ID, abi_Jahrgang, halbjahr, quartal, fach_ID, kursartAllg, dauer, auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
+			vorgabe = new DTOGostKlausurenVorgaben(ID, abi_Jahrgang, halbjahr, quartal, fach_ID, kursart, dauer, auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
 			vorgabe.Bemerkungen = bemerkungen;
 			conn.transactionPersist(vorgabe);
 			if (!conn.transactionCommit())
@@ -339,6 +340,11 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
+	/**
+	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang *
+	 * 
+	 * @return erfolgreich / nicht erfolgreich
+	 */
 	public boolean copyVorgabenToJahrgang() {
 		List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
 		List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
@@ -353,13 +359,13 @@ public class DataGostKlausurenVorgabe extends DataManager<Long> {
 			for (DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
 				boolean exists = false;
 				for (DTOGostKlausurenVorgaben v : vorgabenJg) {
-					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal.equals(v.Quartal) && vorgabe.Fach_ID.equals(v.Fach_ID) && vorgabe.KursartAllg.equals(v.KursartAllg)) {
+					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal.equals(v.Quartal) && vorgabe.Fach_ID.equals(v.Fach_ID) && vorgabe.Kursart.equals(v.Kursart)) {
 						exists = true;
 						break;
 					}
 				}
 				if (!exists) {
-					DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, _abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.KursartAllg, vorgabe.Dauer,
+					DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, _abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer,
 							vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
 					k.Bemerkungen = vorgabe.Bemerkungen;
 					gostVorgaben.add(k);

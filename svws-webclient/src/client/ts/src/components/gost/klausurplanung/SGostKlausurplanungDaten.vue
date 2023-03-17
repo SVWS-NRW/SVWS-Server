@@ -6,7 +6,7 @@
 		</div>
 		<div class="flex flex-row flex-wrap gap-4 w-full">
 			<div class="w-3/4">
-				<svws-ui-data-table :items="vorgaben" :columns="[{key: 'kursartAllg', label: 'Kursart', sortable: true},{key:'idFach', label: 'Fach', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Min.', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
+				<svws-ui-data-table :items="vorgaben" :columns="[{key: 'kursart', label: 'Kursart', sortable: true},{key:'idFach', label: 'Fach', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Min.', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 					<template #cell(idFach)="{ value }">
 						{{ faecherManager.get(value)?.bezeichnung }}
 					</template>
@@ -76,7 +76,7 @@
 							<div class="flex flex-row items-center">
 								<label for="rbgKursart">Kursart: </label>
 								<svws-ui-radio-group id="rbgKursart" :row="true">
-									<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursartAllg" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
+									<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 								</svws-ui-radio-group>
 							</div>
 							<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung" v-model="inputVorgabeFach" />
@@ -159,7 +159,7 @@
 
 	const saveKlausurvorgabe = async () => {
 		let result;
-		if (activeVorgabe.value.idFach == -1 || activeVorgabe.value.kursartAllg == "" || activeVorgabe.value.quartal == -1) {
+		if (activeVorgabe.value.idFach === -1 || activeVorgabe.value.kursart === "" || activeVorgabe.value.quartal === -1) {
 			console.log("Eingabefehler");
 			return;
 		}

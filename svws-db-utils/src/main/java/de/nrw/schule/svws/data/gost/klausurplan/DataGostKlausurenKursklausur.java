@@ -119,7 +119,7 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.auswahlzeit = v.auswahlzeit;
 		kk.bemerkungVorgabe = v.bemerkungVorgabe;
 		kk.dauer = v.dauer;
-		kk.kursartAllg = v.kursartAllg;
+		kk.kursart = v.kursart;
 		kk.idFach = v.idFach;
 		kk.quartal = v.quartal;
 		kk.halbjahr = v.halbjahr;

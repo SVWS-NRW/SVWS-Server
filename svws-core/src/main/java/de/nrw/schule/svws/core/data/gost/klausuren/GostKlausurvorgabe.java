@@ -36,7 +36,7 @@ public class GostKlausurvorgabe {
 	
 	/** Das Kürzel einer verallgemeinerten Kursart. */
 	@Schema(required = true, description = "das Kürzel einer verallgemeinerten Kursart", example="GK")
-	public @NotNull String kursartAllg = "";
+	public @NotNull String kursart = "";
 
 	/** Die Dauer der Klausur in Minuten. */
 	@Schema(required = false, description = "die Dauer der Klausur in Minuten", example="135")

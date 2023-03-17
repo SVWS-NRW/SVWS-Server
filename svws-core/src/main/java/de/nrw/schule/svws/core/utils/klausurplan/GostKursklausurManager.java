@@ -132,9 +132,9 @@ public class GostKursklausurManager {
 		if (mapKursartTerminKursklausuren == null)
 			_mapQuartalKursartTerminKursklausuren.put(kk.quartal, mapKursartTerminKursklausuren = new HashMap<>());
 
-		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapKursklausurenMapQuartalKursartTerminKursKlausuren = mapKursartTerminKursklausuren.get(kk.kursartAllg);
+		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapKursklausurenMapQuartalKursartTerminKursKlausuren = mapKursartTerminKursklausuren.get(kk.kursart);
 		if (mapKursklausurenMapQuartalKursartTerminKursKlausuren == null)
-			mapKursartTerminKursklausuren.put(kk.kursartAllg, mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap<>());
+			mapKursartTerminKursklausuren.put(kk.kursart, mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap<>());
 
 		Vector<@NotNull GostKursklausur> listKursklausurenMapQuartalKursartmapTermine = mapKursklausurenMapQuartalKursartTerminKursKlausuren.get(kk.idTermin == null ? -1 : kk.idTermin);
 		if (listKursklausurenMapQuartalKursartmapTermine == null)
@@ -184,7 +184,7 @@ public class GostKursklausurManager {
 			// aus _mapQuartalTerminKursklausuren löschen
 			HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>>> quartalKursartMap = _mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
 			if (quartalKursartMap != null) {
-				HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> kursartMap = quartalKursartMap.get(klausur.kursartAllg);
+				HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> kursartMap = quartalKursartMap.get(klausur.kursart);
 				if (kursartMap != null) {
 					List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren != null)

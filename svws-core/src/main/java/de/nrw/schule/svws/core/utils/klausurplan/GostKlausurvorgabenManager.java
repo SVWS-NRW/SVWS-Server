@@ -62,16 +62,16 @@ public class GostKlausurvorgabenManager {
 		if (mapKursartFachKlausurvorgabe == null)
 			_mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap<>());
 		HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> mapFachKlausurvorgabe = mapKursartFachKlausurvorgabe
-				.get(v.kursartAllg);
+				.get(v.kursart);
 		if (mapFachKlausurvorgabe == null)
-			mapKursartFachKlausurvorgabe.put(v.kursartAllg, mapFachKlausurvorgabe = new HashMap<>());
+			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe = new HashMap<>());
 		mapFachKlausurvorgabe.put(v.idFach, v);
 
 		// Füllen von _mapKursartFachKlausurvorgaben
 		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> mapFachKlausurvorgaben = _mapKursartFachKlausurvorgaben
-				.get(v.kursartAllg);
+				.get(v.kursart);
 		if (mapFachKlausurvorgaben == null)
-			_mapKursartFachKlausurvorgaben.put(v.kursartAllg, mapFachKlausurvorgaben = new HashMap<>());
+			_mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben = new HashMap<>());
 		List<@NotNull GostKlausurvorgabe> listKlausurvorgaben = mapFachKlausurvorgaben.get(v.idFach);
 		if (listKlausurvorgaben == null)
 			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector<>());
@@ -117,7 +117,7 @@ public class GostKlausurvorgabenManager {
 		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
 				.get(vorgabe.quartal);
 		if (map1 != null) {
-			HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(vorgabe.kursartAllg);
+			HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(vorgabe.kursart);
 			if (map2 != null) {
 				GostKlausurvorgabe kv = map2.get(vorgabe.idFach);
 				if (kv == vorgabe)
@@ -126,7 +126,7 @@ public class GostKlausurvorgabenManager {
 		}
 		// aus _mapKursartFachKlausurvorgaben löschen
 		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map3 = _mapKursartFachKlausurvorgaben
-				.get(vorgabe.kursartAllg);
+				.get(vorgabe.kursart);
 		if (map3 != null) {
 			List<@NotNull GostKlausurvorgabe> list = map3.get(vorgabe.idFach);
 			if (list != null) {

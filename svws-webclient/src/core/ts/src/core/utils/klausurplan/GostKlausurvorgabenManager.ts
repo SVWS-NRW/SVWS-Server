@@ -61,13 +61,13 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		let mapKursartFachKlausurvorgabe : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(v.quartal);
 		if (mapKursartFachKlausurvorgabe === null) 
 			this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap());
-		let mapFachKlausurvorgabe : HashMap<number, GostKlausurvorgabe> | null = mapKursartFachKlausurvorgabe.get(v.kursartAllg);
+		let mapFachKlausurvorgabe : HashMap<number, GostKlausurvorgabe> | null = mapKursartFachKlausurvorgabe.get(v.kursart);
 		if (mapFachKlausurvorgabe === null) 
-			mapKursartFachKlausurvorgabe.put(v.kursartAllg, mapFachKlausurvorgabe = new HashMap());
+			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe = new HashMap());
 		mapFachKlausurvorgabe.put(v.idFach, v);
-		let mapFachKlausurvorgaben : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(v.kursartAllg);
+		let mapFachKlausurvorgaben : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(v.kursart);
 		if (mapFachKlausurvorgaben === null) 
-			this._mapKursartFachKlausurvorgaben.put(v.kursartAllg, mapFachKlausurvorgaben = new HashMap());
+			this._mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben = new HashMap());
 		let listKlausurvorgaben : List<GostKlausurvorgabe> | null = mapFachKlausurvorgaben.get(v.idFach);
 		if (listKlausurvorgaben === null) 
 			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector());
@@ -106,14 +106,14 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		}
 		let map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(vorgabe.quartal);
 		if (map1 !== null) {
-			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursartAllg);
+			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursart);
 			if (map2 !== null) {
 				let kv : GostKlausurvorgabe | null = map2.get(vorgabe.idFach);
 				if (kv as unknown === vorgabe as unknown) 
 					map2.remove(vorgabe.idFach);
 			}
 		}
-		let map3 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(vorgabe.kursartAllg);
+		let map3 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(vorgabe.kursart);
 		if (map3 !== null) {
 			let list : List<GostKlausurvorgabe> | null = map3.get(vorgabe.idFach);
 			if (list !== null) {

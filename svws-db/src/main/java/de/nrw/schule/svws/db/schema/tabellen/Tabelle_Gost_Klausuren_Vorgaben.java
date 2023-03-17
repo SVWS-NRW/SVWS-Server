@@ -3,6 +3,7 @@ package de.nrw.schule.svws.db.schema.tabellen;
 import de.nrw.schule.svws.core.adt.Pair;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStHalbjahrConverter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStKursartConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -43,10 +44,12 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Fach_ID der Klausurvorgaben");
 	
-	/** Die Definition der Tabellenspalte KursartAllg */
-	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	/** Die Definition der Tabellenspalte Kursart */
+	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+		.setDefault("GK")
 		.setNotNull()
-		.setJavaComment("Allgemeine Kursart des Klausur-Kurses");
+		.setConverter(GOStKursartConverter.class)
+		.setJavaComment("ID der Kursart (siehe ID des Core-Types GostKursart)");
 
 	/** Die Definition der Tabellenspalte Dauer */
 	public SchemaTabelleSpalte col_Dauer = add("Dauer", SchemaDatentypen.INT, false)
@@ -101,7 +104,7 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Vorgaben_UC1 */
 	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Vorgaben_UC1 = addUniqueIndex("Gost_Klausuren_Vorgaben_UC1", 
-			col_Abi_Jahrgang, col_Fach_ID, col_Halbjahr, col_KursartAllg, col_Quartal
+			col_Abi_Jahrgang, col_Fach_ID, col_Halbjahr, col_Kursart, col_Quartal
 		);
 
 

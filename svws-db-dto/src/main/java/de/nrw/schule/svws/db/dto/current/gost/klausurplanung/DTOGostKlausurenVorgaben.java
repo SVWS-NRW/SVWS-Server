@@ -3,8 +3,10 @@ package de.nrw.schule.svws.db.dto.current.gost.klausurplanung;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStHalbjahrConverter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStKursartConverter;
 
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
 
 
 import jakarta.persistence.Cacheable;
@@ -23,6 +25,8 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.gost.GOStKursartConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.gost.GOStKursartConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Vorgaben.
@@ -43,8 +47,8 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DTOGostKlausurenVorgaben.quartal.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Quartal IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.fach_id", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID = :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.fach_id.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.kursartallg", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.KursartAllg = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.kursartallg.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.KursartAllg IN :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.kursart", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart = :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.kursart.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.dauer", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer = :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.dauer.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.auswahlzeit", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit = :value")
@@ -59,7 +63,7 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DTOGostKlausurenVorgaben.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostKlausurenVorgaben.all.migration", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Fach_ID","KursartAllg","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
+@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Fach_ID","Kursart","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
 public class DTOGostKlausurenVorgaben {
 
 	/** ID der Klausurvorgaben (generiert) */
@@ -91,10 +95,13 @@ public class DTOGostKlausurenVorgaben {
 	@JsonProperty
 	public Long Fach_ID;
 
-	/** Allgemeine Kursart des Klausur-Kurses */
-	@Column(name = "KursartAllg")
+	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
+	@Column(name = "Kursart")
 	@JsonProperty
-	public String KursartAllg;
+	@Convert(converter=GOStKursartConverter.class)
+	@JsonSerialize(using=GOStKursartConverterSerializer.class)
+	@JsonDeserialize(using=GOStKursartConverterDeserializer.class)
+	public GostKursart Kursart;
 
 	/** Das Dauer der Klausur/Prüfung in Minuten */
 	@Column(name = "Dauer")
@@ -149,14 +156,14 @@ public class DTOGostKlausurenVorgaben {
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param Quartal   der Wert für das Attribut Quartal
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
-	 * @param KursartAllg   der Wert für das Attribut KursartAllg
+	 * @param Kursart   der Wert für das Attribut Kursart
 	 * @param Dauer   der Wert für das Attribut Dauer
 	 * @param Auswahlzeit   der Wert für das Attribut Auswahlzeit
 	 * @param IstMdlPruefung   der Wert für das Attribut IstMdlPruefung
 	 * @param IstAudioNotwendig   der Wert für das Attribut IstAudioNotwendig
 	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
-	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal, final Long Fach_ID, final String KursartAllg, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
+	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal, final Long Fach_ID, final GostKursart Kursart, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -177,10 +184,10 @@ public class DTOGostKlausurenVorgaben {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (KursartAllg == null) { 
-			throw new NullPointerException("KursartAllg must not be null");
+		if (Kursart == null) { 
+			throw new NullPointerException("Kursart must not be null");
 		}
-		this.KursartAllg = KursartAllg;
+		this.Kursart = Kursart;
 		if (Dauer == null) { 
 			throw new NullPointerException("Dauer must not be null");
 		}
@@ -237,7 +244,7 @@ public class DTOGostKlausurenVorgaben {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Fach_ID=" + this.Fach_ID + ", KursartAllg=" + this.KursartAllg + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Fach_ID=" + this.Fach_ID + ", Kursart=" + this.Kursart + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }
