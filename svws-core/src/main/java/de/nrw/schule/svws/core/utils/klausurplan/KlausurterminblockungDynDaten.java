@@ -9,6 +9,7 @@ import java.util.Vector;
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
+import de.nrw.schule.svws.core.exceptions.UserNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /** 
@@ -75,9 +76,22 @@ public class KlausurterminblockungDynDaten {
 		initialisiereKlausurGruppen(pInput, pConfig);
 		
 		aktionClear();
+		
+		checkKlausurgruppenOrException();
 	}
 	
+	private void checkKlausurgruppenOrException() {
+		// TODO BAR genauere Meldung der Exception
+		for (@NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) {
+			for (int nr1 : gruppe)
+				for (int nr2 : gruppe)
+					if (_verboten[nr1][nr2])
+						throw new UserNotificationException("Klausurgruppe hat einen Schülerkonflikt!");
+		}
+	}
+
 	private void initialisiereKlausurGruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+		// pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 		
 		switch (pConfig.get_algorithmus()) {
 			// Jede Gruppe besteht aus einer einzelnen Klausur
@@ -89,6 +103,32 @@ public class KlausurterminblockungDynDaten {
 					@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
 					gruppe.add(klausurNr);
 					_klausurGruppen.add(gruppe);
+				}
+				break;
+			}
+			// Jede Gruppe besteht allen Klausuren des selben Faches.
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
+				@NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
+				for (@NotNull GostKursklausur gostKursklausur : pInput) {
+					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+					long fachID = gostKursklausur.idFach;
+					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+					if (fachID < 0   ) {
+						// Ohne FachID --> Erzeuge eigene Gruppe
+						@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+						gruppe.add(klausurNr);
+						_klausurGruppen.add(gruppe);
+					} else {
+						// Mit FachID --> Suche zugehörige Gruppe
+						Vector<@NotNull Integer> gruppe = mapFachZuKlausurGruppe.get(fachID);
+						if (gruppe == null) {
+							gruppe = new Vector<>();
+							mapFachZuKlausurGruppe.put(fachID, gruppe);
+							_klausurGruppen.add(gruppe);
+						}
+						gruppe.add(klausurNr);
+					}
+					
 				}
 				break;
 			}
@@ -133,9 +173,10 @@ public class KlausurterminblockungDynDaten {
 		for (@NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
 			LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
 			if (list == null) throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
-			for (@NotNull Integer klausurNr1 : list) 
-				for (@NotNull Integer klausurNr2 : list) 
-					_verboten[klausurNr1][klausurNr2] = true;
+			for (int klausurNr1 : list) 
+				for (int klausurNr2 : list) 
+					if (klausurNr1 != klausurNr2)
+						_verboten[klausurNr1][klausurNr2] = true;
 		}
 
 	}	
@@ -405,6 +446,23 @@ public class KlausurterminblockungDynDaten {
 
 	/** 
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Füllt dann die Termine nacheinander auf. 
+	 */
+	void aktion_Clear_TermineNacheinander_KlausurenZufaellig() {
+		aktionClear();
+	
+		while (gibExistierenNichtverteilteKlausuren()) {
+			int terminNr = gibErzeugeNeuenTermin();
+			
+			for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+				if (gibIstKlausurgruppeUnverteilt(gruppe)) 
+					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
+		}
+	
+	}
+
+	/** 
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
 	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
 	 */
@@ -413,22 +471,6 @@ public class KlausurterminblockungDynDaten {
 
 		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
-	}
-
-	/** 
-	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Füllt dann die Termine nacheinander auf. 
-	 */
-	void aktion_Clear_TermineNacheinander_KlausurenZufaellig() {
-		aktionClear();
-	
-		while (gibExistierenNichtverteilteKlausuren()) {
-			int terminNr = gibErzeugeNeuenTermin();
-	
-			for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
-				if (gibIstKlausurgruppeUnverteilt(gruppe))
-					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
-		}
 	}
 
 	/** 

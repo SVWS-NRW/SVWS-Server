@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
 @DisplayName("Diese Klasse testet die Klasse KlausurblockungSchienenAlgorithmus")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class KlausurblockungSchieneTests {
+public class KlausurterminblockungTests {
 
 	
 	private static final long BLOCKUNGS_ZEIT = 1000 * 1;
@@ -178,7 +178,6 @@ public class KlausurblockungSchieneTests {
 			
 			HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
 			for (long schuelerID : map.get(stufe).keySet()) {
-
 				for (long klausurID : map.get(stufe).get(schuelerID)) {
 					if (!mapKlausur.containsKey(klausurID)) {
 						GostKursklausur gostKlausur = new GostKursklausur();
