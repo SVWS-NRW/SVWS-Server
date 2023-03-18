@@ -138,6 +138,29 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
+				let mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+				for (let gostKursklausur of pInput) {
+					let klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
+					let schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
+					if (klausurNr === null) 
+						throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+					if (schienenID < 0) {
+						let gruppe : Vector<number> = new Vector();
+						gruppe.add(klausurNr);
+						this._klausurGruppen.add(gruppe);
+					} else {
+						let gruppe : Vector<number> | null = mapSchieneZuKlausurGruppe.get(schienenID);
+						if (gruppe === null) {
+							gruppe = new Vector();
+							mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
+							this._klausurGruppen.add(gruppe);
+						}
+						gruppe.add(klausurNr);
+					}
+				}
+				break;
+			}
 			default: {
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
