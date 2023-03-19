@@ -4,9 +4,9 @@ import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostK
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { KlausurterminblockungDynDaten, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { KlausurterminblockungAlgorithmusGreedy1b, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
 import { KlausurterminblockungAlgorithmusAbstract, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { List, cast_java_util_List } from '../../../java/util/List';
+import { KlausurterminblockungAlgorithmusGreedy2, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2';
 import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
@@ -70,7 +70,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		let seed : number = new Random().nextLong();
 		let random : Random = new Random(seed);
 		let dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
-		let algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten)];
+		let algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten)];
 		dynDaten.aktion_Clear_TermineNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;

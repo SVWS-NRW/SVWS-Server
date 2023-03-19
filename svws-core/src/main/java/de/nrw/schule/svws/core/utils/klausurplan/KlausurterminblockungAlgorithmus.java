@@ -83,8 +83,9 @@ public class KlausurterminblockungAlgorithmus {
 		// Algorithmen erzeugen
 		@NotNull KlausurterminblockungAlgorithmusAbstract @NotNull [] algorithmen = new KlausurterminblockungAlgorithmusAbstract @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Klausuren auf ihre Termine ...
-				//new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), // Klausuren zufällig auf Termine zufällig
-				new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausuren zufällig
+				//new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), // Klausuren zufällig, Termine zufällig
+				//new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausuren zufällig
+				new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), // Klausuren nach Grad, Termine zufällig
 				// ... Ende der Algorithmen.
 		};
 

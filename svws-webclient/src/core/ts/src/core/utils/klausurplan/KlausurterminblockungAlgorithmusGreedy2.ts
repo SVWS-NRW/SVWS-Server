@@ -5,7 +5,7 @@ import { KlausurterminblockungAlgorithmusAbstract, cast_de_nrw_schule_svws_core_
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 
-export class KlausurterminblockungAlgorithmusGreedy1 extends KlausurterminblockungAlgorithmusAbstract {
+export class KlausurterminblockungAlgorithmusGreedy2 extends KlausurterminblockungAlgorithmusAbstract {
 
 
 	/**
@@ -20,14 +20,14 @@ export class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 	}
 
 	public toString() : string {
-		return "Klausuren zufällig --> Termine zufällig";
+		return "Klausurgruppen nach Knotengrad & Schienen zufällig";
 	}
 
 	public berechne(pZeitEnde : number) : void {
-		this._dynDaten.aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig();
+		this._dynDaten.aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig();
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
-			this._dynDaten.aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig();
+			this._dynDaten.aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1()) 
 				this._dynDaten.aktionZustand1Speichern(); else 
 				this._dynDaten.aktionZustand1Laden();
@@ -37,11 +37,11 @@ export class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy1', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
+		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy2', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1(obj : unknown) : KlausurterminblockungAlgorithmusGreedy1 {
-	return obj as KlausurterminblockungAlgorithmusGreedy1;
+export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2(obj : unknown) : KlausurterminblockungAlgorithmusGreedy2 {
+	return obj as KlausurterminblockungAlgorithmusGreedy2;
 }

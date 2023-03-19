@@ -50,7 +50,11 @@ public class KlausurterminblockungDynDaten {
 	/** Bestimmt, ob ein Klausurnummer-Paar am selben Termin verboten ist. */
 	private final @NotNull boolean @NotNull [] @NotNull [] _verboten;
 	
+	/** Alle Klausurgruppen. */
 	private final @NotNull Vector<@NotNull Vector<@NotNull Integer> > _klausurGruppen = new Vector<>();
+
+	/** Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). */
+	private final @NotNull Vector<@NotNull Vector<@NotNull Integer> > _klausurGruppenGrad = new Vector<>();
 	
 	/** 
 	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur, 
@@ -73,11 +77,12 @@ public class KlausurterminblockungDynDaten {
 		_verboten = new boolean[_klausurenAnzahl][_klausurenAnzahl];
 		initialisiereMatrixVerboten(pInput);
 		
-		initialisiereKlausurGruppen(pInput, pConfig);
+		initialisiereKlausurgruppen(pInput, pConfig);
 		checkKlausurgruppenOrException();
+
+		initialisiereKlausurgruppenGrad();
 		
 		aktionClear();
-		
 	}
 	
 	private void checkKlausurgruppenOrException() {
@@ -90,7 +95,7 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereKlausurGruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	private void initialisiereKlausurgruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
 		pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 		
 		switch (pConfig.get_algorithmus()) {
@@ -165,6 +170,39 @@ public class KlausurterminblockungDynDaten {
 			}
 		}
 		
+	}
+	
+	private void initialisiereKlausurgruppenGrad() {
+		// Kopieren
+		_klausurGruppenGrad.addAll(_klausurGruppen);
+
+		// InsertionSort von '_klausurenSortiertGrad'.
+		for (int i = 1; i < _klausurGruppenGrad.size(); i++)
+			for (int j = i; j >= 1; j--) {
+				@NotNull Vector<@NotNull Integer> gruppeR = _klausurGruppenGrad.get(j);
+				@NotNull Vector<@NotNull Integer> gruppeL = _klausurGruppenGrad.get(j-1);
+				int gradR = gibKnotengrad(gruppeR); 
+				int gradL = gibKnotengrad(gruppeL);
+				if (gradL >= gradR) break; // bereits richtig einsortiert.
+				_klausurGruppenGrad.set(j, gruppeL);
+				_klausurGruppenGrad.set(j-1, gruppeR);
+			}
+	}
+
+	private int gibKnotengrad(@NotNull Vector<@NotNull Integer> pGruppe) {
+		int grad = 0;
+		for (@NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) 
+			if (gibIstVerboten(pGruppe, gruppe))
+				grad++;
+		return grad;
+	}
+
+	private boolean gibIstVerboten(@NotNull Vector<@NotNull Integer> pGruppe1, @NotNull Vector<@NotNull Integer> pGruppe2) {
+		for (int klausurNr1 : pGruppe1) 
+			for (int klausurNr2 : pGruppe2) 
+				if (_verboten[klausurNr1][klausurNr2])
+					return true;
+		return false;
 	}
 
 	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
@@ -274,6 +312,32 @@ public class KlausurterminblockungDynDaten {
 		
 		return temp;
 	}
+	
+	/** 
+	 * Liefert ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
+	 * 
+	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst. 
+	 */
+	@NotNull @NotNull Vector<@NotNull Vector<@NotNull Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
+		// Kopieren
+		@NotNull Vector<@NotNull Vector<@NotNull Integer>> temp = new Vector<>();
+		temp.addAll(_klausurGruppenGrad);
+
+		// Permutiere nahe beieinander liegende Indizes.
+		int size = temp.size();
+		for (int i1 = 0; i1 < size; i1++) {
+			int i2 = _random.nextInt(size);
+			if ((i1 - i2) * (i1 - i2) >= size) continue;
+			// Tausche nur dann, wenn Abstand der Indizes kleiner als Wurzel(size) ist.
+			@NotNull Vector<@NotNull Integer> save1 = temp.get(i1);
+			@NotNull Vector<@NotNull Integer> save2 = temp.get(i2);
+			temp.set(i1, save2);
+			temp.set(i2, save1);
+		}
+
+		return temp;
+	}
+	
 
 	private boolean gibVergleicheMitAktuellemZustand(int terminAnzahlX, @NotNull int @NotNull [] klausurZuTerminX) {
 		// Kriterium 1: Die Anzahl an Terminen.
@@ -477,7 +541,7 @@ public class KlausurterminblockungDynDaten {
 	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
 	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
 	 */
-	void aktion_Clear_KlausurenZufaellig_TermineZufaellig() {
+	void aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() {
 		aktionClear();
 
 		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
@@ -502,6 +566,18 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	/** 
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Verteilt dann die Klausurgruppen mit höherem Knoten-Grad zuerst auf eine zufällige Schiene. 
+	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt. 
+	 */
+	void aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() {
+		aktionClear();
+		
+		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+	}
+
+	/** 
 	 * Ausgabe zum Debuggen der Tests.
 	 * 
 	 * @param header Überschrift der Debug-Ausgabe. 
@@ -509,7 +585,7 @@ public class KlausurterminblockungDynDaten {
 	void debug(String header) {
 		System.out.println();
 		System.out.println(header);
-
+	
 		for (int s = 0; s < _terminAnzahl; s++) {
 			String line = "";
 			line += "    Schiene " + (s + 1) + ": ";
@@ -521,12 +597,11 @@ public class KlausurterminblockungDynDaten {
 				}
 			System.out.println(line);
 		}
-
+	
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
 			if (_klausurZuTermin[nr] < 0)
 				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!");
 	}
-
 
 
 }

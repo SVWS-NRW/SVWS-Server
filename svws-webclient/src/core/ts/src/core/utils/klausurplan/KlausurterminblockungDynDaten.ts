@@ -66,7 +66,15 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	private readonly _verboten : Array<Array<boolean>>;
 
+	/**
+	 * Alle Klausurgruppen. 
+	 */
 	private readonly _klausurGruppen : Vector<Vector<number>> = new Vector();
+
+	/**
+	 * Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). 
+	 */
+	private readonly _klausurGruppenGrad : Vector<Vector<number>> = new Vector();
 
 
 	/**
@@ -88,7 +96,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._klausurZuTermin2 = Array(this._klausurenAnzahl).fill(0);
 		this._verboten = [...Array(this._klausurenAnzahl)].map(e => Array(this._klausurenAnzahl).fill(false));
 		this.initialisiereMatrixVerboten(pInput);
-		this.initialisiereKlausurGruppen(pInput, pConfig);
+		this.initialisiereKlausurgruppen(pInput, pConfig);
+		this.initialisiereKlausurgruppenGrad();
 		this.checkKlausurgruppenOrException();
 		this.aktionClear();
 	}
@@ -102,7 +111,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereKlausurGruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
+	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
 		pConfig.set_algorithmus_faecherweise();
 		switch (pConfig.get_algorithmus()) {
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
@@ -166,6 +175,37 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
 		}
+	}
+
+	private initialisiereKlausurgruppenGrad() : void {
+		this._klausurGruppenGrad.addAll(this._klausurGruppen);
+		for (let i : number = 1; i < this._klausurGruppenGrad.size(); i++)
+			for (let j : number = i; j >= 1; j--){
+				let gruppeR : Vector<number> = this._klausurGruppenGrad.get(j);
+				let gruppeL : Vector<number> = this._klausurGruppenGrad.get(j - 1);
+				let gradR : number = this.gibKnotengrad(gruppeR);
+				let gradL : number = this.gibKnotengrad(gruppeL);
+				if (gradL >= gradR) 
+					break;
+				this._klausurGruppenGrad.set(j, gruppeL);
+				this._klausurGruppenGrad.set(j - 1, gruppeR);
+			}
+	}
+
+	private gibKnotengrad(pGruppe : Vector<number>) : number {
+		let grad : number = 0;
+		for (let gruppe of this._klausurGruppen) 
+			if (this.gibIstVerboten(pGruppe, gruppe)) 
+				grad++;
+		return grad;
+	}
+
+	private gibIstVerboten(pGruppe1 : Vector<number>, pGruppe2 : Vector<number>) : boolean {
+		for (let klausurNr1 of pGruppe1) 
+			for (let klausurNr2 of pGruppe2) 
+				if (this._verboten[klausurNr1][klausurNr2]) 
+					return true;
+		return false;
 	}
 
 	private initialisiereMapKlausuren(pInput : List<GostKursklausur>) : void {
@@ -261,6 +301,28 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		temp.addAll(this._klausurGruppen);
 		for (let i1 : number = 0; i1 < temp.size(); i1++){
 			let i2 : number = this._random.nextInt(temp.size());
+			let save1 : Vector<number> = temp.get(i1);
+			let save2 : Vector<number> = temp.get(i2);
+			temp.set(i1, save2);
+			temp.set(i2, save1);
+		}
+		return temp;
+	}
+
+	/**
+	 *
+	 * Liefert ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
+	 * 
+	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst. 
+	 */
+	gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() : Vector<Vector<number>> {
+		let temp : Vector<Vector<number>> = new Vector();
+		temp.addAll(this._klausurGruppenGrad);
+		let size : number = temp.size();
+		for (let i1 : number = 0; i1 < size; i1++){
+			let i2 : number = this._random.nextInt(size);
+			if ((i1 - i2) * (i1 - i2) >= size) 
+				continue;
 			let save1 : Vector<number> = temp.get(i1);
 			let save2 : Vector<number> = temp.get(i2);
 			temp.set(i1, save2);
@@ -460,7 +522,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
 	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
 	 */
-	aktion_Clear_KlausurenZufaellig_TermineZufaellig() : void {
+	aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() : void {
 		this.aktionClear();
 		for (let gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge()) 
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
@@ -479,6 +541,18 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				if (this.gibIstKlausurgruppeUnverteilt(gruppe)) 
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
+	}
+
+	/**
+	 *
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Verteilt dann die Klausurgruppen mit höherem Knoten-Grad zuerst auf eine zufällige Schiene. 
+	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt. 
+	 */
+	aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() : void {
+		this.aktionClear();
+		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
 	/**
