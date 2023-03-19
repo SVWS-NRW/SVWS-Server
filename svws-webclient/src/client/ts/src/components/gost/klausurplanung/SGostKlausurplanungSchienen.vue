@@ -1,5 +1,55 @@
 <template>
 	<div>
+		<svws-ui-modal ref="modal" size="small">
+			<template #modalTitle>
+				Automatisch Blocken
+			</template>
+			<template #modalDescription>
+				Hier können Sie weitere Einstellungen vornehmen:
+			</template>
+			<template #modalContent>
+				<svws-ui-radio-group :row="true"
+					class="justify-center">
+					<svws-ui-radio-option value="algNormal" v-model="algMode"
+						name="blockAlgo"
+						label="Normal" />
+					<svws-ui-radio-option value="algFaecher" v-model="algMode"
+						name="blockAlgo"
+						label="Fächerweise" />
+					<svws-ui-radio-option value="algSchienen" v-model="algMode"
+						name="blockAlgo"
+						label="Schienenweise" />
+				</svws-ui-radio-group>
+				<svws-ui-radio-group :row="true"
+					class="justify-center">
+					<svws-ui-radio-option value="lkgkMix" v-model="lkgkMode"
+						name="lkgkMode"
+						label="Gemischt" />
+					<svws-ui-radio-option value="lkgkSep" v-model="lkgkMode"
+						name="lkgkMode"
+						label="Getrennt" />
+					<svws-ui-radio-option value="lkgkOnlyLk" v-model="lkgkMode"
+						name="lkgkMode"
+						label="Nur LK" />
+					<svws-ui-radio-option value="lkgkOnlyGk" v-model="lkgkMode"
+						name="lkgkMode"
+						label="Nur GK" />
+				</svws-ui-radio-group>
+				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === 'algNormal'">
+					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
+				</svws-ui-checkbox>
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="secondary"
+					@click="blocken">
+					Blocken
+				</svws-ui-button>
+				<svws-ui-button type="secondary"
+					@click="modal.closeModal()">
+					Abbrechen
+				</svws-ui-button>
+			</template>
+		</svws-ui-modal>
 		<div class="flex flex-row items-center gap-x-5">
 			<label for="rgQuartalAuswahl">Quartalauswahl: </label>
 			<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
@@ -9,27 +59,7 @@
 			</svws-ui-radio-group>
 			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
 			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-			<!--<svws-ui-button class="secondary" @click="blocken" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>-->
-			<svws-ui-dropdown type="primary" :disabled="quartal <= 0 || termine.size() > 0">
-				<template #dropdownButton>
-					<svws-ui-spinner :spinning="loading" />&nbsp;Automatisch blocken
-				</template>
-				<template #dropdownItems>
-					<SvwsUiDropdownItem
-						@click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
-						Normal - Kursarten mischen
-					</SvwsUiDropdownItem>
-					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT)">
-						Normal - Kursarten trennen
-					</SvwsUiDropdownItem>
-					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
-						Schienenweise
-					</SvwsUiDropdownItem>
-					<SvwsUiDropdownItem @click="blocken(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE, KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE)">
-						Fächerweise
-					</SvwsUiDropdownItem>
-				</template>
-			</svws-ui-dropdown>
+			<svws-ui-button class="secondary" @click="modal.openModal()" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
 			<svws-ui-button class="secondary" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 		</div>
 		<div class="flex flex-row gap-8 mt-5">
@@ -66,8 +96,10 @@
 <script setup lang="ts">
 
 	import { GostKursklausur, GostKlausurtermin, KlausurblockungSchienenAlgorithmus, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
-	import { computed, ref } from 'vue';
+	import { computed, Ref, ref } from 'vue';
 	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
+
+	const modal = ref<any>(null);
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 	const loading = ref<boolean>(false);
@@ -86,16 +118,36 @@
 
 	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
 
-	const blocken = async (mode: number, lkgk: number) => {
+	const algMode = ref("algNormal");
+	const lkgkMode = ref("lkgkMix");
+	const blockGleicheLehrkraft = ref(false);
+
+	const blocken = async () => {
 		loading.value = true;
+		modal.value.closeModal();
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
 		// Aufruf von Blockungsalgorithmus
-		KlausurterminblockungAlgorithmusConfig
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		blockConfig.set_algorithmus(mode);
-		blockConfig.set_lk_gk_modus(lkgk);
+		if (algMode.value === "algNormal")
+			blockConfig.set_algorithmus_normal();
+		else if (algMode.value === "algFaecher")
+			blockConfig.set_algorithmus_faecherweise();
+		else if (algMode.value === "algSchienen")
+			blockConfig.set_algorithmus_schienenweise();
+		if (lkgkMode.value === "lkgkMix")
+			blockConfig.set_lk_gk_modus_beide();
+		else if (lkgkMode.value === "lkgkSep")
+			blockConfig.set_lk_gk_modus_getrennt();
+		else if (lkgkMode.value === "lkgkOnlyLk")
+			blockConfig.set_lk_gk_modus_nur_lk();
+		else if (lkgkMode.value === "lkgkOnlyGk")
+			blockConfig.set_lk_gk_modus_nur_gk();
+		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
+		console.log(blockConfig.get_algorithmus());
+		console.log(blockConfig.get_lk_gk_modus());
+		console.log(blockConfig.get_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin());
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
 		for await (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(quartal.value);
