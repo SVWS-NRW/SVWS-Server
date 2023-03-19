@@ -20,7 +20,7 @@ export class KlausurterminblockungAlgorithmusGreedy2 extends Klausurterminblocku
 	}
 
 	public toString() : string {
-		return "Klausurgruppen nach Knotengrad & Schienen zufällig";
+		return "Klausurgruppen nach Knotengrad, Schienen zufällig";
 	}
 
 	public berechne(pZeitEnde : number) : void {

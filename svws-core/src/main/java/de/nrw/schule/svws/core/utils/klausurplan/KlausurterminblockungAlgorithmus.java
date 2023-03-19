@@ -83,9 +83,9 @@ public class KlausurterminblockungAlgorithmus {
 		// Algorithmen erzeugen
 		@NotNull KlausurterminblockungAlgorithmusAbstract @NotNull [] algorithmen = new KlausurterminblockungAlgorithmusAbstract @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Klausuren auf ihre Termine ...
-				// new KlausurterminblockungAlgorithmusGreedy1 (random, dynDaten), // Klausurgruppen zufällig, Termine zufällig
-				// new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausurgruppen zufällig
-				// new KlausurterminblockungAlgorithmusGreedy2 (random, dynDaten), // Klausurgruppen nach Grad, Termine zufällig
+				new KlausurterminblockungAlgorithmusGreedy1 (random, dynDaten), // Klausurgruppen zufällig, Termine zufällig
+				new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausurgruppen zufällig
+				new KlausurterminblockungAlgorithmusGreedy2 (random, dynDaten), // Klausurgruppen nach Grad, Termine zufällig
 				new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), // Termine nacheinander, Klausurgruppen nach Grad
 				// ... Ende der Algorithmen.
 		};
@@ -97,12 +97,13 @@ public class KlausurterminblockungAlgorithmus {
 		
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
 		do {
-			// System.out.println("zeitProAlgorithmus --> " + zeitProAlgorithmus);
+			// System.out.println("\nzeitProAlgorithmus --> " + zeitProAlgorithmus);
 
 			// Alle Algorithmus starten (pro Algorithmus ggf. auch mehrfach).
 			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
 				long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
+				// System.out.println(algorithmen[iAlgo].toString()+" --> " + dynDaten.gibTerminAnzahl() );
 			}
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.

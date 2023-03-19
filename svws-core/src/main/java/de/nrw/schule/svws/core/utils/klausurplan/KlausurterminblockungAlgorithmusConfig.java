@@ -51,15 +51,17 @@ public class KlausurterminblockungAlgorithmusConfig {
 	private int algorithmus;
 	private int lk_gk_modus;
 	private boolean regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
+	private boolean regel_bevorzuge_gleiche_kursschienen_pro_termin;
 
 	/**
 	 * Der Konstruktor definiert Standardwerte.
 	 */
 	public KlausurterminblockungAlgorithmusConfig() {
 		set_max_time_millis(1000L);
-		set_lk_gk_modus(LK_GK_MODUS_BEIDE);
+		set_lk_gk_modus_beide();
+		set_algorithmus_normal();
 		set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
-		set_algorithmus(ALGORITHMUS_NORMAL);
+		set_regel_bevorzuge_gleiche_kursschienen_pro_termin(false);
 	}
 
 	/**
@@ -173,11 +175,26 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
-	 * @param pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 * @param pAktivieren TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
-	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(
-			boolean pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin) {
-		regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
+	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(boolean pAktivieren) {
+		regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pAktivieren;
+	}
+
+	/**
+	 * Liefert TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 * @return TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 */
+	public boolean get_regel_bevorzuge_gleiche_kursschienen_pro_termin() {
+		return regel_bevorzuge_gleiche_kursschienen_pro_termin;
+	}
+
+	/**
+	 * TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 * @param pAktivieren TRUETRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 */
+	public void set_regel_bevorzuge_gleiche_kursschienen_pro_termin(boolean pAktivieren) {
+		this.regel_bevorzuge_gleiche_kursschienen_pro_termin = pAktivieren;
 	}
 
 }

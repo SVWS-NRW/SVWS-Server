@@ -19,7 +19,7 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	}
 
 	public toString() : string {
-		return "Klausuren zufällig & Schienen nacheinander";
+		return "Schienen nacheinander, Klausurgruppen zufällig";
 	}
 
 	public berechne(pZeitEnde : number) : void {

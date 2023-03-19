@@ -246,6 +246,15 @@ public class KlausurterminblockungDynDaten {
 
 	}	
 	
+	/**
+	 * Liefert die aktuelle Anzahl an Terminen.
+	 * 
+	 * @return die aktuelle Anzahl an Terminen.
+	 */
+	int gibTerminAnzahl() {
+		return _terminAnzahl;
+	}
+
 	/** 
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
 	 * 
@@ -521,7 +530,7 @@ public class KlausurterminblockungDynDaten {
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
 			_klausurZuTermin2[nr] = _klausurZuTermin[nr];
 		
-		debug("BESSER");
+		//debug("BESSER");
 	}
 
 	/** 

@@ -30,7 +30,7 @@ public class KlausurterminblockungAlgorithmusGreedy2 extends Klausurterminblocku
 
 	@Override
 	public @NotNull String toString() {
-		return "Klausurgruppen nach Knotengrad & Schienen zufällig";
+		return "Klausurgruppen nach Knotengrad, Schienen zufällig";
 	}
 
 	@Override

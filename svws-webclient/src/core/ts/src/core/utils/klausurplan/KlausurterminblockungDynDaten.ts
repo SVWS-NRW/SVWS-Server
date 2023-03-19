@@ -246,6 +246,15 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	/**
+	 * Liefert die aktuelle Anzahl an Terminen.
+	 * 
+	 * @return die aktuelle Anzahl an Terminen.
+	 */
+	gibTerminAnzahl() : number {
+		return this._terminAnzahl;
+	}
+
+	/**
 	 *
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
 	 * 
@@ -501,7 +510,6 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._terminAnzahl2 = this._terminAnzahl;
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 			this._klausurZuTermin2[nr] = this._klausurZuTermin[nr];
-		this.debug("BESSER");
 	}
 
 	/**

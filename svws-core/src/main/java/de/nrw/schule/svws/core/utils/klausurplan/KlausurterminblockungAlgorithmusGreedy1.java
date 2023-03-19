@@ -29,7 +29,7 @@ public class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 
 	@Override
 	public @NotNull String toString() {
-		return "Klausuren zufällig --> Termine zufällig";
+		return "Klausurgruppen zufällig, Termine zufällig";
 	}
 
 	@Override

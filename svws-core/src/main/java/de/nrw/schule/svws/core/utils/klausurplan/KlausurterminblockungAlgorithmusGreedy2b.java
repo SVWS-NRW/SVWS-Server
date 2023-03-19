@@ -29,7 +29,7 @@ public class KlausurterminblockungAlgorithmusGreedy2b extends Klausurterminblock
 
 	@Override
 	public @NotNull String toString() {
-		return "Schienen nacheinander & Klausuren nach Knotengrad";
+		return "Schienen nacheinander, Klausurgruppen nach Knotengrad";
 	}
 
 	@Override

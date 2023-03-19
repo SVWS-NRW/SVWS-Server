@@ -28,7 +28,7 @@ public class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 
 	@Override
 	public @NotNull String toString() {
-		return "Klausuren zufällig & Schienen nacheinander";
+		return "Schienen nacheinander, Klausurgruppen zufällig";
 	}
 
 	@Override

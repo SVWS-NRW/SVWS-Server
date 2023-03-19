@@ -47,6 +47,8 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	private regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin : boolean = false;
 
+	private regel_bevorzuge_gleiche_kursschienen_pro_termin : boolean = false;
+
 
 	/**
 	 * Der Konstruktor definiert Standardwerte.
@@ -54,9 +56,10 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public constructor() {
 		super();
 		this.set_max_time_millis(1000);
-		this.set_lk_gk_modus(KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE);
+		this.set_lk_gk_modus_beide();
+		this.set_algorithmus_normal();
 		this.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
-		this.set_algorithmus(KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL);
+		this.set_regel_bevorzuge_gleiche_kursschienen_pro_termin(false);
 	}
 
 	/**
@@ -168,10 +171,26 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
-	 * @param pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 * @param pAktivieren TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
-	public set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin : boolean) : void {
-		this.regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pRegel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
+	public set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(pAktivieren : boolean) : void {
+		this.regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pAktivieren;
+	}
+
+	/**
+	 * Liefert TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 * @return TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 */
+	public get_regel_bevorzuge_gleiche_kursschienen_pro_termin() : boolean {
+		return this.regel_bevorzuge_gleiche_kursschienen_pro_termin;
+	}
+
+	/**
+	 * TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 * @param pAktivieren TRUETRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 */
+	public set_regel_bevorzuge_gleiche_kursschienen_pro_termin(pAktivieren : boolean) : void {
+		this.regel_bevorzuge_gleiche_kursschienen_pro_termin = pAktivieren;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
