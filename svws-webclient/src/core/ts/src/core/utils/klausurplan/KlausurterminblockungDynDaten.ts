@@ -255,12 +255,22 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl an Klausurgruppen. Dies ist ein theoretisches Maximum
+	 * für die größte Anzahl an Terminen. 
+	 * 
+	 * @return die Anzahl an Klausurgruppen.
+	 */
+	gibKlausurgruppenAnzahl() : number {
+		return this._klausurGruppen.size();
+	}
+
+	/**
 	 *
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
 	 * 
 	 * @return die Anzahl noch nicht verteilter Klausuren. 
 	 */
-	private gibExistierenNichtverteilteKlausuren() : boolean {
+	gibExistierenNichtverteilteKlausuren() : boolean {
 		for (let klausurNr : number = 0; klausurNr < this._klausurenAnzahl; klausurNr++)
 			if (this._klausurZuTermin[klausurNr] < 0) 
 				return true;
@@ -273,9 +283,17 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * 
 	 * @return die Nummer eines neu erzeugten Termins. 
 	 */
-	private gibErzeugeNeuenTermin() : number {
+	gibErzeugeNeuenTermin() : number {
 		this._terminAnzahl++;
 		return this._terminAnzahl - 1;
+	}
+
+	/**
+	 *
+	 * Löscht den letzten Termin.
+	 */
+	entferneLetztenTermin() : void {
+		this._terminAnzahl--;
 	}
 
 	/**
@@ -339,6 +357,37 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		return temp;
 	}
 
+	/**
+	 * Liefert die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
+	 * 
+	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
+	 */
+	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() : Vector<number> {
+		let min : number = this._klausurenAnzahl;
+		let gruppeMin : Vector<number> | null = null;
+		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+			if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
+				let terminmoeglichekeiten : number = this.gibTerminmoeglichkeiten(gruppe);
+				if (terminmoeglichekeiten < min) {
+					min = terminmoeglichekeiten;
+					gruppeMin = gruppe;
+				}
+			}
+		if (gruppeMin === null) 
+			throw new DeveloperNotificationException("Das darf nicht passieren!")
+		return gruppeMin;
+	}
+
+	private gibTerminmoeglichkeiten(gruppe : Vector<number>) : number {
+		let summe : number = 0;
+		for (let terminNr : number = 0; terminNr < this._terminAnzahl; terminNr++)
+			if (this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
+				summe++;
+				this.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
+			}
+		return summe;
+	}
+
 	private gibVergleicheMitAktuellemZustand(terminAnzahlX : number, klausurZuTerminX : Array<number>) : boolean {
 		if (this._terminAnzahl < terminAnzahlX) 
 			return true;
@@ -381,7 +430,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param  pTermin der Termin 
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten. 
 	 */
-	private aktionSetzeKlausurgruppeInTermin(pGruppe : Vector<number>, pTermin : number) : boolean {
+	aktionSetzeKlausurgruppeInTermin(pGruppe : Vector<number>, pTermin : number) : boolean {
 		if (pTermin < 0) 
 			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
 		if (pTermin >= this._terminAnzahl) 
@@ -398,11 +447,29 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
+	 * Entfernt die Klausuren der Gruppe aus ihrem Termin.
+	 * @param  pGruppe die Gruppe aller Klausuren.
+	 * @param  pTermin der Termin 
+	 */
+	aktionEntferneKlausurgruppeAusTermin(pGruppe : Vector<number>, pTermin : number) : void {
+		if (pTermin < 0) 
+			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
+		if (pTermin >= this._terminAnzahl) 
+			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
+		for (let nr of pGruppe) {
+			if (this._klausurZuTermin[nr] !== pTermin) 
+				throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!")
+			this._klausurZuTermin[nr] = -1;
+		}
+	}
+
+	/**
+	 *
 	 * Erhöht die Termin-Anzahl um 1, setzt alle Klausuren der übergebenen Gruppe in den neuen Termin.
 	 * 
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
-	private aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : Vector<number>) : void {
+	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : Vector<number>) : void {
 		for (let klausurNr of pGruppe) 
 			if (this._klausurZuTermin[klausurNr] >= 0) 
 				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!")

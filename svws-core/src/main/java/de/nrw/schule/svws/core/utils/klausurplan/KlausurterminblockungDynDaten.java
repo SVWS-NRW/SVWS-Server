@@ -255,12 +255,22 @@ public class KlausurterminblockungDynDaten {
 		return _terminAnzahl;
 	}
 
+	/**
+	 * Liefert die Anzahl an Klausurgruppen. Dies ist ein theoretisches Maximum
+	 * für die größte Anzahl an Terminen. 
+	 * 
+	 * @return die Anzahl an Klausurgruppen.
+	 */
+	int gibKlausurgruppenAnzahl() {
+		return _klausurGruppen.size();
+	}
+
 	/** 
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
 	 * 
 	 * @return die Anzahl noch nicht verteilter Klausuren. 
 	 */
-	private boolean gibExistierenNichtverteilteKlausuren() {
+	boolean gibExistierenNichtverteilteKlausuren() {
 		for (int klausurNr = 0; klausurNr < _klausurenAnzahl; klausurNr++)
 			if (_klausurZuTermin[klausurNr] < 0)
 				return true;
@@ -272,11 +282,18 @@ public class KlausurterminblockungDynDaten {
 	 * 
 	 * @return die Nummer eines neu erzeugten Termins. 
 	 */
-	private int gibErzeugeNeuenTermin() {
+	int gibErzeugeNeuenTermin() {
 		_terminAnzahl++;
 		return _terminAnzahl - 1;
 	}
 
+	/** 
+	 * Löscht den letzten Termin.
+	 */
+	void entferneLetztenTermin() {
+		_terminAnzahl--;
+	}
+	
 	/** 
 	 * Liefert ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge.
 	 * 
@@ -347,6 +364,38 @@ public class KlausurterminblockungDynDaten {
 	}
 	
 
+	/**
+	 * Liefert die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
+	 * 
+	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
+	 */
+	@NotNull Vector<@NotNull Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
+		int min = _klausurenAnzahl;
+		Vector<@NotNull Integer> gruppeMin = null;
+		
+		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+			if (gibIstKlausurgruppeUnverteilt(gruppe)) {
+				int terminmoeglichekeiten = gibTerminmoeglichkeiten(gruppe);
+				if (terminmoeglichekeiten < min) {
+					min = terminmoeglichekeiten;
+					gruppeMin = gruppe;
+				}
+			}
+		
+		if (gruppeMin == null) throw new DeveloperNotificationException("Das darf nicht passieren!");
+		return gruppeMin;
+	}
+
+	private int gibTerminmoeglichkeiten(@NotNull Vector<@NotNull Integer> gruppe) {
+		int summe = 0;
+		for (int terminNr = 0; terminNr < _terminAnzahl; terminNr++) 
+			if (aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
+				summe++;
+				aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
+			}
+		return summe;
+	}
+
 	private boolean gibVergleicheMitAktuellemZustand(int terminAnzahlX, @NotNull int @NotNull [] klausurZuTerminX) {
 		// Kriterium 1: Die Anzahl an Terminen.
 		if (_terminAnzahl < terminAnzahlX) return true;
@@ -397,7 +446,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param  pTermin der Termin 
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten. 
 	 */
-	private boolean aktionSetzeKlausurgruppeInTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
+	boolean aktionSetzeKlausurgruppeInTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin("+pGruppe+", "+pTermin+") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin("+pGruppe+", "+pTermin+") --> Termin zu groß!");
 	
@@ -414,13 +463,27 @@ public class KlausurterminblockungDynDaten {
 		
 		return true;
 	}
+	
+	/** 
+	 * Entfernt die Klausuren der Gruppe aus ihrem Termin.
+	 * @param  pGruppe die Gruppe aller Klausuren.
+	 * @param  pTermin der Termin 
+	 */
+	void aktionEntferneKlausurgruppeAusTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
+		if (pTermin <              0) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu klein!");
+		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu groß!");
+		for (int nr : pGruppe) {
+			if (_klausurZuTermin[nr] != pTermin) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!");
+			_klausurZuTermin[nr] = -1;
+		}
+	}
 
 	/** 
 	 * Erhöht die Termin-Anzahl um 1, setzt alle Klausuren der übergebenen Gruppe in den neuen Termin.
 	 * 
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
-	private void aktionSetzeKlausurgruppeInNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
+	void aktionSetzeKlausurgruppeInNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
 		for (int klausurNr : pGruppe)
 			if (_klausurZuTermin[klausurNr] >= 0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin("+klausurNr+") --> Die Klausur ist bereits einem Termin zugeordnet!");
 		
@@ -496,7 +559,6 @@ public class KlausurterminblockungDynDaten {
 	void aktionClear() {
 		for (int i = 0; i < _klausurenAnzahl; i++)
 			_klausurZuTermin[i] = -1;
-	
 		_terminAnzahl = 0;
 	}
 

@@ -87,6 +87,7 @@ public class KlausurterminblockungAlgorithmus {
 				new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausurgruppen zufällig
 				new KlausurterminblockungAlgorithmusGreedy2 (random, dynDaten), // Klausurgruppen nach Grad, Termine zufällig
 				new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), // Termine nacheinander, Klausurgruppen nach Grad
+				new KlausurterminblockungAlgorithmusGreedy3 (random, dynDaten), // Termine nacheinander, Klausurgruppen mit Backtracking
 				// ... Ende der Algorithmen.
 		};
 

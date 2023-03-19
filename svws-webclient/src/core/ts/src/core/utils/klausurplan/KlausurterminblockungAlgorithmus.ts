@@ -4,6 +4,7 @@ import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostK
 import { KlausurterminblockungAlgorithmusGreedy1, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1';
 import { KlausurterminblockungAlgorithmusGreedy2, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2';
 import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { KlausurterminblockungAlgorithmusGreedy3, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy3 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy3';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 import { Random, cast_java_util_Random } from '../../../java/util/Random';
 import { KlausurterminblockungDynDaten, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
@@ -73,7 +74,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		let seed : number = new Random().nextLong();
 		let random : Random = new Random(seed);
 		let dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
-		let algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten)];
+		let algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy3(random, dynDaten)];
 		dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;
