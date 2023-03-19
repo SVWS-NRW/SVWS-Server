@@ -453,6 +453,7 @@ export { KlausurterminblockungAlgorithmusConfig } from './core/utils/klausurplan
 export { KlausurterminblockungAlgorithmusGreedy1 } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1';
 export { KlausurterminblockungAlgorithmusGreedy1b } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
 export { KlausurterminblockungAlgorithmusGreedy2 } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2';
+export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
 export { KlausurterminblockungDynDaten } from './core/utils/klausurplan/KlausurterminblockungDynDaten';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';

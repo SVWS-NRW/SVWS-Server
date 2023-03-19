@@ -97,8 +97,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._verboten = [...Array(this._klausurenAnzahl)].map(e => Array(this._klausurenAnzahl).fill(false));
 		this.initialisiereMatrixVerboten(pInput);
 		this.initialisiereKlausurgruppen(pInput, pConfig);
-		this.initialisiereKlausurgruppenGrad();
 		this.checkKlausurgruppenOrException();
+		this.initialisiereKlausurgruppenGrad();
 		this.aktionClear();
 	}
 
@@ -112,7 +112,6 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
-		pConfig.set_algorithmus_faecherweise();
 		switch (pConfig.get_algorithmus()) {
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
 				for (let gostKursklausur of pInput) {
@@ -531,9 +530,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Füllt dann die Termine nacheinander auf. 
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen zufällig. 
 	 */
-	aktion_Clear_TermineNacheinander_KlausurenZufaellig() : void {
+	aktion_Clear_TermineNacheinander_GruppeZufaellig() : void {
 		this.aktionClear();
 		while (this.gibExistierenNichtverteilteKlausuren()) {
 			let terminNr : number = this.gibErzeugeNeuenTermin();
@@ -553,6 +552,21 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this.aktionClear();
 		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+	}
+
+	/**
+	 *
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen nach ihrem Grad. 
+	 */
+	public aktion_Clear_TermineNacheinander_GruppeNachGrad() : void {
+		this.aktionClear();
+		while (this.gibExistierenNichtverteilteKlausuren()) {
+			let terminNr : number = this.gibErzeugeNeuenTermin();
+			for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+				if (this.gibIstKlausurgruppeUnverteilt(gruppe)) 
+					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
+		}
 	}
 
 	/**

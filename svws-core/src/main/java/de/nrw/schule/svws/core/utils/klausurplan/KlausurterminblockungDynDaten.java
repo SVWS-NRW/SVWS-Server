@@ -68,7 +68,6 @@ public class KlausurterminblockungDynDaten {
 		_random = pRandom;
 		
 		initialisiereMapKlausuren(pInput);
-		
 		_klausurenAnzahl = _mapKlausurZuNummer.size();
 		_klausurZuTermin = new int[_klausurenAnzahl];
 		_klausurZuTermin1 = new int[_klausurenAnzahl];
@@ -96,7 +95,7 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void initialisiereKlausurgruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-		pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
+		// pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 		
 		switch (pConfig.get_algorithmus()) {
 			// Jede Gruppe besteht aus einer einzelnen Klausur
@@ -550,9 +549,9 @@ public class KlausurterminblockungDynDaten {
 
 	/** 
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Füllt dann die Termine nacheinander auf. 
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen zufällig. 
 	 */
-	void aktion_Clear_TermineNacheinander_KlausurenZufaellig() {
+	void aktion_Clear_TermineNacheinander_GruppeZufaellig() {
 		aktionClear();
 	
 		while (gibExistierenNichtverteilteKlausuren()) {
@@ -575,6 +574,22 @@ public class KlausurterminblockungDynDaten {
 		
 		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+	}
+
+	/** 
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen nach ihrem Grad. 
+	 */
+	public void aktion_Clear_TermineNacheinander_GruppeNachGrad() {
+		aktionClear();
+		
+		while (gibExistierenNichtverteilteKlausuren()) {
+			int terminNr = gibErzeugeNeuenTermin();
+			
+			for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+				if (gibIstKlausurgruppeUnverteilt(gruppe)) 
+					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
+		}
 	}
 
 	/** 

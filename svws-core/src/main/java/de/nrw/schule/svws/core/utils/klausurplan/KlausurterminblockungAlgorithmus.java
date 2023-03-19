@@ -83,15 +83,16 @@ public class KlausurterminblockungAlgorithmus {
 		// Algorithmen erzeugen
 		@NotNull KlausurterminblockungAlgorithmusAbstract @NotNull [] algorithmen = new KlausurterminblockungAlgorithmusAbstract @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Klausuren auf ihre Termine ...
-				//new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), // Klausuren zufällig, Termine zufällig
-				//new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausuren zufällig
-				new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), // Klausuren nach Grad, Termine zufällig
+				// new KlausurterminblockungAlgorithmusGreedy1 (random, dynDaten), // Klausurgruppen zufällig, Termine zufällig
+				// new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), // Termine nacheinander, Klausurgruppen zufällig
+				// new KlausurterminblockungAlgorithmusGreedy2 (random, dynDaten), // Klausurgruppen nach Grad, Termine zufällig
+				new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), // Termine nacheinander, Klausurgruppen nach Grad
 				// ... Ende der Algorithmen.
 		};
 
 		
 		// Generiere das erste Ergebnis (Zustand2 = bisheriges globales Optimum)
-		dynDaten.aktion_Clear_TermineNacheinander_KlausurenZufaellig();
+		dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
