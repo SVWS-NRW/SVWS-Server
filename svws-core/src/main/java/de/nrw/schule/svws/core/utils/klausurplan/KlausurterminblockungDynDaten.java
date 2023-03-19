@@ -74,10 +74,10 @@ public class KlausurterminblockungDynDaten {
 		initialisiereMatrixVerboten(pInput);
 		
 		initialisiereKlausurGruppen(pInput, pConfig);
+		checkKlausurgruppenOrException();
 		
 		aktionClear();
 		
-		checkKlausurgruppenOrException();
 	}
 	
 	private void checkKlausurgruppenOrException() {
@@ -91,7 +91,7 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void initialisiereKlausurGruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-		// pConfig.set_algorithmus_schienenweise(); // TODO BAR remove fake algorithm
+		pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 		
 		switch (pConfig.get_algorithmus()) {
 			// Jede Gruppe besteht aus einer einzelnen Klausur
@@ -111,8 +111,9 @@ public class KlausurterminblockungDynDaten {
 				@NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
 				for (@NotNull GostKursklausur gostKursklausur : pInput) {
 					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-					long fachID = gostKursklausur.idFach;
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+					
+					long fachID = gostKursklausur.idFach;
 					if (fachID < 0   ) {
 						// Ohne FachID --> Erzeuge eigene Gruppe
 						@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
@@ -137,15 +138,16 @@ public class KlausurterminblockungDynDaten {
 				@NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
 				for (@NotNull GostKursklausur gostKursklausur : pInput) {
 					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-					long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+					
+					long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
 					if (schienenID < 0   ) {
-						// Ohne FachID --> Erzeuge eigene Gruppe
+						// Ohne schienenID --> Erzeuge eigene Gruppe
 						@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
 						gruppe.add(klausurNr);
 						_klausurGruppen.add(gruppe);
 					} else {
-						// Mit FachID --> Suche zugehörige Gruppe
+						// Mit schienenID --> Suche zugehörige Gruppe
 						Vector<@NotNull Integer> gruppe = mapSchieneZuKlausurGruppe.get(schienenID);
 						if (gruppe == null) {
 							gruppe = new Vector<>();
@@ -472,6 +474,18 @@ public class KlausurterminblockungDynDaten {
 
 	/** 
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
+	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
+	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
+	 */
+	void aktion_Clear_KlausurenZufaellig_TermineZufaellig() {
+		aktionClear();
+
+		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+	}
+
+	/** 
+	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Füllt dann die Termine nacheinander auf. 
 	 */
 	void aktion_Clear_TermineNacheinander_KlausurenZufaellig() {
@@ -485,18 +499,6 @@ public class KlausurterminblockungDynDaten {
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
 	
-	}
-
-	/** 
-	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
-	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
-	 */
-	void aktion_Clear_KlausurenZufaellig_TermineZufaellig() {
-		aktionClear();
-
-		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
-			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
 	/** 
