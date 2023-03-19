@@ -9,6 +9,31 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostLaufbahnplanungDaten extends JavaObject {
 
 	/**
+	 * Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind. 
+	 */
+	public schulNr : number = 0;
+
+	/**
+	 * Der erste Teil (von dreien) der Bezeichnung der Schule 
+	 */
+	public schulBezeichnung1 : string = "";
+
+	/**
+	 * Der zweite Teil (von dreien) der Bezeichnung der Schule 
+	 */
+	public schulBezeichnung2 : string = "";
+
+	/**
+	 * Der dritte Teil (von dreien) der Bezeichnung der Schule 
+	 */
+	public schulBezeichnung3 : string = "";
+
+	/**
+	 * Anmerkungen zu diesen Daten 
+	 */
+	public anmerkungen : string = "";
+
+	/**
 	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. 
 	 */
 	public abiturjahr : number = -1;
@@ -76,6 +101,21 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDaten {
 		const obj = JSON.parse(json);
 		const result = new GostLaufbahnplanungDaten();
+		if (typeof obj.schulNr === "undefined")
+			 throw new Error('invalid json format, missing attribute schulNr');
+		result.schulNr = obj.schulNr;
+		if (typeof obj.schulBezeichnung1 === "undefined")
+			 throw new Error('invalid json format, missing attribute schulBezeichnung1');
+		result.schulBezeichnung1 = obj.schulBezeichnung1;
+		if (typeof obj.schulBezeichnung2 === "undefined")
+			 throw new Error('invalid json format, missing attribute schulBezeichnung2');
+		result.schulBezeichnung2 = obj.schulBezeichnung2;
+		if (typeof obj.schulBezeichnung3 === "undefined")
+			 throw new Error('invalid json format, missing attribute schulBezeichnung3');
+		result.schulBezeichnung3 = obj.schulBezeichnung3;
+		if (typeof obj.anmerkungen === "undefined")
+			 throw new Error('invalid json format, missing attribute anmerkungen');
+		result.anmerkungen = obj.anmerkungen;
 		if (typeof obj.abiturjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
@@ -114,6 +154,11 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostLaufbahnplanungDaten) : string {
 		let result = '{';
+		result += '"schulNr" : ' + obj.schulNr + ',';
+		result += '"schulBezeichnung1" : ' + '"' + obj.schulBezeichnung1! + '"' + ',';
+		result += '"schulBezeichnung2" : ' + '"' + obj.schulBezeichnung2! + '"' + ',';
+		result += '"schulBezeichnung3" : ' + '"' + obj.schulBezeichnung3! + '"' + ',';
+		result += '"anmerkungen" : ' + '"' + obj.anmerkungen! + '"' + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen + '"') + ',';
@@ -176,6 +221,21 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungDaten>) : string {
 		let result = '{';
+		if (typeof obj.schulNr !== "undefined") {
+			result += '"schulNr" : ' + obj.schulNr + ',';
+		}
+		if (typeof obj.schulBezeichnung1 !== "undefined") {
+			result += '"schulBezeichnung1" : ' + '"' + obj.schulBezeichnung1 + '"' + ',';
+		}
+		if (typeof obj.schulBezeichnung2 !== "undefined") {
+			result += '"schulBezeichnung2" : ' + '"' + obj.schulBezeichnung2 + '"' + ',';
+		}
+		if (typeof obj.schulBezeichnung3 !== "undefined") {
+			result += '"schulBezeichnung3" : ' + '"' + obj.schulBezeichnung3 + '"' + ',';
+		}
+		if (typeof obj.anmerkungen !== "undefined") {
+			result += '"anmerkungen" : ' + '"' + obj.anmerkungen + '"' + ',';
+		}
 		if (typeof obj.abiturjahr !== "undefined") {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}

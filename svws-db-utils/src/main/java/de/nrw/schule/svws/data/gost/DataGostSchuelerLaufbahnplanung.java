@@ -3,6 +3,8 @@ package de.nrw.schule.svws.data.gost;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -302,10 +304,24 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		if (jahrgangsdaten == null)
     		throw OperationError.NOT_FOUND.exception();
     	List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw OperationError.NOT_FOUND.exception();
+		DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw OperationError.NOT_FOUND.exception();		
+		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abidaten.abiturjahr, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt);
+		if ((halbjahr == null) && (schuljahresabschnitt.Jahr >= abidaten.abiturjahr))
+			halbjahr = GostHalbjahr.Q22;
     	// Schreibe die Daten in das Export-DTO
 		GostLaufbahnplanungDaten daten = new GostLaufbahnplanungDaten();
+		daten.schulNr = schule.SchulNr;
+		daten.schulBezeichnung1 = schule.Bezeichnung1 == null ? "" : schule.Bezeichnung1;
+		daten.schulBezeichnung2 = schule.Bezeichnung2 == null ? "" : schule.Bezeichnung2;
+		daten.schulBezeichnung3 = schule.Bezeichnung3 == null ? "" : schule.Bezeichnung3;
+		daten.anmerkungen = "Exportiert am " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 		daten.abiturjahr = abidaten.abiturjahr;
-		daten.jahrgang = "";    // TODO Bestimme das aktuelle Planungshalbjahr  
+		daten.jahrgang = halbjahr == null ? "" : halbjahr.jahrgang;
 		daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen;
 		daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
 		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
@@ -381,6 +397,16 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param logger
 	 */
 	private boolean doImport(DTOSchueler dtoSchueler, GostLaufbahnplanungDaten laufbahnplanungsdaten, Logger logger) {
+		// Lese zunächst die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
+		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null) {
+			logger.logLn("Fehler: Die Daten der Schule können nicht aus der Datenbank eingelesen werden.");
+			return false;
+		}
+		if (laufbahnplanungsdaten.schulNr != schule.SchulNr) {
+			logger.logLn("Fehler: Die Schulnummer der Planungsdatei simmt nicht mit der Schulnummer der Datenbank überein.");
+			return false;
+		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
     	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
 		GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
@@ -397,7 +423,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		}
 		// Prüfe den Bilingualen Bildungsgang
 		if (daten.bilingualeSprache != abidaten.bilingualeSprache) {
-			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen icht überein.");
+			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
 			return false;
 		}
 		// Überprüfe die Sprachenfolge

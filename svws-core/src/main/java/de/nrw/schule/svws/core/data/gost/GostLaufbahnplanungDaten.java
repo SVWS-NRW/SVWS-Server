@@ -17,6 +17,25 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostLaufbahnplanungDaten {
 
+	/** Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind. */
+	@Schema(description = "die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind", example="123456")
+	public long schulNr;
+
+	/** Der erste Teil (von dreien) der Bezeichnung der Schule */
+	@Schema(description = "die Bezeichnung 1 der Schule", example="Städt. Gymnasium")
+	public @NotNull String schulBezeichnung1 = "";
+	
+	/** Der zweite Teil (von dreien) der Bezeichnung der Schule */
+	@Schema(description = "die Bezeichnung 2 der Schule", example="der Stadt Wuppertal")
+	public @NotNull String schulBezeichnung2 = "";
+	
+	/** Der dritte Teil (von dreien) der Bezeichnung der Schule */
+	@Schema(description = "die Bezeichnung 3 der Schule", example="")
+	public @NotNull String schulBezeichnung3 = "";
+	/** Anmerkungen zu diesen Daten */
+	@Schema(description = "anmerkungen zu diesen Daten", example="Exportiert am 30.2.2023")	
+	public @NotNull String anmerkungen = "";
+	
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	@Schema(description = "Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.", example="2025")
 	public int abiturjahr = -1;
