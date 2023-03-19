@@ -5,11 +5,12 @@ import { KlausurterminblockungAlgorithmusAbstract, cast_de_nrw_schule_svws_core_
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
 
-export class KlausurterminblockungAlgorithmusGreedy1b extends KlausurterminblockungAlgorithmusAbstract {
+export class KlausurterminblockungAlgorithmusGreedy2b extends KlausurterminblockungAlgorithmusAbstract {
 
 
 	/**
-	 *Konstruktor.
+	 *
+	 * Konstruktor.
 	 * 
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
@@ -19,14 +20,14 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	}
 
 	public toString() : string {
-		return "Klausuren zufällig & Schienen nacheinander";
+		return "Schienen nacheinander & Klausuren nach Knotengrad";
 	}
 
 	public berechne(pZeitEnde : number) : void {
-		this._dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
+		this._dynDaten.aktion_Clear_TermineNacheinander_GruppeNachGrad();
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
-			this._dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
+			this._dynDaten.aktion_Clear_TermineNacheinander_GruppeNachGrad();
 			if (this._dynDaten.gibIstBesserAlsZustand1()) 
 				this._dynDaten.aktionZustand1Speichern(); else 
 				this._dynDaten.aktionZustand1Laden();
@@ -36,11 +37,11 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy1b', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
+		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy2b', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1b(obj : unknown) : KlausurterminblockungAlgorithmusGreedy1b {
-	return obj as KlausurterminblockungAlgorithmusGreedy1b;
+export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2b(obj : unknown) : KlausurterminblockungAlgorithmusGreedy2b {
+	return obj as KlausurterminblockungAlgorithmusGreedy2b;
 }
