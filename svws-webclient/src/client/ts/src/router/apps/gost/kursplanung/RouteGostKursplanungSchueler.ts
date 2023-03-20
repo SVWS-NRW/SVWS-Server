@@ -91,7 +91,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			// Setze den neu ausgewählten Schüler-Eintrag
 			const schuelerEintrag = routeGostKursplanung.data.mapSchueler.get(idSchueler);
 			if (schuelerEintrag === undefined)
-				throw new Error("Programmierfehler: Ein Eintrag für die Schüler-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
+				return this.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis, undefined);
 			await routeGostKursplanung.data.setAuswahlSchueler(schuelerEintrag);
 		}
 	}

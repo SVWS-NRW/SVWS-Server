@@ -123,8 +123,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				return;   // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id); // Es existiert keine Blockung, also route zu der Halbjahresauswahl
 		}
-		const ergebnisEintrag = routeGostKursplanung.data.datenmanager.getErgebnis(idErgebnis);
-		if (ergebnisEintrag === undefined) {
+		let ergebnisEintrag;
+		try {
+			ergebnisEintrag = routeGostKursplanung.data.datenmanager.getErgebnis(idErgebnis);
+		} catch (e) {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
 			if (this.data.ergebnisse.size() <= 0)
 				throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
