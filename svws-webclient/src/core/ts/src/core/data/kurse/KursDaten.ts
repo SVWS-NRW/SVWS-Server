@@ -1,5 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
@@ -45,6 +47,11 @@ export class KursDaten extends JavaObject {
 	 */
 	public istSichtbar : boolean = false;
 
+	/**
+	 * Die Schüler des Kurses. 
+	 */
+	public schueler : List<Schueler> = new Vector();
+
 
 	public constructor() {
 		super();
@@ -81,6 +88,11 @@ export class KursDaten extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
+		if (!!obj.schueler) {
+			for (let elem of obj.schueler) {
+				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -105,6 +117,18 @@ export class KursDaten extends JavaObject {
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		if (!obj.schueler) {
+			result += '"schueler" : []';
+		} else {
+			result += '"schueler" : [ ';
+			for (let i : number = 0; i < obj.schueler.size(); i++) {
+				let elem = obj.schueler.get(i);
+				result += Schueler.transpilerToJSON(elem);
+				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -146,6 +170,20 @@ export class KursDaten extends JavaObject {
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		}
+		if (typeof obj.schueler !== "undefined") {
+			if (!obj.schueler) {
+				result += '"schueler" : []';
+			} else {
+				result += '"schueler" : [ ';
+				for (let i : number = 0; i < obj.schueler.size(); i++) {
+					let elem = obj.schueler.get(i);
+					result += Schueler.transpilerToJSON(elem);
+					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

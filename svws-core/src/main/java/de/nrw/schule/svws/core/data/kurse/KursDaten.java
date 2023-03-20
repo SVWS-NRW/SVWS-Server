@@ -1,9 +1,10 @@
 package de.nrw.schule.svws.core.data.kurse;
 
+import java.util.List;
 import java.util.Vector;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -48,6 +49,10 @@ public class KursDaten {
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
 	public boolean istSichtbar;
+
+	/** Die Schüler des Kurses. */
+	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+
 
 	// TODO Weitere Daten	
 }

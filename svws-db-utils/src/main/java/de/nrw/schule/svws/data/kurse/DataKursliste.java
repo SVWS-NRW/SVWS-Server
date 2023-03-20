@@ -1,19 +1,24 @@
 package de.nrw.schule.svws.data.kurse;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
+import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursSchueler;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -63,7 +68,36 @@ public class DataKursliste extends DataManager<Long> {
     		: conn.queryNamed("DTOKurs.schuljahresabschnitts_id", abschnitt, DTOKurs.class);
     	if (kurse == null)
     		return OperationError.NOT_FOUND.getResponse();
+    	// Erstelle die Liste der Kurse
     	List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a,b) -> Long.compare(a.sortierung, b.sortierung)).collect(Collectors.toList());
+    	// Ergänze die Liste der Schüler in den Kursen
+    	List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
+    	List<DTOKursSchueler> listKursSchueler = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class);
+    	List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
+    	Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || (schuelerIDs.size() == 0)) ? new HashMap<>() : 
+			conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+    	HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
+    	for (DTOKursSchueler ks : listKursSchueler) {
+    		DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
+    		if (dtoSchueler == null)
+    			continue;
+    		List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
+    		if (listSchueler == null) {
+    			listSchueler = new Vector<>();
+    			mapKursSchueler.put(ks.Kurs_ID, listSchueler);
+    		}
+    		Schueler schueler = new Schueler();
+    		schueler.id = dtoSchueler.ID;
+    		schueler.geschlecht = dtoSchueler.Geschlecht.id;
+    		schueler.nachname = dtoSchueler.Nachname;
+    		schueler.vorname = dtoSchueler.Vorname;
+    		listSchueler.add(schueler);
+    	}
+    	for (KursListeEintrag eintrag : daten) {
+    		List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
+    		if (listSchueler != null)
+    			eintrag.schueler.addAll(listSchueler);
+    	}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

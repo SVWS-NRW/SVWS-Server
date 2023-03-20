@@ -1,9 +1,10 @@
 package de.nrw.schule.svws.core.data.kurse;
 
+import java.util.List;
 import java.util.Vector;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -41,6 +42,10 @@ public class KursListeEintrag {
 	@Schema(required = true, description = "die ID des Kurslehrers", example="42")
 	public Long lehrer;
 
+	/** Die Schüler des Kurses. */
+	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+
+	
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(required = true, description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example="1")
 	public int sortierung;

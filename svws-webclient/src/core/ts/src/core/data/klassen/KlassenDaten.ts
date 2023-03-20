@@ -1,5 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
@@ -40,6 +42,11 @@ export class KlassenDaten extends JavaObject {
 	 */
 	public klassenLeitungen : Vector<number> | null = new Vector();
 
+	/**
+	 * Die Schüler der Klasse. 
+	 */
+	public schueler : List<Schueler> = new Vector();
+
 
 	public constructor() {
 		super();
@@ -69,6 +76,11 @@ export class KlassenDaten extends JavaObject {
 				result.klassenLeitungen?.add(elem);
 			}
 		}
+		if (!!obj.schueler) {
+			for (let elem of obj.schueler) {
+				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -88,6 +100,18 @@ export class KlassenDaten extends JavaObject {
 				let elem = obj.klassenLeitungen.get(i);
 				result += elem;
 				if (i < obj.klassenLeitungen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schueler) {
+			result += '"schueler" : []';
+		} else {
+			result += '"schueler" : [ ';
+			for (let i : number = 0; i < obj.schueler.size(); i++) {
+				let elem = obj.schueler.get(i);
+				result += Schueler.transpilerToJSON(elem);
+				if (i < obj.schueler.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -126,6 +150,20 @@ export class KlassenDaten extends JavaObject {
 					let elem = obj.klassenLeitungen.get(i);
 					result += elem;
 					if (i < obj.klassenLeitungen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schueler !== "undefined") {
+			if (!obj.schueler) {
+				result += '"schueler" : []';
+			} else {
+				result += '"schueler" : [ ';
+				for (let i : number = 0; i < obj.schueler.size(); i++) {
+					let elem = obj.schueler.get(i);
+					result += Schueler.transpilerToJSON(elem);
+					if (i < obj.schueler.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

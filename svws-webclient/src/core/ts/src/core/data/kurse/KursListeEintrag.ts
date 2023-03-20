@@ -1,5 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
@@ -34,6 +36,11 @@ export class KursListeEintrag extends JavaObject {
 	 * Die ID des Kurslehrers. 
 	 */
 	public lehrer : number | null = null;
+
+	/**
+	 * Die Schüler des Kurses. 
+	 */
+	public schueler : List<Schueler> = new Vector();
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
@@ -75,6 +82,11 @@ export class KursListeEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
+		if (!!obj.schueler) {
+			for (let elem of obj.schueler) {
+				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -103,6 +115,18 @@ export class KursListeEintrag extends JavaObject {
 		}
 		result += '"idFach" : ' + obj.idFach + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		if (!obj.schueler) {
+			result += '"schueler" : []';
+		} else {
+			result += '"schueler" : [ ';
+			for (let i : number = 0; i < obj.schueler.size(); i++) {
+				let elem = obj.schueler.get(i);
+				result += Schueler.transpilerToJSON(elem);
+				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result = result.slice(0, -1);
@@ -140,6 +164,20 @@ export class KursListeEintrag extends JavaObject {
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		}
+		if (typeof obj.schueler !== "undefined") {
+			if (!obj.schueler) {
+				result += '"schueler" : []';
+			} else {
+				result += '"schueler" : [ ';
+				for (let i : number = 0; i < obj.schueler.size(); i++) {
+					let elem = obj.schueler.get(i);
+					result += Schueler.transpilerToJSON(elem);
+					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

@@ -1,10 +1,11 @@
 package de.nrw.schule.svws.core.data.klassen;
 
+import java.util.List;
 import java.util.Vector;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,6 +46,10 @@ public class KlassenDaten {
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
 	public Vector<@NotNull Long> klassenLeitungen = new Vector<>();
+
+	/** Die Schüler der Klasse. */
+	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+
 	
 	// TODO Weitere Daten	
 }
