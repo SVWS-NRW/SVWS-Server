@@ -59,12 +59,6 @@ export class RouteDataKurse {
 		return this._state.value.auswahl;
 	}
 
-	get auswahlSchueler(): List<Schueler> {
-		if (this._state.value.auswahl === undefined)
-			throw new Error("Unerwarteter Fehler: Ausgewähltes Kurselement nicht verfügbar, Schülerdaten fehlen");
-		return this._state.value.auswahl.schueler
-	}
-
 	get mapKatalogeintraege(): Map<number, KursListeEintrag> {
 		return this._state.value.mapKatalogeintraege;
 	}

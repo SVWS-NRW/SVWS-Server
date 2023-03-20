@@ -72,6 +72,7 @@ public class DataKlassendaten extends DataManager<Long> {
 			schueler.geschlecht = dto.Geschlecht.id;
 			schueler.nachname = dto.Nachname;
 			schueler.vorname = dto.Vorname;
+			schueler.status = dto.Status.id;
 			daten.schueler.add(schueler);
 		}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

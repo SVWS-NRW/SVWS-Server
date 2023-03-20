@@ -16,19 +16,23 @@ import jakarta.validation.constraints.NotNull;
 public class Schueler {
 
 	/** Die ID des Schülerdatensatzes. */
-	@Schema(required = true, description = "die ID", example="4711")
+	@Schema(description = "die ID", example="4711")
 	public long id;
 	
 	/** Der Nachname des Schülerdatensatzes. */
-	@Schema(required = true, description = "der Nachname", example="Mustermann")
+	@Schema(description = "der Nachname", example="Mustermann")
 	public @NotNull String nachname = "";
 	
 	/** Der Vorname des Schülerdatensatzes. */
-	@Schema(required = true, description = "der Vorname", example="Max")
+	@Schema(description = "der Vorname", example="Max")
 	public @NotNull String vorname = "";
 	
+	/** Der Status des Schülerdatensatzes. */
+	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example="8")
+	public @NotNull int status;
+	
 	/** Die ID des Geschlechtes */
-	@Schema(required = true, description = "die ID des Geschlechtes", example="3")
+	@Schema(description = "die ID des Geschlechtes", example="3")
 	public int geschlecht;
 	
 }

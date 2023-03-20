@@ -5,6 +5,5 @@ export interface KursDatenProps {
 		data: KursDaten;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		listSchueler: List<Schueler>,
 		gotoSchueler: (eintrag: Schueler) => Promise<void>,
 	}

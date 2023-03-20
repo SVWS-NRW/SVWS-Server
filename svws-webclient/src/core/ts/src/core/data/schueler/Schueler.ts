@@ -19,6 +19,11 @@ export class Schueler extends JavaObject {
 	public vorname : string = "";
 
 	/**
+	 * Der Status des Schülerdatensatzes. 
+	 */
+	public status : number = 0;
+
+	/**
 	 * Die ID des Geschlechtes 
 	 */
 	public geschlecht : number = 0;
@@ -44,6 +49,9 @@ export class Schueler extends JavaObject {
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
+		if (typeof obj.status === "undefined")
+			 throw new Error('invalid json format, missing attribute status');
+		result.status = obj.status;
 		if (typeof obj.geschlecht === "undefined")
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
@@ -55,6 +63,7 @@ export class Schueler extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
 		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"status" : ' + obj.status + ',';
 		result += '"geschlecht" : ' + obj.geschlecht + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -71,6 +80,9 @@ export class Schueler extends JavaObject {
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+		}
+		if (typeof obj.status !== "undefined") {
+			result += '"status" : ' + obj.status + ',';
 		}
 		if (typeof obj.geschlecht !== "undefined") {
 			result += '"geschlecht" : ' + obj.geschlecht + ',';
