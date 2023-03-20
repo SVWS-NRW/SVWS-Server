@@ -81,16 +81,16 @@ export class RouteDataGost {
 		return mapJahrgaenge;
 	}
 
-	private async ladeJahrgangsdaten() {
-		if (this.auswahl === undefined)
+	private async ladeJahrgangsdaten(auswahl: GostJahrgang | undefined) {
+		if (auswahl === undefined)
 			return;
-		return await api.server.getGostAbiturjahrgang(api.schema, this.auswahl.abiturjahr);
+		return await api.server.getGostAbiturjahrgang(api.schema, auswahl.abiturjahr);
 	}
 
-	private async ladeFaecherManager(): Promise<GostFaecherManager | undefined> {
-		if (this.auswahl === undefined)
+	private async ladeFaecherManager(auswahl: GostJahrgang | undefined): Promise<GostFaecherManager | undefined> {
+		if (auswahl === undefined)
 			return;
-		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.auswahl.abiturjahr);
+		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, auswahl.abiturjahr);
 		return new GostFaecherManager(listFaecher);
 	}
 
@@ -105,8 +105,8 @@ export class RouteDataGost {
 		const auswahl = this.firstAbiturjahrgang(mapAbiturjahrgaenge);
 		const mapJahrgaenge = await this.ladeJahrgaenge();
 		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);
-		const jahrgangsdaten = await this.ladeJahrgangsdaten();
-		const faecherManager = await this.ladeFaecherManager();
+		const jahrgangsdaten = await this.ladeJahrgangsdaten(undefined);
+		const faecherManager = await this.ladeFaecherManager(undefined);
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			auswahl,
@@ -207,8 +207,8 @@ export class RouteDataGost {
 			return;
 		}
 		const auswahl = (this.mapAbiturjahrgaenge.get(jahrgang.abiturjahr) === undefined) ? this.firstAbiturjahrgang(this.mapAbiturjahrgaenge) : jahrgang;
-		const jahrgangsdaten = await this.ladeJahrgangsdaten();
-		const faecherManager = await this.ladeFaecherManager();
+		const jahrgangsdaten = await this.ladeJahrgangsdaten(auswahl);
+		const faecherManager = await this.ladeFaecherManager(auswahl);
 		this.setPatchedState({
 			auswahl,
 			jahrgangsdaten,

@@ -15,6 +15,6 @@
 
 	const props = defineProps<GostStammdatenProps>();
 
-	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten.abiturjahr > 0));
+	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten().abiturjahr > 0));
 
 </script>

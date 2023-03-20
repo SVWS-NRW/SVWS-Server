@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-textarea-input placeholder="Mailversand" :model-value="props.jahrgangsdaten.textMailversand"
+		<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
 			@update:model-value="doPatch({ textMailversand: String($event) })" resizeable="vertical" :autoresize="true" />
 	</svws-ui-content-card>
 </template>
@@ -11,11 +11,11 @@
 
 	const props = defineProps<{
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-		jahrgangsdaten: GostJahrgangsdaten;
+		jahrgangsdaten: () => GostJahrgangsdaten;
 	}>();
 
 	async function doPatch(data: Partial<GostJahrgangsdaten>) {
-		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten.abiturjahr);
+		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
 	}
 
 </script>

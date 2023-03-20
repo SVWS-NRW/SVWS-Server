@@ -11,7 +11,7 @@
 	import { GostJahrgangsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		jahrgangsdaten: GostJahrgangsdaten;
+		jahrgangsdaten: () => GostJahrgangsdaten;
 	}>();
 
 </script>
