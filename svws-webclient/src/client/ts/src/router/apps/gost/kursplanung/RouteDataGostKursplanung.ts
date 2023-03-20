@@ -1,4 +1,4 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, SchuelerStatus, Vector } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
@@ -93,8 +93,11 @@ export class RouteDataGostKursplanung {
 		const faecherManager = new GostFaecherManager(listFaecher);
 		// Lade die Schülerliste des Abiturjahrgangs
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
-		for (const s of listSchueler)
-			mapSchueler.set(s.id, s);
+		for (const s of listSchueler) {
+			const status = SchuelerStatus.fromID(s.status);
+			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
+				mapSchueler.set(s.id, s);
+		}
 		api.status.stop();
 		// Lade die Fachwahlstatistik des Abiturjahrgangs
 		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
