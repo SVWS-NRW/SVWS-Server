@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button type="transparent" size="small" @click="modal.openModal()" class="print:hidden">
+		<svws-ui-button type="transparent" size="small" @click="modal.openModal()">
 			<span>Hilfe</span>
 			<i-ri-question-line />
 		</svws-ui-button>

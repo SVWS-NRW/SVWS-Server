@@ -13,7 +13,9 @@
 					<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 					<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
 						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
-						<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="apiStatus.pending" />
+						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
+							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
+						</s-gost-kursplanung-remove-blockung-modal>
 					</div>
 				</div>
 				<div v-else>
@@ -30,16 +32,6 @@
 		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
-		<svws-ui-modal ref="modal_remove_blockung" size="small">
-			<template #modalTitle>Blockung löschen</template>
-			<template #modalDescription>
-				Soll die Blockung mit allen Ergebnissen gelöscht werden?
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="toggle_remove_blockung_modal()">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="remove_blockung">Ja</svws-ui-button>
-			</template>
-		</svws-ui-modal>
 	</div>
 </template>
 
@@ -106,86 +98,10 @@
 			props.auswahlBlockung.name = value.toString();
 	}
 
-	async function remove_blockung() {
-		modal_remove_blockung.value.closeModal()
-		await props.removeBlockung();
-	}
-
-	const modal_remove_blockung: Ref<any> = ref(null);
-	function toggle_remove_blockung_modal() {
-		modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
-	}
-
 	const visible: ComputedRef<boolean> = computed(() => {
 		return props.mapBlockungen().size > 0;
 	});
-
 </script>
-
-<style>
-	.loading-disclaimer {
-		background-color: rgba(var(--svws-ui-color-dark-20), var(--tw-border-opacity));
-		--tw-bg-opacity: 1;
-		--tw-border-opacity: 1;
-		border-width: 1px;
-		padding: .25rem .75rem;
-		line-height: 1.125;
-	}
-
-	.loading-spinner-dimensions {
-		height: 1rem;
-		width: 1rem;
-	}
-
-	.loading-display {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-	}
-
-	.loading-rotation {
-		display: block;
-		position: relative;
-		-webkit-animation: spin 6s steps(11, end) infinite;
-		-moz-animation: spin 6s steps(11, end) infinite;
-		animation: spin 6s steps(11, end) infinite;
-	}
-
-	.api-error-text {
-		color: rgb(var(--svws-ui-color-error));
-		font-weight: 700;
-	}
-
-	@-webkit-keyframes spin {
-		0% {
-			-webkit-transform: rotate(0deg);
-		}
-
-		100% {
-			-webkit-transform: rotate(360deg);
-		}
-	}
-
-	@-moz-keyframes spin {
-		0% {
-			-webkit-transform: rotate(0deg);
-		}
-
-		100% {
-			-webkit-transform: rotate(360deg);
-		}
-	}
-
-	@keyframes spin {
-		0% {
-			-webkit-transform: rotate(0deg);
-		}
-
-		100% {
-			-webkit-transform: rotate(360deg);
-		}
-	}
-</style>
 
 <style lang="postcss" scoped>
 	.cell--bewertung span {

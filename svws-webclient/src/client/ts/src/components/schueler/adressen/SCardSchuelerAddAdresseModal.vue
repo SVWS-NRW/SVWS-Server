@@ -1,4 +1,5 @@
 <template>
+	<slot :open-modal="openModal" />
 	<svws-ui-modal ref="modal" size="medium">
 		<template #modalTitle>Ansprechpartner Hinzufügen</template>
 		<template #modalContent>
@@ -19,7 +20,6 @@
 			<svws-ui-button type="primary" @click="save"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-button @click="hinzufuegen()">Adresse hinzufügen</svws-ui-button>
 </template>
 
 <script setup lang="ts">
@@ -73,10 +73,6 @@
 		set: (value) => schuelerBetriebsdaten.value.betreuungslehrer_id = (value === undefined) ? null : value.id
 	});
 
-	async function hinzufuegen() {
-		modal.value.openModal();
-	}
-
 	async function save() {
 		schuelerBetriebsdaten.value.schueler_id = props.idSchueler;
 		if (schuelerBetriebsdaten.value.betrieb_id === undefined){
@@ -87,4 +83,7 @@
 		modal.value.closeModal();
 	}
 
+	const openModal = () => {
+		modal.value.openModal();
+	}
 </script>

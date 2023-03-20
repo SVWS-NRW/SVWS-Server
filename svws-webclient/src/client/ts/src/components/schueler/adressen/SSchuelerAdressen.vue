@@ -1,9 +1,11 @@
 <template>
 	<div class="app-container relative">
 		<div class="svws-ui-bg-white sticky top-0 z-50 col-span-3 flex justify-end py-4">
-			<s-card-schueler-add-adresse :id-schueler="idSchueler" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
+			<s-card-schueler-add-adresse-modal :id-schueler="idSchueler" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
 				:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"
-				:create-schueler-betriebsdaten="createSchuelerBetriebsdaten" />
+				:create-schueler-betriebsdaten="createSchuelerBetriebsdaten" v-slot="{ openModal }">
+				<svws-ui-button @click="openModal()">Adresse hinzufügen</svws-ui-button>
+			</s-card-schueler-add-adresse-modal>
 		</div>
 		<div v-if="(betriebsStammdaten !== undefined) && (betrieb !== undefined)" class="col-span-3">
 			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
@@ -25,5 +27,4 @@
 	import { SchuelerAdressenProps } from "./SSChuelerAdressenProps";
 
 	defineProps<SchuelerAdressenProps>();
-
 </script>

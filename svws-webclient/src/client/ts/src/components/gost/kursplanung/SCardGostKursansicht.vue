@@ -4,8 +4,12 @@
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline">{{ blockungsname }}</h3>
 			<div class="flex items-center gap-2">
-				<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
-				<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
+				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+					<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="openModal()">Aktivieren</svws-ui-button>
+				</s-card-gost-kursansicht-blockung-aktivieren-modal>
+				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+					<svws-ui-button type="primary" @click="openModal()">Hochschreiben</svws-ui-button>
+				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 			</div>
 		</div>
 		<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
@@ -102,34 +106,11 @@
 			</table>
 		</div>
 	</svws-ui-content-card>
-	<div class="hidden">
-		<svws-ui-modal ref="modal_aktivieren" size="small">
-			<template #modalTitle>Blockungsergebnis aktivieren</template>
-			<template #modalDescription>
-				Soll {{ blockungsname }} aktiviert werden?
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
-				<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
-			</template>
-		</svws-ui-modal>
-		<svws-ui-modal ref="modal_hochschreiben" size="small">
-			<template #modalTitle>Blockungsergebnis hochschreiben</template>
-			<template #modalContent>
-				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
-			</template>
-		</svws-ui-modal>
-	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { SvwsUiButton, SvwsUiContentCard, SvwsUiIcon, SvwsUiModal, SvwsUiTextInput } from "@ui";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { Config } from "~/components/Config";
 	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
@@ -206,25 +187,4 @@
 	async function del_schiene(schiene: GostBlockungSchiene) {
 		return await props.removeSchiene(schiene);
 	}
-
-	const modal_aktivieren: Ref<any> = ref(null);
-	function toggle_modal_aktivieren() {
-		modal_aktivieren.value.isOpen ? modal_aktivieren.value.closeModal() : modal_aktivieren.value.openModal();
-	}
-
-	const modal_hochschreiben: Ref<any> = ref(null);
-	function toggle_modal_hochschreiben() {
-		modal_hochschreiben.value.isOpen ? modal_hochschreiben.value.closeModal() : modal_hochschreiben.value.openModal();
-	}
-
-	async function activate_ergebnis() {
-		modal_aktivieren.value.closeModal();
-		await props.ergebnisAktivieren();
-	}
-
-	async function hochschreiben_ergebnis() {
-		modal_hochschreiben.value.closeModal();
-		await props.ergebnisHochschreiben();
-	}
-
 </script>
