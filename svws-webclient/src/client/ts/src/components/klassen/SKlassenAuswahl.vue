@@ -6,6 +6,7 @@
 		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols">
+				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse" />
 				</template>
@@ -37,7 +38,8 @@
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
+		{ key: "schueler", label: "Schüler" }
 	];
 
 </script>

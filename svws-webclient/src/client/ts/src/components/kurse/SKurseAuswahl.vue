@@ -12,12 +12,9 @@
 				<template #filterSimple>
 					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
 				</template>
-				<template #cell(lehrer)="{ value }">
-					{{ mapLehrer.get(value)?.kuerzel ?? "" }}
-				</template>
-				<template #cell(idJahrgaenge)="{ value }">
-					{{ getJahrgangsKuerzel(value) }}
-				</template>
+				<template #cell(lehrer)="{ value }"> {{ mapLehrer.get(value)?.kuerzel ?? "" }} </template>
+				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
+				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -46,7 +43,8 @@
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
-		{ key: "idJahrgaenge", label: "Jahrgänge", sortable: true }
+		{ key: "idJahrgaenge", label: "Jahrgänge", sortable: true },
+		{ key: "schueler", label: "Schüler" },
 	];
 
 	/**

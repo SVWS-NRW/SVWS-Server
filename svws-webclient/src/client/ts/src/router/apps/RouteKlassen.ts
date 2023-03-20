@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, List, Schueler, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -9,6 +9,7 @@ import { routeApp, RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
+import { routeSchueler } from "./RouteSchueler";
 
 
 interface RouteStateKlassen {
@@ -60,6 +61,12 @@ export class RouteDataKlassen {
 		return this._state.value.auswahl;
 	}
 
+	get auswahlSchueler(): List<Schueler> {
+		if (this._state.value.auswahl === undefined)
+			throw new Error("Unerwarteter Fehler: Ausgewähltes Klassenelement nicht verfügbar, Schülerdaten fehlen");
+		return this._state.value.auswahl.schueler;
+	}
+
 	get mapKatalogeintraege(): Map<number, KlassenListeEintrag> {
 		return this._state.value.mapKatalogeintraege;
 	}
@@ -104,6 +111,10 @@ export class RouteDataKlassen {
 
 	gotoEintrag = async (eintrag: KlassenListeEintrag) => {
 		await RouteManager.doRoute(routeKlassen.getRoute(eintrag.id));
+	}
+
+	gotoSchueler = async (eintrag: Schueler) => {
+		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
 	}
 
 	patch = async (data : Partial<KlassenDaten>) => {

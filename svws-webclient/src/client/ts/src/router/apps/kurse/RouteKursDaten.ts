@@ -28,7 +28,9 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 			patch: routeKurse.data.patch,
 			mapJahrgaenge: routeKurse.data.mapJahrgaenge,
 			mapLehrer: routeKurse.data.mapLehrer,
-			data: routeKurse.data.daten
+			data: routeKurse.data.daten,
+			listSchueler: routeKurse.data.auswahlSchueler,
+			gotoSchueler: routeKurse.data.gotoSchueler,
 		};
 	}
 
