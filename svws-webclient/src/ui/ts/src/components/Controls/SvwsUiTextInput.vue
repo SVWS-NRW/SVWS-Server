@@ -4,7 +4,7 @@
 	};
 </script>
 <script setup lang="ts">
-	import { useSlots, ref, computed } from "vue";
+	import { useSlots, ref, computed, watch } from "vue";
 	import { InputType } from "../../types";
 	import { genId } from "../../utils";
 
@@ -42,7 +42,10 @@
 
 	const slots = useSlots();
 
-	const tmp = ref<string | number | null>(props.modelValue)
+	const tmp = ref<string | number | null>(props.modelValue);
+
+	watch(()=>props.modelValue, (neu)=>tmp.value = neu);
+
 	const input = ref<null | HTMLElement>(null);
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
