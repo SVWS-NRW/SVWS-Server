@@ -212,7 +212,7 @@
 				const fachwahl = props.abiturdatenManager.getSchuelerFachwahl(fach.id);
 				for (const hj  of GostHalbjahr.values()) {
 					if (!props.abiturdatenManager.istBewertet(hj))
-						fachwahl[hj.toString() as 'EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22'] = null;
+						fachwahl.halbjahre[hj.id] = null;
 				}
 				fachwahl.abiturFach = null;
 				await onUpdateWahl(fach.id, fachwahl);

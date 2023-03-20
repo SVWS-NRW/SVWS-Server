@@ -253,20 +253,20 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Schüler-Fachwahl
 	 */
-    public @NotNull GostSchuelerFachwahl getSchuelerFachwahl(long fach_id) {
-    	AbiturFachbelegung belegung = getFachbelegungByID(fach_id);
-    	if (belegung == null)
-    		return new GostSchuelerFachwahl();
-    	@NotNull GostSchuelerFachwahl wahl = new GostSchuelerFachwahl();
-		wahl.EF1 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
-		wahl.EF2 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
-		wahl.Q11 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q11);
-		wahl.Q12 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q12);
-		wahl.Q21 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
-		wahl.Q22 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
+ 	public @NotNull GostSchuelerFachwahl getSchuelerFachwahl(long fach_id) {
+		AbiturFachbelegung belegung = getFachbelegungByID(fach_id);
+		if (belegung == null)
+			return new GostSchuelerFachwahl();
+		@NotNull GostSchuelerFachwahl wahl = new GostSchuelerFachwahl();
+		wahl.halbjahre[0] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
+		wahl.halbjahre[1] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
+		wahl.halbjahre[2] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q11);
+		wahl.halbjahre[3] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q12);
+		wahl.halbjahre[4] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
+		wahl.halbjahre[5] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
 		wahl.abiturFach = belegung.abiturFach;
 		return wahl;    	
-    }
+	}
 
     /**
 	 * Liefert das Fach der gymnasialen Oberstufe für die angegeben Abiturfachbelegung.

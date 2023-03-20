@@ -82,9 +82,9 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	@Override
 	public Response get(Long schueler_id) {
 		if (schueler_id == null)
-	    	return OperationError.NOT_FOUND.getResponse();
+			return OperationError.NOT_FOUND.getResponse();
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
+		Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -103,24 +103,24 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response getFachwahl(Long schueler_id, Long fach_id) {
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-    	if (schueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-    	if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
-    		return OperationError.NOT_FOUND.getResponse();
-    	DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
-    	if (fachbelegung == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
-    	fachwahl.EF1 = fachbelegung.EF1_Kursart;
-    	fachwahl.EF2 = fachbelegung.EF2_Kursart;
-    	fachwahl.Q11 = fachbelegung.Q11_Kursart;
-    	fachwahl.Q12 = fachbelegung.Q12_Kursart;
-    	fachwahl.Q21 = fachbelegung.Q21_Kursart;
-    	fachwahl.Q22 = fachbelegung.Q22_Kursart;
-    	fachwahl.abiturFach = fachbelegung.AbiturFach;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(fachwahl).build();
+		DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+		if (schueler == null)
+			return OperationError.NOT_FOUND.getResponse();
+		DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
+		if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
+			return OperationError.NOT_FOUND.getResponse();
+		DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
+		if (fachbelegung == null)
+			return OperationError.NOT_FOUND.getResponse();
+		GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
+		fachwahl.halbjahre[0] = fachbelegung.EF1_Kursart;
+		fachwahl.halbjahre[1] = fachbelegung.EF2_Kursart;
+		fachwahl.halbjahre[2] = fachbelegung.Q11_Kursart;
+		fachwahl.halbjahre[3] = fachbelegung.Q12_Kursart;
+		fachwahl.halbjahre[4] = fachbelegung.Q21_Kursart;
+		fachwahl.halbjahre[5] = fachbelegung.Q22_Kursart;
+		fachwahl.abiturFach = fachbelegung.AbiturFach;
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(fachwahl).build();
 	}
 	
 	
@@ -222,66 +222,66 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return Die HTTP-Response der Patch-Operation
 	 */
 	public Response patchFachwahl(Long schueler_id, Long fach_id, InputStream is) {
-    	Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
-    		try {
-    			conn.transactionBegin();
-    			DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
-    	    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-    	    	if (schueler == null)
-    	    		throw OperationError.NOT_FOUND.exception();
-    	    	// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt 
-    	    	DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
-    	    	if (abschnitt == null)
-    	    		throw OperationError.NOT_FOUND.exception();
-    	    	TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
-    	    	DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
-    	    			.setParameter("schueler_id", schueler.ID)
-    	    			.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
-    	    			.getResultList().stream().findFirst().orElse(null);
-    	    	if (lernabschnitt == null)
-    	    		throw OperationError.NOT_FOUND.exception();
-    			GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)  
-    					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
-    					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
-    	    	// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern 
-    	    	DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-    	    	if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
-    	    		throw OperationError.NOT_FOUND.exception();
-    	    	DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
-    	    	if (fachbelegung == null)
-    	    		fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
-		    	for (Entry<String, Object> entry : map.entrySet()) {
-		    		String key = entry.getKey();
-		    		Object value = entry.getValue();
-		    		switch (key) {
-		    			case "EF1" -> fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, value);
-		    			case "EF2" -> fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, value);
-		    			case "Q11" -> fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, value);
-		    			case "Q12" -> fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, value);
-		    			case "Q21" -> fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, value);
-		    			case "Q22" -> fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, value);
-		    			case "abiturFach" -> {
-		    				Integer af = JSONMapper.convertToInteger(value, true);
-		    		    	if ((af != null) && ((af < 1) || (af > 4)))
-		    		    		throw OperationError.CONFLICT.exception();
-		    		    	fachbelegung.AbiturFach = af;			    				
-		    			}
-		    			default -> throw OperationError.BAD_REQUEST.exception();
-		    		}
-		    	}
-		    	conn.transactionPersist(fachbelegung);
-		    	conn.transactionCommit();
-    		} catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
-    				return webAppException.getResponse();
+		Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			try {
+				conn.transactionBegin();
+				DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+				DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+				if (schueler == null)
+					throw OperationError.NOT_FOUND.exception();
+				// Ermittle den aktuellen Schuljahresaschnitt und den dazugehörigen Schüler-Lernabschnitt 
+				DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
+				if (abschnitt == null)
+					throw OperationError.NOT_FOUND.exception();
+				TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+				DTOSchuelerLernabschnittsdaten lernabschnitt = queryAktAbschnitt
+						.setParameter("schueler_id", schueler.ID)
+						.setParameter("abschnitt_id", schueler.Schuljahresabschnitts_ID)
+						.getResultList().stream().findFirst().orElse(null);
+				if (lernabschnitt == null)
+					throw OperationError.NOT_FOUND.exception();
+				GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)  
+						? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
+						: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
+				// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern 
+				DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
+				if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
+					throw OperationError.NOT_FOUND.exception();
+				DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
+				if (fachbelegung == null)
+					fachbelegung = new DTOGostSchuelerFachbelegungen(schueler.ID, fach.ID);
+				for (Entry<String, Object> entry : map.entrySet()) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					switch (key) {
+						case "EF1" -> fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, value);
+						case "EF2" -> fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, value);
+						case "Q11" -> fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, value);
+						case "Q12" -> fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, value);
+						case "Q21" -> fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, value);
+						case "Q22" -> fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, value);
+						case "abiturFach" -> {
+							Integer af = JSONMapper.convertToInteger(value, true);
+								if ((af != null) && ((af < 1) || (af > 4)))
+									throw OperationError.CONFLICT.exception();
+								fachbelegung.AbiturFach = af;			    				
+						}
+						default -> throw OperationError.BAD_REQUEST.exception();
+					}
+				}
+				conn.transactionPersist(fachbelegung);
+				conn.transactionCommit();
+			} catch (Exception e) {
+				if (e instanceof WebApplicationException webAppException)
+					return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
-    	}
-    	return Response.status(Status.OK).build();
+			} finally {
+				// Perform a rollback if necessary
+				conn.transactionRollback();
+			}
+		}
+		return Response.status(Status.OK).build();
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(DTOSchueler dtoSchueler) {
 		// Lese die Daten aus der Datenbank
-    	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
+			Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
 		GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
@@ -302,8 +302,8 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 		if (jahrgangsdaten == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+				throw OperationError.NOT_FOUND.exception();
+			List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
 		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw OperationError.NOT_FOUND.exception();
@@ -313,7 +313,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abidaten.abiturjahr, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt);
 		if ((halbjahr == null) && (schuljahresabschnitt.Jahr >= abidaten.abiturjahr))
 			halbjahr = GostHalbjahr.Q22;
-    	// Schreibe die Daten in das Export-DTO
+			// Schreibe die Daten in das Export-DTO
 		GostLaufbahnplanungDaten daten = new GostLaufbahnplanungDaten();
 		daten.schulNr = schule.SchulNr;
 		daten.schulBezeichnung1 = schule.Bezeichnung1 == null ? "" : schule.Bezeichnung1;
@@ -327,8 +327,8 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
 		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
-    	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-    	daten.faecher.addAll(gostFaecher.toVector());
+			daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
+			daten.faecher.addAll(gostFaecher.toVector());
 		for (DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));    	
 		GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler(); 
@@ -354,7 +354,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.schueler.add(schuelerDaten);
 		return daten;
 	}
-	
+
 	/**
 	 * Erstellt eine Export-Datei mit den Laufbahnplanungsdaten des 
 	 * angegebenen Schülers zur Bearbeitung in einem externen Tool. 
@@ -365,12 +365,12 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response exportGZip(long idSchueler) {
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (dtoSchueler == null)
-    		throw OperationError.NOT_FOUND.exception();
+		DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			throw OperationError.NOT_FOUND.exception();
 		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
 	}
-	
+
 	/**
 	 * Erstellt den Export mit den Laufbahnplanungsdaten des 
 	 * angegebenen Schülers zur Bearbeitung in einem externen Tool. 
@@ -381,10 +381,10 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response exportJSON(long idSchueler) {
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (dtoSchueler == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+		DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			throw OperationError.NOT_FOUND.exception();
+		GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
 		return Response.ok(daten).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -408,7 +408,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			return false;
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
-    	Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
+		Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
 		GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
@@ -635,24 +635,24 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response importGZip(long idSchueler, byte[] data) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (dtoSchueler == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	// Erstelle den Logger
-    	Logger logger = new Logger();
-    	LogConsumerVector log = new LogConsumerVector();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
-    	// Importiere die Daten...
-    	GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
-    	try {
-    		ByteArrayInputStream bais = new ByteArrayInputStream(data);
-    		laufbahnplanungsdaten = JSONMapper.toObjectGZip(bais, GostLaufbahnplanungDaten.class);
-    	} catch(IOException e) {
-    		logger.log("Fehler beim Öffnen der Datei.");
-    		logger.log("Fehlernachricht: " + e.getMessage());
-    	}
-    	// Führe den Import durch und erstelle die Response mit dem Log
+		DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			throw OperationError.NOT_FOUND.exception();
+		// Erstelle den Logger
+		Logger logger = new Logger();
+		LogConsumerVector log = new LogConsumerVector();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
+		// Importiere die Daten...
+		GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
+		try {
+			ByteArrayInputStream bais = new ByteArrayInputStream(data);
+			laufbahnplanungsdaten = JSONMapper.toObjectGZip(bais, GostLaufbahnplanungDaten.class);
+		} catch(IOException e) {
+			logger.log("Fehler beim Öffnen der Datei.");
+			logger.log("Fehlernachricht: " + e.getMessage());
+		}
+		// Führe den Import durch und erstelle die Response mit dem Log
 		SimpleOperationResponse daten = new SimpleOperationResponse();
 		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
 		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
@@ -660,8 +660,8 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();    	
 	}
 
-	
-	
+
+
 	/**
 	 * Importiert die Daten des Schülers mit der angegebenen ID aus den übergebenen 
 	 * Laufbahnplanungsdaten.
@@ -674,20 +674,20 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response importJSON(long idSchueler, GostLaufbahnplanungDaten laufbahnplanungsdaten) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-    	if (dtoSchueler == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	// Erstelle den Logger
-    	Logger logger = new Logger();
-    	LogConsumerVector log = new LogConsumerVector();
-    	logger.addConsumer(log);
-    	logger.addConsumer(new LogConsumerConsole());
-    	// Führe den Import durch und erstelle die Response mit dem Log
+		DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			throw OperationError.NOT_FOUND.exception();
+		// Erstelle den Logger
+		Logger logger = new Logger();
+		LogConsumerVector log = new LogConsumerVector();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
+		// Führe den Import durch und erstelle die Response mit dem Log
 		SimpleOperationResponse daten = new SimpleOperationResponse();
 		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
 		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
 		daten.log = log.getStrings();
 		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();    	
 	}
-	
+
 }
