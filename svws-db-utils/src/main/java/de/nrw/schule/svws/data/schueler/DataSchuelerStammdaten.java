@@ -90,7 +90,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 //		daten.istAOSF = schueler.AOSF; // „Ausbildungsordnung Sonderpädagogische Förderung" bzw. „Verordnung über die sonderpädagogische Förderung, den Hausunterricht und die Schule für Kranke“
 //		daten.istLernenZieldifferent = schueler.ZieldifferentesLernen;
 		// Statusdaten
-		daten.status = schueler.Status.bezeichnung;
+		daten.status = schueler.Status.id;
 		daten.istDuplikat = schueler.Duplikat;
 		daten.fahrschuelerArtID = schueler.Fahrschueler_ID;
 		daten.haltestelleID = schueler.Haltestelle_ID;
@@ -305,7 +305,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			
 		    			// Statusdaten
 		    			case "status" -> {
-		    				SchuelerStatus s = SchuelerStatus.fromBezeichnung(JSONMapper.convertToString(value, false, false));
+		    				SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
 		    				if (s == null)
 		    					throw OperationError.BAD_REQUEST.exception();
 		    				schueler.Status = s;

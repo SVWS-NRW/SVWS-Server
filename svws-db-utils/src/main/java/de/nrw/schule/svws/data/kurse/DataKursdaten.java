@@ -8,6 +8,7 @@ import java.util.function.Function;
 import de.nrw.schule.svws.core.data.kurse.KursDaten;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursSchueler;
@@ -76,15 +77,9 @@ public class DataKursdaten extends DataManager<Long> {
     	List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
     	List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.size() == 0)) ? new Vector<>() : 
 			conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		for (DTOSchueler dto : listSchueler) {
-			Schueler schueler = new Schueler();
-			schueler.id = dto.ID;
-			schueler.geschlecht = dto.Geschlecht.id;
-			schueler.nachname = dto.Nachname;
-			schueler.vorname = dto.Vorname;
-			daten.schueler.add(schueler);
-		}
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		for (DTOSchueler dto : listSchueler)
+			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

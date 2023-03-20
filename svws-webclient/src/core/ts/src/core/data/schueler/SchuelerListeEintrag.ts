@@ -44,7 +44,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).
 	 */
-	public status : string = "";
+	public status : number = 0;
 
 	/**
 	 * Die ID des Schuljahresabschnittes des Schülers. 
@@ -110,7 +110,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
 		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
 		result += '"schulgliederung" : ' + '"' + obj.schulgliederung! + '"' + ',';
-		result += '"status" : ' + '"' + obj.status! + '"' + ',';
+		result += '"status" : ' + obj.status + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt! + ',';
 		if (!obj.kurse) {
 			result += '"kurse" : []';
@@ -153,7 +153,7 @@ export class SchuelerListeEintrag extends JavaObject {
 			result += '"schulgliederung" : ' + '"' + obj.schulgliederung + '"' + ',';
 		}
 		if (typeof obj.status !== "undefined") {
-			result += '"status" : ' + '"' + obj.status + '"' + ',';
+			result += '"status" : ' + obj.status + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';

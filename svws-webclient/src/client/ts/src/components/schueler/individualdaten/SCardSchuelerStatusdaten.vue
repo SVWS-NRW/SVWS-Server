@@ -37,8 +37,8 @@
 	}
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-		get: () => (SchuelerStatus.fromBezeichnung(props.data.status) || undefined),
-		set: (value) => doPatch({ status: value?.bezeichnung })
+		get: () => (SchuelerStatus.fromID(props.data.status) || undefined),
+		set: (value) => doPatch({ status: value?.id })
 	});
 
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({

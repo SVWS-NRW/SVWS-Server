@@ -6,7 +6,7 @@
 					{{ `${schueler.nachname}, ${schueler.vorname}` }}
 				</span>
 				<div class="flex items-center">
-					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" type="light" size="big" class="mr-1"> {{ schueler.status }} </svws-ui-badge>
+					<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" class="mr-1"> {{ SchuelerStatus.fromID(schueler.status) }} </svws-ui-badge>
 					<div class="leading-none overflow-hidden w-5"
 						style="margin-bottom: -0.1em;"
 						:class="{
@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungsergebnisManager, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+	import { GostBlockungsergebnisManager, SchuelerListeEintrag, SchuelerStatus } from "@svws-nrw/svws-core";
 	import { ComputedRef, computed } from "vue";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 

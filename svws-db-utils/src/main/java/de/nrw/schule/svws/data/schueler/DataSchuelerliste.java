@@ -6,12 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
@@ -99,10 +100,24 @@ public class DataSchuelerliste extends DataManager<Long> {
 		eintrag.idKlasse = (aktAbschnitt == null) ? null : aktAbschnitt.Klassen_ID;
 		eintrag.jahrgang = (aktAbschnitt == null) ? null : aktAbschnitt.ASDJahrgang;
 		eintrag.schulgliederung = ((aktAbschnitt == null) || (aktAbschnitt.Schulgliederung == null)) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;
-		eintrag.status = schueler.Status.bezeichnung;
+		eintrag.status = schueler.Status.id;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
-		return eintrag;		
+		return eintrag;
 	}
+
+
+	/**
+	 * Lambda-Ausdruck zum Befüllen des Core-DTOs Schueler aus DTOSchueler
+	 */
+	public static Function<DTOSchueler, Schueler> mapToSchueler = (DTOSchueler dto) -> {
+		Schueler schueler = new Schueler();
+		schueler.id = dto.ID;
+		schueler.nachname = dto.Nachname;
+		schueler.vorname = dto.Vorname;
+		schueler.geschlecht = dto.Geschlecht.id;
+		schueler.status = dto.Status.id;
+		return schueler;
+	};
 
 	
 	/**

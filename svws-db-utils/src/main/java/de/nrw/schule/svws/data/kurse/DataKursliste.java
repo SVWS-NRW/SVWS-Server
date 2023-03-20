@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursSchueler;
@@ -86,12 +87,7 @@ public class DataKursliste extends DataManager<Long> {
     			listSchueler = new Vector<>();
     			mapKursSchueler.put(ks.Kurs_ID, listSchueler);
     		}
-    		Schueler schueler = new Schueler();
-    		schueler.id = dtoSchueler.ID;
-    		schueler.geschlecht = dtoSchueler.Geschlecht.id;
-    		schueler.nachname = dtoSchueler.Nachname;
-    		schueler.vorname = dtoSchueler.Vorname;
-    		listSchueler.add(schueler);
+    		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
     	}
     	for (KursListeEintrag eintrag : daten) {
     		List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);

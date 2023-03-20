@@ -29,7 +29,7 @@ public class Schueler {
 	
 	/** Der Status des Schülerdatensatzes. */
 	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example="8")
-	public @NotNull int status;
+	public int status;
 	
 	/** Die ID des Geschlechtes */
 	@Schema(description = "die ID des Geschlechtes", example="3")

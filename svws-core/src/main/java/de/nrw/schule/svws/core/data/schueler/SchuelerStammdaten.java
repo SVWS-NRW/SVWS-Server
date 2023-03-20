@@ -172,9 +172,9 @@ public class SchuelerStammdaten {
 	
 	// **** Statusdaten	
 	
-	/** Die Bezeichnung des Status des Schülerdatensatzes. */
-	@Schema(required = true, description = "die Bezeichnung des aktuellen Schülerstatus", example="Aktiv")
-	public String status;
+	/** Die ID des Status des Schülerdatensatzes. */
+	@Schema(required = true, description = "die ID des aktuellen Schülerstatus", example="2")
+	public int status;
 
 	/** Die ID der Art des Fahrschülers des Schülerdatensatzes. */
 	@Schema(required = true, description = "ggf. die ID der Art des Fahrschülers", example="3")
@@ -205,7 +205,7 @@ public class SchuelerStammdaten {
 	public Boolean istBerufsschulpflichtErfuellt;
 
 	/** Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat. */
-	@Schema(required = true, description = "gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat", example="true")
+	@Schema(required = true, description = "gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat", example="true")
 	public boolean hatMasernimpfnachweis;
 
 	/** Gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.*/
@@ -228,7 +228,7 @@ public class SchuelerStammdaten {
 	// Bemerkungen
 	
 	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
-	@Schema(required = true, description = "ggf. Bermerkungen", example="eine Bemerkung")
+	@Schema(required = true, description = "ggf. Bemerkungen", example="eine Bemerkung")
 	public String bemerkungen;
 	
 }

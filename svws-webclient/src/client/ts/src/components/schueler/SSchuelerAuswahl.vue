@@ -64,7 +64,7 @@
 
 	const rows = computed(() =>
 		[...props.mapSchueler.values()]
-			.filter(s => !props.filter.status.length || props.filter.status.map(s => s.bezeichnung).includes(s.status))
+			.filter(s => !props.filter.status.length || props.filter.status.map(s => s.id).includes(s.status))
 			.filter(s => !props.filter.jahrgang || s.jahrgang === props.filter.jahrgang.kuerzel)
 			.filter(s => !props.filter.klasse || s.idKlasse === props.filter.klasse.id)
 			.filter(s => !props.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(props.filter.kurs.id))

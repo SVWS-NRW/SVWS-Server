@@ -19,39 +19,39 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerListeEintrag {
 
 	/** Die ID des Schülers. */
-	@Schema(required = true, description = "die ID des Schülers", example="4711")
+	@Schema(description = "die ID des Schülers", example="4711")
 	public long id;
 	
 	/** Der Nachname des Schülers. */
-	@Schema(required = true, description = "der Nachname des Schülers", example="Mustermann")
+	@Schema(description = "der Nachname des Schülers", example="Mustermann")
 	public @NotNull String nachname = "";
 	
 	/** Der Vorname des Schülers. */
-	@Schema(required = true, description = "der Vorname des Schülers", example="Max")
+	@Schema(description = "der Vorname des Schülers", example="Max")
 	public @NotNull String vorname = "";
 
 	/** Die ID der aktuellen Klasse des Schülers.*/
-	@Schema(required = true, description = "die ID der aktuellen Klasse des Schülers", example="47")
+	@Schema(description = "die ID der aktuellen Klasse des Schülers", example="47")
 	public @NotNull Long idKlasse = -1L;
 
 	/** Der aktuelle Jahrgang des Schülers.*/
-	@Schema(required = true, description = "der aktuelle Jahrgang des Schülers", example="09")
+	@Schema(description = "der aktuelle Jahrgang des Schülers", example="09")
 	public @NotNull String jahrgang = "";
 	
 	/** Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt. */
-	@Schema(required = true, description = "der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt", example="2030")
+	@Schema(description = "der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt", example="2030")
 	public Integer abiturjahrgang = null;
 	
 	/** Das Kürzel der aktuellen Schulgliederung des Schülers */
-	@Schema(required = true, description = "das Kürzel der aktuellen Schulgliederung des Schülers", example="GY9")
+	@Schema(description = "das Kürzel der aktuellen Schulgliederung des Schülers", example="GY9")
 	public @NotNull String schulgliederung = "";
 	
 	/** Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).*/
-	@Schema(required = true, description = "die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.)", example="Aktiv")
-	public @NotNull String status = "";
+	@Schema(description = "die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.)", example="2")
+	public int status;
 	
 	/** Die ID des Schuljahresabschnittes des Schülers. */
-	@Schema(required = true, description = "die ID des Schuljahresabschnittes des Schülers", example="14")
+	@Schema(description = "die ID des Schuljahresabschnittes des Schülers", example="14")
 	public @NotNull Long idSchuljahresabschnitt = -1L;
 
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */

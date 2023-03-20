@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
 import de.nrw.schule.svws.core.data.klassen.KlassenListeEintrag;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenLeitung;
@@ -71,12 +72,7 @@ public class DataKlassenlisten extends DataManager<Long> {
     			listSchueler = new Vector<>();
     			mapKlassenSchueler.put(sla.Klassen_ID, listSchueler);
     		}
-    		Schueler schueler = new Schueler();
-    		schueler.id = dtoSchueler.ID;
-    		schueler.geschlecht = dtoSchueler.Geschlecht.id;
-    		schueler.nachname = dtoSchueler.Nachname;
-    		schueler.vorname = dtoSchueler.Vorname;
-    		listSchueler.add(schueler);
+    		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
     	}
     	// Erstelle die Einträge für die Liste der Klassen
     	var daten = klassen.stream().map(k -> {

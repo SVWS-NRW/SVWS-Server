@@ -181,9 +181,9 @@ export class SchuelerStammdaten extends JavaObject {
 	public istLernenZieldifferent : boolean | null = null;
 
 	/**
-	 * Die Bezeichnung des Status des Schülerdatensatzes. 
+	 * Die ID des Status des Schülerdatensatzes. 
 	 */
-	public status : string | null = null;
+	public status : number = 0;
 
 	/**
 	 * Die ID der Art des Fahrschülers des Schülerdatensatzes. 
@@ -313,7 +313,9 @@ export class SchuelerStammdaten extends JavaObject {
 		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID === null ? null : obj.foerderschwerpunkt2ID;
 		result.istAOSF = typeof obj.istAOSF === "undefined" ? null : obj.istAOSF === null ? null : obj.istAOSF;
 		result.istLernenZieldifferent = typeof obj.istLernenZieldifferent === "undefined" ? null : obj.istLernenZieldifferent === null ? null : obj.istLernenZieldifferent;
-		result.status = typeof obj.status === "undefined" ? null : obj.status === null ? null : obj.status;
+		if (typeof obj.status === "undefined")
+			 throw new Error('invalid json format, missing attribute status');
+		result.status = obj.status;
 		result.fahrschuelerArtID = typeof obj.fahrschuelerArtID === "undefined" ? null : obj.fahrschuelerArtID === null ? null : obj.fahrschuelerArtID;
 		result.haltestelleID = typeof obj.haltestelleID === "undefined" ? null : obj.haltestelleID === null ? null : obj.haltestelleID;
 		result.anmeldedatum = typeof obj.anmeldedatum === "undefined" ? null : obj.anmeldedatum === null ? null : obj.anmeldedatum;
@@ -377,7 +379,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID) + ',';
 		result += '"istAOSF" : ' + ((!obj.istAOSF) ? 'null' : obj.istAOSF) + ',';
 		result += '"istLernenZieldifferent" : ' + ((!obj.istLernenZieldifferent) ? 'null' : obj.istLernenZieldifferent) + ',';
-		result += '"status" : ' + ((!obj.status) ? 'null' : '"' + obj.status + '"') + ',';
+		result += '"status" : ' + obj.status + ',';
 		result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID) + ',';
 		result += '"haltestelleID" : ' + ((!obj.haltestelleID) ? 'null' : obj.haltestelleID) + ',';
 		result += '"anmeldedatum" : ' + ((!obj.anmeldedatum) ? 'null' : '"' + obj.anmeldedatum + '"') + ',';
@@ -504,7 +506,7 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"istLernenZieldifferent" : ' + ((!obj.istLernenZieldifferent) ? 'null' : obj.istLernenZieldifferent) + ',';
 		}
 		if (typeof obj.status !== "undefined") {
-			result += '"status" : ' + ((!obj.status) ? 'null' : '"' + obj.status + '"') + ',';
+			result += '"status" : ' + obj.status + ',';
 		}
 		if (typeof obj.fahrschuelerArtID !== "undefined") {
 			result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID) + ',';

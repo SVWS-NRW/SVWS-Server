@@ -7,6 +7,7 @@ import java.util.Vector;
 import de.nrw.schule.svws.core.data.klassen.KlassenDaten;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenLeitung;
@@ -66,16 +67,9 @@ public class DataKlassendaten extends DataManager<Long> {
 		if (klassenLeitungen != null)
 			for (DTOKlassenLeitung kl : klassenLeitungen)
 				daten.klassenLeitungen.add(kl.Lehrer_ID);
-		for (DTOSchueler dto : dtoSchueler) {
-			Schueler schueler = new Schueler();
-			schueler.id = dto.ID;
-			schueler.geschlecht = dto.Geschlecht.id;
-			schueler.nachname = dto.Nachname;
-			schueler.vorname = dto.Vorname;
-			schueler.status = dto.Status.id;
-			daten.schueler.add(schueler);
-		}
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		for (DTOSchueler dto : dtoSchueler)
+			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
