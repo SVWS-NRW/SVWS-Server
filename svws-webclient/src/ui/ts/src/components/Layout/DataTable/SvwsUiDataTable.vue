@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions}"
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
 			<slot name="header"
@@ -149,7 +149,7 @@
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" v-if="selectable || $slots.footer || $slots.footerActions || count">
+		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" v-if="!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)">
 			<slot name="footer"
 				:all-rows-selected="allRowsSelected"
 				:toggle-all-rows="toggleBulkSelection"
@@ -214,10 +214,12 @@
 				action: string;
 			}>;
 			rowExecute?: (action: string, row: DataTableItem) => void;
+			manualRowActions?: boolean;
 			filterOpen?: boolean;
 			filterHide?: boolean;
 			filtered?: boolean;
 			filterReset?: () => void;
+			disableFooter?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -234,10 +236,12 @@
 			count: false,
 			rowActions: undefined,
 			rowExecute: undefined,
+			manualRowActions: false,
 			filterOpen: false,
 			filterHide: true,
 			filtered: false,
 			filterReset: () => {},
+			disableFooter: false,
 		}
 	);
 

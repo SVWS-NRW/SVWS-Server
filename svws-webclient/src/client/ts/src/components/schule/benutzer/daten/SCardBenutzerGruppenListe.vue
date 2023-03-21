@@ -1,24 +1,49 @@
 <template>
 	<svws-ui-content-card title="Benutzergruppen">
-		<div class="flex flex-row gap-4 ">
-			<table class="border-collapse text-sm ">
-				<thead class="bg-slate-100">
-					<tr>
-						<td class="border border-[#7f7f7f]/20 text-center">
-							<svws-ui-checkbox v-model="selected"> Alle </svws-ui-checkbox>
-						</td>
-					</tr>
-				</thead>
-				<tbody>
-					<template v-for="bgle in listBenutzergruppen" :key="bgle.id">
-						<s-benutzergruppen-listeneintrag :bgle="bgle"
-							:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-							:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-							:get-benutzer-manager="getBenutzerManager" />
-					</template>
-				</tbody>
-			</table>
-		</div>
+		<svws-ui-data-table selectable :items="listBenutzergruppen" :disable-footer="true">
+			<template #header>
+				<div role="row" class="data-table__tr data-table__thead__tr">
+					<div role="checkbox" aria-label="Alle auswählen"
+						 class="data-table__th data-table__thead__th data-table__cell-select">
+						<svws-ui-checkbox class="data-table__cell-checkbox"
+										  v-model="selected" />
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title font-mono">
+								ID
+							</span>
+						</div>
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title">
+								Bezeichnung
+							</span>
+						</div>
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__th__align-center data-table__thead__th">
+						<span class="data-table__th-title" title="Administrative Gruppe">
+							<i-ri-shield-star-line />
+						</span>
+					</div>
+				</div>
+			</template>
+			<template #body>
+				<div role="row"
+					 class="data-table__tr data-table__tbody__tr"
+					 v-for="(row, index) in listBenutzergruppen"
+					 :key="index">
+					<s-benutzergruppen-listeneintrag :row="row"
+													 :add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
+													 :remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
+													 :get-benutzer-manager="getBenutzerManager"/>
+				</div>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -45,3 +70,9 @@
 	});
 
 </script>
+
+<style scoped lang="postcss">
+	.data-table__tr {
+		grid-template-columns: var(--checkbox-width) minmax(4rem, 1fr) minmax(4rem, 10fr) var(--checkbox-width) !important;
+	}
+</style>

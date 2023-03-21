@@ -1,17 +1,13 @@
 <template>
 	<svws-ui-content-card title="Benutzer">
-		<div class="flex flex-col">
-			<div class="flex gap-4">
-				<svws-ui-text-input class="mb-5" v-model="name" type="text" placeholder="Name" />
-				<svws-ui-text-input class="mb-5" v-model="anzeigename" type="text" placeholder="Login-Name" />
-			</div>
+		<div class="input-wrapper">
+			<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
+			<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Login-Name" />
 			<!-- <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager.istInAdminGruppe()"> Admin ? </svws-ui-checkbox> -->
-			<div class="flex gap-4 mt-3">
-				<svws-ui-text-input class="mb-5" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
-				<svws-ui-text-input class="mb-5" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
-			</div>
+			<svws-ui-text-input v-model="kennwort1" type="password" placeholder="Neues Passwort" />
+			<svws-ui-text-input v-model="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />
 			<div>
-				<svws-ui-button @click="setPassword()"> Kennwort ändern </svws-ui-button>
+				<svws-ui-button :disabled="!kennwort1 || !kennwort2" @click="setPassword()"> Passwort speichern </svws-ui-button>
 			</div>
 		</div>
 	</svws-ui-content-card>

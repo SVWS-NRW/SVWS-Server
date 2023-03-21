@@ -1,28 +1,26 @@
 <template>
-	<svws-ui-content-card title="Kompetenzen">
-		<div class="overflow-y-scroll h-screen shadow-md sm:rounded-lg">
-			<table class=" ">
-				<tr class="bg-green-100">
-					<td />
-					<td> <svws-ui-icon> <i-ri-information-fill /> </svws-ui-icon> </td>
-					<td> Kompetenz / Kompetenzgruppe </td>
-					<td>durch Gruppe(n)</td>
-				</tr>
-				<!-- <tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }"> -->
-				<tr>
-					<td />
-					<td colspan="2"> <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()"> Admin ? </svws-ui-checkbox></td>
-					<!-- <td> Admin ?  </td>  -->
-					<td> Kompetenz von </td>
-				</tr>
-				<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
-					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
-						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
-						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
-						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
-				</template>
-			</table>
-		</div>
+	<svws-ui-content-card title="Kompetenzen" class="col-span-full">
+		<table class=" ">
+			<tr class="bg-green-100">
+				<td />
+				<td> <svws-ui-icon> <i-ri-information-fill /> </svws-ui-icon> </td>
+				<td> Kompetenz / Kompetenzgruppe </td>
+				<td>durch Gruppe(n)</td>
+			</tr>
+			<!-- <tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }"> -->
+			<tr>
+				<td />
+				<td colspan="2"> <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()"> Admin ? </svws-ui-checkbox></td>
+				<!-- <td> Admin ?  </td>  -->
+				<td> Kompetenz von </td>
+			</tr>
+			<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
+				<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
+											:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
+											:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
+											:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+			</template>
+		</table>
 	</svws-ui-content-card>
 </template>
 
