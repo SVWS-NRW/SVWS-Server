@@ -1,10 +1,15 @@
 <template>
-	<div class="flex flex-row">
-		<div class="w-32 mr-2"> <router-view :key="$route.hash" name="lernabschnittauswahl" /> </div>
-		<div class="grow"> <router-view :key="$route.hash" /> </div>
+	<div class="leistungsdaten flex items-start gap-4">
+		<div class="w-32">
+			<!--TODO: Vertical Router Tab Bar Style für Abschnittsauswahl-->
+			<router-view :key="$route.hash" name="lernabschnittauswahl" />
+		</div>
+		<router-view :key="$route.hash" />
 	</div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<style lang="postcss">
+.leistungsdaten .data-table {
+	@apply overflow-visible;
+}
+</style>

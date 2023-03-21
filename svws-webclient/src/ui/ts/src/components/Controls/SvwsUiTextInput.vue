@@ -352,7 +352,7 @@
 	.text-input--control:disabled {
 		@apply bg-black bg-opacity-10 border-black border-opacity-50 text-black;
 		@apply opacity-20;
-		@apply cursor-not-allowed;
+		@apply pointer-events-none;
 	}
 
 	.text-input-component:focus-within,

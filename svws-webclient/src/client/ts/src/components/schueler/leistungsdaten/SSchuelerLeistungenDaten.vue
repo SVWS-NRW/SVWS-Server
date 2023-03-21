@@ -1,7 +1,7 @@
 <template>
-	<tem v-if="visible">
+	<template v-if="visible">
 		<!-- TODO v-model="selected" - siehe auch unten-->
-		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten" :footer="false">
+		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
@@ -12,7 +12,7 @@
 				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-data-table>
-	</tem>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -32,3 +32,10 @@
 	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);
 
 </script>
+
+<style scoped lang="postcss">
+	.data-table {
+		@apply overflow-visible;
+	}
+</style>
+

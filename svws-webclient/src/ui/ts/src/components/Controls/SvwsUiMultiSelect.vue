@@ -238,7 +238,7 @@
 <template>
 	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList }">
 		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger }">
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
 				<svws-ui-text-input ref="inputEl"
 					:model-value="dynModelValue"
@@ -422,6 +422,10 @@
 
 	&:hover .icon {
 		@apply bg-black text-white rounded;
+	}
+
+	.multiselect-input-component--disabled & {
+		@apply pointer-events-none;
 	}
 }
 
