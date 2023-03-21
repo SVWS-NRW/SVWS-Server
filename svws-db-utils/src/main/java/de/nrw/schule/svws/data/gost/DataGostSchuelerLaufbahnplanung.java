@@ -136,14 +136,15 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
 	 * @param aktHalbjahr   das Halbjahr, in welchem sich der Schüler befindet
 	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
-	 * @param value         der Wert für die Fachwahl
+	 * @param fw            der Wert für die Fachwahl
 	 * 
 	 * @return der zu übertragende Wert
 	 * 
 	 * @throws WebApplicationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private String patchFachwahlHalbjahr(DTOSchueler schueler, String fwDB, GostHalbjahr halbjahr, GostHalbjahr aktHalbjahr, DTOFach fach, Object value) throws WebApplicationException {
-		String fw = JSONMapper.convertToString(value, true, false);
+	private String patchFachwahlHalbjahr(DTOSchueler schueler, String fwDB, GostHalbjahr halbjahr, GostHalbjahr aktHalbjahr, DTOFach fach, String fw) throws WebApplicationException {
+		if ("".equals(fw))
+			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
 			return fwDB;
 		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
@@ -255,12 +256,26 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					String key = entry.getKey();
 					Object value = entry.getValue();
 					switch (key) {
-						case "EF1" -> fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, value);
-						case "EF2" -> fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, value);
-						case "Q11" -> fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, value);
-						case "Q12" -> fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, value);
-						case "Q21" -> fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, value);
-						case "Q22" -> fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, value);
+						case "halbjahre" -> {
+							String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
+							if ((wahlen == null) || (wahlen.length != 0 && wahlen.length != 6))
+								throw OperationError.CONFLICT.exception();
+							if (wahlen.length == 0) {
+								fachbelegung.EF1_Kursart = null;
+								fachbelegung.EF2_Kursart = null;
+								fachbelegung.Q11_Kursart = null;
+								fachbelegung.Q12_Kursart = null;
+								fachbelegung.Q21_Kursart = null;
+								fachbelegung.Q22_Kursart = null;
+							} else {
+								fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
+								fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
+								fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
+								fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
+								fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
+								fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
+							}
+						}
 						case "abiturFach" -> {
 							Integer af = JSONMapper.convertToInteger(value, true);
 								if ((af != null) && ((af < 1) || (af > 4)))

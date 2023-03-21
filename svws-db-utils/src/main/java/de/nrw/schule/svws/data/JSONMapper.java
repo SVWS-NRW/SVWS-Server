@@ -309,6 +309,39 @@ public class JSONMapper {
 	
 
 	/**
+	 * Konvertiert das übergeben Objekt in einen String-Array, sofern es sich um ein
+	 * String-Array handelt.
+	 * 
+	 * @param obj          das zu konvertierende Objekt
+	 * @param nullable     gibt an, ob Elemente auch null sein dürfen oder nicht
+	 * @param allowEmpty   gibt an, ob auch leere Arrays erlaubt sind oder nicht
+	 * @param size         die verlangte Größe des Arrays
+	 * 
+	 * @return das konvertierte String-Array
+	 */
+	public static String[] convertToStringArray(Object obj, boolean nullable, boolean allowEmpty, Integer size) {
+		if (obj == null)
+			throw new WebApplicationException("Der Wert null ist nicht erlaubt.", Response.Status.BAD_REQUEST);
+		if (!(obj instanceof List))
+			throw new WebApplicationException("Es wurde ein Arrays erwartet, aber keines übergeben.", Response.Status.BAD_REQUEST);
+		@SuppressWarnings("unchecked")
+		List<? extends String> params = (List<? extends String>)obj;
+		if ((size != null) && (size != params.size()))
+			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
+		if ((params.size() == 0) && ((size == null) || (size == 0)))
+			return new String[0];
+		String[] result = new String[params.size()];
+		for (int i = 0; i < params.size(); i++) {
+			String pvalue = params.get(i);
+			if (!nullable && (pvalue == null))
+				throw new WebApplicationException("Der Wert null ist in diesem Array nicht erlaubt.", Response.Status.BAD_REQUEST);
+			result[i] = pvalue;
+		}
+		return result;
+	}
+	
+
+	/**
 	 * Konvertiert den Java-String in eine {@link Response} mit dem JSON-String.
 	 * 
 	 * @param data   der zu konvertierende String
