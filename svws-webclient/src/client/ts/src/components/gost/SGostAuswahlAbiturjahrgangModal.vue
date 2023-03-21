@@ -1,10 +1,10 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="medium">
+	<svws-ui-modal ref="modal">
 		<template #modalTitle>Abiturjahr hinzufügen</template>
 		<template #modalContent>
-			<div class="flex flex-col items-center gap-1">
-				<svws-ui-button type="transparent" v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" @click="props.addAbiturjahrgang(jahrgang.id)">
+			<div class="flex justify-center flex-wrap items-center gap-1">
+				<svws-ui-button type="transparent" v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" @click="props.addAbiturjahrgang(jahrgang.id)" :title="`Stufe ${jahrgang.kuerzel} hinzufügen`">
 					{{ jahrgang.kuerzel }}
 				</svws-ui-button>
 			</div>

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible">
+	<tem v-if="visible">
 		<!-- TODO v-model="selected" - siehe auch unten-->
 		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten" :footer="false">
 			<template #cell(fachID)="{rowData}">
@@ -12,7 +12,7 @@
 				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-data-table>
-	</div>
+	</tem>
 </template>
 
 <script setup lang="ts">

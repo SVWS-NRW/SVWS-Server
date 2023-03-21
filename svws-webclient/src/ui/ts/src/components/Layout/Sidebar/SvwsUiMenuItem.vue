@@ -2,10 +2,12 @@
 	const props = withDefaults(defineProps<{
 		active?: boolean;
 		collapsed?: boolean;
+		disabled?: boolean;
 		subline?: string;
 	}>(), {
 		active: false,
 		collapsed: false,
+		disabled: false,
 		subline: '',
 	});
 
@@ -21,9 +23,10 @@
 <template>
 	<a class="sidebar--menu-item" :class="{
 		'sidebar--menu-item--active': active,
-		'sidebar--menu-item--collapsed': collapsed
+		'sidebar--menu-item--collapsed': collapsed,
+		'sidebar--menu-item--disabled': disabled
 	}" href="#" @click.prevent="onClick"
-		:title="($slots.label?.()[0].children as unknown as string)">
+		:title="disabled ? 'Nicht verfügbar' : ($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<svws-ui-icon>
 				<slot name="icon" />
@@ -118,5 +121,15 @@
 
 .sidebar--menu-item--subline {
 	@apply text-caption font-normal;
+}
+
+.sidebar--menu-item--disabled {
+	&,
+	&:hover,
+	&:focus {
+		@apply bg-light border-black text-black !important;
+		@apply opacity-25;
+		@apply cursor-not-allowed;
+	}
 }
 </style>

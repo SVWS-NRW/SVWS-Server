@@ -1,13 +1,18 @@
 <template>
 	<svws-ui-content-card title="Migrationshintergrund">
-		<div class="input-wrapper">
+		<template #actions>
 			<svws-ui-checkbox v-model="hatMigrationshintergrund">Migrationshintergrund vorhanden</svws-ui-checkbox>
+			<!--<svws-ui-toggle v-model="hatMigrationshintergrund">Vorhanden</svws-ui-toggle>-->
+		</template>
+		<div class="input-wrapper">
 			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" />
 			<svws-ui-multi-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`"
 				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" />
-			<svws-ui-multi-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
-				:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
-				:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" />
+			<div class="col-span-2">
+				<svws-ui-multi-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
+					:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
+					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" />
+			</div>
 			<svws-ui-multi-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
 				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />

@@ -1,7 +1,7 @@
 <template>
 	<div class="loading-status">
 		<p>
-			<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation">
+			<img src="/loading_spinner.svg" alt="Lädt…" class="loading-spinner-dimensions loading-rotation">
 		</p>
 	</div>
 </template>

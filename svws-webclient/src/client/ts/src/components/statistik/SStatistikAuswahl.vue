@@ -3,7 +3,7 @@
 		<template #headline>Statistik</template>
 		<template #header />
 		<template #content>
-			<div class="secondary-menu--navigation container">
+			<div class="secondary-menu--navigation">
 				<svws-ui-menu-item>
 					<template #label>
 						<span>Verschlüsselung</span>

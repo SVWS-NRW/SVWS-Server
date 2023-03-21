@@ -45,6 +45,14 @@
 	@apply flex flex-col items-start
 }
 
+.secondary-menu--navigation + .secondary-menu--navigation {
+	@apply mt-5 pt-5;
+}
+
+.secondary-menu--navigation--headline {
+	@apply text-headline-md px-3 mb-2;
+}
+
 .input {
 	@apply cursor-pointer;
 }

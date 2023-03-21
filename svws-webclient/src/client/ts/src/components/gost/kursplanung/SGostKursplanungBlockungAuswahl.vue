@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible">
+	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
 				<div v-if="row === auswahlBlockung" class="flex justify-between w-full">
@@ -32,7 +32,7 @@
 		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
-	</div>
+	</template>
 </template>
 
 <script setup lang="ts">

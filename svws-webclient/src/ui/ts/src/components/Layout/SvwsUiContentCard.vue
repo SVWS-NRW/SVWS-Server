@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<slot name="title" />
-		<div :class="{'mt-4': title}">
+		<div :class="{'mt-4': title || $slots.title}">
 			<slot />
 		</div>
 	</div>

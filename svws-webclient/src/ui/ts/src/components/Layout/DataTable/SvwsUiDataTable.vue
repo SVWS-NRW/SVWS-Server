@@ -299,7 +299,7 @@
 
 .data-table {
 	@apply flex flex-col;
-	@apply w-full border border-black/25 bg-white;
+	@apply w-full border border-black/25 bg-white border-b-0;
 	@apply overflow-auto;
 	@apply tabular-nums;
 	@apply max-h-full;
@@ -429,7 +429,7 @@
 		&__th,
 		&__td {
 			@apply text-left;
-			@apply h-[2.9rem];
+			@apply h-[2.75rem];
 			padding: 0.8rem 0.25rem;
 
 			> div:not(.data-table__th-wrapper__sortable),
@@ -499,11 +499,11 @@
 	&__tfoot {
 		@apply w-full bg-white;
 		@apply sticky bottom-0 left-0 z-20;
-		@apply border-t border-black/25 -mt-px;
+		@apply border-y border-black/25 -mt-px;
 
 		&__tr {
 			@apply w-full flex items-center;
-			@apply h-[2.9rem];
+			@apply h-[2.75rem];
 		}
 
 		&__th,
@@ -570,7 +570,7 @@
 	}
 
 	&__no-data {
-		@apply border-black/10;
+		@apply border-black/10 border-b;
 
 		.data-table__thead {
 			@apply text-black/25 pointer-events-none;

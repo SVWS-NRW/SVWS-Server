@@ -108,7 +108,12 @@
 
 <style lang="postcss">
     .router-tab-bar--area {
-        @apply flex flex-col items-start overflow-hidden pt-1.5;
+        @apply flex flex-col items-start overflow-hidden;
+		@apply pt-1.5;
+
+		&--single-route {
+			@apply pt-0.5;
+		}
     }
 
     .router-tab-bar--panel {

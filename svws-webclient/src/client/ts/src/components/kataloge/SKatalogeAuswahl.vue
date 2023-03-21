@@ -6,13 +6,13 @@
 		</template>
 		<template #header />
 		<template #content>
-			<template v-for="child_item in children" :key="child_item.name">
-				<div class="secondary-menu--navigation container">
+			<div class="secondary-menu--navigation">
+				<template v-for="child_item in children" :key="child_item.name">
 					<svws-ui-menu-item @click="setChild(child_item)">
 						<template #label> <span>{{ child_item.text }}</span> </template>
 					</svws-ui-menu-item>
-				</div>
-			</template>
+				</template>
+			</div>
 		</template>
 	</svws-ui-secondary-menu>
 </template>

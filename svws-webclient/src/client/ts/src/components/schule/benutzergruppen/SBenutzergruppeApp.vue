@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible">
+	<template v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ bezeichnung }}</span>
@@ -12,7 +12,7 @@
 		<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
-	</div>
+	</template>
 	<div v-else class="app-layout--main--placeholder">
 		<i-ri-community-line />
 	</div>

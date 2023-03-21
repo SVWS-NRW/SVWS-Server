@@ -1,6 +1,6 @@
 <template>
 	<div v-if="visible" class="flex flex-row gap-3">
-		<div class="felx flex-col w-2/5">
+		<div class="flex flex-col w-2/5">
 			<s-card-benutzergruppe-daten :set-bezeichnung="setBezeichnung" :set-ist-admin="setIstAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" />
 			<s-benutzergruppe-add-benutzer :list-benutzer-alle="listBenutzerAlle"
 				:list-benutzergruppen-benutzer="listBenutzergruppenBenutzer"

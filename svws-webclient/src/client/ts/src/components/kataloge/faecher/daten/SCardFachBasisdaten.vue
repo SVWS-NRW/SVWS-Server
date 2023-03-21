@@ -1,9 +1,19 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
-		<div class="content-wrapper">
-			<div class="input-wrapper">
-				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
-				<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
+		<div class="input-wrapper">
+			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
+		</div>
+	</svws-ui-content-card>
+	<svws-ui-content-card>
+		<template #title>
+			<div class="content-card--header content-card--headline text-headline-sm">
+				<i-ri-bar-chart-fill class="mr-1 opacity-50" />
+				<span>Statistik</span>
+			</div>
+		</template>
+		<div class="input-wrapper">
+			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputFachStatistik" type="text" />
 			</div>
 		</div>

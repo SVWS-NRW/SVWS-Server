@@ -49,6 +49,10 @@ module.exports = {
 				lineHeight: '1.33',
 				fontWeight: '700',
 			}],
+			'headline-md': ['1.2rem', {
+				lineHeight: '1.33',
+				fontWeight: '700',
+			}],
 			'headline': ['1.618rem', {
 				lineHeight: '1.1',
 				fontWeight: '700',
