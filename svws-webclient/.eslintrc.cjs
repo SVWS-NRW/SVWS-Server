@@ -13,7 +13,7 @@ module.exports = {
 	},
 	rules: {
 		// Standard Regeln
-		"indent": ["error", "tab"],
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		//console.log-Warnung. Können wir bei Bedarf wieder aktivieren
 		//"no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
 		"no-debugger": process.env.NODE_ENV === "production" ? "error" : "warn",
