@@ -945,11 +945,20 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled if statement 
 	 */
 	public String convertIf(IfTree node) {
-		return "if %s %s%s".formatted(
-			convertExpression(node.getCondition()),
-			convertStatement(node.getThenStatement(), false),
-			node.getElseStatement() == null ? "" : " else " + convertStatement(node.getElseStatement(), false)
-		);
+		String result = "if ";
+		result += convertExpression(node.getCondition());
+		if ((node.getThenStatement() instanceof BlockTree))
+			result += " ";
+		result += convertStatement(node.getThenStatement(), false);
+		if (node.getElseStatement() != null) {
+			if ((node.getThenStatement() instanceof BlockTree))
+				result += " ";
+			result += "else";
+			if ((node.getElseStatement() instanceof BlockTree))
+				result += " ";
+			result += convertStatement(node.getElseStatement(), false);
+		}
+		return result;
 	}
 	
 

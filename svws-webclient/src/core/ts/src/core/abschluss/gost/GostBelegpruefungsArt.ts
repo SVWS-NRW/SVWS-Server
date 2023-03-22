@@ -59,7 +59,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 * @return die Art der Belegprüfung
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBelegpruefungsArt | null {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return null;
 		switch (kuerzel) {
 			case "EF.1": 

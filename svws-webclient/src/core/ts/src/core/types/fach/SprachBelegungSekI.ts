@@ -51,13 +51,13 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static getByASDJahrgang(ASDJahrgang : string | null) : SprachBelegungSekI {
-		if (ASDJahrgang === null) 
+		if (ASDJahrgang === null)
 			return SprachBelegungSekI.NICHT_BELEGT;
-		if (JavaString.compareTo(ASDJahrgang, "05") <= 0) 
+		if (JavaString.compareTo(ASDJahrgang, "05") <= 0)
 			return SprachBelegungSekI.AB_JAHRGANG_5;
-		if (JavaString.compareTo(ASDJahrgang, "07") <= 0) 
+		if (JavaString.compareTo(ASDJahrgang, "07") <= 0)
 			return SprachBelegungSekI.MIND_4_JAHRE;
-		if (JavaString.compareTo(ASDJahrgang, "09") <= 0) 
+		if (JavaString.compareTo(ASDJahrgang, "09") <= 0)
 			return SprachBelegungSekI.MIND_2_JAHRE;
 		return SprachBelegungSekI.NICHT_BELEGT;
 	}
@@ -72,17 +72,17 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static getByDauer(dauer : number) : SprachBelegungSekI {
-		if (dauer <= 0) 
+		if (dauer <= 0)
 			return SprachBelegungSekI.NICHT_BELEGT;
-		if (dauer <= 3) 
+		if (dauer <= 3)
 			return SprachBelegungSekI.MIND_2_JAHRE;
-		if (dauer <= 4) 
+		if (dauer <= 4)
 			return SprachBelegungSekI.MIND_4_JAHRE;
 		return SprachBelegungSekI.AB_JAHRGANG_5;
 	}
 
 	public compareTo(other : SprachBelegungSekI | null) : number {
-		if (other === null) 
+		if (other === null)
 			return 1;
 		return JavaInteger.compare(this.dauer, other.dauer);
 	}

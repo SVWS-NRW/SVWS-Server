@@ -34,7 +34,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	 * Der Algorithmus entfernt zunächst alle SuS aus ihren Kursen. Anschließend werden die Kurse zufällig verteilt.
 	 */
 	public berechne(pEndzeit : number) : void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) 
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();

@@ -45,9 +45,9 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	 *         Log-Information später geloggt wurde 
 	 */
 	public compareTo(other : LogData) : number {
-		if (this.time < other.time) 
+		if (this.time < other.time)
 			return -1;
-		if (this.time > other.time) 
+		if (this.time > other.time)
 			return 1;
 		return 0;
 	}
@@ -104,7 +104,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	 * @return der Text dieser Log-Information
 	 */
 	public getText() : string {
-		if (this.indent <= 0) 
+		if (this.indent <= 0)
 			return this.text;
 		let indentChars : Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');

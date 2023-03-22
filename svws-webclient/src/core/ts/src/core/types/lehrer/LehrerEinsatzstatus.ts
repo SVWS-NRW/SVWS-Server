@@ -80,7 +80,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
 	private static getMapStatusByID() : HashMap<number, LehrerEinsatzstatus | null> {
-		if (LehrerEinsatzstatus._statusByID.size() === 0) 
+		if (LehrerEinsatzstatus._statusByID.size() === 0)
 			for (let g of LehrerEinsatzstatus.values()) 
 				LehrerEinsatzstatus._statusByID.put(g.daten.id, g);
 		return LehrerEinsatzstatus._statusByID;
@@ -93,7 +93,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, LehrerEinsatzstatus | null> {
-		if (LehrerEinsatzstatus._statusByKuerzel.size() === 0) 
+		if (LehrerEinsatzstatus._statusByKuerzel.size() === 0)
 			for (let g of LehrerEinsatzstatus.values()) 
 				LehrerEinsatzstatus._statusByKuerzel.put(g.daten.kuerzel, g);
 		return LehrerEinsatzstatus._statusByKuerzel;

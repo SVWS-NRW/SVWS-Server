@@ -121,9 +121,9 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
 	private static getMap() : HashMap<number, StundenplanblockungRegelTyp | null> {
-		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty()) 
+		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty())
 			for (let typ of StundenplanblockungRegelTyp.values()) 
-				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null) 
+				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null)
 					throw new NullPointerException("StundenplanblockungRegelTyp.id=" + typ.id + " doppelt!")
 		return StundenplanblockungRegelTyp._map_id_regel;
 	}
@@ -145,10 +145,10 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @return der Regel-Typ 
 	 */
 	public static fromTyp(id : number | null) : StundenplanblockungRegelTyp {
-		if (id === null) 
+		if (id === null)
 			return StundenplanblockungRegelTyp.UNDEFINIERT;
 		let gostTyp : StundenplanblockungRegelTyp | null = StundenplanblockungRegelTyp.getMap().get(id);
-		if (gostTyp === null) 
+		if (gostTyp === null)
 			return StundenplanblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
 	}
@@ -183,7 +183,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
 	 */
 	public getParamType(i : number) : StundenplanblockungRegelParameterTyp {
-		if ((i < 0) || (i >= this.paramTypes.size())) 
+		if ((i < 0) || (i >= this.paramTypes.size()))
 			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name()!)
 		return this.paramTypes.get(i);
 	}
@@ -198,7 +198,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 */
 	public hasParamType(paramType : StundenplanblockungRegelParameterTyp | null) : boolean {
 		for (let cur of this.paramTypes) 
-			if (paramType as unknown === cur as unknown) 
+			if (paramType as unknown === cur as unknown)
 				return true;
 		return false;
 	}

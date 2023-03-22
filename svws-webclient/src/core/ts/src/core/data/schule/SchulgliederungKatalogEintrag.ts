@@ -151,10 +151,10 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			this.bkTyp = bkTyp;
 			this.bkIndex = bkIndex;
 			this.istVZ = istVZ;
-			if (bkAbschlussBerufsbildend !== null) 
+			if (bkAbschlussBerufsbildend !== null)
 				for (let sbb of bkAbschlussBerufsbildend) 
 					this.bkAbschlussBerufsbildend.add(sbb.daten.kuerzel);
-			if (bkAbschlussAllgemeinbildend !== null) 
+			if (bkAbschlussAllgemeinbildend !== null)
 				for (let sab of bkAbschlussAllgemeinbildend) 
 					this.bkAbschlussAllgemeinbildend.add(sab.daten.kuerzel);
 			this.gueltigVon = gueltigVon;

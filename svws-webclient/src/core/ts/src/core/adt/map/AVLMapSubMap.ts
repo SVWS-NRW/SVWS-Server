@@ -62,15 +62,15 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	public equals(o : unknown) : boolean {
-		if (o as unknown === this as unknown) 
+		if (o as unknown === this as unknown)
 			return true;
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map'))) === false) 
+		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map'))) === false)
 			return false;
 		let mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
-		if (mapO.size() !== this.size()) 
+		if (mapO.size() !== this.size())
 			return false;
 		for (let e of this.entrySet()) 
-			if (JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))) === false) 
+			if (JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))) === false)
 				return false;
 		return true;
 	}
@@ -464,7 +464,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		let mapSave : AVLMap<K, V> = new AVLMap();
 		let setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
 		for (let o of c) 
-			if (this._par.bcContainsEntry(o, this._iv)) 
+			if (this._par.bcContainsEntry(o, this._iv))
 				setSave.add(cast_java_util_Map_Entry(o));
 		let changed : boolean = false;
 		let iterOfEntries : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
@@ -767,9 +767,9 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	private _createMap(from : K, fromInc : boolean, to : K, toInc : boolean, asc : boolean) : AVLMapSubMap<K, V> {
-		if (this._par.bcCheckOutOfIntervall(from, fromInc, this._iv)) 
+		if (this._par.bcCheckOutOfIntervall(from, fromInc, this._iv))
 			throw new IllegalArgumentException("FROM-KEY " + from + "/" + fromInc + " nicht in " + this._iv)
-		if (this._par.bcCheckOutOfIntervall(to, toInc, this._iv)) 
+		if (this._par.bcCheckOutOfIntervall(to, toInc, this._iv))
 			throw new IllegalArgumentException("TO-KEY " + to + "/" + toInc + " nicht in " + this._iv)
 		return new AVLMapSubMap(this._par, new AVLMapIntervall(from, fromInc, to, toInc), asc);
 	}

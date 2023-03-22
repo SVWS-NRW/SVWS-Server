@@ -249,7 +249,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	gibIstInSchiene(pSchiene : number) : boolean {
 		for (let i : number = 0; i < this.schienenLage.length; i++)
-			if (this.schienenLage[i].gibNr() === pSchiene) 
+			if (this.schienenLage[i].gibNr() === pSchiene)
 				return true;
 		return false;
 	}
@@ -263,7 +263,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	gibIstImSchienenIntervall(schieneVon : number, schieneBis : number) : boolean {
 		for (let i : number = 0; i < this.schienenLage.length; i++)
-			if ((this.schienenLage[i].gibNr() >= schieneVon) && (this.schienenLage[i].gibNr() <= schieneBis)) 
+			if ((this.schienenLage[i].gibNr() >= schieneVon) && (this.schienenLage[i].gibNr() <= schieneBis))
 				return true;
 		return false;
 	}

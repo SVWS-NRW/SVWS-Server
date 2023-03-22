@@ -151,7 +151,7 @@ export class BerufskollegBerufsebene1 extends JavaObject {
 	private static getMapBerufsebenenByKuerzel() : HashMap<string, BerufskollegBerufsebene1> {
 		if (BerufskollegBerufsebene1._ebenen.size() === 0) {
 			for (let s of BerufskollegBerufsebene1.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					BerufskollegBerufsebene1._ebenen.put(s.daten.kuerzel, s);
 			}
 		}

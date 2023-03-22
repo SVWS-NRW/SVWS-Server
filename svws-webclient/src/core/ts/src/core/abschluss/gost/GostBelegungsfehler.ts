@@ -577,9 +577,9 @@ export class GostBelegungsfehler extends JavaObject {
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
 	public getText(pruef_art : GostBelegpruefungsArt) : string {
-		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.EF1))) 
+		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.EF1)))
 			return this.textEF1;
-		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.GESAMT))) 
+		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.GESAMT)))
 			return this.textGESAMT;
 		return this.textGESAMT;
 	}

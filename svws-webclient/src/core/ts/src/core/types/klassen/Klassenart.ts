@@ -118,7 +118,7 @@ export class Klassenart extends JavaObject {
 			this.zulaessig[i] = new Vector();
 			for (let kuerzelSfSgl of historie[i].zulaessig) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
-				if (sf === null) 
+				if (sf === null)
 					continue;
 				let sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
@@ -133,9 +133,9 @@ export class Klassenart extends JavaObject {
 	 * @return die Map von den IDs auf die zugehörigen Klassenarten
 	 */
 	private static getMapByID() : HashMap<number, Klassenart> {
-		if (Klassenart._mapID.size() === 0) 
+		if (Klassenart._mapID.size() === 0)
 			for (let s of Klassenart.values()) 
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					Klassenart._mapID.put(s.daten.id, s);
 		return Klassenart._mapID;
 	}
@@ -147,9 +147,9 @@ export class Klassenart extends JavaObject {
 	 * @return die Map von den Kürzeln auf die zugehörigen Klassenarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, Klassenart> {
-		if (Klassenart._mapKuerzel.size() === 0) 
+		if (Klassenart._mapKuerzel.size() === 0)
 			for (let s of Klassenart.values()) 
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					Klassenart._mapKuerzel.put(s.daten.kuerzel, s);
 		return Klassenart._mapKuerzel;
 	}
@@ -163,10 +163,10 @@ export class Klassenart extends JavaObject {
 	 * @return true, falls die Klassenart in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		for (let sfsgl of this.zulaessig[0]) {
-			if (sfsgl.a === schulform) 
+			if (sfsgl.a === schulform)
 				return true;
 		}
 		return false;
@@ -182,10 +182,10 @@ export class Klassenart extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<Klassenart> {
 		let kursarten : Vector<Klassenart> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return kursarten;
 		for (let kursart of Klassenart.values()) 
-			if (kursart.hasSchulform(schulform)) 
+			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;
 	}

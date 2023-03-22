@@ -310,8 +310,8 @@ export class SatSolverWrapper extends SatSolverA {
 		let iter : JavaIterator<number> = list.iterator();
 		while (iter.hasNext()) {
 			let value : number = iter.next();
-			if (i < maximum) 
-				i++; else 
+			if (i < maximum)
+				i++;else
 				this.c_1(-value!);
 		}
 	}

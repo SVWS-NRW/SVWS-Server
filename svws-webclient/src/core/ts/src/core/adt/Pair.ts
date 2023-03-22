@@ -31,9 +31,9 @@ export class Pair<A, B> extends JavaObject {
 	}
 
 	public equals(o : unknown | null) : boolean {
-		if (o === null) 
+		if (o === null)
 			return false;
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.Pair'))) === false) 
+		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.Pair'))) === false)
 			return false;
 		let e : Pair<unknown, unknown> | null = cast_de_nrw_schule_svws_core_adt_Pair(o);
 		let a_equals : boolean = JavaObject.equalsTranspiler(this.a, (e.a));

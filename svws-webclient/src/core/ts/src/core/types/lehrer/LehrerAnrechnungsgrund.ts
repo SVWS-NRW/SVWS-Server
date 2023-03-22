@@ -474,7 +474,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
 	private static getMapGruendeByID() : HashMap<number, LehrerAnrechnungsgrund | null> {
-		if (LehrerAnrechnungsgrund._gruendeByID.size() === 0) 
+		if (LehrerAnrechnungsgrund._gruendeByID.size() === 0)
 			for (let g of LehrerAnrechnungsgrund.values()) 
 				LehrerAnrechnungsgrund._gruendeByID.put(g.daten.id, g);
 		return LehrerAnrechnungsgrund._gruendeByID;
@@ -487,7 +487,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
 	private static getMapGruendeByKuerzel() : HashMap<string, LehrerAnrechnungsgrund | null> {
-		if (LehrerAnrechnungsgrund._gruendeByKuerzel.size() === 0) 
+		if (LehrerAnrechnungsgrund._gruendeByKuerzel.size() === 0)
 			for (let g of LehrerAnrechnungsgrund.values()) 
 				LehrerAnrechnungsgrund._gruendeByKuerzel.put(g.daten.kuerzel, g);
 		return LehrerAnrechnungsgrund._gruendeByKuerzel;

@@ -216,7 +216,7 @@ export class GostFachbereich extends JavaObject {
 			return fach === null ? false : this.hat(fach.kuerzel);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
 			let kuerzel : string | null = __param0;
-			if (kuerzel === null) 
+			if (kuerzel === null)
 				return false;
 			return this.kuerzel.contains(kuerzel);
 		} else throw new Error('invalid method overload');
@@ -230,11 +230,11 @@ export class GostFachbereich extends JavaObject {
 	 * @return die zugehörigen Fachbereiche
 	 */
 	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {
-		if (fach === null) 
+		if (fach === null)
 			return new Vector();
 		let zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		let bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
-		if (bereiche !== null) 
+		if (bereiche !== null)
 			return bereiche;
 		return new Vector();
 	}

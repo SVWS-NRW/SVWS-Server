@@ -77,7 +77,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, LehrerLeitungsfunktion | null> {
 		if (LehrerLeitungsfunktion._mapByKuerzel.size() === 0) {
 			for (let s of LehrerLeitungsfunktion.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					LehrerLeitungsfunktion._mapByKuerzel.put(s.daten.kuerzel, s);
 			}
 		}
@@ -93,7 +93,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	private static getMapByID() : HashMap<number, LehrerLeitungsfunktion | null> {
 		if (LehrerLeitungsfunktion._mapByID.size() === 0) {
 			for (let s of LehrerLeitungsfunktion.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					LehrerLeitungsfunktion._mapByID.put(s.daten.id, s);
 			}
 		}

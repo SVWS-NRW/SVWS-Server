@@ -222,7 +222,7 @@ export class Fachgruppe extends JavaObject {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
-				if (sf !== null) 
+				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
 		}
@@ -235,7 +235,7 @@ export class Fachgruppe extends JavaObject {
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 */
 	private static getMapEintragByID() : HashMap<number, FachgruppenKatalogEintrag> {
-		if (Fachgruppe._mapEintragByID.size() === 0) 
+		if (Fachgruppe._mapEintragByID.size() === 0)
 			for (let g of Fachgruppe.values()) 
 				for (let k of g.historie) 
 					Fachgruppe._mapEintragByID.put(k.id, k);
@@ -249,7 +249,7 @@ export class Fachgruppe extends JavaObject {
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
 	private static getMapByID() : HashMap<number, Fachgruppe> {
-		if (Fachgruppe._mapByID.size() === 0) 
+		if (Fachgruppe._mapByID.size() === 0)
 			for (let g of Fachgruppe.values()) 
 				Fachgruppe._mapByID.put(g.daten.id, g);
 		return Fachgruppe._mapByID;
@@ -262,7 +262,7 @@ export class Fachgruppe extends JavaObject {
 	 * @return die Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
 	private static getMapByKuerzel() : HashMap<string, Fachgruppe> {
-		if (Fachgruppe._mapByKuerzel.size() === 0) 
+		if (Fachgruppe._mapByKuerzel.size() === 0)
 			for (let g of Fachgruppe.values()) 
 				Fachgruppe._mapByKuerzel.put(g.daten.kuerzel, g);
 		return Fachgruppe._mapByKuerzel;
@@ -286,12 +286,12 @@ export class Fachgruppe extends JavaObject {
 	 * @return true, falls die Fachgruppe in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
 		}
@@ -340,12 +340,12 @@ export class Fachgruppe extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<Fachgruppe> {
 		let faecher : Vector<Fachgruppe> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return faecher;
 		let fachgruppen : Array<Fachgruppe> = Fachgruppe.values();
 		for (let i : number = 0; i < fachgruppen.length; i++){
 			let fg : Fachgruppe | null = fachgruppen[i];
-			if (fg.hasSchulform(schulform)) 
+			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}
 		return faecher;

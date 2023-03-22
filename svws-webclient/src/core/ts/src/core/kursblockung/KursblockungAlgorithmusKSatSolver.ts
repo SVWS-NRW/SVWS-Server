@@ -92,14 +92,14 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 			for (let fachart of schueler.gibFacharten()) {
 				let varNichtwahlen : number = ssw.createNewVar();
 				let mapFachartNichtwahl : HashMap<KursblockungDynFachart, number> | null = mapSchuelerFachartNichtwahl.get(schueler);
-				if (mapFachartNichtwahl === null) 
+				if (mapFachartNichtwahl === null)
 					throw new NullPointerException()
 				mapFachartNichtwahl.put(fachart, varNichtwahlen);
 				listNichtwahlen.add(varNichtwahlen);
 				for (let kurs of fachart.gibKurse()) {
 					let varKurs : number = ssw.createNewVar();
 					let mapIstInKurs : HashMap<KursblockungDynKurs, number> | null = mapSchuelerIstInKurs.get(schueler);
-					if (mapIstInKurs === null) 
+					if (mapIstInKurs === null)
 						throw new NullPointerException()
 					mapIstInKurs.put(kurs, varKurs);
 				}
@@ -108,7 +108,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		for (let kurs of this.kurseAlle) {
 			let list : LinkedCollection<number> = new LinkedCollection();
 			let schienen : Array<number> | null = mapKursSchiene.get(kurs);
-			if (schienen === null) 
+			if (schienen === null)
 				throw new NullPointerException()
 			for (let s : number = 0; s < nSchienen; s++){
 				list.add(schienen[s]);
@@ -121,10 +121,10 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 				let list : LinkedCollection<number> = new LinkedCollection();
 				for (let kurs of fachart.gibKurse()) {
 					let mapIstInKurs : HashMap<KursblockungDynKurs, number> | null = mapSchuelerIstInKurs.get(schueler);
-					if (mapIstInKurs === null) 
+					if (mapIstInKurs === null)
 						throw new NullPointerException()
 					let varKurs : number | null = mapIstInKurs.get(kurs);
-					if (varKurs === null) 
+					if (varKurs === null)
 						throw new NullPointerException()
 					list.add(varKurs);
 				}
@@ -133,7 +133,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		}
 		for (let schueler of this.schuelerAlle) {
 			let mapIstInKurs : HashMap<KursblockungDynKurs, number> | null = mapSchuelerIstInKurs.get(schueler);
-			if (mapIstInKurs === null) 
+			if (mapIstInKurs === null)
 				throw new NullPointerException()
 			for (let fachart1 of schueler.gibFacharten()) {
 				for (let fachart2 of schueler.gibFacharten()) {
@@ -142,13 +142,13 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 							for (let kurs2 of fachart2.gibKurse()) {
 								let var1 : number | null = mapIstInKurs.get(kurs1);
 								let var2 : number | null = mapIstInKurs.get(kurs2);
-								if ((var1 === null) || (var2 === null)) 
+								if ((var1 === null) || (var2 === null))
 									throw new NullPointerException()
 								let x : number = ssw.c_new_var_AND(var1!, var2!);
 								for (let s : number = 0; s < nSchienen; s++){
 									let schienenKurs1 : Array<number> | null = mapKursSchiene.get(kurs1);
 									let schienenKurs2 : Array<number> | null = mapKursSchiene.get(kurs2);
-									if ((schienenKurs1 === null) || (schienenKurs2 === null)) 
+									if ((schienenKurs1 === null) || (schienenKurs2 === null))
 										throw new NullPointerException()
 									let var3 : number = schienenKurs1[s];
 									let var4 : number = schienenKurs2[s];
@@ -170,7 +170,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 			let schienen : LinkedCollection<number> = new LinkedCollection();
 			for (let s : number = 0; s < nSchienen; s++){
 				let schienenKurs : Array<number> | null = mapKursSchiene.get(kurs);
-				if (schienenKurs === null) 
+				if (schienenKurs === null)
 					throw new NullPointerException()
 				if (ssw.isVarTrue(schienenKurs[s])) {
 					schienen.add(s);

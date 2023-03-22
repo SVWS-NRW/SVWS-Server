@@ -38,7 +38,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	public berechne(pEndzeit : number) : void {
 		let current : number = System.currentTimeMillis();
 		let halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) 
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();

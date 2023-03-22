@@ -217,18 +217,18 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibBewertungZustandS_NW_KD() : number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS) 
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS)
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveS) 
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveS)
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveS) 
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveS)
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS) 
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS)
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i]) 
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i])
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i]) 
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i])
 				return +1;
 		}
 		return 0;
@@ -243,23 +243,23 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibCompareZustandK_NW_KD_FW() : number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) 
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) 
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK)
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) 
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK)
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) 
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) 
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) 
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
 				return +1;
 		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) 
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK)
 			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) 
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK)
 			return +1;
 		return 0;
 	}
@@ -273,22 +273,22 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibCompareZustandK_FW_NW_KD() : number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) 
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) 
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK)
 			return +1;
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) 
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK)
 			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) 
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK)
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) 
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK)
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) 
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) 
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) 
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
 				return +1;
 		}
 		return 0;
@@ -303,23 +303,23 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibCompareZustandG_NW_KD_FW() : number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG) 
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG)
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveG) 
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveG)
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG) 
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG)
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG) 
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG)
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i]) 
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i])
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i]) 
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i])
 				return +1;
 		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG) 
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG)
 			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG) 
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG)
 			return +1;
 		return 0;
 	}
@@ -388,7 +388,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	aktionKursdifferenzHinzufuegen(pIndex : number) : void {
 		this.bewertungKursdifferenzen[pIndex]++;
-		if (pIndex > this.bewertungKursdifferenzenMaxIndex) 
+		if (pIndex > this.bewertungKursdifferenzenMaxIndex)
 			this.bewertungKursdifferenzenMaxIndex = pIndex;
 	}
 
@@ -405,7 +405,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	aktionKursdifferenzEntfernen(pIndex : number) : void {
 		this.bewertungKursdifferenzen[pIndex]--;
-		if (pIndex === this.bewertungKursdifferenzenMaxIndex) 
+		if (pIndex === this.bewertungKursdifferenzenMaxIndex)
 			while ((this.bewertungKursdifferenzen[this.bewertungKursdifferenzenMaxIndex] === 0) && (this.bewertungKursdifferenzenMaxIndex > 0)) 
 				this.bewertungKursdifferenzenMaxIndex--;
 	}

@@ -54,11 +54,11 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	 * @param t   die auszugebenden Log-Informationen 
 	 */
 	public accept(t : LogData) : void {
-		if (t === null) 
+		if (t === null)
 			return;
 		let s : string | null = (this.printTime ? t.getTime() + " " : "") + (this.printLevel ? t.getLevel() + " " : "") + t.getText()!;
-		if (t.isNewLine()) 
-			console.log(JSON.stringify(s)); else 
+		if (t.isNewLine())
+			console.log(JSON.stringify(s));else
 			console.log(JSON.stringify(s));
 	}
 

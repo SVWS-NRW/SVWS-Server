@@ -40,11 +40,11 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 			this._dynDaten.aktionZustand1Speichern();
 			while (System.currentTimeMillis() < pZeitEnde) {
 				this.berechne();
-				if (this._dynDaten.gibIstBesserAlsZustand1() === true) 
-					this._dynDaten.aktionZustand1Speichern(); else 
+				if (this._dynDaten.gibIstBesserAlsZustand1() === true)
+					this._dynDaten.aktionZustand1Speichern();else
 					this._dynDaten.aktionZustand1Laden();
 			}
-			if (this._dynDaten.gibIstBesserAlsZustand2() === true) 
+			if (this._dynDaten.gibIstBesserAlsZustand2() === true)
 				this._dynDaten.aktionZustand2Speichern();
 		} else if ((typeof __param0 === "undefined")) {
 			this._dynDaten.aktionKlausurenAusSchienenEntfernen();
@@ -57,7 +57,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				let nr2 : number = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				while (nr2 >= 0) {
 					setS.addLast(nr2);
-					if (this._dynDaten.aktionSetzeKlausurInSchiene(nr2, s) === false) 
+					if (this._dynDaten.aktionSetzeKlausurInSchiene(nr2, s) === false)
 						throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!")
 					nr2 = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				}

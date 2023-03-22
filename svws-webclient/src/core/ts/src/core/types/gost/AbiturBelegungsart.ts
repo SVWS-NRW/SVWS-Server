@@ -64,7 +64,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 * @return die Kurs-Belegungsart oder null, falls das kuerzel fehlerhaft ist
 	 */
 	public static fromKuerzel(kuerzel : string | null) : AbiturBelegungsart | null {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return AbiturBelegungsart.NICHT_BELEGT;
 		switch (kuerzel) {
 			case "-": 

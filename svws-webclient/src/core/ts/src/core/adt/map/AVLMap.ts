@@ -51,9 +51,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 *  das {@link Comparable} - Interface verwendet wird.
 	 */
 	private readonly _comparatorNatural : Comparator<K> = { compare : (key1: K, key2: K) => {
-		if ((key1 === null) || (key2 === null)) 
+		if ((key1 === null) || (key2 === null))
 			throw new NullPointerException()
-		if (!((((key1 instanceof JavaObject) && (key1.isTranspiledInstanceOf('java.lang.Comparable')))) && (((key2 instanceof JavaObject) && (key2.isTranspiledInstanceOf('java.lang.Comparable')))))) 
+		if (!((((key1 instanceof JavaObject) && (key1.isTranspiledInstanceOf('java.lang.Comparable')))) && (((key2 instanceof JavaObject) && (key2.isTranspiledInstanceOf('java.lang.Comparable'))))))
 			throw new ClassCastException()
 		let k1 : Comparable<K> = cast_java_lang_Comparable(key1);
 		return k1.compareTo(key2);
@@ -330,9 +330,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return Den alten Wert (Value), falls ein zugehöriger Schlüssel (Key) existierte, sonst NULL.
 	 */
 	bcAddEntryReturnOldValueOrNull(key : K, value : V, iv : AVLMapIntervall<K>) : V | null {
-		if (key === null) 
+		if (key === null)
 			throw new NullPointerException("TreeMap erlaubt keine NULL keys.")
-		if (this._isOutOfRange(key, iv)) 
+		if (this._isOutOfRange(key, iv))
 			throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.")
 		if (this._root === null) {
 			this._root = new AVLMapNode(key, value);
@@ -383,9 +383,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
 	bcAddKey(e : K, iv : AVLMapIntervall<K>) : boolean {
-		if (this._allowKeyAlone === false) 
+		if (this._allowKeyAlone === false)
 			throw new UnsupportedOperationException()
-		if (this.bcContainsKey(e, iv)) 
+		if (this.bcContainsKey(e, iv))
 			return false;
 		this.bcAddEntryReturnOldValueOrNull(e, this._dummyValue, iv);
 		return true;
@@ -431,7 +431,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcContainsAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
 		for (let key of c) 
-			if (!this.bcContainsKey(key, iv)) 
+			if (!this.bcContainsKey(key, iv))
 				return false;
 		return true;
 	}
@@ -448,15 +448,15 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	bcContainsValue(objValue : unknown, iv : AVLMapIntervall<K>) : boolean {
 		let value : V = objValue as unknown as V;
 		let n1 : AVLMapNode<K, V> | null = this._nodeFirstOrNull(iv);
-		if (n1 === null) 
+		if (n1 === null)
 			return false;
 		let n2 : AVLMapNode<K, V> | null = this._nodeLastOrNull(iv);
-		if (n2 === null) 
+		if (n2 === null)
 			return false;
 		while (n1 as unknown !== n2 as unknown) {
-			if (n1 === null) 
+			if (n1 === null)
 				throw new NullPointerException()
-			if (this._valEquals(n1._val, value)) 
+			if (this._valEquals(n1._val, value))
 				return true;
 			n1 = n1._next;
 		}
@@ -474,7 +474,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcContainsAllValues(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
 		for (let val of c) 
-			if (!this.bcContainsValue(val, iv)) 
+			if (!this.bcContainsValue(val, iv))
 				return false;
 		return true;
 	}
@@ -488,7 +488,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das übergebene Entry in dieser Datenstruktur existiert.
 	 */
 	bcContainsEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false) 
+		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false)
 			return false;
 		let e : JavaMapEntry<K, V> = cast_java_util_Map_Entry(o);
 		let node : AVLMapNode<K, V> | null = this._nodeGetOrNull(e.getKey(), iv);
@@ -506,7 +506,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcContainsAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
 		for (let entry of c) 
-			if (!this.bcContainsEntry(entry, iv)) 
+			if (!this.bcContainsEntry(entry, iv))
 				return false;
 		return true;
 	}
@@ -522,13 +522,13 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return Liefert den zum Schlüssel (Key) zugehörigen Wert (Value), falls es eine Zuordnung gab, andernfalls NULL.
 	 */
 	bcRemoveKeyReturnOldValueOrNull(obj : unknown, iv : AVLMapIntervall<K>) : V | null {
-		if (obj === null) 
+		if (obj === null)
 			throw new NullPointerException("TreeMap unterstützt keine NULL-Schlüssel.")
 		let key : K = obj as unknown as K;
 		let old : AVLMapNode<K, V> | null = this._nodeGetOrNull(key, iv);
-		if (old === null) 
+		if (old === null)
 			return null;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		this._root = this._nodeRemoveKeyRecursive(this._root, key);
 		return old._val;
@@ -543,7 +543,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls der Schlüssel existierte und somit entfernt wurde.
 	 */
 	bcRemoveKeyReturnBool(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (!this.bcContainsKey(o, iv)) 
+		if (!this.bcContainsKey(o, iv))
 			return false;
 		this.bcRemoveKeyReturnOldValueOrNull(o, iv);
 		return true;
@@ -573,11 +573,11 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
 	bcRemoveEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false) 
+		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false)
 			return false;
-		if (!this.bcContainsEntry(o, iv)) 
+		if (!this.bcContainsEntry(o, iv))
 			return false;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		let e : JavaMapEntry<K, V> = cast_java_util_Map_Entry(o);
 		this._root = this._nodeRemoveKeyRecursive(this._root, e.getKey());
@@ -608,9 +608,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcPollFirstEntryOrNull(iv : AVLMapIntervall<K>) : JavaMapEntry<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeFirstOrNull(iv);
-		if (node === null) 
+		if (node === null)
 			return null;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		this._root = this._nodeRemoveKeyRecursive(this._root, node._key);
 		return node;
@@ -625,9 +625,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcPollFirstKeyOrNull(iv : AVLMapIntervall<K>) : K | null {
 		let node : AVLMapNode<K, V> | null = this._nodeFirstOrNull(iv);
-		if (node === null) 
+		if (node === null)
 			return null;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		this._root = this._nodeRemoveKeyRecursive(this._root, node._key);
 		return node._key;
@@ -642,9 +642,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcPollLastEntryOrNull(iv : AVLMapIntervall<K>) : JavaMapEntry<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeLastOrNull(iv);
-		if (node === null) 
+		if (node === null)
 			return null;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		this._root = this._nodeRemoveKeyRecursive(this._root, node._key);
 		return node;
@@ -659,9 +659,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcPollLastKeyOrNull(iv : AVLMapIntervall<K>) : K | null {
 		let node : AVLMapNode<K, V> | null = this._nodeLastOrNull(iv);
-		if (node === null) 
+		if (node === null)
 			return null;
-		if (this._root === null) 
+		if (this._root === null)
 			throw new NullPointerException()
 		this._root = this._nodeRemoveKeyRecursive(this._root, node._key);
 		return node._key;
@@ -676,10 +676,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcGetSize(iv : AVLMapIntervall<K>) : number {
 		let n1 : AVLMapNode<K, V> | null = this._nodeFirstOrNull(iv);
-		if (n1 === null) 
+		if (n1 === null)
 			return 0;
 		let n2 : AVLMapNode<K, V> | null = this._nodeLastOrNull(iv);
-		if (n2 === null) 
+		if (n2 === null)
 			return 0;
 		return this._nodeIndexOf(n2._key) - this._nodeIndexOf(n1._key) + 1;
 	}
@@ -914,17 +914,17 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls der übergebene Schlüssel außerhalb des übergebenen Intervalls ist.
 	 */
 	bcCheckOutOfIntervall(key : K, inc : boolean, iv : AVLMapIntervall<K>) : boolean {
-		if ((key === this._infinityMinus) || (key === this._infinityPlus)) 
+		if ((key === this._infinityMinus) || (key === this._infinityPlus))
 			return false;
 		let cmpF : number = this._compare(key, iv.from);
-		if (cmpF < 0) 
+		if (cmpF < 0)
 			return true;
-		if ((cmpF === 0) && (!iv.fromInc) && (inc)) 
+		if ((cmpF === 0) && (!iv.fromInc) && (inc))
 			return true;
 		let cmpT : number = this._compare(key, iv.to);
-		if (cmpT > 0) 
+		if (cmpT > 0)
 			return true;
-		if ((cmpT === 0) && (!iv.toInc) && (inc)) 
+		if ((cmpT === 0) && (!iv.toInc) && (inc))
 			return true;
 		return false;
 	}
@@ -938,25 +938,25 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	private _keyOrExeption(node : AVLMapNode<K, V> | null) : K {
-		if (node === null) 
+		if (node === null)
 			throw new NoSuchElementException()
 		return node._key;
 	}
 
 	private _compare(key1 : K, key2 : K) : number {
-		if ((key1 === this._infinityMinus) || (key2 === this._infinityPlus)) 
+		if ((key1 === this._infinityMinus) || (key2 === this._infinityPlus))
 			return -1;
-		if ((key1 === this._infinityPlus) || (key2 === this._infinityMinus)) 
+		if ((key1 === this._infinityPlus) || (key2 === this._infinityMinus))
 			return +1;
 		return this._comparator.compare(key1, key2);
 	}
 
 	private _isOutOfRange(key : K, iv : AVLMapIntervall<K>) : boolean {
 		let cmpKeyFrom : number = this._compare(key, iv.from);
-		if ((cmpKeyFrom < 0) || (cmpKeyFrom === 0) && (!iv.fromInc)) 
+		if ((cmpKeyFrom < 0) || (cmpKeyFrom === 0) && (!iv.fromInc))
 			return true;
 		let cmpKeyTo : number = this._compare(key, iv.to);
-		if ((cmpKeyTo > 0) || (cmpKeyTo === 0) && (!iv.toInc)) 
+		if ((cmpKeyTo > 0) || (cmpKeyTo === 0) && (!iv.toInc))
 			return true;
 		return false;
 	}
@@ -971,7 +971,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeCeilingOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
-		if (node === null) 
+		if (node === null)
 			return null;
 		let cmpNodeKey : number = this._compare(node._key, key);
 		return cmpNodeKey >= 0 ? node : this._nodeNextOrNull(node, iv);
@@ -979,7 +979,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeHigherOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
-		if (node === null) 
+		if (node === null)
 			return null;
 		let cmpNodeKey : number = this._compare(node._key, key);
 		return cmpNodeKey > 0 ? node : this._nodeNextOrNull(node, iv);
@@ -987,7 +987,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeFloorOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
-		if (node === null) 
+		if (node === null)
 			return null;
 		let cmpNodeKey : number = this._compare(node._key, key);
 		return cmpNodeKey <= 0 ? node : this._nodePrevOrNull(node, iv);
@@ -995,7 +995,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeLowerOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
-		if (node === null) 
+		if (node === null)
 			return null;
 		let cmpNodeKey : number = this._compare(node._key, key);
 		return cmpNodeKey < 0 ? node : this._nodePrevOrNull(node, iv);
@@ -1013,7 +1013,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeGetOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		let node : AVLMapNode<K, V> | null = this._nodeDeepestOrNull(key, iv);
-		if (node === null) 
+		if (node === null)
 			return null;
 		return this._compare(key, node._key) === 0 ? node : null;
 	}
@@ -1022,7 +1022,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		let current : AVLMapNode<K, V> | null = this._root;
 		let index : number = 0;
 		while (true) {
-			if (current === null) 
+			if (current === null)
 				throw new NullPointerException()
 			let cmp : number = this._compare(key, current._key);
 			if (cmp < 0) {
@@ -1075,8 +1075,8 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 			current._val = value;
 			return current;
 		}
-		if (cmp < 0) 
-			current._childL = (current._childL === null) ? this._nodeCreateLeaf(current._prev, current, key, value) : this._nodePutRecursive(current._childL, key, value); else 
+		if (cmp < 0)
+			current._childL = (current._childL === null) ? this._nodeCreateLeaf(current._prev, current, key, value) : this._nodePutRecursive(current._childL, key, value);else
 			current._childR = (current._childR === null) ? this._nodeCreateLeaf(current, current._next, key, value) : this._nodePutRecursive(current._childR, key, value);
 		return this._nodeRevalidate(current);
 	}
@@ -1097,13 +1097,13 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	private _nodeRemoveKeyRecursive(current : AVLMapNode<K, V>, key : K) : AVLMapNode<K, V> | null {
 		let cmp : number = this._compare(key, current._key);
 		if (cmp < 0) {
-			if (current._childL === null) 
+			if (current._childL === null)
 				throw new NullPointerException()
 			current._childL = this._nodeRemoveKeyRecursive(current._childL, key);
 			return this._nodeRevalidate(current);
 		}
 		if (cmp > 0) {
-			if (current._childR === null) 
+			if (current._childR === null)
 				throw new NullPointerException()
 			current._childR = this._nodeRemoveKeyRecursive(current._childR, key);
 			return this._nodeRevalidate(current);
@@ -1117,7 +1117,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 			return current._childL;
 		}
 		let next : AVLMapNode<K, V> | null = current._next;
-		if (next === null) 
+		if (next === null)
 			throw new NullPointerException()
 		current._childR = this._nodeRemoveKeyRecursive(current._childR, next._key);
 		return this._nodeRevalidate(this._nodeReplaceReferencesFromAwithB(next, current));
@@ -1130,9 +1130,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		let n : AVLMapNode<K, V> | null = b._next;
 		a._prev = p;
 		a._next = n;
-		if (p !== null) 
+		if (p !== null)
 			p._next = a;
-		if (n !== null) 
+		if (n !== null)
 			n._prev = a;
 		return a;
 	}
@@ -1140,9 +1140,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	private _nodeRemovePrevNext(current : AVLMapNode<K, V>) : void {
 		let nodeP : AVLMapNode<K, V> | null = current._prev;
 		let nodeN : AVLMapNode<K, V> | null = current._next;
-		if (nodeP !== null) 
+		if (nodeP !== null)
 			nodeP._next = nodeN;
-		if (nodeN !== null) 
+		if (nodeN !== null)
 			nodeN._prev = nodeP;
 	}
 
@@ -1156,16 +1156,16 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	private _nodeRevalidate(node : AVLMapNode<K, V>) : AVLMapNode<K, V> {
 		let heightBalance : number = this._nodeGetHeightBalance(node);
 		if (heightBalance > +1) {
-			if (node._childR === null) 
+			if (node._childR === null)
 				throw new NullPointerException()
-			if (this._nodeGetHeightBalance(node._childR) < 0) 
+			if (this._nodeGetHeightBalance(node._childR) < 0)
 				node._childR = this._nodeRotateRight(node._childR);
 			return this._nodeRotateLeft(node);
 		}
 		if (heightBalance < -1) {
-			if (node._childL === null) 
+			if (node._childL === null)
 				throw new NullPointerException()
-			if (this._nodeGetHeightBalance(node._childL) > 0) 
+			if (this._nodeGetHeightBalance(node._childL) > 0)
 				node._childL = this._nodeRotateLeft(node._childL);
 			return this._nodeRotateRight(node);
 		}
@@ -1174,7 +1174,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	private _nodeRotateLeft(nodeM : AVLMapNode<K, V>) : AVLMapNode<K, V> {
-		if (nodeM._childR === null) 
+		if (nodeM._childR === null)
 			throw new NullPointerException()
 		let nodeR : AVLMapNode<K, V> = nodeM._childR;
 		nodeM._childR = nodeR._childL;
@@ -1185,7 +1185,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	private _nodeRotateRight(nodeM : AVLMapNode<K, V>) : AVLMapNode<K, V> {
-		if (nodeM._childL === null) 
+		if (nodeM._childL === null)
 			throw new NullPointerException()
 		let nodeL : AVLMapNode<K, V> = nodeM._childL;
 		nodeM._childL = nodeL._childR;

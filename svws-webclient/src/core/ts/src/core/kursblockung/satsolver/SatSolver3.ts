@@ -130,7 +130,7 @@ export class SatSolver3 extends SatSolverA {
 	 */
 	private addClause1(x : number) : void {
 		let varX : Variable = this.getVarOf(x);
-		if (varX.negation === null) 
+		if (varX.negation === null)
 			throw new NullPointerException()
 		this.heap.remove(varX);
 		this.heap.remove(varX.negation);
@@ -151,7 +151,7 @@ export class SatSolver3 extends SatSolverA {
 	private addClause2(x : number, y : number) : void {
 		let varX : Variable = this.getVarOf(x);
 		let varY : Variable = this.getVarOf(y);
-		if ((varX.negation === null) || (varY.negation === null)) 
+		if ((varX.negation === null) || (varY.negation === null))
 			throw new NullPointerException()
 		this.heap.remove(varX);
 		this.heap.remove(varY);
@@ -182,7 +182,7 @@ export class SatSolver3 extends SatSolverA {
 		let varX : Variable = this.getVarOf(x);
 		let varY : Variable = this.getVarOf(y);
 		let varZ : Variable = this.getVarOf(z);
-		if ((varX.negation === null) || (varY.negation === null) || (varZ.negation === null)) 
+		if ((varX.negation === null) || (varY.negation === null) || (varZ.negation === null))
 			throw new NullPointerException()
 		this.heap.remove(varX);
 		this.heap.remove(varY);
@@ -283,7 +283,7 @@ export class SatSolver3 extends SatSolverA {
 			} else {
 				this.unitpropagation_undo(varP);
 			}
-			if (varP.negation === null) 
+			if (varP.negation === null)
 				throw new NullPointerException()
 			varP = varP.negation;
 			if (varP.isUnsat()) {
@@ -327,7 +327,7 @@ export class SatSolver3 extends SatSolverA {
 				if (varP.statSatFree[0][0] > 0) {
 					return SatSolverA.RESULT_UNSATISFIABLE;
 				}
-				if (varP.negation === null) 
+				if (varP.negation === null)
 					throw new NullPointerException()
 				if (varP.negation.statSatFree[0][0] > 0) {
 					return SatSolverA.RESULT_UNSATISFIABLE;
@@ -379,7 +379,7 @@ export class SatSolver3 extends SatSolverA {
 	 */
 	private unitpropagation(varP : Variable) : void {
 		let varN : Variable | null = varP.negation;
-		if (varN === null) 
+		if (varN === null)
 			throw new NullPointerException()
 		this.heap.remove(varP);
 		this.heap.remove(varN);
@@ -396,7 +396,7 @@ export class SatSolver3 extends SatSolverA {
 	 */
 	private unitpropagation_undo(varP : Variable) : void {
 		let varN : Variable | null = varP.negation;
-		if (varN === null) 
+		if (varN === null)
 			throw new NullPointerException()
 		this.unitpropagationHelper(varP.clauses, -1, +1);
 		this.unitpropagationHelper(varN.clauses, +0, +1);

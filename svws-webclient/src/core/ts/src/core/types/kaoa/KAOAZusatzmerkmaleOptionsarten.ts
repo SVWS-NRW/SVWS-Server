@@ -73,7 +73,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAZusatzmerkmaleOptionsarten | null {
 		for (let art of KAOAZusatzmerkmaleOptionsarten.values()) 
-			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
+			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
 				return art;
 		return null;
 	}

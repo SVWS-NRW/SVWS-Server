@@ -61,7 +61,7 @@ export class GostFachwahlManager extends JavaObject {
 	 * @param fachwahl   die hinzuzufügende Fachwahl
 	 */
 	public add(fachwahl : GostFachwahl | null) : void {
-		if (fachwahl === null) 
+		if (fachwahl === null)
 			return;
 		this.fachwahlen.add(fachwahl);
 		let fwFach : Vector<GostFachwahl> | null = this.mapFach.get(fachwahl.fachID);
@@ -128,10 +128,10 @@ export class GostFachwahlManager extends JavaObject {
 	 */
 	public hatFachwahl(idSchueler : number, idFach : number, kursart : GostKursart) : boolean {
 		let mapKursart : HashMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(idFach);
-		if (mapKursart === null) 
+		if (mapKursart === null)
 			return false;
 		let schueler : HashSet<number> | null = mapKursart.get(kursart);
-		if (schueler === null) 
+		if (schueler === null)
 			return false;
 		return schueler.contains(idSchueler);
 	}

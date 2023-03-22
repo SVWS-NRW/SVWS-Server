@@ -129,7 +129,7 @@ export class GostKursart extends JavaObject {
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostKursart> {
-		if (GostKursart._mapKuerzel.size() === 0) 
+		if (GostKursart._mapKuerzel.size() === 0)
 			for (let k of GostKursart.values()) 
 				GostKursart._mapKuerzel.put(k.kuerzel, k);
 		return GostKursart._mapKuerzel;
@@ -142,7 +142,7 @@ export class GostKursart extends JavaObject {
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
 	private static getMapByZulKursart() : HashMap<ZulaessigeKursart, GostKursart> {
-		if (GostKursart._mapZulKursart.size() === 0) 
+		if (GostKursart._mapZulKursart.size() === 0)
 			for (let k of GostKursart.values()) 
 				for (let zulKursart of k.kursarten) 
 					GostKursart._mapZulKursart.put(zulKursart, k);

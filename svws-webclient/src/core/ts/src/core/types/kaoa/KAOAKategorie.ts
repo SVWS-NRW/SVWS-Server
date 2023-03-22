@@ -112,7 +112,7 @@ export class KAOAKategorie extends JavaObject {
 	 * @return die Map von der ID auf die zugehörige Kategorie
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAKategorie> {
-		if (KAOAKategorie._statusByID.size() === 0) 
+		if (KAOAKategorie._statusByID.size() === 0)
 			for (let g of KAOAKategorie.values()) 
 				KAOAKategorie._statusByID.put(g.daten.id, g);
 		return KAOAKategorie._statusByID;
@@ -125,7 +125,7 @@ export class KAOAKategorie extends JavaObject {
 	 * @return die Map von dem Kürzel auf die zugehörige Kategorie
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAKategorie> {
-		if (KAOAKategorie._statusByKuerzel.size() === 0) 
+		if (KAOAKategorie._statusByKuerzel.size() === 0)
 			for (let g of KAOAKategorie.values()) 
 				KAOAKategorie._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOAKategorie._statusByKuerzel;

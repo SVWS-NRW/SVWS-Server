@@ -73,7 +73,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				this._mapByKuerzel.put(kuerzel, eintrag);
 				for (let daten of eintrag.historie) {
 					let alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
-					if (alt !== null) 
+					if (alt !== null)
 						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei der Fachklasse \'" + kuerzel! + "\'")
 					this._mapDatenByID.put(daten.id, daten);
 				}
@@ -116,15 +116,15 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let index : number = __param0 as number;
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-			if (katIndex === null) 
+			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex.version;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
 			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
-			if (gliederung.daten.bkIndex === null) 
+			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
-			if (katIndex === null) 
+			if (katIndex === null)
 				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
 			return katIndex.version;
 		} else throw new Error('invalid method overload');
@@ -182,10 +182,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			let kuerzel : string = __param0;
 			let schuljahr : number = __param1 as number;
 			let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
-			if (eintrag === null) 
+			if (eintrag === null)
 				return null;
 			for (let daten of eintrag.historie) 
-				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr))) 
+				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
 					return daten;
 			return null;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined")) {
@@ -235,15 +235,15 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let index : number = __param0 as number;
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-			if (katIndex === null) 
+			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
 			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
-			if (gliederung.daten.bkIndex === null) 
+			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
-			if (katIndex === null) 
+			if (katIndex === null)
 				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
 			return katIndex;
 		} else throw new Error('invalid method overload');

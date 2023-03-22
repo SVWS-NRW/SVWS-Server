@@ -44,14 +44,14 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		this._dynDaten.aktionClear();
 		this.berechneRekursiv();
 		this._dynDaten.aktionZustand1Laden();
-		if (this._dynDaten.gibIstBesserAlsZustand2() === true) 
+		if (this._dynDaten.gibIstBesserAlsZustand2() === true)
 			this._dynDaten.aktionZustand2Speichern();
 	}
 
 	private berechneRekursiv() : void {
-		if (this._dynDaten.gibTerminAnzahl() > this._minTermine) 
+		if (this._dynDaten.gibTerminAnzahl() > this._minTermine)
 			return;
-		if (System.currentTimeMillis() > this._zeitEnde) 
+		if (System.currentTimeMillis() > this._zeitEnde)
 			return;
 		if (!this._dynDaten.gibExistierenNichtverteilteKlausuren()) {
 			if (this._dynDaten.gibIstBesserAlsZustand1()) {
@@ -68,7 +68,7 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 			}
 		}
 		let terminNr : number = this._dynDaten.gibErzeugeNeuenTermin();
-		if (!this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) 
+		if (!this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr))
 			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!")
 		this.berechneRekursiv();
 		this._dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);

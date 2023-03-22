@@ -164,7 +164,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	private static getMap() : HashMap<number, GostKursblockungRegelTyp> {
-		if (GostKursblockungRegelTyp._map_id_regel.isEmpty()) 
+		if (GostKursblockungRegelTyp._map_id_regel.isEmpty())
 			for (let gostTyp of GostKursblockungRegelTyp.values()) 
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
 		return GostKursblockungRegelTyp._map_id_regel;
@@ -188,10 +188,10 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @return der Regel-Typ 
 	 */
 	public static fromTyp(id : number | null) : GostKursblockungRegelTyp {
-		if (id === null) 
+		if (id === null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		let gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
-		if (gostTyp === null) 
+		if (gostTyp === null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
 	}
@@ -216,7 +216,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
 	 */
 	public getParamType(i : number) : GostKursblockungRegelParameterTyp {
-		if ((i < 0) || (i >= this.paramTypes.size())) 
+		if ((i < 0) || (i >= this.paramTypes.size()))
 			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name()!)
 		return this.paramTypes.get(i);
 	}
@@ -231,7 +231,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 */
 	public hasParamType(paramType : GostKursblockungRegelParameterTyp | null) : boolean {
 		for (let cur of this.paramTypes) 
-			if (paramType as unknown === cur as unknown) 
+			if (paramType as unknown === cur as unknown)
 				return true;
 		return false;
 	}
@@ -268,9 +268,9 @@ export class GostKursblockungRegelTyp extends JavaObject {
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
 				let p0 : number = param.get(0).valueOf();
 				let p1 : number = param.get(1).valueOf();
-				if (p1 < pSchienenNr) 
+				if (p1 < pSchienenNr)
 					return [p0, p1];
-				if (p1 > pSchienenNr) 
+				if (p1 > pSchienenNr)
 					return [p0, p1 - 1];
 				return null;
 			}
@@ -281,7 +281,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 				let bis : number = param.get(2).valueOf();
 				von = pSchienenNr < von ? von - 1 : von;
 				bis = pSchienenNr <= bis ? bis - 1 : bis;
-				if (von <= bis) 
+				if (von <= bis)
 					return [p0, von, bis];
 				return null;
 			}

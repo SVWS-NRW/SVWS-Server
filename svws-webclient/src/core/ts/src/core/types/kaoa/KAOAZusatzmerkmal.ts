@@ -652,7 +652,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAZusatzmerkmal> {
-		if (KAOAZusatzmerkmal._statusByID.size() === 0) 
+		if (KAOAZusatzmerkmal._statusByID.size() === 0)
 			for (let g of KAOAZusatzmerkmal.values()) 
 				KAOAZusatzmerkmal._statusByID.put(g.daten.id, g);
 		return KAOAZusatzmerkmal._statusByID;
@@ -665,7 +665,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAZusatzmerkmal> {
-		if (KAOAZusatzmerkmal._statusByKuerzel.size() === 0) 
+		if (KAOAZusatzmerkmal._statusByKuerzel.size() === 0)
 			for (let g of KAOAZusatzmerkmal.values()) 
 				KAOAZusatzmerkmal._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOAZusatzmerkmal._statusByKuerzel;

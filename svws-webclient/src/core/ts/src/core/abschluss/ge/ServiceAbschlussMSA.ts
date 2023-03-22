@@ -98,7 +98,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.INFO, " => kein MSA (FOR) - nicht genügend E-Kurse belegt");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
-		} else 
+		} else
 			if (anzahlEKurse > 2) {
 				let zuviel : number = anzahlEKurse - 2;
 				let eKursFG2 : GEAbschlussFach | null = faecher.fg2.getFach(this.filterEKurse);
@@ -129,7 +129,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		if (abschlussergebnis.erworben) {
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.INFO, " => MSA (FOR): APO-SI §42 (3)");
-		} else 
+		} else
 			if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
 				this.logger.logLn(LogLevel.INFO, " => kein MSA (FOR) - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)!);
 			} else {
@@ -154,9 +154,9 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		let fg1_defizite : number = faecher.fg1.getFaecherAnzahl(this.filterDefizite);
 		let fg2_defizite : number = faecher.fg2.getFaecherAnzahl(this.filterDefizite);
 		let fg1_anzahlAusgleiche : number = faecher.fg1.getFaecherAnzahl(this.filterAusgleiche);
-		if (fg1_defizite > 0) 
+		if (fg1_defizite > 0)
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizite)!);
-		if (fg2_defizite > 0) 
+		if (fg2_defizite > 0)
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizite)!);
 		if (faecher.fg1.getFaecherAnzahl(this.filterDefiziteMehrAls1NS) > 0) {
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> in FG1 unzulässig: mind. 1x6 oder bei einem G-Kurs 1x5");
@@ -170,14 +170,14 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		if (sonstige_ungenuegend.size() > 1) {
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite, kann nicht mehr als eine Note mit 6 (bzw. 5 bei einem G-Kurs) in FG2 unberücksichtigt lassen");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
-		} else 
+		} else
 			if (sonstige_ungenuegend.size() === 1) {
 				let defizitFach : GEAbschlussFach = sonstige_ungenuegend.get(0);
 				if (GELeistungsdifferenzierteKursart.Sonstige.hat(defizitFach.kursart)) {
 					defizitFach.ausgeglichen = true;
 					this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> unberücksichtigt: Defizit in " + defizitFach.kuerzel + " (2 Notenstufen)");
 					ignorieren_genutzt = true;
-				} else 
+				} else
 					if ((GELeistungsdifferenzierteKursart.E.hat(defizitFach.kursart)) && (defizitFach.note === 6)) {
 						this.logger.logLn(LogLevel.DEBUG, log_indent! + "   -> Ein ungenügend in dem E-Kurs " + defizitFach.kuerzel + " kann nicht ausgelichen werden und eine Nachprüfung ist nicht zulässig!");
 						return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
@@ -205,11 +205,11 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		if ((fg1_defizite === 2) || ((fg1_defizite === 1) && (wp_defizit === null))) {
 			ausgleich_genutzt = true;
 			let defizitFach : GEAbschlussFach | null = faecher.fg1.getFach(this.filterDefizitNichtWP);
-			if (defizitFach === null) 
+			if (defizitFach === null)
 				throw new NullPointerException()
 			defizitFach.ausgeglichen = true;
 			let ausgleichsFach : GEAbschlussFach | null = faecher.fg1.getFach(this.filterAusgleiche);
-			if (ausgleichsFach === null) 
+			if (ausgleichsFach === null)
 				throw new NullPointerException()
 			ausgleichsFach.ausgleich = true;
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Gleiche das Defizit (FG1) in " + defizitFach.kuerzel + " mit " + ausgleichsFach.kuerzel + " (FG1) aus.");
@@ -223,7 +223,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 				ausgleichsFach.ausgleich = true;
 				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe mit Ausgleich: Gleiche das Defizit (FG1) in " + defizitFach.kuerzel + " mit " + ausgleichsFach.kuerzel + " (FG1) aus. " + defizitFach.kuerzel + " alternativ als Nachprüfungsfach denkbar.");
 				let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, 2, ignorieren_genutzt, ausgleich_genutzt, nachpruefung_genutzt);
-				if (!abschlussergebnis.erworben && abschlussergebnis.npFaecher !== null && AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis) && wp_defizit.kuerzel !== null) 
+				if (!abschlussergebnis.erworben && abschlussergebnis.npFaecher !== null && AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis) && wp_defizit.kuerzel !== null)
 					abschlussergebnis.npFaecher.add(wp_defizit.kuerzel);
 				return abschlussergebnis;
 			}
@@ -236,7 +236,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 			nachpruefung_genutzt = true;
 		}
 		let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent, npFaecher, 2, ignorieren_genutzt, ausgleich_genutzt, nachpruefung_genutzt);
-		if ((nachpruefung_genutzt) && abschlussergebnis.erworben) 
+		if ((nachpruefung_genutzt) && abschlussergebnis.erworben)
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA, AbschlussManager.getKuerzel(npFaecher));
 		return abschlussergebnis;
 	}
@@ -259,16 +259,16 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		let mangelhaft : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite1NS);
 		let hat_defizit : boolean = defizite.size() > 0;
 		let hat_defizit_sonstige_3er : boolean = faecher.fg2.getFaecherAnzahl(this.filterBenoetigte3er) < benoetige3er;
-		if ((!hat_defizit) && (!hat_defizit_sonstige_3er)) 
+		if ((!hat_defizit) && (!hat_defizit_sonstige_3er))
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, true);
 		if (!ignorieren_genutzt) {
 			for (let defizitFach of mangelhaft) {
-				if (!GELeistungsdifferenzierteKursart.Sonstige.hat(defizitFach.kursart)) 
+				if (!GELeistungsdifferenzierteKursart.Sonstige.hat(defizitFach.kursart))
 					continue;
 				defizitFach.ausgeglichen = true;
 				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe: Defizit unberücksichtigt in " + defizitFach.kuerzel);
 				let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, benoetige3er, true, ausgleich_genutzt, nachpruefung_genutzt);
-				if (abschlussergebnis.erworben) 
+				if (abschlussergebnis.erworben)
 					return abschlussergebnis;
 				defizitFach.ausgeglichen = false;
 			}
@@ -282,7 +282,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 					this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe: Ausgleich einer fehlende 3 durch " + ausgleichsFach.kuerzel);
 					ausgleichsFach.ausgleich = true;
 					let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, benoetige3er - 1, ignorieren_genutzt, true, nachpruefung_genutzt);
-					if (abschlussergebnis.erworben) 
+					if (abschlussergebnis.erworben)
 						return abschlussergebnis;
 					ausgleichsFach.ausgleich = false;
 				}
@@ -301,7 +301,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 								defizitFach.ausgeglichen = true;
 								ausgleichsFach.ausgleich = true;
 								let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, benoetige3er, ignorieren_genutzt, true, nachpruefung_genutzt);
-								if (abschlussergebnis.erworben) 
+								if (abschlussergebnis.erworben)
 									return abschlussergebnis;
 								defizitFach.ausgeglichen = false;
 								ausgleichsFach.ausgleich = false;
@@ -320,7 +320,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 					defizitFach.note--;
 					let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, benoetige3er, ignorieren_genutzt, ausgleich_genutzt, true);
 					this.logger.logLn(LogLevel.DEBUG, log_indent! + (abschlussergebnis.erworben ? "   -> Ja!" : "   -> Nein!"));
-					if (abschlussergebnis.erworben) 
+					if (abschlussergebnis.erworben)
 						npFaecher.add(defizitFach);
 					defizitFach.note++;
 					defizitFach.ausgeglichen = false;
@@ -333,14 +333,14 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 					defizitFach.note--;
 					let abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, benoetige3er, ignorieren_genutzt, ausgleich_genutzt, true);
 					this.logger.logLn(LogLevel.DEBUG, log_indent! + (abschlussergebnis.erworben ? "   -> Ja!" : "   -> Nein!"));
-					if (abschlussergebnis.erworben) 
+					if (abschlussergebnis.erworben)
 						npFaecher.add(defizitFach);
 					defizitFach.note++;
 					defizitFach.ausgeglichen = false;
 				}
 			}
 		}
-		if ((!nachpruefung_genutzt) && (npFaecher.size() > 0)) 
+		if ((!nachpruefung_genutzt) && (npFaecher.size() > 0))
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA, AbschlussManager.getKuerzel(npFaecher));
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 	}

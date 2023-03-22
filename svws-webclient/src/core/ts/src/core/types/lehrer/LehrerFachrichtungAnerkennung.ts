@@ -85,7 +85,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerFachrichtungAnerkennung | null> {
-		if (LehrerFachrichtungAnerkennung._anerkennungenByID.size() === 0) 
+		if (LehrerFachrichtungAnerkennung._anerkennungenByID.size() === 0)
 			for (let l of LehrerFachrichtungAnerkennung.values()) 
 				LehrerFachrichtungAnerkennung._anerkennungenByID.put(l.daten.id, l);
 		return LehrerFachrichtungAnerkennung._anerkennungenByID;
@@ -98,7 +98,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerFachrichtungAnerkennung | null> {
-		if (LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.size() === 0) 
+		if (LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.size() === 0)
 			for (let l of LehrerFachrichtungAnerkennung.values()) 
 				LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerFachrichtungAnerkennung._anerkennungenByKuerzel;

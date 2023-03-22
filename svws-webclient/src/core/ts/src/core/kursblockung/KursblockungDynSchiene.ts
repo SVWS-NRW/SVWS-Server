@@ -133,7 +133,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		let setFachart : AVLSet<number | null> | null = new AVLSet();
 		let summe : number = 0;
 		for (let kurs of this.kursMap.values()) 
-			if (setFachart.add(kurs.gibFachart().gibNr()) === false) 
+			if (setFachart.add(kurs.gibFachart().gibNr()) === false)
 				summe++;
 		return summe;
 	}

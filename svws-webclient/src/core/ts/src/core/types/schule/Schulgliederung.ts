@@ -659,7 +659,7 @@ export class Schulgliederung extends JavaObject {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
-				if (sf !== null) 
+				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
 		}
@@ -672,7 +672,7 @@ export class Schulgliederung extends JavaObject {
 	 * @return die Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Schulgliederung> {
-		if (Schulgliederung._schulgliederungenKuerzel.size() === 0) 
+		if (Schulgliederung._schulgliederungenKuerzel.size() === 0)
 			for (let s of Schulgliederung.values()) 
 				Schulgliederung._schulgliederungenKuerzel.put(s.daten.kuerzel, s);
 		return Schulgliederung._schulgliederungenKuerzel;
@@ -685,7 +685,7 @@ export class Schulgliederung extends JavaObject {
 	 * @return die Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static getMapSchulgliederungByID() : HashMap<number, Schulgliederung> {
-		if (Schulgliederung._schulgliederungenID.size() === 0) 
+		if (Schulgliederung._schulgliederungenID.size() === 0)
 			for (let s of Schulgliederung.values()) {
 				for (let k of s.historie) 
 					Schulgliederung._schulgliederungenID.put(k.id, s);
@@ -701,7 +701,7 @@ export class Schulgliederung extends JavaObject {
 	 * @return die Schulgliederung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Schulgliederung | null {
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Schulgliederung.DEFAULT;
 		return Schulgliederung.getMapSchulgliederungByKuerzel().get(kuerzel);
 	}
@@ -730,7 +730,7 @@ export class Schulgliederung extends JavaObject {
 		let gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++){
 			let gliederung : Schulgliederung = gliederungen[i];
-			if ((gliederung.daten.bkIndex !== null) && (gliederung.daten.bkIndex === index)) 
+			if ((gliederung.daten.bkIndex !== null) && (gliederung.daten.bkIndex === index))
 				result.add(gliederung);
 		}
 		return result;
@@ -754,12 +754,12 @@ export class Schulgliederung extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<Schulgliederung> {
 		let result : Vector<Schulgliederung> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return result;
 		let gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++){
 			let gliederung : Schulgliederung = gliederungen[i];
-			if (gliederung.hasSchulform(schulform)) 
+			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
 		return result;
@@ -774,12 +774,12 @@ export class Schulgliederung extends JavaObject {
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
 		}
@@ -794,12 +794,12 @@ export class Schulgliederung extends JavaObject {
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
 		}
@@ -825,9 +825,9 @@ export class Schulgliederung extends JavaObject {
 	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null 
 	 */
 	public static getDefault(sf : Schulform | null) : Schulgliederung | null {
-		if (sf === null) 
+		if (sf === null)
 			return null;
-		if ((sf as unknown === Schulform.GY as unknown) || (sf as unknown === Schulform.SK as unknown) || (sf as unknown === Schulform.GM as unknown) || (sf as unknown === Schulform.G as unknown) || (sf as unknown === Schulform.S as unknown) || (sf as unknown === Schulform.PS as unknown) || (sf as unknown === Schulform.V as unknown) || (sf as unknown === Schulform.FW as unknown) || (sf as unknown === Schulform.H as unknown) || (sf as unknown === Schulform.R as unknown) || (sf as unknown === Schulform.GE as unknown) || (sf as unknown === Schulform.SR as unknown) || (sf as unknown === Schulform.SG as unknown)) 
+		if ((sf as unknown === Schulform.GY as unknown) || (sf as unknown === Schulform.SK as unknown) || (sf as unknown === Schulform.GM as unknown) || (sf as unknown === Schulform.G as unknown) || (sf as unknown === Schulform.S as unknown) || (sf as unknown === Schulform.PS as unknown) || (sf as unknown === Schulform.V as unknown) || (sf as unknown === Schulform.FW as unknown) || (sf as unknown === Schulform.H as unknown) || (sf as unknown === Schulform.R as unknown) || (sf as unknown === Schulform.GE as unknown) || (sf as unknown === Schulform.SR as unknown) || (sf as unknown === Schulform.SG as unknown))
 			return Schulgliederung.DEFAULT;
 		return null;
 	}
@@ -842,14 +842,14 @@ export class Schulgliederung extends JavaObject {
 	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
 	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Schulgliederung | null {
-		if (sf === null) 
+		if (sf === null)
 			return null;
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Schulgliederung.getDefault(sf);
 		let gliederungen : List<Schulgliederung> = Schulgliederung.get(sf);
 		for (let i : number = 0; i < gliederungen.size(); i++){
 			let sg : Schulgliederung | null = gliederungen.get(i);
-			if (JavaString.equalsIgnoreCase((sg.daten.kuerzel), kuerzel)) 
+			if (JavaString.equalsIgnoreCase((sg.daten.kuerzel), kuerzel))
 				return sg;
 		}
 		return null;

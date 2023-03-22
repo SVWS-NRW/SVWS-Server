@@ -71,19 +71,19 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 			let gueltigVon : number | null = __param3;
 			let gueltigBis : number | null = __param4;
 			this.id = id;
-			if ((wbkTyp !== null) && (bkTyp !== null)) 
+			if ((wbkTyp !== null) && (bkTyp !== null))
 				throw new IllegalArgumentException("Fehler im Core-Type: wbkTyp und bkTyp dürfen nicht gleichzeitig gesetzt sein.")
 			if (wbkTyp !== null) {
 				this.kuerzel = wbkTyp.daten.kuerzel;
 				this.schulformen.add(Schulform.WB.daten.kuerzel);
 				this.beschreibung = wbkTyp.daten.bezeichnung;
-			} else 
+			} else
 				if (bkTyp !== null) {
 					this.kuerzel = bkTyp.daten.kuerzel;
 					this.schulformen.add(Schulform.BK.daten.kuerzel);
 					this.schulformen.add(Schulform.SB.daten.kuerzel);
 					this.beschreibung = bkTyp.daten.bezeichnung;
-				} else 
+				} else
 					throw new NullPointerException("Fehler im Core-Type. Entweder wbkTyp oder bkTyp muss gesetzt sein.")
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

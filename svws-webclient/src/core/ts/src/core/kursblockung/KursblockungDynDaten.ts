@@ -143,212 +143,212 @@ export class KursblockungDynDaten extends JavaObject {
 	 * @param pInput Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
 	private schritt01FehlerBeiReferenzen(pInput : GostBlockungsdatenManager) : void {
-		if (pInput === null) 
+		if (pInput === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager == null")
-		if (pInput.daten() === null) 
+		if (pInput.daten() === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten() == null")
-		if (pInput.daten().fachwahlen === null) 
+		if (pInput.daten().fachwahlen === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen == null")
-		if (pInput.faecherManager() === null) 
+		if (pInput.faecherManager() === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager() == null")
-		if (pInput.faecherManager().faecher() === null) 
+		if (pInput.faecherManager().faecher() === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher() == null")
-		if (GostKursart.values() === null) 
+		if (GostKursart.values() === null)
 			throw new DeveloperNotificationException("GostKursart.values() == null")
-		if (pInput.daten().kurse === null) 
+		if (pInput.daten().kurse === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse == null")
-		if (pInput.daten().regeln === null) 
+		if (pInput.daten().regeln === null)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().regeln == null")
-		if (pInput.getID() < 0) 
+		if (pInput.getID() < 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.getID() < 0")
-		if (pInput.daten().fachwahlen.size() <= 0) 
+		if (pInput.daten().fachwahlen.size() <= 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen.size() <= 0")
-		if (pInput.faecherManager().faecher().size() <= 0) 
+		if (pInput.faecherManager().faecher().size() <= 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher().size() <= 0")
-		if (GostKursart.values().length <= 0) 
+		if (GostKursart.values().length <= 0)
 			throw new DeveloperNotificationException("GostKursart.values().length <= 0")
-		if (pInput.daten().kurse.size() <= 0) 
+		if (pInput.daten().kurse.size() <= 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse.size() <= 0")
 		let schienenAnzahl : number = pInput.getSchienenAnzahl();
-		if (schienenAnzahl <= 0) 
+		if (schienenAnzahl <= 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.getSchienenAnzahl() <= 0")
 		let usedSchiene : HashSet<number | null> | null = new HashSet();
 		for (let gSchiene of pInput.daten().schienen) {
-			if (gSchiene.id < 0) 
+			if (gSchiene.id < 0)
 				throw new DeveloperNotificationException("GostBlockungSchiene.id < 0")
-			if (gSchiene.nummer < 1) 
+			if (gSchiene.nummer < 1)
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer < 1")
-			if (gSchiene.nummer > schienenAnzahl) 
+			if (gSchiene.nummer > schienenAnzahl)
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer > schienenAnzahl")
-			if (usedSchiene.add(gSchiene.nummer) === false) 
+			if (usedSchiene.add(gSchiene.nummer) === false)
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer existiert doppelt!")
 		}
 		let setKursarten : HashSet<number> = new HashSet();
 		for (let iKursart of GostKursart.values()) {
-			if (iKursart === null) 
+			if (iKursart === null)
 				throw new DeveloperNotificationException("GostKursart == null")
-			if (iKursart.id < 0) 
+			if (iKursart.id < 0)
 				throw new DeveloperNotificationException("GostKursart.id < 0 (" + iKursart.kuerzel + ")")
-			if (setKursarten.add(iKursart.id) === false) 
+			if (setKursarten.add(iKursart.id) === false)
 				throw new DeveloperNotificationException("GostKursart.id (" + iKursart.id + ") gibt es doppelt!")
 		}
 		let setFaecher : HashSet<number> = new HashSet();
 		for (let iFach of pInput.faecherManager().faecher()) {
-			if (iFach === null) 
+			if (iFach === null)
 				throw new DeveloperNotificationException("GostFach == null")
-			if (iFach.id < 0) 
+			if (iFach.id < 0)
 				throw new DeveloperNotificationException("GostFach.id < 0 (" + iFach.kuerzel + ")")
-			if (setFaecher.add(iFach.id) === false) 
+			if (setFaecher.add(iFach.id) === false)
 				throw new DeveloperNotificationException("GostFach.id (" + iFach.id + ") gibt es doppelt!")
 		}
 		let setKurse : HashSet<number> = new HashSet();
 		for (let iKurs of pInput.daten().kurse) {
-			if (iKurs === null) 
+			if (iKurs === null)
 				throw new DeveloperNotificationException("GostBlockungKurs == null")
-			if (iKurs.id < 0) 
+			if (iKurs.id < 0)
 				throw new DeveloperNotificationException("GostBlockungKurs.id < 0")
 			let fachID : number = iKurs.fach_id;
-			if (!setFaecher.contains(fachID)) 
+			if (!setFaecher.contains(fachID))
 				throw new DeveloperNotificationException("GostBlockungKurs (id=" + iKurs.id + "): Unbekannte Fach-ID (" + fachID + ")!")
 			let kursartID : number = iKurs.kursart;
-			if (!setKursarten.contains(kursartID)) 
+			if (!setKursarten.contains(kursartID))
 				throw new DeveloperNotificationException("GostBlockungKurs (id=" + iKurs.id + "): Unbekannte Kursart-ID (" + kursartID + ")!")
 			setKurse.add(iKurs.id);
 		}
 		let setSchueler : HashSet<number> = new HashSet();
 		for (let iFachwahl of pInput.daten().fachwahlen) {
-			if (iFachwahl === null) 
+			if (iFachwahl === null)
 				throw new DeveloperNotificationException("GostFachwahl == null")
 			let schuelerID : number = iFachwahl.schuelerID;
-			if (schuelerID < 0) 
+			if (schuelerID < 0)
 				throw new DeveloperNotificationException("GostFachwahl.schuelerID < 0")
 			setSchueler.add(schuelerID);
 			let fachID : number = iFachwahl.fachID;
-			if (!setFaecher.contains(fachID)) 
+			if (!setFaecher.contains(fachID))
 				throw new DeveloperNotificationException("GostFachwahl: Unbekannte Fach-ID (" + fachID + ")")
 			let kursartID : number = iFachwahl.kursartID;
-			if (!setKursarten.contains(kursartID)) 
+			if (!setKursarten.contains(kursartID))
 				throw new DeveloperNotificationException("GostFachwahl: Unbekannte Kursart-ID (" + kursartID + ")")
 		}
 		for (let iRegel of pInput.daten().regeln) {
-			if (iRegel === null) 
+			if (iRegel === null)
 				throw new DeveloperNotificationException("GostBlockungRegel == null")
-			if (iRegel.parameter === null) 
+			if (iRegel.parameter === null)
 				throw new DeveloperNotificationException("GostBlockungRegel.parameter == null")
 			for (let i : number = 0; i < iRegel.parameter.size(); i++)
-				if (iRegel.parameter.get(i) === null) 
+				if (iRegel.parameter.get(i) === null)
 					throw new DeveloperNotificationException("GostBlockungRegel.parameter.get(" + i + ") == null")
-			if (iRegel.id < 0) 
+			if (iRegel.id < 0)
 				throw new DeveloperNotificationException("GostBlockungRegel.id < 0")
 			let gostRegel : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
-			if (gostRegel as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown) 
+			if (gostRegel as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown)
 				throw new DeveloperNotificationException("GostBlockungRegel.typ (" + iRegel.typ + ") unbekannt.")
 			let daten : Array<number> = iRegel.parameter.toArray(Array(0).fill(null));
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS as unknown) {
 				let length : number = daten.length;
-				if (length !== 3) 
+				if (length !== 3)
 					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!")
 				let kursartID : number = iRegel.parameter.get(0)!;
-				if (!setKursarten.contains(kursartID)) 
+				if (!setKursarten.contains(kursartID))
 					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS hat unbekannte Kursart-ID (" + kursartID + ")")
 				let von : number = daten[1]!;
 				let bis : number = daten[2]!;
-				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl))) 
+				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
 					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE daten.length=" + length + ", statt 2!")
 				let kursID : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID)) 
+				if (!setKurse.contains(kursID))
 					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE hat unbekannte Kurs-ID (" + kursID + ")")
 				let schiene : number = daten[1]!;
-				if (!((schiene >= 1) && (schiene <= schienenAnzahl))) 
+				if (!((schiene >= 1) && (schiene <= schienenAnzahl)))
 					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE daten.length=" + length + ", statt 2!")
 				let kursID : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID)) 
+				if (!setKurse.contains(kursID))
 					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE hat unbekannte Kurs-ID (" + kursID + ")")
 				let schiene : number = daten[1]!;
-				if (!((schiene >= 1) && (schiene <= schienenAnzahl))) 
+				if (!((schiene >= 1) && (schiene <= schienenAnzahl)))
 					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS daten.length=" + length + ", statt 2!")
 				let schuelerID : number = daten[0].valueOf();
-				if (!setSchueler.contains(schuelerID)) 
+				if (!setSchueler.contains(schuelerID))
 					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS hat unbekannte Schüler-ID (" + schuelerID + ")")
 				let kursID : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID)) 
+				if (!setKurse.contains(kursID))
 					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS hat unbekannte Kurs-ID (" + kursID + ")")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!")
 				let schuelerID : number = daten[0].valueOf();
-				if (!setSchueler.contains(schuelerID)) 
+				if (!setSchueler.contains(schuelerID))
 					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS hat unbekannte Schüler-ID (" + schuelerID + ")")
 				let kursID : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID)) 
+				if (!setKurse.contains(kursID))
 					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS hat unbekannte Kurs-ID (" + kursID + ")")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS as unknown) {
 				let length : number = daten.length;
-				if (length !== 3) 
+				if (length !== 3)
 					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!")
 				let kursartID : number = daten[0]!;
-				if (!setKursarten.contains(kursartID)) 
+				if (!setKursarten.contains(kursartID))
 					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS hat unbekannte Kursart-ID (" + kursartID + ")")
 				let von : number = daten[1]!;
 				let bis : number = daten[2]!;
-				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl))) 
+				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
 					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!")
 				let kursID1 : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID1)) 
+				if (!setKurse.contains(kursID1))
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
 				let kursID2 : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID2)) 
+				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
-				if (kursID1 === kursID2) 
+				if (kursID1 === kursID2)
 					throw new UserNotificationException("Die Regel \'KURS_VERBIETEN_MIT_KURS\' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
 				let length : number = daten.length;
-				if (length !== 2) 
+				if (length !== 2)
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!")
 				let kursID1 : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID1)) 
+				if (!setKurse.contains(kursID1))
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
 				let kursID2 : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID2)) 
+				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
-				if (kursID1 === kursID2) 
+				if (kursID1 === kursID2)
 					throw new UserNotificationException("Die Regel \'KURS_ZUSAMMEN_MIT_KURS\' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN as unknown) {
 				let length : number = daten.length;
-				if (length !== 1) 
+				if (length !== 1)
 					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!")
 				let auchExtern : number = daten[0].valueOf();
-				if ((auchExtern < 0) || (auchExtern > 1)) 
+				if ((auchExtern < 0) || (auchExtern > 1))
 					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN as unknown) {
 				let length : number = daten.length;
-				if (length !== 0) 
+				if (length !== 0)
 					throw new DeveloperNotificationException("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!")
 			}
 		}
@@ -357,9 +357,9 @@ export class KursblockungDynDaten extends JavaObject {
 	private schritt02FehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
 		let regelDatabaseIDs : HashSet<number | null> | null = new HashSet();
 		for (let iRegel of pRegeln) {
-			if (iRegel.id < 0) 
+			if (iRegel.id < 0)
 				throw new DeveloperNotificationException("GostBlockungRegel.id < 0")
-			if (regelDatabaseIDs.add(iRegel.id) === false) 
+			if (regelDatabaseIDs.add(iRegel.id) === false)
 				throw new DeveloperNotificationException("GostBlockungRegel.id (" + iRegel.id + ") gibt es doppelt!")
 			let regelTyp : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
 			let list : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(regelTyp);
@@ -376,10 +376,10 @@ export class KursblockungDynDaten extends JavaObject {
 		let nKurse : number = pInput.daten().kurse.size();
 		for (let gKurs of pInput.daten().kurse) {
 			let fach : GostFach | null = pInput.faecherManager().get(gKurs.fach_id);
-			if (fach === null) 
+			if (fach === null)
 				throw new DeveloperNotificationException("GostBlockungKurs (" + gKurs.id + ") die Fach-ID ist im Manager unbekannt!")
 			let kursart : GostKursart | null = GostKursart.fromIDorNull(gKurs.kursart);
-			if (kursart === null) 
+			if (kursart === null)
 				throw new DeveloperNotificationException("GostBlockungKurs (" + gKurs.id + ") die Kursart-ID ist bei GostKursart unbekannt!")
 			let kursartMap : HashMap<number, KursblockungDynFachart> | null = this.fachartMap.get(fach.id);
 			if (kursartMap === null) {
@@ -396,13 +396,13 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 		for (let iFachwahl of pInput.daten().fachwahlen) {
 			let fach : GostFach | null = pInput.faecherManager().get(iFachwahl.fachID);
-			if (fach === null) 
+			if (fach === null)
 				throw new DeveloperNotificationException("GostFachwahl: Die Fach-ID (" + iFachwahl.fachID + ") ist im Manager unbekannt!")
 			let kursart : GostKursart | null = GostKursart.fromIDorNull(iFachwahl.kursartID);
-			if (kursart === null) 
+			if (kursart === null)
 				throw new DeveloperNotificationException("GostFachwahl: Die Kursart-ID (" + iFachwahl.kursartID + ") ist bei GostKursart unbekannt!")
 			let schuelerID : number = iFachwahl.schuelerID;
-			if (schuelerID < 0) 
+			if (schuelerID < 0)
 				throw new DeveloperNotificationException("GostFachwahl.schuelerID < 0")
 			let kursartMap : HashMap<number, KursblockungDynFachart> | null = this.fachartMap.get(fach.id);
 			if (kursartMap === null) {
@@ -417,7 +417,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			dynFachart.aktionMaxSchuelerErhoehen();
 		}
-		if (nFacharten <= 0) 
+		if (nFacharten <= 0)
 			throw new DeveloperNotificationException("Die Blockung hat keine Facharten/Fachwahlen (Fach + Kursart).")
 		this.fachartArr = Array(nFacharten).fill(null);
 		for (let kursartMap of this.fachartMap.values()) 
@@ -426,7 +426,7 @@ export class KursblockungDynDaten extends JavaObject {
 		let kursSumme : number = 0;
 		for (let i : number = 0; i < this.fachartArr.length; i++)
 			kursSumme += this.fachartArr[i].gibKurseMax();
-		if (kursSumme !== nKurse) 
+		if (kursSumme !== nKurse)
 			throw new DeveloperNotificationException("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.")
 	}
 
@@ -454,17 +454,17 @@ export class KursblockungDynDaten extends JavaObject {
 			mapSchuelerFA.put(susArr[i], new LinkedCollection());
 		for (let iFachwahl of pInput.daten().fachwahlen) {
 			let schueler : KursblockungDynSchueler | null = this.schuelerMap.get(iFachwahl.schuelerID);
-			if (schueler === null) 
+			if (schueler === null)
 				throw new DeveloperNotificationException("GostFachwahl.schueler --> KursblockungDynSchueler (mapping fehlt)!")
 			let dynFacharten : LinkedCollection<KursblockungDynFachart> | null = mapSchuelerFA.get(schueler);
-			if (dynFacharten === null) 
+			if (dynFacharten === null)
 				throw new DeveloperNotificationException("dynFacharten == null")
 			let dynFachart : KursblockungDynFachart = this.gibFachart(iFachwahl.fachID, iFachwahl.kursartID);
 			dynFacharten.addLast(dynFachart);
 		}
 		for (let schueler of susArr) {
 			let listFA : LinkedCollection<KursblockungDynFachart> | null = mapSchuelerFA.get(schueler);
-			if (listFA === null) 
+			if (listFA === null)
 				throw new DeveloperNotificationException("mapSchuelerFA.get(schueler) == null (mapping fehlt)!")
 			let arrFA : Array<KursblockungDynFachart> = listFA.toArray(Array(0).fill(null));
 			schueler.aktionSetzeFachartenUndIDs(arrFA);
@@ -526,7 +526,7 @@ export class KursblockungDynDaten extends JavaObject {
 			for (let j : number = 0; j < nSchienen; j++)
 				schieneFrei.addLast(this.schienenArr[perm[j]]);
 			let regelnTyp1 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS);
-			if (regelnTyp1 !== null) 
+			if (regelnTyp1 !== null)
 				for (let regel1 of regelnTyp1) 
 					if (kurs.kursart === regel1.parameter.get(0)) {
 						let von : number = regel1.parameter.get(1)!;
@@ -535,47 +535,47 @@ export class KursblockungDynDaten extends JavaObject {
 							schieneFrei.remove(this.schienenArr[schiene - 1]);
 					}
 			let regelnTyp6 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
-			if (regelnTyp6 !== null) 
+			if (regelnTyp6 !== null)
 				for (let regel6 of regelnTyp6) {
 					let von : number = regel6.parameter.get(1)!;
 					let bis : number = regel6.parameter.get(2)!;
 					for (let schiene : number = 1; schiene <= this.schienenArr.length; schiene++){
 						let innerhalb : boolean = (von <= schiene) && (schiene <= bis);
 						let gleicheArt : boolean = kurs.kursart === regel6.parameter.get(0);
-						if (innerhalb !== gleicheArt) 
+						if (innerhalb !== gleicheArt)
 							schieneFrei.remove(this.schienenArr[schiene - 1]);
 					}
 				}
 			let regelnTyp3 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE);
-			if (regelnTyp3 !== null) 
+			if (regelnTyp3 !== null)
 				for (let regel3 of regelnTyp3) 
 					if (kurs.id === regel3.parameter.get(0)) {
 						let schiene : number = regel3.parameter.get(1)!;
 						schieneFrei.remove(this.schienenArr[schiene - 1]);
 					}
 			let regelnTyp2 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
-			if (regelnTyp2 !== null) 
+			if (regelnTyp2 !== null)
 				for (let regel2 of regelnTyp2) 
 					if (kurs.id === regel2.parameter.get(0)) {
 						let schiene : number = regel2.parameter.get(1)!;
 						let dynSchiene : KursblockungDynSchiene = this.schienenArr[schiene - 1];
-						if (schieneLage.contains(dynSchiene)) 
+						if (schieneLage.contains(dynSchiene))
 							continue;
-						if (!schieneFrei.contains(dynSchiene)) 
+						if (!schieneFrei.contains(dynSchiene))
 							throw new UserNotificationException("Die Regel \'KURS_FIXIERE_IN_SCHIENE\' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
 						schieneFrei.remove(dynSchiene);
 						schieneLage.addLast(dynSchiene);
 					}
 			let schienen : number = kurs.anzahlSchienen;
-			if (schienen <= 0) 
+			if (schienen <= 0)
 				throw new DeveloperNotificationException("Kurs (" + kurs.id + ") belegt nur " + schienen + " Schienen, das ist zu wenig.")
-			if (schienen > this.schienenArr.length) 
+			if (schienen > this.schienenArr.length)
 				throw new DeveloperNotificationException("Es gibt " + this.schienenArr.length + " Schienen, aber der Kurs (" + kurs.id + ") möchte " + schienen + " Schienen belegen.")
 			let pSchienenLageFixiert : number = schieneLage.size();
-			if (pSchienenLageFixiert > schienen) 
+			if (pSchienenLageFixiert > schienen)
 				throw new DeveloperNotificationException("Kurs (" + kurs.id + ") fixert " + pSchienenLageFixiert + " Schienen, das ist mehr als seine Schienenanzahl " + schienen + ".")
 			while (schieneLage.size() < schienen) {
-				if (schieneFrei.isEmpty()) 
+				if (schieneFrei.isEmpty())
 					throw new UserNotificationException("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!")
 				schieneLage.addLast(schieneFrei.pollFirst());
 			}
@@ -592,7 +592,7 @@ export class KursblockungDynDaten extends JavaObject {
 	private schritt09FehlerBeiKursFreiErstellung() : void {
 		let nKursFrei : number = 0;
 		for (let kurs of this.kursArr) 
-			if (kurs.gibHatFreiheitsgrade()) 
+			if (kurs.gibHatFreiheitsgrade())
 				nKursFrei++;
 		this.kursArrFrei = Array(nKursFrei).fill(null);
 		for (let i : number = 0, j : number = 0; i < this.kursArr.length; i++)
@@ -610,13 +610,13 @@ export class KursblockungDynDaten extends JavaObject {
 		for (let kurs of this.kursArr) {
 			let fachartNr : number = kurs.gibFachart().gibNr();
 			let fachartKurse : LinkedCollection<KursblockungDynKurs> | null = mapFachartList.get(fachartNr);
-			if (fachartKurse === null) 
+			if (fachartKurse === null)
 				throw new DeveloperNotificationException("mapFachartList.get(fachartNr) == null")
 			fachartKurse.addLast(kurs);
 		}
 		for (let nr : number = 0; nr < nFacharten; nr++){
 			let list : LinkedCollection<KursblockungDynKurs> | null = mapFachartList.get(nr);
-			if (list === null) 
+			if (list === null)
 				throw new DeveloperNotificationException("mapFachartList.get(nr) == null")
 			let kursArr : Array<KursblockungDynKurs> = list.toArray(Array(0).fill(null));
 			this.fachartArr[nr].aktionSetKurse(kursArr);
@@ -625,18 +625,18 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt11FehlerBeiRegel_4_oder_5() : void {
 		let regelnTyp4 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
-		if (regelnTyp4 !== null) 
+		if (regelnTyp4 !== null)
 			for (let regel4 of regelnTyp4) {
 				let schuelerID : number = regel4.parameter.get(0).valueOf();
 				let kursID : number = regel4.parameter.get(1).valueOf();
 				let schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
 				let fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
 				for (let kurs of fixierterKurs.gibFachart().gibKurse()) 
-					if (kurs as unknown !== fixierterKurs as unknown) 
+					if (kurs as unknown !== fixierterKurs as unknown)
 						schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 			}
 		let regelnTyp5 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
-		if (regelnTyp5 !== null) 
+		if (regelnTyp5 !== null)
 			for (let regel5 of regelnTyp5) {
 				let schuelerID : number = regel5.parameter.get(0).valueOf();
 				let kursID : number = regel5.parameter.get(1).valueOf();
@@ -648,7 +648,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt12FehlerBeiRegel_7_oder_8() : void {
 		let regelnTyp7 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS);
-		if (regelnTyp7 !== null) 
+		if (regelnTyp7 !== null)
 			for (let regel7 of regelnTyp7) {
 				let kursID1 : number = regel7.parameter.get(0).valueOf();
 				let kursID2 : number = regel7.parameter.get(1).valueOf();
@@ -657,7 +657,7 @@ export class KursblockungDynDaten extends JavaObject {
 				this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 			}
 		let regelnTyp8 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS);
-		if (regelnTyp8 !== null) 
+		if (regelnTyp8 !== null)
 			for (let regel8 of regelnTyp8) {
 				let kursID1 : number = regel8.parameter.get(0).valueOf();
 				let kursID2 : number = regel8.parameter.get(1).valueOf();
@@ -672,16 +672,16 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp9 !== null) {
 			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
 			for (let gKurs of pInput.daten().kurse) 
-				if (gKurs.lehrer.isEmpty() === false) 
+				if (gKurs.lehrer.isEmpty() === false)
 					vKurseMitLehrkraft.add(gKurs);
 			for (let regel9 of regelnTyp9) {
 				let externBeachten : boolean = regel9.parameter.get(0) === 1;
 				for (let gKurs1 of vKurseMitLehrkraft) 
 					for (let gKurs2 of vKurseMitLehrkraft) 
-						if (gKurs1.id < gKurs2.id) 
+						if (gKurs1.id < gKurs2.id)
 							for (let gLehr1 of gKurs1.lehrer) 
 								for (let gLehr2 of gKurs2.lehrer) 
-									if (gLehr1.id === gLehr2.id) 
+									if (gLehr1.id === gLehr2.id)
 										if ((externBeachten) || (!gLehr1.istExtern)) {
 											let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
 											let kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
@@ -693,12 +693,12 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp10 !== null) {
 			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
 			for (let gKurs of pInput.daten().kurse) 
-				if (gKurs.lehrer.isEmpty() === false) 
+				if (gKurs.lehrer.isEmpty() === false)
 					vKurseMitLehrkraft.add(gKurs);
 			for (let regel10 of regelnTyp10) 
 				for (let gKurs1 of vKurseMitLehrkraft) 
 					for (let gKurs2 of vKurseMitLehrkraft) 
-						if (gKurs1.id < gKurs2.id) 
+						if (gKurs1.id < gKurs2.id)
 							for (let gLehr1 of gKurs1.lehrer) 
 								for (let gLehr2 of gKurs2.lehrer) 
 									if (gLehr1.id === gLehr2.id) {
@@ -711,24 +711,24 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {
 		let kursartMap : HashMap<number, KursblockungDynFachart> | null = this.fachartMap.get(pFachID);
-		if (kursartMap === null) 
+		if (kursartMap === null)
 			throw new DeveloperNotificationException("gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Fach)!")
 		let dynFachart : KursblockungDynFachart | null = kursartMap.get(pKursart);
-		if (dynFachart === null) 
+		if (dynFachart === null)
 			throw new DeveloperNotificationException("gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Kursart)!")
 		return dynFachart;
 	}
 
 	private gibSchueler(schuelerID : number) : KursblockungDynSchueler {
 		let schueler : KursblockungDynSchueler | null = this.schuelerMap.get(schuelerID);
-		if (schueler === null) 
+		if (schueler === null)
 			throw new DeveloperNotificationException("schuelerMap.get(" + schuelerID + ") --> kein Mapping!")
 		return schueler;
 	}
 
 	private gibKurs(kursID : number) : KursblockungDynKurs {
 		let kurs : KursblockungDynKurs | null = this.kursMap.get(kursID);
-		if (kurs === null) 
+		if (kurs === null)
 			throw new DeveloperNotificationException("kursMap.get(" + kursID + ") --> kein Mapping!")
 		return kurs;
 	}
@@ -786,13 +786,13 @@ export class KursblockungDynDaten extends JavaObject {
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
 		for (let dynSchueler of this.schuelerArr) 
 			for (let kurs of dynSchueler.gibKurswahlen()) 
-				if (kurs !== null) 
+				if (kurs !== null)
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
 		for (let gRegel of pDataManager.getMengeOfRegeln()) 
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				let schuelerID : number = gRegel.parameter.get(0).valueOf();
 				let kursID : number = gRegel.parameter.get(1).valueOf();
-				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) === false) 
+				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) === false)
 					out.setSchuelerKurs(schuelerID, kursID, true);
 			}
 		return out;
@@ -1047,7 +1047,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 *Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. 
 	 */
 	aktionKursVerteilenEinenZufaelligenFreien() : void {
-		if (this.kursArrFrei.length === 0) 
+		if (this.kursArrFrei.length === 0)
 			return;
 		let index : number = this._random.nextInt(this.kursArrFrei.length);
 		let kurs : KursblockungDynKurs = this.kursArrFrei[index];

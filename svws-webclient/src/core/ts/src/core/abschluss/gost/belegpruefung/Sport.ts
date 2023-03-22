@@ -36,7 +36,7 @@ export class Sport extends GostBelegpruefung {
 	}
 
 	protected pruefeGesamt() : void {
-		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiert(this.sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))) 
+		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiert(this.sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
 			this.addFehler(GostBelegungsfehler.SP_10);
 	}
 

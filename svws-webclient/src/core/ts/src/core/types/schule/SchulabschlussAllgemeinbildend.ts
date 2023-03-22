@@ -157,7 +157,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzel.size() === 0) {
 			for (let s of SchulabschlussAllgemeinbildend.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					SchulabschlussAllgemeinbildend._mapByKuerzel.put(s.daten.kuerzel, s);
 			}
 		}
@@ -184,7 +184,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzelStatistik.size() === 0) {
 			for (let s of SchulabschlussAllgemeinbildend.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					SchulabschlussAllgemeinbildend._mapByKuerzelStatistik.put(s.daten.kuerzelStatistik, s);
 			}
 		}
@@ -211,7 +211,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 * @return true, falls beide Abschlüsse übereinstimmen und ansonsten false
 	 */
 	public is(str : string | null) : boolean {
-		if (str === null) 
+		if (str === null)
 			return false;
 		try {
 			let other : SchulabschlussAllgemeinbildend | null = SchulabschlussAllgemeinbildend.valueOf(str);

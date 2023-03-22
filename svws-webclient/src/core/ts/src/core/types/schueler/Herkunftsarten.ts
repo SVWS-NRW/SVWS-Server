@@ -276,7 +276,7 @@ export class Herkunftsarten extends JavaObject {
 			this.bezeichnungen[i] = new Vector();
 			for (let bez of historie[i].bezeichnungen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
-				if (sf !== null) 
+				if (sf !== null)
 					this.schulformen[i].add(sf);
 				this.bezeichnungen[i].add(bez.bezeichnung);
 			}
@@ -290,9 +290,9 @@ export class Herkunftsarten extends JavaObject {
 	 * @return die Map von den Kürzeln der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
 	private static getMapHerkunftsartByKuerzel() : HashMap<string, Herkunftsarten | null> {
-		if (Herkunftsarten._mapKuerzel.size() === 0) 
+		if (Herkunftsarten._mapKuerzel.size() === 0)
 			for (let j of Herkunftsarten.values()) 
-				if (!Herkunftsarten._mapKuerzel.containsKey(j.daten.kuerzel)) 
+				if (!Herkunftsarten._mapKuerzel.containsKey(j.daten.kuerzel))
 					Herkunftsarten._mapKuerzel.put(j.daten.kuerzel, j);
 		return Herkunftsarten._mapKuerzel;
 	}
@@ -304,7 +304,7 @@ export class Herkunftsarten extends JavaObject {
 	 * @return die Map von den IDs der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
 	private static getMapHerkunftsartByID() : HashMap<number, Herkunftsarten | null> {
-		if (Herkunftsarten._mapID.size() === 0) 
+		if (Herkunftsarten._mapID.size() === 0)
 			for (let j of Herkunftsarten.values()) {
 				for (let k of j.historie) 
 					Herkunftsarten._mapID.put(k.id, j);
@@ -342,13 +342,13 @@ export class Herkunftsarten extends JavaObject {
 	 * @return die Bezeichung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
 	public getBezeichnung(schulform : Schulform | null) : string | null {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return null;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
 				let bez : HerkunftsartKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
 				let sfKuerzel : string | null = bez.schulform;
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return bez.bezeichnung;
 			}
 		}
@@ -373,12 +373,12 @@ export class Herkunftsarten extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<Herkunftsarten | null> {
 		let result : Vector<Herkunftsarten | null> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return result;
 		let herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();
 		for (let i : number = 0; i < herkunftsarten.length; i++){
 			let herkunftsart : Herkunftsarten = herkunftsarten[i];
-			if (herkunftsart.hasSchulform(schulform)) 
+			if (herkunftsart.hasSchulform(schulform))
 				result.add(herkunftsart);
 		}
 		return result;
@@ -393,12 +393,12 @@ export class Herkunftsarten extends JavaObject {
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
 				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
-				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
 		}
@@ -413,12 +413,12 @@ export class Herkunftsarten extends JavaObject {
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
 				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
 		}

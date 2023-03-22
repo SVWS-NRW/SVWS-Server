@@ -37,7 +37,7 @@ export class AVLMapSubCollectionIterator<K, V> extends JavaObject implements Jav
 	}
 
 	public next() : V {
-		if (this._next === null) 
+		if (this._next === null)
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this._sub.bcGetNextEntryOrNull(this._current);
@@ -49,7 +49,7 @@ export class AVLMapSubCollectionIterator<K, V> extends JavaObject implements Jav
 	}
 
 	public remove() : void {
-		if (this._current === null) 
+		if (this._current === null)
 			throw new IllegalStateException()
 		this._sub.remove(this._current.getKey());
 		this._current = null;

@@ -130,7 +130,7 @@ export class HerkunftSchulform extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, HerkunftSchulform | null> {
 		if (HerkunftSchulform._ebenen.size() === 0) {
 			for (let s of HerkunftSchulform.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					HerkunftSchulform._ebenen.put(s.daten.kuerzel, s);
 			}
 		}

@@ -538,7 +538,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 */
 	gibIstInKurs(kurs : KursblockungDynKurs | null) : boolean {
 		for (let zugeordneterKurs of this.fachartZuKurs) 
-			if (zugeordneterKurs as unknown === kurs as unknown) 
+			if (zugeordneterKurs as unknown === kurs as unknown)
 				return true;
 		return false;
 	}
@@ -552,7 +552,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		let setSchienenLage : HashSet<number | null> | null = new HashSet();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++){
 			let kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
-			if (kurs === null) 
+			if (kurs === null)
 				continue;
 			console.log(JSON.stringify("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!));
 			for (let schiene of kurs.gibSchienenLage()) {

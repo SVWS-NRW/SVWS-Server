@@ -79,7 +79,7 @@ export class GostAbiturFach extends JavaObject {
 	 * 
 	 */
 	public static fromID(id : number | null) : GostAbiturFach | null {
-		if (id === null) 
+		if (id === null)
 			return null;
 		switch (id) {
 			case 1: 
@@ -104,7 +104,7 @@ export class GostAbiturFach extends JavaObject {
 	 * 
 	 */
 	public static fromIDString(strID : string | null) : GostAbiturFach | null {
-		if (strID === null) 
+		if (strID === null)
 			return null;
 		switch (strID) {
 			case "1": 

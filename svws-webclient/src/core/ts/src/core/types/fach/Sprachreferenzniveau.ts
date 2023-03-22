@@ -132,7 +132,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 * @return die Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
 	private static getMapByID() : HashMap<number, Sprachreferenzniveau> {
-		if (Sprachreferenzniveau._mapID.size() === 0) 
+		if (Sprachreferenzniveau._mapID.size() === 0)
 			for (let l of Sprachreferenzniveau.values()) 
 				Sprachreferenzniveau._mapID.put(l.daten.id, l);
 		return Sprachreferenzniveau._mapID;
@@ -145,7 +145,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 * @return die Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
 	private static getMapByKuerzel() : HashMap<string, Sprachreferenzniveau> {
-		if (Sprachreferenzniveau._mapKuerzel.size() === 0) 
+		if (Sprachreferenzniveau._mapKuerzel.size() === 0)
 			for (let l of Sprachreferenzniveau.values()) 
 				Sprachreferenzniveau._mapKuerzel.put(l.daten.kuerzel, l);
 		return Sprachreferenzniveau._mapKuerzel;
@@ -182,7 +182,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 */
 	public vergleiche(kuerzel : string | null) : number {
 		let other : Sprachreferenzniveau | null = Sprachreferenzniveau.getByKuerzel(kuerzel);
-		if (other === null) 
+		if (other === null)
 			return 1;
 		return this.compareTo(other);
 	}

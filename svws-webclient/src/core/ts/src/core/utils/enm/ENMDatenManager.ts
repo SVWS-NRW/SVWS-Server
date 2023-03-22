@@ -132,7 +132,7 @@ export class ENMDatenManager extends JavaObject {
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
 	 */
 	public addNoten() : void {
-		if (this.daten.noten.size() > 0) 
+		if (this.daten.noten.size() > 0)
 			return;
 		let noten : Array<Note> = Note.values();
 		for (let i : number = 0; i < noten.length; i++){
@@ -154,7 +154,7 @@ export class ENMDatenManager extends JavaObject {
 	 *                    zurückgegeben werden
 	 */
 	public addFoerderschwerpunkte(schulform : Schulform) : void {
-		if (this.daten.foerderschwerpunkte.size() > 0) 
+		if (this.daten.foerderschwerpunkte.size() > 0)
 			return;
 		let foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
 		for (let i : number = 0; i < foerderschwerpunkte.size(); i++){
@@ -180,7 +180,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false  
 	 */
 	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null) : boolean {
-		if (this.mapLehrer.get(id) !== null) 
+		if (this.mapLehrer.get(id) !== null)
 			return false;
 		let enmLehrer : ENMLehrer = new ENMLehrer();
 		enmLehrer.id = id;
@@ -212,7 +212,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @return true, falls der Schueler hinzugefügt wurde, ansonsten false  
 	 */
 	public addSchueler(id : number, jahrgangID : number, klasseID : number, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, bilingualeSprache : string | null, istZieldifferent : boolean, istDaZFoerderung : boolean) : boolean {
-		if (this.mapSchueler.get(id) !== null) 
+		if (this.mapSchueler.get(id) !== null)
 			return false;
 		let enmSchueler : ENMSchueler = new ENMSchueler();
 		enmSchueler.id = id;
@@ -241,7 +241,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
 	 */
 	public addFach(id : number, kuerzel : string, kuerzelAnzeige : string, sortierung : number, istFremdsprache : boolean) : boolean {
-		if (this.mapFaecher.get(id) !== null) 
+		if (this.mapFaecher.get(id) !== null)
 			return false;
 		let enmFach : ENMFach = new ENMFach();
 		enmFach.id = id;
@@ -268,7 +268,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false  
 	 */
 	public addJahrgang(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, beschreibung : string | null, stufe : string | null, sortierung : number) : boolean {
-		if (this.mapJahrgaenge.get(id) !== null) 
+		if (this.mapJahrgaenge.get(id) !== null)
 			return false;
 		let enmJahrgang : ENMJahrgang = new ENMJahrgang();
 		enmJahrgang.id = id;
@@ -293,7 +293,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false  
 	 */
 	public addKlasse(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, sortierung : number) : boolean {
-		if (this.mapKlassen.get(id) !== null) 
+		if (this.mapKlassen.get(id) !== null)
 			return false;
 		let enmKlasse : ENMKlasse = new ENMKlasse();
 		enmKlasse.id = id;
@@ -398,7 +398,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param wochenstunden       die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.
 	 */
 	public addLerngruppe(strID : string, kID : number, fachID : number, kursartID : number | null, bezeichnung : string | null, kursartKuerzel : string | null, bilingualeSprache : string | null, wochenstunden : number) : void {
-		if (this.mapLerngruppen.get(strID) !== null) 
+		if (this.mapLerngruppen.get(strID) !== null)
 			return;
 		let lerngruppe : ENMLerngruppe = new ENMLerngruppe();
 		lerngruppe.id = this.lerngruppenIDZaehler++;

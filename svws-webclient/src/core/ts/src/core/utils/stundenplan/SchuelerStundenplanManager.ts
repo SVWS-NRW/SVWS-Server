@@ -86,13 +86,13 @@ export class SchuelerStundenplanManager extends JavaObject {
 		super();
 		this._daten = daten;
 		for (let sz of this._daten.zeitraster) {
-			if (sz.wochentag < this.minWochentag) 
+			if (sz.wochentag < this.minWochentag)
 				this.minWochentag = sz.wochentag;
-			if (sz.wochentag > this.maxWochentag) 
+			if (sz.wochentag > this.maxWochentag)
 				this.maxWochentag = sz.wochentag;
-			if (sz.unterrichtstunde < this.minStunde) 
+			if (sz.unterrichtstunde < this.minStunde)
 				this.minStunde = sz.unterrichtstunde;
-			if (sz.unterrichtstunde > this.maxStunde) 
+			if (sz.unterrichtstunde > this.maxStunde)
 				this.maxStunde = sz.unterrichtstunde;
 			this._mapZeitraster.put(sz.id, sz);
 			let listWochentagZeitraster : Vector<StundenplanZeitraster> | null = this._mapWochentagZeitraster.get(sz.wochentag);
@@ -252,7 +252,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 				return null;
 			}
 			let retList : List<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht_Wochentyp.get(idZeitraster);
-			if (retList === null) 
+			if (retList === null)
 				retList = new Vector();
 			if (wochentyp !== 0 && inklWoche0) {
 				let mapZeitrasterUnterricht_Woche0 : HashMap<number, Vector<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(0);

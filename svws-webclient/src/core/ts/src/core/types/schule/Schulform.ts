@@ -163,7 +163,7 @@ export class Schulform extends JavaObject {
 	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformen.size() === 0) {
 			for (let s of Schulform.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					Schulform._schulformen.put(s.daten.kuerzel, s);
 			}
 		}
@@ -177,9 +177,9 @@ export class Schulform extends JavaObject {
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
 	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
-		if (Schulform._schulformenNummer.size() === 0) 
+		if (Schulform._schulformenNummer.size() === 0)
 			for (let s of Schulform.values()) 
-				if ((s.daten !== null) && (s.daten.nummer !== null)) 
+				if ((s.daten !== null) && (s.daten.nummer !== null))
 					Schulform._schulformenNummer.put(s.daten.nummer, s);
 		return Schulform._schulformenNummer;
 	}
@@ -216,7 +216,7 @@ export class Schulform extends JavaObject {
 	public static get() : List<Schulform> {
 		let result : Vector<Schulform> = new Vector();
 		for (let sf of Schulform.values()) 
-			if ((sf.daten !== null) && (sf.daten.nummer !== null)) 
+			if ((sf.daten !== null) && (sf.daten.nummer !== null))
 				result.add(sf);
 		return result;
 	}
@@ -229,7 +229,7 @@ export class Schulform extends JavaObject {
 	public static getMitGymOb() : List<Schulform> {
 		let result : Vector<Schulform> = new Vector();
 		for (let sf of Schulform.values()) 
-			if (sf.daten.hatGymOb) 
+			if (sf.daten.hatGymOb)
 				result.add(sf);
 		return result;
 	}

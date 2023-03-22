@@ -151,10 +151,10 @@ export class Heap extends JavaObject {
 	public update(pVar : Variable) : void {
 		if (pVar.index >= 0) {
 			this.remove(pVar);
-			if (pVar.negation !== null) 
+			if (pVar.negation !== null)
 				this.remove(pVar.negation);
 			this.insert(pVar);
-			if (pVar.negation !== null) 
+			if (pVar.negation !== null)
 				this.insert(pVar.negation);
 		}
 	}

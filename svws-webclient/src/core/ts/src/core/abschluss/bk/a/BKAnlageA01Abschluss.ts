@@ -19,7 +19,7 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 		if (AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) > 0) {
 			this.logger.logLn(LogLevel.INFO, " nicht erreicht (kein ungenügend erlaubt, insgesamt " + AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) + ").");
 			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
-		} else 
+		} else
 			if (AbschlussManagerBerufsbildend.getAnzahlDefizite(input) > 1) {
 				this.logger.logLn(LogLevel.INFO, " nicht erreicht (mehr als 1 Defizit, insgesamt " + AbschlussManagerBerufsbildend.getAnzahlDefizite(input) + ").");
 				return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
@@ -38,7 +38,7 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 			this.logger.logLn(LogLevel.INFO, "Die Durschnittsnote ist besser als oder gleich 2,5.");
 			this.logger.logLn(LogLevel.INFO, "MSA-Q wurde erreicht.");
 			return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), input.hatBestandenBerufsAbschlussPruefung, SchulabschlussAllgemeinbildend.MSA_Q);
-		} else 
+		} else
 			if (AbschlussManagerBerufsbildend.getDurchschnitt(input) <= 3.5) {
 				this.logger.logLn(LogLevel.INFO, "Die Durschnittsnote ist besser als oder gleich 3,5, aber schlechter als 2,5.");
 				this.logger.logLn(LogLevel.INFO, "MSA wurde erreicht.");

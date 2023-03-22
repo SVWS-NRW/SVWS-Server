@@ -39,7 +39,7 @@ export class Projektkurse extends GostBelegpruefung {
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
-			if (this.manager.zaehleBelegung(fachbelegung) <= 0) 
+			if (this.manager.zaehleBelegung(fachbelegung) <= 0)
 				continue;
 			let fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach !== null) && GostFachManager.istProjektkurs(fach)) {
@@ -57,7 +57,7 @@ export class Projektkurse extends GostBelegpruefung {
 		this.pruefeAufAnrechenbarenProjektkurs();
 		this.pruefeBelegungHalbjahre();
 		this.pruefeBelegungLeitfaecher();
-		if (this.manager.istProjektKursBesondereLernleistung()) 
+		if (this.manager.istProjektKursBesondereLernleistung())
 			this.addFehler((this.projektkurs !== null) ? GostBelegungsfehler.PF_16_INFO : GostBelegungsfehler.PF_15);
 	}
 
@@ -65,14 +65,14 @@ export class Projektkurse extends GostBelegpruefung {
 	 * Prüft, ob ein Projektfach in der EF belegt wurde. Eine solche Belegung ist nicht zulässig.
 	 */
 	private pruefeBelegungEF() : void {
-		if (this.projektkursBelegung === null) 
+		if (this.projektkursBelegung === null)
 			return;
 		for (let fachbelegung of this.projektkursBelegung) {
 			for (let belegungHalbjahr of fachbelegung.belegungen) {
-				if (belegungHalbjahr === null) 
+				if (belegungHalbjahr === null)
 					continue;
 				let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown)) 
+				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown))
 					this.addFehler(GostBelegungsfehler.PF_10);
 			}
 		}
@@ -83,22 +83,22 @@ export class Projektkurse extends GostBelegpruefung {
 	 * auch nur genau ein anrechenbarer Projektkurs existieren! 
 	 */
 	private pruefeAufAnrechenbarenProjektkurs() : void {
-		if (this.projektkursBelegung === null) 
+		if (this.projektkursBelegung === null)
 			return;
 		for (let fachbelegung of this.projektkursBelegung) {
 			for (let belegungHalbjahr of fachbelegung.belegungen) {
-				if (belegungHalbjahr === null) 
+				if (belegungHalbjahr === null)
 					continue;
 				let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if (halbjahr === null) 
+				if (halbjahr === null)
 					continue;
-				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown)) 
+				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown))
 					continue;
 				let nextHalbjahr : GostHalbjahr | null = halbjahr.next();
 				if (nextHalbjahr === null) {
 					this.addFehler(GostBelegungsfehler.PF_18);
 					continue;
-				} else 
+				} else
 					if (!this.manager.pruefeBelegung(fachbelegung, nextHalbjahr)) {
 						this.addFehler(GostBelegungsfehler.PF_17_INFO);
 						continue;
@@ -108,7 +108,7 @@ export class Projektkurse extends GostBelegpruefung {
 					break;
 				}
 				this.projektkurs = fachbelegung;
-				if (this.projektkursHalbjahre === null) 
+				if (this.projektkursHalbjahre === null)
 					this.projektkursHalbjahre = new Vector();
 				this.projektkursHalbjahre.add(halbjahr);
 				this.projektkursHalbjahre.add(nextHalbjahr);
@@ -124,26 +124,26 @@ export class Projektkurse extends GostBelegpruefung {
 	 * einem Halbjahr nicht mehrere Projektfächer belegt sein.  
 	 */
 	private pruefeBelegungHalbjahre() : void {
-		if (this.projektkursBelegung === null) 
+		if (this.projektkursBelegung === null)
 			return;
 		let pjkHalbjahre : HashSet<GostHalbjahr> = new HashSet();
 		for (let fachbelegung of this.projektkursBelegung) {
 			for (let belegungHalbjahr of fachbelegung.belegungen) {
-				if (belegungHalbjahr === null) 
+				if (belegungHalbjahr === null)
 					continue;
 				let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if (halbjahr === null) 
+				if (halbjahr === null)
 					continue;
-				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown)) 
+				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown))
 					continue;
 				if (!pjkHalbjahre.add(halbjahr)) {
 					this.addFehler(GostBelegungsfehler.PF_14);
 					continue;
 				}
-				if ((this.projektkurs !== null) && JavaObject.equalsTranspiler(this.projektkurs, (fachbelegung)) && (this.projektkursHalbjahre !== null) && this.projektkursHalbjahre.contains(halbjahr)) 
+				if ((this.projektkurs !== null) && JavaObject.equalsTranspiler(this.projektkurs, (fachbelegung)) && (this.projektkursHalbjahre !== null) && this.projektkursHalbjahre.contains(halbjahr))
 					continue;
 				let nextHalbjahr : GostHalbjahr | null = halbjahr.next();
-				if ((nextHalbjahr !== null) && (GostFachManager.istWaehlbar(this.manager.getFach(fachbelegung), nextHalbjahr)) && ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (halbjahr.compareTo(this.projektkursHalbjahre.get(0)) < 0))) 
+				if ((nextHalbjahr !== null) && (GostFachManager.istWaehlbar(this.manager.getFach(fachbelegung), nextHalbjahr)) && ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (halbjahr.compareTo(this.projektkursHalbjahre.get(0)) < 0)))
 					continue;
 				this.addFehler(GostBelegungsfehler.PF_14);
 			}
@@ -154,17 +154,17 @@ export class Projektkurse extends GostBelegpruefung {
 	 * Prüft die Belegung der Leitfächer 
 	 */
 	private pruefeBelegungLeitfaecher() : void {
-		if (this.projektkursBelegung === null) 
+		if (this.projektkursBelegung === null)
 			return;
 		for (let fachbelegung of this.projektkursBelegung) {
 			let fach : GostFach | null = this.manager.getFach(fachbelegung);
-			if (fach === null) 
+			if (fach === null)
 				continue;
 			let leitfach1 : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 			let leitfach2 : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-			if ((leitfach1 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1)) 
+			if ((leitfach1 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1))
 				continue;
-			if ((leitfach2 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2)) 
+			if ((leitfach2 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2))
 				continue;
 			this.addFehler(GostBelegungsfehler.PF_13);
 		}
@@ -180,31 +180,31 @@ export class Projektkurse extends GostBelegpruefung {
 	 */
 	private pruefeBelegungLeitfachbelegung(projektkurs : AbiturFachbelegung | null, leitfach : AbiturFachbelegung | null) : boolean {
 		if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-			if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) 
+			if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
 				return true;
-		} else 
+		} else
 			if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-				if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21))) 
+				if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)))
 					return true;
-			} else 
+			} else
 				if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-					if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22)))) 
+					if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22))))
 						return true;
-				} else 
+				} else
 					if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11)) {
-						if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11)) 
+						if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11))
 							return true;
-					} else 
+					} else
 						if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12)) {
-							if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12))) 
+							if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12)))
 								return true;
-						} else 
+						} else
 							if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21)) {
-								if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21)))) 
+								if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21))))
 									return true;
-							} else 
+							} else
 								if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q22)) {
-									if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q22)))) 
+									if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q22))))
 										return true;
 								}
 		return false;
@@ -229,12 +229,12 @@ export class Projektkurse extends GostBelegpruefung {
 	 * @return true, wenn die Fachbelegung anrechenbar ist.
 	 */
 	public istAnrechenbar(fachbelegungHalbjahr : AbiturFachbelegungHalbjahr | null) : boolean {
-		if (fachbelegungHalbjahr === null) 
+		if (fachbelegungHalbjahr === null)
 			return false;
-		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) as unknown !== GostKursart.PJK as unknown) 
+		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) as unknown !== GostKursart.PJK as unknown)
 			return false;
 		let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
-		if ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (this.manager.istProjektKursBesondereLernleistung())) 
+		if ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (this.manager.istProjektKursBesondereLernleistung()))
 			return false;
 		return (halbjahr as unknown === this.projektkursHalbjahre.get(0) as unknown) || (halbjahr as unknown === this.projektkursHalbjahre.get(1) as unknown);
 	}
@@ -245,7 +245,7 @@ export class Projektkurse extends GostBelegpruefung {
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public getAnrechenbareKurse() : number {
-		if ((this.projektkurs === null) || (this.manager.istProjektKursBesondereLernleistung())) 
+		if ((this.projektkurs === null) || (this.manager.istProjektKursBesondereLernleistung()))
 			return 0;
 		return 2;
 	}

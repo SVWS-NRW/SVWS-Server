@@ -71,7 +71,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * @param t   die anzuhängenden Log-Informationen 
 	 */
 	public accept(t : LogData | null) : void {
-		if (t === null) 
+		if (t === null)
 			return;
 		this.logData.add(t);
 	}
@@ -113,7 +113,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 			let result : Vector<string> | null = new Vector();
 			for (let i : number = 0; i < this.logData.size(); i++){
 				let data : LogData = this.logData.get(i);
-				if (data === null) 
+				if (data === null)
 					continue;
 				result.add(indent! + data.getText()!);
 			}
@@ -176,9 +176,9 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 			let sb : StringBuilder | null = new StringBuilder();
 			for (let i : number = 0; i < this.logData.size(); i++){
 				let data : LogData | null = this.logData.get(i);
-				if (data === null) 
+				if (data === null)
 					continue;
-				if (data.getLevel().toInteger() > level.toInteger()) 
+				if (data.getLevel().toInteger() > level.toInteger())
 					continue;
 				sb.append(indent);
 				sb.append(data.getText());

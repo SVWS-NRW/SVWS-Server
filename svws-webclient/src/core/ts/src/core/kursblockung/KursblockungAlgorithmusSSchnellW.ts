@@ -67,7 +67,7 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		let cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0) 
+		if (cmp < 0)
 			schueler.aktionZustandLadenS();
 		return cmp > 0;
 	}

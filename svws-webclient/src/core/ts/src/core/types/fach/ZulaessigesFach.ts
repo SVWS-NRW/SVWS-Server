@@ -1496,7 +1496,7 @@ export class ZulaessigesFach extends JavaObject {
 			this.zulaessig[i] = new Vector();
 			for (let kuerzelSfSgl of historie[i].zulaessig) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
-				if (sf === null) 
+				if (sf === null)
 					continue;
 				let sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
@@ -1511,7 +1511,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
 	private static getMapByASDKuerzel() : HashMap<string, ZulaessigesFach | null> {
-		if (ZulaessigesFach._mapKuerzelASD.size() === 0) 
+		if (ZulaessigesFach._mapKuerzelASD.size() === 0)
 			for (let s of ZulaessigesFach.values()) 
 				ZulaessigesFach._mapKuerzelASD.put(s.daten.kuerzelASD, s);
 		return ZulaessigesFach._mapKuerzelASD;
@@ -1526,10 +1526,10 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		for (let sfsgl of this.zulaessig[0]) {
-			if (sfsgl.a === schulform) 
+			if (sfsgl.a === schulform)
 				return true;
 		}
 		return false;
@@ -1545,10 +1545,10 @@ export class ZulaessigesFach extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigesFach | null> {
 		let faecher : Vector<ZulaessigesFach | null> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return faecher;
 		for (let fach of ZulaessigesFach.values()) 
-			if (fach.hasSchulform(schulform)) 
+			if (fach.hasSchulform(schulform))
 				faecher.add(fach);
 		return faecher;
 	}
@@ -1559,7 +1559,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die Fachgruppe des Faches
 	 */
 	public getFachgruppe() : Fachgruppe | null {
-		if (this.daten.fachgruppe === null) 
+		if (this.daten.fachgruppe === null)
 			return null;
 		return Fachgruppe.getByKuerzel(this.daten.fachgruppe);
 	}
@@ -1570,7 +1570,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return der Jahrgang
 	 */
 	public getJahrgangAb() : Jahrgaenge | null {
-		if (this.daten.abJahrgang === null) 
+		if (this.daten.abJahrgang === null)
 			return null;
 		return Jahrgaenge.getByKuerzel(this.daten.abJahrgang);
 	}

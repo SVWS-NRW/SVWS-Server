@@ -32,7 +32,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
 	 */
 	public addOrException(pRaumID : number, pKuerzel : string) : void {
-		if (this._map.containsKey(pRaumID) === true) 
+		if (this._map.containsKey(pRaumID) === true)
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!")
 		let ra : StundenplanblockungManagerRaum = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
 		this._map.put(pRaumID, ra);
@@ -49,7 +49,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 */
 	public getOrException(pRaumID : number) : StundenplanblockungManagerRaum {
 		let ra : StundenplanblockungManagerRaum | null = this._map.get(pRaumID);
-		if (ra === null) 
+		if (ra === null)
 			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!")
 		return ra;
 	}
@@ -63,7 +63,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerRaum {
 		let size : number = this._menge.size();
-		if (size <= 0) 
+		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Räume!")
 		return this._menge.get(pRandom.nextInt(size));
 	}

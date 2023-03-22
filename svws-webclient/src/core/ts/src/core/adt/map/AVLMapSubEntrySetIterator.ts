@@ -37,7 +37,7 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 	}
 
 	public next() : JavaMapEntry<K, V> {
-		if (this._next === null) 
+		if (this._next === null)
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this._sub.higherEntry(this._next.getKey());
@@ -49,7 +49,7 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 	}
 
 	public remove() : void {
-		if (this._current === null) 
+		if (this._current === null)
 			throw new IllegalStateException()
 		this._sub.remove(this._current.getKey());
 		this._current = null;

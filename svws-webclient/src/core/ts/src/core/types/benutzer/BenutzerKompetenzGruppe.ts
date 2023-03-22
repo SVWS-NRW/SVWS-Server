@@ -168,7 +168,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */
 	private static getMapID() : HashMap<number, BenutzerKompetenzGruppe> {
-		if (BenutzerKompetenzGruppe._mapID.size() === 0) 
+		if (BenutzerKompetenzGruppe._mapID.size() === 0)
 			for (let p of BenutzerKompetenzGruppe.values()) 
 				BenutzerKompetenzGruppe._mapID.put(p.daten.id, p);
 		return BenutzerKompetenzGruppe._mapID;

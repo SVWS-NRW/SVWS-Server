@@ -47,9 +47,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public pruefe() : void {
 		this.init();
-		if (this.pruefungs_art as unknown === GostBelegpruefungsArt.EF1 as unknown) 
-			this.pruefeEF1(); else 
-			if (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown) 
+		if (this.pruefungs_art as unknown === GostBelegpruefungsArt.EF1 as unknown)
+			this.pruefeEF1();else
+			if (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)
 				this.pruefeGesamt();
 	}
 
@@ -60,7 +60,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
 	protected addFehler(fehler : GostBelegungsfehler) : void {
-		if (!this.belegungsfehler.contains(fehler)) 
+		if (!this.belegungsfehler.contains(fehler))
 			this.belegungsfehler.add(fehler);
 	}
 
@@ -81,7 +81,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	public hatBelegungsfehler() : boolean {
 		for (let i : number = 0; i < this.belegungsfehler.size(); i++){
 			let fehler : GostBelegungsfehler = this.belegungsfehler.get(i);
-			if (!fehler.istInfo()) 
+			if (!fehler.istInfo())
 				return false;
 		}
 		return true;
@@ -113,7 +113,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	public static istErfolgreich(alle_fehler : Vector<GostBelegungsfehler>) : boolean {
 		for (let i : number = 0; i < alle_fehler.size(); i++){
 			let fehler : GostBelegungsfehler = alle_fehler.get(i);
-			if (!fehler.istInfo()) 
+			if (!fehler.istInfo())
 				return false;
 		}
 		return true;

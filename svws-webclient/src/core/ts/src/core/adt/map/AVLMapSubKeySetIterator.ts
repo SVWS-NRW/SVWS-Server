@@ -38,7 +38,7 @@ export class AVLMapSubKeySetIterator<K, V> extends JavaObject implements JavaIte
 	}
 
 	public next() : K {
-		if (this._next === null) 
+		if (this._next === null)
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this._sub.bcGetNextEntryOrNull(this._next);
@@ -50,7 +50,7 @@ export class AVLMapSubKeySetIterator<K, V> extends JavaObject implements JavaIte
 	}
 
 	public remove() : void {
-		if (this._current === null) 
+		if (this._current === null)
 			throw new IllegalStateException()
 		this._sub.remove(this._current._key);
 		this._current = null;

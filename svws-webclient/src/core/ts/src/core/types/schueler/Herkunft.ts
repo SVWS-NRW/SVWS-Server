@@ -473,7 +473,7 @@ export class Herkunft extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, Herkunft | null> {
 		if (Herkunft._kuerzel.size() === 0) {
 			for (let h of Herkunft.values()) {
-				if (h.daten !== null) 
+				if (h.daten !== null)
 					Herkunft._kuerzel.put(h.daten.kuerzel, h);
 			}
 		}

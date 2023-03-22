@@ -42,7 +42,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	 * @return der Notendurchschnitt oder NaN im Fehlerfall
 	 */
 	public static getDurchschnitt(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0)) 
+		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return NaN;
 		let sum : number = 0;
 		for (let fach of abschluss_faecher.faecher) {
@@ -59,11 +59,11 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	 * @return die Anzahl der Defizite oder -1 im Fehlerfall
 	 */
 	public static getAnzahlDefizite(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0)) 
+		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
 		for (let fach of abschluss_faecher.faecher) {
-			if (fach.note >= 5) 
+			if (fach.note >= 5)
 				sum++;
 		}
 		return sum;
@@ -77,11 +77,11 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	 * @return die Anzahl der Note Ungenügend oder -1 im Fehlerfall
 	 */
 	public static getAnzahlUngenuegend(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0)) 
+		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
 		for (let fach of abschluss_faecher.faecher) {
-			if (fach.note >= 6) 
+			if (fach.note >= 6)
 				sum++;
 		}
 		return sum;

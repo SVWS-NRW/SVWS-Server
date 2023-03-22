@@ -63,7 +63,7 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	public static createSchuljahresAbschnittString(abschnitt : Schuljahresabschnitt, anzahlAbschnitte : number) : string {
 		if (anzahlAbschnitte <= 1) {
 			return "" + abschnitt.schuljahr;
-		} else 
+		} else
 			if (anzahlAbschnitte > 1 && anzahlAbschnitte < 5) {
 				return SchuljahresAbschnittsManager.createRepresentationForAnzahlAbschnitte(anzahlAbschnitte)! + abschnitt.abschnitt + " " + abschnitt.schuljahr;
 			} else {
@@ -96,12 +96,12 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         leerer String, bei 1 oder mehr als 4 Abschnitten<br>
 	 */
 	public static createRepresentationForAnzahlAbschnitte(anzahlAbschnitte : number) : string {
-		if (anzahlAbschnitte === 2) 
-			return "S"; else 
-			if (anzahlAbschnitte === 3) 
-				return "T"; else 
-				if (anzahlAbschnitte === 4) 
-					return "Q"; else 
+		if (anzahlAbschnitte === 2)
+			return "S";else
+			if (anzahlAbschnitte === 3)
+				return "T";else
+				if (anzahlAbschnitte === 4)
+					return "Q";else
 					return "";
 	}
 

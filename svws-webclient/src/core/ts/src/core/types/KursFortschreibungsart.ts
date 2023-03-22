@@ -97,7 +97,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * @return die Kurs-Fortschreibungsart 
 	 */
 	public static fromID(id : number | null) : KursFortschreibungsart | null {
-		if (id === null) 
+		if (id === null)
 			return KursFortschreibungsart.KEINE;
 		switch (id) {
 			case 0: 
@@ -121,7 +121,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * @return die Kurs-Fortschreibungsart 
 	 */
 	public static fromKuerzel(kuerzel : string | null) : KursFortschreibungsart | null {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return KursFortschreibungsart.KEINE;
 		switch (kuerzel) {
 			case "N": 
@@ -146,7 +146,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 */
 	public static isValidKuerzel(kuerzel : string | null) : boolean {
 		for (let art of KursFortschreibungsart.values()) 
-			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
+			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
 				return true;
 		return false;
 	}

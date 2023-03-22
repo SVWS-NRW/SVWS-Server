@@ -48,7 +48,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAMerkmaleOptionsarten | null {
 		for (let art of KAOAMerkmaleOptionsarten.values()) 
-			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
+			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
 				return art;
 		return null;
 	}

@@ -133,7 +133,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return die Map von den IDs auf das Gost-Halbjahr
 	 */
 	private static getMapByID() : HashMap<number, GostHalbjahr> {
-		if (GostHalbjahr._mapID.size() === 0) 
+		if (GostHalbjahr._mapID.size() === 0)
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapID.put(h.id, h);
 		return GostHalbjahr._mapID;
@@ -146,7 +146,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostHalbjahr> {
-		if (GostHalbjahr._mapKuerzel.size() === 0) 
+		if (GostHalbjahr._mapKuerzel.size() === 0)
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapKuerzel.put(h.kuerzel, h);
 		return GostHalbjahr._mapKuerzel;
@@ -159,7 +159,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
 	 */
 	private static getMapByKuerzelAlt() : HashMap<string, GostHalbjahr> {
-		if (GostHalbjahr._mapKuerzelAlt.size() === 0) 
+		if (GostHalbjahr._mapKuerzelAlt.size() === 0)
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapKuerzelAlt.put(h.kuerzelAlt, h);
 		return GostHalbjahr._mapKuerzelAlt;
@@ -234,7 +234,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return das Halbjahr oder null, falls die ID nicht gültig ist
 	 */
 	public static fromID(id : number | null) : GostHalbjahr | null {
-		if (id === null) 
+		if (id === null)
 			return null;
 		switch (id) {
 			case 0: 
@@ -265,7 +265,7 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	public static fromIDorException(pGostHalbjahID : number) : GostHalbjahr {
 		let halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(pGostHalbjahID);
-		if (halbjahr === null) 
+		if (halbjahr === null)
 			throw new NullPointerException("GostHalbjahr nicht gefunden!")
 		return halbjahr;
 	}
@@ -301,7 +301,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static fromJahrgangUndHalbjahr(jahrgang : string | null, halbjahr : number) : GostHalbjahr | null {
-		if ((halbjahr !== 1) && (halbjahr !== 2)) 
+		if ((halbjahr !== 1) && (halbjahr !== 2))
 			return null;
 		switch (jahrgang) {
 			case "EF": 
@@ -344,7 +344,7 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	public static getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
 		let id : number = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr;
-		if (id < 0) 
+		if (id < 0)
 			id = 0;
 		return GostHalbjahr.fromID(id);
 	}
@@ -401,7 +401,7 @@ export class GostHalbjahr extends JavaObject {
 	 *         und ansonsten false
 	 */
 	public static pruefeEinfuehrungsphase(...halbjahre : Array<GostHalbjahr>) : boolean {
-		if ((halbjahre === null) || (halbjahre.length !== 2)) 
+		if ((halbjahre === null) || (halbjahre.length !== 2))
 			return false;
 		return ((halbjahre[0] as unknown === GostHalbjahr.EF1 as unknown) && (halbjahre[0] as unknown === GostHalbjahr.EF2 as unknown)) || ((halbjahre[0] as unknown === GostHalbjahr.EF2 as unknown) && (halbjahre[0] as unknown === GostHalbjahr.EF1 as unknown));
 	}
@@ -416,7 +416,7 @@ export class GostHalbjahr extends JavaObject {
 	 *         handelt und ansonsten false
 	 */
 	public static pruefeQualifikationsphase(...halbjahre : Array<GostHalbjahr>) : boolean {
-		if ((halbjahre === null) || (halbjahre.length !== 4)) 
+		if ((halbjahre === null) || (halbjahre.length !== 4))
 			return false;
 		let list : List<GostHalbjahr> = Arrays.asList(...halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));

@@ -85,7 +85,7 @@ export class Geschlecht extends JavaObject {
 	 * @return das Geschlecht oder null, falls die ID fehlerhaft ist
 	 */
 	public static fromValue(value : number | null) : Geschlecht | null {
-		if (value === null) 
+		if (value === null)
 			return null;
 		switch (value) {
 			case 3: 
@@ -112,7 +112,7 @@ export class Geschlecht extends JavaObject {
 	 * @return das Geschlecht als Type
 	 */
 	public static fromStringValue(text : string | null) : Geschlecht {
-		if ((text === null) || JavaObject.equalsTranspiler("", (text))) 
+		if ((text === null) || JavaObject.equalsTranspiler("", (text)))
 			return Geschlecht.X;
 		let upperValue : string | null = text.toUpperCase();
 		switch (upperValue) {

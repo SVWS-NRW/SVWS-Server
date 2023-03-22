@@ -150,7 +150,7 @@ export class Foerderschwerpunkt extends JavaObject {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
-				if (sf !== null) 
+				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
 		}
@@ -163,7 +163,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return die Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static getMapFoerderschwerpunktByKuerzel() : HashMap<string, Foerderschwerpunkt> {
-		if (Foerderschwerpunkt._foerderschwerpunkteKuerzel.size() === 0) 
+		if (Foerderschwerpunkt._foerderschwerpunkteKuerzel.size() === 0)
 			for (let s of Foerderschwerpunkt.values()) 
 				Foerderschwerpunkt._foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);
 		return Foerderschwerpunkt._foerderschwerpunkteKuerzel;
@@ -176,7 +176,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return die Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static getMapFoerderschwerpunktByID() : HashMap<number, Foerderschwerpunkt> {
-		if (Foerderschwerpunkt._foerderschwerpunkteID.size() === 0) 
+		if (Foerderschwerpunkt._foerderschwerpunkteID.size() === 0)
 			for (let s of Foerderschwerpunkt.values()) {
 				for (let k of s.historie) 
 					Foerderschwerpunkt._foerderschwerpunkteID.put(k.id, s);
@@ -224,12 +224,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<Foerderschwerpunkt> {
 		let result : Vector<Foerderschwerpunkt> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return result;
 		let fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();
 		for (let i : number = 0; i < fs.length; i++){
 			let gliederung : Foerderschwerpunkt = fs[i];
-			if (gliederung.hasSchulform(schulform)) 
+			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
 		return result;
@@ -244,12 +244,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
 		}
@@ -264,12 +264,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
 		}
@@ -285,14 +285,14 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
 	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Foerderschwerpunkt | null {
-		if (sf === null) 
+		if (sf === null)
 			return null;
-		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
+		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Foerderschwerpunkt.KEINER;
 		let schwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(sf);
 		for (let i : number = 0; i < schwerpunkte.size(); i++){
 			let fs : Foerderschwerpunkt | null = schwerpunkte.get(i);
-			if (JavaString.equalsIgnoreCase((fs.daten.kuerzel), kuerzel)) 
+			if (JavaString.equalsIgnoreCase((fs.daten.kuerzel), kuerzel))
 				return fs;
 		}
 		return null;

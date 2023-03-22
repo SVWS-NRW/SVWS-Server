@@ -105,7 +105,7 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, HerkunftBildungsgangsTyp | null> {
 		if (HerkunftBildungsgangsTyp._ebenen.size() === 0) {
 			for (let s of HerkunftBildungsgangsTyp.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					HerkunftBildungsgangsTyp._ebenen.put(s.daten.kuerzel, s);
 			}
 		}

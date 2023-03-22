@@ -27,9 +27,9 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1) 
+		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
 			this.addFehler(GostBelegungsfehler.IGF_10);
-		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1)) 
+		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.IGF_10);
 	}
 
@@ -37,13 +37,13 @@ export class Allgemeines extends GostBelegpruefung {
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
-			if (!this.manager.istBelegtSeitEF(fachbelegung)) 
+			if (!this.manager.istBelegtSeitEF(fachbelegung))
 				this.addFehler(GostBelegungsfehler.E1BEL_10);
 		}
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach !== null) 
+			if (abiturFach !== null)
 				continue;
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
 				this.addFehler(GostBelegungsfehler.ABI_16);
@@ -51,10 +51,10 @@ export class Allgemeines extends GostBelegpruefung {
 			}
 		}
 		for (let halbjahr of GostHalbjahr.values()) {
-			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1) 
+			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
 				this.addFehler(GostBelegungsfehler.IGF_10);
 		}
-		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) 
+		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			this.addFehler(GostBelegungsfehler.IGF_10);
 	}
 

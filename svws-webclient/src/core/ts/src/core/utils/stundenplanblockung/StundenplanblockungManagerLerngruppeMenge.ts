@@ -34,7 +34,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
 	public createOrException(pLerngruppeID : number) : StundenplanblockungManagerLerngruppe {
-		if (this._map.containsKey(pLerngruppeID) === true) 
+		if (this._map.containsKey(pLerngruppeID) === true)
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!")
 		let gr : StundenplanblockungManagerLerngruppe | null = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		this._map.put(pLerngruppeID, gr);
@@ -52,7 +52,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 */
 	public getOrException(pLerngruppeID : number) : StundenplanblockungManagerLerngruppe {
 		let gr : StundenplanblockungManagerLerngruppe | null = this._map.get(pLerngruppeID);
-		if (gr === null) 
+		if (gr === null)
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!")
 		return gr;
 	}
@@ -66,7 +66,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerLerngruppe {
 		let size : number = this._menge.size();
-		if (size <= 0) 
+		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lerngruppen!")
 		return this._menge.get(pRandom.nextInt(size));
 	}

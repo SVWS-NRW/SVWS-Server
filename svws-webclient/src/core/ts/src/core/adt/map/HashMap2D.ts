@@ -42,7 +42,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 */
 	public getOrException(key1 : K1, key2 : K2) : V | null {
 		let map2 : HashMap<K2, V | null> = this.getSubMapOrException(key1);
-		if (!map2.containsKey(key2)) 
+		if (!map2.containsKey(key2))
 			throw new NullPointerException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		return map2.get(key2);
 	}
@@ -59,7 +59,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 */
 	public getNonNullOrException(key1 : K1, key2 : K2) : V {
 		let value : V | null = this.getOrException(key1, key2);
-		if (value === null) 
+		if (value === null)
 			throw new NullPointerException("value is NULL!")
 		return value;
 	}
@@ -72,7 +72,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 */
 	public getSubMapOrException(key1 : K1) : HashMap<K2, V | null> {
 		let map2 : HashMap<K2, V | null> | null = this._map.get(key1);
-		if (map2 === null) 
+		if (map2 === null)
 			throw new NullPointerException("Pfad (key1=" + key1 + ") ungültig!")
 		return map2;
 	}

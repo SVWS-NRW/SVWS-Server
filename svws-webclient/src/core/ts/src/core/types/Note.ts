@@ -243,7 +243,7 @@ export class Note extends JavaObject {
 	 * @return die Note
 	 */
 	public static fromNoteSekI(noteSekI : number | null) : Note | null {
-		if (noteSekI === null) 
+		if (noteSekI === null)
 			return null;
 		switch (noteSekI) {
 			case 1: 
@@ -271,7 +271,7 @@ export class Note extends JavaObject {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkte(notenpunkte : number | null) : Note {
-		if (notenpunkte === null) 
+		if (notenpunkte === null)
 			return Note.KEINE;
 		switch (notenpunkte) {
 			case 0: 
@@ -318,7 +318,7 @@ export class Note extends JavaObject {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromKuerzel(kuerzel : string | null) : Note {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return Note.KEINE;
 		let kuerzelUppercase : string | null = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
@@ -385,7 +385,7 @@ export class Note extends JavaObject {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkteString(notenpunkte : string | null) : Note {
-		if (notenpunkte === null) 
+		if (notenpunkte === null)
 			return Note.KEINE;
 		switch (notenpunkte) {
 			case "0": 
@@ -430,7 +430,7 @@ export class Note extends JavaObject {
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public hatTendenz() : boolean {
-		if (this.notenpunkte === null) 
+		if (this.notenpunkte === null)
 			return false;
 		switch (this.notenpunkte) {
 			case 0: 
@@ -450,7 +450,7 @@ export class Note extends JavaObject {
 	 * @return die entsprechende Note ohne Tendenz
 	 */
 	public ohneTendenz() : Note {
-		if (this.notenpunkte === null) 
+		if (this.notenpunkte === null)
 			return Note.KEINE;
 		switch (this.notenpunkte) {
 			case 0: 
@@ -523,7 +523,7 @@ export class Note extends JavaObject {
 	 * @return der Noten-Katalog-Eintrag
 	 */
 	public getKatalogEintrag() : NotenKatalogEintrag {
-		if (this.katalogEintrag === null) 
+		if (this.katalogEintrag === null)
 			this.katalogEintrag = new NotenKatalogEintrag(this.id, this.sortierung, this.notenpunkte, this.kuerzel, this.text, this.textZeugnis, this.gueltigVon, this.gueltigBis);
 		return this.katalogEintrag;
 	}

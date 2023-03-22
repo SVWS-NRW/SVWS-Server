@@ -27,7 +27,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 	protected pruefeEF1() : void {
 		let pruefung_sprachen : Fremdsprachen = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
 		let pruefung_nawi : Naturwissenschaften = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) 
+		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
 			return;
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
@@ -43,7 +43,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 	protected pruefeGesamt() : void {
 		let pruefung_sprachen : Fremdsprachen = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
 		let pruefung_nawi : Naturwissenschaften = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) 
+		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
 			return;
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);

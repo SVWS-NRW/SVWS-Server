@@ -33,7 +33,7 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	}
 
 	public berechne(pEndzeit : number) : void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) 
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionZustandLadenG();
 		this.dynDaten.aktionZustandSpeichernK();

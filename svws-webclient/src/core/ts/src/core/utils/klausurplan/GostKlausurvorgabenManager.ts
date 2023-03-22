@@ -59,17 +59,17 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		}
 		listKlausurvorgabenMapQuartalKlausurvorgaben.add(v);
 		let mapKursartFachKlausurvorgabe : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(v.quartal);
-		if (mapKursartFachKlausurvorgabe === null) 
+		if (mapKursartFachKlausurvorgabe === null)
 			this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap());
 		let mapFachKlausurvorgabe : HashMap<number, GostKlausurvorgabe> | null = mapKursartFachKlausurvorgabe.get(v.kursart);
-		if (mapFachKlausurvorgabe === null) 
+		if (mapFachKlausurvorgabe === null)
 			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe = new HashMap());
 		mapFachKlausurvorgabe.put(v.idFach, v);
 		let mapFachKlausurvorgaben : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(v.kursart);
-		if (mapFachKlausurvorgaben === null) 
+		if (mapFachKlausurvorgaben === null)
 			this._mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben = new HashMap());
 		let listKlausurvorgaben : List<GostKlausurvorgabe> | null = mapFachKlausurvorgaben.get(v.idFach);
-		if (listKlausurvorgaben === null) 
+		if (listKlausurvorgaben === null)
 			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector());
 		listKlausurvorgaben.add(v);
 	}
@@ -109,7 +109,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursart);
 			if (map2 !== null) {
 				let kv : GostKlausurvorgabe | null = map2.get(vorgabe.idFach);
-				if (kv as unknown === vorgabe as unknown) 
+				if (kv as unknown === vorgabe as unknown)
 					map2.remove(vorgabe.idFach);
 			}
 		}
@@ -193,10 +193,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			let kursartAllg : string | null = __param1;
 			let idFach : number = __param2 as number;
 			let map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(quartal);
-			if (map1 === null) 
+			if (map1 === null)
 				return null;
 			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(kursartAllg);
-			if (map2 !== null) 
+			if (map2 !== null)
 				return map2.get(idFach);
 			return null;
 		} else throw new Error('invalid method overload');
@@ -236,7 +236,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			if (quartal > 0) {
 				let retList : List<GostKlausurvorgabe> | null = new Vector();
 				let vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
-				if (vorgabe !== null) 
+				if (vorgabe !== null)
 					retList.add(vorgabe);
 				return retList;
 			}
@@ -245,10 +245,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			let kursartAllg : string | null = __param0;
 			let idFach : number = __param1 as number;
 			let map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
-			if (map1 === null) 
+			if (map1 === null)
 				return new Vector();
 			let list : List<GostKlausurvorgabe> | null = map1.get(idFach);
-			if (list === null) 
+			if (list === null)
 				return new Vector();
 			return list;
 		} else throw new Error('invalid method overload');

@@ -2401,7 +2401,7 @@ export class Verkehrssprache extends JavaObject {
 	private static getMapSpracheByKuerzel() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._sprachen.size() === 0) {
 			for (let s of Verkehrssprache.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					Verkehrssprache._sprachen.put(s.daten.kuerzel, s);
 			}
 		}
@@ -2417,7 +2417,7 @@ export class Verkehrssprache extends JavaObject {
 	private static getMapSpracheByKuerzel2() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._kuerzel2.size() === 0) {
 			for (let s of Verkehrssprache.values()) {
-				if ((s.daten !== null) && (s.daten.iso2 !== null)) 
+				if ((s.daten !== null) && (s.daten.iso2 !== null))
 					Verkehrssprache._kuerzel2.put(s.daten.iso2, s);
 			}
 		}
@@ -2456,9 +2456,9 @@ export class Verkehrssprache extends JavaObject {
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByKuerzelAuto(kuerzel : string | null) : Verkehrssprache | null {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return null;
-		if (kuerzel.length === 2) 
+		if (kuerzel.length === 2)
 			return Verkehrssprache.getMapSpracheByKuerzel2().get(kuerzel);
 		return Verkehrssprache.getMapSpracheByKuerzel().get(kuerzel);
 	}

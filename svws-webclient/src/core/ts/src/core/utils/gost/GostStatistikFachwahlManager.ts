@@ -19,9 +19,9 @@ export class GostStatistikFachwahlManager extends JavaObject {
 	 * @param fachwahl   die Fachwahl
 	 */
 	public static setFachwahlHalbjahr(statfw : GostStatistikFachwahl, halbjahr : GostHalbjahr, fachwahl : string | null) : void {
-		if (statfw.fachwahlen[halbjahr.id] === null) 
+		if (statfw.fachwahlen[halbjahr.id] === null)
 			statfw.fachwahlen[halbjahr.id] = new GostStatistikFachwahlHalbjahr();
-		if ((fachwahl === null) || !(JavaObject.equalsTranspiler("M", (fachwahl)) || JavaObject.equalsTranspiler("S", (fachwahl)) || JavaObject.equalsTranspiler("ZK", (fachwahl)) || JavaObject.equalsTranspiler("LK", (fachwahl)))) 
+		if ((fachwahl === null) || !(JavaObject.equalsTranspiler("M", (fachwahl)) || JavaObject.equalsTranspiler("S", (fachwahl)) || JavaObject.equalsTranspiler("ZK", (fachwahl)) || JavaObject.equalsTranspiler("LK", (fachwahl))))
 			return;
 		statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich += JavaObject.equalsTranspiler("M", (fachwahl)) ? 1 : 0;
 		statfw.fachwahlen[halbjahr.id].wahlenGKSchriftlich += JavaObject.equalsTranspiler("S", (fachwahl)) ? 1 : 0;

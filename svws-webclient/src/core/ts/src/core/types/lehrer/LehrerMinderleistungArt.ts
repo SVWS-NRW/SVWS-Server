@@ -155,7 +155,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerMinderleistungArt | null> {
-		if (LehrerMinderleistungArt._artenByID.size() === 0) 
+		if (LehrerMinderleistungArt._artenByID.size() === 0)
 			for (let g of LehrerMinderleistungArt.values()) 
 				LehrerMinderleistungArt._artenByID.put(g.daten.id, g);
 		return LehrerMinderleistungArt._artenByID;
@@ -168,7 +168,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerMinderleistungArt | null> {
-		if (LehrerMinderleistungArt._artenByKuerzel.size() === 0) 
+		if (LehrerMinderleistungArt._artenByKuerzel.size() === 0)
 			for (let g of LehrerMinderleistungArt.values()) 
 				LehrerMinderleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);
 		return LehrerMinderleistungArt._artenByKuerzel;

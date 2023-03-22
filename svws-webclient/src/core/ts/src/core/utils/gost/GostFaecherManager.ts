@@ -66,10 +66,10 @@ export class GostFaecherManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
 	 */
 	private addInternal(fach : GostFach) : boolean {
-		if (fach.id < 0) 
+		if (fach.id < 0)
 			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!")
 		let old : GostFach | null = this._map.put(fach.id, fach);
-		if (old !== null) 
+		if (old !== null)
 			return false;
 		return this._faecher.add(fach);
 	}
@@ -106,7 +106,7 @@ export class GostFaecherManager extends JavaObject {
 	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
 		for (let fach of faecher) 
-			if (!this.addInternal(fach)) 
+			if (!this.addInternal(fach))
 				result = false;
 		this.sort();
 		return result;
@@ -131,7 +131,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getOrException(pFachID : number) : GostFach {
 		let fach : GostFach | null = this._map.get(pFachID);
-		if (fach === null) 
+		if (fach === null)
 			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.")
 		return fach;
 	}

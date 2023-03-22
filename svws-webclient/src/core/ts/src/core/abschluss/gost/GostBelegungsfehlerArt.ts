@@ -57,7 +57,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	 * @return die Belegungsfehler-Art
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBelegungsfehlerArt | null {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return null;
 		switch (kuerzel) {
 			case "BELEGUNG": 

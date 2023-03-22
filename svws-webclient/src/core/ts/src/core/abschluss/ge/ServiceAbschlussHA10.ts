@@ -86,7 +86,7 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		let weitereFS : List<GEAbschlussFach> = faecher.fg2.entferneFaecher(this.filterWeitereFremdsprachen);
 		if (weitereFS.size() > 0) {
 			for (let fs of weitereFS) {
-				if (fs.bezeichnung === null) 
+				if (fs.bezeichnung === null)
 					continue;
 				this.logger.logLn(LogLevel.DEBUG, " -> Ignoriere weitere Fremdsprache: " + fs.bezeichnung + "(" + fs.note + ")");
 			}
@@ -94,7 +94,7 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		this.logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
 		let tmpFaecher : List<GEAbschlussFach> = faecher.getFaecher(this.filterEKurse);
 		for (let f of tmpFaecher) {
-			if (f.kuerzel === null) 
+			if (f.kuerzel === null)
 				continue;
 			let note : number = f.note;
 			let note_neu : number = (note === 1) ? 1 : note - 1;
@@ -107,7 +107,7 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		if (abschlussergebnis.erworben) {
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.INFO, " => HA 10: APO-SI §41 (1)");
-		} else 
+		} else
 			if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
 				this.logger.logLn(LogLevel.INFO, " => kein HA10 - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)!);
 			} else {
@@ -131,9 +131,9 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		let fg1_mangelhaft : number = faecher.fg1.getFaecherAnzahl(this.filterMangelhaft);
 		let fg1_ungenuegend : number = faecher.fg1.getFaecherAnzahl(this.filterUngenuegend);
 		let fg2_ungenuegend : number = faecher.fg2.getFaecherAnzahl(this.filterUngenuegend);
-		if (fg1_defizite > 0) 
+		if (fg1_defizite > 0)
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizit)!);
-		if (fg2_defizite > 0) 
+		if (fg2_defizite > 0)
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizit)!);
 		if ((fg1_ungenuegend > 0) || (fg2_ungenuegend > 1)) {
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");

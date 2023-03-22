@@ -93,7 +93,7 @@ export class Einschulungsart extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, Einschulungsart | null> {
 		if (Einschulungsart._ebenen.size() === 0) {
 			for (let s of Einschulungsart.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					Einschulungsart._ebenen.put(s.daten.kuerzel, s);
 			}
 		}

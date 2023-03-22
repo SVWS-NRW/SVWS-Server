@@ -91,7 +91,7 @@ export class KAOAMerkmalEintrag extends JavaObject {
 			this.kategorie = kategorie.daten.kuerzel;
 			this.optionsart = optionsart.kuerzel;
 			for (let gl of bkAnlagen) {
-				if (gl.daten.bkAnlage === null) 
+				if (gl.daten.bkAnlage === null)
 					throw new NullPointerException("Es wurde keine Gliederung des Berufskollges als Anlage angegeben.")
 				this.bkAnlagen.add(gl.daten.kuerzel);
 			}

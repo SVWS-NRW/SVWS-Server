@@ -90,7 +90,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 * @return die Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung | null> {
-		if (LehrerLehramtAnerkennung._anerkennungenByID.size() === 0) 
+		if (LehrerLehramtAnerkennung._anerkennungenByID.size() === 0)
 			for (let l of LehrerLehramtAnerkennung.values()) 
 				LehrerLehramtAnerkennung._anerkennungenByID.put(l.daten.id, l);
 		return LehrerLehramtAnerkennung._anerkennungenByID;
@@ -103,7 +103,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 * @return die Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung | null> {
-		if (LehrerLehramtAnerkennung._anerkennungenByKuerzel.size() === 0) 
+		if (LehrerLehramtAnerkennung._anerkennungenByKuerzel.size() === 0)
 			for (let l of LehrerLehramtAnerkennung.values()) 
 				LehrerLehramtAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerLehramtAnerkennung._anerkennungenByKuerzel;

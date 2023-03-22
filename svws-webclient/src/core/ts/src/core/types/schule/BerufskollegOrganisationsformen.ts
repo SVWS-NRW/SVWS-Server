@@ -150,7 +150,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, BerufskollegOrganisationsformen> {
 		if (BerufskollegOrganisationsformen._mapKuerzel.size() === 0) {
 			for (let s of BerufskollegOrganisationsformen.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					BerufskollegOrganisationsformen._mapKuerzel.put(s.daten.kuerzel, s);
 			}
 		}

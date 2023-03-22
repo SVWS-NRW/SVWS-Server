@@ -92,21 +92,21 @@ export class Variable extends JavaObject {
 	 */
 	public isBetterThan(b : Variable) : boolean {
 		let statB : Array<Array<number>> = b.statSatFree;
-		if (this.statSatFree[0][0] > statB[0][0]) 
+		if (this.statSatFree[0][0] > statB[0][0])
 			return true;
-		if (this.statSatFree[0][0] < statB[0][0]) 
+		if (this.statSatFree[0][0] < statB[0][0])
 			return false;
-		if (this.statSatFree[0][1] > statB[0][1]) 
+		if (this.statSatFree[0][1] > statB[0][1])
 			return true;
-		if (this.statSatFree[0][1] < statB[0][1]) 
+		if (this.statSatFree[0][1] < statB[0][1])
 			return false;
-		if (this.statSatFree[0][2] > statB[0][2]) 
+		if (this.statSatFree[0][2] > statB[0][2])
 			return true;
-		if (this.statSatFree[0][2] < statB[0][2]) 
+		if (this.statSatFree[0][2] < statB[0][2])
 			return false;
-		if (this.statSatFree[0][3] > statB[0][3]) 
+		if (this.statSatFree[0][3] > statB[0][3])
 			return true;
-		if (this.statSatFree[0][3] < statB[0][3]) 
+		if (this.statSatFree[0][3] < statB[0][3])
 			return false;
 		return this._random.nextBoolean();
 	}

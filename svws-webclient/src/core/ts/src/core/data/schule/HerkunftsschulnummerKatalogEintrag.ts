@@ -79,7 +79,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 				for (let zul of zulaessig) {
 					let sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
 					let sf : Schulform = zul.a;
-					if (sf.daten === null) 
+					if (sf.daten === null)
 						continue;
 					sfsgl.schulform = sf.daten.kuerzel;
 					let sgl : Schulgliederung | null = zul.b;

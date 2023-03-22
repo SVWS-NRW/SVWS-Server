@@ -130,7 +130,7 @@ export class Logger extends JavaObject {
 			let data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++){
 				let c : Consumer<LogData> = this.consumer.get(i);
-				if (c === null) 
+				if (c === null)
 					continue;
 				c.accept(data);
 			}

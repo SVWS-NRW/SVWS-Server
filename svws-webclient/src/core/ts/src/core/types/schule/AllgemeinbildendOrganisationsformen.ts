@@ -90,7 +90,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	private static getMapByKuerzel() : HashMap<string, AllgemeinbildendOrganisationsformen> {
 		if (AllgemeinbildendOrganisationsformen._mapKuerzel.size() === 0) {
 			for (let s of AllgemeinbildendOrganisationsformen.values()) {
-				if (s.daten !== null) 
+				if (s.daten !== null)
 					AllgemeinbildendOrganisationsformen._mapKuerzel.put(s.daten.kuerzel, s);
 			}
 		}

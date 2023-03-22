@@ -112,7 +112,7 @@ export class BilingualeSprache extends JavaObject {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
-				if (sf !== null) 
+				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
 		}
@@ -125,7 +125,7 @@ export class BilingualeSprache extends JavaObject {
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
 	 */
 	private static getMapEintragByID() : HashMap<number, BilingualeSpracheKatalogEintrag> {
-		if (BilingualeSprache._mapEintragByID.size() === 0) 
+		if (BilingualeSprache._mapEintragByID.size() === 0)
 			for (let s of BilingualeSprache.values()) 
 				for (let k of s.historie) 
 					BilingualeSprache._mapEintragByID.put(k.id, k);
@@ -139,7 +139,7 @@ export class BilingualeSprache extends JavaObject {
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
 	private static getMapByID() : HashMap<number, BilingualeSprache> {
-		if (BilingualeSprache._mapByID.size() === 0) 
+		if (BilingualeSprache._mapByID.size() === 0)
 			for (let s of BilingualeSprache.values()) 
 				BilingualeSprache._mapByID.put(s.daten.id, s);
 		return BilingualeSprache._mapByID;
@@ -152,7 +152,7 @@ export class BilingualeSprache extends JavaObject {
 	 * @return die Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
 	private static getMapByKuerzel() : HashMap<string, BilingualeSprache> {
-		if (BilingualeSprache._mapByKuerzel.size() === 0) 
+		if (BilingualeSprache._mapByKuerzel.size() === 0)
 			for (let s of BilingualeSprache.values()) 
 				BilingualeSprache._mapByKuerzel.put(s.daten.kuerzel, s);
 		return BilingualeSprache._mapByKuerzel;
@@ -175,12 +175,12 @@ export class BilingualeSprache extends JavaObject {
 	 * @return true, falls die bilingualen Sprache in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null)) 
+		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
 		}
@@ -229,12 +229,12 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	public static get(schulform : Schulform | null) : List<BilingualeSprache> {
 		let faecher : Vector<BilingualeSprache> = new Vector();
-		if (schulform === null) 
+		if (schulform === null)
 			return faecher;
 		let fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();
 		for (let i : number = 0; i < fachgruppen.length; i++){
 			let fg : BilingualeSprache | null = fachgruppen[i];
-			if (fg.hasSchulform(schulform)) 
+			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}
 		return faecher;

@@ -28,11 +28,11 @@ export class KlausurblockungSchienenAlgorithmusGreedy7 extends KlausurblockungSc
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_EntferneAlles_TermineNacheinander_KlausurenBevorzugterLage();
-			if (this._dynDaten.gibIstBesserAlsZustand1()) 
-				this._dynDaten.aktionZustand1Speichern(); else 
+			if (this._dynDaten.gibIstBesserAlsZustand1())
+				this._dynDaten.aktionZustand1Speichern();else
 				this._dynDaten.aktionZustand1Laden();
 		}
-		if (this._dynDaten.gibIstBesserAlsZustand2()) 
+		if (this._dynDaten.gibIstBesserAlsZustand2())
 			this._dynDaten.aktionZustand2Speichern();
 	}
 

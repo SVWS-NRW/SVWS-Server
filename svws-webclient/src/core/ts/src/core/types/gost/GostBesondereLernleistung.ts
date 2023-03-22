@@ -66,7 +66,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 * @return die Art der Besonderen Lernleistung
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBesondereLernleistung {
-		if (kuerzel === null) 
+		if (kuerzel === null)
 			return GostBesondereLernleistung.KEINE;
 		switch (kuerzel) {
 			case "K": 

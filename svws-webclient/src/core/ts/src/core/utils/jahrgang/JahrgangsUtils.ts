@@ -24,11 +24,11 @@ export class JahrgangsUtils extends JavaObject {
 	 * @return die restlichen Jahre oder null 
 	 */
 	public static getRestlicheJahre(schulform : Schulform, gliederung : Schulgliederung, jahrgang : string) : number | null {
-		if (gliederung === null) 
+		if (gliederung === null)
 			return null;
-		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown)) 
+		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown))
 			return null;
-		if (jahrgang === null) 
+		if (jahrgang === null)
 			return null;
 		if (schulform as unknown === Schulform.GY as unknown) {
 			switch (jahrgang) {

@@ -101,17 +101,17 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	public compareTo(o : Clause) : number {
 		let set1 : AVLSet<number> = this.getSet();
 		let set2 : AVLSet<number> = o.getSet();
-		if (set1.size() < set2.size()) 
+		if (set1.size() < set2.size())
 			return -1;
-		if (set1.size() > set2.size()) 
+		if (set1.size() > set2.size())
 			return +1;
 		let i1 : JavaIterator<number> | null = set1.iterator();
 		let i2 : JavaIterator<number> | null = set2.iterator();
-		if ((i1 === null) || (i2 === null)) 
+		if ((i1 === null) || (i2 === null))
 			throw new NullPointerException()
 		while (i1.hasNext()) {
 			let cmp : number = JavaInteger.compare(i1.next()!, i2.next()!);
-			if (cmp !== 0) 
+			if (cmp !== 0)
 				return cmp;
 		}
 		return 0;

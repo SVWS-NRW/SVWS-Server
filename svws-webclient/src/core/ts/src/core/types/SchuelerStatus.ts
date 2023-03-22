@@ -119,7 +119,7 @@ export class SchuelerStatus extends JavaObject {
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
 	private static getMapID() : HashMap<number, SchuelerStatus> {
-		if (SchuelerStatus._mapID.size() === 0) 
+		if (SchuelerStatus._mapID.size() === 0)
 			for (let p of SchuelerStatus.values()) 
 				SchuelerStatus._mapID.put(p.id, p);
 		return SchuelerStatus._mapID;
@@ -132,7 +132,7 @@ export class SchuelerStatus extends JavaObject {
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
 	private static getMapBezeichnungen() : HashMap<string, SchuelerStatus> {
-		if (SchuelerStatus._mapBezeichnungen.size() === 0) 
+		if (SchuelerStatus._mapBezeichnungen.size() === 0)
 			for (let p of SchuelerStatus.values()) 
 				SchuelerStatus._mapBezeichnungen.put(p.bezeichnung.toUpperCase(), p);
 		return SchuelerStatus._mapBezeichnungen;
@@ -161,7 +161,7 @@ export class SchuelerStatus extends JavaObject {
 	 * 
 	 */
 	public static fromBezeichnung(value : string | null) : SchuelerStatus | null {
-		if (value === null) 
+		if (value === null)
 			return null;
 		return SchuelerStatus.getMapBezeichnungen().get(value.toUpperCase());
 	}
@@ -175,10 +175,10 @@ export class SchuelerStatus extends JavaObject {
 	 * @return true, falls die ID gültig ist.
 	 */
 	public static isValidID(id : number | null) : boolean {
-		if (id === null) 
+		if (id === null)
 			return false;
 		for (let status of SchuelerStatus.values()) 
-			if (status.id === id) 
+			if (status.id === id)
 				return true;
 		return false;
 	}
