@@ -16,12 +16,12 @@ export class JahrgangsUtils extends JavaObject {
 	 * und den angegebenen Jahrgang die restlichen Jahre an der Schule.
 	 * Ist keine Berechnung für diese Kombination implementiert,
 	 * so wird null zurückgegeben.
-	 * 
-	 * @param schulform    die Schulform 
+	 *
+	 * @param schulform    die Schulform
 	 * @param gliederung   die Schulgliederung
 	 * @param jahrgang     der Jahrgang, für den die restlichen Jahre bestimmt werden sollen
-	 * 
-	 * @return die restlichen Jahre oder null 
+	 *
+	 * @return die restlichen Jahre oder null
 	 */
 	public static getRestlicheJahre(schulform : Schulform, gliederung : Schulgliederung, jahrgang : string) : number | null {
 		if (gliederung === null)

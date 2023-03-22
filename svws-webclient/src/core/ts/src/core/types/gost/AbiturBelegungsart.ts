@@ -42,7 +42,7 @@ export class AbiturBelegungsart extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Abitur-Belegungsart-Objekt
-	 * 
+	 *
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */
@@ -60,7 +60,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 * Gibt die Kurs-Belegungsart anhand des übergebenen Kürzels zurück.
 	 *
 	 * @param kuerzel    das Kürzel der Kurs-Belegungsart
-	 *  
+	 *
 	 * @return die Kurs-Belegungsart oder null, falls das kuerzel fehlerhaft ist
 	 */
 	public static fromKuerzel(kuerzel : string | null) : AbiturBelegungsart | null {

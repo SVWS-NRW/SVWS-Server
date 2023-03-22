@@ -58,9 +58,9 @@ export class KAOAMerkmalEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen KAoA-Merkmal-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel 
+	 * @param kuerzel        das Kürzel
 	 * @param beschreibung   die Beschreibung
 	 * @param kategorie      die Kategorie, dem das Merkmal zugeordnet ist
 	 * @param optionsart     die Optionsart bei dem Merkmal

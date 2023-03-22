@@ -275,8 +275,8 @@ export class LehrerLehramt extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Lehramt in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Lehramtes, welches ein Array von {@link LehrerKatalogLehramtEintrag} ist  
+	 *
+	 * @param historie   die Historie des Lehramtes, welches ein Array von {@link LehrerKatalogLehramtEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogLehramtEintrag>) {
 		super();
@@ -291,7 +291,7 @@ export class LehrerLehramt extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
 	private static getMapLehraemterByID() : HashMap<number, LehrerLehramt | null> {
@@ -304,7 +304,7 @@ export class LehrerLehramt extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */
 	private static getMapLehraemterByKuerzel() : HashMap<string, LehrerLehramt | null> {
@@ -316,9 +316,9 @@ export class LehrerLehramt extends JavaObject {
 
 	/**
 	 * Gibt das Lehramt anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Lehramts
-	 * 
+	 *
 	 * @return das Lehramt oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerLehramt | null {
@@ -327,9 +327,9 @@ export class LehrerLehramt extends JavaObject {
 
 	/**
 	 * Gibt das Lehramt anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Lehramts
-	 * 
+	 *
 	 * @return das Lehramt oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerLehramt | null {

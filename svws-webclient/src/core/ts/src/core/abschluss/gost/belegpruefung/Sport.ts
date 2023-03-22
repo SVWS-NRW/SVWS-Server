@@ -16,7 +16,7 @@ export class Sport extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Sport.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */

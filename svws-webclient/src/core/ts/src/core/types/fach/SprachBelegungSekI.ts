@@ -33,7 +33,7 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 
 	/**
 	 * Erstellt einen neuen enum-Wert mit der angegebenen Dauer der Sprachbelegung.
-	 * 
+	 *
 	 * @param dauer   die Dauer der Sprachbelegung in der Sek I
 	 */
 	private constructor(dauer : number) {
@@ -42,12 +42,12 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	}
 
 	/**
-	 * Ermittelt die Spachbelegung in der Sek I anhand des übergebenen Jahrgangs. 
-	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer 
-	 * mit 6 Jahren hier nicht korrekt zugeordnet.  
-	 * 
+	 * Ermittelt die Spachbelegung in der Sek I anhand des übergebenen Jahrgangs.
+	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
+	 * mit 6 Jahren hier nicht korrekt zugeordnet.
+	 *
 	 * @param ASDJahrgang der Jahrgang in welchem mit der Sprache begonnen wurde
-	 * 
+	 *
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static getByASDJahrgang(ASDJahrgang : string | null) : SprachBelegungSekI {
@@ -64,11 +64,11 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 
 	/**
 	 * Ermittelt die Spachbelegung in der Sek I anhand der übergebenen Dauer der Belegung in der Sek I.
-	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer 
-	 * mit 6 Jahren hier nicht korrekt zugeordnet.  
-	 *  
+	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
+	 * mit 6 Jahren hier nicht korrekt zugeordnet.
+	 *
 	 * @param dauer   die Dauer in vollen Jahren bei der Sprachbelegung in der Sek I
-	 * 
+	 *
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static getByDauer(dauer : number) : SprachBelegungSekI {

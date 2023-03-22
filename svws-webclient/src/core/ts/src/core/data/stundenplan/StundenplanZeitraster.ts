@@ -36,7 +36,7 @@ export class StundenplanZeitraster extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param wochentag          der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 * @param unterrichtstunde   die Nummer der Unterrichtsstunde an dem Wochentag

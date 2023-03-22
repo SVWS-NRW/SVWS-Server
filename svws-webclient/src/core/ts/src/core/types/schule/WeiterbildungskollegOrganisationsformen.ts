@@ -51,9 +51,9 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Organisationsform, welche ein Array von 
-	 *                   {@link OrganisationsformKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Organisationsform, welche ein Array von
+	 *                   {@link OrganisationsformKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<OrganisationsformKatalogEintrag>) {
 		super();
@@ -66,10 +66,10 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Organisationsformen auf die 
-	 * zugehörigen Organisationsformen zurück. 
+	 * Gibt eine Map von den Kürzeln der Organisationsformen auf die
+	 * zugehörigen Organisationsformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
 	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegOrganisationsformen> {
@@ -84,9 +84,9 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 
 	/**
 	 * Gibt die Organisationsform für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Organisationsform
-	 * 
+	 *
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : WeiterbildungskollegOrganisationsformen | null {

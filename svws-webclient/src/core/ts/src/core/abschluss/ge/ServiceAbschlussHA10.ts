@@ -54,9 +54,9 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 	/**
 	 * Führt die Abschlussberechnung anhand der übergebenen Abschlussfächer durch
 	 * und gibt das Berechnungsergebnis zurück.
-	 * 
+	 *
 	 * @param input    die Abschlussfächer
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public handle(input : GEAbschlussFaecher) : AbschlussErgebnis {
@@ -118,10 +118,10 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 
 	/**
 	 * Prüft in Bezug auf Defizite, ob der Abschluss erworben wurde.
-	 * 
+	 *
 	 * @param faecher      die Abschlussfächer nach Fächergruppen sortiert
 	 * @param log_indent   die Einrückung für das Logging
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
 	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {

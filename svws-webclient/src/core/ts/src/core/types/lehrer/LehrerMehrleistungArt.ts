@@ -75,8 +75,8 @@ export class LehrerMehrleistungArt extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Art von Mehrleistung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Art von Mehrleistung, welches ein Array von {@link LehrerKatalogMehrleistungsartEintrag} ist  
+	 *
+	 * @param historie   die Historie der Art von Mehrleistung, welches ein Array von {@link LehrerKatalogMehrleistungsartEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogMehrleistungsartEintrag>) {
 		super();
@@ -91,7 +91,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerMehrleistungArt | null> {
@@ -104,7 +104,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerMehrleistungArt | null> {
@@ -116,9 +116,9 @@ export class LehrerMehrleistungArt extends JavaObject {
 
 	/**
 	 * Gibt die Art der Mehrleistung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Art der Mehrleistung
-	 * 
+	 *
 	 * @return die Art der Mehrleistung oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerMehrleistungArt | null {
@@ -127,9 +127,9 @@ export class LehrerMehrleistungArt extends JavaObject {
 
 	/**
 	 * Gibt die Art der Mehrleistung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Art der Mehrleistung
-	 * 
+	 *
 	 * @return die Art der Mehrleistung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerMehrleistungArt | null {

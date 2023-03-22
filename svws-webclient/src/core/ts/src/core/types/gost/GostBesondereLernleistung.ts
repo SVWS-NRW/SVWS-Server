@@ -42,8 +42,8 @@ export class GostBesondereLernleistung extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Objekt für die Aufzählung der Arten von Besonderen
-	 * Lernleistungen. 
-	 * 
+	 * Lernleistungen.
+	 *
 	 * @param kuerzel        das Kürzel für die Art der Besonderen Lernleistung
 	 * @param beschreibung   die textuelle Beschreibung der Art der Besonderen Lernleistung
 	 */
@@ -59,10 +59,10 @@ export class GostBesondereLernleistung extends JavaObject {
 
 	/**
 	 *
-	 * Gibt die Art der Besonderen Lernleistung anhand des angegebenen Kürzels zurück. 
-	 * 
+	 * Gibt die Art der Besonderen Lernleistung anhand des angegebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Art der Besonderen Lernleistung
-	 * 
+	 *
 	 * @return die Art der Besonderen Lernleistung
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBesondereLernleistung {
@@ -86,8 +86,8 @@ export class GostBesondereLernleistung extends JavaObject {
 	/**
 	 * Prüft, ob diese Art der Besonderen Lernleistung mit der Art der c
 	 * Lernleistung des übergebenen Kürzels übereinstimmt.
-	 * 
-	 * @param kuerzel   das zu prüfende Kürzel der anderen Art der 
+	 *
+	 * @param kuerzel   das zu prüfende Kürzel der anderen Art der
 	 *                  besonderen Lernleistung
 	 *
 	 * @return true, falls die Arten übereinstimmen und ansonsten false

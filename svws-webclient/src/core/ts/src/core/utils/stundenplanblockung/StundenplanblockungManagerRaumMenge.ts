@@ -26,8 +26,8 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	/**
 	 * Fügt den Raum hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID bereits existiert.
-	 * 
-	 * @param pRaumID                Die Datenbank-ID des Raumes. 
+	 *
+	 * @param pRaumID                Die Datenbank-ID des Raumes.
 	 * @param pKuerzel               Das Kürzel des Raumes.
 	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
 	 */
@@ -42,7 +42,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pRaumID                Die Datenbank-ID des Raumes.
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID.
@@ -56,9 +56,9 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
 	/**
 	 * Liefert einen zufälligen Raum. <br>
-	 * Liefert eine Exception, falls die Menge der Räume leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Räume leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert einen zufälligen Raum.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerRaum {
@@ -71,7 +71,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	/**
 	 * Löscht den übergebenen Raum. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pRaumID                Die Datenbank-ID des Raumes.
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 */
@@ -83,7 +83,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Räume.
-	 * 
+	 *
 	 * @return Die Menge aller Räume.
 	 */
 	public getMenge() : Vector<StundenplanblockungManagerRaum | null> | null {
@@ -91,8 +91,8 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Raum-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Raum-ID existiert.
+	 *
 	 * @param pRaumID Die Datenbank-ID des Raumes.
 	 * @return TRUE, falls die Raum-ID existiert.
 	 */
@@ -102,7 +102,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Räume.
-	 * 
+	 *
 	 * @return Die Anzahl an Räume.
 	 */
 	public size() : number {

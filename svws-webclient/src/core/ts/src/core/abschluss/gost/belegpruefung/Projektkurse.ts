@@ -24,7 +24,7 @@ export class Projektkurse extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für die Projektkurse.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
@@ -79,8 +79,8 @@ export class Projektkurse extends GostBelegpruefung {
 	}
 
 	/**
-	 * Prüft, ob ein anrechenbarer Projektkurs unter den belegten Projektfächern existiert. Es darf aber 
-	 * auch nur genau ein anrechenbarer Projektkurs existieren! 
+	 * Prüft, ob ein anrechenbarer Projektkurs unter den belegten Projektfächern existiert. Es darf aber
+	 * auch nur genau ein anrechenbarer Projektkurs existieren!
 	 */
 	private pruefeAufAnrechenbarenProjektkurs() : void {
 		if (this.projektkursBelegung === null)
@@ -118,10 +118,10 @@ export class Projektkurse extends GostBelegpruefung {
 	}
 
 	/**
-	 * Prüfe die Halbjahresbelegungen der belegten Projektfächer. Hierbei Darf 
+	 * Prüfe die Halbjahresbelegungen der belegten Projektfächer. Hierbei Darf
 	 * es zu Einzelbelegungen neben dem anrechenbaren Projektkurs kommen. Diese dürfen
-	 * aber nur vor der Belegung des anrechenbaren Kurses liegen. Außerdem dürfen in 
-	 * einem Halbjahr nicht mehrere Projektfächer belegt sein.  
+	 * aber nur vor der Belegung des anrechenbaren Kurses liegen. Außerdem dürfen in
+	 * einem Halbjahr nicht mehrere Projektfächer belegt sein.
 	 */
 	private pruefeBelegungHalbjahre() : void {
 		if (this.projektkursBelegung === null)
@@ -151,7 +151,7 @@ export class Projektkurse extends GostBelegpruefung {
 	}
 
 	/**
-	 * Prüft die Belegung der Leitfächer 
+	 * Prüft die Belegung der Leitfächer
 	 */
 	private pruefeBelegungLeitfaecher() : void {
 		if (this.projektkursBelegung === null)
@@ -172,10 +172,10 @@ export class Projektkurse extends GostBelegpruefung {
 
 	/**
 	 * Prüft, ob das Leitfach in Bezug auf die Belegung des Projektfaches die korrekten Halbjahresbelegungen hat.
-	 * 
+	 *
 	 * @param projektkurs   die Fachbelegungen des Projektfaches
 	 * @param leitfach      die Fachbelegungen des Leitfaches
-	 * 
+	 *
 	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
 	 */
 	private pruefeBelegungLeitfachbelegung(projektkurs : AbiturFachbelegung | null, leitfach : AbiturFachbelegung | null) : boolean {
@@ -212,7 +212,7 @@ export class Projektkurse extends GostBelegpruefung {
 
 	/**
 	 * Gibt den belegten Projektkurs zurück, fall ein Kurs gültig belegt wurde.
-	 * 
+	 *
 	 * @return die Fachbelegung des Projektkurses oder null
 	 */
 	public getProjektkurs() : AbiturFachbelegung | null {
@@ -221,11 +221,11 @@ export class Projektkurse extends GostBelegpruefung {
 
 	/**
 	 * Gibt zurück, ob die angegebene Fachbelegung des Halbjahres eine Fachbelegung des
-	 * angewählten Projektkurses ist und anrechenbar ist. Sollte sie Teil des Projektkurses 
+	 * angewählten Projektkurses ist und anrechenbar ist. Sollte sie Teil des Projektkurses
 	 * sein, aber auch zu einer besonderen Lernleistung gehören, so ist sie nicht anrechenbar.
-	 * 
+	 *
 	 * @param fachbelegungHalbjahr   die Fachbelegung des Halbjahres
-	 * 
+	 *
 	 * @return true, wenn die Fachbelegung anrechenbar ist.
 	 */
 	public istAnrechenbar(fachbelegungHalbjahr : AbiturFachbelegungHalbjahr | null) : boolean {
@@ -241,7 +241,7 @@ export class Projektkurse extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der anrechenbaren Kurse für Block I des Abiturs zurück
-	 * 
+	 *
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public getAnrechenbareKurse() : number {

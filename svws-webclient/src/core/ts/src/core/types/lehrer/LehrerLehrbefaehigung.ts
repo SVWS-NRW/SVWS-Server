@@ -595,8 +595,8 @@ export class LehrerLehrbefaehigung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Lehrbefähigung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Lehrbefähigungen, welches ein Array von {@link LehrerKatalogLehrbefaehigungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Lehrbefähigungen, welches ein Array von {@link LehrerKatalogLehrbefaehigungEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogLehrbefaehigungEintrag>) {
 		super();
@@ -611,7 +611,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
 	private static getMapLehrbefaehigungByID() : HashMap<number, LehrerLehrbefaehigung | null> {
@@ -624,7 +624,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
 	private static getMapLehrbefaehigungByKuerzel() : HashMap<string, LehrerLehrbefaehigung | null> {
@@ -636,9 +636,9 @@ export class LehrerLehrbefaehigung extends JavaObject {
 
 	/**
 	 * Gibt die Lehrbefähigung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Lehrbefähigung
-	 * 
+	 *
 	 * @return die Lehrbefähigung oder null, falls die IF ungültig ist
 	 */
 	public static getByID(id : number) : LehrerLehrbefaehigung | null {
@@ -647,9 +647,9 @@ export class LehrerLehrbefaehigung extends JavaObject {
 
 	/**
 	 * Gibt die Lehrbefähigung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Lehrbefähigung
-	 * 
+	 *
 	 * @return die Lehrbefähigung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerLehrbefaehigung | null {

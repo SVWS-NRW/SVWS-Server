@@ -86,9 +86,9 @@ export class HerkunftSonstige extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue sonstige Herkunft in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der sonstigen Herkunft, welches ein Array von 
-	 *                   {@link HerkunftSonstigeKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der sonstigen Herkunft, welches ein Array von
+	 *                   {@link HerkunftSonstigeKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<HerkunftSonstigeKatalogEintrag>) {
 		super();
@@ -101,10 +101,10 @@ export class HerkunftSonstige extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der sonstigen Herkünfte auf die 
-	 * zugehörigen sonstigen Herkünfte zurück. 
+	 * Gibt eine Map von den Kürzeln der sonstigen Herkünfte auf die
+	 * zugehörigen sonstigen Herkünfte zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen sonstigen Herkünfte
 	 */
 	private static getMapByKuerzel() : HashMap<string, HerkunftSonstige | null> {
@@ -119,9 +119,9 @@ export class HerkunftSonstige extends JavaObject {
 
 	/**
 	 * Gibt die sonstige Herkunft für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der sonstigen Herkunft
-	 * 
+	 *
 	 * @return die sonstige Herkunft oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : HerkunftSonstige | null {

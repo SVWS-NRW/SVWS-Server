@@ -205,9 +205,9 @@ export class Fachgruppe extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Fachgruppe in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Fachgruppe, welche ein Array von 
-	 *                   {@link FachgruppenKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Fachgruppe, welche ein Array von
+	 *                   {@link FachgruppenKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<FachgruppenKatalogEintrag>) {
 		super();
@@ -231,7 +231,7 @@ export class Fachgruppe extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 */
 	private static getMapEintragByID() : HashMap<number, FachgruppenKatalogEintrag> {
@@ -245,7 +245,7 @@ export class Fachgruppe extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
 	private static getMapByID() : HashMap<number, Fachgruppe> {
@@ -258,7 +258,7 @@ export class Fachgruppe extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
 	private static getMapByKuerzel() : HashMap<string, Fachgruppe> {
@@ -270,7 +270,7 @@ export class Fachgruppe extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Fachgruppe vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
@@ -278,11 +278,11 @@ export class Fachgruppe extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Fachgruppe der 
+	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Fachgruppe der
 	 * angegebenen Schulform zulässig ist.
-	 * 
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return true, falls die Fachgruppe in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
@@ -300,9 +300,9 @@ export class Fachgruppe extends JavaObject {
 
 	/**
 	 * Liefert den Katalog-Eintrag der Fachgruppe zu der übergebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Fachgruppen-Katalog-Eintrags
-	 * 
+	 *
 	 * @return der Fachgruppen-Katalog-Eintrag oder null, falls die ID ungültig ist
 	 */
 	public static getKatalogEintragByID(id : number) : FachgruppenKatalogEintrag | null {
@@ -311,9 +311,9 @@ export class Fachgruppe extends JavaObject {
 
 	/**
 	 * Liefert die Fachgruppe zu der übergebenen ID der Fachgruppe zurück.
-	 * 
+	 *
 	 * @param id   die ID der Fachgruppe
-	 * 
+	 *
 	 * @return die Fachgruppe oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : Fachgruppe | null {
@@ -322,9 +322,9 @@ export class Fachgruppe extends JavaObject {
 
 	/**
 	 * Liefert die Fachgruppe zu der übergebenen ID der Fachgruppe zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Fachgruppe
-	 * 
+	 *
 	 * @return die Fachgruppe oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Fachgruppe | null {
@@ -332,10 +332,10 @@ export class Fachgruppe extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt alle Fachgruppen, die in der angegebenen Schulform zulässig sind. 
-	 *  
+	 * Bestimmt alle Fachgruppen, die in der angegebenen Schulform zulässig sind.
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<Fachgruppe> {

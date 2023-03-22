@@ -17,7 +17,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -46,9 +46,9 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	}
 
 	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, 
+	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter,
 	 * wird die Veränderung rückgängig gemacht.
-	 * 
+	 *
 	 * @return TRUE, falls sich die Bewertung verbessert hat.
 	 */
 	private verteileKurse() : boolean {

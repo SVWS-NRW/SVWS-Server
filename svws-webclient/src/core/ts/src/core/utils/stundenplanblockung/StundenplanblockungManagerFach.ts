@@ -23,7 +23,7 @@ export class StundenplanblockungManagerFach extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Fach.
-	 * 
+	 *
 	 * @param pFachID   Die Datenbank-ID des Faches.
 	 * @param pKuerzel  Das Kürzel des Faches.
 	 */
@@ -35,7 +35,7 @@ export class StundenplanblockungManagerFach extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID des Faches.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Faches.
 	 */
 	public getID() : number {

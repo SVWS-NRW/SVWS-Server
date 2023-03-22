@@ -64,9 +64,9 @@ export class Kindergartenbesuch extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Eintrags, welche ein Array von 
-	 *                   {@link KindergartenbesuchKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Eintrags, welche ein Array von
+	 *                   {@link KindergartenbesuchKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KindergartenbesuchKatalogEintrag>) {
 		super();
@@ -79,9 +79,9 @@ export class Kindergartenbesuch extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert. 
+	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
 	private static getMapByKuerzel() : HashMap<number, Kindergartenbesuch | null> {
@@ -96,9 +96,9 @@ export class Kindergartenbesuch extends JavaObject {
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebe Kürzel der Dauer des Kindergartenbesuchs zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Dauer
-	 * 
+	 *
 	 * @return der Core-Type-Wert oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : number) : Kindergartenbesuch | null {

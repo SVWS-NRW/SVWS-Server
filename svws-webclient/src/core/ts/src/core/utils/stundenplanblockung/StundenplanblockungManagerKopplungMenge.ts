@@ -26,8 +26,8 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	/**
 	 * Fügt die Kopplung hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Kopplung-ID bereits existiert.
-	 * 
-	 * @param pKopplungID            Die Datenbank-ID der Kopplung. 
+	 *
+	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
 	 * @param pKuerzel               Das Kürzel der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
@@ -42,7 +42,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungManagerKopplung}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungManagerKopplung}-Objekt zur übergebenen ID.
@@ -56,9 +56,9 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 
 	/**
 	 * Liefert eine zufällige Kopplung. <br>
-	 * Liefert eine Exception, falls die Menge der Kopplungen leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Kopplungen leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert eine zufällige Kopplung.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerKopplung {
@@ -71,7 +71,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	/**
 	 * Löscht die übergebene Kopplung. <br>
 	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
 	 */
@@ -82,8 +82,8 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Kopplung-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Kopplung-ID existiert.
+	 *
 	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
 	 * @return TRUE, falls die Kopplung-ID existiert.
 	 */
@@ -93,7 +93,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Kopplungen.
-	 * 
+	 *
 	 * @return Die Menge aller Kopplungen.
 	 */
 	public getMenge() : Vector<StundenplanblockungManagerKopplung | null> | null {
@@ -102,7 +102,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Kopplungen.
-	 * 
+	 *
 	 * @return Die Anzahl an Kopplungen.
 	 */
 	public size() : number {

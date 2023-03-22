@@ -134,8 +134,8 @@ export class Foerderschwerpunkt extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Förderschwerpunkt in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Förderschwerpunktes, welches ein Array von {@link FoerderschwerpunktKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Förderschwerpunktes, welches ein Array von {@link FoerderschwerpunktKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<FoerderschwerpunktKatalogEintrag>) {
 		super();
@@ -159,7 +159,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static getMapFoerderschwerpunktByKuerzel() : HashMap<string, Foerderschwerpunkt> {
@@ -172,7 +172,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static getMapFoerderschwerpunktByID() : HashMap<number, Foerderschwerpunkt> {
@@ -185,10 +185,10 @@ export class Foerderschwerpunkt extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Förderschwerpunkt anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert den Förderschwerpunkt anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel des Förderschwerpunktes
-	 * 
+	 *
 	 * @return der Förderschwerpunkt oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Foerderschwerpunkt | null {
@@ -196,10 +196,10 @@ export class Foerderschwerpunkt extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Förderschwerpunkt anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert den Förderschwerpunkt anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID des Förderschwerpunktes
-	 * 
+	 *
 	 * @return der Förderschwerpunkt oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number | null) : Foerderschwerpunkt | null {
@@ -208,7 +208,7 @@ export class Foerderschwerpunkt extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen der Förderschwerpunkt vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
@@ -217,9 +217,9 @@ export class Foerderschwerpunkt extends JavaObject {
 
 	/**
 	 * Liefert alle zulässigen Förderschwerpunkte für die angegebene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static get(schulform : Schulform | null) : List<Foerderschwerpunkt> {
@@ -238,9 +238,9 @@ export class Foerderschwerpunkt extends JavaObject {
 	/**
 	 * Prüft anhand des Förderschwerpunkts-Kürzels, ob die Schulform diesen Förderschwerpunkt
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
@@ -258,9 +258,9 @@ export class Foerderschwerpunkt extends JavaObject {
 
 	/**
 	 * Prüft, ob die Schulform diesen Förderschwerpunkt hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {
@@ -278,11 +278,11 @@ export class Foerderschwerpunkt extends JavaObject {
 
 	/**
 	 * Gibt die Förderschwerpunkte der angegebenen Schulform mit dem übergegebenen Kürzel zurück.
-	 * 
+	 *
 	 * @param sf        die Schulform
 	 * @param kuerzel   das Kürzel des Förderschwerpunktes
-	 * 
-	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null 
+	 *
+	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null
 	 */
 	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Foerderschwerpunkt | null {
 		if (sf === null)

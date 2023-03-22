@@ -134,7 +134,7 @@ export class GostFachbereich extends JavaObject {
 	/**
 	 * Erstellt einen neuen Fachbereich als Kombination der übergebenen Fachbereiche
 	 * und der übergebenen Fächer
-	 * 
+	 *
 	 * @param fachbereiche   die Fachbereiche
 	 * @param kuerzel        die zusätzlichen Kürzel des Fachbereichs
 	 */
@@ -161,7 +161,7 @@ export class GostFachbereich extends JavaObject {
 	/**
 	 * Gibt eine Map von den Fächern auf die zugehörigen Fachbereiche
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
 	 */
 	private static getMapFachbereichByFach() : HashMap<ZulaessigesFach, List<GostFachbereich>> {
@@ -182,7 +182,7 @@ export class GostFachbereich extends JavaObject {
 
 	/**
 	 * Gibt die Liste der Fächer des Fachbereichs zurück.
-	 * 
+	 *
 	 * @return die Liste der Fächer des Fachbereichs
 	 */
 	public getFaecher() : List<ZulaessigesFach> {
@@ -191,18 +191,18 @@ export class GostFachbereich extends JavaObject {
 
 	/**
 	 * Prüft, ob das übergebene Fach zu diesem Fachbereich gehört.
-	 * 
+	 *
 	 * @param fach   das zu prüfende Fach
-	 * 
+	 *
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	public hat(fach : GostFach | null) : boolean;
 
 	/**
 	 * Prüft, ob das Fach mit dem übergebenen Kürzel zu diesem Fachbereich gehört.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des zu prüfenden Faches
-	 * 
+	 *
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	public hat(kuerzel : string | null) : boolean;
@@ -224,9 +224,9 @@ export class GostFachbereich extends JavaObject {
 
 	/**
 	 * Ermittelt die, dem Fach zugehörigen, Fachbereiche
-	 *  
+	 *
 	 * @param fach   das Fach
-	 * 
+	 *
 	 * @return die zugehörigen Fachbereiche
 	 */
 	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {

@@ -115,8 +115,8 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Beschäftigungsart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Beschäftigungsart, welches ein Array von {@link LehrerKatalogBeschaeftigungsartEintrag} ist  
+	 *
+	 * @param historie   die Historie der Beschäftigungsart, welches ein Array von {@link LehrerKatalogBeschaeftigungsartEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogBeschaeftigungsartEintrag>) {
 		super();
@@ -131,7 +131,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerBeschaeftigungsart | null> {
@@ -144,7 +144,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerBeschaeftigungsart | null> {
@@ -156,9 +156,9 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 
 	/**
 	 * Gibt die Beschäftigungsart anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Beschäftigungsart
-	 * 
+	 *
 	 * @return die Beschäftigungsart oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerBeschaeftigungsart | null {
@@ -167,9 +167,9 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 
 	/**
 	 * Gibt die Beschäftigungsart anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Beschäftigungsart
-	 * 
+	 *
 	 * @return die Beschäftigungsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerBeschaeftigungsart | null {

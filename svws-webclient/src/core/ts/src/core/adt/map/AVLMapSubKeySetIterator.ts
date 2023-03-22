@@ -27,7 +27,7 @@ export class AVLMapSubKeySetIterator<K, V> extends JavaObject implements JavaIte
 	/**
 	 * Erstellt einen neuen KEY-Iterator für die angegebene {@link AVLMapSubMap} im gültigen Bereich
 	 * {@link AVLMapIntervall}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

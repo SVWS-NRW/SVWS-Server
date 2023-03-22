@@ -23,9 +23,9 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Instanz eines Fehlers beim Ergebnis der Belegprüfung.
-	 * 
+	 *
 	 * @param f           der Typ des Belegungsfehlers (siehe {@link GostBelegungsfehler})
-	 * @param pruef_art   die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um 
+	 * @param pruef_art   die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um
 	 *                    die konkrete Ausprägung des Textinformationen bestimmen zu können.
 	 */
 	public constructor(f : GostBelegungsfehler, pruef_art : GostBelegpruefungsArt);

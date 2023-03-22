@@ -224,8 +224,8 @@ export class KAOAMerkmal extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAMerkmalEintrag>) {
 		super();
@@ -238,9 +238,9 @@ export class KAOAMerkmal extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAMerkmal> {
@@ -251,9 +251,9 @@ export class KAOAMerkmal extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAMerkmal> {
@@ -265,9 +265,9 @@ export class KAOAMerkmal extends JavaObject {
 
 	/**
 	 * Gibt das Merkmal anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOAMerkmal | null {
@@ -276,9 +276,9 @@ export class KAOAMerkmal extends JavaObject {
 
 	/**
 	 * Gibt das Merkmal anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAMerkmal | null {

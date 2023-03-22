@@ -94,9 +94,9 @@ export class Religion extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Religion in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Religionen, welche ein Array von 
-	 *                   {@link ReligionKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Religionen, welche ein Array von
+	 *                   {@link ReligionKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<ReligionKatalogEintrag>) {
 		super();
@@ -109,10 +109,10 @@ export class Religion extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Religionen auf die 
-	 * zugehörigen Religionen zurück. 
+	 * Gibt eine Map von den Kürzeln der Religionen auf die
+	 * zugehörigen Religionen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
 	private static getMapByKuerzel() : HashMap<string, Religion | null> {
@@ -127,9 +127,9 @@ export class Religion extends JavaObject {
 
 	/**
 	 * Gibt die Religion für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Religion
-	 * 
+	 *
 	 * @return die Religion oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Religion | null {

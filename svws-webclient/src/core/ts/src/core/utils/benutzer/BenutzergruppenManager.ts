@@ -24,7 +24,7 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 *
 	 * Erstellt einen neuen Manager mit leeren Daten für eine Benutzergruppe.
-	 * 
+	 *
 	 * @param id            die ID der Benutzergruppe
 	 * @param bezeichnung   die Bezeichnung der Benutzergruppe
 	 */
@@ -33,7 +33,7 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 *
 	 * Erstellt einen neuen Manager mit den Daten einer Benutzergruppe
-	 * 
+	 *
 	 * @param pDaten          die Benutzergruppendaten
 	 */
 	public constructor(pDaten : BenutzergruppeDaten);
@@ -66,8 +66,8 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 *
 	 * Gibt die Benutzergruppen-Daten zurück.
-	 * 
-	 * @return die Benutzergruppen-Daten (siehe {@link BenutzergruppeDaten}) 
+	 *
+	 * @return die Benutzergruppen-Daten (siehe {@link BenutzergruppeDaten})
 	 */
 	public daten() : BenutzergruppeDaten {
 		return this._daten;
@@ -75,7 +75,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Gibt die ID der Benutzergruppe zurück.
-	 * 
+	 *
 	 * @return die ID der Benutzergruppe
 	 */
 	public getID() : number {
@@ -84,7 +84,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Gibt die Bezeichnung der Benutzergruppe zurück.
-	 * 
+	 *
 	 * @return die Bezeichnung der Benutzergruppe
 	 */
 	public getBezeichnung() : string {
@@ -93,7 +93,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Setzt die Bezeichnung der Benutzergruppe.
-	 * 
+	 *
 	 * @param bezeichnung  die neue Bezeichnung der Benutzergruppe
 	 */
 	public setBezeichnung(bezeichnung : string) : void {
@@ -104,7 +104,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Setzt, ob es sich um eine administrative Gruppe handelt oder nicht
-	 * 
+	 *
 	 * @param istAdmin   true, falls die Gruppe administrativ ist und ansonsten
 	 */
 	public setAdmin(istAdmin : boolean) : void {
@@ -113,7 +113,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es sich um eine administrative Gruppe handelt oder nicht.
-	 *  
+	 *
 	 * @return true, falls es sich um eine administrative Gruppe handelt und ansonsten false
 	 */
 	public istAdmin() : boolean {
@@ -122,9 +122,9 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Gruppe die angebene Kompetenz besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenz   die zu prüfende Kompetenz
-	 * 
+	 *
 	 * @return true, falls die Gruppe die Kompetenz besitzt.
 	 */
 	public hatKompetenz(kompetenz : BenutzerKompetenz) : boolean {
@@ -135,9 +135,9 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Gruppe alle angebenen Kompetenzen besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
-	 * 
+	 *
 	 * @return true, falls die Gruppe die Kompetenzen besitzt.
 	 */
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
@@ -151,9 +151,9 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Gruppe mindestens eine der angebenen Kompetenzen besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
-	 * 
+	 *
 	 * @return true, falls die Gruppe mindestens eine der Kompetenzen besitzt.
 	 */
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
@@ -167,10 +167,10 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Fügt die übergebene Kompetenz zu der Gruppe hinzu.
-	 * 
+	 *
 	 * @param kompetenz   die Kompetenz, die hinzugefügt wird
-	 * 
-	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz bereits enthält 
+	 *
+	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz bereits enthält
 	 */
 	public addKompetenz(kompetenz : BenutzerKompetenz | null) : void {
 		if (kompetenz === null)
@@ -183,10 +183,10 @@ export class BenutzergruppenManager extends JavaObject {
 
 	/**
 	 * Entfernt die übergebene Kompetenz aus der Gruppe.
-	 * 
+	 *
 	 * @param kompetenz   die Kompetenz, die entfernt wird
-	 * 
-	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält 
+	 *
+	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält
 	 */
 	public removeKompetenz(kompetenz : BenutzerKompetenz) : void {
 		if (!this._setKompetenzen.contains(kompetenz.daten.id))

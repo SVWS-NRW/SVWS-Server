@@ -33,13 +33,13 @@ export class GostFaecherManager extends JavaObject {
 
 
 	/**
-	 * Erstelle einen neuen Manager mit einer leeren Fächerliste 
+	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
 	 */
 	public constructor();
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Fächern.
-	 * 
+	 *
 	 * @param faecher   die Liste mit den Fächern
 	 */
 	public constructor(faecher : List<GostFach>);
@@ -58,10 +58,10 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu.
-	 * Die interne Sortierung wird nicht korrigiert 
-	 * 
+	 * Die interne Sortierung wird nicht korrigiert
+	 *
 	 * @param fach   das hinzuzufügende Fach
-	 * 
+	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
 	 */
@@ -75,7 +75,7 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
-	 * Führt eine Sortierung der Fächer anhand des 
+	 * Führt eine Sortierung der Fächer anhand des
 	 * Sortierungsfeldes durch.
 	 */
 	private sort() : void {
@@ -85,9 +85,9 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu und
 	 * passt intern die Sortierung der Fächer an.
-	 * 
+	 *
 	 * @param fach   das hinzuzufügende Fach
-	 * 
+	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
 	public add(fach : GostFach) : boolean {
@@ -98,10 +98,10 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
-	 * 
+	 *
 	 * @param faecher   die einzufügenden Fächer
-	 * 
-	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false 
+	 *
+	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
 	 */
 	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
@@ -114,7 +114,7 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Gibt das Fach mit der angegebenen ID zurück oder null, falls es das Fach nicht gibt.
-	 *  
+	 *
 	 * @param id   die ID des gesuchten Faches
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
@@ -124,7 +124,7 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Liefert das Fach mit der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param pFachID die ID des gesuchten Faches.
 	 * @return Das Fach mit der angegebenen ID zurück.
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
@@ -138,7 +138,7 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob die Liste der Fächer leer ist
-	 * 
+	 *
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public isEmpty() : boolean {
@@ -148,7 +148,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Liefert die interne Liste der Fächer. Diese sollte nicht
 	 * verändert werden.
-	 * 
+	 *
 	 * @return die interne Liste der Fächer
 	 */
 	public faecher() : LinkedCollection<GostFach> {
@@ -157,7 +157,7 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Erstellt aus der internen Liste der Fächer ein Array
-	 * 
+	 *
 	 * @return ein Array mit den Fächern
 	 */
 	public values() : Array<GostFach> {
@@ -166,7 +166,7 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Erstellt aus der internen Liste einen Vector mit den Daten
-	 * 
+	 *
 	 * @return ein Vector mit den Fächern
 	 */
 	public toVector() : Vector<GostFach> {

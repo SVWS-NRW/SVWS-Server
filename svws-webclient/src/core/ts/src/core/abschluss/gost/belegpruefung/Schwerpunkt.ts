@@ -11,7 +11,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
-	 * 
+	 *
 	 * @param manager             der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art       die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefung_sprachen   das Ergebnis für die Belegprüfung der Sprachen

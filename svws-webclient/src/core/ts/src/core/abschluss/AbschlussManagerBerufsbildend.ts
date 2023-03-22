@@ -14,15 +14,15 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben 
+	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben
 	 * wurde. Die Liste der Nachprüfungsfächer ist leer und ein Log ist nicht zugeordnet.
-	 *  
+	 *
 	 * @param hatBSA                      ist der Berufsschulabschluss erreicht
 	 * @param note                        Note des Abschlusses
 	 * @param hatBA                       ist der Berufsabschluss erreicht
 	 * @param abschlussAllgemeinbildend   der allgemeinbildende Abschluss
-	 * 
-	 * @return das Ergebnis der Abschlussberechnung 
+	 *
+	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public static getErgebnis(hatBSA : boolean, note : number, hatBA : boolean | null, abschlussAllgemeinbildend : SchulabschlussAllgemeinbildend | null) : AbschlussErgebnisBerufsbildend {
 		let ergebnis : AbschlussErgebnisBerufsbildend = new AbschlussErgebnisBerufsbildend();
@@ -36,9 +36,9 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 
 	/**
 	 * Berechnet den Notendurchschnitt aller Fächer
-	 * 
+	 *
 	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
-	 * 
+	 *
 	 * @return der Notendurchschnitt oder NaN im Fehlerfall
 	 */
 	public static getDurchschnitt(abschluss_faecher : BKAnlageAFaecher) : number {
@@ -52,10 +52,10 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	}
 
 	/**
-	 * Berechnet die Anzahl der Defizite 
-	 * 
+	 * Berechnet die Anzahl der Defizite
+	 *
 	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
-	 * 
+	 *
 	 * @return die Anzahl der Defizite oder -1 im Fehlerfall
 	 */
 	public static getAnzahlDefizite(abschluss_faecher : BKAnlageAFaecher) : number {
@@ -70,10 +70,10 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	}
 
 	/**
-	 * Berechnet die Anzahl der Note Ungenügend 
-	 * 
+	 * Berechnet die Anzahl der Note Ungenügend
+	 *
 	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
-	 * 
+	 *
 	 * @return die Anzahl der Note Ungenügend oder -1 im Fehlerfall
 	 */
 	public static getAnzahlUngenuegend(abschluss_faecher : BKAnlageAFaecher) : number {

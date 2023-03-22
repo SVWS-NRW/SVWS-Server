@@ -148,8 +148,8 @@ export class Herkunftsschulnummern extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulnummer in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Herkunftsschulnummer, welches ein Array von {@link HerkunftsschulnummerKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Herkunftsschulnummer, welches ein Array von {@link HerkunftsschulnummerKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<HerkunftsschulnummerKatalogEintrag>) {
 		super();
@@ -164,7 +164,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 */
 	private static getMapBySchulnummer() : HashMap<number, Herkunftsschulnummern | null> {
@@ -179,9 +179,9 @@ export class Herkunftsschulnummern extends JavaObject {
 
 	/**
 	 * Gibt die Herkunftsschulnummer für die angegebene Schulnummer zurück.
-	 * 
+	 *
 	 * @param nummer   die Schulnummer
-	 * 
+	 *
 	 * @return die Herkunftsschulnummer oder null, falls die Schulnummer hier nicht vohanden ist
 	 */
 	public static getByKuerzel(nummer : number | null) : Herkunftsschulnummern | null {

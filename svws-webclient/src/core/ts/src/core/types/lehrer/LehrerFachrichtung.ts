@@ -600,8 +600,8 @@ export class LehrerFachrichtung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neuen Fachrichtung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Fachrichtung, welches ein Array von {@link LehrerKatalogFachrichtungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Fachrichtung, welches ein Array von {@link LehrerKatalogFachrichtungEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogFachrichtungEintrag>) {
 		super();
@@ -616,7 +616,7 @@ export class LehrerFachrichtung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
 	private static getMapFachrichtungByID() : HashMap<number, LehrerFachrichtung | null> {
@@ -629,7 +629,7 @@ export class LehrerFachrichtung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
 	private static getMapFachrichtungByKuerzel() : HashMap<string, LehrerFachrichtung | null> {
@@ -641,9 +641,9 @@ export class LehrerFachrichtung extends JavaObject {
 
 	/**
 	 * Gibt die Fachrichtung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Fachrichtung
-	 * 
+	 *
 	 * @return die Fachrichtung oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerFachrichtung | null {
@@ -652,9 +652,9 @@ export class LehrerFachrichtung extends JavaObject {
 
 	/**
 	 * Gibt die Fachrichtung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Fachrichtung
-	 * 
+	 *
 	 * @return die Fachrichtung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerFachrichtung | null {

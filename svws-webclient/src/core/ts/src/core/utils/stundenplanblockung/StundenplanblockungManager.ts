@@ -44,7 +44,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der globalen Schulkonfiguration.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der globalen Schulkonfiguration.
 	 */
 	public getSchule() : StundenplanblockungManagerSchule {
@@ -53,7 +53,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Lehrkräfte.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Lehrkräfte.
 	 */
 	public getLehrkraefte() : StundenplanblockungManagerLehrkraftMenge {
@@ -62,7 +62,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Lerngruppen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Lerngruppen.
 	 */
 	public getLerngruppen() : StundenplanblockungManagerLerngruppeMenge {
@@ -71,7 +71,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Klassen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Klassen.
 	 */
 	public getKlassen() : StundenplanblockungManagerKlasseMenge {
@@ -80,7 +80,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Fächer.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Fächer.
 	 */
 	public getFaecher() : StundenplanblockungManagerFachMenge {
@@ -89,7 +89,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Räume.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Räume.
 	 */
 	public getRaeume() : StundenplanblockungManagerRaumMenge {
@@ -98,7 +98,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Kopplungen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Kopplungen.
 	 */
 	public getKopplungen() : StundenplanblockungManagerKopplungMenge {
@@ -107,7 +107,7 @@ export class StundenplanblockungManager extends JavaObject {
 
 	/**
 	 * Überprüft alle Daten auf ihre Konsistenz. <br>
-	 * Wirft eine Exception, falls die Daten nicht konsistent sind.  
+	 * Wirft eine Exception, falls die Daten nicht konsistent sind.
 	 */
 	public miscCheckConsistencyOrException() : void {
 	}

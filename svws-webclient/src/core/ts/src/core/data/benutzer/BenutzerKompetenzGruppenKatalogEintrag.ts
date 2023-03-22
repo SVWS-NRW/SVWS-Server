@@ -31,12 +31,12 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID der Benutzerkompetenz-Gruppe
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz-Gruppe
 	 * @param spalte         die Spalte bei der Darstellung der Benutzerverwaltung in Schild
 	 * @param zeile          die Zeile bei der Darstellung der Benutzerverwaltung in Schild
-	 *  
+	 *
 	 */
 	public constructor(id : number, bezeichnung : string, spalte : number, zeile : number);
 

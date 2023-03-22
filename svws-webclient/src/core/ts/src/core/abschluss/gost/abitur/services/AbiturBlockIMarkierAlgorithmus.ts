@@ -8,7 +8,7 @@ export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten | null, 
 
 	/**
 	 * Erzeugt einen Markierungs-Dienst zur Markierung der Kurse aus dem Block I der Abiturdaten, welche
-	 * in die Punktewertung für die Abiturzulassung und in das Abitur einfliessen. 
+	 * in die Punktewertung für die Abiturzulassung und in das Abitur einfliessen.
 	 */
 	public constructor() {
 		super();

@@ -22,7 +22,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Mathematik.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
@@ -60,7 +60,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der durchgehend belegten bzw. belegbaren Naturwissenschaften zurück.
-	 * 
+	 *
 	 * @return die Anzahl der durchgehend belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public getAnzahlDurchgehendBelegt() : number {
@@ -70,7 +70,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	/**
 	 * Gibt die Anzahl der durchgehend schriftlich belegten bzw. belegbaren Naturwissenschaften zurück.
 	 * Durchgehend schriftlich bedeutet, dass das Fach mind. von Q1.1 bus Q2.1 schriftlich belegt wurde.
-	 * 
+	 *
 	 * @return die Anzahl der durchgehend schriftlich belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public getAnzahlDurchgehendSchritflichBelegt() : number {

@@ -52,12 +52,12 @@ export class NotenKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Noten-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param sortierung      die Nummer für die Sortierung der Noten-Einträge
-	 * @param notenpunkte     die Notenpunkte 
-	 * @param kuerzel         das Kürzel 
-	 * @param text            der Text für die Notenbeschreibung 
+	 * @param notenpunkte     die Notenpunkte
+	 * @param kuerzel         das Kürzel
+	 * @param text            der Text für die Notenbeschreibung
 	 * @param textZeugnis     das Text, welcher auf dem Zeugnis erscheint
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist

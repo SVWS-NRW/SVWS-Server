@@ -16,7 +16,7 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 
 
 	/**
-	 * Erstellt einen neuen Service, dessen Logger automatisch in einen Vector loggt. 
+	 * Erstellt einen neuen Service, dessen Logger automatisch in einen Vector loggt.
 	 */
 	protected constructor() {
 		super();
@@ -24,19 +24,19 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 	}
 
 	/**
-	 * Diese Methode muss von dem erbenden Service implementiert werden 
+	 * Diese Methode muss von dem erbenden Service implementiert werden
 	 * und handhabt das übergebene Input-Objekt und erzeugt das zugehörige
-	 * Output-Objekt.  
-	 *  
+	 * Output-Objekt.
+	 *
 	 * @param input   das Input-Objekt
-	 * 
+	 *
 	 * @return das Output-Objekt
 	 */
 	public abstract handle(input : T_IN | null) : T_OUT | null;
 
 	/**
-	 * Gibt die Logger-Instanz von diesem Service zurück.  
-	 * 
+	 * Gibt die Logger-Instanz von diesem Service zurück.
+	 *
 	 * @return die Logger-Instanz.
 	 */
 	public getLogger() : Logger {
@@ -45,7 +45,7 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 
 	/**
 	 * Gibt das Log dieses Services zurück.
-	 * 
+	 *
 	 * @return das Log dieses Services
 	 */
 	public getLog() : LogConsumerVector {

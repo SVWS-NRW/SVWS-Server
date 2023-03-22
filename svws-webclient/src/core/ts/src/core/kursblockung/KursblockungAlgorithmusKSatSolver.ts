@@ -27,7 +27,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param dynDat  Die dynamischen Blockungsdaten.
@@ -66,9 +66,9 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 	 * Erzeugt eine Formel in konjunktiver Normalform (CNF) und übergibt sie dem SAT-Solver. Der Solver versucht die
 	 * Formel innerhalb des Zeitlimits zu lösen. Falls er es nicht schafft, dann wurde zuvor eine zufällige
 	 * Kursverteilung definiert.
-	 * 
+	 *
 	 * @param pMaxTimeMillis Die maximale Blockungszeit in Millisekunde.
-	 * 
+	 *
 	 * @return Liefert eines der drei möglichen Ergebnisse {@link SatSolverA#RESULT_SATISFIABLE oder
 	 *         SatSolverI#RESULT_UNKNOWN oder SatSolverI#RESULT_UNSATISFIABLE. }
 	 */

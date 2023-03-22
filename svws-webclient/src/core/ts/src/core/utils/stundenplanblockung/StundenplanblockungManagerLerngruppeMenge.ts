@@ -28,8 +28,8 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	/**
 	 * Liefert die zuvor erzeugte Lerngruppe. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID bereits existiert.
-	 * 
-	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe. 
+	 *
+	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID bereits existiert.
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
@@ -45,7 +45,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
@@ -59,9 +59,9 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 
 	/**
 	 * Liefert eine zufällige Lerngruppe. <br>
-	 * Liefert eine Exception, falls die Menge der Lerngruppen leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Lerngruppen leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert eine zufällige Lerngruppe.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerLerngruppe {
@@ -74,7 +74,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	/**
 	 * Löscht die übergebene Lerngruppe. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 */
@@ -86,7 +86,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Lerngruppen.
-	 * 
+	 *
 	 * @return Die Menge aller Lerngruppen.
 	 */
 	public getMenge() : Vector<StundenplanblockungManagerLerngruppe | null> | null {
@@ -94,8 +94,8 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Lerngruppe-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Lerngruppe-ID existiert.
+	 *
 	 * @param pRaumID Die Datenbank-ID des Raumes.
 	 * @return TRUE, falls die Lerngruppe-ID existiert.
 	 */
@@ -105,7 +105,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Lerngruppen.
-	 * 
+	 *
 	 * @return Die Anzahl an Lerngruppen.
 	 */
 	public size() : number {

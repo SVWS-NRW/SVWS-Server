@@ -147,7 +147,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
 	 */
 	public set_lk_gk_modus_getrennt() : void {
 		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT;

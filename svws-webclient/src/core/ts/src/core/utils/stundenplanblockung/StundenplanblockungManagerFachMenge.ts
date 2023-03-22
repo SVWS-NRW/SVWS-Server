@@ -25,8 +25,8 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	/**
 	 * Fügt das Fach hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID bereits existiert.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Fach. 
+	 *
+	 * @param pFachID                Die Datenbank-ID des Fach.
 	 * @param pKuerzel               Das Kürzel des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
@@ -41,7 +41,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungFach}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pFachID                Die Datenbank-ID des Faches.
 	 * @return                       Das {@link StundenplanblockungFach}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
@@ -56,7 +56,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	/**
 	 * Löscht das übergebene Fach. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pFachID                Die Datenbank-ID des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
 	 */
@@ -67,8 +67,8 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Fach-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Fach-ID existiert.
+	 *
 	 * @param pFachID Die Datenbank-ID des Faches.
 	 * @return TRUE, falls die Fach-ID existiert.
 	 */
@@ -78,7 +78,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Lehrkräften.
-	 * 
+	 *
 	 * @return Die Anzahl an Lehrkräften.
 	 */
 	public size() : number {

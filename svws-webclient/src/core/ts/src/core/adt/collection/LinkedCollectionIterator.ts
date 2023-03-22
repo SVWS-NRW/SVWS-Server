@@ -27,9 +27,9 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 
 
 	/**
-	 * Erzeugt einen neuen LinkedCollectionIterator. Dabei wird die Referenz auf 
+	 * Erzeugt einen neuen LinkedCollectionIterator. Dabei wird die Referenz auf
 	 * die {@link LinkedCollection} übergeben.
-	 * 
+	 *
 	 * @param collection   die zum Iterator zugehörige {@link LinkedCollection}
 	 */
 	constructor(collection : LinkedCollection<E>) {

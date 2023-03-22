@@ -62,9 +62,9 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param kuerzelSchild      das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
 	 * @param bezeichnung        die Bezeichnung
 	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde

@@ -104,7 +104,7 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 *
-	 * Initialisiert alle Attribute mit Dummy-Werten. 
+	 * Initialisiert alle Attribute mit Dummy-Werten.
 	 */
 	constructor() {
 		super();
@@ -113,8 +113,8 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 *
-	 * Initialisiert alle Attribute mit Dummy-Werten. 
-	 * Setzt alle Werte auf 0 und initialisiert alle Arrays auf die Länge 0. 
+	 * Initialisiert alle Attribute mit Dummy-Werten.
+	 * Setzt alle Werte auf 0 und initialisiert alle Arrays auf die Länge 0.
 	 */
 	clear() : void {
 		this.matrixFachartPaar = [...Array(0)].map(e => Array(0).fill(0));
@@ -140,11 +140,11 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Initialisiert dieses Objekt mit den Anfangswerten.
-	 * 
+	 *
 	 * @param pMatrixFachartPaar Das 2D-Array beinhaltet pro Fachart-Paar eine Bewertung.
 	 * @param pMaxSchueler       Die maximale Anzahl an Schülern.
-	 * @param pMaxFacharten      Die maximale Anzahl an Facharten. 
-	 * @param pMaxKurse          Die maximale Anzahl an Kursen. 
+	 * @param pMaxFacharten      Die maximale Anzahl an Facharten.
+	 * @param pMaxKurse          Die maximale Anzahl an Kursen.
 	 */
 	aktionInitialisiere(pMatrixFachartPaar : Array<Array<number>>, pMaxSchueler : number, pMaxFacharten : number, pMaxKurse : number) : void {
 		this.matrixFachartPaar = pMatrixFachartPaar;
@@ -170,8 +170,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Ausgabe von Debug-Informationen. Nur für Testzwecke.
-	 * 
-	 * @param pPrefix Ein String-Prefix vor der Ausgabe. 
+	 *
+	 * @param pPrefix Ein String-Prefix vor der Ausgabe.
 	 */
 	debug(pPrefix : string) : void {
 		console.log(JSON.stringify(pPrefix! + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!));
@@ -180,8 +180,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Liefert die aktuelle Fachart-Paar-Bewertung.
-	 * 
-	 * @return Die aktuelle Fachart-Paar-Bewertung. 
+	 *
+	 * @return Die aktuelle Fachart-Paar-Bewertung.
 	 */
 	gibBewertungFachartPaar() : number {
 		return this.bewertungFachartPaar;
@@ -189,10 +189,10 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 *
-	 * Liefert die aktuelle Anzahl an Nichtwahlen. 
+	 * Liefert die aktuelle Anzahl an Nichtwahlen.
 	 * Das ist die Summe aller Kurs, die bei Schülern nicht zugeordnet wurden.
-	 * 
-	 * @return Die aktuelle Anzahl an Nichtwahlen. 
+	 *
+	 * @return Die aktuelle Anzahl an Nichtwahlen.
 	 */
 	gibBewertungNichtwahlen() : number {
 		return this.bewertungNichtwahlen;
@@ -201,8 +201,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Liefert die aktuell größte Kursdifferenz (über alle Facharten).
-	 * 
-	 * @return Die aktuell größte Kursdifferenz (über alle Facharten). 
+	 *
+	 * @return Die aktuell größte Kursdifferenz (über alle Facharten).
 	 */
 	gibBewertungKursdifferenz() : number {
 		return this.bewertungKursdifferenzenMaxIndex;
@@ -212,9 +212,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
 	gibBewertungZustandS_NW_KD() : number {
 		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS)
@@ -238,9 +238,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
 	gibCompareZustandK_NW_KD_FW() : number {
 		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
@@ -268,9 +268,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
 	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdiffenzen) des
-	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
 	gibCompareZustandK_FW_NW_KD() : number {
 		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
@@ -298,9 +298,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
 	gibCompareZustandG_NW_KD_FW() : number {
 		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG)
@@ -327,8 +327,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
-	 * 
-	 * @return das Array bzw. das Histogramm der Kursdifferenzen. 
+	 *
+	 * @return das Array bzw. das Histogramm der Kursdifferenzen.
 	 */
 	gibArrayDerKursdifferenzen() : Array<number> {
 		return this.bewertungKursdifferenzen;
@@ -337,7 +337,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Informiert die Statistik, dass ein Kurs-Paar hinzuzufügen ist.
-	 * 
+	 *
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
@@ -353,9 +353,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Informiert die Statistik, dass ein Kurs-Paar zu entfernen ist.
-	 * 
+	 *
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
-	 * @param pKurs2 Der 2. Kurs des Kurs-Paares. 
+	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
 	aktionKurspaarInSchieneEntfernen(pKurs1 : KursblockungDynKurs, pKurs2 : KursblockungDynKurs) : void {
 		let faNr1 : number = pKurs1.gibFachart().gibNr();
@@ -369,7 +369,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 *
 	 * Informiert die Statistik über eine Veränderung der Nichtwahlen.
-	 * 
+	 *
 	 * @param pVeraenderung Die Veränderungen der Nichtwahlen (negative Werte sind möglich).
 	 */
 	aktionNichtwahlenVeraendern(pVeraenderung : number) : void {
@@ -383,8 +383,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * {@link KursblockungDynStatistik#bewertungKursdifferenzenMaxIndex} wird dabei möglicherweise größer. <br>
 	 * {@code Beispiel vorher: 5, 0, 6*, 0, 0, 0, 0, 0, 0}<br>
 	 * {@code Beispiel danach: 5, 0, 6, 0, 0, 1*, 0, 0, 0}<br>
-	 * 
-	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll. 
+	 *
+	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll.
 	 */
 	aktionKursdifferenzHinzufuegen(pIndex : number) : void {
 		this.bewertungKursdifferenzen[pIndex]++;
@@ -400,8 +400,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * kleiner. <br>
 	 * {@code Beispiel vorher: 5, 0, 6, 0, 0, 1*, 0, 0, 0}<br>
 	 * {@code Beispiel danach: 5, 0, 6*, 0, 0, 0, 0, 0, 0}<br>
-	 * 
-	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll. 
+	 *
+	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll.
 	 */
 	aktionKursdifferenzEntfernen(pIndex : number) : void {
 		this.bewertungKursdifferenzen[pIndex]--;
@@ -444,7 +444,7 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 * Fügt die Regel {@link GostKursblockungRegelTyp#KURS_VERBIETEN_MIT_KURS} zur Bewertung hinzu.
-	 * 
+	 *
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */
@@ -457,10 +457,10 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 * Fügt die Regel {@link GostKursblockungRegelTyp#KURS_ZUSAMMEN_MIT_KURS} zur Bewertung hinzu.
-	 * 
+	 *
 	 * Erhöht direkt den Malus 'bewertungRegelverletzungen', da die Kurse anfangs noch nicht zusammen sind.
-	 * Geht ein Kurs über 2 Schienen, der andere über 3, dann können diese maximal 2 Mal zusammen sein.   
-	 * 
+	 * Geht ein Kurs über 2 Schienen, der andere über 3, dann können diese maximal 2 Mal zusammen sein.
+	 *
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */

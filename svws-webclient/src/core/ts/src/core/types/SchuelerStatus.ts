@@ -94,7 +94,7 @@ export class SchuelerStatus extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Schüler-Status in der Aufzählung.
-	 * 
+	 *
 	 * @param id            die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird
 	 * @param bezeichnung   die textuelle Bezeichnung des Schülerstatus
 	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
@@ -115,7 +115,7 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
 	private static getMapID() : HashMap<number, SchuelerStatus> {
@@ -128,7 +128,7 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
 	private static getMapBezeichnungen() : HashMap<string, SchuelerStatus> {
@@ -141,11 +141,11 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 *
 	 * Gibt den Schülerstatus anhand der ID zurück.
-	 * 
+	 *
 	 * @param status	die id des Schülerstatus
-	 * 
+	 *
 	 * @return der Schülerstatus oder null, falls die ID ungültig ist
-	 * 
+	 *
 	 */
 	public static fromID(status : number) : SchuelerStatus | null {
 		return SchuelerStatus.getMapID().get(status);
@@ -154,11 +154,11 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 *
 	 * Ermittelt den Schülerstatus anhand der Bezeichnung.
-	 * 
+	 *
 	 * @param value	  die Bezeichnung des Schülerstatus
-	 * 
+	 *
 	 * @return der Schülerstatus oder null, falls die Bezeichnung ungültig ist
-	 * 
+	 *
 	 */
 	public static fromBezeichnung(value : string | null) : SchuelerStatus | null {
 		if (value === null)
@@ -169,9 +169,9 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Prüft, ob die übergebene ID für einen gültigen Schülerstatus
 	 * steht oder nicht
-	 * 
+	 *
 	 * @param id   die zu prüfende ID
-	 * 
+	 *
 	 * @return true, falls die ID gültig ist.
 	 */
 	public static isValidID(id : number | null) : boolean {

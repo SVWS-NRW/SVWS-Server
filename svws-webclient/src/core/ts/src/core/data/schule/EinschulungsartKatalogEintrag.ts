@@ -42,7 +42,7 @@ export class EinschulungsartKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel der Einschulungsart
 	 * @param bezeichnung     eine kurze Bezeichnung der Einschulungsart

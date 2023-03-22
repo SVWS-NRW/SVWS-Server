@@ -54,9 +54,9 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Typ von Bildungsgängen in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Typen von Bildungsgängen, welches ein Array von 
-	 *                   {@link BildungsgangTypKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Typen von Bildungsgängen, welches ein Array von
+	 *                   {@link BildungsgangTypKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<BildungsgangTypKatalogEintrag>) {
 		super();
@@ -69,10 +69,10 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Typen von Bildungsgängen auf die 
-	 * zugehörigen Typen von Bildungsgängen zurück. 
+	 * Gibt eine Map von den Kürzeln der Typen von Bildungsgängen auf die
+	 * zugehörigen Typen von Bildungsgängen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Typen auf die zugehörigen Typen von Bildungsgängen
 	 */
 	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegBildungsgangTyp> {
@@ -87,9 +87,9 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 
 	/**
 	 * Gibt den Typ von Bildungsgängen für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Typs von Bildungsgängen
-	 * 
+	 *
 	 * @return der Typ von Bildungsgängen oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : WeiterbildungskollegBildungsgangTyp | null {

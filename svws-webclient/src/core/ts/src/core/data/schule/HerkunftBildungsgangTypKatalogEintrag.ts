@@ -49,10 +49,10 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id            die ID
-	 * @param wbkTyp        der Bildungsgangtyp am Weiterbildungskolleg oder null 
-	 * @param bkTyp         der Bildungsgangtyp am BErufskolleg oder null 
+	 * @param wbkTyp        der Bildungsgangtyp am Weiterbildungskolleg oder null
+	 * @param bkTyp         der Bildungsgangtyp am BErufskolleg oder null
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */

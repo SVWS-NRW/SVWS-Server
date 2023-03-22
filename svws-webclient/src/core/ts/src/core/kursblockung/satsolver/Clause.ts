@@ -27,14 +27,14 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 
 	/**
 	 * Konstruktor für eine 1-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 */
 	public constructor(pX : Variable);
 
 	/**
 	 * Konstruktor für eine 2-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 */
@@ -42,7 +42,7 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 
 	/**
 	 * Konstruktor für eine 3-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 * @param pZ Die 3. Variable in dieser Klausel.

@@ -19,9 +19,9 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 
 	/**
-	 * Erstellt eine neues LinkedCollectionElement mit den Wert _value und den 
+	 * Erstellt eine neues LinkedCollectionElement mit den Wert _value und den
 	 * übergebenen Vorgänger bzw. Nachfolger
-	 * 
+	 *
 	 * @param value   der Wert des SimpleCollectionElements
 	 * @param prev    der Vorgänger
 	 * @param next    der Nachfolger
@@ -35,7 +35,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Gibt den Wert des Elements zurück.
-	 * 
+	 *
 	 * @return der Wert des Elements
 	 */
 	getValue() : E {
@@ -44,9 +44,9 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Ersetzt den Wert des Elements.
-	 * 
+	 *
 	 * @param value   der neue Wert des Elements
-	 * 
+	 *
 	 * @return der alte Wert des Elements
 	 */
 	setValue(value : E) : E {
@@ -57,7 +57,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Gibt den Vorgänger des Elementes zurück.
-	 * 
+	 *
 	 * @return   das LinkedCollectionElement das der Vorgänger des Elementes ist
 	 */
 	getPrev() : LinkedCollectionElement<E> | null {
@@ -66,7 +66,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Setzt den Vorgänger des Elementes auf _prev
-	 * 
+	 *
 	 * @param prev   der Vorgänger des Elements
 	 */
 	setPrev(prev : LinkedCollectionElement<E> | null) : void {
@@ -75,7 +75,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Gibt den Nachfolger des Elementes zurück.
-	 * 
+	 *
 	 * @return   das LinkedCollectionElement das der Nachfolger des Elementes ist
 	 */
 	getNext() : LinkedCollectionElement<E> | null {
@@ -84,7 +84,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
 	 * Setzt den Nachfolger des Elementes auf _next
-	 * 
+	 *
 	 * @param next   der Nachfolger des Elements
 	 */
 	setNext(next : LinkedCollectionElement<E> | null) : void {

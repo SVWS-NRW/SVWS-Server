@@ -112,8 +112,8 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.
 	 *
-	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
-	 *                   {@link SprachreferenzniveauKatalogEintrag} ist  
+	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von
+	 *                   {@link SprachreferenzniveauKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SprachreferenzniveauKatalogEintrag>) {
 		super();
@@ -128,7 +128,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
 	private static getMapByID() : HashMap<number, Sprachreferenzniveau> {
@@ -141,7 +141,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
 	private static getMapByKuerzel() : HashMap<string, Sprachreferenzniveau> {
@@ -164,9 +164,9 @@ export class Sprachreferenzniveau extends JavaObject {
 
 	/**
 	 * Gibt das Sprachreferenzniveau für das übergebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Sprachreferenzniveaus
-	 * 
+	 *
 	 * @return das Sprachreferenzniveau oder null, wenn das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Sprachreferenzniveau | null {
@@ -175,9 +175,9 @@ export class Sprachreferenzniveau extends JavaObject {
 
 	/**
 	 * Vergleicht dieses Sprachreferenzniveau mit dem Niveau des übergebenen Kürzels.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des anderen Sprachreferenzniveaus
-	 * 
+	 *
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
 	public vergleiche(kuerzel : string | null) : number {

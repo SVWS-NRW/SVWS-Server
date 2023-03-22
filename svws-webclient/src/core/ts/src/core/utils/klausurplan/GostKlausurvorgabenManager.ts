@@ -38,7 +38,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen
 	 * GostKlausurvorgaben und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param vorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs und
 	 *                 Gost-Halbjahres
 	 */
@@ -77,7 +77,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich Informationen einer
 	 * Klausurvorgabe geändert hat.
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public updateKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
@@ -89,7 +89,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
 	 * Fügt die Klausurvorgabe den internen Strukturen hinzu.
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
@@ -124,7 +124,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
 	 * Löscht eine Klausurvorgabe aus den internen Strukturen
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public removeVorgabe(vorgabe : GostKlausurvorgabe) : void {
@@ -135,16 +135,16 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
 	public getKlausurvorgaben() : List<GostKlausurvorgabe>;
 
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
 	public getKlausurvorgaben(quartal : number) : List<GostKlausurvorgabe> | null;
@@ -163,20 +163,20 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idVorgabe die ID der Klausurvorgabe
-	 * 
+	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe | null;
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zu den übergebenen Parametern zurück.
-	 * 
+	 *
 	 * @param quartal     das Quartal
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public gibGostKlausurvorgabe(quartal : number, kursartAllg : string | null, idFach : number) : GostKlausurvorgabe | null;
@@ -205,11 +205,11 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
-	 * 
+	 *
 	 * @param quartal     das Quartal, wenn 0, Vorgaben für alle Quartale
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
 	public gibGostKlausurvorgaben(quartal : number, kursartAllg : string | null, idFach : number) : List<GostKlausurvorgabe> | null;
@@ -217,10 +217,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
-	 * 
+	 *
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
 	public gibGostKlausurvorgaben(kursartAllg : string | null, idFach : number) : List<GostKlausurvorgabe> | null;

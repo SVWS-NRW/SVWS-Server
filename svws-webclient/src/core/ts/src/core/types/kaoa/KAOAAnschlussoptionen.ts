@@ -233,8 +233,8 @@ export class KAOAAnschlussoptionen extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAAnschlussoptionEintrag>) {
 		super();
@@ -247,9 +247,9 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf die zugehörige Anschlussoption zurück. 
+	 * Gibt eine Map von der ID auf die zugehörige Anschlussoption zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf die zugehörige Anschlussoption
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAAnschlussoptionen> {
@@ -260,9 +260,9 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf die zugehörige Anschlussoption zurück. 
+	 * Gibt eine Map von dem Kürzel auf die zugehörige Anschlussoption zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Anschlussoption
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAAnschlussoptionen> {
@@ -274,9 +274,9 @@ export class KAOAAnschlussoptionen extends JavaObject {
 
 	/**
 	 * Gibt die Anschlussoption anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Anschlussoption
-	 * 
+	 *
 	 * @return die Anschlussoption oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOAAnschlussoptionen | null {
@@ -285,9 +285,9 @@ export class KAOAAnschlussoptionen extends JavaObject {
 
 	/**
 	 * Gibt die Anschlussoption anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Anschlussoption
-	 * 
+	 *
 	 * @return die Anschlussoption oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAAnschlussoptionen | null {

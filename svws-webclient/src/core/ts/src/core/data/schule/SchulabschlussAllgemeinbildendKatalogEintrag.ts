@@ -42,9 +42,9 @@ export class SchulabschlussAllgemeinbildendKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Abschlussart-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param bezeichnung        die Bezeichnung
 	 * @param kuerzelStatistik   das Kürzel der Abschlussart für die amtliche Schulstatistik
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

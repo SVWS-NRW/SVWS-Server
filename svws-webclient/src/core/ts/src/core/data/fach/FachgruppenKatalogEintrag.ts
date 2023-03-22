@@ -71,17 +71,17 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id            die ID
 	 * @param nummer        die Nummer für den Fachbereich, sofern festgelegt, ansonsten null
 	 * @param idSchild      die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde
 	 * @param bezeichnung   die Bezeichnung der Fachgruppe
-	 * @param kuerzel       das Kürzel der Fachgruppe 
+	 * @param kuerzel       das Kürzel der Fachgruppe
 	 * @param farbe         die Farbe, welche der Fachgruppe zugeordnet wurde
 	 * @param schulformen   die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt
 	 * @param sortierung    ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x)
-	 * @param fuerZeugnis   gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht 
-	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param fuerZeugnis   gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht
+	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */

@@ -43,9 +43,9 @@ export class KAOAEbene4Eintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen KAoA-Eintrag der SBO Ebene 4 mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel 
+	 * @param kuerzel        das Kürzel
 	 * @param beschreibung   die Beschreibung
 	 * @param zusatzmerkmal  das Zusatzmerkmal, dem der Eintrag der SBO Ebene 4 zugeordnet ist
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

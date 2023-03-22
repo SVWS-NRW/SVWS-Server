@@ -42,9 +42,9 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Abgangsgrund-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param schluessel   der Schlüssel für die ASD-Schulstatistik
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

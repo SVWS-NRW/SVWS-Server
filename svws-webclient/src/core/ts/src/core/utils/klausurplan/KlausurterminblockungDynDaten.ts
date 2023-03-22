@@ -79,11 +79,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur, 
+	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur,
 	 * welche als Basis für alle Algorithmen zur schnellen Manipulation dient.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
+	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
 	public constructor(pRandom : Random, pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) {
@@ -247,7 +247,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert die aktuelle Anzahl an Terminen.
-	 * 
+	 *
 	 * @return die aktuelle Anzahl an Terminen.
 	 */
 	gibTerminAnzahl() : number {
@@ -256,8 +256,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Klausurgruppen. Dies ist ein theoretisches Maximum
-	 * für die größte Anzahl an Terminen. 
-	 * 
+	 * für die größte Anzahl an Terminen.
+	 *
 	 * @return die Anzahl an Klausurgruppen.
 	 */
 	gibKlausurgruppenAnzahl() : number {
@@ -267,8 +267,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
-	 * 
-	 * @return die Anzahl noch nicht verteilter Klausuren. 
+	 *
+	 * @return die Anzahl noch nicht verteilter Klausuren.
 	 */
 	gibExistierenNichtverteilteKlausuren() : boolean {
 		for (let klausurNr : number = 0; klausurNr < this._klausurenAnzahl; klausurNr++)
@@ -280,8 +280,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert die Nummer eines neu erzeugten Termins.
-	 * 
-	 * @return die Nummer eines neu erzeugten Termins. 
+	 *
+	 * @return die Nummer eines neu erzeugten Termins.
 	 */
 	gibErzeugeNeuenTermin() : number {
 		this._terminAnzahl++;
@@ -299,8 +299,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge.
-	 * 
-	 * @return ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge. 
+	 *
+	 * @return ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge.
 	 */
 	private gibTermineInZufaelligerReihenfolge() : Array<number> {
 		let temp : Array<number> | null = Array(this._terminAnzahl).fill(0);
@@ -319,8 +319,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert die Klausur-Gruppen in zufälliger Reihenfolge.
-	 * 
-	 * @return die Klausur-Gruppen in zufälliger Reihenfolge. 
+	 *
+	 * @return die Klausur-Gruppen in zufälliger Reihenfolge.
 	 */
 	private gibKlausurgruppenInZufaelligerReihenfolge() : Vector<Vector<number>> {
 		let temp : Vector<Vector<number>> = new Vector();
@@ -338,8 +338,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
-	 * 
-	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst. 
+	 *
+	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
 	 */
 	gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() : Vector<Vector<number>> {
 		let temp : Vector<Vector<number>> = new Vector();
@@ -359,7 +359,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
-	 * 
+	 *
 	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
 	 */
 	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() : Vector<number> {
@@ -411,9 +411,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
-	 * 
+	 *
 	 * @param pGruppe die Gruppe aller Klausuren.
-	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden. 
+	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
 	 */
 	private gibIstKlausurgruppeUnverteilt(pGruppe : Vector<number>) : boolean {
 		for (let klausurNr of pGruppe) 
@@ -425,10 +425,10 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
-	 * 
+	 *
 	 * @param  pGruppe die Gruppe aller Klausuren.
-	 * @param  pTermin der Termin 
-	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten. 
+	 * @param  pTermin der Termin
+	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
 	 */
 	aktionSetzeKlausurgruppeInTermin(pGruppe : Vector<number>, pTermin : number) : boolean {
 		if (pTermin < 0)
@@ -449,7 +449,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * Entfernt die Klausuren der Gruppe aus ihrem Termin.
 	 * @param  pGruppe die Gruppe aller Klausuren.
-	 * @param  pTermin der Termin 
+	 * @param  pTermin der Termin
 	 */
 	aktionEntferneKlausurgruppeAusTermin(pGruppe : Vector<number>, pTermin : number) : void {
 		if (pTermin < 0)
@@ -466,7 +466,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Erhöht die Termin-Anzahl um 1, setzt alle Klausuren der übergebenen Gruppe in den neuen Termin.
-	 * 
+	 *
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
 	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : Vector<number>) : void {
@@ -482,8 +482,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * Setzt alle Klausuren in einen zufälligen Termin. <br>
 	 * Falls dies nicht möglich ist, wird die Gruppe in einen neuen Termin gesetzt.
-	 * 
-	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen. 
+	 *
+	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen.
 	 */
 	private aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(pGruppe : Vector<number>) : void {
 		for (let terminNr of this.gibTermineInZufaelligerReihenfolge()) 
@@ -495,8 +495,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist.
-	 * 
-	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist. 
+	 *
+	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist.
 	 */
 	gibIstBesserAlsZustand1() : boolean {
 		return this.gibVergleicheMitAktuellemZustand(this._terminAnzahl1, this._klausurZuTermin1);
@@ -505,8 +505,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist.
-	 * 
-	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist. 
+	 *
+	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist.
 	 */
 	gibIstBesserAlsZustand2() : boolean {
 		return this.gibVergleicheMitAktuellemZustand(this._terminAnzahl2, this._klausurZuTermin2);
@@ -515,7 +515,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Liefert die berechnete Zuordnung als Liste (Termine) von Listen (KlausurIDs).
-	 * 
+	 *
 	 * @return die berechnete Zuordnung als Liste (Termine) von Listen (KlausurIDs).
 	 */
 	gibErzeugeOutput() : List<List<number>> {
@@ -540,7 +540,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Entfernt alle Klausur-Termin-Zuordnungen und passt die Datenstrukturen entsprechend an. 
+	 * Entfernt alle Klausur-Termin-Zuordnungen und passt die Datenstrukturen entsprechend an.
 	 */
 	aktionClear() : void {
 		for (let i : number = 0; i < this._klausurenAnzahl; i++)
@@ -550,7 +550,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 1. 
+	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 1.
 	 */
 	aktionZustand1Speichern() : void {
 		this._terminAnzahl1 = this._terminAnzahl;
@@ -560,7 +560,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 1. 
+	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 1.
 	 */
 	aktionZustand1Laden() : void {
 		this.aktionClear();
@@ -571,7 +571,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 2. 
+	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 2.
 	 */
 	aktionZustand2Speichern() : void {
 		this._terminAnzahl2 = this._terminAnzahl;
@@ -581,7 +581,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 *
-	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 2. 
+	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 2.
 	 */
 	aktionZustand2Laden() : void {
 		this.aktionClear();
@@ -593,8 +593,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
-	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
+	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br>
+	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt.
 	 */
 	aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() : void {
 		this.aktionClear();
@@ -605,7 +605,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen zufällig. 
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen zufällig.
 	 */
 	aktion_Clear_TermineNacheinander_GruppeZufaellig() : void {
 		this.aktionClear();
@@ -620,8 +620,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Verteilt dann die Klausurgruppen mit höherem Knoten-Grad zuerst auf eine zufällige Schiene. 
-	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt. 
+	 * Verteilt dann die Klausurgruppen mit höherem Knoten-Grad zuerst auf eine zufällige Schiene.
+	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
 	aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() : void {
 		this.aktionClear();
@@ -632,7 +632,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
-	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen nach ihrem Grad. 
+	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen nach ihrem Grad.
 	 */
 	public aktion_Clear_TermineNacheinander_GruppeNachGrad() : void {
 		this.aktionClear();
@@ -647,8 +647,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 *
 	 * Ausgabe zum Debuggen der Tests.
-	 * 
-	 * @param header Überschrift der Debug-Ausgabe. 
+	 *
+	 * @param header Überschrift der Debug-Ausgabe.
 	 */
 	debug(header : string | null) : void {
 		console.log();

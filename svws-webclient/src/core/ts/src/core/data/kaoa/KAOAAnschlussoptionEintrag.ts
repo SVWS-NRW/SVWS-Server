@@ -51,9 +51,9 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen KAoA-Anschlussoption-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel 
+	 * @param kuerzel        das Kürzel
 	 * @param beschreibung   die Beschreibung
 	 * @param stufen         die Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)
 	 * @param anzeigeZusatzmerkmal

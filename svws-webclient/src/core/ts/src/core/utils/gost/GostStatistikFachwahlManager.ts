@@ -13,7 +13,7 @@ export class GostStatistikFachwahlManager extends JavaObject {
 
 	/**
 	 * Aktualisiert die Informationen zu einer Fachwahl in dem angegebenen Halbjahr anhand der übergebenen Fachwahl
-	 * 
+	 *
 	 * @param statfw     die Statistik-Informationen zu den Fachwahlen, bei denen die Informationen hinzugefügt werden sollen
 	 * @param halbjahr   das Halbjahr, zu der die Fachwahl gehört
 	 * @param fachwahl   die Fachwahl

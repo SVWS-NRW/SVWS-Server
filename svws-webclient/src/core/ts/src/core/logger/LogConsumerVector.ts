@@ -26,14 +26,14 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 
 
 	/**
-	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen, 
+	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen,
 	 * das weder Zeit noch Log-Level mit ausgegeben werden.
 	 */
 	public constructor();
 
 	/**
 	 * Erzeugt einen neuen Consumer für Log-Informationen.
-	 * 
+	 *
 	 * @param printTime     gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht
 	 * @param printLevel    gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht
 	 */
@@ -57,7 +57,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 
 	/**
 	 * Hängt einen anderen Log vom gleichen Typ an diesen an.
-	 * 
+	 *
 	 * @param log   der anzuhängende Log
 	 */
 	public append(log : LogConsumerVector) : void {
@@ -67,8 +67,8 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	/**
 	 * Diese Methode implementiert das funktionale Interface java.util.function.Consumer
 	 * und hängt die empfangenen Log-Informationen an den Vektor an.
-	 * 
-	 * @param t   die anzuhängenden Log-Informationen 
+	 *
+	 * @param t   die anzuhängenden Log-Informationen
 	 */
 	public accept(t : LogData | null) : void {
 		if (t === null)
@@ -78,7 +78,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 
 	/**
 	 * Gibt den Vektor mit den gesammelten Log-Informationen zurück.
-	 * 
+	 *
 	 * @return der Vektor mit den gesammelten Log-Informationen
 	 */
 	public getLogData() : List<LogData> {
@@ -87,7 +87,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück.
-	 * 
+	 *
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
 	public getStrings() : List<string> | null;
@@ -95,9 +95,9 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück, die alle
 	 * als Präfix indet erhalten. Dies dient z.B. dem Einrücken der Log-Informationen.
-	 * 
+	 *
 	 * @param indent   das Präfix, welches zum Einrücken der Log-Informationen genutzt wird
-	 * 
+	 *
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
 	public getStrings(indent : string) : List<string> | null;
@@ -125,9 +125,9 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des hier vorgegebenen Log-Levels LogLevel.INFO nicht 
-	 * berücksichtigt werden sollen.   
-	 *   
+	 * die aufgrund des hier vorgegebenen Log-Levels LogLevel.INFO nicht
+	 * berücksichtigt werden sollen.
+	 *
 	 * @return der Text der Log-Informationen für das Log-Level LogLevel.INFO
 	 */
 	public getText() : string;
@@ -136,12 +136,12 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden 
-	 * sollen.   
-	 *   
-	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die 
-	 *                 Log-Informationen berücksichtigt werden.   
-	 * 
+	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * sollen.
+	 *
+	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die
+	 *                 Log-Informationen berücksichtigt werden.
+	 *
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
 	public getText(level : LogLevel) : string;
@@ -150,13 +150,13 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden 
-	 * sollen.   
-	 *   
-	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die 
-	 *                 Log-Informationen berücksichtigt werden.   
+	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * sollen.
+	 *
+	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die
+	 *                 Log-Informationen berücksichtigt werden.
 	 * @param indent   das Präfix, welches zum Einrücken der Log-Informationen genutzt wird
-	 * 
+	 *
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
 	public getText(level : LogLevel, indent : string) : string;

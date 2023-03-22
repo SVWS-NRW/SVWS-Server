@@ -146,9 +146,9 @@ export class AllgemeineMerkmale extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues allgemeines Merkmal in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der allgemeinen Merkmale, welche ein Array von 
-	 *                   {@link AllgemeineMerkmaleKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der allgemeinen Merkmale, welche ein Array von
+	 *                   {@link AllgemeineMerkmaleKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<AllgemeineMerkmaleKatalogEintrag>) {
 		super();
@@ -161,10 +161,10 @@ export class AllgemeineMerkmale extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der allgemeinen Merkmale auf die 
-	 * zugehörigen allgemeinen Merkmale zurück. 
+	 * Gibt eine Map von den Kürzeln der allgemeinen Merkmale auf die
+	 * zugehörigen allgemeinen Merkmale zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen allgemeinen Merkmale
 	 */
 	private static getMapByKuerzel() : HashMap<string, AllgemeineMerkmale | null> {
@@ -179,9 +179,9 @@ export class AllgemeineMerkmale extends JavaObject {
 
 	/**
 	 * Gibt das allgemeine Merkmal für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des allgemeinen Merkmals
-	 * 
+	 *
 	 * @return das allgemeine Merkmal oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : AllgemeineMerkmale | null {

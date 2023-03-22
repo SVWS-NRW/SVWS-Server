@@ -52,8 +52,8 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param kuerzel   das Kürzel  
+	 *
+	 * @param kuerzel   das Kürzel
 	 */
 	private constructor(name : string, ordinal : number, kuerzel : string | null) {
 		super();
@@ -66,9 +66,9 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 
 	/**
 	 * Gibt die Optionsart anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel
-	 * 
+	 *
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAZusatzmerkmaleOptionsarten | null {

@@ -60,8 +60,8 @@ export class LehrerEinsatzstatus extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Einsatzstatus in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Einsatzstatus, welches ein Array von {@link LehrerKatalogEinsatzstatusEintrag} ist  
+	 *
+	 * @param historie   die Historie des Einsatzstatus, welches ein Array von {@link LehrerKatalogEinsatzstatusEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogEinsatzstatusEintrag>) {
 		super();
@@ -76,7 +76,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	/**
 	 * Gibt eine Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
 	private static getMapStatusByID() : HashMap<number, LehrerEinsatzstatus | null> {
@@ -89,7 +89,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	/**
 	 * Gibt eine Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, LehrerEinsatzstatus | null> {
@@ -101,9 +101,9 @@ export class LehrerEinsatzstatus extends JavaObject {
 
 	/**
 	 * Gibt den Einsatzstatus anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Einsatzstatus
-	 * 
+	 *
 	 * @return der Einsatzstatus oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerEinsatzstatus | null {
@@ -112,9 +112,9 @@ export class LehrerEinsatzstatus extends JavaObject {
 
 	/**
 	 * Gibt den Einsatzstatus anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Einsatzstatus
-	 * 
+	 *
 	 * @return der Einsatzstatus oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerEinsatzstatus | null {

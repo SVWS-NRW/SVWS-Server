@@ -13,9 +13,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Gibt an, ob es sich bei dem Fach um ein Projektkursfach handelt.
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return true, falls es sich um ein Projektkursfach handelt
 	 */
 	public static istProjektkurs(fach : GostFach) : boolean {
@@ -24,9 +24,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Gibt an, ob es sich bei dem Fach um ein Vertiefungskursfach handelt.
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return true, falls es sich um ein Vertiefungskursfach handelt
 	 */
 	public static istVertiefungskurs(fach : GostFach) : boolean {
@@ -35,9 +35,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Gibt an, ob das Fach durchgehend von EF.1 bis Q2.2 belegbar ist;
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return true, falls es so belegbar ist, sonst false
 	 */
 	public static istDurchgehendBelegbarBisQ22(fach : GostFach | null) : boolean {
@@ -48,9 +48,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Gibt an, ob das Fach durchgehend von EF.1 bis EF.2 belegbar ist;
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return true, falls es so belegbar ist, sonst false
 	 */
 	public static istBelegbarBisEF2(fach : GostFach) : boolean {
@@ -59,11 +59,11 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Prüft, ob das Fach zu der angegebenen Sprache gehört
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
 	 * @param sprache   das Kürzel der Sprache (1. Zeichen ohne Jahrgang!)
-	 * 
-	 * @return true, falls das Fach zu der angegebenen Sprache passt, sonst false 
+	 *
+	 * @return true, falls das Fach zu der angegebenen Sprache passt, sonst false
 	 */
 	public static istFremdsprachenfach(fach : GostFach | null, sprache : string | null) : boolean {
 		if ((fach === null) || (fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach) || (sprache === null))
@@ -73,9 +73,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Liefert das Kürzel der Sprache (ohne Jahrgang) zurück, falls es sich um eine Sprache handelt.
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return das Kürzel der Sprache oder null
 	 */
 	public static getFremdsprache(fach : GostFach) : string | null {
@@ -86,9 +86,9 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Prüft, ob das Fach bilingual unterrichtet wird oder nicht.
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
-	 * 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
 	 * @return true, falls das Fach bilingual unterrichtet wird.
 	 */
 	public static istBilingual(fach : GostFach) : boolean {
@@ -97,10 +97,10 @@ export class GostFachManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob das Fach in dem angegebenen Halbjahr wählbar ist oder nicht.
-	 * 
-	 * @param fach   das Fach der gymnasialen Oberstufe 
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
 	 * @param halbjahr   das zu prüfende Halbjahr
-	 * 
+	 *
 	 * @return true, falls das Fach in dem Halbjahr wählbar ist, sonst false
 	 */
 	public static istWaehlbar(fach : GostFach | null, halbjahr : GostHalbjahr) : boolean {

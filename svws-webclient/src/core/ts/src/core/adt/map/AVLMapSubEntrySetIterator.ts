@@ -26,7 +26,7 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 
 	/**
 	 * Erstellt einen neuen ENTRY-Iterator für die angegebene {@link AVLMapSubMap} im gültigen {@link AVLMapIntervall}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

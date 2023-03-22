@@ -42,11 +42,11 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	}
 
 	/**
-	 * Führt die Abschlussberechnung (bzw. Berechtigungsberechnung) anhand der übergebenen 
+	 * Führt die Abschlussberechnung (bzw. Berechtigungsberechnung) anhand der übergebenen
 	 * Abschlussfächer durch und gibt das Berechnungsergebnis zurück.
-	 * 
+	 *
 	 * @param input    die Abschlussfächer
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public handle(input : GEAbschlussFaecher) : AbschlussErgebnis {
@@ -107,10 +107,10 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 
 	/**
 	 * Prüft in Bezug auf Defizite, ob der Abschluss erworben wurde.
-	 * 
+	 *
 	 * @param faecher      die Abschlussfächer nach Fächergruppen sortiert
 	 * @param log_indent   die Einrückung für das Logging
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
 	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {
@@ -215,13 +215,13 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	}
 
 	/**
-	 * Führt eine Detailprüfung in der Fächergruppe 2 durch. Diese Methode wird ggf. mehrfach - auch rekursiv - aufgerufen. 
-	 * 
+	 * Führt eine Detailprüfung in der Fächergruppe 2 durch. Diese Methode wird ggf. mehrfach - auch rekursiv - aufgerufen.
+	 *
 	 * @param faecher                die Abschlussfächer nach Fächergruppen sortiert
 	 * @param log_indent             die Einrückung für das Logging
 	 * @param npFaecher              die Liste der Nachprüfungsfächer, die bisher schon feststehen
 	 * @param nachpruefung_genutzt   gibt an, ob die Nachprüfungsmöglichkeit bereits eingesetzt werden musste
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
 	 */
 	private pruefeFG2(faecher : AbschlussFaecherGruppen, log_indent : string, npFaecher : List<GEAbschlussFach>, nachpruefung_genutzt : boolean) : AbschlussErgebnis {

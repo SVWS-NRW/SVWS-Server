@@ -17,7 +17,7 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für den literarisch-künstlerischen Bereich.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
@@ -37,8 +37,8 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkte 26-28:
-	 * Prüfe, ob ein Kurs in Kunst oder Musik mindestens von EF.1 bis Q1.2 belegt wurde 
-	 *   oder ob ein Ersatzfach (Literatur, vokal- oder instrumentalpraktischer Grundkurs) in der 
+	 * Prüfe, ob ein Kurs in Kunst oder Musik mindestens von EF.1 bis Q1.2 belegt wurde
+	 *   oder ob ein Ersatzfach (Literatur, vokal- oder instrumentalpraktischer Grundkurs) in der
 	 *           Qualifikationsphase gültig belegt wurde
 	 */
 	protected pruefeGesamt() : void {

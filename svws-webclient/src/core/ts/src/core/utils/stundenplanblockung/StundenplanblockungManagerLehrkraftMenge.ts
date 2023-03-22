@@ -26,8 +26,8 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	/**
 	 * Fügt die Lehrkraft hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID bereits existiert.
-	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft. 
+	 *
+	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel               Das Kürzel der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
@@ -42,7 +42,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @return                       Das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
@@ -56,9 +56,9 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
 	/**
 	 * Liefert eine zufällige Lehrkraft. <br>
-	 * Liefert eine Exception, falls die Menge der Lehrkräfte leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Lehrkräfte leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert eine zufällige Lehrkraft.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerLehrkraft {
@@ -71,7 +71,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	/**
 	 * Löscht die übergebene Lehrkraft. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
@@ -82,8 +82,8 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Lehrkraft-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Lehrkraft-ID existiert.
+	 *
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @return              TRUE, falls die Lehrkraft-ID existiert.
 	 */
@@ -93,7 +93,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Lehrkräfte.
-	 * 
+	 *
 	 * @return Die Menge aller Lehrkräfte.
 	 */
 	public getMenge() : Vector<StundenplanblockungManagerLehrkraft | null> | null {
@@ -102,7 +102,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Lehrkräften.
-	 * 
+	 *
 	 * @return Die Anzahl an Lehrkräften.
 	 */
 	public size() : number {

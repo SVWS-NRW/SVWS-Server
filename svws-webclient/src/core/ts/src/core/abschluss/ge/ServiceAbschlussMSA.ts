@@ -51,9 +51,9 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 
 	/**
 	 * Bestimmt anhand der übergebenen Fächer die Zuordnung zu den beiden Fächergruppen.
-	 * 
+	 *
 	 * @param input   die Abschlussfächer
-	 * 
+	 *
 	 * @return die Zuordnung der Abschlussfächer zu beiden Fachgruppen 1 und 2
 	 */
 	public static getFaechergruppen(input : List<GEAbschlussFach>) : AbschlussFaecherGruppen {
@@ -64,9 +64,9 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	/**
 	 * Führt die Abschlussberechnung anhand der übergebenen Abschlussfächer durch
 	 * und gibt das Berechnungsergebnis zurück.
-	 * 
+	 *
 	 * @param input    die Abschlussfächer
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public handle(input : GEAbschlussFaecher) : AbschlussErgebnis {
@@ -140,10 +140,10 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 
 	/**
 	 * Prüft in Bezug auf Defizite, ob der Abschluss erworben wurde.
-	 * 
+	 *
 	 * @param faecher      die Asbchlussfächer nach Fächergruppen sortiert
 	 * @param log_indent   die Einrückung für das Logging
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
 	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {
@@ -242,16 +242,16 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	}
 
 	/**
-	 * Führt eine Detailprüfung in der Fächergruppe 2 durch. Diese Methode wird ggf. mehrfach - auch rekursiv - aufgerufen. 
-	 * 
+	 * Führt eine Detailprüfung in der Fächergruppe 2 durch. Diese Methode wird ggf. mehrfach - auch rekursiv - aufgerufen.
+	 *
 	 * @param faecher                die Abschlussfächer nach Fächergruppen sortiert
 	 * @param log_indent             die Einrückung für das Logging
 	 * @param npFaecher              die Liste der Nachprüfungsfächer, die bisher schon feststehen
 	 * @param benoetige3er           die Anzahl der 3er, die noch in FG2 benötigt werden
-	 * @param ignorieren_genutzt     gibt an, ob die Möglichkeit eine defizitäre Leistung in FG2 zu ignorieren schon genutzt wurde 
+	 * @param ignorieren_genutzt     gibt an, ob die Möglichkeit eine defizitäre Leistung in FG2 zu ignorieren schon genutzt wurde
 	 * @param ausgleich_genutzt      gibt an, ob die Möglichkeit des Ausgleichs über ein anderes Fach schon genutzt wurde
 	 * @param nachpruefung_genutzt   gibt an, ob die Nachprüfungsmöglichkeit bereits eingesetzt werden musste
-	 * 
+	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
 	 */
 	private pruefeFG2(faecher : AbschlussFaecherGruppen, log_indent : string, npFaecher : List<GEAbschlussFach>, benoetige3er : number, ignorieren_genutzt : boolean, ausgleich_genutzt : boolean, nachpruefung_genutzt : boolean) : AbschlussErgebnis {

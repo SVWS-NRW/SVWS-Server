@@ -47,7 +47,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Lerngruppe mit der übergebenen ID.
-	 * 
+	 *
 	 * @param pID  Die Datenbank-ID der Lerngruppe.
 	 */
 	public constructor(pID : number) {
@@ -57,7 +57,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID der Lerngruppe.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Lerngruppe.
 	 */
 	public getID() : number {
@@ -66,7 +66,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Fügt der Lerngruppe die Lehrkraft hinzu (und umgekehrt).
-	 * 
+	 *
 	 * @param pLe Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public addLehrkraftOrException(pLe : StundenplanblockungManagerLehrkraft) : void {
@@ -78,7 +78,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Fügt der Lerngruppe die Klasse hinzu (und umgekehrt).
-	 * 
+	 *
 	 * @param pKl Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public addKlasseOrException(pKl : StundenplanblockungManagerKlasse) : void {
@@ -90,7 +90,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Fügt der Lerngruppe das Fach hinzu (und umgekehrt).
-	 * 
+	 *
 	 * @param pFa Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public addFachOrException(pFa : StundenplanblockungManagerFach) : void {
@@ -102,7 +102,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Lerngruppe die Lehrkraft zugeordnet ist.
-	 * 
+	 *
 	 * @param pLe  Das Objekt, nach dem gesucht wird.
 	 * @return TRUE, falls der Lerngruppe die Lehrkraft zugeordnet ist.
 	 */
@@ -112,7 +112,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Lerngruppe der Klasse zugeordnet ist.
-	 * 
+	 *
 	 * @param pKl  Das Objekt, nach dem gesucht wird.
 	 * @return TRUE, falls der Lerngruppe der Klasse zugeordnet ist.
 	 */
@@ -122,7 +122,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Lerngruppe das Fach zugeordnet ist.
-	 * 
+	 *
 	 * @param pFa  Das Objekt, nach dem gesucht wird..
 	 * @return TRUE, falls der Lerngruppe das Fach zugeordnet ist.
 	 */
@@ -132,7 +132,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Entfernt aus der Lerngruppe die Lehrkraft (und umgekehrt).
-	 * 
+	 *
 	 * @param pLe  Das Objekt, welches entfernt werden soll.
 	 */
 	public removeLehrkraftOrException(pLe : StundenplanblockungManagerLehrkraft) : void {
@@ -144,7 +144,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Entfernt aus der Lerngruppe die Lehrkraft (und umgekehrt).
-	 * 
+	 *
 	 * @param pKl  Das Objekt, welches entfernt werden soll.
 	 */
 	public removeKlasseOrException(pKl : StundenplanblockungManagerKlasse) : void {
@@ -156,7 +156,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
 	 * Entfernt aus der Lerngruppe das Fach (und umgekehrt).
-	 * 
+	 *
 	 * @param pFa  Das Objekt, welches entfernt werden soll.
 	 */
 	public removeFachOrException(pFa : StundenplanblockungManagerFach) : void {

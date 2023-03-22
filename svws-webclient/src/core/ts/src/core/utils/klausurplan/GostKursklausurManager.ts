@@ -64,7 +64,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param klausuren die Liste der GostKursklausuren eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 * @param termine   die Liste der GostKlausurtermine eines Abiturjahrgangs und
@@ -75,7 +75,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param klausuren die Liste der GostKursklausuren eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 */
@@ -145,7 +145,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
-	 * 
+	 *
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public updateKursklausur(klausur : GostKursklausur) : void {
@@ -200,7 +200,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
-	 * 
+	 *
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public addTermin(termin : GostKlausurtermin) : void {
@@ -216,7 +216,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
-	 * 
+	 *
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public addKlausur(klausur : GostKursklausur) : void {
@@ -227,7 +227,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Fügt den internen Strukturen neue Kursklausuren hinzu.
-	 * 
+	 *
 	 * @param klausuren die Liste von GostKursklausur-Objekten
 	 */
 	public addKlausuren(klausuren : List<GostKursklausur>) : void {
@@ -238,7 +238,7 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
-	 * 
+	 *
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public removeTermin(termin : GostKlausurtermin) : void {
@@ -261,25 +261,25 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausuren(idTermin : number | null) : List<GostKursklausur>;
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausuren() : List<GostKursklausur>;
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausuren(quartal : number) : List<GostKursklausur> | null;
@@ -303,7 +303,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten für die noch kein Termin /
 	 * Schiene gesetzt wurde
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausurenOhneTermin() : List<GostKursklausur>;
@@ -311,9 +311,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausurenOhneTermin(quartal : number) : List<GostKursklausur>;
@@ -338,9 +338,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausurenKursartOhneTermin(quartal : number) : List<List<GostKursklausur>> {
@@ -357,9 +357,9 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
 	public gibGostKlausurtermin(idTermin : number) : GostKlausurtermin | null {
@@ -369,9 +369,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Gibt eine Liste von Schüler-IDs zurück, die vom übergebenen Termin betroffen
 	 * sind.
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return die Liste der betroffenen Schüler-IDs
 	 */
 	public gibSchuelerIDsZuTermin(idTermin : number) : List<number> | null {
@@ -381,9 +381,9 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Gibt das GostKursklausur-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idKursklausur die ID der Kursklausur
-	 * 
+	 *
 	 * @return das GostKursklausur-Objekt
 	 */
 	public gibKursklausur(idKursklausur : number) : GostKursklausur | null {
@@ -392,16 +392,16 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public getKlausurtermine() : List<GostKlausurtermin>;
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public getKlausurtermine(quartal : number) : List<GostKlausurtermin>;
@@ -421,9 +421,9 @@ export class GostKursklausurManager extends JavaObject {
 
 	/**
 	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idTermin die ID des GostKlausurtermins
-	 * 
+	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
 	public gibKlausurtermin(idTermin : number) : GostKlausurtermin | null {
@@ -435,10 +435,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param termin  der zu prüfende Klausurtermin
 	 * @param klausur die zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public gibKonfliktTerminInternKursklausur(termin : GostKlausurtermin, klausur : GostKursklausur) : List<number> {
@@ -457,10 +457,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param termin  der zu prüfende Klausurtermin
 	 * @param klausur die zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public gibKonfliktTerminKursklausur(termin : GostKlausurtermin, klausur : GostKursklausur) : List<number>;
@@ -470,10 +470,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param idTermin      die ID des zu prüfenden Klausurtermins
 	 * @param idKursklausur die ID der zu prüfenden Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public gibKonfliktTerminKursklausur(idTermin : number, idKursklausur : number) : List<number>;
@@ -510,9 +510,9 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
 	 * wird die Anzahl der Konflikte zurückgegeben.
-	 * 
+	 *
 	 * @param idTermin die ID des zu prüfenden Klausurtermins
-	 * 
+	 *
 	 * @return die Anzahl der Konflikte innerhalb des Termins.
 	 */
 	public gibAnzahlKonflikteZuTermin(idTermin : number) : number {
@@ -533,10 +533,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
 	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
 	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 * 
+	 *
 	 * @param idKursklausur1 die ID der ersten zu prüfenden Kursklausur
 	 * @param idKursklausur2 die ID der zweiten zu prüfenden Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public gibKonfliktKursklausurKursklausur(idKursklausur1 : number, idKursklausur2 : number) : List<number>;
@@ -545,10 +545,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
 	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
 	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 * 
+	 *
 	 * @param klausur1 die erste zu prüfende Kursklausur
 	 * @param klausur2 die zweite zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public gibKonfliktKursklausurKursklausur(klausur1 : GostKursklausur, klausur2 : GostKursklausur) : List<number>;

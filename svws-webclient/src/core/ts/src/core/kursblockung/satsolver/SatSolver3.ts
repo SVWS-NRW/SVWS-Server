@@ -51,7 +51,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	public constructor(pRandom : Random) {
@@ -125,7 +125,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 1-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 */
 	private addClause1(x : number) : void {
@@ -144,7 +144,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 2-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 */
@@ -173,7 +173,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 3-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 * @param z Das 3. Literal (Variablennummer) der Klausel.
@@ -374,7 +374,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Setzt die Variable {@code varP} auf TRUE und aktualisiert die gesamte Datenstruktur entsprechend.
-	 * 
+	 *
 	 * @param varP Die Variable, die auf TRUE gesetzt wird.
 	 */
 	private unitpropagation(varP : Variable) : void {
@@ -391,7 +391,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Setzt die Variable {@code varP} von TRUE auf FREI und aktualisiert die gesamte Datenstruktur entsprechend.
-	 * 
+	 *
 	 * @param varP Die Variable, die von TRUE auf FREI gesetzt wird.
 	 */
 	private unitpropagation_undo(varP : Variable) : void {
@@ -406,7 +406,7 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Eine Hilsmethode, die alle Klauseln der Liste aktualisiert.
-	 * 
+	 *
 	 * @param clauses    Alle zu informmierenden Klausel.
 	 * @param pDeltaSat  Die Veränderung der erfüllten Klauseln, relativ zum 1. Index im 2D-Array
 	 *                   {@link Variable#statSatFree}.
@@ -431,9 +431,9 @@ export class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Liefert das zugehörige Variablenobjekt.
-	 * 
+	 *
 	 * @param pNr Der Variablennummer.
-	 * 
+	 *
 	 * @return Das zugehörige Variablenobjekt.
 	 */
 	private getVarOf(pNr : number) : Variable {

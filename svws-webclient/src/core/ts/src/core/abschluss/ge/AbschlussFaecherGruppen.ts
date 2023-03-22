@@ -21,7 +21,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 
 	/**
 	 * Erzeugt eine neues Objekt AbschlussFaecherGruppen
-	 *  
+	 *
 	 * @param fg1   die Fächergruppe 1
 	 * @param fg2   die Fächergruppe 2
 	 */
@@ -33,7 +33,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 
 	/**
 	 * Prüft, ob eine der beiden Fächergruppen leer ist.
-	 * 
+	 *
 	 * @return true, falls eine der beiden Fächergruppen leer ist.
 	 */
 	public isEmpty() : boolean {
@@ -41,11 +41,11 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob das Fach mit dem angegebenen Fachkürzel in einer der beiden 
+	 * Prüft, ob das Fach mit dem angegebenen Fachkürzel in einer der beiden
 	 * Fächergruppen enthalten ist oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Faches, welches geprüft werden soll.
-	 * 
+	 *
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
 	public contains(kuerzel : string | null) : boolean {
@@ -53,11 +53,11 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt alle Fächer beider Fächergruppen, welche dem übergebenen 
+	 * Bestimmt alle Fächer beider Fächergruppen, welche dem übergebenen
 	 * Filterkriterium entsprechen.
-	 * 
+	 *
 	 * @param filter   die Funktion, die das Kriterium für die gesuchten Fächer angibt.
-	 * 
+	 *
 	 * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getFaecher(filter : Predicate<GEAbschlussFach>) : List<GEAbschlussFach> {
@@ -67,11 +67,11 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Anzahl der Fächer beider Fächergruppen zurück, welche dem übergebenen 
+	 * Gibt die Anzahl der Fächer beider Fächergruppen zurück, welche dem übergebenen
 	 * Filterkriterium entsprechen.
-	 * 
+	 *
 	 * @param filter   die Funktion, die das Kriterium für die gesuchten Fächer angibt.
-	 * 
+	 *
 	 * @return die Anzahl der Fächer
 	 */
 	public getFaecherAnzahl(filter : Predicate<GEAbschlussFach>) : number {
@@ -79,11 +79,11 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt die Kürzel aller Fächer beider Fächergruppen, welche dem übergebenen 
+	 * Bestimmt die Kürzel aller Fächer beider Fächergruppen, welche dem übergebenen
 	 * Filterkriterium entsprechen.
-	 * 
+	 *
 	 * @param filter   die Funktion, die das Kriterium für die gesuchten Fächer angibt.
-	 * 
+	 *
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<string> {
@@ -95,9 +95,9 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	/**
 	 * Erstellt eine Zeichenkette mit einer Komma-separierten Liste der Kürzel aller Fächer
 	 * beider Fächergruppen, welche dem übergebenen Filterkriterium entsprechen.
-	 * 
+	 *
 	 * @param filter   die Funktion, die das Kriterium für die gesuchten Fächer angibt.
-	 * 
+	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
 	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : string;
@@ -106,10 +106,10 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * Erstellt eine Zeichenkette mit einer Komma-separierten Liste der Kürzel aller Fächer
 	 * beider Fächergruppen, welche dem übergebenen Filterkriterium entsprechen. Dabei
 	 * werden für die Fächergruppen jedoch unterschiedliche Filterkriterien angewendet.
-	 * 
+	 *
 	 * @param filterFG1   die Funktion, die das Kriterium für die gesuchten Fächer der Fächergruppe 1 angibt.
 	 * @param filterFG2   die Funktion, die das Kriterium für die gesuchten Fächer der Fächergruppe 2 angibt.
-	 * 
+	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
 	public getKuerzelListe(filterFG1 : Predicate<GEAbschlussFach>, filterFG2 : Predicate<GEAbschlussFach>) : string;

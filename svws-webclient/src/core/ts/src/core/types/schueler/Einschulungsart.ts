@@ -69,9 +69,9 @@ export class Einschulungsart extends JavaObject {
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einschulungsart, welche ein Array von 
-	 *                   {@link EinschulungsartKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einschulungsart, welche ein Array von
+	 *                   {@link EinschulungsartKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<EinschulungsartKatalogEintrag>) {
 		super();
@@ -84,10 +84,10 @@ export class Einschulungsart extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Einschulungsarten auf die 
-	 * zugehörigen Einschulungsarten zurück. 
+	 * Gibt eine Map von den Kürzeln der Einschulungsarten auf die
+	 * zugehörigen Einschulungsarten zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, Einschulungsart | null> {
@@ -102,9 +102,9 @@ export class Einschulungsart extends JavaObject {
 
 	/**
 	 * Gibt die Einschulungsart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Einschulungsart
-	 * 
+	 *
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Einschulungsart | null {

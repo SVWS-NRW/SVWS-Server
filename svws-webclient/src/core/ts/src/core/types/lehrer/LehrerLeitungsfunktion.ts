@@ -55,8 +55,8 @@ export class LehrerLeitungsfunktion extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Leitungsfunktion in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Leitungsfunktion, welches ein Array von {@link LehrerKatalogLeitungsfunktionenEintrag} ist  
+	 *
+	 * @param historie   die Historie der Leitungsfunktion, welches ein Array von {@link LehrerKatalogLeitungsfunktionenEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogLeitungsfunktionenEintrag>) {
 		super();
@@ -71,7 +71,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
 	private static getMapByKuerzel() : HashMap<string, LehrerLeitungsfunktion | null> {
@@ -87,7 +87,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
 	private static getMapByID() : HashMap<number, LehrerLeitungsfunktion | null> {
@@ -102,9 +102,9 @@ export class LehrerLeitungsfunktion extends JavaObject {
 
 	/**
 	 * Gibt die Leitungsfunktion für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Leitungsfunktion
-	 * 
+	 *
 	 * @return die Leitungsfunktion oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerLeitungsfunktion | null {
@@ -113,9 +113,9 @@ export class LehrerLeitungsfunktion extends JavaObject {
 
 	/**
 	 * Gibt die Leitungsfunktion für die angegebene ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Leitungsfunktion
-	 * 
+	 *
 	 * @return die Leitungsfunktion oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerLeitungsfunktion | null {

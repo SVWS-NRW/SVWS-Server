@@ -135,8 +135,8 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussAllgemeinbildendKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussAllgemeinbildendKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SchulabschlussAllgemeinbildendKatalogEintrag>) {
 		super();
@@ -151,7 +151,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, SchulabschlussAllgemeinbildend> {
@@ -166,9 +166,9 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : SchulabschlussAllgemeinbildend | null {
@@ -178,7 +178,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	/**
 	 * Gibt eine Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussAllgemeinbildend> {
@@ -193,9 +193,9 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Statistik-Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
 	public static getByKuerzelStatistik(kuerzel : string | null) : SchulabschlussAllgemeinbildend | null {
@@ -203,11 +203,11 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob dieser Abschluss dem im String-Parameter str übergebenen 
+	 * Prüft, ob dieser Abschluss dem im String-Parameter str übergebenen
 	 * Abschluss entspricht.
-	 *  
+	 *
 	 * @param str   der Name des Abschlusses für den Vergleich als String
-	 * 
+	 *
 	 * @return true, falls beide Abschlüsse übereinstimmen und ansonsten false
 	 */
 	public is(str : string | null) : boolean {

@@ -24,7 +24,7 @@ export abstract class KursblockungAlgorithmusS extends JavaObject {
 	/**
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
-	 * 
+	 *
 	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param dynDaten Die aktuellen Blockungsdaten.

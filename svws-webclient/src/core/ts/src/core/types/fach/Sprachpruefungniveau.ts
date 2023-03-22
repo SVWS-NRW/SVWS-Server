@@ -76,8 +76,8 @@ export class Sprachpruefungniveau extends JavaObject {
 	/**
 	 * Erstellt ein neues Prüfungsniveau dieser Aufzählung.
 	 *
-	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
-	 *                   {@link SprachpruefungsniveauKatalogEintrag} ist  
+	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von
+	 *                   {@link SprachpruefungsniveauKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SprachpruefungsniveauKatalogEintrag>) {
 		super();
@@ -92,7 +92,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static getMapByID() : HashMap<number, Sprachpruefungniveau> {
@@ -105,7 +105,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static getMapByKuerzel() : HashMap<string, Sprachpruefungniveau> {
@@ -128,9 +128,9 @@ export class Sprachpruefungniveau extends JavaObject {
 
 	/**
 	 * Gibt das Prüfungsniveau für das übergebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Prüfungsniveaus
-	 * 
+	 *
 	 * @return das Prüfungsniveaus oder null, wenn das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Sprachpruefungniveau | null {

@@ -18,14 +18,14 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 
 
 	/**
-	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen, 
+	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen,
 	 * das weder Zeit noch Log-Level mit ausgegeben werden.
 	 */
 	public constructor();
 
 	/**
 	 * Erzeugt einen neuen Consumer für Log-Informationen.
-	 * 
+	 *
 	 * @param printTime     gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht
 	 * @param printLevel    gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht
 	 */
@@ -50,8 +50,8 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	/**
 	 * Diese Methode implementiert das funktionale Interface java.util.function.Consumer
 	 * und gibt die empfangenen Log-Informationen auf der Kommandozeile aus.
-	 * 
-	 * @param t   die auszugebenden Log-Informationen 
+	 *
+	 * @param t   die auszugebenden Log-Informationen
 	 */
 	public accept(t : LogData) : void {
 		if (t === null)

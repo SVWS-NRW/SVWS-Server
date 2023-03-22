@@ -393,7 +393,7 @@ export class Herkunft extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer sonstigen Herkunft.
-	 * 
+	 *
 	 * @param h   die sonstige Herkunft
 	 */
 	private constructor(name : string, ordinal : number, h : HerkunftSonstige);
@@ -401,7 +401,7 @@ export class Herkunft extends JavaObject {
 	/**
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer Herkunft
 	 * aus einem Bildungsgang eines Berufskollegs.
-	 * 
+	 *
 	 * @param h   die Herkunft aus einem Bildungsgang
 	 */
 	private constructor(name : string, ordinal : number, h : HerkunftBildungsgang);
@@ -410,7 +410,7 @@ export class Herkunft extends JavaObject {
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer Herkunft
 	 * aus einem Typ eines Bildungsgangs eines Berufskollegs oder eines
 	 * Weiterbildungskollegs.
-	 * 
+	 *
 	 * @param h   die Herkunft aus einem Bildungsgangtyp
 	 */
 	private constructor(name : string, ordinal : number, h : HerkunftBildungsgangsTyp);
@@ -418,7 +418,7 @@ export class Herkunft extends JavaObject {
 	/**
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer Herkunft
 	 * aus einer Schulform.
-	 * 
+	 *
 	 * @param h   die Herkunft aus einer Schulform
 	 */
 	private constructor(name : string, ordinal : number, h : HerkunftSchulform);
@@ -464,10 +464,10 @@ export class Herkunft extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Herkünfte auf die zugehörigen Herkünfte 
-	 * zurück. 
+	 * Gibt eine Map von den Kürzeln der Herkünfte auf die zugehörigen Herkünfte
+	 * zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkünfte
 	 */
 	private static getMapByKuerzel() : HashMap<string, Herkunft | null> {
@@ -482,9 +482,9 @@ export class Herkunft extends JavaObject {
 
 	/**
 	 * Gibt die Herkunft für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Herkunft
-	 * 
+	 *
 	 * @return die Herkunft oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Herkunft | null {

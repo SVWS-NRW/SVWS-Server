@@ -71,8 +71,8 @@ export class Schulstufe extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Schulstufe in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Schulstufe, welches ein Array von {@link SchulstufeKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Schulstufe, welches ein Array von {@link SchulstufeKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SchulstufeKatalogEintrag>) {
 		super();
@@ -87,7 +87,7 @@ export class Schulstufe extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
 	 */
 	private static getMapByKuerzel() : HashMap<string, Schulstufe> {
@@ -102,9 +102,9 @@ export class Schulstufe extends JavaObject {
 
 	/**
 	 * Gibt die Schulstufe für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulstufe
-	 * 
+	 *
 	 * @return die Schulstufe oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Schulstufe | null {

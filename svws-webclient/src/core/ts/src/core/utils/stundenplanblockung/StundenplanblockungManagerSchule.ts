@@ -16,7 +16,7 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Unterrichtstagen in der Woche.
-	 * 
+	 *
 	 * @return Die Anzahl an Unterrichtstagen in der Woche.
 	 */
 	public get_tage_pro_woche() : number {

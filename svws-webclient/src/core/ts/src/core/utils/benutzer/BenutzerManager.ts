@@ -49,15 +49,15 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Manager mit leeren Daten für einen Benutzer
-	 * 
+	 *
 	 * @param id die ID des Benutzers
-	 * 
+	 *
 	 */
 	public constructor(id : number);
 
 	/**
 	 * Erstellt einen neuen Manager mit den Daten eines Benutzers
-	 * 
+	 *
 	 * @param pDaten die BenutzerDaten
 	 */
 	public constructor(pDaten : BenutzerDaten);
@@ -95,7 +95,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
-	 * 
+	 *
 	 * @param bgd die Benutzergruppendaten
 	 */
 	private addGruppe(bgd : BenutzergruppeDaten | null) : void {
@@ -117,7 +117,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
-	 * 
+	 *
 	 * @param bgd die Benutzergruppendaten
 	 */
 	private removeGruppe(bgd : BenutzergruppeDaten | null) : void {
@@ -142,7 +142,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Liefert true, wenn der Benutzer in einer adminstrativen Gruppe ist, sonst false.
-	 * 
+	 *
 	 * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
 	 */
 	public istInAdminGruppe() : boolean {
@@ -165,9 +165,9 @@ export class BenutzerManager extends JavaObject {
 	 * Gibt für die übergebene Benutzerkompetenz eine Liste der
 	 * Benutzergruppen-Daten
 	 * zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
-	 * 
+	 *
 	 * @param kompetenz die Benutzerkompetenz
-	 * 
+	 *
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
 	public getGruppen(kompetenz : BenutzerKompetenz) : List<BenutzergruppeDaten> {
@@ -179,7 +179,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt die Benutzer-Daten zurück.
-	 * 
+	 *
 	 * @return die Benutzer-Daten (siehe {@link BenutzerDaten})
 	 */
 	public daten() : BenutzerDaten {
@@ -188,7 +188,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt die ID des Benutzers zurück.
-	 * 
+	 *
 	 * @return die ID des Benutzers
 	 */
 	public getID() : number {
@@ -197,7 +197,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt die BenutzerGruppen des Benutzers zurück.
-	 * 
+	 *
 	 * @return Gibt die BenutzerGruppen des Benutzers zurück.
 	 */
 	public getBenutzerGruppen() : List<BenutzergruppeDaten> {
@@ -206,7 +206,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt den Anmeldenamen des Benutzers zurück.
-	 * 
+	 *
 	 * @return Gibt den Anmeldenamen des Benutzers zurück.
 	 */
 	public getAnmeldename() : string {
@@ -215,7 +215,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Setzt den Anmeldenamen des Benutzers.
-	 * 
+	 *
 	 * @param name der neue Anmeldename des Benutzers
 	 */
 	public setAnmeldename(name : string) : void {
@@ -226,7 +226,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt denAnzeigenamen des Benutzers zurück.
-	 * 
+	 *
 	 * @return Gibt den Anzeigenamen des Benutzers zurück.
 	 */
 	public getAnzeigename() : string {
@@ -235,7 +235,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Setzt den Anzeigenamen des Benutzers.
-	 * 
+	 *
 	 * @param name der neue Anzeigenamen des Benutzers
 	 */
 	public setAnzeigename(name : string) : void {
@@ -246,7 +246,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Setzt, ob es sich um einen administrativen Benutzer handelt oder nicht
-	 * 
+	 *
 	 * @param istAdmin true, falls der Benutzer administrativ ist und ansonsten
 	 *                 false
 	 */
@@ -256,7 +256,7 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es sich um einen administrativen Benutzer handelt oder nicht.
-	 * 
+	 *
 	 * @return true, falls es sich um einen administrativen Benutzer handelt und
 	 *         ansonsten false
 	 */
@@ -267,9 +267,9 @@ export class BenutzerManager extends JavaObject {
 	/**
 	 * Prüft, ob der Benutzer die angebene Kompetenz direkt oder über eine Gruppe
 	 * besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenz die zu prüfende Kompetenz
-	 * 
+	 *
 	 * @return true, falls der Benutzer die Kompetenz besitzt.
 	 */
 	public hatKompetenz(kompetenz : BenutzerKompetenz) : boolean {
@@ -282,9 +282,9 @@ export class BenutzerManager extends JavaObject {
 	 * Prüft, ob der Benutzer alle angebenen Kompetenzen direkt oder über eine
 	 * Gruppe
 	 * besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenzen die zu prüfenden Kompetenzen
-	 * 
+	 *
 	 * @return true, falls der Benutzer die Kompetenzen besitzt.
 	 */
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
@@ -300,9 +300,9 @@ export class BenutzerManager extends JavaObject {
 	 * Prüft, ob der Benutzer mindestens eine der angebenen Kompetenzen direkt oder
 	 * über eine Gruppe
 	 * besitzt oder nicht.
-	 * 
+	 *
 	 * @param kompetenzen die zu prüfenden Kompetenzen
-	 * 
+	 *
 	 * @return true, falls der Benutzer mindestens eine der Kompetenzen besitzt.
 	 */
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
@@ -316,9 +316,9 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Fügt die übergebene Kompetenz direkt bei dem Benutzer hinzu.
-	 * 
+	 *
 	 * @param kompetenz die Kompetenz, die hinzugefügt wird
-	 * 
+	 *
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
 	public addKompetenz(kompetenz : BenutzerKompetenz | null) : void {
@@ -337,9 +337,9 @@ export class BenutzerManager extends JavaObject {
 	 * zugeordnet wure. Sollte die Kompetenz zusätzlich über eine Gruppe zugeordnet
 	 * sein,
 	 * so bleibt diese Zuordnung erhalten.
-	 * 
+	 *
 	 * @param kompetenz die zu entfernende Kompetenz
-	 * 
+	 *
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz nicht hat
 	 *                                  oder nur über eine Gruppe hat
 	 */
@@ -355,9 +355,9 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Überprüft, ob der Benutzer in einer Grupper mit der id Mitglied ist.
-	 * 
+	 *
 	 * @param id  ID der Gruppe
-	 * 
+	 *
 	 * @return true, falls der Benutzer in der Gruppe ist.
 	 */
 	public IstInGruppe(id : number) : boolean {
@@ -366,8 +366,8 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl der Gruppen des Benutzers
-	 * 
-	 * 
+	 *
+	 *
 	 * @return anzahl   der Gruppen
 	 */
 	public anzahlGruppen() : number {
@@ -376,9 +376,9 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Fügt den Benutzer in eine Gruppe ein
-	 * 
+	 *
 	 * @param bgd die Benutzergruppe
-	 * 
+	 *
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
 	public addToGruppe(bgd : BenutzergruppeDaten) : void {
@@ -390,9 +390,9 @@ export class BenutzerManager extends JavaObject {
 
 	/**
 	 * Entfernt den Benutzer aus der Gruppe
-	 * 
+	 *
 	 * @param bgd  dei Benutzergruppe
-	 * 
+	 *
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
 	public removeFromGruppe(bgd : BenutzergruppeDaten) : void {

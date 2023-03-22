@@ -27,7 +27,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 
 	/**
 	 * @param pInput   Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
-	 * @param pConfig  Das Konfigurationsobjekt für den Algorithmus. 
+	 * @param pConfig  Das Konfigurationsobjekt für den Algorithmus.
 	 * @return Eine Liste (Termine) von Listen (KlausurIDs)
 	 */
 	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {

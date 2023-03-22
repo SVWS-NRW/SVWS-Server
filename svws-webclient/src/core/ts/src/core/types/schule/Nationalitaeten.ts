@@ -1084,8 +1084,8 @@ export class Nationalitaeten extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Nationalität in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Nationalitäten, welches ein Array von {@link NationalitaetenKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Nationalitäten, welches ein Array von {@link NationalitaetenKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<NationalitaetenKatalogEintrag>) {
 		super();
@@ -1100,7 +1100,7 @@ export class Nationalitaeten extends JavaObject {
 	/**
 	 * Gibt eine Map von den dreistelligen ISO-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static getMapISO3() : HashMap<string, Nationalitaeten> {
@@ -1116,7 +1116,7 @@ export class Nationalitaeten extends JavaObject {
 	/**
 	 * Gibt eine Map von den zweistelligen ISO-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static getMapISO2() : HashMap<string, Nationalitaeten> {
@@ -1132,7 +1132,7 @@ export class Nationalitaeten extends JavaObject {
 	/**
 	 * Gibt eine Map von den DESTATIS-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static getMapDESTATIS() : HashMap<string, Nationalitaeten> {
@@ -1147,9 +1147,9 @@ export class Nationalitaeten extends JavaObject {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen dreistelligen ISO-Code nach ISO 3166-1 zurück.
-	 * 
+	 *
 	 * @param code   der ISO-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static getByISO3(code : string | null) : Nationalitaeten | null {
@@ -1158,9 +1158,9 @@ export class Nationalitaeten extends JavaObject {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen zweistelligen ISO-Code nach ISO 3166-1 zurück.
-	 * 
+	 *
 	 * @param code   der ISO-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static getByISO2(code : string | null) : Nationalitaeten | null {
@@ -1169,9 +1169,9 @@ export class Nationalitaeten extends JavaObject {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen DESTATIS-Code zurück.
-	 * 
+	 *
 	 * @param code   der DESTATIS-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static getByDESTATIS(code : string | null) : Nationalitaeten | null {

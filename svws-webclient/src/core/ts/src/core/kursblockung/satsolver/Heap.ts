@@ -26,7 +26,7 @@ export class Heap extends JavaObject {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	constructor(pRandom : Random) {
@@ -42,7 +42,7 @@ export class Heap extends JavaObject {
 
 	/**
 	 * Überprüft, ob der Heap leer ist.
-	 * 
+	 *
 	 * @return TRUE, wenn der Heap leer ist.
 	 */
 	isEmpty() : boolean {
@@ -51,7 +51,7 @@ export class Heap extends JavaObject {
 
 	/**
 	 * Liefert das oberste (beste) Element des Heaps mit hoher Wahrscheinlichkeit.
-	 * 
+	 *
 	 * @return Liefert das oberste (beste) Element des Heaps mit hoher Wahrscheinlichkeit.
 	 */
 	top() : Variable {
@@ -64,7 +64,7 @@ export class Heap extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Elementen im Heap.
-	 * 
+	 *
 	 * @return Die Anzahl an Elementen im Heap.
 	 */
 	size() : number {
@@ -74,7 +74,7 @@ export class Heap extends JavaObject {
 	/**
 	 * Fügt die Variable "var" dem Heap hinzu. Nach dem Einfügen kennt die Variable mit {@link Variable#index} ihre
 	 * eigene Position in diesem Heap.
-	 * 
+	 *
 	 * @param pVar Die einzufügende Variable.
 	 */
 	insert(pVar : Variable) : void {
@@ -101,7 +101,7 @@ export class Heap extends JavaObject {
 	/**
 	 * Entfernt die Variable pVar vom Heap. Dabei wird zunächst mit Hilfe von {@link Variable#index} die Position
 	 * bestimmt. Anschließend wird der Heap so transformiert, dass die Variable entfernt werden kann.
-	 * 
+	 *
 	 * @param pVar Die zu entfernende Variable.
 	 */
 	remove(pVar : Variable) : void {
@@ -145,7 +145,7 @@ export class Heap extends JavaObject {
 	/**
 	 * Falls sich die Variable pVar im Heap befindet, wird sie entfernt und direkt wieder hinzugefügt. Diese Methode
 	 * muss aufgerufen werden, sobald die Variable eine neue Bewertung erhalten hat.
-	 * 
+	 *
 	 * @param pVar Die Variable, deren Bewertung sich geändert hat.
 	 */
 	public update(pVar : Variable) : void {

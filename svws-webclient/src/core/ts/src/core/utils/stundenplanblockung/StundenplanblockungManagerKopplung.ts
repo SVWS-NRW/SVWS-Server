@@ -23,7 +23,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Kopplung.
-	 * 
+	 *
 	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
 	 * @param pKuerzel     Das Kürzel der Kopplung.
 	 */
@@ -35,7 +35,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID der Kopplung.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Kopplung.
 	 */
 	public getID() : number {
@@ -44,7 +44,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 
 	/**
 	 * Setzt das Kürzel der Kopplung.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel der Kopplung.
 	 */
 	public setKuerzel(pKuerzel : string) : void {

@@ -26,8 +26,8 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	/**
 	 * Fügt die Klasse hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Klasse-ID bereits existiert.
-	 * 
-	 * @param pKlasseID              Die Datenbank-ID der Klasse. 
+	 *
+	 * @param pKlasseID              Die Datenbank-ID der Klasse.
 	 * @param pKuerzel               Das Kürzel der Klasse.
 	 * @throws NullPointerException  Falls die Klasse-ID bereits existiert.
 	 */
@@ -42,7 +42,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanblockungKlasse}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Klasse-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pKlasseID              Die Datenbank-ID der Klasse.
 	 * @return                       Das {@link StundenplanblockungKlasse}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
@@ -55,9 +55,9 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine zufällige Klasse oder null, falls es gar keine Lehrkräfte gibt. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine zufällige Klasse oder null, falls es gar keine Lehrkräfte gibt.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Eine zufällige Lehrkraft oder null, falls es gar keine Lehrkräfte gibt.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerKlasse {
@@ -70,7 +70,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	/**
 	 * Löscht die übergebene Klasse. <br>
 	 * Wirft eine NullPointerException, falls die Klasse-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pKlasseID              Die Datenbank-ID der Klasse.
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
@@ -81,8 +81,8 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Klasse-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Klasse-ID existiert.
+	 *
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @return           TRUE, falls die Klasse-ID existiert.
 	 */
@@ -92,7 +92,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Klassen.
-	 * 
+	 *
 	 * @return Die Menge aller Klassen.
 	 */
 	public getMenge() : Vector<StundenplanblockungManagerKlasse | null> | null {
@@ -101,7 +101,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Klassen.
-	 * 
+	 *
 	 * @return Die Anzahl an Klassen.
 	 */
 	public size() : number {

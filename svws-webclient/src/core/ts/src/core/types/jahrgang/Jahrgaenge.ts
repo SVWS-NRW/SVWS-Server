@@ -190,8 +190,8 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Jahrgang in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Jahrgangs, welches ein Array von {@link JahrgangsKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Jahrgangs, welches ein Array von {@link JahrgangsKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<JahrgangsKatalogEintrag>) {
 		super();
@@ -218,7 +218,7 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Jahrgänge auf die zugehörigen Jahrgänge
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzel der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
 	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge | null> {
@@ -231,7 +231,7 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Jahrgänge auf die zugehörigen Jahrgänge
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
 	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge | null> {
@@ -244,10 +244,10 @@ export class Jahrgaenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Jahrgang anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert den Jahrgang anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel des Jahrgangs
-	 * 
+	 *
 	 * @return der Jahrgang oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Jahrgaenge | null {
@@ -255,10 +255,10 @@ export class Jahrgaenge extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Jahrgang anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert den Jahrgang anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID des Jahrgangs
-	 * 
+	 *
 	 * @return der Jahrgang oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number | null) : Jahrgaenge | null {
@@ -267,9 +267,9 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Liefert die Bezeichnung des Jahrgangs für die angebenene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die Bezeichung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
 	 */
 	public getBezeichnung(schulform : Schulform | null) : string | null {
@@ -288,7 +288,7 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen der Jahrgang vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform | null> {
@@ -297,9 +297,9 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Liefert alle zulässigen Jahrgänge für die angegebene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
 	public static get(schulform : Schulform | null) : List<Jahrgaenge | null> {
@@ -317,9 +317,9 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Prüft, ob das übergebene Kürzel dem Kürzel dieses Jahrgangs entspricht.
-	 * 
+	 *
 	 * @param kuerzel   das zu prüfende Kürzel
-	 * 
+	 *
 	 * @return true, falls das übergebene Kürzel das Kürzel dieses Jahrgangs ist.
 	 */
 	public isKuerzel(kuerzel : string | null) : boolean {
@@ -331,9 +331,9 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob die Schulform diesen Jahrgang
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls der Jahrgang bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
@@ -351,9 +351,9 @@ export class Jahrgaenge extends JavaObject {
 
 	/**
 	 * Prüft, ob die Schulform diesen Jahrgang hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls der Jahrgang bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {

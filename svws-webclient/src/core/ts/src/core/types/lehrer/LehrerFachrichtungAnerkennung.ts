@@ -65,8 +65,8 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 
 	/**
 	 * Erzeugt neue Anerkennung für Fachrichtungen in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogFachrichtungAnerkennungEintrag>) {
 		super();
@@ -81,7 +81,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerFachrichtungAnerkennung | null> {
@@ -94,7 +94,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerFachrichtungAnerkennung | null> {
@@ -106,10 +106,10 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt die Fachrichtungsanerkennung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Fachrichtungsanerkennung
-	 * 
-	 * @return die Fachrichtungsanerkennung oder null, falls die ID ungültig ist 
+	 *
+	 * @return die Fachrichtungsanerkennung oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerFachrichtungAnerkennung | null {
 		return LehrerFachrichtungAnerkennung.getMapAnerkennungenByID().get(id);
@@ -117,9 +117,9 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt die Fachrichtungsanerkennung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Fachrichtungsanerkennung
-	 * 
+	 *
 	 * @return die Fachrichtungsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerFachrichtungAnerkennung | null {

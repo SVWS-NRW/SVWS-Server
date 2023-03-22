@@ -81,9 +81,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
-	 * 
+	 *
 	 * @param abidaten       die Abiturdaten
-	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen. 
+	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen.
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
 	public constructor(abidaten : Abiturdaten, gostFaecher : List<GostFach>, pruefungsArt : GostBelegpruefungsArt) {
@@ -100,11 +100,11 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Führt die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen 
+	 * Führt die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
 	 * Manager verwaltet werden.
-	 * 
+	 *
 	 * @param pruefungs_art    die Art der Prüfung, die durchgeführt wird
-	 * 
+	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public getPruefungen(pruefungs_art : GostBelegpruefungsArt) : Vector<GostBelegpruefung> {
@@ -130,7 +130,7 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Initialisiert bzw. reinitialisert die Datenstrukturen, die für den schnellen Zugriff auf die Daten
-	 * eingerichtet werden. 
+	 * eingerichtet werden.
 	 */
 	public init() : void {
 		if (this.abidaten === null)
@@ -147,7 +147,7 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Initialisiert bzw. reinitialisiert die Map für den schnellen Zugriff auf Fachbelegungen
-	 * anhand des Fachbereichs. 
+	 * anhand des Fachbereichs.
 	 */
 	private initMapFachbereiche() : void {
 		this.mapFachbereiche.clear();
@@ -170,9 +170,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob das angegebene Halbjahr bereits bewertet ist oder nicht.
-	 *  
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return true, falls es bereits bewertet ist
 	 */
 	public istBewertet(halbjahr : GostHalbjahr) : boolean {
@@ -189,10 +189,10 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen 
+	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
 	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
-	 * 
-	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre 
+	 *
+	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public getWochenstunden() : Array<number> {
 		let stunden : Array<number> = [0, 0, 0, 0, 0, 0];
@@ -208,10 +208,10 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen 
+	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
 	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
-	 * 
-	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre 
+	 *
+	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public getAnrechenbareKurse() : Array<number> {
 		let anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
@@ -246,9 +246,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übegebenen ID
-	 * 
+	 *
 	 * @param fach_id   die ID des Faches
-	 * 
+	 *
 	 * @return die Schüler-Fachwahl
 	 */
 	public getSchuelerFachwahl(fach_id : number) : GostSchuelerFachwahl {
@@ -268,10 +268,10 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Liefert das Fach der gymnasialen Oberstufe für die angegeben Abiturfachbelegung.
-	 * 
+	 *
 	 * @param belegung   die Fachbelegung (siehe {@link AbiturFachbelegung})
-	 * 
-	 * @return das Fach der gymnasialen Oberstufe (siehe {@link GostFach}) 
+	 *
+	 * @return das Fach der gymnasialen Oberstufe (siehe {@link GostFach})
 	 */
 	public getFach(belegung : AbiturFachbelegung | null) : GostFach | null {
 		if (belegung === null)
@@ -283,11 +283,11 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob das Faches in allen angegebenen Halbjahren belegt wurde.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachbelegung
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false 
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false
 	 */
 	public pruefeBelegung(fachbelegung : AbiturFachbelegung | null, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -305,9 +305,9 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Bestimmt die Anzahl der Fachbelegungen, die dem Fach zugeordnet sind.
 	 * Wird keine gültige Fachbelegung übergeben, so wird 0 zurückgegeben.
-	 *  
-	 * @param fachbelegung   die Fachbelegung 
-	 * 
+	 *
+	 * @param fachbelegung   die Fachbelegung
+	 *
 	 * @return die Anzahl der Belegungen des Faches
 	 */
 	public zaehleBelegung(fachbelegung : AbiturFachbelegung | null) : number {
@@ -325,11 +325,11 @@ export class AbiturdatenManager extends JavaObject {
 	 * Zählt die Anzahl der Belegungen für die angegebenen Fachbelegungen in den angegeben Halbjahren.
 	 * Ist die Fachbelegung null, so wird 0 zurückgegeben. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so wird ebenfalls 0 zurückgegeben.
-	 * 
+	 *
 	 * @param fachbelegungen      die Fachbelegungen
-	 * @param halbjahre           die Halbjahre 
-	 * 
-	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern 
+	 * @param halbjahre           die Halbjahre
+	 *
+	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern
 	 */
 	public zaehleBelegungInHalbjahren(fachbelegungen : List<AbiturFachbelegung> | null, ...halbjahre : Array<GostHalbjahr>) : number {
 		if (fachbelegungen === null)
@@ -348,12 +348,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob die Belegung des Faches in den angegebenen Halbjahren der angegebenen Kursart entspricht.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param kursart           die zu prüfende Kursart 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param kursart           die zu prüfende Kursart
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitKursart(fachbelegung : AbiturFachbelegung | null, kursart : GostKursart, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -369,16 +369,16 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob eine Fachbelegung existiert, welche in den angegebenen Halbjahren der angegebenen Kursart 
+	 * Prüft, ob eine Fachbelegung existiert, welche in den angegebenen Halbjahren der angegebenen Kursart
 	 * entspricht.
-	 * Ist keine Fachbelegung angegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen 
+	 * Ist keine Fachbelegung angegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen
 	 * Fachbelegung kein Halbjahr angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param kursart           die zu prüfende Kursart 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param kursart           die zu prüfende Kursart
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitKursart(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if ((fachbelegungen === null) || (fachbelegungen.size() <= 0))
@@ -397,12 +397,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung nicht erfolgreich, da kein Halbjahr geprüft werden muss und somit die Kursart nicht
 	 * einmal existiert.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param kursart           die zu prüfende Kursart 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Kursart mindestens einmal in den Halbjahren gegeben ist, sonst false 
+	 * @param kursart           die zu prüfende Kursart
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Kursart mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungHatMindestensEinmalKursart(fachbelegung : AbiturFachbelegung | null, kursart : GostKursart, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -421,13 +421,13 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Belegung des Faches in dem angegebenen Halbjahr der angegebenen Schriftlichkeit entspricht.
-	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. 
-	 * 
+	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl.
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahr          das zu prüfende Halbjahr 
-	 * 
-	 * @return true, falls die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahr          das zu prüfende Halbjahr
+	 *
+	 * @return true, falls die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, halbjahr : GostHalbjahr) : boolean {
 		if (fachbelegung === null)
@@ -442,12 +442,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob die Belegung des Faches in den angegebenen Halbjahren der angegebenen Schriftlichkeit entspricht.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitSchriftlichkeit(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -464,12 +464,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob eine Belegung des Faches in den angegebenen Halbjahren nicht der angegebenen Schriftlichkeit entspricht.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
 	public pruefeBelegungErfuelltNicht(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -489,12 +489,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * sofern es in dem Halbjahr überhaupt belegt wurde..
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
 	public pruefeBelegungErfuelltNichtFallsBelegt(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -517,12 +517,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung nicht erfolgreich, da kein Halbjahr geprüft werden muss und somit die Schriftlichkeit nicht
 	 * einmal existiert.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die angegebene Schriftlichkeit mindestens einmal in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die angegebene Schriftlichkeit mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -540,17 +540,17 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob eine Fachbelegung existiert, welche in den angegebenen Halbjahren mindestens einmal die angegebene 
+	 * Prüft, ob eine Fachbelegung existiert, welche in den angegebenen Halbjahren mindestens einmal die angegebene
 	 * Schritflichkeit hat.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung nicht erfolgreich, da kein Halbjahr geprüft werden muss und somit die Schriftlichkeit nicht
 	 * einmal existiert.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if ((fachbelegungen === null) || (fachbelegungen.size() <= 0))
@@ -567,14 +567,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob die Belegung eines der angegebenen Fächer mit den angegebenen Halbjahren existiert.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche 
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
 	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, sonst false 
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, sonst false
 	 */
 	public pruefeBelegungExistiert(fachbelegungen : List<AbiturFachbelegung> | null, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -610,15 +610,15 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert.
-	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. 
-	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche 
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
 	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param halbjahr          das zu prüfende Halbjahr 
-	 * 
-	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false 
+	 * @param halbjahr          das zu prüfende Halbjahr
+	 *
+	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false
 	 */
 	public pruefeBelegungExistiertEinzeln(fachbelegungen : List<AbiturFachbelegung> | null, halbjahr : GostHalbjahr) : boolean {
 		if (fachbelegungen === null)
@@ -640,14 +640,14 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft, ob die Belegung eines der angegebenen Fächer mit einer durchgängigen Belegung existiert,
 	 * die zumindest in der Q1 und der Q2.1 schriftlich ist.
-	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche 
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist bei bilingualen
-	 * Fächern nötig.   
+	 * Fächern nötig.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * 
-	 * @return true, falls eine durchgehend schriftliche Fachbelegung existiert, sonst false 
+	 *
+	 * @return true, falls eine durchgehend schriftliche Fachbelegung existiert, sonst false
 	 */
 	public pruefeBelegungExistiertDurchgehendSchriftlich(fachbelegungen : List<AbiturFachbelegung> | null) : boolean {
 		if (fachbelegungen === null)
@@ -682,13 +682,13 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Prüft, ob die Belegung eines der angegebenen Fächer in dem angegebenen Halbjahr der angegebenen Schriftlichkeit entspricht.
-	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. 
-	 * 
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahr          das zu prüfende Halbjahr 
-	 * 
-	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahr          das zu prüfende Halbjahr
+	 *
+	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitSchriftlichkeitEinzeln(fachbelegungen : List<AbiturFachbelegung | null> | null, schriftlichkeit : GostSchriftlichkeit, halbjahr : GostHalbjahr) : boolean {
 		if (fachbelegungen === null)
@@ -704,12 +704,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob die Belegung eines der angegebenen Fächer in den angegebenen Halbjahren der angegebenen Schriftlichkeit entspricht.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -722,15 +722,15 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob die Belegung eines der angegebenen Fächer in den angegebenen Halbjahren mindestens einmal die angegebene Kursart 
+	 * Prüft, ob die Belegung eines der angegebenen Fächer in den angegebenen Halbjahren mindestens einmal die angegebene Kursart
 	 * hat. Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param kursart           die zu prüfende Kursart 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Kursart bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false 
+	 * @param kursart           die zu prüfende Kursart
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Kursart bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertHatMindestensEinmalKursart(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -747,12 +747,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * bei welchem in mind. einem der Halbjahren die angebene Schriftlichkeit nicht gegeben ist.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true oder false (siehe oben) 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true oder false (siehe oben)
 	 */
 	public pruefeBelegungExistiertErfuelltNicht(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -770,12 +770,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * das Fach überhaupt belegt wurde.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true oder false (siehe oben) 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true oder false (siehe oben)
 	 */
 	public pruefeBelegungExistiertErfuelltNichtFallsBelegt(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -792,12 +792,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * und das Fach durchgehend belegbar ist.
 	 * Ist die Fachbelegung null, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegung      die zu prüfende Fachnbelegung
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegbar(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
@@ -812,12 +812,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * und das Fach durchgängig belegbar ist.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegbarExistiert(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -833,14 +833,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * Prüft, ob die Belegung eines der angegebenen Fächer in den angegebenen Halbjahren der angegebenen Schriftlichkeit entspricht
 	 * und das Fach durchgängig belegt ist.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
-	 * angegeben, so ist die Prüfung erfolgreich sofern das Fach durchgängig belegt wurde, da kein Halbjahr auf die 
+	 * angegeben, so ist die Prüfung erfolgreich sofern das Fach durchgängig belegt wurde, da kein Halbjahr auf die
 	 * Schriftlichkeit geprüft werden muss.
-	 * 
+	 *
 	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
-	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit 
-	 * @param halbjahre         die zu prüfenden Halbjahre 
-	 * 
-	 * @return true, falls bei eine Fachbelegung durchgängig belegt wurde und die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
+	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls bei eine Fachbelegung durchgängig belegt wurde und die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegtExistiert(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegungen === null)
@@ -856,10 +856,10 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft, ob die Fachbelegung in mindestens einem der Halbjahre die angegebene Kursart aufweist.
 	 * Existiert die Fachbelegung nicht (null), so kommt die Kursart auch nicht vor.
-	 *  
+	 *
 	 * @param fachbelegung   die Fachbelegung
 	 * @param kursart        die Kursart
-	 * 
+	 *
 	 * @return true, falls mindestens einmal die Kursart belegt wurde, sonst false
 	 */
 	public pruefeAufKursart(fachbelegung : AbiturFachbelegung | null, kursart : GostKursart) : boolean {
@@ -873,14 +873,14 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Filtert die Fachbelegungen und gibt nur die Fachbelegungen zurück, bei denen die 
+	 * Filtert die Fachbelegungen und gibt nur die Fachbelegungen zurück, bei denen die
 	 * Kursart existiert.
-	 * Wird keine Fachbelegung übergeben (null oder leere Liste), so kommt auch keine 
+	 * Wird keine Fachbelegung übergeben (null oder leere Liste), so kommt auch keine
 	 * Belegung mit der Kursart vor.
-	 *  
+	 *
 	 * @param fachbelegungen   die Fachbelegungen
 	 * @param kursart          die Kursart
-	 * 
+	 *
 	 * @return eine Liste mit den Fachbelegungen, welche die kursart haben
 	 */
 	public filterBelegungKursartExistiert(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart) : List<AbiturFachbelegung> {
@@ -897,9 +897,9 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft, ob die Fachbelegung eine durchgängige Belegung hat. Zusatzkurse können nicht für eine
 	 * durchgängige Belegung zählen.
-	 * 
+	 *
 	 * @param fachbelegung   die zu prüfende Fachbelegung
-	 * 
+	 *
 	 * @return true, wenn die Belegung durchgängig ist.
 	 */
 	public pruefeDurchgaengigkeit(fachbelegung : AbiturFachbelegung | null) : boolean {
@@ -911,12 +911,12 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Zählt die Fachbelegungen, welche eine durchgängige Belegung aufweisen. Zusatzkurse zählen
 	 * nicht für eine durchgängige Belegung.
-	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche 
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist bei bilingualen
-	 * Fächern nötig.   
-	 * 
+	 * Fächern nötig.
+	 *
 	 * @param fachbelegungen   die zu überprüfenden Fachbelegungen
-	 * 
+	 *
 	 * @return die Anzahl der durchgängigen Belegungen
 	 */
 	public zaehleDurchgaengigeBelegungen(fachbelegungen : List<AbiturFachbelegung> | null) : number {
@@ -956,11 +956,11 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft, ob die Fachbelegung eine durchgängige Belegung hat und prüft die Schriftlichkeit
 	 * in der Qualifikationsphase. Ein Fach in der Qualifikationsphase gilt als Schriftlich belegt,
-	 * sofern die ersten 3 Halbjahre der Qualifikationsphase schriftlich belegt wurden. 
+	 * sofern die ersten 3 Halbjahre der Qualifikationsphase schriftlich belegt wurden.
 	 * - Zusatzkurse können nicht für eine durchgängige Belegung zählen.
-	 * 
+	 *
 	 * @param fachbelegung   die zu prüfende die zu überprüfenden Fachbelegung
-	 * 
+	 *
 	 * @return true, wenn die Belegung durchgängig ist und die Schriftlichkeit den Anforderungen genügt.
 	 */
 	public pruefeDurchgaengigkeitSchriftlich(fachbelegung : AbiturFachbelegung | null) : boolean {
@@ -970,13 +970,13 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob unter den angegebenen Fachbelegungen ein Fach als Abiturfach von einem der angegebenen Arten 
+	 * Prüft, ob unter den angegebenen Fachbelegungen ein Fach als Abiturfach von einem der angegebenen Arten
 	 * gewählt wurde. Wird keine Art angebeben, so wird jede Fachbelegung akzeptiert und true zurückgegeben.
-	 * 
+	 *
 	 * @param fachbelegungen   die Fachbelegungen
 	 * @param arten            die Arten der Abiturfächer
-	 *  
-	 * @return true, falls unter den Fachbelegungen mindestens ein Fach als Abiturfach von einem der 
+	 *
+	 * @return true, falls unter den Fachbelegungen mindestens ein Fach als Abiturfach von einem der
 	 *         angegebenen Arten gewählt wurde und false sonst
 	 */
 	public pruefeExistiertAbiFach(fachbelegungen : List<AbiturFachbelegung> | null, ...arten : Array<GostAbiturFach>) : boolean {
@@ -994,12 +994,12 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft anhand des Statistik-Kürzels, ob in dem angegebenen Halbjahr eine doppelte Fachbelegung 
-	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr 
-	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.   
-	 * 
+	 * Prüft anhand des Statistik-Kürzels, ob in dem angegebenen Halbjahr eine doppelte Fachbelegung
+	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr
+	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.
+	 *
 	 * @param halbjahr   das zu prüfende Halbjahr
-	 * 
+	 *
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
 	public hatDoppelteFachbelegungInHalbjahr(halbjahr : GostHalbjahr) : boolean {
@@ -1022,12 +1022,12 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft anhand des Statistik-Kürzels, ob in einem der angegebenen Halbjahre eine doppelte Fachbelegung 
-	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr 
-	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.   
-	 * 
+	 * Prüft anhand des Statistik-Kürzels, ob in einem der angegebenen Halbjahre eine doppelte Fachbelegung
+	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr
+	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.
+	 *
 	 * @param halbjahre   die zu prüfenden Halbjahre
-	 * 
+	 *
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
 	public hatDoppelteFachbelegung(...halbjahre : Array<GostHalbjahr>) : boolean {
@@ -1041,7 +1041,7 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob der Projektkurs als besondere Lernleistung verwendet wird.
-	 * 
+	 *
 	 * @return true, falls der Projektkurs als besondere Lernleistung verwendet wird
 	 */
 	public istProjektKursBesondereLernleistung() : boolean {
@@ -1050,9 +1050,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Bestimmt die Fachbelegung des Faches mit der angegebenen ID
-	 * 
+	 *
 	 * @param fach_id   die ID des Faches
-	 * 
+	 *
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public getFachbelegungByID(fach_id : number) : AbiturFachbelegung | null {
@@ -1067,9 +1067,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Bestimmt die erste Fachbelegung mit dem angegebenen Statistik-Kürzel
-	 * 
+	 *
 	 * @param kuerzel          das Kürzel des Faches, kann null sein (dann wird auch null zurückgegeben)
-	 * 
+	 *
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public getFachbelegungByKuerzel(kuerzel : string | null) : AbiturFachbelegung | null {
@@ -1087,9 +1087,9 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Liefert alle Fachbelegungen der Abiturdaten, welche den angegebenen Fachbereichen zuzuordnen sind.
 	 * Wird kein Fachbereich angegeben, so werden alle Fachbelegungen der Abiturdaten zurückgegeben.
-	 * 
-	 * @param fachbereiche   die Fachbereiche 
-	 * 
+	 *
+	 * @param fachbereiche   die Fachbereiche
+	 *
 	 * @return eine Liste der Fachbelegungen aus den Fachbereichen
 	 */
 	public getFachbelegungen(...fachbereiche : Array<GostFachbereich>) : List<AbiturFachbelegung> {
@@ -1107,7 +1107,7 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Liefert alle Fachbelegungen, die bilingual unterrichtet wurden.
-	 * 
+	 *
 	 * @return eine Liste der Fachbelegungen
 	 */
 	public getFachbelegungenBilingual() : List<AbiturFachbelegung> {
@@ -1125,9 +1125,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Filtert die Fachbelegungen auf neu einsetzende Fremdsprachen.
-	 * 
+	 *
 	 * @param fachbelegungen   die zu filternden Fachbelegungen
-	 * 
+	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterFremdspracheNeuEinsetzend(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
@@ -1144,9 +1144,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Filtert die Fachbelegungen auf fortgeführte Fremdsprachen.
-	 * 
+	 *
 	 * @param fachbelegungen   die zu filternden Fachbelegungen
-	 * 
+	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterFremdspracheFortgefuehrt(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
@@ -1163,9 +1163,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Filtert die Fachbelegungen danach, ob sie durchgehend belegbar sind
-	 * 
+	 *
 	 * @param fachbelegungen   die zu filternden Fachbelegungen
-	 * 
+	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterDurchgehendBelegbar(fachbelegungen : List<AbiturFachbelegung> | null) : List<AbiturFachbelegung> {
@@ -1183,10 +1183,10 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Filtert die Fachbelegungen. Es werden nur Fachbelegungen behalten, die in den angegebenen Halbjahren eine Belegung aufweisen.
 	 * Wird kein Halbjahr angegeben, so wird nichts gefiltert, da kein Halbjahr geprüft werden muss.
-	 * 
-	 * @param fachbelegungen    die zu filternden Fachbelegungen 
+	 *
+	 * @param fachbelegungen    die zu filternden Fachbelegungen
 	 * @param halbjahre         die Halbjahre, die belegt sein müssen
-	 * 
+	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterBelegungen(fachbelegungen : List<AbiturFachbelegung> | null, ...halbjahre : Array<GostHalbjahr>) : List<AbiturFachbelegung> {
@@ -1201,13 +1201,13 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen 
+	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen
 	 * Halbjahren belegt sind. Dabei werden Fachbelegungen, welche dem gleichem Statistik-Fach
 	 * zuzuordnen sind zusammengefasst. Dies ist bei der Abwahl von bilingualen Sachfächern
 	 * relevant.
-	 *   
+	 *
 	 * @param fachbelegungen   die zu zählenden Fachbelegungen
-	 * 
+	 *
 	 * @return die Anzahl der Fachbelegungen
 	 */
 	public zaehleBelegungenDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : number {
@@ -1249,13 +1249,13 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen 
+	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen
 	 * Halbjahren belegt sind. Dabei werden Fachbelegungen, welche dem gleichem Statistik-Fach
 	 * zuzuordnen sind zusammengefasst. Dies ist bei der Abwahl von bilingualen Sachfächern
 	 * relevant.
-	 *   
+	 *
 	 * @param fachbelegungen   die zu zählenden Fachbelegungen
-	 * 
+	 *
 	 * @return die Anzahl der Fachbelegungen
 	 */
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen : List<AbiturFachbelegung> | null) : number {
@@ -1307,11 +1307,11 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Filtert die Fachbelegungen. Es werden nur Belegungen behalten, die in den angegebenen Halbjahren die geforderte Schriftlichkeit aufweisen.
 	 * Wird kein Halbjahr angegeben, so wird nichts gefiltert, da kein Halbjahr geprüft werden muss.
-	 * 
-	 * @param fachbelegungen    die zu filternden Fachbelegungen 
+	 *
+	 * @param fachbelegungen    die zu filternden Fachbelegungen
 	 * @param schriftlichkeit   die geforderte Schriftlichkeit
 	 * @param halbjahre         die Halbjahre, die belegt sein müssen
-	 * 
+	 *
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterBelegungenMitSchriftlichkeit(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : List<AbiturFachbelegung> {
@@ -1327,9 +1327,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Liefert die erste Fachbelegung für den Fachbereich - sofern eine existiert
-	 * 
+	 *
 	 * @param fachbereich   der Fachbereich
-	 * 
+	 *
 	 * @return die Fachbelegung oder null
 	 */
 	public getFachbelegung(fachbereich : GostFachbereich) : AbiturFachbelegung | null {
@@ -1340,10 +1340,10 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert alle Fachbelegungen mit dem angegebenen Statistk-Kürzel des Faches 
-	 * 
+	 * Liefert alle Fachbelegungen mit dem angegebenen Statistk-Kürzel des Faches
+	 *
 	 * @param kuerzel   das Kürzel des Faches
-	 * 
+	 *
 	 * @return eine Liste mit den Fachbelegungen
 	 */
 	public getFachbelegungByFachkuerzel(kuerzel : string | null) : List<AbiturFachbelegung> {
@@ -1361,13 +1361,13 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob der Kurs in dem angegebenen Halbjahr mit der angegebenen Schriftlichkeit belegt ist 
+	 * Prüft, ob der Kurs in dem angegebenen Halbjahr mit der angegebenen Schriftlichkeit belegt ist
 	 * und gibt ggf. die Belegung zurück.
-	 *  
-	 * @param fachbelegung   die Abiturfachbelegung aus welcher die Belegungsinformationen für das Halbjahr entnommen wird 
+	 *
+	 * @param fachbelegung   die Abiturfachbelegung aus welcher die Belegungsinformationen für das Halbjahr entnommen wird
 	 * @param halbjahr       das Halbjahr, in welchem die Belegung gesucht wird.
 	 * @param schriftlich    gibt an, ob das Fach schriftlich oder mündlich belegt sein muss
-	 * 
+	 *
 	 * @return die Belegungsinformationen zu dem Fach
 	 */
 	public getBelegungHalbjahr(fachbelegung : AbiturFachbelegung, halbjahr : GostHalbjahr, schriftlich : GostSchriftlichkeit) : AbiturFachbelegungHalbjahr | null {
@@ -1377,9 +1377,9 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Liefert die erste Sprachbelegung - sofern eine existiert
-	 * 
+	 *
 	 * @param sprache   das einstellige Kürzel der Sprache
-	 * 
+	 *
 	 * @return die Fachbelegung für die Sprache
 	 */
 	public getSprachbelegung(sprache : string | null) : AbiturFachbelegung | null {
@@ -1397,13 +1397,13 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für die übergebene Fachbelegung die Halbjahre, in denen das Fach mit einer der angebenen 
+	 * Liefert für die übergebene Fachbelegung die Halbjahre, in denen das Fach mit einer der angebenen
 	 * Kursarten belegt wurde. Ist keine Kursart angegeben, so werden die Halbjahre aller Belegungen
 	 * zurückgegeben. Ist keine Fachbelegung angegeben, so wird eine leere Liste zurückgegeben.
-	 *  
+	 *
 	 * @param fachbelegung   die Fachbelegung
 	 * @param kursarten      die Kursarten
-	 * 
+	 *
 	 * @return eine Liste der Halbjahre in den das Fach mit einer der Kursarten belegt wurde
 	 */
 	public getHalbjahreKursart(fachbelegung : AbiturFachbelegung | null, ...kursarten : Array<GostKursart>) : Vector<GostHalbjahr> {
@@ -1432,7 +1432,7 @@ export class AbiturdatenManager extends JavaObject {
 
 	/**
 	 * Gibt die Sprache des bilingualen Bildungsgang zurück oder null, falls keiner gewählt wurde.
-	 * 
+	 *
 	 * @return die Sprache des bilingualen Bildungsgang oder null
 	 */
 	public getBiligualenBildungsgang() : string | null {
@@ -1442,12 +1442,12 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft bei der Sprachenfolge, ob eine laut Sprachenfolge fortgeführte
 	 * Fremdsprache fehlerhafterweise als neu einsetzende Fremdsprache belegt wurde.
-	 * Übergebene Fachbelegungen, die keine Fremdsprachen sind werden ignoriert.  
-	 * 
+	 * Übergebene Fachbelegungen, die keine Fremdsprachen sind werden ignoriert.
+	 *
 	 * @param fremdsprachen   die zu prüfenden Fachbelegungen
-	 *  
-	 * @return true, falls eine fortgeführte Fremdsprache bei den übergebenen 
-	 *         Fachbelegungen existiert, ansonsten false 
+	 *
+	 * @return true, falls eine fortgeführte Fremdsprache bei den übergebenen
+	 *         Fachbelegungen existiert, ansonsten false
 	 */
 	public hatFortgefuehrteFremdspracheInSprachendaten(fremdsprachen : List<AbiturFachbelegung> | null) : boolean {
 		if (fremdsprachen === null)
@@ -1468,12 +1468,12 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft bei der Sprachenfolge, ob für eine laut Sprachenfolge neu einsetzende
 	 * Fremdsprache fehlerhafterweise ein Kurs in einer fortgeführten Fremdsprache belegt wurde.
-	 * Übergebene Fachbelegungen, die keine Fremdsprachen sind werden ignoriert.  
-	 * 
+	 * Übergebene Fachbelegungen, die keine Fremdsprachen sind werden ignoriert.
+	 *
 	 * @param fremdsprachen   die zu prüfenden Fachbelegungen
-	 *  
-	 * @return true, falls eine neu einsetzende Fremdsprache bei den übergebenen 
-	 *         Fachbelegungen existiert, ansonsten false 
+	 *
+	 * @return true, falls eine neu einsetzende Fremdsprache bei den übergebenen
+	 *         Fachbelegungen existiert, ansonsten false
 	 */
 	public hatNeuEinsetzendeFremdspracheInSprachendaten(fremdsprachen : List<AbiturFachbelegung> | null) : boolean {
 		if (fremdsprachen === null)
@@ -1494,12 +1494,12 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Prüft, ob die Belegung seit der EF1 vorhanden ist. Hierbei werden
 	 * Zusatz-, Vertiefungs- und Projektkurse auch als später einsetzend akzeptiert.
-	 * Dies gilt auch für Literatur, instrumental- und vokalpraktische Kurse sowie 
+	 * Dies gilt auch für Literatur, instrumental- und vokalpraktische Kurse sowie
 	 * für Religion und Philosophie.
-	 * 
+	 *
 	 * @param fachbelegung   die Abiturfachbelegungen, die geprüft werden
-	 * 
-	 * @return true, falls das Fach seit EF1 durchgängig belegt wurde oder eine der Ausnahmen zutrifft, sonsta false 
+	 *
+	 * @return true, falls das Fach seit EF1 durchgängig belegt wurde oder eine der Ausnahmen zutrifft, sonsta false
 	 */
 	public istBelegtSeitEF(fachbelegung : AbiturFachbelegung) : boolean {
 		let fach : GostFach | null = this.getFach(fachbelegung);
@@ -1535,9 +1535,9 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt das Ergebnis der Belegprüfung zurück. Dieses enthält eine Liste der Fehler, die bei der Belegprüfung 
+	 * Gibt das Ergebnis der Belegprüfung zurück. Dieses enthält eine Liste der Fehler, die bei der Belegprüfung
 	 * festgestellt wurden und ob diese erfolgreich gewesen ist oder nicht.
-	 * 
+	 *
 	 * @return das Ergebnis der Belegprüfung
 	 */
 	public getBelegpruefungErgebnis() : GostBelegpruefungErgebnis {

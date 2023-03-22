@@ -49,9 +49,9 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen KAoA-Zusatzmerkmal-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel 
+	 * @param kuerzel        das Kürzel
 	 * @param beschreibung   die Beschreibung
 	 * @param merkmal        das Merkmal, dem das Zusatzmerkmal zugeordnet ist
 	 * @param optionsart     die Optionsart bei dem Zusatzmerkmal

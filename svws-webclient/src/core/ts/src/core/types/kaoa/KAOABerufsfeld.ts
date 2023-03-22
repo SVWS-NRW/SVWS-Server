@@ -125,8 +125,8 @@ export class KAOABerufsfeld extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOABerufsfeldEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOABerufsfeldEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOABerufsfeldEintrag>) {
 		super();
@@ -139,9 +139,9 @@ export class KAOABerufsfeld extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf das zugehörige Berufsfeld zurück. 
+	 * Gibt eine Map von der ID auf das zugehörige Berufsfeld zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf das zugehörige Berufsfeld
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOABerufsfeld> {
@@ -152,9 +152,9 @@ export class KAOABerufsfeld extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf das zugehörige Berufsfeld zurück. 
+	 * Gibt eine Map von dem Kürzel auf das zugehörige Berufsfeld zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Berufsfeld
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOABerufsfeld> {
@@ -166,9 +166,9 @@ export class KAOABerufsfeld extends JavaObject {
 
 	/**
 	 * Gibt das Berufsfeld anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Berufsfeldes
-	 * 
+	 *
 	 * @return das Berufsfeld oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOABerufsfeld | null {
@@ -177,9 +177,9 @@ export class KAOABerufsfeld extends JavaObject {
 
 	/**
 	 * Gibt das Berufsfeld anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Berufsfeldes
-	 * 
+	 *
 	 * @return das Berufsfeld oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOABerufsfeld | null {

@@ -58,8 +58,8 @@ export class LehrerZugangsgrund extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Grund in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Zugangsgrundes, welches ein Array von {@link LehrerKatalogZugangsgrundEintrag} ist  
+	 *
+	 * @param historie   die Historie des Zugangsgrundes, welches ein Array von {@link LehrerKatalogZugangsgrundEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogZugangsgrundEintrag>) {
 		super();
@@ -73,9 +73,9 @@ export class LehrerZugangsgrund extends JavaObject {
 
 	/**
 	 * Gibt den Grund anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Grundes
-	 * 
+	 *
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerZugangsgrund | null {
@@ -87,9 +87,9 @@ export class LehrerZugangsgrund extends JavaObject {
 
 	/**
 	 * Gibt den Grund anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Grundes
-	 * 
+	 *
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerZugangsgrund | null {
@@ -102,10 +102,10 @@ export class LehrerZugangsgrund extends JavaObject {
 	/**
 	 * Gibt den Grund anhand des angegebenen Schlüssels der
 	 * amtlichen Schulstatistik zurück.
-	 * 
-	 * @param schluessel   der Schlüssel der amtlichen Schulstatistik 
+	 *
+	 * @param schluessel   der Schlüssel der amtlichen Schulstatistik
 	 *                     für den Grundes
-	 * 
+	 *
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls der Schlüssel ungültig ist
 	 */
 	public static getByASDSchluessel(schluessel : string | null) : LehrerZugangsgrund | null {

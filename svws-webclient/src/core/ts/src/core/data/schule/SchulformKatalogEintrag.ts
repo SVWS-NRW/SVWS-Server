@@ -54,12 +54,12 @@ export class SchulformKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Schulform-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param nummer       die Nummer
 	 * @param bezeichnung  die Bezeichnung
-	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat 
+	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */

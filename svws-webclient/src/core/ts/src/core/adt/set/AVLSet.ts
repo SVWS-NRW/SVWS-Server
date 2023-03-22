@@ -19,14 +19,14 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 
 	/**
 	 * Erstellt eine neues Set und nutzt dabei die angegeben Ordnung der Schlüssel.
-	 * 
+	 *
 	 * @param comparator Die Ordnung für die Schlüssel.
 	 */
 	public constructor(comparator : Comparator<E>);
 
 	/**
 	 * Erstellt ein neues Set mit den Daten des angegebenen Sets und nutzt dabei die Ordnung dieses Sets.
-	 * 
+	 *
 	 * @param set Die Map mit den Daten.
 	 */
 	public constructor(set : SortedSet<E>);

@@ -632,8 +632,8 @@ export class KAOAZusatzmerkmal extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAZusatzmerkmalEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAZusatzmerkmalEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAZusatzmerkmalEintrag>) {
 		super();
@@ -646,9 +646,9 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAZusatzmerkmal> {
@@ -659,9 +659,9 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAZusatzmerkmal> {
@@ -673,9 +673,9 @@ export class KAOAZusatzmerkmal extends JavaObject {
 
 	/**
 	 * Gibt das Merkmal anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOAZusatzmerkmal | null {
@@ -684,9 +684,9 @@ export class KAOAZusatzmerkmal extends JavaObject {
 
 	/**
 	 * Gibt das Merkmal anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAZusatzmerkmal | null {

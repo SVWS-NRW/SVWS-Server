@@ -147,10 +147,10 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	/**
 	 *
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
-	 * 
+	 *
 	 * @param id            die ID des Regel-Typs
 	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
-	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
+	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
 	 */
 	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<GostKursblockungRegelParameterTyp>) {
 		super();
@@ -172,7 +172,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller existierender Regeln.
-	 * 
+	 *
 	 * @return Die Menge aller existierender Regeln.
 	 */
 	public static getCollection() : Collection<GostKursblockungRegelTyp> {
@@ -184,8 +184,8 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
 	 * @param id   die ID des Regel-Typs
-	 * 
-	 * @return der Regel-Typ 
+	 *
+	 * @return der Regel-Typ
 	 */
 	public static fromTyp(id : number | null) : GostKursblockungRegelTyp {
 		if (id === null)
@@ -199,8 +199,8 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	/**
 	 *
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
-	 * 
-	 * @return die Anzahl der Parameter für diesen Regel-Type zurück. 
+	 *
+	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
 	 */
 	public getParamCount() : number {
 		return this.paramTypes.size();
@@ -208,12 +208,12 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Gibt den i-ten Parameter-Typ der Regel zurück.
-	 * 
+	 *
 	 * @param i   der Index des Parameters
-	 * 
+	 *
 	 * @return der Parameter-Typ
-	 * 
-	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
+	 *
+	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public getParamType(i : number) : GostKursblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size()))
@@ -224,10 +224,10 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	/**
 	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
 	 * Parametertyp hat.
-	 *  
+	 *
 	 * @param paramType   der Parametertyp
-	 * 
-	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
+	 *
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType : GostKursblockungRegelParameterTyp | null) : boolean {
 		for (let cur of this.paramTypes) 
@@ -237,8 +237,8 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	/**
-	 * Simuliert ein Löschen der Schienen-Nummer und 
-	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.  
+	 * Simuliert ein Löschen der Schienen-Nummer und
+	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.
 	 *
 	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
 	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.

@@ -14,7 +14,7 @@ export class Latinum extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung in Bezug auf den Erwerb des Latinums.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */

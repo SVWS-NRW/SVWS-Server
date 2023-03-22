@@ -15,7 +15,7 @@ export class Allgemeines extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue allgemeine Belegprüfung.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */

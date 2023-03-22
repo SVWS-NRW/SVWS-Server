@@ -79,14 +79,14 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Erstellt eine neue leere Map und nutzt dabei die angegeben Ordnung der Schlüssel.
-	 * 
+	 *
 	 * @param comparator Die Ordnung für die Schlüssel.
 	 */
 	public constructor(comparator : Comparator<K>);
 
 	/**
 	 * Erstellt eine neue Map mit den Daten aus der angegebenen Map und nutzt dabei die Ordnung dieser Map.
-	 * 
+	 *
 	 * @param map Die Map mit den Daten.
 	 */
 	public constructor(map : SortedMap<K, V>);
@@ -115,7 +115,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Bewirkt, dass das Hinzufügen von Keys ohne Value durch {@link AVLMapSubKeySet} erlaubt ist. Die Keys werden auf
 	 * einen Dummy-Wert gemapped.
-	 * 
+	 *
 	 * @param b Falls TRUE, dürfen KEYs ohne VALUE hinzugefügt werden.
 	 */
 	public allowKeyAlone(b : boolean) : void {
@@ -309,10 +309,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Fügt ein Entry der Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param e  Das einzufügende Entry.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das Entry (e.getKey(), e.getValue()) neu war und somit hinzugefügt wurde.
 	 */
 	bcAddEntryReturnBool(e : JavaMapEntry<K, V>, iv : AVLMapIntervall<K>) : boolean {
@@ -322,11 +322,11 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Fügt ein Entry bzw. ein Key-Value-Paar der Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param key   Der Schlüssel (Key) des Entrys.
 	 * @param value Der zum Schlüssel (Key) zugehörige Wert (Value).
 	 * @param iv    Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den alten Wert (Value), falls ein zugehöriger Schlüssel (Key) existierte, sonst NULL.
 	 */
 	bcAddEntryReturnOldValueOrNull(key : K, value : V, iv : AVLMapIntervall<K>) : V | null {
@@ -346,10 +346,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Fügt alle Entries der Collection der Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param c  Die Collection mit den einzufügenden Entries.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Entry neu war und somit hinzugefügt wurde.
 	 */
 	bcAddAllEntries(c : Collection<JavaMapEntry<K, V>>, iv : AVLMapIntervall<K>) : boolean {
@@ -361,7 +361,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Fügt alle Entrys der übergebenen Map dieser Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param map Die Map, deren Entries dieser Datenstruktur hinzugefügt werden soll.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
 	 */
@@ -375,10 +375,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * kann es zu einer {@link UnsupportedOperationException} kommen, wenn das Attribut {@link #_allowKeyAlone} auf
 	 * FALSE gesetzt ist. Andernfalls wird dem Schlüssel (Key) ein Dummy-Wert {@link #_dummyValue} zugeordnet. Der
 	 * Schlüssel (Key) wird jedoch nur dann hinzugefügt, falls er noch nicht existierte.
-	 * 
+	 *
 	 * @param e  Der Schlüssel (Key) der hinzugefügt werden soll.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
@@ -394,10 +394,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Versucht alle Schlüssel (Keys) der Collection hinzuzufügen. Ob das
 	 * Hinzufügen eines Schlüssels (Key) ohne Wert (Value) erlaubt ist, hängt vom Attribut {@link #_allowKeyAlone} ab.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die hinzugefügt werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
@@ -410,10 +410,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob ein Schlüssel (Key) in dieser Datenstruktur existiert.
-	 * 
+	 *
 	 * @param objKey Der Schlüssel (Key) nach dem gesucht wird.
 	 * @param iv     Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) in dieser Datenstruktur existiert.
 	 */
 	bcContainsKey(objKey : unknown, iv : AVLMapIntervall<K>) : boolean {
@@ -423,10 +423,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob alle Schlüssel (Keys) der Collection in dieser
 	 * Datenstruktur existieren.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys), welche überprüft werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
@@ -439,10 +439,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob ein Wert (Value) in dieser Datenstruktur existiert. Die
 	 * Laufzeit ist linear, da die gesamte Datenstruktur überprüft werden muss.
-	 * 
+	 *
 	 * @param objValue Der Wert (Value) nach dem gesucht wird.
 	 * @param iv       Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Wert (Value) in dieser Datenstruktur existiert.
 	 */
 	bcContainsValue(objValue : unknown, iv : AVLMapIntervall<K>) : boolean {
@@ -466,10 +466,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob alle Werte (Values) aus der Collection in dieser
 	 * Datenstruktur vorkommen. Diese Methode sollte NICHT verwendet werden, da sie quadratische Laufzeit hat.
-	 * 
+	 *
 	 * @param c  Die Collection deren Werte (Values) überprüft werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllValues(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
@@ -481,10 +481,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob das übergebene Entry in dieser Datenstruktur existiert.
-	 * 
+	 *
 	 * @param o  Das Entry (Schlüssel-Wert-Paar) nach dem gesucht wird.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das übergebene Entry in dieser Datenstruktur existiert.
 	 */
 	bcContainsEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
@@ -498,10 +498,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob alle Entries der Collection in dieser Datenstruktur
 	 * existieren.
-	 * 
+	 *
 	 * @param c  Die Collection mit den Entries welche überprüft werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
@@ -515,10 +515,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Versucht einen Schlüssel (Key) aus dieser Datenstruktur zu entfernen.
 	 * In dieser Implementierung kann ein Schlüssel (Key) keinem NULL-Wert zugeordnet sein. Ist das Ergebnis NULL,
 	 * bedeutet dies, dass der Schlüssel (Key) definitiv nicht existierte.
-	 * 
+	 *
 	 * @param obj Der Schlüssel (Key), welcher entfernt werden soll.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den zum Schlüssel (Key) zugehörigen Wert (Value), falls es eine Zuordnung gab, andernfalls NULL.
 	 */
 	bcRemoveKeyReturnOldValueOrNull(obj : unknown, iv : AVLMapIntervall<K>) : V | null {
@@ -536,10 +536,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt einen Schlüssel (Key) aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param o  Der Schlüssel (Key) der entfernt werden soll.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel existierte und somit entfernt wurde.
 	 */
 	bcRemoveKeyReturnBool(o : unknown, iv : AVLMapIntervall<K>) : boolean {
@@ -551,10 +551,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt alle Schlüssel (Keys) der Collection aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die entfernt werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
 	bcRemoveAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
@@ -566,10 +566,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt das Entry aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param o  Das Entry, welches entfernt werden soll.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
 	bcRemoveEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
@@ -586,10 +586,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt alle Entries der Collection aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param c  Die Collection mit den Entries, welche entfernt werden sollen.
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
 	bcRemoveAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
@@ -601,9 +601,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt und liefert das erste Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcPollFirstEntryOrNull(iv : AVLMapIntervall<K>) : JavaMapEntry<K, V> | null {
@@ -618,9 +618,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcPollFirstKeyOrNull(iv : AVLMapIntervall<K>) : K | null {
@@ -635,9 +635,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt und liefert das letzte Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcPollLastEntryOrNull(iv : AVLMapIntervall<K>) : JavaMapEntry<K, V> | null {
@@ -652,9 +652,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcPollLastKeyOrNull(iv : AVLMapIntervall<K>) : K | null {
@@ -669,9 +669,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert die Anzahl der Elemente innerhalb des übergebenen Intervalls.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert die Anzahl der Elemente innerhalb des übergebenen Intervalls.
 	 */
 	bcGetSize(iv : AVLMapIntervall<K>) : number {
@@ -686,9 +686,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob die Datenstruktur innerhalb des Intervalls leer ist.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls die Datenstruktur innerhalb des Intervalls leer ist.
 	 */
 	bcIsEmpty(iv : AVLMapIntervall<K>) : boolean {
@@ -697,9 +697,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Liefert den Comparator dieser Map.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den Comparator dieser Map.
 	 */
 	bcGetComparator(iv : AVLMapIntervall<K>) : Comparator<K> {
@@ -708,9 +708,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das erste Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcGetFirstEntryOrNull(iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -719,9 +719,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
@@ -731,9 +731,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das letzte Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcGetLastEntryOrNull(iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -742,9 +742,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
@@ -754,10 +754,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das nächste Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param current Das aktuelle Entry .
 	 * @param iv      Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert das nächste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcGetNextEntryOrNull(current : AVLMapNode<K, V>, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -766,10 +766,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das vorherige Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param current Das aktuelle Entry.
 	 * @param iv      Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert das vorherige Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	bcGetPrevEntryOrNull(current : AVLMapNode<K, V>, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -778,10 +778,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den Wert (Value) eines bestimmten Schlüssels (Key).
-	 * 
+	 *
 	 * @param objKey Der Schlüssel (Key) dessen Wert (Value) angefordert wird.
 	 * @param iv     Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den Wert (Value) eines bestimmten Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	bcGetValueOfKeyOrNull(objKey : unknown, iv : AVLMapIntervall<K>) : V | null {
@@ -793,10 +793,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das größte Entry welches kleiner ist als der übergebene
 	 * Schlüssel (Key), somit den Vorgänger-Entry des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Vorgänger-Entry gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den Vorgänger-Entry des Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	bcGetLowerEntryOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -806,10 +806,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den größten Schlüssel (Key) welcher kleiner ist als der
 	 * übergebene Schlüssel (Key), somit den Vorgänger-Schlüssel des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Vorgänger gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	bcGetLowerKeyOrNull(key : K, iv : AVLMapIntervall<K>) : K | null {
@@ -820,10 +820,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das größte Entry welches kleiner oder gleich dem übergebenen
 	 * Schlüssel (Key) ist. Somit das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den
 	 * Vorgänger-Entry falls vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Entry bzw. Vorgänger-Entry gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Vorgänger-Entry falls
 	 *         vorhanden, andernfalls NULL.
 	 */
@@ -835,10 +835,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den größten Schlüssel (Key) welcher kleiner oder gleich dem
 	 * übergebenen Schlüssel (Key) ist. Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls den
 	 * Vorgänger-Schlüssel (Key) falls vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Vorgänger-Schlüssel.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Vorgänger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
@@ -850,10 +850,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das kleinste Entry welches größer oder gleich dem übergebenen
 	 * Schlüssel (Key) ist. Somit das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den
 	 * Nachfolger-Entry falls vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Entry bzw. Nachfolger-Entry gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Nachfolger-Entry falls
 	 *         vorhanden, andernfalls NULL.
 	 */
@@ -865,10 +865,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den kleinsten Schlüssel (Key) welcher größer oder gleich dem
 	 * übergebenen Schlüssel (Key) ist. Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls sein
 	 * Nachfolger-Schlüssel (Key) falls vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Nachfolger-Schlüssel.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
@@ -879,10 +879,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert das kleinste Entry welches größer ist als der übergebene
 	 * Schlüssel (Key), somit den Nachfolger-Entry des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Nachfolger-Entry gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Liefert den Nachfolger-Entry des Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	bcGetHigherEntryOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
@@ -892,10 +892,10 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Liefert den kleinsten Schlüssel (Key) welcher größer ist als der
 	 * übergebene Schlüssel (Key), somit den Nachfolger-Schlüssel des übergebenen Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Nachfolger-Schlüssel gesucht wird.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	bcGetHigherKeyOrNull(key : K, iv : AVLMapIntervall<K>) : K | null {
@@ -906,11 +906,11 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * Wird aufgerufen von {@link AVLMapSubMap}. Überprüft, ob ein übergebener Schlüssel sich außerhalb des Bereichs des
 	 * übergebenen Intervalls befindet. Der Parameter {@code inc} gibt an, auf der übergebene Schlüssel selbst inklusive
 	 * zu interpretieren ist.
-	 * 
+	 *
 	 * @param key Der gesuchte Schlüssel.
 	 * @param inc Falls TRUE, dann ist der Schlüssel key inklusive zu interpretieren.
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der übergebene Schlüssel außerhalb des übergebenen Intervalls ist.
 	 */
 	bcCheckOutOfIntervall(key : K, inc : boolean, iv : AVLMapIntervall<K>) : boolean {
@@ -1149,9 +1149,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	/**
 	 * Aktualisiert {@link node} und liefert, wenn es zur Rotation kommt, eine neue Sub-Wurzel.
-	 * 
+	 *
 	 * @param node Der Knoten, der revalidiert werden soll.
-	 * 
+	 *
 	 * @return node, oder die neue Sub-Wurzel, wenn es zur Rotation kam.
 	 */
 	private _nodeRevalidate(node : AVLMapNode<K, V>) : AVLMapNode<K, V> {

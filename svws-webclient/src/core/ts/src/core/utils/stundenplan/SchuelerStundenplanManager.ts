@@ -79,7 +79,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager mit den angegebenen Stundenplandaten und erzeugt
 	 * die privaten Attribute.
-	 * 
+	 *
 	 * @param daten die Stundenplandaten
 	 */
 	public constructor(daten : SchuelerStundenplan) {
@@ -138,7 +138,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die ID des Stundenplans
-	 * 
+	 *
 	 * @return die ID des Stundenplans
 	 */
 	public getStundenplanID() : number {
@@ -147,7 +147,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die ID des Schülers
-	 * 
+	 *
 	 * @return die ID des Schülers
 	 */
 	public getSchuelerID() : number {
@@ -156,7 +156,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert den minimalen Wochentag als int, z.B. 1 für Montag
-	 * 
+	 *
 	 * @return den minimalen Wochentag
 	 */
 	public getMinWochentag() : number {
@@ -165,7 +165,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert den maximalen Wochentag als int, z.B. 5 für Freitag
-	 * 
+	 *
 	 * @return den maximalen Wochentag
 	 */
 	public getMaxWochentag() : number {
@@ -174,7 +174,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die minimale Unterrichtsstunde als int, z.B. 1 für die 1. Stunde
-	 * 
+	 *
 	 * @return die minimale Unterrichtsstunde
 	 */
 	public getMinStunde() : number {
@@ -183,7 +183,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die maximale Unterrichtsstunde als int, z.B. 9 für die 9. Stunde
-	 * 
+	 *
 	 * @return die maximale Unterrichtsstunde
 	 */
 	public getMaxStunde() : number {
@@ -193,9 +193,9 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Liefert das SchulerStundenplanUnterricht-Objekt zur übergebenen
 	 * Unterrichts-ID
-	 * 
+	 *
 	 * @param idUnterricht die ID des Unterrichts
-	 * 
+	 *
 	 * @return das SchulerStundenplanUnterricht-Objekt
 	 */
 	public getUnterrichtById(idUnterricht : number) : SchuelerStundenplanUnterricht | null {
@@ -204,9 +204,9 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Zeitraster liegen.
-	 * 
+	 *
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public getUnterrichtByZeitrasterId(idZeitraster : number) : List<SchuelerStundenplanUnterricht> | null {
@@ -215,10 +215,10 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
-	 * 
+	 *
 	 * @param wochentyp der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public getUnterrichtByWocheZeitrasterId(wochentyp : number, idZeitraster : number) : List<SchuelerStundenplanUnterricht> | null;
@@ -226,11 +226,11 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
 	 * Je nach Parameter inklWoche0 wird die Liste um den Unterricht aus Woche 0 ergänzt.
-	 * 
+	 *
 	 * @param wochentyp der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
 	 * @param inklWoche0 Ergänzung des Unterrichts um Woche 0
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public getUnterrichtByWocheZeitrasterId(wochentyp : number, idZeitraster : number, inklWoche0 : boolean) : List<SchuelerStundenplanUnterricht> | null;
@@ -271,9 +271,9 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert das Zeitraster-Objekt zur übergebenen ID.
-	 * 
+	 *
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return das Zeitraster-Objekt
 	 */
 	public getZeitrasterById(idZeitraster : number) : StundenplanZeitraster | null {
@@ -282,7 +282,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert das Zeitraster-Objekt an dem übergebenen Wochentag in der übergebenen Stunde.
-	 * 
+	 *
 	 * @param wochentag der Wochentag
 	 * @param stunde die Stunde
 	 * @return das Zeitraster-Objekt
@@ -297,9 +297,9 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die Liste von Zeitraster-Objekten am übergebenen Wochentag.
-	 * 
+	 *
 	 * @param wochentag der Wochentag
-	 * 
+	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
 	public getZeitrasterByWochentag(wochentag : number) : Vector<StundenplanZeitraster> | null {
@@ -308,9 +308,9 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die Liste von Zeitraster-Objekten in der übergebenen Stunde.
-	 * 
+	 *
 	 * @param stunde die Unterrichtsstunde
-	 * 
+	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
 	public getZeitrasterByStunde(stunde : number) : Vector<StundenplanZeitraster> | null {
@@ -319,7 +319,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es unterschiedliche Wochentypen gibt.
-	 * 
+	 *
 	 * @return {@code true}, falls es sich um unterschiedliche Wochentypen handelt,
 	 *         {@code false}, falls es nur einen Typen gibt
 	 */
@@ -329,7 +329,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Gibt die Anzahl der Wochentypen zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Wochentypen
 	 */
 	public getAnzahlWochentypen() : number {
@@ -338,7 +338,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
 	 * Gibt die Wochentypen ohne Typ 0 zurück.
-	 * 
+	 *
 	 * @return die Wochentypen als Vector von Integern
 	 */
 	public getWochentypen() : Vector<number> {

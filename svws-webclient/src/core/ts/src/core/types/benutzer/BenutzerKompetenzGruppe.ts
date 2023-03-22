@@ -164,7 +164,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */
 	private static getMapID() : HashMap<number, BenutzerKompetenzGruppe> {
@@ -176,10 +176,10 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 
 	/**
 	 *
-	 * Gibt die Benutzerkompetenz-Gruppen anhand der übergebenen ID zurück. 
-	 * 
+	 * Gibt die Benutzerkompetenz-Gruppen anhand der übergebenen ID zurück.
+	 *
 	 * @param id    die ID der Benutzerkompetenz-Gruppen
-	 *  
+	 *
 	 * @return die Benutzerkompetenz-Gruppen oder null, falls die ID fehlerhaft ist
 	 */
 	public static getByID(id : number) : BenutzerKompetenzGruppe | null {

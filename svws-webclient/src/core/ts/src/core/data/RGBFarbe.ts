@@ -25,15 +25,15 @@ export class RGBFarbe extends JavaObject {
 
 	/**
 	 *
-	 * Erstellt einen RGB-Farbwert aus dem übergebenen 24-Bit-Farbwert. 
-	 * 
+	 * Erstellt einen RGB-Farbwert aus dem übergebenen 24-Bit-Farbwert.
+	 *
 	 * @param color24Bit   RGB-Farbwerte
 	 */
 	public constructor(color24Bit : number);
 
 	/**
 	 * Erstellt einen RGB-Farbwert mit den angegebenen RGB-Werten.
-	 * 
+	 *
 	 * @param red     der Rot-Anteil (0-255)
 	 * @param green   der Grün-Anteil (0-255)
 	 * @param blue    der Blau-Anteil (0-255)

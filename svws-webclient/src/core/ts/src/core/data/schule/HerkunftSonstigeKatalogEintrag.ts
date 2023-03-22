@@ -45,9 +45,9 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param kuerzel         das Kürzel 
+	 * @param kuerzel         das Kürzel
 	 * @param schulformen     die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann
 	 * @param beschreibung    die textuelle Beschreibung der sonstigen Herkunft
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

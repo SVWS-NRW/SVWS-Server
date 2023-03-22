@@ -32,7 +32,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Fachkombinations-Typ
-	 * 
+	 *
 	 * @param value   der numerische Wert des Typs
 	 */
 	private constructor(name : string, ordinal : number, value : number) {
@@ -46,8 +46,8 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 
 	/**
 	 * Gibt den numerischen Wert des Fachkombination-Typs zurück.
-	 *  
-	 * @return der numerische Wert 
+	 *
+	 * @return der numerische Wert
 	 */
 	public getValue() : number {
 		return this.value;
@@ -56,12 +56,12 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	/**
 	 * Gibt den Fachkombination-Typ für den angegebenen numerischen Wert
 	 * zurück.
-	 * 
-	 * @param value   der numerische Wert 
-	 * 
+	 *
+	 * @param value   der numerische Wert
+	 *
 	 * @return der Typ der Fachkombination
-	 * 
-	 * @throws IllegalArgumentException   bei einem ungültigen numerischen Wert 
+	 *
+	 * @throws IllegalArgumentException   bei einem ungültigen numerischen Wert
 	 */
 	public static fromValue(value : number) : GostLaufbahnplanungFachkombinationTyp {
 		if ((value < 0) || (value > 1))

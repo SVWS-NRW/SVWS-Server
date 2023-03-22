@@ -13,16 +13,16 @@ export class GostAbiturjahrUtils extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler 
-	 * der gymnasialen Oberstufe Abitur gemacht hat, macht oder machen wird. Hierbei wird für die 
-	 * Bestimmung die Schulgliederung und Schulform bei dem Schüler sowie das aktuelle Schuljahr und der 
+	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
+	 * der gymnasialen Oberstufe Abitur gemacht hat, macht oder machen wird. Hierbei wird für die
+	 * Bestimmung die Schulgliederung und Schulform bei dem Schüler sowie das aktuelle Schuljahr und der
 	 * Statistik-Jahrgang, in welchem sich der Schüler befindet, benötigt.
-	 * 
-	 * @param schulform            die Schulform 
+	 *
+	 * @param schulform            die Schulform
 	 * @param gliederung           die Schulgliederung des Schülers
 	 * @param aktuellesSchuljahr   das aktuelle Schuljahr, in welchem sich der Schüler befindet
 	 * @param jahrgang             der Statistik-Jahrgang des Schülers
-	 * 
+	 *
 	 * @return das Kalenderjahr des Abiturs oder null, falls das Jahr des Abiturs nicht bestimmt werden kann.
 	 */
 	public static getGostAbiturjahr(schulform : Schulform, gliederung : Schulgliederung, aktuellesSchuljahr : number, jahrgang : string) : number | null {
@@ -34,14 +34,14 @@ export class GostAbiturjahrUtils extends JavaObject {
 
 	/**
 	 * Bestimmt für das angegebene Abiturjahr, das angegebene aktuelles Schuljahr, in dem sich die
-	 * Schule befindet, und der angegebenen Schulform und Schulgliederung den zugrhörigen Statistik-Jahrgang 
-	 * einer Schule mit gymnasialer Oberstufe.  
-	 * 
-	 * @param schulform     die Schulform 
+	 * Schule befindet, und der angegebenen Schulform und Schulgliederung den zugrhörigen Statistik-Jahrgang
+	 * einer Schule mit gymnasialer Oberstufe.
+	 *
+	 * @param schulform     die Schulform
 	 * @param gliederung    die Schulgliederung
 	 * @param schuljahr     das Schuljahr, in dem sich die Schule befindet
-	 * @param abiturjahr    das Abiturjahr, für welches der Statistik-Jahrgang ermittelt werden soll. 
-	 * 
+	 * @param abiturjahr    das Abiturjahr, für welches der Statistik-Jahrgang ermittelt werden soll.
+	 *
 	 * @return der Statistik-Jahrgang zu dem angegeben Abiturjahrgang
 	 */
 	public static getGostAbiturjahrJahrgang(schulform : Schulform, gliederung : Schulgliederung, schuljahr : number, abiturjahr : number) : string | null {

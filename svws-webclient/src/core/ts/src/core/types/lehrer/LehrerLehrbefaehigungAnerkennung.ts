@@ -65,8 +65,8 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Anerkennungsgrund für Lehrbefähigungen in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Lehrbefähigung, welches ein Array von {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Lehrbefähigung, welches ein Array von {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogLehrbefaehigungAnerkennungEintrag>) {
 		super();
@@ -81,7 +81,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> {
@@ -94,7 +94,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> {
@@ -106,9 +106,9 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt den Anerkennungsgrund für Lehrbefähigungen anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Anerkennungsgrunded für Lehrbefähigungen
-	 * 
+	 *
 	 * @return der Anerkennungsgrund für Lehrbefähigungen oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerLehrbefaehigungAnerkennung | null {
@@ -117,9 +117,9 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt den Anerkennungsgrund für Lehrbefähigungen anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Anerkennungsgrunded für Lehrbefähigungen
-	 * 
+	 *
 	 * @return der Anerkennungsgrund für Lehrbefähigungen oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerLehrbefaehigungAnerkennung | null {

@@ -42,7 +42,7 @@ export class GostFremdsprachenart extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Fremdsprachenart für die Aufzählung.
-	 * 
+	 *
 	 * @param id            die eindeutige ID für die Fremdsprachenart
 	 * @param bezeichnung   die Bezeichnung der Fremdsprachenart als Text
 	 */

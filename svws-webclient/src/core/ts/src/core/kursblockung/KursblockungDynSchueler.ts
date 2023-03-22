@@ -72,7 +72,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
-	 * 
+	 *
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pStatistik      Referenz um die Nichtwahlen mitzuteilen.
 	 * @param pSchuelerID     Die ID des Schülers von der GUI/DB.
@@ -103,7 +103,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Liefert die ID (von der GUI) dieses Schülers, beispielsweise 42.
-	 * 
+	 *
 	 * @return Die ID (von der GUI) dieses Schülers.
 	 */
 	gibDatenbankID() : number {
@@ -113,7 +113,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	/**
 	 * Eine String-Darstellung des Schülers. Beinhaltet meistens den Vornamen, den Nachnamen, das Geburtsdatum und das
 	 * Geschlecht.
-	 * 
+	 *
 	 * @return Eine String-Darstellung des Schülers.
 	 */
 	gibRepresentation() : string {
@@ -122,7 +122,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Liefert die aktuelle Anzahl an Nichtwahlen.
-	 * 
+	 *
 	 * @return Die aktuelle Anzahl an Nichtwahlen.
 	 */
 	gibNichtwahlen() : number {
@@ -131,7 +131,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Liefert ein Array aller Facharten (= Fachwahlen) des Schülers.
-	 * 
+	 *
 	 * @return Ein Array aller Facharten (= Fachwahlen) des Schülers.
 	 */
 	gibFacharten() : Array<KursblockungDynFachart> {
@@ -141,7 +141,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Schüler mindestens einen Multikurs hat. Ein Multikurs ist ein Kurs, der über mehr als
 	 * eine Schiene geht.
-	 * 
+	 *
 	 * @return TRUE, falls der Schüler mindestens einen Multikurs hat.
 	 */
 	gibHatMultikurs() : boolean {
@@ -155,7 +155,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Liefert ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
-	 * 
+	 *
 	 * @return Ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
 	 */
 	gibKurswahlen() : Array<KursblockungDynKurs | null> {
@@ -164,7 +164,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Setzt alle Facharten (=Fachwahlen) des Schülers.
-	 * 
+	 *
 	 * @param pFacharten Die Facharten des Schülers.
 	 */
 	aktionSetzeFachartenUndIDs(pFacharten : Array<KursblockungDynFachart>) : void {
@@ -192,7 +192,7 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Sperrt einen bestimmten Kurs für diesen Schüler.
-	 * 
+	 *
 	 * @param pInterneKursID Die ID des Kurses, der gesperrt wird.
 	 */
 	aktionSetzeKursSperrung(pInterneKursID : number) : void {
@@ -200,21 +200,21 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 *Speichert die aktuell belegten Kurse im Zustand S. 
+	 *Speichert die aktuell belegten Kurse im Zustand S.
 	 */
 	aktionZustandSpeichernS() : void {
 		System.arraycopy(this.fachartZuKurs, 0, this.fachartZuKursSaveS, 0, this.fachartZuKurs.length);
 	}
 
 	/**
-	 *Speichert die aktuell belegten Kurse im Zustand K. 
+	 *Speichert die aktuell belegten Kurse im Zustand K.
 	 */
 	aktionZustandSpeichernK() : void {
 		System.arraycopy(this.fachartZuKurs, 0, this.fachartZuKursSaveK, 0, this.fachartZuKurs.length);
 	}
 
 	/**
-	 *Speichert die aktuell belegten Kurse im Zustand G. 
+	 *Speichert die aktuell belegten Kurse im Zustand G.
 	 */
 	aktionZustandSpeichernG() : void {
 		System.arraycopy(this.fachartZuKurs, 0, this.fachartZuKursSaveG, 0, this.fachartZuKurs.length);
@@ -259,7 +259,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 *Entfernt den Schüler aus seinen aktuell zugeordneten Kursen. 
+	 *Entfernt den Schüler aus seinen aktuell zugeordneten Kursen.
 	 */
 	aktionKurseAlleEntfernen() : void {
 		for (let i : number = 0; i < this.fachartArr.length; i++){
@@ -271,7 +271,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 *Verteilt alle Kurse des S., die über mehr als eine Schiene gehen. 
+	 *Verteilt alle Kurse des S., die über mehr als eine Schiene gehen.
 	 */
 	aktionKurseVerteilenNurMultikurseZufaellig() : void {
 		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
@@ -306,7 +306,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 *Verteilt alle Kurse des S. von denen es pro Fachart nur einen gibt. 
+	 *Verteilt alle Kurse des S. von denen es pro Fachart nur einen gibt.
 	 */
 	aktionKurseVerteilenNurFachartenMitEinemKurs() : void {
 		for (let iFachart : number = 0; iFachart < this.fachartArr.length; iFachart++){
@@ -382,7 +382,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 *Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines Bipartiten-Matching-Algorithmus. 
+	 *Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines Bipartiten-Matching-Algorithmus.
 	 */
 	aktionKurseVerteilenMitBipartiteMatching() : void {
 		let data : Array<Array<number>> = this.matrix.getMatrix();
@@ -424,7 +424,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Die (nicht Multi) Facharten des S. werden auf eine Schiene gematched. Falls dies nicht klappt, wird der Fachart
 	 * gesagt, dass einer ihrer Kurse die Schiene wechseln muss. Um welche Schiene es sich dabei handelt, wird durch den
 	 * Matching-Algorithmus berechnet. Der S. wird bei den Berechnungen nicht einem Kurs hinzugefügt.
-	 * 
+	 *
 	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
 	 */
 	aktionKurseVerteilenNachDeinemWunsch() : boolean {
@@ -531,9 +531,9 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	/**
 	 * Liefert TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
-	 * 
+	 *
 	 * @param  kurs Der Kurs in dem der Schüler potentiell ist.
-	 * 
+	 *
 	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
 	gibIstInKurs(kurs : KursblockungDynKurs | null) : boolean {

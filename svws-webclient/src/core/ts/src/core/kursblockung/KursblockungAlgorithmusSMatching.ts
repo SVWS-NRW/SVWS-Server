@@ -27,7 +27,7 @@ export class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -52,7 +52,7 @@ export class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 
 	/**
 	 * Der Algorithmus verteilt alle SuS in zufälliger Reihenfolge erneut.
-	 * 
+	 *
 	 * @return TRUE, falls der Zustand sich verbessert hat.
 	 */
 	private verteileAlleSchueler() : boolean {

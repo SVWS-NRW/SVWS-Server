@@ -45,9 +45,9 @@ export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Förderschwerpunkt-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param kuerzel         das Kürzel 
+	 * @param kuerzel         das Kürzel
 	 * @param beschreibung    die textuelle Beschreibung des Förderschwerpunktes
 	 * @param schulformen     die Schulformen, bei welchen der Förderschwerpunkt vorkommt
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

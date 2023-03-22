@@ -70,9 +70,9 @@ export class Uebergangsempfehlung extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Eintrags, welche ein Array von 
-	 *                   {@link UebergangsempfehlungKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Eintrags, welche ein Array von
+	 *                   {@link UebergangsempfehlungKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<UebergangsempfehlungKatalogEintrag>) {
 		super();
@@ -85,9 +85,9 @@ export class Uebergangsempfehlung extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert. 
+	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
 	private static getMapByKuerzel() : HashMap<string, Uebergangsempfehlung | null> {
@@ -102,9 +102,9 @@ export class Uebergangsempfehlung extends JavaObject {
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebe Kürzel der Übergangsempfehlung zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel
-	 * 
+	 *
 	 * @return die Übergangsempfehlung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Uebergangsempfehlung | null {

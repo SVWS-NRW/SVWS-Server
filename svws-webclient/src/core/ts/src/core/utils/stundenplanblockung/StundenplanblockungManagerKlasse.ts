@@ -23,7 +23,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Klasse.
-	 * 
+	 *
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @param pKuerzel   Das Kürzel der Klasse.
 	 */
@@ -36,7 +36,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID der Klasse.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Klasse.
 	 */
 	public getID() : number {
@@ -45,7 +45,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 
 	/**
 	 * Setzt das Kürzel der Klasse.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel der Klasse.
 	 */
 	public setKuerzel(pKuerzel : string) : void {

@@ -81,7 +81,7 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Kursart für die Aufzählung.
-	 * 
+	 *
 	 * @param id             die eindeutige ID der Kursart der Gymnasialen Oberstufe
 	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
 	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
@@ -100,9 +100,9 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Prüft die Anzahl der Wochenstunden zu der Kursart.
-	 * 
+	 *
 	 * @param anzahl   Anzahl der Wochenstunden
-	 * 
+	 *
 	 * @return         Anzahl der Wochenstunden der Kursart korrekt, true oder false
 	 */
 	public pruefeWochenstunden(anzahl : number) : boolean {
@@ -123,9 +123,9 @@ export class GostKursart extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf die Gost-Kursart zurück. 
+	 * Gibt eine Map von den Kürzeln auf die Gost-Kursart zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostKursart> {
@@ -136,9 +136,9 @@ export class GostKursart extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den zulässigen Kursarten auf die Gost-Kursart zurück. 
+	 * Gibt eine Map von den zulässigen Kursarten auf die Gost-Kursart zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
 	private static getMapByZulKursart() : HashMap<ZulaessigeKursart, GostKursart> {
@@ -150,8 +150,8 @@ export class GostKursart extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Liste der zulässigen Kursarten zurück. 
-	 * 
+	 * Gibt die Liste der zulässigen Kursarten zurück.
+	 *
 	 * @return die Liste der zulässigen Kursarten
 	 */
 	public getKursarten() : List<ZulaessigeKursart> {
@@ -160,12 +160,12 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Gibt die Kursart aus der ID Kursart zurück.
-	 * 
+	 *
 	 * @param id    die ID der Kursart
-	 * 
+	 *
 	 * @return die Kursart
-	 * 
-	 * @throws DeveloperNotificationException falls die ID ungültig ist 
+	 *
+	 * @throws DeveloperNotificationException falls die ID ungültig ist
 	 */
 	public static fromID(id : number) : GostKursart {
 		switch (id) {
@@ -186,10 +186,10 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Liefert die Kursart anhand der Kursart-ID der Fachwahl.
-	 * 
+	 *
 	 * @param pFachwahl Das Fachwahl-Objekt.
 	 * @return die Kursart anhand der Kursart-ID der Fachwahl.
-	 * @throws DeveloperNotificationException falls die ID ungültig ist 
+	 * @throws DeveloperNotificationException falls die ID ungültig ist
 	 */
 	public static fromFachwahlOrException(pFachwahl : GostFachwahl) : GostKursart {
 		return GostKursart.fromID(pFachwahl.kursartID);
@@ -197,10 +197,10 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Gibt die Kursart aus der ID Kursart zurück.
-	 * 
+	 *
 	 * @param id    die ID der Kursart
-	 * 
-	 * @return die Kursart oder null falls die ID ungültig ist 
+	 *
+	 * @return die Kursart oder null falls die ID ungültig ist
 	 */
 	public static fromIDorNull(id : number) : GostKursart | null {
 		switch (id) {
@@ -221,10 +221,10 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Gibt die Gost-Kursart aus dem Kürzel der Kursart zurück.
-	 * 
+	 *
 	 * @param kuerzel    das Kürzel der Kursart
-	 * 
-	 * @return die Kursart oder null, falls das Kürzel ungültig ist 
+	 *
+	 * @return die Kursart oder null, falls das Kürzel ungültig ist
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostKursart | null {
 		return GostKursart.getMapByKuerzel().get(kuerzel);
@@ -232,9 +232,9 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Bestimmt die Gost-Kursart anhand der übergebenen zulässigen Kursart
-	 * 
+	 *
 	 * @param kursart   die Kursart
-	 * 
+	 *
 	 * @return die Gost-Kursart
 	 */
 	public static fromKursart(kursart : ZulaessigeKursart | null) : GostKursart | null {
@@ -243,10 +243,10 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Berechnet mit der Formel pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID die ID der Fachart.
-	 * 
+	 *
 	 * @param  pFachID    Die DatenbankID des Faches.
 	 * @param  pKursartID Die DatenbankID der Kursart.
-	 * 
+	 *
 	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
 	 */
 	public static getFachartID(pFachID : number, pKursartID : number) : number;
@@ -254,7 +254,7 @@ export class GostKursart extends JavaObject {
 	/**
 	 * Berechnet anhand des Fachwahl-Objektes die FachartID.
 	 * @param pFachwahl Das Fachwahl-Objekt.
-	 * 
+	 *
 	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
 	 */
 	public static getFachartID(pFachwahl : GostFachwahl) : number;
@@ -263,7 +263,7 @@ export class GostKursart extends JavaObject {
 	 * Berechnet anhand des Kurs-Objektes die FachartID.
 	 *
 	 * @param pKurs Das Kurs-Objekt.
-	 * 
+	 *
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
 	public static getFachartID(pKurs : GostBlockungKurs) : number;
@@ -287,9 +287,9 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Berechnet anhand der Fachart-ID die Fach-ID.
-	 *  
+	 *
 	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
-	 * 
+	 *
 	 * @return Ganzzahlige Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
 	 */
 	public static getFachID(pFachartID : number) : number {
@@ -298,9 +298,9 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Berechnet anhand der Fachart-ID die Kursart-ID.
-	 *  
+	 *
 	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
-	 * 
+	 *
 	 * @return Rest der ganzzahligen Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
 	 */
 	public static getKursartID(pFachartID : number) : number {

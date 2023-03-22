@@ -48,7 +48,7 @@ export class Variable extends JavaObject {
 
 	/**
 	 * Konstruktor. Erzeugt eine neue Variable mit einer bestimmten Variablen-Nummer (ungleich 0).
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr     Die Nummer der Variablen (ungleich 0).
 	 */
@@ -69,7 +69,7 @@ export class Variable extends JavaObject {
 
 	/**
 	 * Überprüft, ob diese Variable noch auf TRUE gesetzt werden kann.
-	 * 
+	 *
 	 * @return TRUE, falls man diese Variable und einen logischen Widerspruch erfüllen kann.
 	 */
 	public isUnsat() : boolean {
@@ -85,9 +85,9 @@ export class Variable extends JavaObject {
 
 	/**
 	 * Vergleicht die Statistik zweier Variablen und bestimmt, für welche man sich entscheiden sollte.
-	 * 
+	 *
 	 * @param b Die Variable, mit der verglichen werden soll.
-	 * 
+	 *
 	 * @return TRUE, wenn diese Instanz besser als "b" ist.
 	 */
 	public isBetterThan(b : Variable) : boolean {
@@ -132,7 +132,7 @@ export class Variable extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an noch nicht erfüllten Klauseln.
-	 * 
+	 *
 	 * @return Die Anzahl an noch nicht erfüllten Klauseln.
 	 */
 	getClauseOccurences() : number {

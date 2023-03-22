@@ -106,9 +106,9 @@ export class HerkunftSchulform extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulform in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Herkunftsschulform, welche ein Array von 
-	 *                   {@link HerkunftSchulformKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Herkunftsschulform, welche ein Array von
+	 *                   {@link HerkunftSchulformKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<HerkunftSchulformKatalogEintrag>) {
 		super();
@@ -121,10 +121,10 @@ export class HerkunftSchulform extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Herkunftsschulformen auf die 
-	 * zugehörigen Herkunftsschulformen zurück. 
+	 * Gibt eine Map von den Kürzeln der Herkunftsschulformen auf die
+	 * zugehörigen Herkunftsschulformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsschulformen
 	 */
 	private static getMapByKuerzel() : HashMap<string, HerkunftSchulform | null> {
@@ -139,9 +139,9 @@ export class HerkunftSchulform extends JavaObject {
 
 	/**
 	 * Gibt die Herkunftsschulform für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Herkunftsschulform
-	 * 
+	 *
 	 * @return die Herkunftsschulform oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : HerkunftSchulform | null {

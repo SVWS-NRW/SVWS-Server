@@ -95,8 +95,8 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Art von Rechtsverhältnissen in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Rechtsverhältnisses, welches ein Array von {@link LehrerKatalogRechtsverhaeltnisEintrag} ist  
+	 *
+	 * @param historie   die Historie des Rechtsverhältnisses, welches ein Array von {@link LehrerKatalogRechtsverhaeltnisEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogRechtsverhaeltnisEintrag>) {
 		super();
@@ -111,7 +111,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
 	private static getMapRechtsverhaeltnisByID() : HashMap<number, LehrerRechtsverhaeltnis | null> {
@@ -124,7 +124,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
 	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<string, LehrerRechtsverhaeltnis | null> {
@@ -136,9 +136,9 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 
 	/**
 	 * Gibt die Art von Rechtsverhältnissen anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Art von Rechtsverhältnissen
-	 * 
+	 *
 	 * @return die Art von Rechtsverhältnissen oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerRechtsverhaeltnis | null {
@@ -147,9 +147,9 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 
 	/**
 	 * Gibt die Art von Rechtsverhältnissen anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Art von Rechtsverhältnissen
-	 * 
+	 *
 	 * @return die Art von Rechtsverhältnissen oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerRechtsverhaeltnis | null {

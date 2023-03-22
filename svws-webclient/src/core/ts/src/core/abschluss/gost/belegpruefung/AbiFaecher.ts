@@ -34,7 +34,7 @@ export class AbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für die Projektkurse.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
@@ -103,7 +103,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Prüfe, ob die Zahl der Abiturfächer 4 ist und diese alle Aufgabenfelder abdecken
 	 *    und ob mindestens 2 Fächer im Bereich Deutsch, Fremdsprache, Mathematik liegen
 	 *    und ob maximale 1 Fach im Bereich Sport und Religion liegt
-	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde 
+	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde
 	 */
 	private pruefeAnzahlUndAufgabenfelderAbiFaecher() : void {
 		if ((this.anzahlAbiFaecher !== 4) || (!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII))
@@ -124,7 +124,7 @@ export class AbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung: Prüfe, ob eines der Abiturfächer mehrfach belegt wurde. Es ist nicht zulässig
-	 * Abiturfächer mehrfach belegt zu haben. 
+	 * Abiturfächer mehrfach belegt zu haben.
 	 */
 	private pruefeMehrfacheAbiturfaecher() : void {
 		let abiFaecher : HashSet<GostAbiturFach> = new HashSet();
@@ -157,9 +157,9 @@ export class AbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkte 76 und 77:
-	 * Prüfe ob das 3. Abiturfach von Q1.1 bis Q2.2 schriftlich belegt wurde 
+	 * Prüfe ob das 3. Abiturfach von Q1.1 bis Q2.2 schriftlich belegt wurde
 	 *   und on das 4. Abiturfach von Q1.1 bis Q2.1 schriftlich und in Q2.2 mündlich belegt wurde
-	 * 
+	 *
 	 */
 	private pruefeSchriftlichkeitAB3undAB4() : void {
 		let ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
@@ -180,9 +180,9 @@ export class AbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Liefert die zugehörige Abitur-Fachbelegung zurück.
-	 * 
+	 *
 	 * @param abifach  die Art des Abifachs (1., 2., 3. oder 4. Fach)
-	 * 
+	 *
 	 * @return die Abitur-Fachbelegung oder null, falls es (noch) nicht festgelegt wurde
 	 */
 	public getAbiturfach(abifach : GostAbiturFach | null) : AbiturFachbelegung | null {

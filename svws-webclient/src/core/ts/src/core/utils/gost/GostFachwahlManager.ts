@@ -37,7 +37,7 @@ export class GostFachwahlManager extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Fachwahl-Manager mit den übergebenen Fachwahlen
-	 * 
+	 *
 	 * @param fachwahlen   die Fachwahlen
 	 */
 	public constructor(fachwahlen : List<GostFachwahl>);
@@ -57,7 +57,7 @@ export class GostFachwahlManager extends JavaObject {
 
 	/**
 	 * Fügt eine weitere Fachwahl zu dem Manager hinzu
-	 * 
+	 *
 	 * @param fachwahl   die hinzuzufügende Fachwahl
 	 */
 	public add(fachwahl : GostFachwahl | null) : void {
@@ -92,11 +92,11 @@ export class GostFachwahlManager extends JavaObject {
 
 	/**
 	 * Ermittelt die Fachwahlen zu der übergebenen Fach-ID.
-	 * Sind keine Fachwahlen vorhanden, so wird ein leerer Vektor 
+	 * Sind keine Fachwahlen vorhanden, so wird ein leerer Vektor
 	 * zurückgegeben.
-	 * 
+	 *
 	 * @param idFach   die ID des Faches
-	 * 
+	 *
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public getFachwahlen(idFach : number) : List<GostFachwahl> {
@@ -107,9 +107,9 @@ export class GostFachwahlManager extends JavaObject {
 	/**
 	 * Ermittelt die Fachwahlen zu der übergebenen Schüler ID.
 	 * Sind keine Fachwahlen vorhanden, so wird ein leerer Vektor zurückgegeben.
-	 * 
+	 *
 	 * @param idSchueler   die ID des Schülers
-	 * 
+	 *
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
 	public getSchuelerFachwahlen(idSchueler : number) : List<GostFachwahl> {
@@ -119,11 +119,11 @@ export class GostFachwahlManager extends JavaObject {
 
 	/**
 	 * Prüft, ob eine Fachwahl mit dem angegebenen Schüler, Fach und der angegebenen Kursart existiert.
-	 *    
+	 *
 	 * @param idSchueler   die ID des Schülers
 	 * @param idFach       die ID des Faches
 	 * @param kursart      die Kursart der gymnasialen Oberstufe
-	 * 
+	 *
 	 * @return true, falls die Fachwahl existiert und ansonsten false
 	 */
 	public hatFachwahl(idSchueler : number, idFach : number, kursart : GostKursart) : boolean {

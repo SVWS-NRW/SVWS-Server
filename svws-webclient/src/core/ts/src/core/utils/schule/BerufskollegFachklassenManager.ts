@@ -57,7 +57,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Manager für den Katalog der Fachklassen
-	 * 
+	 *
 	 * @param katalog   der Katalog der Fachklassen
 	 */
 	public constructor(katalog : BerufskollegFachklassenKatalog) {
@@ -83,26 +83,26 @@ export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
 	 * Gibt die Version der Katalog-Daten zurück.
-	 * 
+	 *
 	 * @return die Version
 	 */
 	public getVersion() : number;
 
 	/**
 	 * Gibt die Version der Daten eines Teilkatalog für einen Index zurück.
-	 * 
+	 *
 	 * @param index   der Index für die Fachklassen
-	 * 
+	 *
 	 * @return die Version des Teilkatalogs
 	 */
 	public getVersion(index : number) : number;
 
 	/**
-	 * Gibt die Version der Daten des Teilkatalog für den Index 
+	 * Gibt die Version der Daten des Teilkatalog für den Index
 	 * der angegebenen Schulgliederung zurück.
-	 * 
+	 *
 	 * @param gliederung   die Schulgliederung
-	 * 
+	 *
 	 * @return die Version des Teilkatalogs
 	 */
 	public getVersion(gliederung : Schulgliederung | null) : number;
@@ -134,10 +134,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Gibt den Katalog-Eintrag für das übergebene Kürzel zurück. Das Kürzel setzt
 	 * sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Katalog-Eintrags
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist.
 	 */
 	public get(kuerzel : string) : BerufskollegFachklassenKatalogEintrag | null {
 		return this._mapByKuerzel.get(kuerzel);
@@ -145,7 +145,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
 	 * Gibt alle Katalog-Einträge zurück.
-	 * 
+	 *
 	 * @return ein Array mit allen Katalog-Einträgen
 	 */
 	public values() : Array<BerufskollegFachklassenKatalogEintrag | null> | null {
@@ -156,20 +156,20 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Gibt die Katalog-Daten für das übergebene Kürzel und das angegebene Schuljahr zurück.
 	 * Das Kürzel setzt sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param kuerzel     das Kürzel des Katalog-Eintrags
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag 
-	 *         keine Daten für das übergebene Schuljahr hat 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag
+	 *         keine Daten für das übergebene Schuljahr hat
 	 */
 	public getDaten(kuerzel : string, schuljahr : number) : BerufskollegFachklassenKatalogDaten | null;
 
 	/**
-	 * Gibt die Katalog-Daten für die Fachklasse zurück. 
-	 * 
+	 * Gibt die Katalog-Daten für die Fachklasse zurück.
+	 *
 	 * @param id   die die des Katalog-Eintrags
-	 * 
+	 *
 	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
 	 */
 	public getDaten(id : number) : BerufskollegFachklassenKatalogDaten | null;
@@ -198,10 +198,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * Gibt das Kürzel für die Fachklasse mit der angebenen ID zurück. Das Kürzel setzt
 	 * sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param id   die ID der Fachklasse
-	 * 
-	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist 
+	 *
+	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist
 	 */
 	public getKuerzel(id : number) : string | null {
 		let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
@@ -211,19 +211,19 @@ export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
 	 * Gibt den Teilkatalog für den angegebenen Fachklassen-Index zurück.
-	 * 
-	 * @param index   der Fachklassen-Index des Teilkatalogs 
-	 * 
+	 *
+	 * @param index   der Fachklassen-Index des Teilkatalogs
+	 *
 	 * @return der Teilkatalog
 	 */
 	public getTeilKatalog(index : number) : BerufskollegFachklassenKatalogIndex;
 
 	/**
-	 * Gibt den Teilkatalog des Fachklassen-Index 
+	 * Gibt den Teilkatalog des Fachklassen-Index
 	 * für die angegebene Schulgliederung zurück.
-	 * 
+	 *
 	 * @param gliederung   die Schulgliederung
-	 * 
+	 *
 	 * @return der Teilkatalog
 	 */
 	public getTeilKatalog(gliederung : Schulgliederung | null) : BerufskollegFachklassenKatalogIndex;
@@ -251,7 +251,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
 	 * Gibt den Katalog zurück.
-	 * 
+	 *
 	 * @return der Katalog
 	 */
 	public getKatalog() : BerufskollegFachklassenKatalog {

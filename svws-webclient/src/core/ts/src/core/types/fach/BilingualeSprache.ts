@@ -95,9 +95,9 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Erzeugt eine bilingualen Sprache in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der bilingualen Sprache, welche ein Array von 
-	 *                   {@link BilingualeSpracheKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der bilingualen Sprache, welche ein Array von
+	 *                   {@link BilingualeSpracheKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<BilingualeSpracheKatalogEintrag>) {
 		super();
@@ -121,7 +121,7 @@ export class BilingualeSprache extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
 	 */
 	private static getMapEintragByID() : HashMap<number, BilingualeSpracheKatalogEintrag> {
@@ -135,7 +135,7 @@ export class BilingualeSprache extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
 	private static getMapByID() : HashMap<number, BilingualeSprache> {
@@ -148,7 +148,7 @@ export class BilingualeSprache extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
 	private static getMapByKuerzel() : HashMap<string, BilingualeSprache> {
@@ -160,7 +160,7 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die bilingualen Sprache vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
@@ -169,9 +169,9 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Prüft, ob die Schulform bei dieser bilingualen Sprache zulässig ist.
-	 * 
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return true, falls die bilingualen Sprache in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
@@ -189,9 +189,9 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Liefert den Katalog-Eintrag der bilingualen Sprache zu der übergebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Katalog-Eintrags
-	 * 
+	 *
 	 * @return der Katalog-Eintrag der bilingualen Sprache oder null, falls die ID ungültig ist
 	 */
 	public static getKatalogEintragByID(id : number) : BilingualeSpracheKatalogEintrag | null {
@@ -200,9 +200,9 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Liefert die bilingualen Sprache zu der übergebenen ID der bilingualen Sprache zurück.
-	 * 
+	 *
 	 * @param id   die ID der bilingualen Sprache
-	 * 
+	 *
 	 * @return die bilingualen Sprache oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : BilingualeSprache | null {
@@ -211,9 +211,9 @@ export class BilingualeSprache extends JavaObject {
 
 	/**
 	 * Liefert die bilingualen Sprache zu der übergebenen ID der bilingualen Sprache zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der bilingualen Sprache
-	 * 
+	 *
 	 * @return die bilingualen Sprache oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : BilingualeSprache | null {
@@ -221,10 +221,10 @@ export class BilingualeSprache extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt alle bilingualen Sprachen, die in der angegebenen Schulform zulässig sind. 
-	 *  
+	 * Bestimmt alle bilingualen Sprachen, die in der angegebenen Schulform zulässig sind.
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return die bilingualen Sprache in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<BilingualeSprache> {

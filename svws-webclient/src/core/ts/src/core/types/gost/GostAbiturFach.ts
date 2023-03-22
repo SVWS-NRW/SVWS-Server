@@ -53,7 +53,7 @@ export class GostAbiturFach extends JavaObject {
 
 	/**
 	 * Erstellt eine Abiturfachart für diese Aufzählung der Abiturfacharten.
-	 * 
+	 *
 	 * @param id             die ID bzw. Nummer der Abiturfachart
 	 * @param kuerzel        das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird
 	 * @param beschreibung   die textuelle Beschreibung der Abiturfachart
@@ -71,12 +71,12 @@ export class GostAbiturFach extends JavaObject {
 
 	/**
 	 *
-	 * Gibt die Abiturfachart anhand der ID zurück. 
-	 * 
+	 * Gibt die Abiturfachart anhand der ID zurück.
+	 *
 	 * @param id    die ID der Abiturfachart
-	 * 
+	 *
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
-	 * 
+	 *
 	 */
 	public static fromID(id : number | null) : GostAbiturFach | null {
 		if (id === null)
@@ -96,12 +96,12 @@ export class GostAbiturFach extends JavaObject {
 
 	/**
 	 *
-	 * Gibt die Abiturfachart anhand der ID (als String) zurück. 
-	 * 
-	 * @param strID    die ID der Abiturfachart (als String) 
-	 * 
+	 * Gibt die Abiturfachart anhand der ID (als String) zurück.
+	 *
+	 * @param strID    die ID der Abiturfachart (als String)
+	 *
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
-	 * 
+	 *
 	 */
 	public static fromIDString(strID : string | null) : GostAbiturFach | null {
 		if (strID === null)
@@ -121,12 +121,12 @@ export class GostAbiturFach extends JavaObject {
 
 	/**
 	 *
-	 * Gibt die Abiturfachart anhand des Kürzels zurück. 
-	 * 
+	 * Gibt die Abiturfachart anhand des Kürzels zurück.
+	 *
 	 * @param kuerzel    das Kürzel der Abiturfachart
-	 * 
+	 *
 	 * @return die Abiturfachart oder null, falls das Kürzel ungültig ist
-	 * 
+	 *
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostAbiturFach | null {
 		switch (kuerzel) {

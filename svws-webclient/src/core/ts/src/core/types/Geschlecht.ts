@@ -57,8 +57,8 @@ export class Geschlecht extends JavaObject {
 	public readonly textLang : string;
 
 	/**
-	 * Erzeugt ein neues Geschlecht für die Aufzählung der Geschlechter. 
-	 *  
+	 * Erzeugt ein neues Geschlecht für die Aufzählung der Geschlechter.
+	 *
 	 * @param id          die ID des Geschlechtes, welche im Rahmen der amtlichen Schulstatistik verwendet wird
 	 * @param kuerzel     das Geschlecht als einstelliges Kürzel
 	 * @param text        die textuelle Kurz-Bezeichnung des Geschlechtes
@@ -79,9 +79,9 @@ export class Geschlecht extends JavaObject {
 	/**
 	 *
 	 * Bestimmt das Geschlecht anhand der ID.
-	 * 
+	 *
 	 * @param value   die ID des Geschlechtes
-	 * 
+	 *
 	 * @return das Geschlecht oder null, falls die ID fehlerhaft ist
 	 */
 	public static fromValue(value : number | null) : Geschlecht | null {
@@ -104,11 +104,11 @@ export class Geschlecht extends JavaObject {
 	 *
 	 * Bestimmt das Geschlecht anhand des übergebenen Strings.
 	 * Enthält der übegebene String einen ungültigen Wert,
-	 * so wird als Geschlecht "x", d.h. ohne Angabe im Geburtenregister 
+	 * so wird als Geschlecht "x", d.h. ohne Angabe im Geburtenregister
 	 * zurückgegebeben.
-	 * 
+	 *
 	 * @param text         die textuelle Beschreibung des Geschlechts
-	 * 
+	 *
 	 * @return das Geschlecht als Type
 	 */
 	public static fromStringValue(text : string | null) : Geschlecht {
@@ -138,9 +138,9 @@ export class Geschlecht extends JavaObject {
 
 	/**
 	 * Gibt die Anrede für eine Person dieses Geschlechts in Abhängigkeit vom Alter zurück.
-	 * 
+	 *
 	 * @param alter   das Alter der Person
-	 * 
+	 *
 	 * @return die Anrede
 	 */
 	public getAnrede(alter : number) : string | null {

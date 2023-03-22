@@ -11,10 +11,10 @@ export class KursblockungStatic extends JavaObject {
 	/**
 	 *Erzeugt ein Array der Größe {@code n}, füllt es mit den Zahlen {@code 0 bis n-1} und permutiert das Array dann
 	 * zufällig.
-	 * 
+	 *
 	 * @param  pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param  n       Die Größe des Arrays.
-	 * @return         Eine Array-Referenz. 
+	 * @return         Eine Array-Referenz.
 	 */
 	public static gibPermutation(pRandom : Random, n : number) : Array<number> {
 		let temp : Array<number> = Array(n).fill(0);
@@ -27,9 +27,9 @@ export class KursblockungStatic extends JavaObject {
 
 	/**
 	 *Permutiert das Array {@code perm} zufällig.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param perm    Das zu permutierende Array. 
+	 * @param perm    Das zu permutierende Array.
 	 */
 	public static aktionPermutiere(pRandom : Random, perm : Array<number>) : void {
 		let n : number = perm.length;

@@ -32,8 +32,8 @@ export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 
 	/**
 	 * Erstellt einen neuen Iterator für die Klasse MinHeap
-	 * 
-	 * @param elem   die Elemente des Minimum Heaps 
+	 *
+	 * @param elem   die Elemente des Minimum Heaps
 	 * @param heap   eine Referenz zum Minimum Heap, um auf parallel erfolgende modifizierende Zugriffe reagieren zu können.
 	 */
 	constructor(elem : Array<T | null>, heap : MinHeap<T>) {

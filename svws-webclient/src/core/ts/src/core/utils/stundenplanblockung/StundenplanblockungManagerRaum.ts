@@ -34,7 +34,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID des Raumes.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Raumes.
 	 */
 	public getID() : number {
@@ -43,7 +43,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 
 	/**
 	 * Setzt das Kürzel des Raumes.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel des Raumes.
 	 */
 	public setKuerzel(pKuerzel : string) : void {

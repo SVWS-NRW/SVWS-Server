@@ -37,7 +37,7 @@ export class ReligionKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel der Religion
 	 * @param bezeichnung     eine kurze Bezeichnung der Religion

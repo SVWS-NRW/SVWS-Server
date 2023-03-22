@@ -42,9 +42,9 @@ export class VerkehrsspracheKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Katalog-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                    die ID
-	 * @param kuerzel               der dreistellige ISO 639-2 code 
+	 * @param kuerzel               der dreistellige ISO 639-2 code
 	 * @param bezeichnung           die ISO-Bezeichnung der Sprache
 	 * @param iso2                  der zweistellige ISO 639-1 code, sofern vorhanden
 	 * @param gueltigVon            das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"

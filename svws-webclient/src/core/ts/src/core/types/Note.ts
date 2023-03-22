@@ -199,9 +199,9 @@ export class Note extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element der Aufzählung
-	 *  
+	 *
 	 * @param id              die eindeutige ID der Note
-	 * @param sortierung      eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt  
+	 * @param sortierung      eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt
 	 * @param notenpunkte     die Notenpunkte, die dieser Note zugeordnet sind
 	 * @param kuerzel         die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)
 	 * @param text            die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)
@@ -227,7 +227,7 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es sich um eine echte Note oder nur um eine "Pseudonote" handelt
-	 * 
+	 *
 	 * @return true, wenn es sich bei der Note um eine echte Note handelt
 	 */
 	public istNote() : boolean {
@@ -237,9 +237,9 @@ export class Note extends JavaObject {
 	/**
 	 * Bestimmt die Note anhand des übergebenen Integer-Wert, welcher eine
 	 * Note ohne Tendenz darstellt.
-	 *  
+	 *
 	 * @param noteSekI    die Note ohne Tendenz
-	 * 
+	 *
 	 * @return die Note
 	 */
 	public static fromNoteSekI(noteSekI : number | null) : Note | null {
@@ -265,9 +265,9 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt die Note anhand der angebenen Notenpunkte zurück.
-	 * 
+	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkte(notenpunkte : number | null) : Note {
@@ -312,9 +312,9 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt die Note bzw. Pseudonote anhand des angebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel anhand derer die Note ermittelt wird
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromKuerzel(kuerzel : string | null) : Note {
@@ -377,11 +377,11 @@ export class Note extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String 
+	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String
 	 * übergeben werden.
-	 * 
+	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkteString(notenpunkte : string | null) : Note {
@@ -426,7 +426,7 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt an, ob es sich um eine Note mit Tendenz handelt oder nicht.
-	 * 
+	 *
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public hatTendenz() : boolean {
@@ -446,7 +446,7 @@ export class Note extends JavaObject {
 
 	/**
 	 * Ermittelt die zu der Note gehörende Note ohne Tendenz (z.B. 3+ wird zu 3)
-	 * 
+	 *
 	 * @return die entsprechende Note ohne Tendenz
 	 */
 	public ohneTendenz() : Note {
@@ -485,8 +485,8 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt die Note als Note der Sekundarstufe I ohne Tendenz als Zahl zurück.
-	 * 
-	 * @return die Noten 1-6 oder im Fehlerfall null  
+	 *
+	 * @return die Noten 1-6 oder im Fehlerfall null
 	 */
 	public getNoteSekI() : number | null {
 		switch (this.notenpunkte) {
@@ -519,7 +519,7 @@ export class Note extends JavaObject {
 
 	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
-	 *  
+	 *
 	 * @return der Noten-Katalog-Eintrag
 	 */
 	public getKatalogEintrag() : NotenKatalogEintrag {

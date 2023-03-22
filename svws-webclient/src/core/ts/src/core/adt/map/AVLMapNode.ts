@@ -48,7 +48,7 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 
 	/**
 	 * Erstellt ein neues Blatt des Baumes.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key). Der Wert darf nicht NULL sein.
 	 * @param val Der Wert (Value), welcher dem Schlüssel (Key) zugeordnet ist. Der Wert darf nicht NULL sein.
 	 */

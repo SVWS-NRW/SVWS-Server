@@ -17,7 +17,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 
 	/**
 	 * Erstellt ein neues SubEntrySet auf die übergebene {@link AVLMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

@@ -30,7 +30,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 
 	/**
 	 * Erstellt eine neue Belegprüfung, welche den angegebenen Daten-Manager verwendet.
-	 * 
+	 *
 	 * @param manager           der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art     die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungen_vorher   eine vorher durchgeführte Abiturprüfung
@@ -57,7 +57,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	/**
 	 * Fügt einen Belegungsfehler zu der Belegprüfung hinzu. Diese Methode wird von den Sub-Klassen
 	 * aufgerufen, wenn dort ein Belegungsfehler erkannt wird.
-	 * 
+	 *
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
 	protected addFehler(fehler : GostBelegungsfehler) : void {
@@ -67,7 +67,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 
 	/**
 	 * Gibt die Belegungsfehler zurück, welche bei der Gesamtprüfung aufgetreten sind.
-	 * 
+	 *
 	 * @return die Belegungsfehler
 	 */
 	public getBelegungsfehler() : Vector<GostBelegungsfehler> {
@@ -76,7 +76,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 
 	/**
 	 * Git zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
-	 * 
+	 *
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public hatBelegungsfehler() : boolean {
@@ -104,11 +104,11 @@ export abstract class GostBelegpruefung extends JavaObject {
 	protected abstract pruefeGesamt() : void;
 
 	/**
-	 * Gibt zurück, ob die angegebenen Belegprüfungsfehler einen "echten" Fehler beinhalten 
+	 * Gibt zurück, ob die angegebenen Belegprüfungsfehler einen "echten" Fehler beinhalten
 	 * und nicht nur einen Hinweise / eine Information.
-	 * 
+	 *
 	 * @param alle_fehler   die Belegprüfungsfehler und -informationen der durchgeführten Belegprüfungen
-	 * 
+	 *
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
 	public static istErfolgreich(alle_fehler : Vector<GostBelegungsfehler>) : boolean {
@@ -123,9 +123,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	/**
 	 * Liefert alle Belegprüfungsfehler der übergebenen Teil-Belegprüfungen zurück.
 	 * Doppelte Fehler werden dabei nur einfach zurückgegeben (Set).
-	 *  
+	 *
 	 * @param pruefungen   die durchgeführten Belegprüfungen, deren Fehler zurückgegeben werden sollen.
-	 * 
+	 *
 	 * @return die Menge der Belegprüfungsfehler
 	 */
 	public static getBelegungsfehlerAlle(pruefungen : List<GostBelegpruefung>) : Vector<GostBelegungsfehler> {

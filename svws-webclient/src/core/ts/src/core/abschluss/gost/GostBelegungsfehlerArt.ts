@@ -37,7 +37,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Abitur-Belegungsfehler-Objekt
-	 * 
+	 *
 	 * @param kuerzel        das Kürzel der Fehler-Art
 	 */
 	private constructor(name : string, ordinal : number, kuerzel : string) {
@@ -53,7 +53,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	 * Gibt die Belegungsfehler-Art anhand des übergebenen Kürzels zurück.
 	 *
 	 * @param kuerzel    das Kürzel der Belegungsfehler-Art
-	 *  
+	 *
 	 * @return die Belegungsfehler-Art
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostBelegungsfehlerArt | null {

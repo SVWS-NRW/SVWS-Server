@@ -9,12 +9,12 @@ export class AdressenUtils extends JavaObject {
 	}
 
 	/**
-	 * Teilt eine Strassenangabe bestehend aus dem 
+	 * Teilt eine Strassenangabe bestehend aus dem
 	 * Strassennamen, der Hausnummer und dem Hausnummerzusatz
 	 * in die Bestandteile auf.
-	 * 
+	 *
 	 * @param strasse   die Strassenangabe
-	 * 
+	 *
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
 	public static splitStrasse(strasse : string | null) : Array<string> {
@@ -42,11 +42,11 @@ export class AdressenUtils extends JavaObject {
 	/**
 	 * Kombiniert die übergebenen Werte für den Strassennamen, die Hausnummer und
 	 * den Zusatz zu einer Strassenangabe in einem String.
-	 * 
+	 *
 	 * @param name         der Strassenname
 	 * @param hausNummer   die Hausnummer
 	 * @param zusatz       der Hausnummerzusatz
-	 * 
+	 *
 	 * @return die kombinierte Strassenangabe
 	 */
 	public static combineStrasse(name : string | null, hausNummer : string | null, zusatz : string | null) : string | null {

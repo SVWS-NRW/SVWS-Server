@@ -134,7 +134,7 @@ public class MethodNode {
         return (comment == null) 
         		? "" 
         		: indent + "/**" + System.lineSeparator() 
-                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> indent + " *" +  s).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
+                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> indent + " *" +  s.stripTrailing()).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
                 + indent + " */" + System.lineSeparator();
 	}
 

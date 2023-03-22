@@ -427,8 +427,8 @@ export class ZulaessigeKursart extends JavaObject {
 
 	/**
 	 * Erzeugt eine zulässige Kursart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Kursarten, welches ein Array von {@link KursartKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Kursarten, welches ein Array von {@link KursartKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KursartKatalogEintrag>) {
 		super();
@@ -454,7 +454,7 @@ export class ZulaessigeKursart extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Kursarten auf die zugehörigen Kursarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Kursarten auf die zugehörigen Kursarten
 	 */
 	private static getMapByID() : HashMap<number, ZulaessigeKursart | null> {
@@ -468,7 +468,7 @@ export class ZulaessigeKursart extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Kursarten auf die zugehörigen Kursarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Kursarten auf die zugehörigen Kursarten
 	 */
 	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart | null> {
@@ -480,11 +480,11 @@ export class ZulaessigeKursart extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob die Schulform bei dieser Kursart in irgendeiner Gliederung der 
+	 * Prüft, ob die Schulform bei dieser Kursart in irgendeiner Gliederung der
 	 * angegebenen Schulform zulässig ist.
-	 * 
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return true, falls die Kursart in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
@@ -500,9 +500,9 @@ export class ZulaessigeKursart extends JavaObject {
 	/**
 	 * Bestimmt alle Kursarten, die in irgendeiner Gliederung der angegebenen Schulform
 	 * zulässig sind.
-	 *  
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigeKursart | null> {
@@ -518,7 +518,7 @@ export class ZulaessigeKursart extends JavaObject {
 	/**
 	 * Liefert alle Kombinationen aus Schulformen und Schulgliederungen zurück,
 	 * bei denen die Kursart zulässig ist.
-	 * 
+	 *
 	 * @return eine Liste der Kombinationen aus Schulformen und Schulgliederungen
 	 */
 	public getGliederungen() : List<Pair<Schulform | null, Schulgliederung | null>> {
@@ -526,10 +526,10 @@ export class ZulaessigeKursart extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt anhand des Statistik-Kürzels, die zulässige Kursart. 
-	 * 
+	 * Bestimmt anhand des Statistik-Kürzels, die zulässige Kursart.
+	 *
 	 * @param kursart   das Statistik-Kürzel
-	 * 
+	 *
 	 * @return die Kursart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
 	public static getByASDKursart(kursart : string | null) : ZulaessigeKursart | null {

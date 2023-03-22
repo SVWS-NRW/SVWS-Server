@@ -52,7 +52,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 
 	/**
 	 * Initialisiert den Datentype für die Aufzählung
-	 * 
+	 *
 	 * @param type   der JSON-Datentyp
 	 */
 	private constructor(name : string, ordinal : number, type : string) {

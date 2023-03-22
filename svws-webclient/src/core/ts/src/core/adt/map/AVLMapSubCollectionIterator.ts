@@ -26,7 +26,7 @@ export class AVLMapSubCollectionIterator<K, V> extends JavaObject implements Jav
 
 	/**
 	 * Erstellt einen neuen VALUES-Iterator, welcher auf der {@link AVLMapSubMap} operiert.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der dieser Iterator operiert.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

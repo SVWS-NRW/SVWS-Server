@@ -104,7 +104,7 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Halbjahr der Gymnasialen Oberstufe für diese Aufzählung.
-	 * 
+	 *
 	 * @param id             die ID für das Halbjahr, welches die Reihenfolge der Halbjahre wiederspiegelt
 	 * @param jahrgang       das Jahrgangskürzel des Halbjahres
 	 * @param halbjahr       die Nummer des Halbjahres
@@ -127,9 +127,9 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den IDs auf das Gost-Halbjahr zurück. 
+	 * Gibt eine Map von den IDs auf das Gost-Halbjahr zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs auf das Gost-Halbjahr
 	 */
 	private static getMapByID() : HashMap<number, GostHalbjahr> {
@@ -140,9 +140,9 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Gibt eine Map von den Kürzeln auf das Gost-Halbjahr zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostHalbjahr> {
@@ -153,9 +153,9 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den alten Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Gibt eine Map von den alten Kürzeln auf das Gost-Halbjahr zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
 	 */
 	private static getMapByKuerzelAlt() : HashMap<string, GostHalbjahr> {
@@ -166,8 +166,8 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Gibt das nachfolgende Halbjahr zurück. 
-	 * 
+	 * Gibt das nachfolgende Halbjahr zurück.
+	 *
 	 * @return das nachfolgende Halbjahr oder null, wenn es keines mehr gibt
 	 */
 	public next() : GostHalbjahr | null {
@@ -175,8 +175,8 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Gibt das vorherige Halbjahr zurück. 
-	 * 
+	 * Gibt das vorherige Halbjahr zurück.
+	 *
 	 * @return das vorherige Halbjahr oder null, wenn es keines mehr gibt
 	 */
 	public previous() : GostHalbjahr | null {
@@ -185,7 +185,7 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt alle Halbjahre der Einführungsphase zurück.
-	 * 
+	 *
 	 * @return ein Array mit allen Halbjahren der Einführungsphase der gymnasialen Oberstufe
 	 */
 	public static getEinfuehrungsphase() : Array<GostHalbjahr> {
@@ -195,7 +195,7 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt alle Halbjahre der Qualifikationsphase zurück.
-	 * 
+	 *
 	 * @return ein Array mit allen Halbjahren der Qualifikationsphase der gymnasialen Oberstufe
 	 */
 	public static getQualifikationsphase() : Array<GostHalbjahr> {
@@ -205,9 +205,9 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt alle Halbjahre des übergebenen Jahrgangs zurück.
-	 * 
+	 *
 	 * @param jahrgang     der Jahrgang
-	 * 
+	 *
 	 * @return ein Array mit den Halbjahren des Jahrgangs
 	 */
 	public static getHalbjahreFromJahrgang(jahrgang : string) : Array<GostHalbjahr> {
@@ -228,9 +228,9 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt das Halbjahr zurück, welches die übergebene ID hat.
-	 * 
+	 *
 	 * @param id   die ID des Halbjahres
-	 * 
+	 *
 	 * @return das Halbjahr oder null, falls die ID nicht gültig ist
 	 */
 	public static fromID(id : number | null) : GostHalbjahr | null {
@@ -257,9 +257,9 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Gibt das Halbjahr zurück, welches die übergebene ID hat. <br>
 	 * Wirft eine Exception, falls die ID keinem Halbjahr zugeordnet werden kann.
-	 * 
+	 *
 	 * @param pGostHalbjahID   Die ID des Halbjahres.
-	 * 
+	 *
 	 * @return Das Halbjahr oder eine Exception, falls die ID nicht gültig ist
 	 * @throws NullPointerException Falls die ID keinem Halbjahr zugeordnet werden kann.
 	 */
@@ -272,9 +272,9 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt das Halbjahr zurück, welches das übergebene Kürzel hat.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel
-	 * 
+	 *
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostHalbjahr | null {
@@ -283,9 +283,9 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt das Halbjahr zurück, welches das übergebene alte Kürzel hat.
-	 * 
+	 *
 	 * @param kuerzelAlt   das alte Kürzel
-	 * 
+	 *
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
 	public static fromKuerzelAlt(kuerzelAlt : string | null) : GostHalbjahr | null {
@@ -294,10 +294,10 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt das Halbjahr zurück, welches zu dem übergebenen Jahrgang und Halbjahr gehört.
-	 * 
+	 *
 	 * @param jahrgang     der Jahrgang
 	 * @param halbjahr     die Nummer des Halbjahres
-	 * 
+	 *
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static fromJahrgangUndHalbjahr(jahrgang : string | null, halbjahr : number) : GostHalbjahr | null {
@@ -318,11 +318,11 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr
-	 * 
+	 *
 	 * @param abiturjahr   das Abiturjahr
 	 * @param schuljahr    das aktuelle Schuljahr
 	 * @param halbjahr     das aktuelle Halbjahr
-	 * 
+	 *
 	 * @return das Halbjahr der gymnasialen Oberstufe oder null
 	 */
 	public static fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
@@ -332,14 +332,14 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Bestimmt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
-	 * dem aktuellen Schuljahr und Halbjahr und gibt anhand dessen das Halbjahr der gymnasialen 
+	 * dem aktuellen Schuljahr und Halbjahr und gibt anhand dessen das Halbjahr der gymnasialen
 	 * Oberstufe zurück, welches als nächstes geplant wird.
-	 * 
+	 *
 	 * @param abiturjahr   das Abiturjahr
 	 * @param schuljahr    das aktuelle Schuljahr
 	 * @param halbjahr     das aktuelle Halbjahr
-	 * 
-	 * @return das nächste Halbjahr der gymnasialen Oberstufe zur Planung oder null, wenn der 
+	 *
+	 * @return das nächste Halbjahr der gymnasialen Oberstufe zur Planung oder null, wenn der
 	 *         Jahrgang in der Q2.2 ist oder das Abitur bereits abgeschlossen ist.
 	 */
 	public static getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
@@ -350,11 +350,11 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
+	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
 	 * übergebenen Schuljahres.
-	 * 
+	 *
 	 * @param schuljahr   das Schuljahr
-	 * 
+	 *
 	 * @return das Abiturjahr
 	 */
 	public getAbiturjahrFromSchuljahr(schuljahr : number) : number {
@@ -362,11 +362,11 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt das Schuljahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
+	 * Bestimmt das Schuljahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
 	 * übergebenen Abiturjahres.
-	 * 
+	 *
 	 * @param abiturjahr   das Abiturjahr
-	 * 
+	 *
 	 * @return das Schuljahr
 	 */
 	public getSchuljahrFromAbiturjahr(abiturjahr : number) : number {
@@ -375,7 +375,7 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es Einführungsphase ist.
-	 * 
+	 *
 	 * @return  Einführungsphase, true oder false
 	 */
 	public istEinfuehrungsphase() : boolean {
@@ -384,7 +384,7 @@ export class GostHalbjahr extends JavaObject {
 
 	/**
 	 * Gibt zurück, ob es Qualifikationsphase ist.
-	 * 
+	 *
 	 * @return  Qualifikationsphase, true oder false
 	 */
 	public istQualifikationsphase() : boolean {
@@ -394,9 +394,9 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Prüft anhand der übergebenen Halbjahre, ob es sich um die beiden Halbjahre
 	 * der Einführungsphase handelt.
-	 * 
+	 *
 	 * @param halbjahre    die Halbjahre
-	 * 
+	 *
 	 * @return true, wenn es sich um die beiden Halbjahre der Einführungsphase handelt
 	 *         und ansonsten false
 	 */
@@ -409,10 +409,10 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Prüft anhand der übergebenen Halbjahre, ob es sich um die vier Halbjahre
 	 * der Qualifikationsphase handelt.
-	 * 
+	 *
 	 * @param halbjahre    die Halbjahre
-	 * 
-	 * @return true, wenn es sich um die vier Halbjahre der Qualifikationsphase 
+	 *
+	 * @return true, wenn es sich um die vier Halbjahre der Qualifikationsphase
 	 *         handelt und ansonsten false
 	 */
 	public static pruefeQualifikationsphase(...halbjahre : Array<GostHalbjahr>) : boolean {

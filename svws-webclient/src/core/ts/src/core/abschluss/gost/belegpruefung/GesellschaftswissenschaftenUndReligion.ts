@@ -33,7 +33,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für den Bereich der Gesellschaftswissenschaften und Religion.
-	 * 
+	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
@@ -57,10 +57,10 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	}
 
 	/**
-	 * EF1-Prüfung Punkte 8-10: 
+	 * EF1-Prüfung Punkte 8-10:
 	 * Prüfe, ob eine Gesellschaftswissenschaft in EF.1 schriftlich belegt wurde und durchgängig belegbar ist
 	 *    und ob Geschichte belegt wurde
-	 *    und ob Sozialwissenschaften belegt wurde 
+	 *    und ob Sozialwissenschaften belegt wurde
 	 */
 	private pruefeGesellschaftswissenschaftenEF1() : void {
 		if (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
@@ -76,7 +76,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	/**
 	 * EF1-Prüfung Punkt 11:
 	 * Prüfe, ob Religion in EF.1 belegt wurde oder ob Philosophie und eine weitere durchgehend belegbare Gesellschaftswissenschaft belegt wurde.
-	 * Falls Philosophie als Ersatz für Religion gewählt wurde, zählt es nicht als durchgehend belegte Gesellschaftswissenschaft.   
+	 * Falls Philosophie als Ersatz für Religion gewählt wurde, zählt es nicht als durchgehend belegte Gesellschaftswissenschaft.
 	 */
 	private pruefeReligionEF1() : void {
 		if (this.manager.pruefeBelegungExistiert(this.religion, GostHalbjahr.EF1))
@@ -113,7 +113,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkt 38:
-	 * Prüfe, ob ein Fach der Gesellschaftswissenschaften von EF.1 bis Q2.2 durchgängig belegt wurde 
+	 * Prüfe, ob ein Fach der Gesellschaftswissenschaften von EF.1 bis Q2.2 durchgängig belegt wurde
 	 * - Zusatzkurse zählen hier nicht als Belegung
 	 */
 	private pruefeDurchgaengigeBelegung() : void {
@@ -123,7 +123,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkt 40:
-	 * Prüfe, ob ein Fach der Gesellschaftswissenschaften oder Religionslehre von EF.1 bis Q2.2 belegt 
+	 * Prüfe, ob ein Fach der Gesellschaftswissenschaften oder Religionslehre von EF.1 bis Q2.2 belegt
 	 * und von Q1.1 bis Q2.1 schriftlich belegt wurde, damit es als potentielles Abiturfach zur Verfügung steht.
 	 * - Zusatzkurse zählen hier nicht als Belegung
 	 */
@@ -137,9 +137,9 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkte 27, 29 und 30:
-	 * Prüft, ob der Zusatzkurs genau zwei mal belegt wurde 
+	 * Prüft, ob der Zusatzkurs genau zwei mal belegt wurde
 	 *    und ob ein Zusatzkurs belegt wurde, obwohl im Halbjahr zuvor ein Geschichtskurs belegt wurde.
-	 * 
+	 *
 	 * @param fachbelegungen   die Fachbelegung für Geschichte oder Sozialwissenschaften
 	 */
 	private pruefeZusatzkurs(fachbelegungen : List<AbiturFachbelegung> | null) : void {
@@ -210,7 +210,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkte 43:
-	 * Prüft die Belegung von Religion und Philosophie in der EF. Wird Philosophie als Ersatz belegt, so wird auch geprüft, 
+	 * Prüft die Belegung von Religion und Philosophie in der EF. Wird Philosophie als Ersatz belegt, so wird auch geprüft,
 	 * ob eine weitere Gesellschaftswissenschaft belegt wurde.
 	 */
 	private pruefeReligionEF() : void {

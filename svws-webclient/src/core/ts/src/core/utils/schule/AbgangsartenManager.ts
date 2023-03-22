@@ -51,7 +51,7 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Manager für die möglichen Abgangsarten
-	 * 
+	 *
 	 * @param katalogAllgemein   der Katalog für die allgemeinbildenden Schulformen
 	 * @param katalogBeruf       der Katalog für die berufsbildenden Schulformen
 	 */
@@ -76,7 +76,7 @@ export class AbgangsartenManager extends JavaObject {
 	/**
 	 * Gibt die Version der Daten im kombinierten Katalog für die allgemeinbildenden
 	 * und dir berufsbildenden Schule zurück.
-	 * 
+	 *
 	 * @return die Version
 	 */
 	public getVersion() : number {
@@ -85,10 +85,10 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Gibt den Katalog-Eintrag für das übergebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Katalog-Eintrags
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist.
 	 */
 	public get(kuerzel : string) : AbgangsartKatalogEintrag | null {
 		return this._mapByKuerzel.get(kuerzel);
@@ -96,7 +96,7 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Gibt alle Katalog-Einträge zurück.
-	 * 
+	 *
 	 * @return eine Liste mit allen Katalog-Einträgen
 	 */
 	public getAll() : List<AbgangsartKatalogEintrag | null> | null {
@@ -104,22 +104,22 @@ export class AbgangsartenManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Katalog-Daten für das übergebene Kürzel 
+	 * Gibt die Katalog-Daten für das übergebene Kürzel
 	 * und das angegebene Schuljahr zurück.
-	 * 
+	 *
 	 * @param kuerzel     das Kürzel des Katalog-Eintrags
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag 
-	 *         keine Daten für das übergebene Schuljahr hat 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag
+	 *         keine Daten für das übergebene Schuljahr hat
 	 */
 	public getDaten(kuerzel : string, schuljahr : number) : AbgangsartKatalogDaten | null;
 
 	/**
-	 * Gibt die Katalog-Daten für die Abgangsart zurück. 
-	 * 
+	 * Gibt die Katalog-Daten für die Abgangsart zurück.
+	 *
 	 * @param id   die die des Katalog-Eintrags
-	 * 
+	 *
 	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
 	 */
 	public getDaten(id : number) : AbgangsartKatalogDaten | null;
@@ -146,10 +146,10 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Gibt das Kürzel für die Abgangsart mit der angebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Abgangsart
-	 * 
-	 * @return das Kürzel der Abgangsart oder null, falls die ID ungültig ist 
+	 *
+	 * @return das Kürzel der Abgangsart oder null, falls die ID ungültig ist
 	 */
 	public getKuerzel(id : number) : string | null {
 		let eintrag : AbgangsartKatalogEintrag | null = this._mapByID.get(id);
@@ -158,7 +158,7 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Gibt den Katalog für allgemeinbildende Schulformen zurück.
-	 * 
+	 *
 	 * @return der Katalog für allgemeinbildende Schulformen
 	 */
 	public getKatalogAllgemeinbildend() : AbgangsartKatalog {
@@ -167,7 +167,7 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Gibt den Katalog für berufsbildende Schulformen zurück.
-	 * 
+	 *
 	 * @return der Katalog für berufsbildende Schulformen
 	 */
 	public getKatalogBerufsbildend() : AbgangsartKatalog {
@@ -176,9 +176,9 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Bestimmt den Allgemeinbildenden Abschluss der Abschlussart.
-	 * 
+	 *
 	 * @param abschlussart   die Abschlussart
-	 * 
+	 *
 	 * @return der allgemeinbildende Abschluss oder null in einem unerwarteten Fehlerfall
 	 */
 	public static getAbschlussAllgemeinbildend(abschlussart : AbgangsartKatalogEintrag) : SchulabschlussAllgemeinbildend | null {
@@ -190,9 +190,9 @@ export class AbgangsartenManager extends JavaObject {
 
 	/**
 	 * Bestimmt den Berufsbildenden Abschluss der Abschlussart.
-	 * 
+	 *
 	 * @param abschlussart   die Abschlussart
-	 * 
+	 *
 	 * @return der berufsbildende Abschluss oder null, wenn nur ein allgemeinbildender Abschluss vorliegt.
 	 */
 	public static getAbschlussBerufsbildend(abschlussart : AbgangsartKatalogEintrag) : SchulabschlussBerufsbildend | null {

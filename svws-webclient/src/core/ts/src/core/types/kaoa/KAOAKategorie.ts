@@ -92,8 +92,8 @@ export class KAOAKategorie extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAKategorieEintrag>) {
 		super();
@@ -106,9 +106,9 @@ export class KAOAKategorie extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf die zugehörige Kategorie zurück. 
+	 * Gibt eine Map von der ID auf die zugehörige Kategorie zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf die zugehörige Kategorie
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAKategorie> {
@@ -119,9 +119,9 @@ export class KAOAKategorie extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf die zugehörige Kategorie zurück. 
+	 * Gibt eine Map von dem Kürzel auf die zugehörige Kategorie zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Kategorie
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAKategorie> {
@@ -133,9 +133,9 @@ export class KAOAKategorie extends JavaObject {
 
 	/**
 	 * Gibt die Kategorie anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Kategorie
-	 * 
+	 *
 	 * @return die Kategorie oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOAKategorie | null {
@@ -144,9 +144,9 @@ export class KAOAKategorie extends JavaObject {
 
 	/**
 	 * Gibt die Kategorie anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Kategorie
-	 * 
+	 *
 	 * @return die Kategorie oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAKategorie | null {

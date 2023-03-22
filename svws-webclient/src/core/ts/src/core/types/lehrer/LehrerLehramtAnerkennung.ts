@@ -70,8 +70,8 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Lehramtsanerkennung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Lehramtsanerkennung, welches ein Array von {@link LehrerKatalogLehramtAnerkennungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Lehramtsanerkennung, welches ein Array von {@link LehrerKatalogLehramtAnerkennungEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogLehramtAnerkennungEintrag>) {
 		super();
@@ -86,7 +86,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung | null> {
@@ -99,7 +99,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung | null> {
@@ -111,9 +111,9 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt die Lehramtsanerkennung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Lehramtsanerkennung
-	 * 
+	 *
 	 * @return die Lehramtsanerkennung oder null, falls die ID ungültig ist.
 	 */
 	public static getByID(id : number) : LehrerLehramtAnerkennung | null {
@@ -122,9 +122,9 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 
 	/**
 	 * Gibt die Lehramtsanerkennung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Lehramtsanerkennung
-	 * 
+	 *
 	 * @return die Lehramtsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerLehramtAnerkennung | null {

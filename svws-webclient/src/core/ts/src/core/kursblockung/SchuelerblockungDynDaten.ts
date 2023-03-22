@@ -57,7 +57,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	/**
 	 * Der Konstruktor der Klasse liest alle Daten von {@link SchuelerblockungInput} ein und baut die relevanten
 	 * Datenstrukturen auf.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
@@ -82,7 +82,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	/**
 	 * Überprüft die Konsistenz und referentielle Integrität der Eingabedaten.
-	 * 
+	 *
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	aktionPruefeEingabedaten(pInput : SchuelerblockungInput) : void {
@@ -167,7 +167,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	/**
 	 * Initialisiert {@link #_fachwahlen}, {@link #_fachwahlZuKurse} und {@link #_fachwahlZuHatMultikurse}.
-	 * 
+	 *
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	private aktionInitialisiereDatenstrukturen(pInput : SchuelerblockungInput) : void {
@@ -198,7 +198,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 * durchgegangen werden. Dann wird pro Verteilung der Multikurse die anderen Kurse mit einem bipartiten
 	 * gewichteten Matching-Algorithmus verteilt. Das beste Ergebnis wird zurückgeliefert. Gibt es mehrere beste
 	 * Ergebnisse wird ein zufälliges gewählt.
-	 * 
+	 *
 	 * @return Eine optimale Zuordnung des Schülers auf seine gewählten Kurse.
 	 */
 	gibBestesMatching() : SchuelerblockungOutput {

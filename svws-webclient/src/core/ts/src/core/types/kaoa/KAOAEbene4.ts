@@ -166,8 +166,8 @@ export class KAOAEbene4 extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAEbene4Eintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAEbene4Eintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAEbene4Eintrag>) {
 		super();
@@ -180,9 +180,9 @@ export class KAOAEbene4 extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von der ID auf den zugehörigen Eintrag der SBO Ebene 4 zurück. 
+	 * Gibt eine Map von der ID auf den zugehörigen Eintrag der SBO Ebene 4 zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAEbene4> {
@@ -193,9 +193,9 @@ export class KAOAEbene4 extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von dem Kürzel auf den zugehörigen Eintrag der SBO Ebene 4 zurück. 
+	 * Gibt eine Map von dem Kürzel auf den zugehörigen Eintrag der SBO Ebene 4 zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAEbene4> {
@@ -207,9 +207,9 @@ export class KAOAEbene4 extends JavaObject {
 
 	/**
 	 * Gibt den Eintrag der SBO Ebene 4 anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Eintrags der SBO Ebene 4
-	 * 
+	 *
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : KAOAEbene4 | null {
@@ -218,9 +218,9 @@ export class KAOAEbene4 extends JavaObject {
 
 	/**
 	 * Gibt den Eintrag der SBO Ebene 4 anhand des angegebenen Kürzels zurück.
-	 * 
-	 * @param kuerzel   das Kürzel des Eintrags der SBO Ebene 4 
-	 * 
+	 *
+	 * @param kuerzel   das Kürzel des Eintrags der SBO Ebene 4
+	 *
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAEbene4 | null {

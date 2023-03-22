@@ -81,9 +81,9 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 
 	/**
 	 * Erzeugt eine neuen Herkunfts-Bildungsgangtyp in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Herkunfts-Bildungsgangtyps, welche ein Array von 
-	 *                   {@link HerkunftBildungsgangTypKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Herkunfts-Bildungsgangtyps, welche ein Array von
+	 *                   {@link HerkunftBildungsgangTypKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<HerkunftBildungsgangTypKatalogEintrag>) {
 		super();
@@ -96,10 +96,10 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Bildungsgangtypen auf die 
-	 * zugehörigen Bildungsgangtypen zurück. 
+	 * Gibt eine Map von den Kürzeln der Bildungsgangtypen auf die
+	 * zugehörigen Bildungsgangtypen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Bildungsgangtypen
 	 */
 	private static getMapByKuerzel() : HashMap<string, HerkunftBildungsgangsTyp | null> {
@@ -114,9 +114,9 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 
 	/**
 	 * Gibt den Herkunfts-Bildungsgangtypen für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Herkunfts-Bildungsgangtyps
-	 * 
+	 *
 	 * @return der Herkunfts-Bildungsgangtyp oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : HerkunftBildungsgangsTyp | null {

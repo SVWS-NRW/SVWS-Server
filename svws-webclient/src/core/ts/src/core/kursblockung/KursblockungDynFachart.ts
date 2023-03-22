@@ -64,7 +64,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param pNr          Eine laufende Nummer (ID) für alle Facharten.
 	 * @param pGostFach    Referenz zum zugehörigen GOST-Fach.
 	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
-	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. 
+	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
 	 */
 	public constructor(pRandom : Random, pNr : number, pGostFach : GostFach, pGostKursart : GostKursart, pStatistik : KursblockungDynStatistik) {
 		super();
@@ -81,7 +81,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Durch das Überschreiben dieser Methode, liefert dieses Objekt eine automatische String-Darstellung,
-	 * beispielsweise 'D;LK'. 
+	 * beispielsweise 'D;LK'.
 	 */
 	public toString() : string {
 		return this.gostFach.kuerzel + ";" + this.gostKursart.kuerzel;
@@ -89,8 +89,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert die Nummer dieser Fachart.
-	 * 
-	 * @return Die Nummer dieser Fachart. 
+	 *
+	 * @return Die Nummer dieser Fachart.
 	 */
 	gibNr() : number {
 		return this.nr;
@@ -99,8 +99,8 @@ export class KursblockungDynFachart extends JavaObject {
 	/**
 	 *Liefert die maximale Anzahl ({@link #schuelerMax}) an SuS, die dieser Fachart zugeordnet sein können. Das ist
 	 * die Anzahl der Fachwahlen.
-	 * 
-	 * @return Die Anzahl der SuS, die diese Fachart gewählt haben. 
+	 *
+	 * @return Die Anzahl der SuS, die diese Fachart gewählt haben.
 	 */
 	gibSchuelerMax() : number {
 		return this.schuelerMax;
@@ -108,8 +108,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert die aktuelle Anzahl ({@link #schuelerAnzNow}) an SuS, die dieser Fachart zugeordnet sind.
-	 * 
-	 * @return Die Anzahl der SuS, die diese Fachart aktuell zugeordnet sind. 
+	 *
+	 * @return Die Anzahl der SuS, die diese Fachart aktuell zugeordnet sind.
 	 */
 	gibSchuelerZordnungen() : number {
 		return this.schuelerAnzNow;
@@ -117,8 +117,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert die Anzahl der Kurse die dieser Fachart zugeordnet sind.
-	 * 
-	 * @return Die Anzahl der Kurse die dieser Fachart zugeordnet sind. 
+	 *
+	 * @return Die Anzahl der Kurse die dieser Fachart zugeordnet sind.
 	 */
 	gibKurseMax() : number {
 		return this.kurseMax;
@@ -126,8 +126,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert die aktuell größte Kursdifferenz.
-	 * 
-	 * @return Die aktuell größte Kursdifferenz. 
+	 *
+	 * @return Die aktuell größte Kursdifferenz.
 	 */
 	gibKursdifferenz() : number {
 		return this.kursArr[this.kursArr.length - 1].gibSchuelerAnzahl() - this.kursArr[0].gibSchuelerAnzahl();
@@ -135,8 +135,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert das Array aller Kurse dieser Fachart.
-	 * 
-	 * @return Das Array aller Kurse dieser Fachart. 
+	 *
+	 * @return Das Array aller Kurse dieser Fachart.
 	 */
 	gibKurse() : Array<KursblockungDynKurs> {
 		return this.kursArr;
@@ -144,10 +144,10 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene {@code pSchiene } vorkommt.
-	 * 
+	 *
 	 * @param  pSchiene     Die Schiene, in der gesucht wird.
 	 * @param  kursGesperrt Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
-	 * @return              Der kleinste Kurs in der Schiene pSchiene, oder null. 
+	 * @return              Der kleinste Kurs in der Schiene pSchiene, oder null.
 	 */
 	gibKleinstenKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
 		for (let i : number = 0; i < this.kursArr.length; i++){
@@ -166,8 +166,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
-	 * 
-	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist. 
+	 *
+	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
 	 */
 	gibHatMultikurs() : boolean {
 		for (let kurs of this.kursArr) {
@@ -180,10 +180,10 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
-	 * 
+	 *
 	 * @param  pSchiene     Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
-	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist. 
+	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
 	gibHatKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
 		for (let kurs of this.kursArr) {
@@ -199,10 +199,10 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
-	 * 
+	 *
 	 * @param  pSchiene     Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
-	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf. 
+	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
 	public gibHatKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
 		for (let kurs of this.kursArr) {
@@ -218,36 +218,36 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Ordnet alle Kurse der Fachart zu. Die Kurse haben noch keine SuS und sind somit automatisch sortiert.
-	 * 
-	 * @param pKursArr Alle Kurse der Fachart. 
+	 *
+	 * @param pKursArr Alle Kurse der Fachart.
 	 */
 	public aktionSetKurse(pKursArr : Array<KursblockungDynKurs>) : void {
 		this.kursArr = pKursArr;
 	}
 
 	/**
-	 *Erhöht die Anzahl ({@link #schuelerMax}) an SuS, die diese Fachart gewählt haben um 1. 
+	 *Erhöht die Anzahl ({@link #schuelerMax}) an SuS, die diese Fachart gewählt haben um 1.
 	 */
 	public aktionMaxSchuelerErhoehen() : void {
 		this.schuelerMax++;
 	}
 
 	/**
-	 *Erhöht die Anzahl ({@link #kurseMax}) an Kursen, die zu dieser Fachart gehören. 
+	 *Erhöht die Anzahl ({@link #kurseMax}) an Kursen, die zu dieser Fachart gehören.
 	 */
 	public aktionMaxKurseErhoehen() : void {
 		this.kurseMax++;
 	}
 
 	/**
-	 *Muss aufgerufen werden, bevor die Schüleranzahl eines Kurses verändert wird. 
+	 *Muss aufgerufen werden, bevor die Schüleranzahl eines Kurses verändert wird.
 	 */
 	public aktionKursdifferenzEntfernen() : void {
 		this.statistik.aktionKursdifferenzEntfernen(this.gibKursdifferenz());
 	}
 
 	/**
-	 *Muss aufgerufen werden, nachdem die Schüleranzahl eines Kurses verändert wird. 
+	 *Muss aufgerufen werden, nachdem die Schüleranzahl eines Kurses verändert wird.
 	 */
 	public aktionKursdifferenzHinzufuegen() : void {
 		this.statistik.aktionKursdifferenzHinzufuegen(this.gibKursdifferenz());
@@ -255,7 +255,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Erhöht die Anzahl ({@link #schuelerAnzNow}) an Schülern, die dieser Fachart momentan zugeordnet sind um 1. Da
-	 * ein (bestimmter) Kurs nun einen S. mehr hat, muss das Array einmalig von links nach rechts sortiert werden. 
+	 * ein (bestimmter) Kurs nun einen S. mehr hat, muss das Array einmalig von links nach rechts sortiert werden.
 	 */
 	public aktionSchuelerWurdeHinzugefuegt() : void {
 		this.schuelerAnzNow++;
@@ -273,7 +273,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Verringert die Anzahl ({@link #schuelerAnzNow}) an SuS, die dieser Fachart momentan zugeordnet sind um 1. Da ein
-	 * (bestimmter) Kurs nun einen S. weniger hat, muss das Array einmalig von rechts nach links sortiert werden. 
+	 * (bestimmter) Kurs nun einen S. weniger hat, muss das Array einmalig von rechts nach links sortiert werden.
 	 */
 	public aktionSchuelerWurdeEntfernt() : void {
 		this.schuelerAnzNow--;
@@ -291,8 +291,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Lässt einen zufälligen Kurs dieser Fachart in die angegebene Schiene wandern.
-	 * 
-	 * @param pSchiene Die Schiene, in die einer Kurs der Fachart wandern soll. 
+	 *
+	 * @param pSchiene Die Schiene, in die einer Kurs der Fachart wandern soll.
 	 */
 	aktionZufaelligerKursWandertNachSchiene(pSchiene : number) : void {
 		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
@@ -308,8 +308,8 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 *Debug Ausgabe. Nur für Testzwecke.
-	 * 
-	 * @param schuelerArr Das Array mit den Schülerdaten. 
+	 *
+	 * @param schuelerArr Das Array mit den Schülerdaten.
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
 		for (let i : number = 0; i < this.kursArr.length; i++){
@@ -319,7 +319,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 * Liefert das zugehörige Fach-Objekt.
-	 * 
+	 *
 	 * @return Das zugehörige Fach-Objekt.
 	 */
 	gibFach() : GostFach {
@@ -328,7 +328,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 	/**
 	 * Liefert das zugehörige Kursart-Objekt.
-	 * 
+	 *
 	 * @return Das zugehörige Kursart-Objekt.
 	 */
 	gibKursart() : GostKursart {

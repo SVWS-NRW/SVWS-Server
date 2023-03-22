@@ -84,7 +84,7 @@ export class PersonalTyp extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen PersonalTyp für die Aufzählung.
-	 * 
+	 *
 	 * @param id           die ID des Personal-Typs
 	 * @param kuerzel      das Kürzel des Personal-Typs
 	 * @param bezeichnung  die Bezeichnung des Personal-Typs
@@ -107,7 +107,7 @@ export class PersonalTyp extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static getMapID() : HashMap<number, PersonalTyp> {
@@ -120,7 +120,7 @@ export class PersonalTyp extends JavaObject {
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static getMapBezeichnungen() : HashMap<string, PersonalTyp> {
@@ -132,12 +132,12 @@ export class PersonalTyp extends JavaObject {
 
 	/**
 	 *
-	 * Gibt den PersonalTyp anhand der Bezeichnung zurück. 
-	 * 
+	 * Gibt den PersonalTyp anhand der Bezeichnung zurück.
+	 *
 	 * @param bezeichnung   die Bezeichnung des Personal-Typs
-	 * 
+	 *
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
-	 * 
+	 *
 	 */
 	public static fromBezeichnung(bezeichnung : string | null) : PersonalTyp | null {
 		return PersonalTyp.getMapBezeichnungen().get(bezeichnung);
@@ -145,12 +145,12 @@ export class PersonalTyp extends JavaObject {
 
 	/**
 	 *
-	 * Gibt den PersonalTyp anhand der ID zurück. 
-	 * 
+	 * Gibt den PersonalTyp anhand der ID zurück.
+	 *
 	 * @param id   die ID des Personal-Typs
-	 * 
+	 *
 	 * @return der Personal-Typ oder null, falls die ID ungültig ist
-	 * 
+	 *
 	 */
 	public static fromID(id : number | null) : PersonalTyp | null {
 		return PersonalTyp.getMapID().get(id);

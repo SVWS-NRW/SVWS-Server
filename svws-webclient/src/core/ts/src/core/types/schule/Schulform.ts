@@ -141,8 +141,8 @@ export class Schulform extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SchulformKatalogEintrag>) {
 		super();
@@ -157,7 +157,7 @@ export class Schulform extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
 	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform | null> {
@@ -173,7 +173,7 @@ export class Schulform extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
 	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
@@ -186,9 +186,9 @@ export class Schulform extends JavaObject {
 
 	/**
 	 * Gibt die Schulform für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return die Schulform oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Schulform | null {
@@ -197,9 +197,9 @@ export class Schulform extends JavaObject {
 
 	/**
 	 * Gibt die Schulform für die angegebene Nummer zurück.
-	 * 
+	 *
 	 * @param nummer   die Nummer der Schulform
-	 * 
+	 *
 	 * @return die Schulform oder null, falls keine Schulform mit dieser Nummer vorhanden ist
 	 */
 	public static getByNummer(nummer : string | null) : Schulform | null {
@@ -208,9 +208,9 @@ export class Schulform extends JavaObject {
 
 	/**
 	 * Gibt alle "echten" Schulformen dieser Aufzählung zurück.
-	 * Das bedeutet, dass Pseudoschulformen, die in NRW nicht 
+	 * Das bedeutet, dass Pseudoschulformen, die in NRW nicht
 	 * existieren, nicht zurückgegeben werden.
-	 * 
+	 *
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static get() : List<Schulform> {
@@ -223,8 +223,8 @@ export class Schulform extends JavaObject {
 
 	/**
 	 * Gibt alle Schulformen dieser Aufzählung mit gymnasialer Oberstufe zurück.
-	 * 
-	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben. 
+	 *
+	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static getMitGymOb() : List<Schulform> {
 		let result : Vector<Schulform> = new Vector();

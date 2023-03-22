@@ -36,10 +36,10 @@ export class KursblockungDynSchiene extends JavaObject {
 
 	/**
 	 *Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
-	 * 
+	 *
 	 * @param pLogger    Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pNr        Die Nummer der Schiene.
-	 * @param pStatistik Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert. 
+	 * @param pStatistik Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
 	public constructor(pLogger : Logger, pNr : number, pStatistik : KursblockungDynStatistik) {
 		super();
@@ -56,8 +56,8 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 *
 	 * Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
-	 * 
-	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. 
+	 *
+	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll.
 	 */
 	public aktionKursHinzufuegen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
@@ -73,8 +73,8 @@ export class KursblockungDynSchiene extends JavaObject {
 
 	/**
 	 *Entfernt aus der Schiene einen Kurs. Das Statistik-Objekt wird über zu entfernende Kurs-Paarungen informiert.
-	 * 
-	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll. 
+	 *
+	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll.
 	 */
 	public aktionKursEntfernen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
@@ -90,8 +90,8 @@ export class KursblockungDynSchiene extends JavaObject {
 
 	/**
 	 *Liefert die aktuelle Nummer der Schiene (0-indiziert).
-	 * 
-	 * @return Die aktuelle Nummer der Schiene (0-indiziert). 
+	 *
+	 * @return Die aktuelle Nummer der Schiene (0-indiziert).
 	 */
 	public gibNr() : number {
 		return this.nr;
@@ -99,8 +99,8 @@ export class KursblockungDynSchiene extends JavaObject {
 
 	/**
 	 *Liefert die aktuelle Anzahl an Kursen in dieser Schiene.
-	 * 
-	 * @return Die aktuelle Anzahl an Kursen in dieser Schiene. 
+	 *
+	 * @return Die aktuelle Anzahl an Kursen in dieser Schiene.
 	 */
 	public gibKursAnzahl() : number {
 		return this.kursMap.size();
@@ -108,8 +108,8 @@ export class KursblockungDynSchiene extends JavaObject {
 
 	/**
 	 *Debug-Ausgabe. Nur für Testzwecke.
-	 * 
-	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt. 
+	 *
+	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public debug(nurMultikurse : boolean) : void {
 		for (let k of this.kursMap.values()) {
@@ -125,9 +125,9 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 *Liefert die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium
 	 * für die Blockung verwendet.
-	 * 
+	 *
 	 * @return die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium
-	 *         für die Blockung verwendet. 
+	 *         für die Blockung verwendet.
 	 */
 	gibAnzahlGleicherFacharten() : number {
 		let setFachart : AVLSet<number | null> | null = new AVLSet();

@@ -135,8 +135,8 @@ export class LehrerMinderleistungArt extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Art von Minderleistung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist  
+	 *
+	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogMinderleistungsartEintrag>) {
 		super();
@@ -151,7 +151,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerMinderleistungArt | null> {
@@ -164,7 +164,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerMinderleistungArt | null> {
@@ -176,9 +176,9 @@ export class LehrerMinderleistungArt extends JavaObject {
 
 	/**
 	 * Gibt die Art der Minderleistung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Art der Minderleistung
-	 * 
+	 *
 	 * @return die Art der Minderleistung oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerMinderleistungArt | null {
@@ -187,9 +187,9 @@ export class LehrerMinderleistungArt extends JavaObject {
 
 	/**
 	 * Gibt die Art der Minderleistung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Art der Minderleistung
-	 * 
+	 *
 	 * @return die Art der Minderleistung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerMinderleistungArt | null {

@@ -19,16 +19,16 @@ export class AbschlussManager extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben 
+	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben
 	 * wurde. Die Liste der Nachprüfungsfächer ist leer und ein Log ist nicht zugeordnet.
-	 * Sollten Nachprüfungsmöglichkeiten bestehen so ist die Methode 
+	 * Sollten Nachprüfungsmöglichkeiten bestehen so ist die Methode
 	 * {@link AbschlussManager#getErgebnisNachpruefung} zu nutzen.
-	 * und ob dieser erworben wurde. 
-	 *  
-	 * @param abschluss   der Abschluss für den das Ergebnis erzeugt wird 
+	 * und ob dieser erworben wurde.
+	 *
+	 * @param abschluss   der Abschluss für den das Ergebnis erzeugt wird
 	 * @param erworben    true, falls der Abschluss erworben wurde, sonst false
-	 * 
-	 * @return das Ergebnis der Abschlussberechnung 
+	 *
+	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public static getErgebnis(abschluss : SchulabschlussAllgemeinbildend | null, erworben : boolean) : AbschlussErgebnis {
 		let ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
@@ -40,14 +40,14 @@ export class AbschlussManager extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt ein Ergebnis der Abschlussberechnung, wo der Abschluss nicht erreicht wurde, aber ggf. 
+	 * Erzeugt ein Ergebnis der Abschlussberechnung, wo der Abschluss nicht erreicht wurde, aber ggf.
 	 * noch durch Nachprüfungen erreicht werden kann. Ein log wird nicht zugeordnet.
-	 * 
-	 * @param abschluss    der Abschluss für den das Ergebnis erzeugt wird 
-	 * @param np_faecher   eine Liste von Nachprüfungsfächern, falls eine Nachprüfung möglich ist, 
+	 *
+	 * @param abschluss    der Abschluss für den das Ergebnis erzeugt wird
+	 * @param np_faecher   eine Liste von Nachprüfungsfächern, falls eine Nachprüfung möglich ist,
 	 *                     ansonsten null oder eine leere Liste
 	 *
-	 * @return das Ergebnis der Abschlussberechnung 
+	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public static getErgebnisNachpruefung(abschluss : SchulabschlussAllgemeinbildend | null, np_faecher : List<string> | null) : AbschlussErgebnis {
 		let ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
@@ -63,10 +63,10 @@ export class AbschlussManager extends JavaObject {
 
 	/**
 	 * Gibt an, ob für einen Abschluss eine Nachprüfungsmöglichkeit besteht.
-	 * 
-	 * @param ergebnis   das Abschluss-Ergebnis bei dem auf eine Nachprüfungsmöglichkeit 
-	 *                   geprüft werden soll. 
-	 * 
+	 *
+	 * @param ergebnis   das Abschluss-Ergebnis bei dem auf eine Nachprüfungsmöglichkeit
+	 *                   geprüft werden soll.
+	 *
 	 * @return true, falls eine Nachprüfungsmöglichkeit besteht, sonst false
 	 */
 	public static hatNachpruefungsmoeglichkeit(ergebnis : AbschlussErgebnis) : boolean {
@@ -75,10 +75,10 @@ export class AbschlussManager extends JavaObject {
 
 	/**
 	 * Gibt die Nachprüfungsfächer als Komma-separierten String zurück.
-	 * 
-	 * @param ergebnis   das Abschluss-Ergebnis bei dem die Nachprüfungsmöglichkeiten 
+	 *
+	 * @param ergebnis   das Abschluss-Ergebnis bei dem die Nachprüfungsmöglichkeiten
 	 *                   ausgegeben werden sollen
-	 *                    
+	 *
 	 * @return die Nachprüfungsfächer als Komma-separierten String
 	 */
 	public static getNPFaecherString(ergebnis : AbschlussErgebnis) : string {
@@ -97,10 +97,10 @@ export class AbschlussManager extends JavaObject {
 	 * Vergleicht die beiden Abschlüsse, ob sie identisch sind. Ein
 	 * Übergabewert null wird als {@link SchulabschlussAllgemeinbildend#OA}
 	 * interpretiert.
-	 *  
+	 *
 	 * @param a   der eine Abschluss
 	 * @param b   der andere Abschluss
-	 * 
+	 *
 	 * @return true, falls sie identisch sind und ansonsten false
 	 */
 	public static equalsAbschluesse(a : string | null, b : string | null) : boolean {
@@ -112,9 +112,9 @@ export class AbschlussManager extends JavaObject {
 	/**
 	 * Gibt den Abschluss zurück. Im Falle das kein Abschluss angegeben ist
 	 * wird {@link SchulabschlussAllgemeinbildend#OA} zurückgegeben.
-	 * 
-	 * @param ergebnis   das Ergebnis 
-	 * 
+	 *
+	 * @param ergebnis   das Ergebnis
+	 *
 	 * @return der Abschluss
 	 */
 	public static getAbschluss(ergebnis : AbschlussErgebnis) : string {
@@ -123,14 +123,14 @@ export class AbschlussManager extends JavaObject {
 
 	/**
 	 * Die Methode dient dem Erzeugen eines Faches für die Abschlussberechnung.
-	 * 
+	 *
 	 * @param kuerzel           das Kürzel des Faches
 	 * @param bezeichnung       die Bezeichnung des Faches
 	 * @param note              die Note, die in dem Fach erteilt wurde
 	 * @param kursart           gibt die Kursart Faches an: leistungsdifferenzierter (E-Kurs, G-Kurs) oder sonstiger Kurs
 	 * @param istFremdsprache   gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
-	 * 
-	 * @return das Abschlussfach 
+	 *
+	 * @return das Abschlussfach
 	 */
 	public static erstelleAbschlussFach(kuerzel : string, bezeichnung : string | null, note : number, kursart : GELeistungsdifferenzierteKursart, istFremdsprache : boolean | null) : GEAbschlussFach {
 		let fach : GEAbschlussFach = new GEAbschlussFach();
@@ -144,9 +144,9 @@ export class AbschlussManager extends JavaObject {
 
 	/**
 	 * Liefert eine List mit den Fachkürzeln aus der übergebenen Liste mit Abschlussfächern.
-	 * 
+	 *
 	 * @param faecher   die Liste mit Abschlussfächern
-	 * 
+	 *
 	 * @return die Liste mit den Fachkürzeln
 	 */
 	public static getKuerzel(faecher : List<GEAbschlussFach>) : List<string> {
@@ -163,11 +163,11 @@ export class AbschlussManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob vier leistungsdifferenzierte Fächer belegt wurden. Dabei wird nicht geprüft, ob 
+	 * Prüft, ob vier leistungsdifferenzierte Fächer belegt wurden. Dabei wird nicht geprüft, ob
 	 * es sich um G oder E-Kurse handelt.
-	 * 
-	 * @param abschluss_faecher   die Abschlussfächer 
-	 * 
+	 *
+	 * @param abschluss_faecher   die Abschlussfächer
+	 *
 	 * @return true, falls vier leistungsdifferenzierte Fächer belegt wurden, sonst false
 	 */
 	public static pruefeHat4LeistungsdifferenzierteFaecher(abschluss_faecher : GEAbschlussFaecher) : boolean {
@@ -188,9 +188,9 @@ export class AbschlussManager extends JavaObject {
 	/**
 	 * Prüft, ob Duplikate bei den Kürzeln der Fächer vorkommen. Dies darf zur korrekten
 	 * Ausführung des Abschlussalgorithmus nicht vorkommen.
-	 * 
-	 * @param abschluss_faecher   die Abschlussfächer 
-	 * 
+	 *
+	 * @param abschluss_faecher   die Abschlussfächer
+	 *
 	 * @return true, falls keine Duplikate vorkommen, sonst false
 	 */
 	public static pruefeKuerzelDuplikate(abschluss_faecher : GEAbschlussFaecher) : boolean {

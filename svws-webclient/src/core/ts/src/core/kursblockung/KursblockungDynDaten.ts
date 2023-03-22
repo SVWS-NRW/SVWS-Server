@@ -99,7 +99,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Der Konstruktor der Klasse liest alle Daten von {@link GostBlockungsdatenManager} ein und baut die relevanten
 	 * Datenstrukturen auf.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
@@ -139,7 +139,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Überprüft alle Referenzen in {@link KursblockungInput} und auch die referentielle Integrität.
-	 * 
+	 *
 	 * @param pInput Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
 	private schritt01FehlerBeiReferenzen(pInput : GostBlockungsdatenManager) : void {
@@ -735,7 +735,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
-	 * 
+	 *
 	 * @return Das Logger-Objekt für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	gibLogger() : Logger {
@@ -744,7 +744,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert das Statistik-Objekt (für Anfragen zu Nichtwahlen, Kursdifferenzen, etc.).
-	 * 
+	 *
 	 * @return Das Statistik-Objekt (für Anfragen zu Nichtwahlen, Kursdifferenzen, etc.).
 	 */
 	gibStatistik() : KursblockungDynStatistik {
@@ -754,7 +754,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert die maximale Blockungszeit in Millisekunden. Entweder handelt es sich um einen Standardwert oder der Wert
 	 * wurde im Konstruktor als Regel übergeben.
-	 * 
+	 *
 	 * @return Liefert die maximale Blockungszeit in Millisekunden.
 	 */
 	gibBlockungszeitMillis() : number {
@@ -764,7 +764,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert die maximal erlaubte Anzahl an Schienen. Entweder handelt es sich um einen Standardwert oder der Wert
 	 * wurde im Konstruktor als Regel übergeben.
-	 * 
+	 *
 	 * @return Liefert die maximal erlaubte Anzahl an Schienen.
 	 */
 	gibSchienenAnzahl() : number {
@@ -774,7 +774,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Erzeugt ein Objekt {@link GostBlockungsergebnisManager}. Dieses Objekt beinhaltet alle Informationen aus denen
 	 * die GUI die Kurs-Zu-Schiene und die SuS-Zu-Kurs-Zuordnungen rekonstruieren kann.
-	 * 
+	 *
 	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
 	 * @param  pErgebnisID   Die ID des Ergebnisses.
 	 * @return               Das Blockungsergebnis für die GUI.
@@ -800,7 +800,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert alle Kurse.
-	 * 
+	 *
 	 * @return Array aller Kurse.
 	 */
 	gibKurseAlle() : Array<KursblockungDynKurs> {
@@ -809,7 +809,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert alle Kurse deren Lage nicht komplett fixiert ist.
-	 * 
+	 *
 	 * @return Array aller Kurse, deren Schienenlage noch veränderbar ist.
 	 */
 	gibKurseDieFreiSind() : Array<KursblockungDynKurs> {
@@ -818,7 +818,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl alle Kurse deren Lage nicht komplett fixiert ist.
-	 * 
+	 *
 	 * @return Anzahl aller Kurse, deren Schienenlage noch veränderbar ist.
 	 */
 	gibKurseDieFreiSindAnzahl() : number {
@@ -828,7 +828,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert einen Long-Wert, der einer Bewertung der Fachwahlmatrix entspricht. Je kleiner der Wert, desto besser ist
 	 * die Bewertung.
-	 * 
+	 *
 	 * @return Long-Wert, der einer Bewertung der Fachwahlmatrix entspricht.
 	 */
 	gibBewertungFachartPaar() : number {
@@ -838,9 +838,9 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert ein Array aller Schülerinnen und Schüler. Falls der Parameter {@code pNurMultiKurse} TRUE ist, dann
 	 * werden nur SuS mit mindestens einem Multikurs ausgewählt.
-	 * 
+	 *
 	 * @param  pNurMultiKurse Falls TRUE, dann werden nur SuS mit mindestens einem Multikurs ausgewählt.
-	 * 
+	 *
 	 * @return                Ein Array aller Schülerinnen und Schüler.
 	 */
 	gibSchuelerArray(pNurMultiKurse : boolean) : Array<KursblockungDynSchueler> {
@@ -862,7 +862,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	/**
 	 * Liefert ein Array aller Schülerinnen und Schüler.
-	 * 
+	 *
 	 * @return Ein Array aller Schülerinnen und Schüler.
 	 */
 	gibSchuelerArrayAlle() : Array<KursblockungDynSchueler> {
@@ -872,7 +872,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
@@ -883,7 +883,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen,
 	 * Fachwahlmatrix) des Zustandes-K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen, Fachwahlmatrix) des
 	 *         Zustandes-K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
@@ -894,7 +894,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen,
 	 * Fachwahlmatrix) des Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen, Fachwahlmatrix) des
 	 *         Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
@@ -905,7 +905,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
 	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdiffenzen) des
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
@@ -914,7 +914,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Entfernt alle SuS aus ihren Kursen. 
+	 *Entfernt alle SuS aus ihren Kursen.
 	 */
 	aktionSchuelerAusAllenKursenEntfernen() : void {
 		for (let i : number = 0; i < this.schuelerArr.length; i++){
@@ -923,7 +923,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Debug Ausgaben. Nur für Testzwecke. 
+	 *Debug Ausgaben. Nur für Testzwecke.
 	 */
 	debug() : void {
 		console.log(JSON.stringify("########## Schienen ##########"));
@@ -940,7 +940,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand S. 
+	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand S.
 	 */
 	aktionZustandSpeichernS() : void {
 		this.statistik.aktionBewertungSpeichernS();
@@ -953,7 +953,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand K. 
+	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand K.
 	 */
 	aktionZustandSpeichernK() : void {
 		this.statistik.aktionBewertungSpeichernK();
@@ -966,7 +966,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand G. 
+	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand G.
 	 */
 	aktionZustandSpeichernG() : void {
 		this.statistik.aktionBewertungSpeichernG();
@@ -979,7 +979,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand S (Kursverteilung und Schülerverteilung). 
+	 *Lädt den zuvor gespeicherten Zustand S (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenS() : void {
 		for (let schueler of this.schuelerArr) {
@@ -994,7 +994,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand K (Kursverteilung und Schülerverteilung). 
+	 *Lädt den zuvor gespeicherten Zustand K (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenK() : void {
 		for (let schueler of this.schuelerArr) {
@@ -1009,7 +1009,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung). 
+	 *Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenG() : void {
 		for (let schueler of this.schuelerArr) {
@@ -1024,7 +1024,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand K (nur Kursverteilung, ohne Schülerverteilung). 
+	 *Lädt den zuvor gespeicherten Zustand K (nur Kursverteilung, ohne Schülerverteilung).
 	 */
 	aktionZustandLadenKohneSuS() : void {
 		for (let schueler of this.schuelerArr) {
@@ -1036,7 +1036,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. 
+	 *Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKurseFreieZufaelligVerteilen() : void {
 		for (let kurs of this.kursArrFrei) 
@@ -1044,7 +1044,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. 
+	 *Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKursVerteilenEinenZufaelligenFreien() : void {
 		if (this.kursArrFrei.length === 0)
@@ -1074,7 +1074,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
+	 *
 	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
@@ -1086,7 +1086,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 * Verteilt die SuS auf die jetzige Kurslage. Pro S. werden erst die Multikurse verteilt, dann werden die übrigen
 	 * Kurse mit Hilfe eines spezielle bipartiten Matching-Algorithmus verteilt. Sobald ein S. seine Nichtwahlen durch
 	 * eine Veränderung der Kurslage reduzieren könnte, wird die Kurslage verändert.
-	 * 
+	 *
 	 * @return TRUE, falls es zu einer Veränderung der Kurslage kam.
 	 */
 	aktionKurseVerteilenNachSchuelerwunsch() : boolean {

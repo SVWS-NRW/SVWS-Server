@@ -10,9 +10,9 @@ export class KlausurblockungSchienenAlgorithmusGreedy1 extends KlausurblockungSc
 
 	/**
 	 *Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public constructor(pRandom : Random, pDynDaten : KlausurblockungSchienenDynDaten) {
 		super(pRandom, pDynDaten);

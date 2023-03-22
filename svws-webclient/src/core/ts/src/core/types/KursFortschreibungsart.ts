@@ -68,7 +68,7 @@ export class KursFortschreibungsart extends JavaObject {
 
 	/**
 	 * Erstellt eine neue Kurs-Fortschreibungsart in der Aufzählung.
-	 * 
+	 *
 	 * @param id             die ID der Fortchreibungsart
 	 * @param kuerzel        das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart
 	 * @param beschreibung   die Beschreibung der Kurs-Fortschreibungsart
@@ -90,11 +90,11 @@ export class KursFortschreibungsart extends JavaObject {
 
 	/**
 	 * Gibt die Kurs-Fortschreibungsart anhand der ID zurück.
-	 * Eine ungültige ID wird als Fortschreibungsart KEINE interpretiert. 
-	 * 
+	 * Eine ungültige ID wird als Fortschreibungsart KEINE interpretiert.
+	 *
 	 * @param id    die ID
-	 * 
-	 * @return die Kurs-Fortschreibungsart 
+	 *
+	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static fromID(id : number | null) : KursFortschreibungsart | null {
 		if (id === null)
@@ -113,12 +113,12 @@ export class KursFortschreibungsart extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Kurs-Fortschreibungsart anhand des Kürzels zurück. 
-	 * Eine ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert. 
-	 * 
+	 * Gibt die Kurs-Fortschreibungsart anhand des Kürzels zurück.
+	 * Eine ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert.
+	 *
 	 * @param kuerzel    das Kürzel
-	 * 
-	 * @return die Kurs-Fortschreibungsart 
+	 *
+	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static fromKuerzel(kuerzel : string | null) : KursFortschreibungsart | null {
 		if (kuerzel === null)
@@ -139,9 +139,9 @@ export class KursFortschreibungsart extends JavaObject {
 	/**
 	 * Prüft, ob das übergebene Kürzel für eine gültige Kurs-Fortschreibungsart
 	 * steht oder nicht
-	 * 
+	 *
 	 * @param kuerzel   das zu prüfende Kürzel
-	 * 
+	 *
 	 * @return true, falls das kürzel gültig ist.
 	 */
 	public static isValidKuerzel(kuerzel : string | null) : boolean {

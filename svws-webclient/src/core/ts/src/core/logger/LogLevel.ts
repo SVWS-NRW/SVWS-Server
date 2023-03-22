@@ -42,8 +42,8 @@ export class LogLevel extends JavaObject {
 	private readonly level : number;
 
 	/**
-	 * Der von der Aufzählung intern genutzte Konstruktor der Aufzählung 
-	 * 
+	 * Der von der Aufzählung intern genutzte Konstruktor der Aufzählung
+	 *
 	 * @param level   der Integer-Wert des Log-Levels.
 	 */
 	private constructor(name : string, ordinal : number, level : number) {
@@ -57,7 +57,7 @@ export class LogLevel extends JavaObject {
 
 	/**
 	 * Gibt den Integer-Wert des Log-Levels zurück.
-	 *  
+	 *
 	 * @return der Integer-Wert des Log-Levels
 	 */
 	public toInteger() : number {

@@ -17,7 +17,7 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 
 	/**
 	 *Der Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
@@ -30,8 +30,8 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 	/**
 	 * Eine Unterklasse, die diese Methode implementiert, berechnet eine Verteilung der Klausuren auf Termine,
 	 * beachtet dabei potentielle Regeln und überschreitet nicht die Endzeit (in Millisekunden).
-	 * 
-	 * @param pZeitEnde Die Endzeit (in Millisekunden). 
+	 *
+	 * @param pZeitEnde Die Endzeit (in Millisekunden).
 	 */
 	public abstract berechne(pZeitEnde : number) : void;
 

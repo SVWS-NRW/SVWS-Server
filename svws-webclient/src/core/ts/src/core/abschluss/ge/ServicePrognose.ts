@@ -22,9 +22,9 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 
 	/**
 	 * Prüft, ob Lernbereichsnoten bei den Abschlussfächern zur Verfügung stehen oder nicht.
-	 * 
+	 *
 	 * @param faecher   die Abschlussfächer
-	 * 
+	 *
 	 * @return true, falls die Lernbereichsnoten vorhanden sind, ansonsten false
 	 */
 	private static hatLernbereichsnoten(faecher : GEAbschlussFaecher) : boolean {
@@ -45,9 +45,9 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 	/**
 	 * Führt die Prognoseberechnung anhand der übergebenen Abschlussfächer durch
 	 * und gibt das Berechnungsergebnis zurück.
-	 * 
+	 *
 	 * @param input    die Abschlussfächer
-	 * 
+	 *
 	 * @return das Ergebnis der Prognoseberechnung
 	 */
 	public handle(input : GEAbschlussFaecher) : AbschlussErgebnis {

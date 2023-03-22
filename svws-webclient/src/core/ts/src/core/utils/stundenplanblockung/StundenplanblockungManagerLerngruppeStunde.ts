@@ -26,7 +26,7 @@ export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Stundenelement.
-	 * 
+	 *
 	 * @param pID     Die Datenbank-ID der Lerngruppe.
 	 * @param pParent Das Eltern-Objekt.
 	 */
@@ -38,7 +38,7 @@ export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID des Objektes.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Objektes.
 	 */
 	public getID() : number {

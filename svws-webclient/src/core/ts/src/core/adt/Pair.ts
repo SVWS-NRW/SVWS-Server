@@ -16,7 +16,7 @@ export class Pair<A, B> extends JavaObject {
 
 	/**
 	 * Erstellt ein neues Paar.
-	 * 
+	 *
 	 * @param a   der erste Wert des Paares
 	 * @param b   der zweite Wert des Paares
 	 */

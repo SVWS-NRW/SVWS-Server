@@ -643,8 +643,8 @@ export class Schulgliederung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Schulgliederung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Schulgliederung, welches ein Array von {@link SchulgliederungKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Schulgliederung, welches ein Array von {@link SchulgliederungKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<SchulgliederungKatalogEintrag>) {
 		super();
@@ -668,7 +668,7 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Schulgliederung> {
@@ -681,7 +681,7 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static getMapSchulgliederungByID() : HashMap<number, Schulgliederung> {
@@ -694,10 +694,10 @@ export class Schulgliederung extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Schulgliederung anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert die Schulgliederung anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Schulgliederung
-	 * 
+	 *
 	 * @return die Schulgliederung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Schulgliederung | null {
@@ -707,10 +707,10 @@ export class Schulgliederung extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Schulgliederung anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert die Schulgliederung anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID der Schulgliederung
-	 * 
+	 *
 	 * @return die Schulgliederung oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number | null) : Schulgliederung | null {
@@ -720,9 +720,9 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Gibt alle Schulgliderungen zurück, die zu dem angebenen
 	 * Fachklassen-Index am Berufskolleg gehören.
-	 * 
+	 *
 	 * @param index   der Fachklassen-Index
-	 * 
+	 *
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static getByBkIndex(index : number) : List<Schulgliederung> {
@@ -738,7 +738,7 @@ export class Schulgliederung extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Schulgliederung vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
@@ -747,9 +747,9 @@ export class Schulgliederung extends JavaObject {
 
 	/**
 	 * Liefert alle zulässigen Gliederungen für die angegeben Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static get(schulform : Schulform | null) : List<Schulgliederung> {
@@ -768,9 +768,9 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob die Schulform diese Gliederung
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
@@ -788,9 +788,9 @@ export class Schulgliederung extends JavaObject {
 
 	/**
 	 * Prüft, ob die Schulform diese Gliederung hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {
@@ -809,9 +809,9 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Gibt zurück, ob es sich um einen 8-jährigen gymnasialen Bildungsgang
 	 * handelt oder nicht.
-	 *  
+	 *
 	 * @return true, falls es sich um einen 8-jährigen gymnasialen Bildungsgang
-	 *         handelt, sonst false 
+	 *         handelt, sonst false
 	 */
 	public istG8() : boolean {
 		return (this as unknown === Schulgliederung.GY8 as unknown) || (this as unknown === Schulgliederung.Y8 as unknown);
@@ -819,10 +819,10 @@ export class Schulgliederung extends JavaObject {
 
 	/**
 	 * Gibt die Standard-Gliederung der angegebenen Schulform zurück.
-	 * 
+	 *
 	 * @param sf        die Schulform
-	 * 
-	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null 
+	 *
+	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null
 	 */
 	public static getDefault(sf : Schulform | null) : Schulgliederung | null {
 		if (sf === null)
@@ -835,11 +835,11 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Gibt die Gliederung der angegebenen Schulform mit dem übergegebenen Kürzel zurück.
 	 * Dabei setzt sich das zu prüfende Kürzel aus Anlage und Typ zusammen.
-	 * 
+	 *
 	 * @param sf        die Schulform
 	 * @param kuerzel   Anlage und Typ als String aneinandergehängt
-	 * 
-	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null 
+	 *
+	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null
 	 */
 	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Schulgliederung | null {
 		if (sf === null)

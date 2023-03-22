@@ -2379,8 +2379,8 @@ export class Verkehrssprache extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Verkehrssprache in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<VerkehrsspracheKatalogEintrag>) {
 		super();
@@ -2395,7 +2395,7 @@ export class Verkehrssprache extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
 	private static getMapSpracheByKuerzel() : HashMap<string, Verkehrssprache> {
@@ -2411,7 +2411,7 @@ export class Verkehrssprache extends JavaObject {
 	/**
 	 * Gibt eine Map von den zweistelligen Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den zweistelligen Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
 	private static getMapSpracheByKuerzel2() : HashMap<string, Verkehrssprache> {
@@ -2426,9 +2426,9 @@ export class Verkehrssprache extends JavaObject {
 
 	/**
 	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Verkehrssprache | null {
@@ -2437,9 +2437,9 @@ export class Verkehrssprache extends JavaObject {
 
 	/**
 	 * Gibt die Verkehrssprache für das angegebene zweistellige ISO 639-1-Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das zweistellige Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByKuerzelISO2(kuerzel : string | null) : Verkehrssprache | null {
@@ -2450,9 +2450,9 @@ export class Verkehrssprache extends JavaObject {
 	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
 	 * Dabei wird anhand der Länge des Kürzels automatisch geprüft, ob
 	 * eine Sprache nach ISO 639-1 bzw. ISO 639-2 angegeben wurde.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByKuerzelAuto(kuerzel : string | null) : Verkehrssprache | null {

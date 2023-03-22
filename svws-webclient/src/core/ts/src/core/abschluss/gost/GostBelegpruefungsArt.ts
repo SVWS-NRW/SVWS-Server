@@ -37,7 +37,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 
 	/**
 	 * Erzeugt ein neues Abitur-Belegungsart-Objekt
-	 * 
+	 *
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */

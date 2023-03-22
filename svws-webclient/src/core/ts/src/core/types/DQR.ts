@@ -67,7 +67,7 @@ export class DQR extends JavaObject {
 
 	/**
 	 * Erstell ein neues DQR-Niveau.
-	 * 
+	 *
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus
 	 */

@@ -258,8 +258,8 @@ export class Herkunftsarten extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Herkunftsart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Herkunftsart, welches ein Array von {@link HerkunftsartKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Herkunftsart, welches ein Array von {@link HerkunftsartKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<HerkunftsartKatalogEintrag>) {
 		super();
@@ -286,7 +286,7 @@ export class Herkunftsarten extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
 	private static getMapHerkunftsartByKuerzel() : HashMap<string, Herkunftsarten | null> {
@@ -300,7 +300,7 @@ export class Herkunftsarten extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Herkunftsarten auf die zugehörigen Herkunftsarten
 	 */
 	private static getMapHerkunftsartByID() : HashMap<number, Herkunftsarten | null> {
@@ -313,10 +313,10 @@ export class Herkunftsarten extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Herkunftsart anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert die Herkunftsart anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Herkunftsart
-	 * 
+	 *
 	 * @return die Herkunftsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Herkunftsarten | null {
@@ -324,10 +324,10 @@ export class Herkunftsarten extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Herkunftsart anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert die Herkunftsart anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID der Herkunftsart
-	 * 
+	 *
 	 * @return die Herkunftsart oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number | null) : Herkunftsarten | null {
@@ -336,9 +336,9 @@ export class Herkunftsarten extends JavaObject {
 
 	/**
 	 * Liefert die Bezeichnung der Herkunftsart für die angebenene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die Bezeichung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
 	public getBezeichnung(schulform : Schulform | null) : string | null {
@@ -357,7 +357,7 @@ export class Herkunftsarten extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Herkunftsart vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform | null> {
@@ -366,9 +366,9 @@ export class Herkunftsarten extends JavaObject {
 
 	/**
 	 * Liefert alle zulässigen Herkunftsarten für die angegebene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
 	public static get(schulform : Schulform | null) : List<Herkunftsarten | null> {
@@ -387,9 +387,9 @@ export class Herkunftsarten extends JavaObject {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob die Schulform diese Herkunftsart
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
@@ -407,9 +407,9 @@ export class Herkunftsarten extends JavaObject {
 
 	/**
 	 * Prüft, ob die Schulform diese Herkunftsart hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {

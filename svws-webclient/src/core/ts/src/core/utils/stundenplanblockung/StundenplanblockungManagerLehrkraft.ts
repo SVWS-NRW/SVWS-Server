@@ -39,7 +39,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 
 	/**
 	 * Liefert die Datenbank-ID der Lehrkraft.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Lehrkraft.
 	 */
 	public getID() : number {
@@ -48,7 +48,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann.
-	 * 
+	 *
 	 * @return TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann.
 	 */
 	public getDarfVertreten() : boolean {
@@ -57,7 +57,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 
 	/**
 	 * Setzt das Kürzel der Lehrkraft.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel der Lehrkraft.
 	 */
 	public setKuerzel(pKuerzel : string) : void {

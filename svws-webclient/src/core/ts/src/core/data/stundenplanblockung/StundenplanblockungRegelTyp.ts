@@ -99,10 +99,10 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	/**
 	 *
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
-	 * 
+	 *
 	 * @param id            die ID des Regel-Typs
 	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
-	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
+	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
 	 */
 	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<StundenplanblockungRegelParameterTyp>) {
 		super();
@@ -117,7 +117,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
-	 * 
+	 *
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
 	private static getMap() : HashMap<number, StundenplanblockungRegelTyp | null> {
@@ -130,7 +130,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller existierender Regeln.
-	 * 
+	 *
 	 * @return Die Menge aller existierender Regeln.
 	 */
 	public static getCollection() : Collection<StundenplanblockungRegelTyp | null> {
@@ -142,7 +142,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
 	 * @param id   die ID des Regel-Typs
-	 * @return der Regel-Typ 
+	 * @return der Regel-Typ
 	 */
 	public static fromTyp(id : number | null) : StundenplanblockungRegelTyp {
 		if (id === null)
@@ -155,9 +155,9 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Ermittelt den Regel-Typ anhand des Regel-Objektes.
-	 * 
+	 *
 	 * @param pRegel Das Regel-Objekt.
-	 * @return der Regel-Typ 
+	 * @return der Regel-Typ
 	 */
 	public static fromRegel(pRegel : StundenplanblockungRegel) : StundenplanblockungRegelTyp {
 		return StundenplanblockungRegelTyp.fromTyp(pRegel.typ);
@@ -166,8 +166,8 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	/**
 	 *
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
-	 * 
-	 * @return die Anzahl der Parameter für diesen Regel-Type zurück. 
+	 *
+	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
 	 */
 	public getParamCount() : number {
 		return this.paramTypes.size();
@@ -175,12 +175,12 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 
 	/**
 	 * Gibt den i-ten Parameter-Typ der Regel zurück.
-	 * 
+	 *
 	 * @param i   der Index des Parameters
-	 * 
+	 *
 	 * @return der Parameter-Typ
-	 * 
-	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
+	 *
+	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public getParamType(i : number) : StundenplanblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size()))
@@ -191,10 +191,10 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	/**
 	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
 	 * Parametertyp hat.
-	 *  
+	 *
 	 * @param paramType   der Parametertyp
-	 * 
-	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
+	 *
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType : StundenplanblockungRegelParameterTyp | null) : boolean {
 		for (let cur of this.paramTypes) 

@@ -15,7 +15,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 
 	/**
 	 * Erstellt eine neue Sub-Collection zur übergebenen {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

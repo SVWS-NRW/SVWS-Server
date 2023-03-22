@@ -23,9 +23,9 @@ export class SchulformSchulgliederung extends JavaObject {
 
 	/**
 	 * Erstellt ein Objekt mit den angegebenen Werten
-	 * 
+	 *
 	 * @param schulform      die Schulform
-	 * @param gliederung     die Schulgliederung oder null 
+	 * @param gliederung     die Schulgliederung oder null
 	 */
 	public constructor(schulform : Schulform, gliederung : Schulgliederung | null);
 

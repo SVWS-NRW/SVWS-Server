@@ -20,7 +20,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Fügt einen Consumer für Log-Informationen zum Logger hinzu.
-	 * 
+	 *
 	 * @param c   der hinzuzufügende Consumer von Log-Informationen
 	 */
 	public addConsumer(c : Consumer<LogData>) : void {
@@ -29,7 +29,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Fügt alle Consumer des anderen Loggers zu diesem hinzu.
-	 * 
+	 *
 	 * @param other   der andere Logger
 	 */
 	public copyConsumer(other : Logger) : void {
@@ -38,7 +38,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Entfernt den angegeben Consumer für Log-Informationen aus dem Logger.
-	 * 
+	 *
 	 * @param c   der zu entfernende Consumer von Log-Informationen
 	 */
 	public removeConsumer(c : Consumer<LogData>) : void {
@@ -47,7 +47,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Gibt das aktuelle Default-Log-Level für neue Log-Informationen zurück.
-	 * 
+	 *
 	 * @return das aktuelle Default-Log-Level für neue Log-Informationen
 	 */
 	public getDefaultLevel() : LogLevel {
@@ -56,7 +56,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Setzt das Default-Log-Level für neue Log-Informationen.
-	 * 
+	 *
 	 * @param defaultLevel   das neue Default-Log-Level für neue Log-Informationen
 	 */
 	public setDefaultLevel(defaultLevel : LogLevel) : void {
@@ -64,9 +64,9 @@ export class Logger extends JavaObject {
 	}
 
 	/**
-	 * Setzt die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von 
+	 * Setzt die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von
 	 * neuen Log-Informationen genutzt wird.
-	 * 
+	 *
 	 * @param indent   die Anzahl der Leerzeichen
 	 */
 	public setIndent(indent : number) : void {
@@ -74,9 +74,9 @@ export class Logger extends JavaObject {
 	}
 
 	/**
-	 * Verändert die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von 
+	 * Verändert die Anzahl der Leerzeichen, die für die Einrückung bei einer Ausgabe von
 	 * neuen Log-Informationen genutzt wird.
-	 * 
+	 *
 	 * @param indent   die Veränderung bei der Anzahl der Leerzeichen
 	 */
 	public modifyIndent(indent : number) : void {
@@ -84,16 +84,16 @@ export class Logger extends JavaObject {
 	}
 
 	/**
-	 * Loggt die übergebenen Log-Informationen bei diesem Debugger. 
-	 * 
+	 * Loggt die übergebenen Log-Informationen bei diesem Debugger.
+	 *
 	 * @param data   die Log-Informationen
 	 */
 	public log(data : LogData) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der angebenen Einrückung.
-	 * 
-	 * @param level    das Log-Level des zu loggenden Textes  
+	 *
+	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
@@ -101,15 +101,15 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung.
-	 * 
-	 * @param level    das Log-Level des zu loggenden Textes  
+	 *
+	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param text     der Text
 	 */
 	public log(level : LogLevel, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung.
-	 * 
+	 *
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
@@ -117,7 +117,7 @@ export class Logger extends JavaObject {
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung.
-	 * 
+	 *
 	 * @param text     der Text
 	 */
 	public log(text : string) : void;
@@ -156,8 +156,8 @@ export class Logger extends JavaObject {
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der angebenen Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
-	 * 
-	 * @param level    das Log-Level des zu loggenden Textes  
+	 *
+	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
@@ -166,9 +166,9 @@ export class Logger extends JavaObject {
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
-	 * 
-	 * 
-	 * @param level    das Log-Level des zu loggenden Textes  
+	 *
+	 *
+	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param text     der Text
 	 */
 	public logLn(level : LogLevel, text : string) : void;
@@ -176,7 +176,7 @@ export class Logger extends JavaObject {
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
-	 * 
+	 *
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
@@ -185,7 +185,7 @@ export class Logger extends JavaObject {
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
-	 * 
+	 *
 	 * @param text     der Text
 	 */
 	public logLn(text : string) : void;

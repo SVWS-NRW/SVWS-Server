@@ -74,8 +74,8 @@ export class Pruefungsordnung extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Verordnung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Verordnung, welches ein Array von {@link PruefungsordnungKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Verordnung, welches ein Array von {@link PruefungsordnungKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<PruefungsordnungKatalogEintrag>) {
 		super();
@@ -90,7 +90,7 @@ export class Pruefungsordnung extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Prüfungsordnungen auf die zugehörigen Prüfungsordnungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Prüfungsordnungen auf die zugehörigen Prüfungsordnungen
 	 */
 	private static getMapPruefungsordnungByKuerzel() : HashMap<string, Pruefungsordnung> {
@@ -105,9 +105,9 @@ export class Pruefungsordnung extends JavaObject {
 
 	/**
 	 * Gibt die Prüfungsordnung für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Prüfungsordnung
-	 * 
+	 *
 	 * @return die Prüfungsordnung oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Pruefungsordnung | null {

@@ -17,7 +17,7 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 
 	/**
 	 *Der Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
@@ -30,8 +30,8 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 	/**
 	 *Eine Unterklasse, die diese Methode implementiert, berechnet eine Verteilung der Klausuren auf die Schienen und
 	 * überschreitet dabei nicht die Endzeit (in Millisekunden).
-	 * 
-	 * @param pZeitEnde Die Endzeit (in Millisekunden). 
+	 *
+	 * @param pZeitEnde Die Endzeit (in Millisekunden).
 	 */
 	public abstract berechne(pZeitEnde : number) : void;
 

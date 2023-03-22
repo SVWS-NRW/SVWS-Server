@@ -120,7 +120,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
 	 * Ergebnisses ist -1 und muss noch gesetzt werden.
-	 * 
+	 *
 	 * @param pParent                  Das Eltern-Objekt. (Daten-Manager für die grundlegenden Definitionen der
 	 *                                 Blockung)
 	 * @param pGostBlockungsergebnisID Die ID des Blockungsergebnisses.
@@ -129,7 +129,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Manager mit den Daten aus dem übergebenen Ergebnis.
-	 * 
+	 *
 	 * @param pParent   Das Eltern-Objekt. (Daten-Manager für die grundlegenden Definitionen der Blockung)
 	 * @param pErgebnis Das Ergebnis, welches kopiert wird.
 	 */
@@ -391,10 +391,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Fügt den Schüler dem Kurs hinzu.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * 
+	 *
 	 * @return             FALSE, falls der Schüler bereits zugeordnet war, sonst TRUE.
 	 */
 	private stateSchuelerKursHinzufuegen(pSchuelerID : number, pKursID : number) : boolean {
@@ -420,10 +420,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Entfernt den Schüler aus dem Kurs.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * 
+	 *
 	 * @return             FALSE, falls der Schüler bereits nicht zugeordnet war, sonst TRUE.
 	 */
 	private stateSchuelerKursEntfernen(pSchuelerID : number, pKursID : number) : boolean {
@@ -449,10 +449,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Fügt den Kurs der Schiene hinzu.
-	 * 
+	 *
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
 	 * @param  pSchienenID Die Datenbank-ID der Schiene.
-	 * 
+	 *
 	 * @return             FALSE, falls der Kurs bereits in der Schiene war, sonst TRUE.
 	 */
 	private stateKursSchieneHinzufuegen(pKursID : number, pSchienenID : number) : boolean {
@@ -481,10 +481,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Entfernt den Kurs aus der Schiene.
-	 * 
+	 *
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
 	 * @param  pSchienenID Die Datenbank-ID der Schiene.
-	 * 
+	 *
 	 * @return             FALSE, falls der Kurs bereits nicht in der Schiene war, sonst TRUE.
 	 */
 	private stateKursSchieneEntfernen(pKursID : number, pSchienenID : number) : boolean {
@@ -577,7 +577,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager zurück.
-	 * 
+	 *
 	 * @return Der Daten-Manager, der zu diesem Ergebnis-Manager gehört.
 	 */
 	public getParent() : GostBlockungsdatenManager | null {
@@ -586,7 +586,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Blockungs-ID. Das ist die ID des Elternteils.
-	 * 
+	 *
 	 * @return Liefert die Blockungs-ID. Das ist die ID des Elternteils.
 	 */
 	public getBlockungsdatenID() : number {
@@ -595,7 +595,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert das Blockungsergebnis zurück.
-	 * 
+	 *
 	 * @return das Blockungsergebnis
 	 */
 	public getErgebnis() : GostBlockungsergebnis {
@@ -606,7 +606,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 * 
+	 *
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
 	public getOfBewertung1Wert() : number {
@@ -620,7 +620,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 * 
+	 *
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung1Farbcode() : number {
@@ -632,7 +632,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
-	 * 
+	 *
 	 * @return Den Wert des 2. Bewertungskriteriums.
 	 */
 	public getOfBewertung2Wert() : number {
@@ -646,7 +646,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
 	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
 	 * - Die Anzahl der Schülerkollisionen. <br>
-	 * 
+	 *
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung2Farbcode() : number {
@@ -658,7 +658,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 * 
+	 *
 	 * @return Den Wert des 3. Bewertungskriteriums.
 	 */
 	public getOfBewertung3Wert() : number {
@@ -669,7 +669,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
 	 * - Die Größte Kursdifferenz. <br>
 	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 * 
+	 *
 	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung3Farbcode() : number {
@@ -685,7 +685,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
-	 * 
+	 *
 	 * @return Den Wert des 4. Bewertungskriteriums.
 	 */
 	public getOfBewertung4Wert() : number {
@@ -698,7 +698,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
 	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
 	 * Raumkapazitäten (Fachräume).
-	 * 
+	 *
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public getOfBewertung4Farbcode() : number {
@@ -709,7 +709,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schülerkollisionen. Ist ein Schüler x mal in einer Schiene und ist x > 1, dann wird dies
 	 * als x-1 Kollisionen gezählt.
-	 * 
+	 *
 	 * @return Die Gesamtzahl der Kollisionen zurück.
 	 */
 	public getOfBewertungAnzahlKollisionen() : number {
@@ -719,7 +719,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl nicht vollständig verteilter Kurse. Ein Multikurse der über zwei Schienen geht und gar nicht
 	 * zugeteilt wurde, wird doppelt gezählt.
-	 * 
+	 *
 	 * @return Liefert die Anzahl nicht vollständig verteilter Kurse.
 	 */
 	public getOfBewertungAnzahlNichtZugeordneterKurse() : number {
@@ -728,7 +728,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Fachwahlen, die nicht zugeordnet wurden.
-	 * 
+	 *
 	 * @return Die Anzahl an Fachwahlen, die nicht zugeordnet wurden.
 	 */
 	public getOfBewertungAnzahlNichtzugeordneterFachwahlen() : number {
@@ -738,7 +738,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Ermittelt das Fach für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
-	 * 
+	 *
 	 * @param pFachID Die Datenbank-ID des Faches.
 	 * @return Das GostFach-Objekt.
 	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
@@ -750,7 +750,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Menge aller Kurse mit dem angegebenen Fach. <br>
 	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
-	 * 
+	 *
 	 * @param pFachID  Die Datenbank-ID des Faches.
 	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
@@ -764,11 +764,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Kursmenge, die zur Fachart gehört. <br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
-	 * 
+	 *
 	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
-	 * 
+	 *
 	 * @return                      Die Kursmenge, die zur Fachart gehört.
-	 * 
+	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursmenge(pFachartID : number) : Vector<GostBlockungsergebnisKurs> {
@@ -781,11 +781,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Kursdifferenz der Fachart. <br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
-	 * 
+	 *
 	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
-	 * 
+	 *
 	 * @return                      Die Kursdifferenz der Fachart.
-	 * 
+	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(pFachartID : number) : number {
@@ -798,7 +798,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Ermittelt den Schüler für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
-	 * 
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Das Schueler-Objekt.
 	 * @throws     DeveloperNotificationException im Falle, dass die ID nicht bekannt ist
@@ -809,9 +809,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert einen Schüler-String im Format: 'Nachname, Vorname'.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * 
+	 *
 	 * @return             Einen Schüler-String im Format: 'Nachname, Vorname'.
 	 */
 	public getOfSchuelerNameVorname(pSchuelerID : number) : string {
@@ -822,7 +822,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Menge aller Kurse, die dem Schüler zugeordnet sind. <br>
 	 * Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
@@ -835,7 +835,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Kurse des Schülers mit Kollisionen.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
@@ -851,7 +851,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Schüler mindestens eine Kollision hat. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
-	 * 
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
 	 */
@@ -861,7 +861,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
-	 * 
+	 *
 	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
 	 * @return             TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
@@ -875,7 +875,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
-	 *  
+	 *
 	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
 	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
 	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
@@ -888,7 +888,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
-	 * 
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Anzahl an Kollisionen des Schülers.
 	 */
@@ -901,7 +901,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
-	 * 
+	 *
 	 * @return TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
 	 */
 	public getOfSchuelerAlleFachwahlenNichtZugeordnet() : boolean {
@@ -910,7 +910,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 */
@@ -923,7 +923,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Map des Schülers, die einer Schiene die Kurse des Schülers zuordnet.
-	 *   
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Map des Schülers, die der Schiene die Kurse des Schülers zuordnet.
 	 */
@@ -936,7 +936,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Kursmenge des Schülers in der Schiene.
-	 * 
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Kursmenge des Schülers in der Schiene.
@@ -951,10 +951,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
 	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
-	 * 
+	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param pFachID     Die Datenbank-ID des Faches.
-	 * 
+	 *
 	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
 	 */
 	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
@@ -963,7 +963,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Ermittelt für den Schüler mit einem Fach den zugeordneten Kurs.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pFachID     Die Datenbank-ID des Faches.
 	 * @return             Der zugeordnete Kurs oder null, falls es keine Zuordnung gibt.
@@ -976,10 +976,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * 
+	 *
 	 * @return             TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 */
 	public getOfSchuelerOfKursIstZugeordnet(pSchuelerID : number, pKursID : number) : boolean {
@@ -990,7 +990,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert für den übergebenen Schüler einen Vorschlag für eine Neuzuordnung der Kurse.
-	 * 
+	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return             Die Neuzuordnung der Kurse im {@link SchuelerblockungOutput}-Objekt.
 	 */
@@ -1027,7 +1027,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
-	 * 
+	 *
 	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
 	 * @param pKursID      Die Datenbank-ID des Kurses.
 	 * @return             TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
@@ -1047,7 +1047,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
-	 * 
+	 *
 	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
 	 * @param pKursID      Die Datenbank-ID des Kurses.
 	 * @return             TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
@@ -1068,7 +1068,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Ermittelt den Kurs für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
-	 * 
+	 *
 	 * @param  pKursID Die ID des Kurses.
 	 * @return Das GostBlockungKurs-Objekt.
 	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
@@ -1080,9 +1080,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert den Kurs (des Blockungsergebnisses) zur übergebenen ID. <br>
 	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * 
+	 *
 	 * @return         Den Kurs (des Blockungsergebnisses) zur übergebenen ID.
 	 */
 	public getKursE(pKursID : number) : GostBlockungsergebnisKurs {
@@ -1095,9 +1095,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert den Namen des Kurses. Der Name wird automatisch erzeugt aus dem Fach, der Kursart und der Nummer,
 	 * beispielsweise D-GK1.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * 
+	 *
 	 * @return         Die Datenbank-ID des Kurses.
 	 */
 	public getOfKursName(pKursID : number) : string {
@@ -1106,10 +1106,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Kurs der Schiene zugeordnet ist.
-	 * 
+	 *
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
 	 * @param  pSchienenID Die Datenbank-ID der Schiene.
-	 * 
+	 *
 	 * @return             TRUE, falls der Kurs der Schiene zugeordnet ist.
 	 */
 	public getOfKursOfSchieneIstZugeordnet(pKursID : number, pSchienenID : number) : boolean {
@@ -1121,7 +1121,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind. <br>
 	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
-	 * 
+	 *
 	 * @param pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind.
 	 */
@@ -1134,7 +1134,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Schienenmenge des Kurses.
-	 * 
+	 *
 	 * @param pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Schienenmenge des Kurses.
 	 */
@@ -1147,7 +1147,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert ein Array aller Schienen-Nummern des Kurses.
-	 * 
+	 *
 	 * @param pKursID  Die Datenbank-ID des Kurses.
 	 * @return         Ein Array aller Schienen-Nummern des Kurses.
 	 */
@@ -1164,7 +1164,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Kurs mindestens eine Kollision hat. <br>
 	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
 	 * @return TRUE, falls der Kurs mindestens eine Kollision hat.
 	 */
@@ -1179,7 +1179,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen. <br>
 	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Anzahl an Schülern des Kurses mit Kollisionen.
 	 */
@@ -1194,7 +1194,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet.
-	 * 
+	 *
 	 * @param  pKursID  Die Datenbank-ID des Kurses.
 	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet.
 	 */
@@ -1205,7 +1205,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
-	 * 
+	 *
 	 * @param  pKursID  Die Datenbank-ID des Kurses.
 	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
 	 */
@@ -1223,7 +1223,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schienen in denen der Kurs gerade ist.
-	 * 
+	 *
 	 * @param kursID Die Datenbank-ID des Kurses.
 	 * @return Die Anzahl an Schienen in denen der Kurs gerade ist.
 	 */
@@ -1233,7 +1233,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schienen, die der Kurs haben sollte.
-	 * 
+	 *
 	 * @param kursID Die Datenbank-ID des Kurses.
 	 * @return Die Anzahl an Schienen, die der Kurs haben sollte.
 	 */
@@ -1243,7 +1243,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 */
@@ -1258,9 +1258,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 *
-	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br> 
+	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
-	 * 
+	 *
 	 * @param  pKursID               Die Datenbank-ID des Kurses.
 	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht existiert.
@@ -1273,7 +1273,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes
 	 * {@link GostBlockungsdatenManager}. <br>
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
-	 * 
+	 *
 	 * @param pSchienenID Die ID der Schiene
 	 * @return Das GostBlockungSchiene-Objekt.
 	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
@@ -1285,7 +1285,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Schiene  zur übergebenen ID. <br>
 	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Schiene (des Blockungsergebnisses) zur übergebenen ID.
 	 */
@@ -1299,7 +1299,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Schiene mit der übergebenen Schienen-NR. <br>
 	 * Wirft eine Exception, wenn eine Schiene mit NR nicht existiert.
-	 * 
+	 *
 	 * @param pSchienenNr Die Nummer der Schiene.
 	 * @return Die Schiene mit der übergebenen Schienen-NR.
 	 */
@@ -1313,7 +1313,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück. <br>
 	 * Falls ein Schüler mehrfach in der Schiene ist, wird er mehrfach gezählt!
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Anzahl an Schülern in der Schiene.
 	 */
@@ -1326,7 +1326,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schienen.
-	 * 
+	 *
 	 * @return Die Anzahl an Schienen.
 	 */
 	public getOfSchieneAnzahl() : number {
@@ -1334,8 +1334,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * TRUE, falls die Schiene mindestens eine Schüler-Kollision hat. 
-	 * 
+	 * TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 */
@@ -1346,7 +1346,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene zurück. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Anzahl an Schüler-Kollisionen in der Schiene.
 	 */
@@ -1359,7 +1359,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
@@ -1373,7 +1373,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge an Kursen, die in der Schiene eine Kollision haben.
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
@@ -1387,7 +1387,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge an Kursen, die in der Schiene eine Kollision haben.
-	 * 
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
@@ -1401,7 +1401,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine "FachartID --> Kurse" Map der Schiene.
-	 *   
+	 *
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
@@ -1416,7 +1416,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
-	 * 
+	 *
 	 * @param  pSchienenID          Die Datenbank-ID der Schiene.
 	 * @return                      TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
@@ -1427,7 +1427,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
-	 * 
+	 *
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 */
 	public getMappingKursIDSchuelerIDs() : HashMap<number, HashSet<number>> {
@@ -1436,7 +1436,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Map, welche jedem Kurs seine Schienenmenge zuordnet.
-	 * 
+	 *
 	 * @return Die Map, welche jedem Kurs seine Schienenmenge zuordnet.
 	 */
 	public getMappingKursIDSchienenmenge() : HashMap<number, HashSet<GostBlockungsergebnisSchiene>> {
@@ -1445,7 +1445,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision.
-	 * 
+	 *
 	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision.
 	 */
 	public getMengeDerSchuelerMitKollisionen() : HashSet<number> {
@@ -1458,7 +1458,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
-	 * 
+	 *
 	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
 	 */
 	public getMengeDerSchuelerMitKollisionenOderNichtwahlen() : HashSet<number> {
@@ -1471,13 +1471,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine gefilterte Menge aller Schüler.
-	 * 
+	 *
 	 * @param  pKursID      Falls > 0, werden Schüler des Kurses herausgefiltert.
-	 * @param  pFachID      Falls > 0 und 
+	 * @param  pFachID      Falls > 0 und
 	 * @param  pKursartID   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
 	 * @param  pKonfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
 	 * @param  pSubString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
-	 * 
+	 *
 	 * @return eine gefilterte Menge aller Schüler.
 	 */
 	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : Vector<Schueler> {
@@ -1510,7 +1510,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
 	 * Groß- und Kleinschreibung wird dabei ignoriert.
-	 * 
+	 *
 	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
 	 * @param pSubString   Der zu suchende Sub-String.
 	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
@@ -1527,7 +1527,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
-	 * 
+	 *
 	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
 	 */
 	public getAnzahlDerSchuelerMitKollisionenOderNichtwahlen() : number {
@@ -1536,7 +1536,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine Menge aller Kurse mit mindestens einer Kollision.
-	 * 
+	 *
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
 	 */
 	public getMengeDerKurseMitKollisionen() : HashSet<GostBlockungsergebnisKurs> {
@@ -1549,7 +1549,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert eine Menge aller Schienen mit mindestens einer Kollision.
-	 * 
+	 *
 	 * @return Eine Menge aller Schienen mit mindestens einer Kollision.
 	 */
 	public getMengeDerSchienenMitKollisionen() : HashSet<GostBlockungsergebnisSchiene> {
@@ -1562,7 +1562,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Schienen.
-	 * 
+	 *
 	 * @return Die Menge aller Schienen.
 	 */
 	public getMengeAllerSchienen() : Vector<GostBlockungsergebnisSchiene> {
@@ -1572,10 +1572,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Verknüpft einen Kurs mit einer Schiene. Die Schiene wird anhand ihrer Nummer (nicht die Datenbank-ID)
 	 * identifiziert.
-	 * 
+	 *
 	 * @param  pKursID              Die Datenbank-ID des Kurses.
 	 * @param  pSchienenNr          Die Nummer der Schiene (nicht die Datenbank-ID).
-	 * 
+	 *
 	 * @throws DeveloperNotificationException Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
 	public setKursSchienenNr(pKursID : number, pSchienenNr : number) : void {
@@ -1587,13 +1587,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Verknüpft einen Kurs mit einer Schiene oder hebt die Verknüpfung auf.
-	 * 
+	 *
 	 * @param  pKursID                   Die Datenbank-ID des Kurses.
 	 * @param  pSchienenID               Die Datenbank-ID der Schiene.
 	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
-	 * 
+	 *
 	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
-	 * 
+	 *
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
 	public setKursSchiene(pKursID : number, pSchienenID : number, pHinzufuegenOderEntfernen : boolean) : boolean {
@@ -1604,13 +1604,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
-	 * 
+	 *
 	 * @param  pSchuelerID               Die Datenbank-ID des Schülers.
 	 * @param  pKursID                   Die Datenbank-ID des Kurses.
 	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
-	 * 
+	 *
 	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
-	 * 
+	 *
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
 	public setSchuelerKurs(pSchuelerID : number, pKursID : number, pHinzufuegenOderEntfernen : boolean) : boolean {
@@ -1620,10 +1620,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt 
-	 * bei Veränderung Kurse des übergebenen Schülers neu.   
-	 * 
-	 * @param schuelerID  Die Datenbank-ID des Schülers. 
+	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt
+	 * bei Veränderung Kurse des übergebenen Schülers neu.
+	 *
+	 * @param schuelerID  Die Datenbank-ID des Schülers.
 	 * @param pZuordnung  Die gewünschte Zuordnung.
 	 */
 	public setSchuelerNeuzuordnung(schuelerID : number, pZuordnung : SchuelerblockungOutput) : void {
@@ -1641,7 +1641,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Fügt die übergebene Schiene hinzu.
-	 * 
+	 *
 	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
 	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
@@ -1653,9 +1653,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Löscht die übergebene Schiene.
-	 * 
+	 *
 	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder
 	 *                               falls die Schiene noch Kurszuordnungen hat.
 	 */
 	public setRemoveSchieneByID(pSchienenID : number) : void {
@@ -1669,7 +1669,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Fügt die übergebene Regel hinzu.
-	 * 
+	 *
 	 * @param  pRegelID              Die Datenbank-ID der Regel.
 	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
@@ -1681,7 +1681,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Löscht die übergebene Regel.
-	 * 
+	 *
 	 * @param  pRegelID              Die Datenbank-ID der Regel.
 	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
@@ -1693,7 +1693,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Fügt den übergebenen Kurs hinzu.
-	 * 
+	 *
 	 * @param  pKursID               Die Datenbank-ID des Kurses.
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
@@ -1711,9 +1711,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Löscht den übergebenen Kurs.
-	 * 
+	 *
 	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder
 	 *                               falls der Kurs noch Schülerzuordnungen hat.
 	 */
 	public setRemoveKursByID(pKursID : number) : void {
@@ -1731,7 +1731,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
-	 * 
+	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
 	 * @param  pAnzahlSchienenNeu Die neue Schienenanzahl des Kurses.
 	 * @throws DeveloperNotificationException Falls ein unerwarteter Fehler passiert.

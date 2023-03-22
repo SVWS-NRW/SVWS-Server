@@ -524,8 +524,8 @@ export class BerufskollegBerufsebene2 extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Berufsebene in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<BerufskollegBerufsebeneKatalogEintrag>) {
 		super();
@@ -540,7 +540,7 @@ export class BerufskollegBerufsebene2 extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Berufsebenen auf die zugehörigen Berufsebenen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Berufsebene auf die zugehörigen Berufsebene
 	 */
 	private static getMapBerufsebenenByKuerzel() : HashMap<string, BerufskollegBerufsebene2> {
@@ -555,9 +555,9 @@ export class BerufskollegBerufsebene2 extends JavaObject {
 
 	/**
 	 * Gibt die Berufsebene für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Berufsebene
-	 * 
+	 *
 	 * @return die Berufsebene oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : BerufskollegBerufsebene2 | null {

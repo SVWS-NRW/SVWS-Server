@@ -454,8 +454,8 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen Grund in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Anrechnungsgrundes, welches ein Array von {@link LehrerKatalogAnrechnungsgrundEintrag} ist  
+	 *
+	 * @param historie   die Historie des Anrechnungsgrundes, welches ein Array von {@link LehrerKatalogAnrechnungsgrundEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogAnrechnungsgrundEintrag>) {
 		super();
@@ -470,7 +470,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
 	private static getMapGruendeByID() : HashMap<number, LehrerAnrechnungsgrund | null> {
@@ -483,7 +483,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
 	private static getMapGruendeByKuerzel() : HashMap<string, LehrerAnrechnungsgrund | null> {
@@ -495,10 +495,10 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 
 	/**
 	 * Gibt den Anrechnungsgrund anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Anrechnungsgrundes
-	 * 
-	 * @return der Anrechnungsgrund oder null, falls die ID ungültig ist. 
+	 *
+	 * @return der Anrechnungsgrund oder null, falls die ID ungültig ist.
 	 */
 	public static getByID(id : number) : LehrerAnrechnungsgrund | null {
 		return LehrerAnrechnungsgrund.getMapGruendeByID().get(id);
@@ -506,9 +506,9 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 
 	/**
 	 * Gibt den Anrechnungsgrund anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Anrechnungsgrundes
-	 * 
+	 *
 	 * @return der Anrechnungsgrund oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerAnrechnungsgrund | null {

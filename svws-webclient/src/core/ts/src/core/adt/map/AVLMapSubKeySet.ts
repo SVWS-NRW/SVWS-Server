@@ -17,7 +17,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 
 	/**
 	 * Erstellt eine neues Sub-Set auf die übergebene {@link AVLMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMap} auf der operiert wird.
 	 */
 	constructor(sub : AVLMapSubMap<K, V>) {

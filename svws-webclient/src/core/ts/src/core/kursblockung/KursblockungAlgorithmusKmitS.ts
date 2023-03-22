@@ -19,7 +19,7 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom       Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger       Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat       Die dynamischen Blockungsdaten.
@@ -52,7 +52,7 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
-	 * 
+	 *
 	 * @param pMaxTimeMillis Die maximale Blockungszeit für den S-Algorithmus.
 	 * @return TRUE, falls es zur Verbesserung kam.
 	 */

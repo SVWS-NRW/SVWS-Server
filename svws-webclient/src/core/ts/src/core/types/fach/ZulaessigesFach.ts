@@ -1480,8 +1480,8 @@ export class ZulaessigesFach extends JavaObject {
 
 	/**
 	 * Erzeugt eine zulässiges Fach in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Faches, welches ein Array von {@link FachKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Faches, welches ein Array von {@link FachKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<FachKatalogEintrag>) {
 		super();
@@ -1507,7 +1507,7 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Gibt eine Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
 	private static getMapByASDKuerzel() : HashMap<string, ZulaessigesFach | null> {
@@ -1518,11 +1518,11 @@ export class ZulaessigesFach extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Gliederung der 
+	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Gliederung der
 	 * angegebenen Schulform zulässig ist.
-	 * 
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
@@ -1537,10 +1537,10 @@ export class ZulaessigesFach extends JavaObject {
 
 	/**
 	 * Bestimmt alle Fächer, die in irgendeiner Gliederung der angegebenen Schulform
-	 * zulässig sind. 
-	 *  
+	 * zulässig sind.
+	 *
 	 * @param schulform    die Schulform
-	 * 
+	 *
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigesFach | null> {
@@ -1554,8 +1554,8 @@ export class ZulaessigesFach extends JavaObject {
 	}
 
 	/**
-	 * Gibt die Fachgruppe dieses Faches zurück. 
-	 * 
+	 * Gibt die Fachgruppe dieses Faches zurück.
+	 *
 	 * @return die Fachgruppe des Faches
 	 */
 	public getFachgruppe() : Fachgruppe | null {
@@ -1565,8 +1565,8 @@ export class ZulaessigesFach extends JavaObject {
 	}
 
 	/**
-	 * Gibt den Jahrgang zurück, ab wann dieses Faches zulässig ist. 
-	 * 
+	 * Gibt den Jahrgang zurück, ab wann dieses Faches zulässig ist.
+	 *
 	 * @return der Jahrgang
 	 */
 	public getJahrgangAb() : Jahrgaenge | null {
@@ -1579,10 +1579,10 @@ export class ZulaessigesFach extends JavaObject {
 	 * Gibt das Fach zurück, welches dem übergebenen Kürzel zuzuordnet ist.
 	 * Ist der übergebene Wert ungültig, so wird {@link ZulaessigesFach#DEFAULT}
 	 * zurückgeben.
-	 * 
+	 *
 	 * @param kuerzel   das Statistik-Kürzel des Faches
-	 * 
-	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT} 
+	 *
+	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT}
 	 */
 	public static getByKuerzelASD(kuerzel : string | null) : ZulaessigesFach {
 		let result : ZulaessigesFach | null = ZulaessigesFach.getMapByASDKuerzel().get(kuerzel);
@@ -1591,7 +1591,7 @@ export class ZulaessigesFach extends JavaObject {
 
 	/**
 	 * Gibt die Farbe des zulässigen Faches zurück.
-	 * 
+	 *
 	 * @return die Farbe des zulässigen Faches
 	 */
 	public getFarbe() : RGBFarbe {
@@ -1602,7 +1602,7 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
 	 * mit der übergebenen Transparenz zurück.
-	 * 
+	 *
 	 * @return die RGB-HTML-Farbdefinition als String
 	 */
 	public getHMTLFarbeRGB() : string {
@@ -1613,9 +1613,9 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgba-Funktion
 	 * mit der übergebenen Transparenz zurück.
-	 * 
-	 * @param alpha   gibt die Deckkraft der Farbe an 
-	 * 
+	 *
+	 * @param alpha   gibt die Deckkraft der Farbe an
+	 *
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public getHMTLFarbeRGBA(alpha : number) : string {

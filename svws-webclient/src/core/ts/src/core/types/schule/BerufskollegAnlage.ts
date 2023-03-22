@@ -79,8 +79,8 @@ export class BerufskollegAnlage extends JavaObject {
 
 	/**
 	 * Erzeugt eine neue Anlage in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<BerufskollegAnlageKatalogEintrag>) {
 		super();
@@ -95,7 +95,7 @@ export class BerufskollegAnlage extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzels der Anlagen auf die zugehörigen Anlagenarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Anlagen auf die zugehörigen Anlagen
 	 */
 	private static getMapAnlageByKuerzel() : HashMap<string, BerufskollegAnlage> {
@@ -110,9 +110,9 @@ export class BerufskollegAnlage extends JavaObject {
 
 	/**
 	 * Gibt die Anlage für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Anlage
-	 * 
+	 *
 	 * @return die Anlage oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : BerufskollegAnlage | null {

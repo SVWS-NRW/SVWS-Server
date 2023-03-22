@@ -20,9 +20,9 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Erzeugt eine neue Log-Information.
-	 * 
+	 *
 	 * @param level     das zugehörige Log-Level
-	 * @param indent    die Anzahl der Leerzeichen, die bei der Ausgabe zur Einrückung genutzt werden sollen 
+	 * @param indent    die Anzahl der Leerzeichen, die bei der Ausgabe zur Einrückung genutzt werden sollen
 	 * @param newLine   gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht
 	 * @param text      der Text der Log-Information
 	 */
@@ -37,12 +37,12 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Vergleicht zwei Log-Informationen anhand der Zeit.
-	 * 
-	 * @param other   die zu vergleichenden Log-Informationen 
-	 * 
-	 * @return ein negativer Wert, falls diese Log-Information früher geloggt wurde, 0, falls 
-	 *         sie zur gleichen Zeit geloggt wurden oder ein positiver Wert, falls diese 
-	 *         Log-Information später geloggt wurde 
+	 *
+	 * @param other   die zu vergleichenden Log-Informationen
+	 *
+	 * @return ein negativer Wert, falls diese Log-Information früher geloggt wurde, 0, falls
+	 *         sie zur gleichen Zeit geloggt wurden oder ein positiver Wert, falls diese
+	 *         Log-Information später geloggt wurde
 	 */
 	public compareTo(other : LogData) : number {
 		if (this.time < other.time)
@@ -54,7 +54,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Gibt diese Log-Information als JSON-String mit Zeit und Log-Level zurück.
-	 * 
+	 *
 	 * @return die Log-Informationen als JSON-String
 	 */
 	public toString() : string {
@@ -63,8 +63,8 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Erhögt die Einrückung bei der Ausgabe, um den angebenen Wert.
-	 * 
-	 * @param indent   der Wert, um den die Einrückung erhöht wird. 
+	 *
+	 * @param indent   der Wert, um den die Einrückung erhöht wird.
 	 */
 	public addIndent(indent : number) : void {
 		this.indent += indent;
@@ -72,7 +72,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Gibt den Zeitstempel der Log-Information zurück.
-	 * 
+	 *
 	 * @return der Zeitstempel der Log-Information
 	 */
 	public getTime() : number {
@@ -81,7 +81,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Gibt das Log-Level der Log-Information zurück.
-	 * 
+	 *
 	 * @return das Log-Level der Log-Information
 	 */
 	public getLevel() : LogLevel {
@@ -90,7 +90,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	/**
 	 * Gibt an, ob bei der Ausgabe mit einer neue Zeile beendet werden soll oder nicht.
-	 * 
+	 *
 	 * @return true, falls die Ausgabe mit einer neuen Zeile beendet werden soll, ansonsten false
 	 */
 	public isNewLine() : boolean {
@@ -98,9 +98,9 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	}
 
 	/**
-	 * Gibt den Text dieser Log-Information mit Einrückung, aber ohne Zeitangabe und 
+	 * Gibt den Text dieser Log-Information mit Einrückung, aber ohne Zeitangabe und
 	 * Log-Level als String zurück.
-	 *  
+	 *
 	 * @return der Text dieser Log-Information
 	 */
 	public getText() : string {

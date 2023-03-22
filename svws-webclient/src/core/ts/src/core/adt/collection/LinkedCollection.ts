@@ -44,9 +44,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public constructor();
 
 	/**
-	 * Erzeugt eine neue LinkedCollection als Kopie der übergebenen 
+	 * Erzeugt eine neue LinkedCollection als Kopie der übergebenen
 	 * LinkedCollection
-	 * 
+	 *
 	 * @param c   die LinkedCollection, die kopiert wird
 	 */
 	public constructor(c : LinkedCollection<E> | null);
@@ -146,10 +146,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	/**
 	 * Entfernt das übergebene Element.
-	 * 
+	 *
 	 * @param elem   das zu entfernende Element
-	 *  
-	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde. 
+	 *
+	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde.
 	 */
 	private removeElement(elem : LinkedCollectionElement<E> | null) : boolean {
 		if (elem === null)
@@ -325,13 +325,13 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	/**
 	 * Diese Methode ist eine Hilfsmethode für die Methode sort(). Sie mischt die beiden über die prev-Zeiger
-	 * verketteten Listen left und right zu einer kombinierten, über die prev-Zeiger verketteten Liste. 
-	 * 
+	 * verketteten Listen left und right zu einer kombinierten, über die prev-Zeiger verketteten Liste.
+	 *
 	 * @param comparator   ein {@link Comparator} zum Vergleichen zweier Elemente
 	 * @param left         die erste sortierte Liste
 	 * @param right        die zweite sortierte Liste
-	 * 
-	 * @return die kombinierte sortierte Liste 
+	 *
+	 * @return die kombinierte sortierte Liste
 	 */
 	private merge(comparator : Comparator<E>, left : LinkedCollectionElement<E>, right : LinkedCollectionElement<E>) : LinkedCollectionElement<E> {
 		let headTo : LinkedCollectionElement<E> | null;
@@ -363,11 +363,11 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	/**
-	 * Sortiert den Inhalte dieser Liste mithilfe des übergebenen {@link Comparator}-Objekts. 
-	 * 
+	 * Sortiert den Inhalte dieser Liste mithilfe des übergebenen {@link Comparator}-Objekts.
+	 *
 	 * @param comparator   ein {@link Comparator} zum Vergleichen zweier Elemente
-	 * 
-	 * @return true, falls eine Sortierung erfolgreich war 
+	 *
+	 * @return true, falls eine Sortierung erfolgreich war
 	 */
 	public sort(comparator : Comparator<E> | null) : boolean {
 		if (comparator === null)
@@ -411,12 +411,12 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	/**
 	 * Sucht das Element an der Stelle Index.
-	 *   
+	 *
 	 * @param index   die Stelle des gesuchten Elements
-	 * 
-	 * @return das Element an der gesuchten Stelle 
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))  
+	 *
+	 * @return das Element an der gesuchten Stelle
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))
 	 */
 	private find(index : number) : LinkedCollectionElement<E> {
 		if ((index < 0) || (index >= this._size))
@@ -431,10 +431,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	/**
 	 * Sucht ein LinkedCollectionElement in der Collection mit dem Wert obj
 	 * und gibt es zurück
-	 * 
+	 *
 	 * @param obj   der Wert der in der LinkedCollection gesucht werden soll
-	 * 
-	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
+	 *
+	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen , ansonsten null
 	 */
 	private findFirst(obj : unknown | null) : LinkedCollectionElement<E> | null {
@@ -452,10 +452,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	/**
 	 * Sucht ein LinkedCollectionElement in der Collection mit dem Wert obj
 	 * und gibt es zurück
-	 * 
+	 *
 	 * @param obj   der Wert der in der LinkedCollection gesucht werden soll
-	 * 
-	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
+	 *
+	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen, ansonsten null
 	 */
 	private findLast(obj : unknown | null) : LinkedCollectionElement<E> | null {
@@ -611,12 +611,12 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	/**
 	 * Gibt den Wert an der Stelle index zurück.
-	 * 
+	 *
 	 * @param index   der Index
-	 * 
+	 *
 	 * @return der Wert
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}
 	 */
 	public get(index : number) : E {
 		return this.find(index).getValue();
@@ -624,13 +624,13 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	/**
 	 * Ersetzt den Wert an der Stelle index mit dem neuen übergebenen Wert.
-	 *  
+	 *
 	 * @param index     die Stelle, wo der Wert ersetzt werden soll
-	 * @param element   der neue Wert für die Stelle 
-	 * 
+	 * @param element   der neue Wert für die Stelle
+	 *
 	 * @return der alte Wert an der Stelle
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}
 	 */
 	public set(index : number, element : E) : E {
 		return this.find(index).setValue(element);

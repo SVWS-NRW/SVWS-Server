@@ -84,8 +84,8 @@ export class Reformpaedagogik extends JavaObject {
 
 	/**
 	 * Erzeugt eine Reformpädagogik in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<ReformpaedagogikKatalogEintrag>) {
 		super();
@@ -109,7 +109,7 @@ export class Reformpaedagogik extends JavaObject {
 	/**
 	 * Gibt eine Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Reformpaedagogik> {
@@ -122,7 +122,7 @@ export class Reformpaedagogik extends JavaObject {
 	/**
 	 * Gibt eine Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
 	private static getMapSchulgliederungByID() : HashMap<number, Reformpaedagogik> {
@@ -135,10 +135,10 @@ export class Reformpaedagogik extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Reformpädagogik anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert die Reformpädagogik anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Reformpädagogik
-	 * 
+	 *
 	 * @return die Reformpädagogik oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Reformpaedagogik | null {
@@ -148,10 +148,10 @@ export class Reformpaedagogik extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Reformpädagogik anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert die Reformpädagogik anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID der Reformpädagogik
-	 * 
+	 *
 	 * @return die Reformpädagogik oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number | null) : Reformpaedagogik | null {
@@ -160,7 +160,7 @@ export class Reformpaedagogik extends JavaObject {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Reformpädagogik vorkommen kann.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
@@ -169,9 +169,9 @@ export class Reformpaedagogik extends JavaObject {
 
 	/**
 	 * Liefert alle möglichen Reformpädagogik-Einträge für die angegeben Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
 	public static get(schulform : Schulform | null) : List<Reformpaedagogik> {
@@ -190,9 +190,9 @@ export class Reformpaedagogik extends JavaObject {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob bei der Schulform diese Reformpädagogik
 	 * vorkommen kann oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
@@ -210,9 +210,9 @@ export class Reformpaedagogik extends JavaObject {
 
 	/**
 	 * Prüft, ob bei der Schulform diese Reformpädagogik vorkommen kann oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	public hasSchulform(schulform : Schulform | null) : boolean {

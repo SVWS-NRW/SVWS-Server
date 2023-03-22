@@ -60,7 +60,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel
 	 * @param bezeichnung     die Bezeichnung des Merkmals

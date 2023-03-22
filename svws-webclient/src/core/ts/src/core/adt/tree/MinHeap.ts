@@ -47,7 +47,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	/**
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * der übergebenen initialen Kapazität.
-	 * 
+	 *
 	 * @param comparator      das Objekt zum Vergleich von zwei Objekten des Typ T
 	 * @param initialCapacity die initiale Kapazität des Baums
 	 */
@@ -56,14 +56,14 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	/**
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * einer initialen Kapazität von 63.
-	 * 
+	 *
 	 * @param comparator das Objekt zum Vergleich von zwei Objekten des Typ T
 	 */
 	public constructor(comparator : Comparator<T>);
 
 	/**
-	 * Erstellt eine Kopie des als Parameter übergebenen Heaps. 
-	 * 
+	 * Erstellt eine Kopie des als Parameter übergebenen Heaps.
+	 *
 	 * @param original    Das zu kopierende Original
 	 */
 	public constructor(original : MinHeap<T>);
@@ -298,7 +298,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Gibt den {@link Comparator} des Minimum Heaps zurück.
-	 * 
+	 *
 	 * @return der Comparator
 	 */
 	public comparator() : Comparator<T> {
@@ -307,7 +307,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Gibt die aktuelle Kapazität des Arrays zurück.
-	 * 
+	 *
 	 * @return die aktuelle Kapazität des Arrays zurück
 	 */
 	public capacity() : number {
@@ -316,7 +316,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Gibt den Inhalt des Minimum Heaps in einem sortierten Array zurück.
-	 * 
+	 *
 	 * @return ein sortiertes Array mit den Elementen des Minimum Heaps.
 	 */
 	public toSortedArray() : Array<T> {
@@ -333,7 +333,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Gibt den Inhalt des Heaps als Array-Repräsentation aus.
-	 * 
+	 *
 	 * @return der Inhalt des Heaps
 	 */
 	public toString() : string {
@@ -347,9 +347,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	/**
-	 * Ermittelt eine Hash-Code für dieses Objekt basierend auf den gespeicherten 
+	 * Ermittelt eine Hash-Code für dieses Objekt basierend auf den gespeicherten
 	 * Daten im Heap (die konkrete Ordnung des Baumes wird nicht unterschieden).
-	 * 
+	 *
 	 * @return der Hashcode des Minimum Heaps
 	 */
 	public hashCode() : number {
@@ -359,7 +359,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	/**
 	 * Prüft, ob das übergebene Objekt ein Minimum-Heap ist, der
 	 * die gleichen Elemente mit der gleichen Ordnung beinhaltet.
-	 * 
+	 *
 	 * @param obj   das zu vergleichende Objekt
 	 */
 	public equals(obj : unknown | null) : boolean {
@@ -376,9 +376,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Liefert zum Index i den Index des Elternteils zurück.
-	 * 
+	 *
 	 * @param i
-	 * 
+	 *
 	 * @return den Index des Elternteils
 	 */
 	private static getParentIndex(i : number) : number {
@@ -387,9 +387,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Liefert zum Index i den Index des linken Kindes zurück.
-	 * 
+	 *
 	 * @param i
-	 * 
+	 *
 	 * @return den Index des linken Kindes
 	 */
 	private static getLeftChildIndex(i : number) : number {
@@ -398,9 +398,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Liefert zum Index i den Index des rechten Kindes zurück.
-	 * 
+	 *
 	 * @param i
-	 * 
+	 *
 	 * @return den Index des rechten Kindes
 	 */
 	private static getRightChildIndex(i : number) : number {
@@ -409,7 +409,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Tauscht die Elemente an den Stellen i und j im Array
-	 * 
+	 *
 	 * @param i
 	 * @param j
 	 */
@@ -421,7 +421,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Stellt die Minimum Heap Eigenschaft vom Index i aus im Baum abwärts her.
-	 * 
+	 *
 	 * @param i   ab diesem Index wird im Baum abwärts geprüft.
 	 */
 	private heapifyDown(i : number) : void {
@@ -452,7 +452,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Stellt die Minimum-Heap-Eigenschaft des Arrays ab Position i aufwärts wieder her.
-	 * 
+	 *
 	 * @param i   ab diesem Index wird überprüft
 	 */
 	private heapifyUp(i : number) : void {
@@ -469,10 +469,10 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Erstellt ein neues Array vom Typ T mit der angegebenen Länge.
-	 *   
-	 * @param elem     Ein Element vom Typ T, welches als Vorlage für die Elemente des Arrays dient 
+	 *
+	 * @param elem     Ein Element vom Typ T, welches als Vorlage für die Elemente des Arrays dient
 	 * @param length   die Länge des neuen Arrays
-	 * 
+	 *
 	 * @return das neue Array
 	 */
 	private newArray(elem : T | null, length : number) : Array<T> {
@@ -483,7 +483,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 	/**
 	 * Erzeugt eine Kopie des internen Arrays _nodes.
-	 * 
+	 *
 	 * @return die Kopie des _nodes-Array.
 	 */
 	private copyNodes() : Array<T> {
@@ -493,12 +493,12 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	/**
-	 * Lässt den dem Baum zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap 
-	 * gespeichert werden können. 
-	 * 
-	 * Falls der Heap durch das Wachsen auf mehr als {@link Integer.MAX_VALUE} Elemente ansteigen würde, 
+	 * Lässt den dem Baum zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap
+	 * gespeichert werden können.
+	 *
+	 * Falls der Heap durch das Wachsen auf mehr als {@link Integer.MAX_VALUE} Elemente ansteigen würde,
 	 * wird eine IllegalStateException geworfen.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 */
 	private grow() : void {
@@ -513,11 +513,11 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	/**
-	 * Findet den Index an dem das Element t im dem dem Heap zu Grunde liegendem Array gespeichert ist. 
+	 * Findet den Index an dem das Element t im dem dem Heap zu Grunde liegendem Array gespeichert ist.
 	 * Gibt -1 zurück, falls das Element nicht vorhanden ist.
-	 * 
+	 *
 	 * @param t   zu diesem Element soll der Index gefunden werden
-	 * 
+	 *
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */
 	private findIndex(obj : unknown | null) : number {
@@ -533,7 +533,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	/**
 	 * Gibt die Anzahl der Operationen zurück, die diese Datenstruktur
 	 * verändert haben.
-	 * 
+	 *
 	 * @return die Anzahl der Operationen
 	 */
 	getModCount() : number {
