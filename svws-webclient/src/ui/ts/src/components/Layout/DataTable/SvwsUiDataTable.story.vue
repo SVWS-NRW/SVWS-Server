@@ -134,7 +134,60 @@
 
 <template>
 	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
-		<Variant title="All Features">
+		<Variant title="Basic">
+			<section style="max-height: 50vh" class="flex flex-col">
+				<svws-ui-data-table v-model="selectedRows3"
+					:items="data"
+					:columns="columns"
+					selectable
+					v-model:sort-by="sortBy"
+					v-model:sorting-order="sortingOrder"
+					v-model:clicked="clickedRow"
+					clickable
+					count
+					:row-actions="actions"
+					:row-execute="execute"
+					:filter="true">
+					<template #search>
+						<svws-ui-text-input type="search" placeholder="Suche" />
+					</template>
+					<template #filter>
+						<svws-ui-multi-select v-model="modelValueComboBox3"
+							autocomplete
+							title="Filter 1"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+						<svws-ui-multi-select v-model="modelValueComboBox4"
+							autocomplete
+							title="Filter 2"
+							:items="items"
+							:item-text="item => item?.text || ''"
+							:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
+							@input="onInput" />
+					</template>
+					<template #footerActions>
+						<svws-ui-button type="transparent">
+							Button
+						</svws-ui-button>
+						<svws-ui-button type="trash">
+							Button
+						</svws-ui-button>
+						<svws-ui-button type="icon">
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						</svws-ui-button>
+					</template>
+				</svws-ui-data-table>
+			</section>
+			<section class="mt-8">
+				<code><strong>Sort By:</strong> {{ sortBy }}</code><br>
+				<code><strong>Sorting Order:</strong> {{ sortingOrder }}</code><br>
+				<code><strong>Clicked Row:</strong> {{ clickedRow }}</code><br>
+				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
+			</section>
+		</Variant>
+		<Variant title="Drag-n-Drop">
 			<section style="max-height: 50vh" class="flex flex-col">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
@@ -263,10 +316,10 @@
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
-		<Variant title="Basic">
+		<Variant title="Simple">
 			<svws-ui-data-table :items="data" />
 		</Variant>
-		<Variant title="Basic Iterable">
+		<Variant title="Simple Iterable">
 			<svws-ui-data-table :items="set" />
 		</Variant>
 		<Variant title="Simple Row Click Selection">
