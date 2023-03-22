@@ -1,7 +1,7 @@
-import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Collections, Credentials, List, Vector } from "@svws-nrw/svws-core";
-import { Ref, ref, ShallowRef, shallowRef, triggerRef } from "vue";
+import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, List, Vector } from "@svws-nrw/svws-core";
+import { shallowRef } from "vue";
 import { api } from "~/router/Api";
-import { RouteManager, router } from "~/router/RouteManager";
+import { RouteManager } from "~/router/RouteManager";
 import { routeSchuleBenutzer } from "../schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzerDaten } from "./RouteSchuleBenutzerDaten";
 

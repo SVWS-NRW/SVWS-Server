@@ -1,11 +1,7 @@
-import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, List, Schulform, Vector } from "@svws-nrw/svws-core";
-import { Ref, ref, shallowRef, ShallowRef, triggerRef } from "vue";
+import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
-import { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
-import { api } from "~/router/Api";
 import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { router } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");

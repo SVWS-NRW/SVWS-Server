@@ -1,9 +1,6 @@
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core";
-import { ref, Ref, shallowRef, ShallowRef, triggerRef } from "vue";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzergruppeProps } from "~/components/schule/benutzergruppen/daten/SBenutzergruppeProps";
-import { api } from "~/router/Api";
-import { router } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
 import { RouteDataSchuleBenutzergruppe } from "./RouteDataSchuleBenutzergruppe";

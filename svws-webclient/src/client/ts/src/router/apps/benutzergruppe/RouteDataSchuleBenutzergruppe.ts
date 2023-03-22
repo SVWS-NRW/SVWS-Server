@@ -1,7 +1,7 @@
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core";
-import { shallowRef, triggerRef } from "vue";
+import { shallowRef } from "vue";
 import { api } from "~/router/Api";
-import { RouteManager, router } from "~/router/RouteManager";
+import { RouteManager } from "~/router/RouteManager";
 import { routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
 
 interface RoutStateSchuleBenutzergruppe {

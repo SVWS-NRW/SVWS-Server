@@ -1,5 +1,4 @@
 import { BenutzerKompetenz, ReligionEintrag, Schulform } from "@svws-nrw/svws-core";
-import { t } from "@vitest/runner/dist/tasks-e1fc71d1";
 import { shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { AuswahlChildData } from "~/components/AuswahlChildData";
