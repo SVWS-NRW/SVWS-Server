@@ -82,7 +82,7 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!(obj.bezeichnungen === undefined)) {
+		if (!((obj.bezeichnungen === undefined) || (obj.bezeichnungen === null))) {
 			for (const elem of obj.bezeichnungen) {
 				result.bezeichnungen?.add(JahrgangsKatalogEintragBezeichnung.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -50,7 +50,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!(obj.zulaessig === undefined)) {
+		if (!((obj.zulaessig === undefined) || (obj.zulaessig === null))) {
 			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformGliederungJahrgaenge.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -85,12 +85,12 @@ export class BenutzerDaten extends JavaObject {
 		if (typeof obj.idCredentials === "undefined")
 			 throw new Error('invalid json format, missing attribute idCredentials');
 		result.idCredentials = obj.idCredentials;
-		if (!(obj.gruppen === undefined)) {
+		if (!((obj.gruppen === undefined) || (obj.gruppen === null))) {
 			for (const elem of obj.gruppen) {
 				result.gruppen?.add(BenutzergruppeDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.kompetenzen === undefined)) {
+		if (!((obj.kompetenzen === undefined) || (obj.kompetenzen === null))) {
 			for (const elem of obj.kompetenzen) {
 				result.kompetenzen?.add(elem);
 			}

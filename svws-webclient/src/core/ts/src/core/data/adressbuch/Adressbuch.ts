@@ -59,7 +59,7 @@ export class Adressbuch extends JavaObject {
 		if (typeof obj.adressbuchTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute adressbuchTyp');
 		result.adressbuchTyp = obj.adressbuchTyp;
-		if (!(obj.adressbuchEintraege === undefined)) {
+		if (!((obj.adressbuchEintraege === undefined) || (obj.adressbuchEintraege === null))) {
 			for (const elem of obj.adressbuchEintraege) {
 				result.adressbuchEintraege?.add(AdressbuchEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}

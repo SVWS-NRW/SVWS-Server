@@ -50,7 +50,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		result.note = obj.note;
 		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : obj.hatBA;
 		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
-		if (!(obj.log === undefined)) {
+		if (!((obj.log === undefined) || (obj.log === null))) {
 			for (const elem of obj.log) {
 				result.log?.add(elem);
 			}

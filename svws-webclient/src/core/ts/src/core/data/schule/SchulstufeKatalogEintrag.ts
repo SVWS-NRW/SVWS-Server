@@ -94,7 +94,7 @@ export class SchulstufeKatalogEintrag extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (!(obj.schulformen === undefined)) {
+		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}

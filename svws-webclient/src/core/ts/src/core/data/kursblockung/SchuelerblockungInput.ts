@@ -42,17 +42,17 @@ export class SchuelerblockungInput extends JavaObject {
 		if (typeof obj.schienen === "undefined")
 			 throw new Error('invalid json format, missing attribute schienen');
 		result.schienen = obj.schienen;
-		if (!(obj.kurse === undefined)) {
+		if (!((obj.kurse === undefined) || (obj.kurse === null))) {
 			for (const elem of obj.kurse) {
 				result.kurse?.add(SchuelerblockungInputKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.fachwahlen === undefined)) {
+		if (!((obj.fachwahlen === undefined) || (obj.fachwahlen === null))) {
 			for (const elem of obj.fachwahlen) {
 				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.fachwahlenText === undefined)) {
+		if (!((obj.fachwahlenText === undefined) || (obj.fachwahlenText === null))) {
 			for (const elem of obj.fachwahlenText) {
 				result.fachwahlenText?.add(elem);
 			}

@@ -30,7 +30,7 @@ export class SimpleOperationResponse extends JavaObject {
 		if (typeof obj.success === "undefined")
 			 throw new Error('invalid json format, missing attribute success');
 		result.success = obj.success;
-		if (!(obj.log === undefined)) {
+		if (!((obj.log === undefined) || (obj.log === null))) {
 			for (const elem of obj.log) {
 				result.log?.add(elem === null ? null : elem);
 			}

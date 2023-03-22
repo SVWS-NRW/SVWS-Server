@@ -83,7 +83,7 @@ export class GostLeistungen extends JavaObject {
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
-		if (!(obj.faecher === undefined)) {
+		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(GostLeistungenFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}

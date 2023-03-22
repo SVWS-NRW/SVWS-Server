@@ -31,7 +31,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!(obj.historie === undefined)) {
+		if (!((obj.historie === undefined) || (obj.historie === null))) {
 			for (const elem of obj.historie) {
 				result.historie?.add(AbgangsartKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}

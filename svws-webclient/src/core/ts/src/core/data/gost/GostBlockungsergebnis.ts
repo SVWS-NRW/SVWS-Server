@@ -79,7 +79,7 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.istVorlage === "undefined")
 			 throw new Error('invalid json format, missing attribute istVorlage');
 		result.istVorlage = obj.istVorlage;
-		if (!(obj.schienen === undefined)) {
+		if (!((obj.schienen === undefined) || (obj.schienen === null))) {
 			for (const elem of obj.schienen) {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}

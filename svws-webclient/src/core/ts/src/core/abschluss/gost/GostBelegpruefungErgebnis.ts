@@ -36,12 +36,12 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 		if (typeof obj.erfolgreich === "undefined")
 			 throw new Error('invalid json format, missing attribute erfolgreich');
 		result.erfolgreich = obj.erfolgreich;
-		if (!(obj.fehlercodes === undefined)) {
+		if (!((obj.fehlercodes === undefined) || (obj.fehlercodes === null))) {
 			for (const elem of obj.fehlercodes) {
 				result.fehlercodes?.add(GostBelegpruefungErgebnisFehler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.log === undefined)) {
+		if (!((obj.log === undefined) || (obj.log === null))) {
 			for (const elem of obj.log) {
 				result.log?.add(elem);
 			}

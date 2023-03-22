@@ -155,7 +155,7 @@ export class KursartKatalogEintrag extends JavaObject {
 		if (typeof obj.erlaubtGOSt === "undefined")
 			 throw new Error('invalid json format, missing attribute erlaubtGOSt');
 		result.erlaubtGOSt = obj.erlaubtGOSt;
-		if (!(obj.zulaessig === undefined)) {
+		if (!((obj.zulaessig === undefined) || (obj.zulaessig === null))) {
 			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -125,7 +125,7 @@ export class ENMLeistung extends JavaObject {
 		result.istGemahnt = typeof obj.istGemahnt === "undefined" ? null : obj.istGemahnt === null ? null : obj.istGemahnt;
 		result.tsIstGemahnt = typeof obj.tsIstGemahnt === "undefined" ? null : obj.tsIstGemahnt === null ? null : obj.tsIstGemahnt;
 		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum === null ? null : obj.mahndatum;
-		if (!(obj.teilleistungen === undefined)) {
+		if (!((obj.teilleistungen === undefined) || (obj.teilleistungen === null))) {
 			for (const elem of obj.teilleistungen) {
 				result.teilleistungen?.add(ENMTeilleistung.transpilerFromJSON(JSON.stringify(elem)));
 			}

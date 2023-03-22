@@ -38,7 +38,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!(obj.stundenelemente === undefined)) {
+		if (!((obj.stundenelemente === undefined) || (obj.stundenelemente === null))) {
 			for (const elem of obj.stundenelemente) {
 				result.stundenelemente?.add(StundenplanblockungStundenelement.transpilerFromJSON(JSON.stringify(elem)));
 			}

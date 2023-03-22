@@ -37,7 +37,7 @@ export class SchuleAbschnitte extends JavaObject {
 		if (typeof obj.abschnittBez === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittBez');
 		result.abschnittBez = obj.abschnittBez;
-		if (!(obj.bezAbschnitte === undefined)) {
+		if (!((obj.bezAbschnitte === undefined) || (obj.bezAbschnitte === null))) {
 			for (const elem of obj.bezAbschnitte) {
 				result.bezAbschnitte?.add(elem);
 			}

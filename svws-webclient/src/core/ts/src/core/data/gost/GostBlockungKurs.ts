@@ -86,7 +86,7 @@ export class GostBlockungKurs extends JavaObject {
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if (!(obj.lehrer === undefined)) {
+		if (!((obj.lehrer === undefined) || (obj.lehrer === null))) {
 			for (const elem of obj.lehrer) {
 				result.lehrer?.add(GostBlockungKursLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}

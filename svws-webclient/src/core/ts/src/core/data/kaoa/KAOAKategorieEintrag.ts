@@ -94,7 +94,7 @@ export class KAOAKategorieEintrag extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!(obj.jahrgaenge === undefined)) {
+		if (!((obj.jahrgaenge === undefined) || (obj.jahrgaenge === null))) {
 			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(elem);
 			}

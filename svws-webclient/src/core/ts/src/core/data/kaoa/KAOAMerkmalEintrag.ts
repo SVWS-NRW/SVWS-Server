@@ -120,7 +120,7 @@ export class KAOAMerkmalEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute kategorie');
 		result.kategorie = obj.kategorie;
 		result.optionsart = typeof obj.optionsart === "undefined" ? null : obj.optionsart === null ? null : obj.optionsart;
-		if (!(obj.bkAnlagen === undefined)) {
+		if (!((obj.bkAnlagen === undefined) || (obj.bkAnlagen === null))) {
 			for (const elem of obj.bkAnlagen) {
 				result.bkAnlagen?.add(elem);
 			}

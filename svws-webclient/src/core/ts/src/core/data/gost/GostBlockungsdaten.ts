@@ -94,32 +94,32 @@ export class GostBlockungsdaten extends JavaObject {
 		if (typeof obj.istAktiv === "undefined")
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if (!(obj.schienen === undefined)) {
+		if (!((obj.schienen === undefined) || (obj.schienen === null))) {
 			for (const elem of obj.schienen) {
 				result.schienen?.add(GostBlockungSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.regeln === undefined)) {
+		if (!((obj.regeln === undefined) || (obj.regeln === null))) {
 			for (const elem of obj.regeln) {
 				result.regeln?.add(GostBlockungRegel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.kurse === undefined)) {
+		if (!((obj.kurse === undefined) || (obj.kurse === null))) {
 			for (const elem of obj.kurse) {
 				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.schueler === undefined)) {
+		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.fachwahlen === undefined)) {
+		if (!((obj.fachwahlen === undefined) || (obj.fachwahlen === null))) {
 			for (const elem of obj.fachwahlen) {
 				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.ergebnisse === undefined)) {
+		if (!((obj.ergebnisse === undefined) || (obj.ergebnisse === null))) {
 			for (const elem of obj.ergebnisse) {
 				result.ergebnisse?.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}

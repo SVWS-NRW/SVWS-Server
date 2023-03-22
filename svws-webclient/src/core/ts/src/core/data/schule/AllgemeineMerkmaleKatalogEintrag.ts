@@ -125,7 +125,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute beiSchueler');
 		result.beiSchueler = obj.beiSchueler;
 		result.kuerzelASD = typeof obj.kuerzelASD === "undefined" ? null : obj.kuerzelASD === null ? null : obj.kuerzelASD;
-		if (!(obj.schulformen === undefined)) {
+		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}

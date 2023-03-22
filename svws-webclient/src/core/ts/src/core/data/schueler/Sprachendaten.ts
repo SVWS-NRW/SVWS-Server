@@ -35,12 +35,12 @@ export class Sprachendaten extends JavaObject {
 		if (typeof obj.schuelerID === "undefined")
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (!(obj.belegungen === undefined)) {
+		if (!((obj.belegungen === undefined) || (obj.belegungen === null))) {
 			for (const elem of obj.belegungen) {
 				result.belegungen?.add(Sprachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!(obj.pruefungen === undefined)) {
+		if (!((obj.pruefungen === undefined) || (obj.pruefungen === null))) {
 			for (const elem of obj.pruefungen) {
 				result.pruefungen?.add(Sprachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -108,7 +108,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (!(obj.zulaessig === undefined)) {
+		if (!((obj.zulaessig === undefined) || (obj.zulaessig === null))) {
 			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -105,12 +105,12 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!(obj.stufen === undefined)) {
+		if (!((obj.stufen === undefined) || (obj.stufen === null))) {
 			for (const elem of obj.stufen) {
 				result.stufen?.add(elem);
 			}
 		}
-		if (!(obj.anzeigeZusatzmerkmal === undefined)) {
+		if (!((obj.anzeigeZusatzmerkmal === undefined) || (obj.anzeigeZusatzmerkmal === null))) {
 			for (const elem of obj.anzeigeZusatzmerkmal) {
 				result.anzeigeZusatzmerkmal?.add(elem);
 			}

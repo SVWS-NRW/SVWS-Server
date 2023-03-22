@@ -71,7 +71,7 @@ export class SchildReportingDatenquelle extends JavaObject {
 		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : obj.masterattribut;
 		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : obj.mastertyp;
 		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut === null ? null : obj.linkattribut;
-		if (!(obj.attribute === undefined)) {
+		if (!((obj.attribute === undefined) || (obj.attribute === null))) {
 			for (const elem of obj.attribute) {
 				result.attribute?.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -116,7 +116,7 @@ export class ENMSchueler extends JavaObject {
 		if (typeof obj.istDaZFoerderung === "undefined")
 			 throw new Error('invalid json format, missing attribute istDaZFoerderung');
 		result.istDaZFoerderung = obj.istDaZFoerderung;
-		if (!(obj.sprachenfolge === undefined)) {
+		if (!((obj.sprachenfolge === undefined) || (obj.sprachenfolge === null))) {
 			for (const elem of obj.sprachenfolge) {
 				result.sprachenfolge?.add(ENMSprachenfolge.transpilerFromJSON(JSON.stringify(elem)));
 			}
@@ -124,7 +124,7 @@ export class ENMSchueler extends JavaObject {
 		if (typeof obj.lernabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute lernabschnitt');
 		result.lernabschnitt = ENMLernabschnitt.transpilerFromJSON(JSON.stringify(obj.lernabschnitt));
-		if (!(obj.leistungsdaten === undefined)) {
+		if (!((obj.leistungsdaten === undefined) || (obj.leistungsdaten === null))) {
 			for (const elem of obj.leistungsdaten) {
 				result.leistungsdaten?.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}

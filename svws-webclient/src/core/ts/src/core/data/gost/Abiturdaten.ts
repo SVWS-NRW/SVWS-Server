@@ -214,7 +214,7 @@ export class Abiturdaten extends JavaObject {
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
-		if (!(obj.fachbelegungen === undefined)) {
+		if (!((obj.fachbelegungen === undefined) || (obj.fachbelegungen === null))) {
 			for (const elem of obj.fachbelegungen) {
 				result.fachbelegungen?.add(AbiturFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}

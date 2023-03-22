@@ -74,7 +74,7 @@ export class Kalender extends JavaObject {
 		if (typeof obj.kalenderTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute kalenderTyp');
 		result.kalenderTyp = obj.kalenderTyp;
-		if (!(obj.kalenderEintraege === undefined)) {
+		if (!((obj.kalenderEintraege === undefined) || (obj.kalenderEintraege === null))) {
 			for (const elem of obj.kalenderEintraege) {
 				result.kalenderEintraege?.add(KalenderEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}

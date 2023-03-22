@@ -88,7 +88,7 @@ export class SchuelerStundenplan extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (!(obj.zeitraster === undefined)) {
+		if (!((obj.zeitraster === undefined) || (obj.zeitraster === null))) {
 			for (const elem of obj.zeitraster) {
 				result.zeitraster?.add(StundenplanZeitraster.transpilerFromJSON(JSON.stringify(elem)));
 			}
@@ -114,7 +114,7 @@ export class SchuelerStundenplan extends JavaObject {
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
-		if (!(obj.unterricht === undefined)) {
+		if (!((obj.unterricht === undefined) || (obj.unterricht === null))) {
 			for (const elem of obj.unterricht) {
 				result.unterricht?.add(SchuelerStundenplanUnterricht.transpilerFromJSON(JSON.stringify(elem)));
 			}

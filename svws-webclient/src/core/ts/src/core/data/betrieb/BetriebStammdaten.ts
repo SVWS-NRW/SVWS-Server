@@ -189,7 +189,7 @@ export class BetriebStammdaten extends JavaObject {
 		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : obj.GU_ID;
 		result.ErwFuehrungszeugnis = typeof obj.ErwFuehrungszeugnis === "undefined" ? null : obj.ErwFuehrungszeugnis === null ? null : obj.ErwFuehrungszeugnis;
 		result.ExtID = typeof obj.ExtID === "undefined" ? null : obj.ExtID === null ? null : obj.ExtID;
-		if (!(obj.ansprechpartner === undefined)) {
+		if (!((obj.ansprechpartner === undefined) || (obj.ansprechpartner === null))) {
 			for (const elem of obj.ansprechpartner) {
 				result.ansprechpartner?.add(BetriebAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
 			}

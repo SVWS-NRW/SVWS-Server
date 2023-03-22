@@ -56,7 +56,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisBewertung {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisBewertung();
-		if (!(obj.regelVerletzungen === undefined)) {
+		if (!((obj.regelVerletzungen === undefined) || (obj.regelVerletzungen === null))) {
 			for (const elem of obj.regelVerletzungen) {
 				result.regelVerletzungen?.add(elem);
 			}

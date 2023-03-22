@@ -110,7 +110,7 @@ export class ENMBKAbschluss extends JavaObject {
 		if (typeof obj.istFachpraktischerTeilAusreichend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;
-		if (!(obj.faecher === undefined)) {
+		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(ENMBKFach.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -37,7 +37,7 @@ export class GostBlockungRegel extends JavaObject {
 		if (typeof obj.typ === "undefined")
 			 throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		if (!(obj.parameter === undefined)) {
+		if (!((obj.parameter === undefined) || (obj.parameter === null))) {
 			for (const elem of obj.parameter) {
 				result.parameter?.add(elem);
 			}

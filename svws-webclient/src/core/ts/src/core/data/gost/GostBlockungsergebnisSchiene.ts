@@ -29,7 +29,7 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (!(obj.kurse === undefined)) {
+		if (!((obj.kurse === undefined) || (obj.kurse === null))) {
 			for (const elem of obj.kurse) {
 				result.kurse?.add(GostBlockungsergebnisKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}

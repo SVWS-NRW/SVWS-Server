@@ -71,12 +71,12 @@ export class KlassenListeEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (!(obj.klassenLehrer === undefined)) {
+		if (!((obj.klassenLehrer === undefined) || (obj.klassenLehrer === null))) {
 			for (const elem of obj.klassenLehrer) {
 				result.klassenLehrer?.add(elem);
 			}
 		}
-		if (!(obj.schueler === undefined)) {
+		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
