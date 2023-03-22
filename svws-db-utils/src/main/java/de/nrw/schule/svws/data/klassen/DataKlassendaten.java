@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.klassen.KlassenDaten;
-import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;

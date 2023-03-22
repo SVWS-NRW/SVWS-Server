@@ -2,7 +2,6 @@ package de.nrw.schule.svws.core.data.gost;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.util.List;
 import java.util.Vector;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

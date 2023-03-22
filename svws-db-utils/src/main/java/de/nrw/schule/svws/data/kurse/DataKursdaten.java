@@ -6,7 +6,6 @@ import java.util.Vector;
 import java.util.function.Function;
 
 import de.nrw.schule.svws.core.data.kurse.KursDaten;
-import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.schueler.DataSchuelerliste;
 import de.nrw.schule.svws.db.DBEntityManager;

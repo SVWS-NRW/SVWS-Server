@@ -10,7 +10,6 @@ import java.util.function.Function;
 
 import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrte;
-import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrtsteile;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
@@ -28,7 +27,6 @@ import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrt;
-import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart;
