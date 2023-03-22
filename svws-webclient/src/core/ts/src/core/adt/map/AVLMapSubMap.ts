@@ -56,7 +56,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	public toString() : string {
 		let s : string | null = "";
-		for (let e of this.entrySet()) 
+		for (let e of this.entrySet())
 			s += (s.length === 0 ? "" : ", ") + e;
 		return "Entries = [" + s! + "], iv = " + this._iv + ", asc = " + this._asc;
 	}
@@ -69,7 +69,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		let mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
 		if (mapO.size() !== this.size())
 			return false;
-		for (let e of this.entrySet()) 
+		for (let e of this.entrySet())
 			if (JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))) === false)
 				return false;
 		return true;
@@ -77,7 +77,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	public hashCode() : number {
 		let h : number = 0;
-		for (let entry of this.entrySet()) 
+		for (let entry of this.entrySet())
 			h += JavaObject.getTranspilerHashCode(entry);
 		return h;
 	}
@@ -463,7 +463,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	bcRetainAllEntries(c : Collection<unknown>) : boolean {
 		let mapSave : AVLMap<K, V> = new AVLMap();
 		let setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
-		for (let o of c) 
+		for (let o of c)
 			if (this._par.bcContainsEntry(o, this._iv))
 				setSave.add(cast_java_util_Map_Entry(o));
 		let changed : boolean = false;

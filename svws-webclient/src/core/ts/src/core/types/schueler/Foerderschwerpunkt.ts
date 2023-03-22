@@ -164,7 +164,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 */
 	private static getMapFoerderschwerpunktByKuerzel() : HashMap<string, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteKuerzel.size() === 0)
-			for (let s of Foerderschwerpunkt.values()) 
+			for (let s of Foerderschwerpunkt.values())
 				Foerderschwerpunkt._foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);
 		return Foerderschwerpunkt._foerderschwerpunkteKuerzel;
 	}
@@ -178,7 +178,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	private static getMapFoerderschwerpunktByID() : HashMap<number, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteID.size() === 0)
 			for (let s of Foerderschwerpunkt.values()) {
-				for (let k of s.historie) 
+				for (let k of s.historie)
 					Foerderschwerpunkt._foerderschwerpunkteID.put(k.id, s);
 			}
 		return Foerderschwerpunkt._foerderschwerpunkteID;

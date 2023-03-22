@@ -165,8 +165,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereMatrixBevorzugt(pInput : List<GostKursklausur>) : void {
-		for (let gostKursklausur1 of pInput) 
-			for (let gostKursklausur2 of pInput) 
+		for (let gostKursklausur1 of pInput)
+			for (let gostKursklausur2 of pInput)
 				if (KlausurblockungSchienenDynDaten.hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					let klausurNr1 : number | null = this._mapKlausurZuNummer.get(gostKursklausur1.id);
 					let klausurNr2 : number | null = this._mapKlausurZuNummer.get(gostKursklausur2.id);
@@ -179,8 +179,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private static hatGemeinsameSchiene(kursSchiene1 : Array<number>, kursSchiene2 : Array<number>) : boolean {
-		for (let schiene1 of kursSchiene1) 
-			for (let schiene2 of kursSchiene2) 
+		for (let schiene1 of kursSchiene1)
+			for (let schiene2 of kursSchiene2)
 				if (schiene1 === schiene2)
 					return true;
 		return false;
@@ -558,7 +558,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private gibIstBenachbart(nr3 : number, setS : LinkedCollection<number>) : boolean {
-		for (let nr4 of setS) 
+		for (let nr4 of setS)
 			if (this._verboten[nr3][nr4!])
 				return true;
 		return false;
@@ -686,7 +686,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 *                  Falls dies nicht möglich ist, wird die Klausur in eine neue Schiene gesetzt.
 	 */
 	aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(klausurNr : number) : void {
-		for (let schienenNr of this.gibErzeugeSchienenInZufaelligerReihenfolge()) 
+		for (let schienenNr of this.gibErzeugeSchienenInZufaelligerReihenfolge())
 			if (this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr) === true)
 				return;
 		this.aktionSetzeKlausurInNeueSchiene(klausurNr);
@@ -698,7 +698,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
 	aktionSetzeNichtverteilteKlausurenZufaellig() : void {
-		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) 
+		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge())
 			if (this._klausurZuSchiene[nr] === -1)
 				this.aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
 	}
@@ -757,7 +757,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig() : void {
 		this.aktionKlausurenAusSchienenEntfernen();
-		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) 
+		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge())
 			this.aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
 	}
 
@@ -769,7 +769,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		this.aktionKlausurenAusSchienenEntfernen();
 		while (this.gibAnzahlNichtverteilterKlausuren() > 0) {
 			let schienenNr : number = this.gibErzeugeNeueSchiene();
-			for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) 
+			for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolge())
 				if (this.gibIstKlausurUnverteilt(klausurNr))
 					this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
 		}
@@ -782,7 +782,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktion_EntferneAlles_KlausurenHoherGradZuerst_SchienenZufaellig() : void {
 		this.aktionKlausurenAusSchienenEntfernen();
-		for (let klausurNr of this.gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert()) 
+		for (let klausurNr of this.gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert())
 			this.aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(klausurNr);
 	}
 
@@ -795,7 +795,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		this.aktionKlausurenAusSchienenEntfernen();
 		while (this.gibAnzahlNichtverteilterKlausuren() > 0) {
 			let schienenNr : number = this.gibErzeugeNeueSchiene();
-			for (let klausurNr of this.gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert()) 
+			for (let klausurNr of this.gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert())
 				if (this.gibIstKlausurUnverteilt(klausurNr))
 					this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
 		}
@@ -825,7 +825,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		this.aktionKlausurenAusSchienenEntfernen();
 		while (this.gibAnzahlNichtverteilterKlausuren() > 0) {
 			let schienenNr : number = this.gibErzeugeNeueSchiene();
-			for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage()) 
+			for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage())
 				if (this.gibIstKlausurUnverteilt(klausurNr))
 					this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
 		}

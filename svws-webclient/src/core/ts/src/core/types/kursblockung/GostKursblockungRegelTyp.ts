@@ -165,7 +165,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	private static getMap() : HashMap<number, GostKursblockungRegelTyp> {
 		if (GostKursblockungRegelTyp._map_id_regel.isEmpty())
-			for (let gostTyp of GostKursblockungRegelTyp.values()) 
+			for (let gostTyp of GostKursblockungRegelTyp.values())
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
 		return GostKursblockungRegelTyp._map_id_regel;
 	}
@@ -230,7 +230,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType : GostKursblockungRegelParameterTyp | null) : boolean {
-		for (let cur of this.paramTypes) 
+		for (let cur of this.paramTypes)
 			if (paramType as unknown === cur as unknown)
 				return true;
 		return false;

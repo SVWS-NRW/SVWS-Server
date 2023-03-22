@@ -78,7 +78,7 @@ export class HerkunftSchulformKatalogEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.kuerzelStatistik = kuerzelStatistik;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.beschreibung = beschreibung;
 			this.gueltigVon = gueltigVon;

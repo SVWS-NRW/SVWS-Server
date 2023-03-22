@@ -116,7 +116,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 */
 	private static getMapRechtsverhaeltnisByID() : HashMap<number, LehrerRechtsverhaeltnis | null> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.size() === 0)
-			for (let l of LehrerRechtsverhaeltnis.values()) 
+			for (let l of LehrerRechtsverhaeltnis.values())
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.put(l.daten.id, l);
 		return LehrerRechtsverhaeltnis._rechtsverhaeltnisByID;
 	}
@@ -129,7 +129,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 */
 	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<string, LehrerRechtsverhaeltnis | null> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.size() === 0)
-			for (let l of LehrerRechtsverhaeltnis.values()) 
+			for (let l of LehrerRechtsverhaeltnis.values())
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel;
 	}

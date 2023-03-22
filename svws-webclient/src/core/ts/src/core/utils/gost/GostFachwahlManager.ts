@@ -50,7 +50,7 @@ export class GostFachwahlManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
 			let fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
-			for (let fw of fachwahlen) 
+			for (let fw of fachwahlen)
 				this.add(fw);
 		} else throw new Error('invalid method overload');
 	}

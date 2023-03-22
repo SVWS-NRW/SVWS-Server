@@ -96,7 +96,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerMehrleistungArt | null> {
 		if (LehrerMehrleistungArt._artenByID.size() === 0)
-			for (let g of LehrerMehrleistungArt.values()) 
+			for (let g of LehrerMehrleistungArt.values())
 				LehrerMehrleistungArt._artenByID.put(g.daten.id, g);
 		return LehrerMehrleistungArt._artenByID;
 	}
@@ -109,7 +109,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerMehrleistungArt | null> {
 		if (LehrerMehrleistungArt._artenByKuerzel.size() === 0)
-			for (let g of LehrerMehrleistungArt.values()) 
+			for (let g of LehrerMehrleistungArt.values())
 				LehrerMehrleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);
 		return LehrerMehrleistungArt._artenByKuerzel;
 	}

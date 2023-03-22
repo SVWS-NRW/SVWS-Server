@@ -114,7 +114,7 @@ export class Reformpaedagogik extends JavaObject {
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenKuerzel.size() === 0)
-			for (let r of Reformpaedagogik.values()) 
+			for (let r of Reformpaedagogik.values())
 				Reformpaedagogik._schulgliederungenKuerzel.put(r.daten.kuerzel, r);
 		return Reformpaedagogik._schulgliederungenKuerzel;
 	}
@@ -128,7 +128,7 @@ export class Reformpaedagogik extends JavaObject {
 	private static getMapSchulgliederungByID() : HashMap<number, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenID.size() === 0)
 			for (let r of Reformpaedagogik.values()) {
-				for (let k of r.historie) 
+				for (let k of r.historie)
 					Reformpaedagogik._schulgliederungenID.put(k.id, r);
 			}
 		return Reformpaedagogik._schulgliederungenID;

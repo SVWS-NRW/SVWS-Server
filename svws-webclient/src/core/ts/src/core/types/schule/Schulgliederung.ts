@@ -673,7 +673,7 @@ export class Schulgliederung extends JavaObject {
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenKuerzel.size() === 0)
-			for (let s of Schulgliederung.values()) 
+			for (let s of Schulgliederung.values())
 				Schulgliederung._schulgliederungenKuerzel.put(s.daten.kuerzel, s);
 		return Schulgliederung._schulgliederungenKuerzel;
 	}
@@ -687,7 +687,7 @@ export class Schulgliederung extends JavaObject {
 	private static getMapSchulgliederungByID() : HashMap<number, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenID.size() === 0)
 			for (let s of Schulgliederung.values()) {
-				for (let k of s.historie) 
+				for (let k of s.historie)
 					Schulgliederung._schulgliederungenID.put(k.id, s);
 			}
 		return Schulgliederung._schulgliederungenID;

@@ -142,7 +142,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
 			let representation : string | null = pInput.fachwahlenText.get(iFachwahl);
 			let kursWurdeFixiert : boolean = false;
-			for (let kurs of pInput.kurse) 
+			for (let kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
 					if (kurs.istGesperrt)
 						continue;
@@ -177,7 +177,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 			let kurse : Vector<SchuelerblockungInputKurs> | null = new Vector();
 			let hatFixiertenKurs : boolean = false;
-			for (let kurs of pInput.kurse) 
+			for (let kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
 					if (kurs.istFixiert) {
 						hatFixiertenKurs = true;
@@ -187,7 +187,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 			this._fachwahlZuKurse.add(kurse);
 			let max : number = 1;
-			for (let kurs of kurse) 
+			for (let kurs of kurse)
 				max = Math.max(max, kurs.schienen.length);
 			this._fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
 		}
@@ -296,7 +296,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	private static gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
 		let maxSuS : number = JavaInteger.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
-		for (let kurs of pKurse) 
+		for (let kurs of pKurse)
 			if (kurs.schienen[0] - 1 === pSchiene)
 				if (kurs.anzahlSuS < maxSuS)
 					best = kurs;
@@ -304,11 +304,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	private aktionBelegeKurs(iFachwahl : number, kurs : SchuelerblockungInputKurs) : boolean {
-		for (let schiene1 of kurs.schienen) 
+		for (let schiene1 of kurs.schienen)
 			if (this._aktuellGesperrteSchiene[schiene1 - 1])
 				return false;
 		this._aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
-		for (let schiene1 of kurs.schienen) 
+		for (let schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = true;
 		this._aktuellBewertung += kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;
@@ -317,11 +317,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	private aktionBelegeKursUndo(iFachwahl : number, kurs : SchuelerblockungInputKurs) : boolean {
 		if (this._aktuellFachwahlZuKurs[iFachwahl] < 0)
 			return false;
-		for (let schiene1 of kurs.schienen) 
+		for (let schiene1 of kurs.schienen)
 			if (this._aktuellGesperrteSchiene[schiene1 - 1] === false)
 				return false;
 		this._aktuellFachwahlZuKurs[iFachwahl] = -1;
-		for (let schiene1 of kurs.schienen) 
+		for (let schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = false;
 		this._aktuellBewertung -= kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;

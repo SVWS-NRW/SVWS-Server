@@ -66,7 +66,7 @@ export class KursblockungDynSchiene extends JavaObject {
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
-		for (let kurs2 of this.kursMap.values()) 
+		for (let kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 		this.kursMap.put(kursID, kurs1);
 	}
@@ -84,7 +84,7 @@ export class KursblockungDynSchiene extends JavaObject {
 			throw new UserNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
-		for (let kurs2 of this.kursMap.values()) 
+		for (let kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 	}
 
@@ -132,7 +132,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	gibAnzahlGleicherFacharten() : number {
 		let setFachart : AVLSet<number | null> | null = new AVLSet();
 		let summe : number = 0;
-		for (let kurs of this.kursMap.values()) 
+		for (let kurs of this.kursMap.values())
 			if (setFachart.add(kurs.gibFachart().gibNr()) === false)
 				summe++;
 		return summe;

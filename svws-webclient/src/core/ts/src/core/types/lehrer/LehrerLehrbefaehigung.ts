@@ -616,7 +616,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 */
 	private static getMapLehrbefaehigungByID() : HashMap<number, LehrerLehrbefaehigung | null> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByID.size() === 0)
-			for (let l of LehrerLehrbefaehigung.values()) 
+			for (let l of LehrerLehrbefaehigung.values())
 				LehrerLehrbefaehigung._lehrbefaehigungenByID.put(l.daten.id, l);
 		return LehrerLehrbefaehigung._lehrbefaehigungenByID;
 	}
@@ -629,7 +629,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 */
 	private static getMapLehrbefaehigungByKuerzel() : HashMap<string, LehrerLehrbefaehigung | null> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.size() === 0)
-			for (let l of LehrerLehrbefaehigung.values()) 
+			for (let l of LehrerLehrbefaehigung.values())
 				LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel;
 	}

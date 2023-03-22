@@ -142,7 +142,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.istBK = istBK;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.istAuslaufend = istAuslaufend;
 			this.istAusgelaufen = istAusgelaufen;
@@ -152,10 +152,10 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			this.bkIndex = bkIndex;
 			this.istVZ = istVZ;
 			if (bkAbschlussBerufsbildend !== null)
-				for (let sbb of bkAbschlussBerufsbildend) 
+				for (let sbb of bkAbschlussBerufsbildend)
 					this.bkAbschlussBerufsbildend.add(sbb.daten.kuerzel);
 			if (bkAbschlussAllgemeinbildend !== null)
-				for (let sab of bkAbschlussAllgemeinbildend) 
+				for (let sab of bkAbschlussAllgemeinbildend)
 					this.bkAbschlussAllgemeinbildend.add(sab.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

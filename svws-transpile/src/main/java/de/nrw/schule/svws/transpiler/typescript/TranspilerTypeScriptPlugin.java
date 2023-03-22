@@ -242,11 +242,14 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled for each loop
 	 */
 	public String convertEnhancedForLoop(EnhancedForLoopTree node) {
-		return "for (let %s of %s) %s".formatted(
+		String result = "for (let %s of %s)".formatted(
 			node.getVariable().getName(),
-			convertExpression(node.getExpression()),
-			convertStatement(node.getStatement(), false)
+			convertExpression(node.getExpression())
 		);
+		if (node.getStatement() instanceof BlockTree)
+			result += " ";
+		result += convertStatement(node.getStatement(), false); 
+		return result;
 	}
 
 	
@@ -258,12 +261,15 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled for loop
 	 */
 	public String convertForLoop(ForLoopTree node) {
-		return "for (%s; %s; %s)%s".formatted(
+		String result = "for (%s; %s; %s)".formatted(
 			"let " + node.getInitializer().stream().map(st -> convertStatement(st, true)).collect(Collectors.joining(", ")).replace("let ", ""),
 			convertExpression(node.getCondition()),
-			node.getUpdate().stream().map(es -> convertExpressionStatement(es)).collect(Collectors.joining(", ")),
-			convertStatement(node.getStatement(), false)			
+			node.getUpdate().stream().map(es -> convertExpressionStatement(es)).collect(Collectors.joining(", "))			
 		);
+		if (node.getStatement() instanceof BlockTree)
+			result += " ";
+		result += convertStatement(node.getStatement(), false);
+		return result;
 	}
 	
 	

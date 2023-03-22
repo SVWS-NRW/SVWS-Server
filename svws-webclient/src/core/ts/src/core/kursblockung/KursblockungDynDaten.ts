@@ -420,8 +420,8 @@ export class KursblockungDynDaten extends JavaObject {
 		if (nFacharten <= 0)
 			throw new DeveloperNotificationException("Die Blockung hat keine Facharten/Fachwahlen (Fach + Kursart).")
 		this.fachartArr = Array(nFacharten).fill(null);
-		for (let kursartMap of this.fachartMap.values()) 
-			for (let fachart of kursartMap.values()) 
+		for (let kursartMap of this.fachartMap.values())
+			for (let fachart of kursartMap.values())
 				this.fachartArr[fachart.gibNr()] = fachart;
 		let kursSumme : number = 0;
 		for (let i : number = 0; i < this.fachartArr.length; i++)
@@ -432,7 +432,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt04FehlerBeiSchuelerErstellung(pInput : GostBlockungsdatenManager) : void {
 		let setSchueler : HashSet<number> = new HashSet();
-		for (let fachwahl of pInput.daten().fachwahlen) 
+		for (let fachwahl of pInput.daten().fachwahlen)
 			setSchueler.add(fachwahl.schuelerID);
 		let nSchueler : number = setSchueler.size();
 		let nSchienen : number = pInput.getSchienenAnzahl();
@@ -527,7 +527,7 @@ export class KursblockungDynDaten extends JavaObject {
 				schieneFrei.addLast(this.schienenArr[perm[j]]);
 			let regelnTyp1 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS);
 			if (regelnTyp1 !== null)
-				for (let regel1 of regelnTyp1) 
+				for (let regel1 of regelnTyp1)
 					if (kurs.kursart === regel1.parameter.get(0)) {
 						let von : number = regel1.parameter.get(1)!;
 						let bis : number = regel1.parameter.get(2)!;
@@ -548,14 +548,14 @@ export class KursblockungDynDaten extends JavaObject {
 				}
 			let regelnTyp3 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE);
 			if (regelnTyp3 !== null)
-				for (let regel3 of regelnTyp3) 
+				for (let regel3 of regelnTyp3)
 					if (kurs.id === regel3.parameter.get(0)) {
 						let schiene : number = regel3.parameter.get(1)!;
 						schieneFrei.remove(this.schienenArr[schiene - 1]);
 					}
 			let regelnTyp2 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
 			if (regelnTyp2 !== null)
-				for (let regel2 of regelnTyp2) 
+				for (let regel2 of regelnTyp2)
 					if (kurs.id === regel2.parameter.get(0)) {
 						let schiene : number = regel2.parameter.get(1)!;
 						let dynSchiene : KursblockungDynSchiene = this.schienenArr[schiene - 1];
@@ -591,7 +591,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt09FehlerBeiKursFreiErstellung() : void {
 		let nKursFrei : number = 0;
-		for (let kurs of this.kursArr) 
+		for (let kurs of this.kursArr)
 			if (kurs.gibHatFreiheitsgrade())
 				nKursFrei++;
 		this.kursArrFrei = Array(nKursFrei).fill(null);
@@ -631,7 +631,7 @@ export class KursblockungDynDaten extends JavaObject {
 				let kursID : number = regel4.parameter.get(1).valueOf();
 				let schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
 				let fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
-				for (let kurs of fixierterKurs.gibFachart().gibKurse()) 
+				for (let kurs of fixierterKurs.gibFachart().gibKurse())
 					if (kurs as unknown !== fixierterKurs as unknown)
 						schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 			}
@@ -671,16 +671,16 @@ export class KursblockungDynDaten extends JavaObject {
 		let regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
 		if (regelnTyp9 !== null) {
 			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
-			for (let gKurs of pInput.daten().kurse) 
+			for (let gKurs of pInput.daten().kurse)
 				if (gKurs.lehrer.isEmpty() === false)
 					vKurseMitLehrkraft.add(gKurs);
 			for (let regel9 of regelnTyp9) {
 				let externBeachten : boolean = regel9.parameter.get(0) === 1;
-				for (let gKurs1 of vKurseMitLehrkraft) 
-					for (let gKurs2 of vKurseMitLehrkraft) 
+				for (let gKurs1 of vKurseMitLehrkraft)
+					for (let gKurs2 of vKurseMitLehrkraft)
 						if (gKurs1.id < gKurs2.id)
-							for (let gLehr1 of gKurs1.lehrer) 
-								for (let gLehr2 of gKurs2.lehrer) 
+							for (let gLehr1 of gKurs1.lehrer)
+								for (let gLehr2 of gKurs2.lehrer)
 									if (gLehr1.id === gLehr2.id)
 										if ((externBeachten) || (!gLehr1.istExtern)) {
 											let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
@@ -692,15 +692,15 @@ export class KursblockungDynDaten extends JavaObject {
 		let regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10 !== null) {
 			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
-			for (let gKurs of pInput.daten().kurse) 
+			for (let gKurs of pInput.daten().kurse)
 				if (gKurs.lehrer.isEmpty() === false)
 					vKurseMitLehrkraft.add(gKurs);
-			for (let regel10 of regelnTyp10) 
-				for (let gKurs1 of vKurseMitLehrkraft) 
-					for (let gKurs2 of vKurseMitLehrkraft) 
+			for (let regel10 of regelnTyp10)
+				for (let gKurs1 of vKurseMitLehrkraft)
+					for (let gKurs2 of vKurseMitLehrkraft)
 						if (gKurs1.id < gKurs2.id)
-							for (let gLehr1 of gKurs1.lehrer) 
-								for (let gLehr2 of gKurs2.lehrer) 
+							for (let gLehr1 of gKurs1.lehrer)
+								for (let gLehr2 of gKurs2.lehrer)
 									if (gLehr1.id === gLehr2.id) {
 										let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
 										let kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
@@ -781,14 +781,14 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	gibErzeugtesKursblockungOutput(pDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
 		let out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
-		for (let dynKurs of this.kursArr) 
-			for (let schienenNr of dynKurs.gibSchienenLage()) 
+		for (let dynKurs of this.kursArr)
+			for (let schienenNr of dynKurs.gibSchienenLage())
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
-		for (let dynSchueler of this.schuelerArr) 
-			for (let kurs of dynSchueler.gibKurswahlen()) 
+		for (let dynSchueler of this.schuelerArr)
+			for (let kurs of dynSchueler.gibKurswahlen())
 				if (kurs !== null)
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
-		for (let gRegel of pDataManager.getMengeOfRegeln()) 
+		for (let gRegel of pDataManager.getMengeOfRegeln())
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				let schuelerID : number = gRegel.parameter.get(0).valueOf();
 				let kursID : number = gRegel.parameter.get(1).valueOf();
@@ -1039,7 +1039,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 *Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKurseFreieZufaelligVerteilen() : void {
-		for (let kurs of this.kursArrFrei) 
+		for (let kurs of this.kursArrFrei)
 			kurs.aktionZufaelligVerteilen();
 	}
 

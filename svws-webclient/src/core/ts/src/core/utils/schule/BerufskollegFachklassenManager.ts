@@ -184,7 +184,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
 			if (eintrag === null)
 				return null;
-			for (let daten of eintrag.historie) 
+			for (let daten of eintrag.historie)
 				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
 					return daten;
 			return null;

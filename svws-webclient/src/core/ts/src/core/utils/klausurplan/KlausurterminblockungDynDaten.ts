@@ -104,8 +104,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	private checkKlausurgruppenOrException() : void {
 		for (let gruppe of this._klausurGruppen) {
-			for (let nr1 of gruppe) 
-				for (let nr2 of gruppe) 
+			for (let nr1 of gruppe)
+				for (let nr2 of gruppe)
 					if (this._verboten[nr1][nr2])
 						throw new UserNotificationException("Klausurgruppe hat einen Schülerkonflikt!")
 		}
@@ -193,15 +193,15 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	private gibKnotengrad(pGruppe : Vector<number>) : number {
 		let grad : number = 0;
-		for (let gruppe of this._klausurGruppen) 
+		for (let gruppe of this._klausurGruppen)
 			if (this.gibIstVerboten(pGruppe, gruppe))
 				grad++;
 		return grad;
 	}
 
 	private gibIstVerboten(pGruppe1 : Vector<number>, pGruppe2 : Vector<number>) : boolean {
-		for (let klausurNr1 of pGruppe1) 
-			for (let klausurNr2 of pGruppe2) 
+		for (let klausurNr1 of pGruppe1)
+			for (let klausurNr2 of pGruppe2)
 				if (this._verboten[klausurNr1][klausurNr2])
 					return true;
 		return false;
@@ -238,8 +238,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			let list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
 			if (list === null)
 				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.")
-			for (let klausurNr1 of list) 
-				for (let klausurNr2 of list) 
+			for (let klausurNr1 of list)
+				for (let klausurNr2 of list)
 					if (klausurNr1 !== klausurNr2)
 						this._verboten[klausurNr1][klausurNr2] = true;
 		}
@@ -365,7 +365,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() : Vector<number> {
 		let min : number = this._klausurenAnzahl;
 		let gruppeMin : Vector<number> | null = null;
-		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
 				let terminmoeglichekeiten : number = this.gibTerminmoeglichkeiten(gruppe);
 				if (terminmoeglichekeiten < min) {
@@ -416,7 +416,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
 	 */
 	private gibIstKlausurgruppeUnverteilt(pGruppe : Vector<number>) : boolean {
-		for (let klausurNr of pGruppe) 
+		for (let klausurNr of pGruppe)
 			if (this._klausurZuTermin[klausurNr] >= 0)
 				return false;
 		return true;
@@ -437,10 +437,10 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
 		for (let nr2 : number = 0; nr2 < this._klausurenAnzahl; nr2++)
 			if (this._klausurZuTermin[nr2] === pTermin)
-				for (let nr of pGruppe) 
+				for (let nr of pGruppe)
 					if (this._verboten[nr][nr2])
 						return false;
-		for (let nr of pGruppe) 
+		for (let nr of pGruppe)
 			this._klausurZuTermin[nr] = pTermin;
 		return true;
 	}
@@ -470,10 +470,10 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
 	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : Vector<number>) : void {
-		for (let klausurNr of pGruppe) 
+		for (let klausurNr of pGruppe)
 			if (this._klausurZuTermin[klausurNr] >= 0)
 				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!")
-		for (let klausurNr of pGruppe) 
+		for (let klausurNr of pGruppe)
 			this._klausurZuTermin[klausurNr] = this._terminAnzahl;
 		this._terminAnzahl++;
 	}
@@ -486,7 +486,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen.
 	 */
 	private aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(pGruppe : Vector<number>) : void {
-		for (let terminNr of this.gibTermineInZufaelligerReihenfolge()) 
+		for (let terminNr of this.gibTermineInZufaelligerReihenfolge())
 			if (this.aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
 				return;
 		this.aktionSetzeKlausurgruppeInNeuenTermin(pGruppe);
@@ -598,7 +598,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() : void {
 		this.aktionClear();
-		for (let gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge()) 
+		for (let gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge())
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -611,7 +611,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this.aktionClear();
 		while (this.gibExistierenNichtverteilteKlausuren()) {
 			let terminNr : number = this.gibErzeugeNeuenTermin();
-			for (let gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge()) 
+			for (let gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge())
 				if (this.gibIstKlausurgruppeUnverteilt(gruppe))
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
@@ -625,7 +625,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() : void {
 		this.aktionClear();
-		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+		for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -638,7 +638,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this.aktionClear();
 		while (this.gibExistierenNichtverteilteKlausuren()) {
 			let terminNr : number = this.gibErzeugeNeuenTermin();
-			for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+			for (let gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 				if (this.gibIstKlausurgruppeUnverteilt(gruppe))
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}

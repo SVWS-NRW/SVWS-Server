@@ -291,7 +291,7 @@ export class Herkunftsarten extends JavaObject {
 	 */
 	private static getMapHerkunftsartByKuerzel() : HashMap<string, Herkunftsarten | null> {
 		if (Herkunftsarten._mapKuerzel.size() === 0)
-			for (let j of Herkunftsarten.values()) 
+			for (let j of Herkunftsarten.values())
 				if (!Herkunftsarten._mapKuerzel.containsKey(j.daten.kuerzel))
 					Herkunftsarten._mapKuerzel.put(j.daten.kuerzel, j);
 		return Herkunftsarten._mapKuerzel;
@@ -306,7 +306,7 @@ export class Herkunftsarten extends JavaObject {
 	private static getMapHerkunftsartByID() : HashMap<number, Herkunftsarten | null> {
 		if (Herkunftsarten._mapID.size() === 0)
 			for (let j of Herkunftsarten.values()) {
-				for (let k of j.historie) 
+				for (let k of j.historie)
 					Herkunftsarten._mapID.put(k.id, j);
 			}
 		return Herkunftsarten._mapID;

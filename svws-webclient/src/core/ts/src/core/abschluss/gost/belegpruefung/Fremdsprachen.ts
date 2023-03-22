@@ -209,7 +209,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	private pruefeEF1Schriftlichkeit() : void {
 		if (this.fremdsprachen === null)
 			return;
-		for (let fachbelegung of this.fremdsprachen) 
+		for (let fachbelegung of this.fremdsprachen)
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1) && !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				this.addFehler(GostBelegungsfehler.FS_12);
 				break;

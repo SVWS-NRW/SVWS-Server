@@ -178,7 +178,7 @@ export class Schulform extends JavaObject {
 	 */
 	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformenNummer.size() === 0)
-			for (let s of Schulform.values()) 
+			for (let s of Schulform.values())
 				if ((s.daten !== null) && (s.daten.nummer !== null))
 					Schulform._schulformenNummer.put(s.daten.nummer, s);
 		return Schulform._schulformenNummer;
@@ -215,7 +215,7 @@ export class Schulform extends JavaObject {
 	 */
 	public static get() : List<Schulform> {
 		let result : Vector<Schulform> = new Vector();
-		for (let sf of Schulform.values()) 
+		for (let sf of Schulform.values())
 			if ((sf.daten !== null) && (sf.daten.nummer !== null))
 				result.add(sf);
 		return result;
@@ -228,7 +228,7 @@ export class Schulform extends JavaObject {
 	 */
 	public static getMitGymOb() : List<Schulform> {
 		let result : Vector<Schulform> = new Vector();
-		for (let sf of Schulform.values()) 
+		for (let sf of Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);
 		return result;

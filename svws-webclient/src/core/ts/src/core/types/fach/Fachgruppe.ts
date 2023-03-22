@@ -236,8 +236,8 @@ export class Fachgruppe extends JavaObject {
 	 */
 	private static getMapEintragByID() : HashMap<number, FachgruppenKatalogEintrag> {
 		if (Fachgruppe._mapEintragByID.size() === 0)
-			for (let g of Fachgruppe.values()) 
-				for (let k of g.historie) 
+			for (let g of Fachgruppe.values())
+				for (let k of g.historie)
 					Fachgruppe._mapEintragByID.put(k.id, k);
 		return Fachgruppe._mapEintragByID;
 	}
@@ -250,7 +250,7 @@ export class Fachgruppe extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, Fachgruppe> {
 		if (Fachgruppe._mapByID.size() === 0)
-			for (let g of Fachgruppe.values()) 
+			for (let g of Fachgruppe.values())
 				Fachgruppe._mapByID.put(g.daten.id, g);
 		return Fachgruppe._mapByID;
 	}
@@ -263,7 +263,7 @@ export class Fachgruppe extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Fachgruppe> {
 		if (Fachgruppe._mapByKuerzel.size() === 0)
-			for (let g of Fachgruppe.values()) 
+			for (let g of Fachgruppe.values())
 				Fachgruppe._mapByKuerzel.put(g.daten.kuerzel, g);
 		return Fachgruppe._mapByKuerzel;
 	}

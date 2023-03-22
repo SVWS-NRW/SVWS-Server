@@ -296,7 +296,7 @@ export class LehrerLehramt extends JavaObject {
 	 */
 	private static getMapLehraemterByID() : HashMap<number, LehrerLehramt | null> {
 		if (LehrerLehramt._aemterByID.size() === 0)
-			for (let l of LehrerLehramt.values()) 
+			for (let l of LehrerLehramt.values())
 				LehrerLehramt._aemterByID.put(l.daten.id, l);
 		return LehrerLehramt._aemterByID;
 	}
@@ -309,7 +309,7 @@ export class LehrerLehramt extends JavaObject {
 	 */
 	private static getMapLehraemterByKuerzel() : HashMap<string, LehrerLehramt | null> {
 		if (LehrerLehramt._aemterByKuerzel.size() === 0)
-			for (let l of LehrerLehramt.values()) 
+			for (let l of LehrerLehramt.values())
 				LehrerLehramt._aemterByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerLehramt._aemterByKuerzel;
 	}

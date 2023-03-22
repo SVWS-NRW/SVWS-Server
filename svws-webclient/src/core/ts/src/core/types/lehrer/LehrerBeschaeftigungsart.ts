@@ -136,7 +136,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 */
 	private static getMapArtenByID() : HashMap<number, LehrerBeschaeftigungsart | null> {
 		if (LehrerBeschaeftigungsart._artenByID.size() === 0)
-			for (let l of LehrerBeschaeftigungsart.values()) 
+			for (let l of LehrerBeschaeftigungsart.values())
 				LehrerBeschaeftigungsart._artenByID.put(l.daten.id, l);
 		return LehrerBeschaeftigungsart._artenByID;
 	}
@@ -149,7 +149,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 */
 	private static getMapArtenByKuerzel() : HashMap<string, LehrerBeschaeftigungsart | null> {
 		if (LehrerBeschaeftigungsart._artenByKuerzel.size() === 0)
-			for (let l of LehrerBeschaeftigungsart.values()) 
+			for (let l of LehrerBeschaeftigungsart.values())
 				LehrerBeschaeftigungsart._artenByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerBeschaeftigungsart._artenByKuerzel;
 	}

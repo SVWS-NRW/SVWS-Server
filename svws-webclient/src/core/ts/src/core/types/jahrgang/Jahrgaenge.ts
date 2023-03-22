@@ -223,7 +223,7 @@ export class Jahrgaenge extends JavaObject {
 	 */
 	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge | null> {
 		if (Jahrgaenge._mapKuerzel.size() === 0)
-			for (let j of Jahrgaenge.values()) 
+			for (let j of Jahrgaenge.values())
 				Jahrgaenge._mapKuerzel.put(j.daten.kuerzel, j);
 		return Jahrgaenge._mapKuerzel;
 	}
@@ -237,7 +237,7 @@ export class Jahrgaenge extends JavaObject {
 	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge | null> {
 		if (Jahrgaenge._mapID.size() === 0)
 			for (let j of Jahrgaenge.values()) {
-				for (let k of j.historie) 
+				for (let k of j.historie)
 					Jahrgaenge._mapID.put(k.id, j);
 			}
 		return Jahrgaenge._mapID;

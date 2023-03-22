@@ -75,7 +75,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		for (let halbjahr of GostHalbjahr.values()) {
 			let kurszahlenHalbjahr : HashMap<GostKursart, number> = new HashMap();
 			this.kurszahlen.put(halbjahr, kurszahlenHalbjahr);
-			for (let kursart of kursarten) 
+			for (let kursart of kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);
 			this.kurszahlenGrundkurse.put(halbjahr, 0);
 			this.kurszahlenLeistungskurse.put(halbjahr, 0);

@@ -70,7 +70,7 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 			let gueltigBis : number | null = __param5;
 			this.id = id;
 			this.kuerzel = kuerzel;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.beschreibung = beschreibung;
 			this.gueltigVon = gueltigVon;

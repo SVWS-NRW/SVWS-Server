@@ -65,7 +65,7 @@ export class BilingualeSpracheKatalogEintrag extends JavaObject {
 			let gueltigBis : number | null = __param4;
 			this.id = id;
 			this.kuerzel = fach.daten.kuerzel;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

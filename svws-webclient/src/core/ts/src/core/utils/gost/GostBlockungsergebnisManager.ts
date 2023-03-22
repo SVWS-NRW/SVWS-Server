@@ -235,7 +235,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (let gSchiene of this._parent.daten().schienen) {
 			this._map_schienenID_fachartID_kurse.put(gSchiene.id, new HashMap());
-			for (let fachartID of this._map_fachartID_kursdifferenz.keySet()) 
+			for (let fachartID of this._map_fachartID_kursdifferenz.keySet())
 				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new Vector());
 		}
 		for (let gSchueler of this._parent.daten().schueler) {
@@ -245,7 +245,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null)
 				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID! + " doppelt!")
 		}
-		for (let gSchueler of this._parent.daten().schueler) 
+		for (let gSchueler of this._parent.daten().schueler)
 			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
 		for (let gFachwahl of this._parent.daten().fachwahlen) {
 			let mapFachKurs : HashMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
@@ -256,15 +256,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (let gSchueler of this._parent.daten().schueler) {
 			this._map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap());
-			for (let gSchiene of this._parent.daten().schienen) 
+			for (let gSchiene of this._parent.daten().schienen)
 				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet());
 		}
 		let kursBearbeitet : HashSet<number> | null = new HashSet();
-		for (let schieneOld of pOld.schienen) 
+		for (let schieneOld of pOld.schienen)
 			for (let kursOld of schieneOld.kurse) {
 				this.setKursSchiene(kursOld.id, schieneOld.id, true);
 				if (kursBearbeitet.add(kursOld.id))
-					for (let schuelerID of kursOld.schueler) 
+					for (let schuelerID of kursOld.schueler)
 						this.setSchuelerKurs(schuelerID!, kursOld.id, true);
 			}
 		this.stateRegelvalidierung();
@@ -311,7 +311,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					let schienenNrVon : number = r.parameter.get(1)!;
 					let schienenNrBis : number = r.parameter.get(2)!;
 					for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
-						for (let eKurs of this.getSchieneEmitNr(schienenNr).kurse) 
+						for (let eKurs of this.getSchieneEmitNr(schienenNr).kurse)
 							if (eKurs.kursart === kursart)
 								regelVerletzungen.add(r.id);
 					break;
@@ -320,7 +320,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					let kursart : number = r.parameter.get(0)!;
 					let schienenNrVon : number = r.parameter.get(1)!;
 					let schienenNrBis : number = r.parameter.get(2)!;
-					for (let eKurs of this._map_kursID_kurs.values()) 
+					for (let eKurs of this._map_kursID_kurs.values())
 						for (let eSchieneID of eKurs.schienen) {
 							let nr : number = this.getSchieneG(eSchieneID!).nummer;
 							let b1 : boolean = eKurs.kursart === kursart;
@@ -335,8 +335,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					let kursID2 : number = r.parameter.get(1).valueOf();
 					let set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
 					let set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
-					for (let schiene1 of set1) 
-						for (let schiene2 of set2) 
+					for (let schiene1 of set1)
+						for (let schiene2 of set2)
 							if (schiene1 as unknown === schiene2 as unknown)
 								regelVerletzungen.add(r.id);
 					break;
@@ -347,11 +347,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					let set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
 					let set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
 					if (set1.size() < set2.size()) {
-						for (let schiene1 of set1) 
+						for (let schiene1 of set1)
 							if (set2.contains(schiene1) === false)
 								regelVerletzungen.add(r.id);
 					} else {
-						for (let schiene2 of set2) 
+						for (let schiene2 of set2)
 							if (set1.contains(schiene2) === false)
 								regelVerletzungen.add(r.id);
 					}
@@ -359,24 +359,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				}
 				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
 					let externBeachten : boolean = r.parameter.get(0) === 1;
-					for (let eSchiene of this._map_schienenID_schiene.values()) 
-						for (let eKurs1 of eSchiene.kurse) 
-							for (let eKurs2 of eSchiene.kurse) 
+					for (let eSchiene of this._map_schienenID_schiene.values())
+						for (let eKurs1 of eSchiene.kurse)
+							for (let eKurs2 of eSchiene.kurse)
 								if (eKurs1.id < eKurs2.id)
-									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer) 
-										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer) 
+									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer)
+										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer)
 											if (gLehr1.id === gLehr2.id)
 												if ((externBeachten) || (!gLehr1.istExtern))
 													regelVerletzungen.add(r.id);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
-					for (let eSchiene of this._map_schienenID_schiene.values()) 
-						for (let eKurs1 of eSchiene.kurse) 
-							for (let eKurs2 of eSchiene.kurse) 
+					for (let eSchiene of this._map_schienenID_schiene.values())
+						for (let eKurs1 of eSchiene.kurse)
+							for (let eKurs2 of eSchiene.kurse)
 								if (eKurs1.id < eKurs2.id)
-									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer) 
-										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer) 
+									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer)
+										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer)
 											if (gLehr1.id === gLehr2.id)
 												regelVerletzungen.add(r.id);
 					break;
@@ -412,7 +412,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		mapSFK.put(fachID, kurs);
 		this.stateKursdifferenzUpdate(fachartID);
-		for (let schieneID of kurs.schienen) 
+		for (let schieneID of kurs.schienen)
 			this.stateSchuelerSchieneHinzufuegen(pSchuelerID, schieneID!, kurs);
 		this.stateRegelvalidierung();
 		return true;
@@ -441,7 +441,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		mapSFK.put(fachID, null);
 		this.stateKursdifferenzUpdate(fachartID);
-		for (let schieneID of kurs.schienen) 
+		for (let schieneID of kurs.schienen)
 			this.stateSchuelerSchieneEntfernen(pSchuelerID, schieneID!, kurs);
 		this.stateRegelvalidierung();
 		return true;
@@ -470,7 +470,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		kurs.schienen.add(schiene.id);
 		schiene.kurse.add(kurs);
 		schienenOfKurs.add(schiene);
-		for (let schuelerID of kurs.schueler) 
+		for (let schuelerID of kurs.schueler)
 			this.stateSchuelerSchieneHinzufuegen(schuelerID!, schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
@@ -502,7 +502,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		kurs.schienen.removeElement(schiene.id);
 		schiene.kurse.removeElement(kurs);
 		schienenOfKurs.remove(schiene);
-		for (let schuelerID of kurs.schueler) 
+		for (let schuelerID of kurs.schueler)
 			this.stateSchuelerSchieneEntfernen(schuelerID!, schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
 		kursGruppe.removeElement(kurs);
@@ -842,7 +842,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerKursmengeMitKollisionen(pSchuelerID : number) : HashSet<GostBlockungsergebnisKurs> {
 		let mapSchieneKurse : HashMap<number, HashSet<GostBlockungsergebnisKurs>> = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID);
 		let set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
-		for (let kurseDerSchiene of mapSchieneKurse.values()) 
+		for (let kurseDerSchiene of mapSchieneKurse.values())
 			if (kurseDerSchiene.size() > 1)
 				set.addAll(kurseDerSchiene);
 		return set;
@@ -867,7 +867,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerHatNichtwahl(pSchuelerID : number) : boolean {
 		let map : HashMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
-		for (let fachID of map.keySet()) 
+		for (let fachID of map.keySet())
 			if (map.get(fachID) === null)
 				return true;
 		return false;
@@ -1169,8 +1169,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Kurs mindestens eine Kollision hat.
 	 */
 	public getOfKursHatKollision(pKursID : number) : boolean {
-		for (let schiene of this.getOfKursSchienenmenge(pKursID)) 
-			for (let schuelerID of this.getKursE(pKursID).schueler) 
+		for (let schiene of this.getOfKursSchienenmenge(pKursID))
+			for (let schuelerID of this.getKursE(pKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
 					return true;
 		return false;
@@ -1185,8 +1185,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfKursAnzahlKollisionen(pKursID : number) : number {
 		let summe : number = 0;
-		for (let schiene of this.getOfKursSchienenmenge(pKursID)) 
-			for (let schuelerID of this.getKursE(pKursID).schueler) 
+		for (let schiene of this.getOfKursSchienenmenge(pKursID))
+			for (let schuelerID of this.getKursE(pKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
 					summe++;
 		return summe;
@@ -1249,8 +1249,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfKursSchuelermengeMitKollisionen(pKursID : number) : HashSet<number> {
 		let set : HashSet<number> = new HashSet();
-		for (let schiene of this.getOfKursSchienenmenge(pKursID)) 
-			for (let schuelerID of this.getKursE(pKursID).schueler) 
+		for (let schiene of this.getOfKursSchienenmenge(pKursID))
+			for (let schuelerID of this.getKursE(pKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
 					set.add(schuelerID);
 		return set;
@@ -1365,7 +1365,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchieneSchuelermengeMitKollisionen(pSchienenID : number) : HashSet<number> {
 		let set : HashSet<number> = new HashSet();
-		for (let schuelerID of this._map_schuelerID_kollisionen.keySet()) 
+		for (let schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, pSchienenID).size() > 1)
 				set.add(schuelerID);
 		return set;
@@ -1379,7 +1379,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchieneAnzahlKursmengeMitKollisionen(pSchienenID : number) : number {
 		let summe : number = 0;
-		for (let kurs of this.getSchieneE(pSchienenID).kurse) 
+		for (let kurs of this.getSchieneE(pSchienenID).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
 				summe++;
 		return summe;
@@ -1393,7 +1393,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchieneKursmengeMitKollisionen(pSchienenID : number) : HashSet<GostBlockungsergebnisKurs> {
 		let set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
-		for (let kurs of this.getSchieneE(pSchienenID).kurse) 
+		for (let kurs of this.getSchieneE(pSchienenID).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
@@ -1450,7 +1450,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getMengeDerSchuelerMitKollisionen() : HashSet<number> {
 		let set : HashSet<number> = new HashSet();
-		for (let schuelerID of this._map_schuelerID_kollisionen.keySet()) 
+		for (let schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerHatKollision(schuelerID!))
 				set.add(schuelerID);
 		return set;
@@ -1463,7 +1463,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getMengeDerSchuelerMitKollisionenOderNichtwahlen() : HashSet<number> {
 		let set : HashSet<number> = new HashSet();
-		for (let schuelerID of this._map_schuelerID_kollisionen.keySet()) 
+		for (let schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerHatKollision(schuelerID!) || this.getOfSchuelerHatNichtwahl(schuelerID!))
 				set.add(schuelerID);
 		return set;
@@ -1541,7 +1541,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getMengeDerKurseMitKollisionen() : HashSet<GostBlockungsergebnisKurs> {
 		let set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
-		for (let kurs of this._map_kursID_kurs.values()) 
+		for (let kurs of this._map_kursID_kurs.values())
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
@@ -1554,7 +1554,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getMengeDerSchienenMitKollisionen() : HashSet<GostBlockungsergebnisSchiene> {
 		let set : HashSet<GostBlockungsergebnisSchiene> = new HashSet();
-		for (let schiene of this._map_schienenID_schiene.values()) 
+		for (let schiene of this._map_schienenID_schiene.values())
 			if (this.getOfSchieneHatKollision(schiene.id))
 				set.add(schiene);
 		return set;
@@ -1723,7 +1723,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (nSchueler > 0)
 			throw new DeveloperNotificationException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
 		let kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
-		for (let schienenID of kurs.schienen) 
+		for (let schienenID of kurs.schienen)
 			this.getSchieneE(schienenID!).kurse.removeElement(kurs);
 		kurs.schienen.clear();
 		this.stateRevalidateEverything();

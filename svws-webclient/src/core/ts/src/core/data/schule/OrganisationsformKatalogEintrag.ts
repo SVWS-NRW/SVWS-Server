@@ -71,7 +71,7 @@ export class OrganisationsformKatalogEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

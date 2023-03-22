@@ -80,9 +80,9 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
-			for (let stufe of stufen) 
+			for (let stufe of stufen)
 				this.stufen.add(stufe.daten.kuerzel);
-			for (let m of anzeigeZusatzmerkmal) 
+			for (let m of anzeigeZusatzmerkmal)
 				this.anzeigeZusatzmerkmal.add(m.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

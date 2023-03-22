@@ -126,8 +126,8 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapEintragByID() : HashMap<number, BilingualeSpracheKatalogEintrag> {
 		if (BilingualeSprache._mapEintragByID.size() === 0)
-			for (let s of BilingualeSprache.values()) 
-				for (let k of s.historie) 
+			for (let s of BilingualeSprache.values())
+				for (let k of s.historie)
 					BilingualeSprache._mapEintragByID.put(k.id, k);
 		return BilingualeSprache._mapEintragByID;
 	}
@@ -140,7 +140,7 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, BilingualeSprache> {
 		if (BilingualeSprache._mapByID.size() === 0)
-			for (let s of BilingualeSprache.values()) 
+			for (let s of BilingualeSprache.values())
 				BilingualeSprache._mapByID.put(s.daten.id, s);
 		return BilingualeSprache._mapByID;
 	}
@@ -153,7 +153,7 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, BilingualeSprache> {
 		if (BilingualeSprache._mapByKuerzel.size() === 0)
-			for (let s of BilingualeSprache.values()) 
+			for (let s of BilingualeSprache.values())
 				BilingualeSprache._mapByKuerzel.put(s.daten.kuerzel, s);
 		return BilingualeSprache._mapByKuerzel;
 	}

@@ -95,7 +95,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			this.beiSchule = beiSchule;
 			this.beiSchueler = beiSchueler;
 			this.kuerzelASD = kuerzelASD;
-			for (let sf of schulformen) 
+			for (let sf of schulformen)
 				this.schulformen.add(sf.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

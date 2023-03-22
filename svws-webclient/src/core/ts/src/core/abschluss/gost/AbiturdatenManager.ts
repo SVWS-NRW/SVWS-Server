@@ -151,7 +151,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private initMapFachbereiche() : void {
 		this.mapFachbereiche.clear();
-		for (let fachbereich of GostFachbereich.values()) 
+		for (let fachbereich of GostFachbereich.values())
 			this.mapFachbereiche.put(fachbereich, new Vector<AbiturFachbelegung>());
 		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (let fachbelegung of fachbelegungen) {
@@ -337,8 +337,8 @@ export class AbiturdatenManager extends JavaObject {
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return 0;
 		let anzahl : number = 0;
-		for (let fachbelegung of fachbelegungen) 
-			for (let halbjahr of halbjahre) 
+		for (let fachbelegung of fachbelegungen)
+			for (let halbjahr of halbjahre)
 				if (fachbelegung.belegungen[halbjahr.id] !== null)
 					anzahl++;
 		return anzahl;
@@ -454,7 +454,7 @@ export class AbiturdatenManager extends JavaObject {
 			return false;
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return true;
-		for (let halbjahr of halbjahre) 
+		for (let halbjahr of halbjahre)
 			if (!this.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr))
 				return false;
 		return true;
@@ -557,7 +557,7 @@ export class AbiturdatenManager extends JavaObject {
 			return false;
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return false;
-		for (let fachbelegung of fachbelegungen) 
+		for (let fachbelegung of fachbelegungen)
 			if (this.pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre))
 				return true;
 		return false;
@@ -630,7 +630,7 @@ export class AbiturdatenManager extends JavaObject {
 			let alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((alleBelegungen === null) || (alleBelegungen.size() === 0))
 				continue;
-			for (let aktFachbelegung of alleBelegungen) 
+			for (let aktFachbelegung of alleBelegungen)
 				if (aktFachbelegung.belegungen[halbjahr.id] !== null)
 					return true;
 		}
@@ -984,7 +984,7 @@ export class AbiturdatenManager extends JavaObject {
 			return true;
 		if (fachbelegungen === null)
 			return false;
-		for (let fachbelegung of fachbelegungen) 
+		for (let fachbelegung of fachbelegungen)
 			for (let art of arten) {
 				let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 				if (abiturFach as unknown === art as unknown)
@@ -1033,7 +1033,7 @@ export class AbiturdatenManager extends JavaObject {
 	public hatDoppelteFachbelegung(...halbjahre : Array<GostHalbjahr>) : boolean {
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return false;
-		for (let halbjahr of halbjahre) 
+		for (let halbjahr of halbjahre)
 			if (this.hatDoppelteFachbelegungInHalbjahr(halbjahr))
 				return true;
 		return false;

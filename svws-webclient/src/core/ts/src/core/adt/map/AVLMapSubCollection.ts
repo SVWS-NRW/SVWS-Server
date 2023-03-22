@@ -25,7 +25,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 
 	public toString() : string {
 		let s : string | null = "";
-		for (let value of this) 
+		for (let value of this)
 			s += (s.length === 0 ? "" : ", ") + value;
 		return "values = [" + s! + "], size = " + this.size() + " --> " + this._sub.toString()!;
 	}

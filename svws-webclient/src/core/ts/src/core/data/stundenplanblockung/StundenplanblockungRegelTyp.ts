@@ -122,7 +122,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 */
 	private static getMap() : HashMap<number, StundenplanblockungRegelTyp | null> {
 		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty())
-			for (let typ of StundenplanblockungRegelTyp.values()) 
+			for (let typ of StundenplanblockungRegelTyp.values())
 				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null)
 					throw new NullPointerException("StundenplanblockungRegelTyp.id=" + typ.id + " doppelt!")
 		return StundenplanblockungRegelTyp._map_id_regel;
@@ -197,7 +197,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType : StundenplanblockungRegelParameterTyp | null) : boolean {
-		for (let cur of this.paramTypes) 
+		for (let cur of this.paramTypes)
 			if (paramType as unknown === cur as unknown)
 				return true;
 		return false;

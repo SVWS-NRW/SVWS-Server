@@ -97,7 +97,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, Sprachpruefungniveau> {
 		if (Sprachpruefungniveau._mapID.size() === 0)
-			for (let l of Sprachpruefungniveau.values()) 
+			for (let l of Sprachpruefungniveau.values())
 				Sprachpruefungniveau._mapID.put(l.daten.id, l);
 		return Sprachpruefungniveau._mapID;
 	}
@@ -110,7 +110,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Sprachpruefungniveau> {
 		if (Sprachpruefungniveau._mapKuerzel.size() === 0)
-			for (let l of Sprachpruefungniveau.values()) 
+			for (let l of Sprachpruefungniveau.values())
 				Sprachpruefungniveau._mapKuerzel.put(l.daten.kuerzel, l);
 		return Sprachpruefungniveau._mapKuerzel;
 	}

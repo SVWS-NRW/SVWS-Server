@@ -396,7 +396,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getKursartenAnzahl() : number {
 		let setKursartenIDs : HashSet<number> = new HashSet();
-		for (let fachwahl of this._daten.fachwahlen) 
+		for (let fachwahl of this._daten.fachwahlen)
 			setKursartenIDs.add(fachwahl.kursartID);
 		return setKursartenIDs.size();
 	}
@@ -529,7 +529,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
 	public addErgebnisListe(pErgebnisse : List<GostBlockungsergebnisListeneintrag>) : void {
-		for (let ergebnis of pErgebnisse) 
+		for (let ergebnis of pErgebnisse)
 			this.addErgebnisOhneSortierung(ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
@@ -593,7 +593,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new DeveloperNotificationException("GostBlockungsergebnis.id=" + pErgebnis.id + " zu klein!")
 		if (pErgebnis.blockungID < 0)
 			throw new DeveloperNotificationException("GostBlockungsergebnis.blockungID=" + pErgebnis.blockungID + " zu klein!")
-		for (let eintrag of this._daten.ergebnisse) 
+		for (let eintrag of this._daten.ergebnisse)
 			if (eintrag.id === pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
 		this._daten.ergebnisse.sort(this._compErgebnisse);
@@ -643,7 +643,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Daten der Kurse inkonsistent sind.
 	 */
 	public addKursListe(pKurse : List<GostBlockungKurs>) : void {
-		for (let gKurs of pKurse) 
+		for (let gKurs of pKurse)
 			this.addKursOhneSortierung(gKurs);
 		this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
 		this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
@@ -806,7 +806,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public getOfKursLehrkraftMitNummer(pKursID : number, pReihenfolgeNr : number) : GostBlockungKursLehrer | null {
-		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge === pReihenfolgeNr)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr. " + pReihenfolgeNr + "!")
@@ -821,7 +821,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public getOfKursLehrkraftMitNummerExists(pKursID : number, pReihenfolgeNr : number) : boolean {
-		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge === pReihenfolgeNr)
 				return true;
 		return false;
@@ -837,7 +837,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public getOfKursLehrkraftMitID(pKursID : number, pLehrkraftID : number) : GostBlockungKursLehrer | null {
-		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id === pLehrkraftID)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID)
@@ -852,7 +852,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public getOfKursLehrkraftMitIDExists(pKursID : number, pLehrkraftID : number) : boolean {
-		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id === pLehrkraftID)
 				return true;
 		return false;
@@ -932,7 +932,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
 	 */
 	public addSchienListe(pSchienen : List<GostBlockungSchiene>) : void {
-		for (let schiene of pSchienen) 
+		for (let schiene of pSchienen)
 			this.addSchieneOhneSortierung(schiene);
 		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 	}
@@ -1014,7 +1014,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
 		this._mapSchienen.remove(pSchienenID);
 		this._daten.schienen.remove(schieneR);
-		for (let schiene of this._daten.schienen) 
+		for (let schiene of this._daten.schienen)
 			if (schiene.nummer > schieneR.nummer)
 				schiene.nummer--;
 		for (let index : number = 0; index < this._daten.schienen.size(); index++)
@@ -1084,7 +1084,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
 	public addRegelListe(pRegeln : List<GostBlockungRegel>) : void {
-		for (let regel of pRegeln) 
+		for (let regel of pRegeln)
 			this.addRegelOhneSortierung(regel);
 		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 	}
@@ -1206,7 +1206,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
 	public addSchuelerListe(pSchueler : List<Schueler>) : void {
-		for (let schueler of pSchueler) 
+		for (let schueler of pSchueler)
 			this.addSchueler(schueler);
 	}
 
@@ -1243,7 +1243,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getSchuelerAnzahlMitFachwahlen() : number {
 		let setSchuelerIDs : HashSet<number> | null = new HashSet();
-		for (let fachwahl of this._daten.fachwahlen) 
+		for (let fachwahl of this._daten.fachwahlen)
 			setSchuelerIDs.add(fachwahl.schuelerID);
 		return setSchuelerIDs.size();
 	}
@@ -1358,7 +1358,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public addFachwahlListe(pFachwahlen : List<GostFachwahl>) : void {
-		for (let gFachwahl of pFachwahlen) 
+		for (let gFachwahl of pFachwahlen)
 			this.addFachwahl(gFachwahl);
 	}
 

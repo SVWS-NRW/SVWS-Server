@@ -459,7 +459,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapID.size() === 0)
-			for (let s of ZulaessigeKursart.values()) 
+			for (let s of ZulaessigeKursart.values())
 				if (s.daten !== null)
 					ZulaessigeKursart._mapID.put(s.daten.id, s);
 		return ZulaessigeKursart._mapID;
@@ -473,7 +473,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapKuerzel.size() === 0)
-			for (let s of ZulaessigeKursart.values()) 
+			for (let s of ZulaessigeKursart.values())
 				if (s.daten !== null)
 					ZulaessigeKursart._mapKuerzel.put(s.daten.kuerzel, s);
 		return ZulaessigeKursart._mapKuerzel;
@@ -509,7 +509,7 @@ export class ZulaessigeKursart extends JavaObject {
 		let kursarten : Vector<ZulaessigeKursart | null> = new Vector();
 		if (schulform === null)
 			return kursarten;
-		for (let kursart of ZulaessigeKursart.values()) 
+		for (let kursart of ZulaessigeKursart.values())
 			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;

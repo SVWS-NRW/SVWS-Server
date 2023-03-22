@@ -47,7 +47,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : KAOAMerkmaleOptionsarten | null {
-		for (let art of KAOAMerkmaleOptionsarten.values()) 
+		for (let art of KAOAMerkmaleOptionsarten.values())
 			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
 				return art;
 		return null;

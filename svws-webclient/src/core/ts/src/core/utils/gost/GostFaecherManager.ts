@@ -105,7 +105,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
-		for (let fach of faecher) 
+		for (let fach of faecher)
 			if (!this.addInternal(fach))
 				result = false;
 		this.sort();
@@ -171,7 +171,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public toVector() : Vector<GostFach> {
 		let result : Vector<GostFach> = new Vector();
-		for (let fach of this._faecher) 
+		for (let fach of this._faecher)
 			result.add(fach);
 		return result;
 	}

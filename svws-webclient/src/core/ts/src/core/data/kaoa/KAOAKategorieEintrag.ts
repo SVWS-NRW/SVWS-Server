@@ -71,7 +71,7 @@ export class KAOAKategorieEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
-			for (let j of jahrgaenge) 
+			for (let j of jahrgaenge)
 				this.jahrgaenge.add(j.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

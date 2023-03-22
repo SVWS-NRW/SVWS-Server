@@ -184,7 +184,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if (this.manager.pruefeBelegungExistiert(this.geschichte, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 			return;
 		if (this.zusatzkursFachbelegungen !== null)
-			for (let zkBelegung of this.zusatzkursFachbelegungen) 
+			for (let zkBelegung of this.zusatzkursFachbelegungen)
 				if (this.geschichte.contains(zkBelegung))
 					return;
 		this.addFehler(GostBelegungsfehler.GE_10);
@@ -202,7 +202,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if (this.manager.pruefeBelegungExistiert(this.sozialwissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 			return;
 		if (this.zusatzkursFachbelegungen !== null)
-			for (let zkBelegung of this.zusatzkursFachbelegungen) 
+			for (let zkBelegung of this.zusatzkursFachbelegungen)
 				if (this.sozialwissenschaften.contains(zkBelegung))
 					return;
 		this.addFehler(GostBelegungsfehler.SW_10);

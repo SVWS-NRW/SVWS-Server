@@ -1512,7 +1512,7 @@ export class ZulaessigesFach extends JavaObject {
 	 */
 	private static getMapByASDKuerzel() : HashMap<string, ZulaessigesFach | null> {
 		if (ZulaessigesFach._mapKuerzelASD.size() === 0)
-			for (let s of ZulaessigesFach.values()) 
+			for (let s of ZulaessigesFach.values())
 				ZulaessigesFach._mapKuerzelASD.put(s.daten.kuerzelASD, s);
 		return ZulaessigesFach._mapKuerzelASD;
 	}
@@ -1547,7 +1547,7 @@ export class ZulaessigesFach extends JavaObject {
 		let faecher : Vector<ZulaessigesFach | null> = new Vector();
 		if (schulform === null)
 			return faecher;
-		for (let fach of ZulaessigesFach.values()) 
+		for (let fach of ZulaessigesFach.values())
 			if (fach.hasSchulform(schulform))
 				faecher.add(fach);
 		return faecher;

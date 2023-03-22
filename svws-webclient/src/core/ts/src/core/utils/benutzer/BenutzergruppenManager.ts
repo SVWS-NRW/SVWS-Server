@@ -143,7 +143,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen) 
+		for (let kompetenz of kompetenzen)
 			if (!this._setKompetenzen.contains(kompetenz.daten.id))
 				return false;
 		return true;
@@ -159,7 +159,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen) 
+		for (let kompetenz of kompetenzen)
 			if (this._setKompetenzen.contains(kompetenz.daten.id))
 				return true;
 		return false;

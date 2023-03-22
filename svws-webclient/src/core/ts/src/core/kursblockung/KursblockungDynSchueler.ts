@@ -537,7 +537,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
 	gibIstInKurs(kurs : KursblockungDynKurs | null) : boolean {
-		for (let zugeordneterKurs of this.fachartZuKurs) 
+		for (let zugeordneterKurs of this.fachartZuKurs)
 			if (zugeordneterKurs as unknown === kurs as unknown)
 				return true;
 		return false;

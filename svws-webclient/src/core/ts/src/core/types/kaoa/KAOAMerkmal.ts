@@ -245,7 +245,7 @@ export class KAOAMerkmal extends JavaObject {
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAMerkmal> {
 		if (KAOAMerkmal._statusByID.size() === 0)
-			for (let g of KAOAMerkmal.values()) 
+			for (let g of KAOAMerkmal.values())
 				KAOAMerkmal._statusByID.put(g.daten.id, g);
 		return KAOAMerkmal._statusByID;
 	}
@@ -258,7 +258,7 @@ export class KAOAMerkmal extends JavaObject {
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAMerkmal> {
 		if (KAOAMerkmal._statusByKuerzel.size() === 0)
-			for (let g of KAOAMerkmal.values()) 
+			for (let g of KAOAMerkmal.values())
 				KAOAMerkmal._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOAMerkmal._statusByKuerzel;
 	}

@@ -189,7 +189,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 			return true;
 		if (this as unknown === c as unknown)
 			return true;
-		for (let o of c) 
+		for (let o of c)
 			if (!this.contains(o))
 				return false;
 		return true;
@@ -202,7 +202,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 			if (this._size === 0)
 				return false;
 			let tmp : Array<T | null> = Arrays.copyOf(this._nodes, this._size);
-			for (let t of tmp) 
+			for (let t of tmp)
 				if (t !== null)
 					this.add(t);
 			return true;

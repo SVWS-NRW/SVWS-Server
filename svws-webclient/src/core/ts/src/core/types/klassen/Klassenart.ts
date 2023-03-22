@@ -134,7 +134,7 @@ export class Klassenart extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, Klassenart> {
 		if (Klassenart._mapID.size() === 0)
-			for (let s of Klassenart.values()) 
+			for (let s of Klassenart.values())
 				if (s.daten !== null)
 					Klassenart._mapID.put(s.daten.id, s);
 		return Klassenart._mapID;
@@ -148,7 +148,7 @@ export class Klassenart extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Klassenart> {
 		if (Klassenart._mapKuerzel.size() === 0)
-			for (let s of Klassenart.values()) 
+			for (let s of Klassenart.values())
 				if (s.daten !== null)
 					Klassenart._mapKuerzel.put(s.daten.kuerzel, s);
 		return Klassenart._mapKuerzel;
@@ -184,7 +184,7 @@ export class Klassenart extends JavaObject {
 		let kursarten : Vector<Klassenart> = new Vector();
 		if (schulform === null)
 			return kursarten;
-		for (let kursart of Klassenart.values()) 
+		for (let kursart of Klassenart.values())
 			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;

@@ -354,7 +354,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcAddAllEntries(c : Collection<JavaMapEntry<K, V>>, iv : AVLMapIntervall<K>) : boolean {
 		let changed : boolean = false;
-		for (let entry of c) 
+		for (let entry of c)
 			changed = changed || this.bcAddEntryReturnBool(entry, iv);
 		return changed;
 	}
@@ -366,7 +366,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
 	 */
 	bcAddAllEntriesOfMap(map : JavaMap<K, V>, iv : AVLMapIntervall<K>) : void {
-		for (let entry of map.entrySet()) 
+		for (let entry of map.entrySet())
 			this.bcAddEntryReturnOldValueOrNull(entry.getKey(), entry.getValue(), iv);
 	}
 
@@ -403,7 +403,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcAddAllKeys(c : Collection<K>, iv : AVLMapIntervall<K>) : boolean {
 		let changed : boolean = false;
-		for (let key of c) 
+		for (let key of c)
 			changed = changed || this.bcAddKey(key, iv);
 		return changed;
 	}
@@ -430,7 +430,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
-		for (let key of c) 
+		for (let key of c)
 			if (!this.bcContainsKey(key, iv))
 				return false;
 		return true;
@@ -473,7 +473,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllValues(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
-		for (let val of c) 
+		for (let val of c)
 			if (!this.bcContainsValue(val, iv))
 				return false;
 		return true;
@@ -505,7 +505,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
 	bcContainsAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
-		for (let entry of c) 
+		for (let entry of c)
 			if (!this.bcContainsEntry(entry, iv))
 				return false;
 		return true;
@@ -559,7 +559,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcRemoveAllKeys(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
 		let changed : boolean = false;
-		for (let obj of c) 
+		for (let obj of c)
 			changed = changed || this.bcRemoveKeyReturnBool(obj, iv);
 		return changed;
 	}
@@ -594,7 +594,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 */
 	bcRemoveAllEntries(c : Collection<unknown>, iv : AVLMapIntervall<K>) : boolean {
 		let removedAny : boolean = false;
-		for (let entry of c) 
+		for (let entry of c)
 			removedAny = removedAny || this.bcRemoveEntry(entry, iv);
 		return removedAny;
 	}

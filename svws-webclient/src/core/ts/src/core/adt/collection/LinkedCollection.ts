@@ -206,7 +206,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public containsAll(c : Collection<unknown> | null) : boolean {
 		if ((c === null) || (this as unknown === c as unknown))
 			return true;
-		for (let o of c) 
+		for (let o of c)
 			if (!this.contains(o))
 				return false;
 		return true;
@@ -286,7 +286,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	public hashCode() : number {
 		let hashCode : number = 1;
-		for (let e of this) 
+		for (let e of this)
 			hashCode = 31 * hashCode + (e === null ? 0 : JavaObject.getTranspilerHashCode(e));
 		return hashCode;
 	}

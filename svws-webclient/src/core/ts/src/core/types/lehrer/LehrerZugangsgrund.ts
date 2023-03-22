@@ -79,7 +79,7 @@ export class LehrerZugangsgrund extends JavaObject {
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls die ID ungültig ist
 	 */
 	public static getByID(id : number) : LehrerZugangsgrund | null {
-		for (let grund of LehrerZugangsgrund.values()) 
+		for (let grund of LehrerZugangsgrund.values())
 			if (grund.daten.id === id)
 				return grund;
 		return null;
@@ -93,7 +93,7 @@ export class LehrerZugangsgrund extends JavaObject {
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls das Kürzel ungültig ist
 	 */
 	public static getByKuerzel(kuerzel : string | null) : LehrerZugangsgrund | null {
-		for (let grund of LehrerZugangsgrund.values()) 
+		for (let grund of LehrerZugangsgrund.values())
 			if (JavaObject.equalsTranspiler(grund.daten.kuerzel, (kuerzel)))
 				return grund;
 		return null;
@@ -109,7 +109,7 @@ export class LehrerZugangsgrund extends JavaObject {
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls der Schlüssel ungültig ist
 	 */
 	public static getByASDSchluessel(schluessel : string | null) : LehrerZugangsgrund | null {
-		for (let grund of LehrerZugangsgrund.values()) 
+		for (let grund of LehrerZugangsgrund.values())
 			if (JavaObject.equalsTranspiler(grund.daten.schluessel, (schluessel)))
 				return grund;
 		return null;

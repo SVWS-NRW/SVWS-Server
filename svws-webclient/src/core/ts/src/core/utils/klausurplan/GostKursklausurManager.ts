@@ -522,7 +522,7 @@ export class GostKursklausurManager extends JavaObject {
 			let copyListKlausurenZuTermin : List<GostKursklausur> | null = new Vector(listKlausurenZuTermin);
 			for (let k1 of listKlausurenZuTermin) {
 				copyListKlausurenZuTermin.remove(k1);
-				for (let k2 of copyListKlausurenZuTermin) 
+				for (let k2 of copyListKlausurenZuTermin)
 					anzahl += this.gibKonfliktKursklausurKursklausur(k1.id, k2.id).size();
 			}
 		}

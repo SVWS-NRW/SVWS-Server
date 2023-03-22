@@ -88,7 +88,7 @@ export class BenutzerManager extends JavaObject {
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
 			}
-			for (let bgd of this._daten.gruppen) 
+			for (let bgd of this._daten.gruppen)
 				this.addGruppe(bgd);
 		} else throw new Error('invalid method overload');
 	}
@@ -157,7 +157,7 @@ export class BenutzerManager extends JavaObject {
 	 * Initialisiert die lokalen Datenstrukturen.
 	 */
 	private init() : void {
-		for (let p of BenutzerKompetenz.values()) 
+		for (let p of BenutzerKompetenz.values())
 			this._mapKompetenzenVonGruppe.put(p, new Vector());
 	}
 
@@ -290,7 +290,7 @@ export class BenutzerManager extends JavaObject {
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen) 
+		for (let kompetenz of kompetenzen)
 			if (!this._setKompetenzenAlle.contains(kompetenz))
 				return false;
 		return true;
@@ -308,7 +308,7 @@ export class BenutzerManager extends JavaObject {
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen) 
+		for (let kompetenz of kompetenzen)
 			if (this._setKompetenzenAlle.contains(kompetenz))
 				return true;
 		return false;

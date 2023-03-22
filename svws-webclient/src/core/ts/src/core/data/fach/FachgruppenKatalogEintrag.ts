@@ -111,7 +111,7 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 			this.bezeichnung = bezeichnung;
 			this.kuerzel = kuerzel;
 			this.farbe = farbe;
-			for (let schulform of schulformen) 
+			for (let schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.sortierung = sortierung;
 			this.fuerZeugnis = fuerZeugnis;

@@ -133,7 +133,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, Sprachreferenzniveau> {
 		if (Sprachreferenzniveau._mapID.size() === 0)
-			for (let l of Sprachreferenzniveau.values()) 
+			for (let l of Sprachreferenzniveau.values())
 				Sprachreferenzniveau._mapID.put(l.daten.id, l);
 		return Sprachreferenzniveau._mapID;
 	}
@@ -146,7 +146,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Sprachreferenzniveau> {
 		if (Sprachreferenzniveau._mapKuerzel.size() === 0)
-			for (let l of Sprachreferenzniveau.values()) 
+			for (let l of Sprachreferenzniveau.values())
 				Sprachreferenzniveau._mapKuerzel.put(l.daten.kuerzel, l);
 		return Sprachreferenzniveau._mapKuerzel;
 	}
