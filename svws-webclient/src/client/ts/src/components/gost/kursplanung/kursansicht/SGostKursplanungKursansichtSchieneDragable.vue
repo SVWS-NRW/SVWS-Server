@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-drop-data class="text-center"
-		tag="td"
+	<svws-ui-drop-data class="text-center" :class="{'bg-yellow-200': is_drop_zone }"
+		tag="td" :drop-allowed="is_drop_zone"
 		@drop="openModal">
 		<svws-ui-drag-data :key="schiene.id"
 			tag="div"
@@ -9,7 +9,7 @@
 			:draggable="true"
 			@drag-start="drag_started"
 			@drag-end="emit('dnd', undefined)">
-			<svws-ui-icon	:class="{'bg-yellow-200': is_drop_zone }">
+			<svws-ui-icon>
 				<i-ri-lock-unlock-line class="inline-block" />
 			</svws-ui-icon>
 		</svws-ui-drag-data>

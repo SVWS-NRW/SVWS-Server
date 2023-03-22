@@ -76,7 +76,7 @@
 
 	async function drop_entferne_kurszuordnung(kurs: any) {
 		const schuelerid = props.schueler.id;
-		if (kurs === undefined)
+		if (kurs === undefined || kurs.id === undefined)
 			return;
 		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
 	}

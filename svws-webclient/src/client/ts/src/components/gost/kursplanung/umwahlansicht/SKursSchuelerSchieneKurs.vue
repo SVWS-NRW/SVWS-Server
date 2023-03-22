@@ -1,28 +1,26 @@
 <template>
 	<svws-ui-drag-data :key="kurs.id" tag="td" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
-		class="select-none text-center" :class="{ 'cursor-move border-2 border-green-700': is_draggable, 'bg-yellow-200': is_drop_zone }"
+		class="select-none text-center cursor-grab" :class="{ 'bg-yellow-200': is_drop_zone }"
 		:draggable="is_draggable" @drag-start="drag_started" @drag-end="drag_ended" :style="{ 'background-color': bgColor }">
-		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}">
-			<div :class="{'bg-green-400': active && is_drop_zone}">
-				<span>{{ kurs_name }}</span>
-				<br>
-				<span class="text-sm" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
-				<br>
-				<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
-					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle">
-						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400" />
-						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
-					</svws-ui-icon>
-					<svws-ui-icon class="cursor-pointer" @click.stop="fixieren_regel_toggle">
-						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400" />
-						<i-ri-pushpin-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
-					</svws-ui-icon>
-				</span>
-				<span v-else>
-					<svws-ui-icon> <i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400" /> </svws-ui-icon>
-					<svws-ui-icon> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400" /> </svws-ui-icon>
-				</span>
-			</div>
+		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" :drop-allowed="is_drop_zone">
+			<span>{{ kurs_name }}</span>
+			<br>
+			<span class="text-sm" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
+			<br>
+			<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
+				<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle">
+					<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400" />
+					<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
+				</svws-ui-icon>
+				<svws-ui-icon class="cursor-pointer" @click.stop="fixieren_regel_toggle">
+					<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400" />
+					<i-ri-pushpin-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
+				</svws-ui-icon>
+			</span>
+			<span v-else>
+				<svws-ui-icon> <i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400" /> </svws-ui-icon>
+				<svws-ui-icon> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400" /> </svws-ui-icon>
+			</span>
 		</svws-ui-drop-data>
 	</svws-ui-drag-data>
 </template>

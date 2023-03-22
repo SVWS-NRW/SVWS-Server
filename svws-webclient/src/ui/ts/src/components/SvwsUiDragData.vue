@@ -1,5 +1,5 @@
 <template>
-	<component :is="tag" :draggable="draggable" @drag="drag" @dragstart="start" @dragenter="enter" @dragleave="leave" @dragend="end">
+	<component :is="tag" :draggable="draggable" @drag="drag" @dragstart="start" @dragenter="enter" @dragleave="leave" @dragend="end" :class="{'cursor-grab': draggable, 'cursor-grabbing': dragging}">
 		<slot :dragging="dragging" />
 	</component>
 </template>

@@ -1,8 +1,8 @@
 <template>
-	<tr class="cursor-pointer" :class="{ 'bg-red-400': (belegung === undefined) }">
+	<tr :class="{ 'bg-red-400': (belegung === undefined) }">
 		<svws-ui-drag-data :key="kursid" tag="td" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
-			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
+			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-grab' : (belegung === undefined) }"
 			:style="style">
 			<div class="flex justify-between">
 				<span> {{ get_kurs_name() }} </span>

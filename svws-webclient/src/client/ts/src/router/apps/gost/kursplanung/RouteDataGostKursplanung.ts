@@ -530,7 +530,8 @@ export class RouteDataGostKursplanung {
 	}
 
 	removeKursSchuelerZuordnung = async (idSchueler: number, idKurs: number): Promise<boolean> => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
+		const zugeordnet = this.ergebnismanager.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)
+		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined) || !zugeordnet)
 			return false;
 		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;

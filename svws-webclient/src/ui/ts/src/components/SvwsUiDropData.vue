@@ -10,6 +10,7 @@
 
 	const props = withDefaults(defineProps<{
 		tag?: string;
+		dropAllowed?:boolean
 	}>(), {
 		tag: 'div'
 	});
@@ -26,7 +27,8 @@
 		if (!transfer)
 			return;
 		active.value = true;
-		transfer.effectAllowed = "move";
+		transfer.effectAllowed = "copyMove";
+		if (props.dropAllowed) transfer.dropEffect = "copy"
 		emit("dragOver", e);
 	}
 

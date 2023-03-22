@@ -5,6 +5,7 @@
 			class="text-center"
 			:class="{'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
 			tag="td"
+			:drop-allowed="is_drop_zone(schiene)"
 			@drop="drop_aendere_kursschiene($event, schiene)">
 			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
@@ -26,7 +27,7 @@
 			</svws-ui-drag-data>
 			<template v-else>
 				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)"
-					:class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id,
+					:class="{'bg-green-400': active && is_drop_zone(schiene),
 						'schiene-gesperrt': schiene_gesperrt(schiene)}">
 					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
@@ -106,6 +107,10 @@
 	function drag_ended() {
 		drag_data.value.kurs = undefined;
 		drag_data.value.schiene = undefined;
+	}
+
+	function is_drop_zone(schiene: GostBlockungsergebnisSchiene): boolean{
+		return drag_data.value?.schiene?.id !== schiene.id && drag_data.value.kurs?.id === props.kurs.id && drag_data.value.schiene?.id !== schiene.id
 	}
 
 	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
