@@ -91,7 +91,7 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
+		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}

@@ -129,22 +129,22 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
 		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
-		if (!((obj.beratungslehrer === undefined) || (obj.beratungslehrer === null))) {
+		if ((obj.beratungslehrer !== undefined) && (obj.beratungslehrer !== null)) {
 			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
+		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.fachkombinationen === undefined) || (obj.fachkombinationen === null))) {
+		if ((obj.fachkombinationen !== undefined) && (obj.fachkombinationen !== null)) {
 			for (const elem of obj.fachkombinationen) {
 				result.fachkombinationen?.add(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
+		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(GostLaufbahnplanungDatenSchueler.transpilerFromJSON(JSON.stringify(elem)));
 			}

@@ -1577,7 +1577,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				result += getIndent() + "if (!((obj." + attribute.getName() + " === undefined) || (obj." + attribute.getName() + " === null))) {" + System.lineSeparator();
+				result += getIndent() + "if ((obj." + attribute.getName() + " !== undefined) && (obj." + attribute.getName() + " !== null)) {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "for (const elem of obj." + attribute.getName() + ") {" + System.lineSeparator();
 				indentC++;

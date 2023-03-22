@@ -46,7 +46,7 @@ export class BenutzergruppeDaten extends JavaObject {
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
-		if (!((obj.kompetenzen === undefined) || (obj.kompetenzen === null))) {
+		if ((obj.kompetenzen !== undefined) && (obj.kompetenzen !== null)) {
 			for (const elem of obj.kompetenzen) {
 				result.kompetenzen?.add(elem);
 			}

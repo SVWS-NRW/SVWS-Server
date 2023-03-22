@@ -50,7 +50,7 @@ export class ENMKlasse extends JavaObject {
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (!((obj.klassenlehrer === undefined) || (obj.klassenlehrer === null))) {
+		if ((obj.klassenlehrer !== undefined) && (obj.klassenlehrer !== null)) {
 			for (const elem of obj.klassenlehrer) {
 				result.klassenlehrer?.add(elem);
 			}

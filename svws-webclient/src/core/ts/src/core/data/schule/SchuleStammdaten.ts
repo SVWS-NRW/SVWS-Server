@@ -145,7 +145,7 @@ export class SchuleStammdaten extends JavaObject {
 		if (typeof obj.dauerUnterrichtseinheit === "undefined")
 			 throw new Error('invalid json format, missing attribute dauerUnterrichtseinheit');
 		result.dauerUnterrichtseinheit = obj.dauerUnterrichtseinheit;
-		if (!((obj.abschnitte === undefined) || (obj.abschnitte === null))) {
+		if ((obj.abschnitte !== undefined) && (obj.abschnitte !== null)) {
 			for (const elem of obj.abschnitte) {
 				result.abschnitte?.add(Schuljahresabschnitt.transpilerFromJSON(JSON.stringify(elem)));
 			}

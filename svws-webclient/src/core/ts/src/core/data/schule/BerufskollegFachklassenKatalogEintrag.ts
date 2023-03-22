@@ -39,7 +39,7 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 		if (typeof obj.schluessel2 === "undefined")
 			 throw new Error('invalid json format, missing attribute schluessel2');
 		result.schluessel2 = obj.schluessel2;
-		if (!((obj.historie === undefined) || (obj.historie === null))) {
+		if ((obj.historie !== undefined) && (obj.historie !== null)) {
 			for (const elem of obj.historie) {
 				result.historie?.add(BerufskollegFachklassenKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}

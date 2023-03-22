@@ -75,7 +75,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
-		if (!((obj.fachbelegungen === undefined) || (obj.fachbelegungen === null))) {
+		if ((obj.fachbelegungen !== undefined) && (obj.fachbelegungen !== null)) {
 			for (const elem of obj.fachbelegungen) {
 				result.fachbelegungen?.add(GostLaufbahnplanungDatenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}

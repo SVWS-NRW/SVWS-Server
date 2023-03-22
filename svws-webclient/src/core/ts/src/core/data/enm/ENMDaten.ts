@@ -165,52 +165,52 @@ export class ENMDaten extends JavaObject {
 		result.fehlstundenSIIFachbezogen = obj.fehlstundenSIIFachbezogen;
 		result.schulform = typeof obj.schulform === "undefined" ? null : obj.schulform === null ? null : obj.schulform;
 		result.mailadresse = typeof obj.mailadresse === "undefined" ? null : obj.mailadresse === null ? null : obj.mailadresse;
-		if (!((obj.noten === undefined) || (obj.noten === null))) {
+		if ((obj.noten !== undefined) && (obj.noten !== null)) {
 			for (const elem of obj.noten) {
 				result.noten?.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.foerderschwerpunkte === undefined) || (obj.foerderschwerpunkte === null))) {
+		if ((obj.foerderschwerpunkte !== undefined) && (obj.foerderschwerpunkte !== null)) {
 			for (const elem of obj.foerderschwerpunkte) {
 				result.foerderschwerpunkte?.add(ENMFoerderschwerpunkt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.jahrgaenge === undefined) || (obj.jahrgaenge === null))) {
+		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
 			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(ENMJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.klassen === undefined) || (obj.klassen === null))) {
+		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
 			for (const elem of obj.klassen) {
 				result.klassen?.add(ENMKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.floskelgruppen === undefined) || (obj.floskelgruppen === null))) {
+		if ((obj.floskelgruppen !== undefined) && (obj.floskelgruppen !== null)) {
 			for (const elem of obj.floskelgruppen) {
 				result.floskelgruppen?.add(ENMFloskelgruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.lehrer === undefined) || (obj.lehrer === null))) {
+		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
 			for (const elem of obj.lehrer) {
 				result.lehrer?.add(ENMLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
+		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(ENMFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.teilleistungsarten === undefined) || (obj.teilleistungsarten === null))) {
+		if ((obj.teilleistungsarten !== undefined) && (obj.teilleistungsarten !== null)) {
 			for (const elem of obj.teilleistungsarten) {
 				result.teilleistungsarten?.add(ENMTeilleistungsart.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.lerngruppen === undefined) || (obj.lerngruppen === null))) {
+		if ((obj.lerngruppen !== undefined) && (obj.lerngruppen !== null)) {
 			for (const elem of obj.lerngruppen) {
 				result.lerngruppen?.add(ENMLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
+		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(ENMSchueler.transpilerFromJSON(JSON.stringify(elem)));
 			}

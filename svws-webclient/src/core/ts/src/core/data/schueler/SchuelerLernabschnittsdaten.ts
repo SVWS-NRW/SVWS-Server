@@ -330,7 +330,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.bemerkungen === "undefined")
 			 throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = SchuelerLernabschnittBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
-		if (!((obj.leistungsdaten === undefined) || (obj.leistungsdaten === null))) {
+		if ((obj.leistungsdaten !== undefined) && (obj.leistungsdaten !== null)) {
 			for (const elem of obj.leistungsdaten) {
 				result.leistungsdaten?.add(SchuelerLeistungsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}

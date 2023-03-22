@@ -229,7 +229,7 @@ export class FachKatalogEintrag extends JavaObject {
 		if (typeof obj.exportASD === "undefined")
 			 throw new Error('invalid json format, missing attribute exportASD');
 		result.exportASD = obj.exportASD;
-		if (!((obj.zulaessig === undefined) || (obj.zulaessig === null))) {
+		if ((obj.zulaessig !== undefined) && (obj.zulaessig !== null)) {
 			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}

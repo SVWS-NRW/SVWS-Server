@@ -93,7 +93,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (!((obj.kurse === undefined) || (obj.kurse === null))) {
+		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
 			for (const elem of obj.kurse) {
 				result.kurse?.add(elem);
 			}

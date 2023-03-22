@@ -21,7 +21,7 @@ export class SchuelerblockungOutput extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungOutput {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungOutput();
-		if (!((obj.fachwahlenZuKurs === undefined) || (obj.fachwahlenZuKurs === null))) {
+		if ((obj.fachwahlenZuKurs !== undefined) && (obj.fachwahlenZuKurs !== null)) {
 			for (const elem of obj.fachwahlenZuKurs) {
 				result.fachwahlenZuKurs?.add(SchuelerblockungOutputFachwahlZuKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}

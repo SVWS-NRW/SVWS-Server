@@ -178,7 +178,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if (typeof obj.istBK === "undefined")
 			 throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
-		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
+		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}
@@ -198,12 +198,12 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if (typeof obj.istVZ === "undefined")
 			 throw new Error('invalid json format, missing attribute istVZ');
 		result.istVZ = obj.istVZ;
-		if (!((obj.bkAbschlussBerufsbildend === undefined) || (obj.bkAbschlussBerufsbildend === null))) {
+		if ((obj.bkAbschlussBerufsbildend !== undefined) && (obj.bkAbschlussBerufsbildend !== null)) {
 			for (const elem of obj.bkAbschlussBerufsbildend) {
 				result.bkAbschlussBerufsbildend?.add(elem);
 			}
 		}
-		if (!((obj.bkAbschlussAllgemeinbildend === undefined) || (obj.bkAbschlussAllgemeinbildend === null))) {
+		if ((obj.bkAbschlussAllgemeinbildend !== undefined) && (obj.bkAbschlussAllgemeinbildend !== null)) {
 			for (const elem of obj.bkAbschlussAllgemeinbildend) {
 				result.bkAbschlussAllgemeinbildend?.add(elem);
 			}

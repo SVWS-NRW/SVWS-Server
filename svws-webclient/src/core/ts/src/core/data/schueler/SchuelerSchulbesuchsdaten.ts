@@ -171,12 +171,12 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.sekIWechsel = typeof obj.sekIWechsel === "undefined" ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = typeof obj.sekIErsteSchulform === "undefined" ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
 		result.sekIIWechsel = typeof obj.sekIIWechsel === "undefined" ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
-		if (!((obj.merkmale === undefined) || (obj.merkmale === null))) {
+		if ((obj.merkmale !== undefined) && (obj.merkmale !== null)) {
 			for (const elem of obj.merkmale) {
 				result.merkmale?.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.alleSchulen === undefined) || (obj.alleSchulen === null))) {
+		if ((obj.alleSchulen !== undefined) && (obj.alleSchulen !== null)) {
 			for (const elem of obj.alleSchulen) {
 				result.alleSchulen?.add(SchuelerSchulbesuchSchule.transpilerFromJSON(JSON.stringify(elem)));
 			}

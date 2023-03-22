@@ -29,7 +29,7 @@ export class GostBelegpruefungsdaten extends JavaObject {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsdaten();
 		result.abiturdaten = ((typeof obj.abiturdaten === "undefined") || (obj.abiturdaten === null)) ? null : Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
-		if (!((obj.gostFaecher === undefined) || (obj.gostFaecher === null))) {
+		if ((obj.gostFaecher !== undefined) && (obj.gostFaecher !== null)) {
 			for (const elem of obj.gostFaecher) {
 				result.gostFaecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}

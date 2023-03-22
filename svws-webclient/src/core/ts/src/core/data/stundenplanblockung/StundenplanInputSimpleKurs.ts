@@ -50,27 +50,27 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanInputSimpleKurs {
 		const obj = JSON.parse(json);
 		const result = new StundenplanInputSimpleKurs();
-		if (!((obj.lehrkraefte === undefined) || (obj.lehrkraefte === null))) {
+		if ((obj.lehrkraefte !== undefined) && (obj.lehrkraefte !== null)) {
 			for (const elem of obj.lehrkraefte) {
 				result.lehrkraefte?.add(StundenplanInputSimpleLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.klassen === undefined) || (obj.klassen === null))) {
+		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
 			for (const elem of obj.klassen) {
 				result.klassen?.add(StundenplanInputSimpleKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
+		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(StundenplanInputSimpleFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.raeume === undefined) || (obj.raeume === null))) {
+		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
 			for (const elem of obj.raeume) {
 				result.raeume?.add(StundenplanInputSimpleRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.kopplungen === undefined) || (obj.kopplungen === null))) {
+		if ((obj.kopplungen !== undefined) && (obj.kopplungen !== null)) {
 			for (const elem of obj.kopplungen) {
 				result.kopplungen?.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}

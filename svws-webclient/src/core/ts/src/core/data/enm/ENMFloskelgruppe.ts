@@ -40,7 +40,7 @@ export class ENMFloskelgruppe extends JavaObject {
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
-		if (!((obj.floskeln === undefined) || (obj.floskeln === null))) {
+		if ((obj.floskeln !== undefined) && (obj.floskeln !== null)) {
 			for (const elem of obj.floskeln) {
 				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
 			}

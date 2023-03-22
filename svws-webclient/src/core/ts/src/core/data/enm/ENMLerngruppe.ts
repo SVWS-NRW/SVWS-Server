@@ -76,7 +76,7 @@ export class ENMLerngruppe extends JavaObject {
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
 		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (!((obj.lehrerID === undefined) || (obj.lehrerID === null))) {
+		if ((obj.lehrerID !== undefined) && (obj.lehrerID !== null)) {
 			for (const elem of obj.lehrerID) {
 				result.lehrerID?.add(elem);
 			}

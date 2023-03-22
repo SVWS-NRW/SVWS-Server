@@ -51,32 +51,32 @@ export class StundenplanblockungInput extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanblockungInput {
 		const obj = JSON.parse(json);
 		const result = new StundenplanblockungInput();
-		if (!((obj.lehrkraefte === undefined) || (obj.lehrkraefte === null))) {
+		if ((obj.lehrkraefte !== undefined) && (obj.lehrkraefte !== null)) {
 			for (const elem of obj.lehrkraefte) {
 				result.lehrkraefte?.add(StundenplanblockungLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.klassen === undefined) || (obj.klassen === null))) {
+		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
 			for (const elem of obj.klassen) {
 				result.klassen?.add(StundenplanblockungKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.faecher === undefined) || (obj.faecher === null))) {
+		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(StundenplanblockungFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.raeume === undefined) || (obj.raeume === null))) {
+		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
 			for (const elem of obj.raeume) {
 				result.raeume?.add(StundenplanblockungRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.kopplungen === undefined) || (obj.kopplungen === null))) {
+		if ((obj.kopplungen !== undefined) && (obj.kopplungen !== null)) {
 			for (const elem of obj.kopplungen) {
 				result.kopplungen?.add(StundenplanblockungKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.lerngruppen === undefined) || (obj.lerngruppen === null))) {
+		if ((obj.lerngruppen !== undefined) && (obj.lerngruppen !== null)) {
 			for (const elem of obj.lerngruppen) {
 				result.lerngruppen?.add(StundenplanblockungLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}

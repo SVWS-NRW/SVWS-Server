@@ -36,7 +36,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
-		if (!((obj.jahrgaenge === undefined) || (obj.jahrgaenge === null))) {
+		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
 			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(elem);
 			}

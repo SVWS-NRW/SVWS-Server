@@ -167,7 +167,7 @@ export class GostKursklausur extends JavaObject {
 		result.idLehrer = obj.idLehrer;
 		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
-		if (!((obj.schuelerIds === undefined) || (obj.schuelerIds === null))) {
+		if ((obj.schuelerIds !== undefined) && (obj.schuelerIds !== null)) {
 			for (const elem of obj.schuelerIds) {
 				result.schuelerIds?.add(elem);
 			}

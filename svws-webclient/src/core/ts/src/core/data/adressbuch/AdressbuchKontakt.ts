@@ -113,14 +113,14 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
 		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
 		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
-		if (!((obj.telefonnummern === undefined) || (obj.telefonnummern === null))) {
+		if ((obj.telefonnummern !== undefined) && (obj.telefonnummern !== null)) {
 			for (const elem of obj.telefonnummern) {
 				result.telefonnummern?.add(Telefonnummer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
 		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : obj.webAdresse;
-		if (!((obj.kategorien === undefined) || (obj.kategorien === null))) {
+		if ((obj.kategorien !== undefined) && (obj.kategorien !== null)) {
 			for (const elem of obj.kategorien) {
 				result.kategorien?.add(elem === null ? null : elem);
 			}

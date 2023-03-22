@@ -141,7 +141,7 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 		if (typeof obj.farbe === "undefined")
 			 throw new Error('invalid json format, missing attribute farbe');
 		result.farbe = RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
-		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
+		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}

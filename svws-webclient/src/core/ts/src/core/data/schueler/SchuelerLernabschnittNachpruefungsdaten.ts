@@ -27,12 +27,12 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefungsdaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerLernabschnittNachpruefungsdaten();
-		if (!((obj.moegliche === undefined) || (obj.moegliche === null))) {
+		if ((obj.moegliche !== undefined) && (obj.moegliche !== null)) {
 			for (const elem of obj.moegliche) {
 				result.moegliche?.add(elem);
 			}
 		}
-		if (!((obj.pruefungen === undefined) || (obj.pruefungen === null))) {
+		if ((obj.pruefungen !== undefined) && (obj.pruefungen !== null)) {
 			for (const elem of obj.pruefungen) {
 				result.pruefungen?.add(SchuelerLernabschnittNachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}

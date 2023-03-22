@@ -38,7 +38,7 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if (!((obj.fachklassen === undefined) || (obj.fachklassen === null))) {
+		if ((obj.fachklassen !== undefined) && (obj.fachklassen !== null)) {
 			for (const elem of obj.fachklassen) {
 				result.fachklassen?.add(BerufskollegFachklassenKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}

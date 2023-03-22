@@ -94,7 +94,7 @@ export class OrganisationsformKatalogEintrag extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!((obj.schulformen === undefined) || (obj.schulformen === null))) {
+		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
 			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}

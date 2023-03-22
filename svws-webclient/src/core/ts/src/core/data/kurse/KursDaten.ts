@@ -73,7 +73,7 @@ export class KursDaten extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!((obj.idJahrgaenge === undefined) || (obj.idJahrgaenge === null))) {
+		if ((obj.idJahrgaenge !== undefined) && (obj.idJahrgaenge !== null)) {
 			for (const elem of obj.idJahrgaenge) {
 				result.idJahrgaenge?.add(elem);
 			}
@@ -88,7 +88,7 @@ export class KursDaten extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
+		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}

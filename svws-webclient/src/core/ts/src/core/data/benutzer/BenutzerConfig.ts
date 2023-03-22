@@ -26,12 +26,12 @@ export class BenutzerConfig extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerConfig {
 		const obj = JSON.parse(json);
 		const result = new BenutzerConfig();
-		if (!((obj.user === undefined) || (obj.user === null))) {
+		if ((obj.user !== undefined) && (obj.user !== null)) {
 			for (const elem of obj.user) {
 				result.user?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!((obj.global === undefined) || (obj.global === null))) {
+		if ((obj.global !== undefined) && (obj.global !== null)) {
 			for (const elem of obj.global) {
 				result.global?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}

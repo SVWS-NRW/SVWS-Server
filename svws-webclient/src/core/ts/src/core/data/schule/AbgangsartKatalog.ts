@@ -30,7 +30,7 @@ export class AbgangsartKatalog extends JavaObject {
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if (!((obj.eintraege === undefined) || (obj.eintraege === null))) {
+		if ((obj.eintraege !== undefined) && (obj.eintraege !== null)) {
 			for (const elem of obj.eintraege) {
 				result.eintraege?.add(AbgangsartKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}

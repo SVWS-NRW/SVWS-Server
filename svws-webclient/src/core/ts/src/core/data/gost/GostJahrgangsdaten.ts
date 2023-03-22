@@ -100,7 +100,7 @@ export class GostJahrgangsdaten extends JavaObject {
 		for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
 			result.istBlockungFestgelegt[i] = obj.istBlockungFestgelegt[i];
 		}
-		if (!((obj.beratungslehrer === undefined) || (obj.beratungslehrer === null))) {
+		if ((obj.beratungslehrer !== undefined) && (obj.beratungslehrer !== null)) {
 			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}

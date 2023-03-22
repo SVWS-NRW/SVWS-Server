@@ -58,12 +58,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if (!((obj.schueler === undefined) || (obj.schueler === null))) {
+		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(elem);
 			}
 		}
-		if (!((obj.schienen === undefined) || (obj.schienen === null))) {
+		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
 			for (const elem of obj.schienen) {
 				result.schienen?.add(elem);
 			}

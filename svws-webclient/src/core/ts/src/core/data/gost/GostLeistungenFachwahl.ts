@@ -43,7 +43,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 		if (typeof obj.istFSNeu === "undefined")
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
-		if (!((obj.belegungen === undefined) || (obj.belegungen === null))) {
+		if ((obj.belegungen !== undefined) && (obj.belegungen !== null)) {
 			for (const elem of obj.belegungen) {
 				result.belegungen?.add(GostLeistungenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
