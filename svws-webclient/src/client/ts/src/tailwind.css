@@ -11,11 +11,15 @@
 }
 
 .input-wrapper-1-col {
-	@apply grid flex-grow grid-cols-1 gap-4;
+	@apply grid flex-grow grid-cols-1 gap-3;
 }
 
 .input-wrapper {
 	@apply grid flex-grow grid-cols-1 gap-3 md:grid-cols-2;
+}
+
+.input-wrapper--checkboxes {
+	@apply gap-x-3 gap-y-0;
 }
 
 .input-wrapper .col-span-2 {

@@ -1,6 +1,6 @@
 <template>
-	<span>
-		{{ lehrer_kuerzel }}
+	<span class="inline-flex items-center gap-2">
+		<span class="w-12">{{ lehrer_kuerzel }}</span>
 		<svws-ui-multi-select title="Fachlehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="getLehrerText" headless />
 	</span>
 </template>

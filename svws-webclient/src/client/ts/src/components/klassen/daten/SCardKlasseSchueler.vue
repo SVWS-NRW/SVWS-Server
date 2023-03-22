@@ -1,17 +1,13 @@
 <template>
 	<svws-ui-content-card title="Klassenliste">
-		<div class="content-wrapper">
-			<div class="input-wrapper">
-				<svws-ui-data-table :columns="cols" :items="listSchueler" :footer="false">
-					<template #cell(nachname)="{ rowData }">
-						<svws-ui-icon @click.stop="gotoSchueler(rowData as Schueler)" class="mr-2 bg-green-light"> <i-ri-link /> </svws-ui-icon> {{ rowData.nachname }}
-					</template>
-					<template #cell(status)="{ value }">
-						<svws-ui-badge type="light" size="big" class="mr-1"> {{ SchuelerStatus.fromID(value) }} </svws-ui-badge>
-					</template>
-				</svws-ui-data-table>
-			</div>
-		</div>
+		<svws-ui-data-table :columns="cols" :items="listSchueler">
+			<template #cell(nachname)="{ rowData }">
+				<svws-ui-icon @click.stop="gotoSchueler(rowData as Schueler)" class="mr-2 bg-green-light"> <i-ri-link /> </svws-ui-icon> {{ rowData.nachname }}
+			</template>
+			<template #cell(status)="{ value }">
+				<svws-ui-badge type="light" size="big" class="mr-1"> {{ SchuelerStatus.fromID(value) }} </svws-ui-badge>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -26,9 +22,9 @@
 	}>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "nachname", label: "Nachname", span: 1, sortable: false },
-		{ key: "vorname", label: "Vorname", span: 1, sortable: false },
-		{ key: "status", label: "Status" }
+		{ key: "nachname", label: "Nachname", span: 1, sortable: true },
+		{ key: "vorname", label: "Vorname", span: 1, sortable: true },
+		{ key: "status", label: "Status", sortable: true }
 	];
 
 </script>

@@ -1,7 +1,7 @@
 <template>
-	<svws-ui-content-card title="Alle bisher besuchten Schulen">
+	<svws-ui-content-card title="Alle bisher besuchten Schulen" class="opacity-50">
 		<div>
-			Hier wird demnächst die Übersicht über die besuchten Schulen implementiert
+			Hier wird demnächst die Übersicht über die besuchten Schulen implementiert.
 			<div v-for="schule in data.alleSchulen" :key="schule.schulnummer">
 				<!-- TODO <svws-zu-table> für die besuchten Schulen -->
 				<p> {{ `${schule.schulnummer} ... (${schule.datumVon}-${schule.datumBis})` }} </p>

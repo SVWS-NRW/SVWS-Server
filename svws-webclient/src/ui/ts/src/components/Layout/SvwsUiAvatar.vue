@@ -135,6 +135,10 @@
 			}
 		}
 
+		.button--icon {
+			padding: 0.4rem;
+		}
+
 		&:hover,
 		&:focus,
 		&:focus-within {

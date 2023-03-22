@@ -1,15 +1,20 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal ref="modal" size="medium">
-		<template #modalTitle>Ansprechpartner Hinzufügen</template>
+		<template #modalTitle>Schülerbetrieb hinzufügen</template>
+		<template #modalDescription/>
 		<template #modalContent>
-			<div class="input-wrapper">
-				<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+			<div class="input-wrapper mb-9">
+				<div class="col-span-2">
+					<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+				</div>
 				<svws-ui-text-input placeholder="Ausbilder" v-model="schuelerBetriebsdaten.ausbilder" type="text" />
 				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+				<svws-ui-checkbox v-model="schuelerBetriebsdaten.praktikum"> Praktikum </svws-ui-checkbox>
+			</div>
+			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="schuelerBetriebsdaten.vertragsbeginn" type="date" />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" />
-				<svws-ui-checkbox v-model="schuelerBetriebsdaten.praktikum"> Praktikum </svws-ui-checkbox>
 				<svws-ui-multi-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 				<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
 				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Anschreiben </svws-ui-checkbox>

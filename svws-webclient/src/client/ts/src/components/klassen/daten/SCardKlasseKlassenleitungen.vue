@@ -1,10 +1,6 @@
 <template>
 	<svws-ui-content-card title="Klassenleitungen">
-		<div class="content-wrapper">
-			<div class="input-wrapper">
-				<svws-ui-data-table :columns="cols" :items="liste" :footer="false" />
-			</div>
-		</div>
+		<svws-ui-data-table :columns="cols" :items="liste" />
 	</svws-ui-content-card>
 </template>
 
@@ -44,8 +40,8 @@
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
-		{ key: "nachname", label: "Nachname", span: 1, sortable: false },
-		{ key: "vorname", label: "Vorname", span: 1, sortable: false },
+		{ key: "nachname", label: "Nachname", span: 2, sortable: false },
+		{ key: "vorname", label: "Vorname", span: 2, sortable: false },
 		{ key: "personTyp", label: "Typ", span: 1, sortable: false },
 	];
 

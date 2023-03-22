@@ -38,8 +38,8 @@
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
-		{ key: "schueler", label: "Schüler" }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
+		{ key: "schueler", label: "Schüler", span: 0.5 }
 	];
 
 </script>

@@ -1,5 +1,8 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
+		<template #actions>
+			<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
+		</template>
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
@@ -13,7 +16,6 @@
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
 				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
-				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
 		</div>
 	</svws-ui-content-card>

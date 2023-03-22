@@ -1,5 +1,7 @@
 <template>
-	<svws-ui-content-card title="Fehlzeiten"> Inhalte </svws-ui-content-card>
+	<svws-ui-content-card title="Fehlzeiten" class="opacity-50">
+		<span>Hier wird demnächst die Übersicht über die Fehlzeiten implementiert.</span>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">

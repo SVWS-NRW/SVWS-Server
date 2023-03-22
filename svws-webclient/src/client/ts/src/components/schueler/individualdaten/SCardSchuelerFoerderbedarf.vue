@@ -3,8 +3,10 @@
 		<div class="input-wrapper">
 			<svws-ui-multi-select title="Haupt-Förderschwerpunkt" v-model="inputFoerderschwerpunktID" :items="mapFoerderschwerpunkte" />
 			<svws-ui-multi-select title="Weiterer-Förderschwerpunkt" v-model="inputFoerderschwerpunkt2ID" :items="mapFoerderschwerpunkte" />
-			<svws-ui-checkbox :model-value="data.istAOSF" @update:model-value="doPatch({ istAOSF: Boolean($event) })">AOSF</svws-ui-checkbox>
-			<svws-ui-checkbox :model-value="data.istLernenZieldifferent" @update:model-value="doPatch({ istLernenZieldifferent: Boolean($event) })">Zieldifferntes Lernen</svws-ui-checkbox>
+			<div class="flex flex-col">
+				<svws-ui-checkbox :model-value="data.istAOSF" @update:model-value="doPatch({ istAOSF: Boolean($event) })">AOSF</svws-ui-checkbox>
+				<svws-ui-checkbox :model-value="data.istLernenZieldifferent" @update:model-value="doPatch({ istLernenZieldifferent: Boolean($event) })">Zieldifferntes Lernen</svws-ui-checkbox>
+			</div>
 		</div>
 	</svws-ui-content-card>
 </template>

@@ -5,10 +5,14 @@
 				@update:model-value="doPatch({ entlassungDatum: String($event) })" type="date" />
 			<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang"
 				@update:model-value="doPatch({ entlassungJahrgang: String($event) })" type="text" />
-			<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" :model-value="data.entlassungGrundID"
-				@update:model-value="doPatch({ entlassungGrundID: Number($event) })" />
-			<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID"
-				@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
+			<div class="col-span-2">
+				<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" :model-value="data.entlassungGrundID"
+					@update:model-value="doPatch({ entlassungGrundID: Number($event) })" />
+			</div>
+			<div class="col-span-2">
+				<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID"
+									@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
+			</div>
 		</div>
 	</svws-ui-content-card>
 </template>

@@ -10,8 +10,8 @@
 				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
 			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
-			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="private E-Mail-Adresse" verify-email />
-			<svws-ui-text-input v-model="inputEmailDienstlich" type="email" placeholder="schulische E-Mail-Adresse" verify-email />
+			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="Private E-Mail-Adresse" verify-email />
+			<svws-ui-text-input v-model="inputEmailDienstlich" type="email" placeholder="Schulische E-Mail-Adresse" verify-email />
 		</div>
 	</svws-ui-content-card>
 </template>

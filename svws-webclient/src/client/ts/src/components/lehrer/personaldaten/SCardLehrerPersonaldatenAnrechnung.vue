@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-content-card title="Mehr- / Minderleistung /Anrechnungsstunden">
-		<div class="input-wrapper">
+	<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
+		<div class="input-wrapper-1-col">
 			<svws-ui-multi-select title="Mehrleistung" v-model="mehrleistungsgrund" :items="LehrerMehrleistungArt.values()"
 				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text" />
 			<svws-ui-multi-select title="Minderleistung" v-model="minderleistungsgrund" :items="LehrerMinderleistungArt.values()"
