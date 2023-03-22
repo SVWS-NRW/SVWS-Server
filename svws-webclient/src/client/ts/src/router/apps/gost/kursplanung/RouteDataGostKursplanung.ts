@@ -610,6 +610,8 @@ export class RouteDataGostKursplanung {
 	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
 		api.status.start();
 		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, idErgebnis);
+		this.mapBlockungen.set(result.id, result);
+		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		api.status.stop();
 		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(result.abijahrgang, result.gostHalbjahr, result.id));
 	}
