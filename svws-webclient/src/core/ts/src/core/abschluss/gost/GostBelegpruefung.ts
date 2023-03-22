@@ -48,7 +48,8 @@ export abstract class GostBelegpruefung extends JavaObject {
 	public pruefe() : void {
 		this.init();
 		if (this.pruefungs_art as unknown === GostBelegpruefungsArt.EF1 as unknown)
-			this.pruefeEF1();else
+			this.pruefeEF1();
+		else
 			if (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)
 				this.pruefeGesamt();
 	}

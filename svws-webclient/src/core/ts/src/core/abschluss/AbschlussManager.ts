@@ -54,7 +54,8 @@ export class AbschlussManager extends JavaObject {
 		ergebnis.abschluss = abschluss === null ? null : abschluss.toString();
 		ergebnis.erworben = false;
 		if ((np_faecher === null) || (np_faecher.size() === 0))
-			ergebnis.npFaecher = null;else
+			ergebnis.npFaecher = null;
+		else
 			ergebnis.npFaecher = np_faecher;
 		ergebnis.log = null;
 		return ergebnis;

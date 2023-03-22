@@ -97,11 +97,14 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 */
 	public static createRepresentationForAnzahlAbschnitte(anzahlAbschnitte : number) : string {
 		if (anzahlAbschnitte === 2)
-			return "S";else
+			return "S";
+		else
 			if (anzahlAbschnitte === 3)
-				return "T";else
+				return "T";
+			else
 				if (anzahlAbschnitte === 4)
-					return "Q";else
+					return "Q";
+				else
 					return "";
 	}
 

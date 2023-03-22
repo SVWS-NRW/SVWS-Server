@@ -28,7 +28,8 @@ export class KlausurblockungSchienenAlgorithmusGreedy1 extends KlausurblockungSc
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1())
-				this._dynDaten.aktionZustand1Speichern();else
+				this._dynDaten.aktionZustand1Speichern();
+			else
 				this._dynDaten.aktionZustand1Laden();
 		}
 		if (this._dynDaten.gibIstBesserAlsZustand2())

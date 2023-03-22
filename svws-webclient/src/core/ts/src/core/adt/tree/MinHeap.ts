@@ -252,7 +252,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 		let changed : boolean = false;
 		while ((elem = this.poll()) !== null) {
 			if (c.contains(elem))
-				tmp[i++] = elem;else
+				tmp[i++] = elem;
+			else
 				changed = true;
 		}
 		this._nodes = tmp;

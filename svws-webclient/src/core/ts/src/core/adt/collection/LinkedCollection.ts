@@ -480,7 +480,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		let value : E = this._head.getValue();
 		this._head = this._head.getNext();
 		if (this._head === null)
-			this._tail = null;else
+			this._tail = null;
+		else
 			this._head.setPrev(null);
 		this._size--;
 		this._modCount++;
@@ -553,7 +554,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		let value : E = this._tail.getValue();
 		this._tail = this._tail.getPrev();
 		if (this._tail === null)
-			this._head = null;else
+			this._head = null;
+		else
 			this._tail.setNext(null);
 		this._size--;
 		this._modCount++;

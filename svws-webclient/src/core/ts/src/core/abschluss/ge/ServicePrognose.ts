@@ -80,7 +80,8 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 		let ha10 : ServiceAbschlussHA10 = new ServiceAbschlussHA10();
 		let ha10output : AbschlussErgebnis = ha10.handle(input);
 		if (ha10output.erworben)
-			abschluss = SchulabschlussAllgemeinbildend.HA10;else
+			abschluss = SchulabschlussAllgemeinbildend.HA10;
+		else
 			if (JavaObject.equalsTranspiler("10", (input.jahrgang)) || (JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.HA9, (abschluss))))
 				np_faecher = ha10output.npFaecher;
 		this.log.append(ha10.getLog());

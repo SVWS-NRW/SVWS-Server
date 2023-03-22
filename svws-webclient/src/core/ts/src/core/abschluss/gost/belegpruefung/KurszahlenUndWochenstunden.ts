@@ -259,7 +259,8 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			let kurszahlLK : number | null = this.kurszahlenLeistungskurse.get(halbjahr);
 			if (kurszahlLK !== null) {
 				if (kurszahlLK < 2)
-					this.addFehler(GostBelegungsfehler.LK_10);else
+					this.addFehler(GostBelegungsfehler.LK_10);
+				else
 					if (kurszahlLK > 2)
 						this.addFehler(GostBelegungsfehler.LK_11);
 			}

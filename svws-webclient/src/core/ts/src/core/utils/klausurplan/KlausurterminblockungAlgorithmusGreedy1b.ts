@@ -28,7 +28,8 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 			if (this._dynDaten.gibIstBesserAlsZustand1())
-				this._dynDaten.aktionZustand1Speichern();else
+				this._dynDaten.aktionZustand1Speichern();
+			else
 				this._dynDaten.aktionZustand1Laden();
 		}
 		if (this._dynDaten.gibIstBesserAlsZustand2())

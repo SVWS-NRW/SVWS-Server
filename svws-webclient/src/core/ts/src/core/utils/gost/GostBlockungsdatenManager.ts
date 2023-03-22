@@ -1025,7 +1025,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			let r : GostBlockungRegel = iRegel.next();
 			let a : Array<number> | null = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
 			if (a === null)
-				iRegel.remove();else
+				iRegel.remove();
+			else
 				for (let i : number = 0; i < a.length; i++)
 					r.parameter.set(i, a[i]);
 		}

@@ -1076,7 +1076,8 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 			return current;
 		}
 		if (cmp < 0)
-			current._childL = (current._childL === null) ? this._nodeCreateLeaf(current._prev, current, key, value) : this._nodePutRecursive(current._childL, key, value);else
+			current._childL = (current._childL === null) ? this._nodeCreateLeaf(current._prev, current, key, value) : this._nodePutRecursive(current._childL, key, value);
+		else
 			current._childR = (current._childR === null) ? this._nodeCreateLeaf(current, current._next, key, value) : this._nodePutRecursive(current._childR, key, value);
 		return this._nodeRevalidate(current);
 	}

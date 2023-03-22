@@ -28,7 +28,8 @@ export class KlausurblockungSchienenAlgorithmusGreedy5 extends KlausurblockungSc
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktionZerstoereEinigeSchienenUndVerteileNeu();
 			if (this._dynDaten.gibIstBesserAlsZustand1() === true)
-				this._dynDaten.aktionZustand1Speichern();else
+				this._dynDaten.aktionZustand1Speichern();
+			else
 				this._dynDaten.aktionZustand1Laden();
 		}
 		if (this._dynDaten.gibIstBesserAlsZustand2() === true)

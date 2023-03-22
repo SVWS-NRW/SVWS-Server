@@ -311,7 +311,8 @@ export class SatSolverWrapper extends SatSolverA {
 		while (iter.hasNext()) {
 			let value : number = iter.next();
 			if (i < maximum)
-				i++;else
+				i++;
+			else
 				this.c_1(-value!);
 		}
 	}
