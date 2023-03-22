@@ -9,7 +9,7 @@
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
 			<div class="mt-16 flex flex-col gap-2">
 				<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
-				<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" />
 			</div>
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
 		</div>
@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten } from "@svws-nrw/svws-core";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten, GostJahrgangsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -45,6 +45,11 @@
 	});
 
 	// TODO Kommentar (siehe Komponente oben)
+	const kommentar: WritableComputedRef<string> = computed({
+		get: () => "",
+		set: (value) => void value
+	});
+
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 
 </script>

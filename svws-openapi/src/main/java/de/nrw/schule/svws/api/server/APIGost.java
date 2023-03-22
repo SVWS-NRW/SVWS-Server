@@ -23,6 +23,7 @@ import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombination;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
+import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDaten;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
@@ -45,6 +46,7 @@ import de.nrw.schule.svws.data.gost.DataGostJahrgangSchuelerliste;
 import de.nrw.schule.svws.data.gost.DataGostJahrgangsdaten;
 import de.nrw.schule.svws.data.gost.DataGostJahrgangsliste;
 import de.nrw.schule.svws.data.gost.DataGostSchuelerLaufbahnplanung;
+import de.nrw.schule.svws.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.OperationError;
 import de.nrw.schule.svws.db.utils.data.Schule;
@@ -415,7 +417,7 @@ public class APIGost {
     		    + "aus der Datenbank aus und liefert diese zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Laufbahnplanungsdaten der gymnasialen Oberstfue des angegebenen Schülers",
+    @ApiResponse(responseCode = "200", description = "Die Laufbahnplanungsdaten der gymnasialen Oberstufe des angegebenen Schülers",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.")
@@ -428,6 +430,67 @@ public class APIGost {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Beratungsdaten für die Laufbahnplanung der Gymnasialen Oberstufe eines Schülers.
+     *  
+     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id          die ID des Schülers zu dem die Beratungsdaten ausgelesen werden
+     * @param request     die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Beratungsdaten zum dem Schüler
+     */
+    @GET
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten")
+    @Operation(summary = "Liest die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus.",
+               description = "Liest die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID "
+    		    + "aus der Datenbank aus und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Beratungsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Beratungsdaten der gymnasialen Oberstufe des angegebenen Schülers",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Beratungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
+    public Response getGostSchuelerLaufbahnplanungBeratungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).get(id);
+    	}
+    }
+
+    /**
+     * Die OpenAPI-Methode für das Anpassen der Beratungsdaten für die Laufbahnplanung der 
+     * Gymnasialen Oberstufe eines Schülers.
+     *  
+     * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param schueler_id   die ID des Schülers
+     * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @PATCH
+    @Path("/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten")
+    @Operation(summary = "Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an.",
+    description = "Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchGostSchuelerLaufbahnplanungBeratungsdaten(
+    		@PathParam("schema") String schema, @PathParam("schuelerid") long schueler_id,
+    		@RequestBody(description = "Der Patch für die Beratungsdaten", required = true, content = 
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class))) InputStream is, 
+    		@Context HttpServletRequest request) 
+    {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
+    		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).patch(schueler_id, is);
+    	}
+    }
     
     /**
      * Die OpenAPI-Methode für die Abfrage des PDF-Wahlbogens für die Gymnasiale Oberstufe eines Schülers.

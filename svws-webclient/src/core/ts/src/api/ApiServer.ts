@@ -48,6 +48,7 @@ import { GostKlausurenKalenderinformation, cast_de_nrw_schule_svws_core_data_gos
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../core/data/gost/klausuren/GostKlausurtermin';
 import { GostKlausurvorgabe, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurvorgabe } from '../core/data/gost/klausuren/GostKlausurvorgabe';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../core/data/gost/klausuren/GostKursklausur';
+import { GostLaufbahnplanungBeratungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
 import { GostLaufbahnplanungDaten, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
@@ -4129,7 +4130,7 @@ export class ApiServer extends BaseApi {
 	 * Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Laufbahnplanungsdaten der gymnasialen Oberstfue des angegebenen Schülers
+	 *   Code 200: Die Laufbahnplanungsdaten der gymnasialen Oberstufe des angegebenen Schülers
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Abiturdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.
@@ -4138,7 +4139,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Laufbahnplanungsdaten der gymnasialen Oberstfue des angegebenen Schülers
+	 * @returns Die Laufbahnplanungsdaten der gymnasialen Oberstufe des angegebenen Schülers
 	 */
 	public async getGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung"
@@ -4147,6 +4148,59 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/beratungsdaten
+	 *
+	 * Liest die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Beratungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Beratungsdaten der gymnasialen Oberstufe des angegebenen Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostLaufbahnplanungBeratungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.
+	 *   Code 404: Kein Eintrag für einen Schüler mit Beratungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Beratungsdaten der gymnasialen Oberstufe des angegebenen Schülers
+	 */
+	public async getGostSchuelerLaufbahnplanungBeratungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungBeratungsdaten> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostLaufbahnplanungBeratungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/beratungsdaten
+	 *
+	 * Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostLaufbahnplanungBeratungsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data : Partial<GostLaufbahnplanungBeratungsdaten>, schema : string, schuelerid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

@@ -136,6 +136,7 @@ export { GostFachwahl } from './core/data/gost/GostFachwahl';
 export { GostJahrgang } from './core/data/gost/GostJahrgang';
 export { GostJahrgangFachkombination } from './core/data/gost/GostJahrgangFachkombination';
 export { GostJahrgangsdaten } from './core/data/gost/GostJahrgangsdaten';
+export { GostLaufbahnplanungBeratungsdaten } from './core/data/gost/GostLaufbahnplanungBeratungsdaten';
 export { GostLaufbahnplanungDaten } from './core/data/gost/GostLaufbahnplanungDaten';
 export { GostLaufbahnplanungDatenFachbelegung } from './core/data/gost/GostLaufbahnplanungDatenFachbelegung';
 export { GostLaufbahnplanungDatenSchueler } from './core/data/gost/GostLaufbahnplanungDatenSchueler';
