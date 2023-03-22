@@ -2,14 +2,14 @@
 	<div v-if="visible">
 		<!-- TODO v-model="selected" - siehe auch unten-->
 		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten" :footer="false">
-			<template #cell(fachID)="{value}">
-				<s-schueler-leistung-fach :fach="value" :map-faecher="mapFaecher" />
+			<template #cell(fachID)="{rowData}">
+				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
-			<template #cell(lehrerID)="{value}">
-				<s-schueler-leistung-fachlehrer :fachlehrer="value" :map-lehrer="props.mapLehrer" />
+			<template #cell(lehrerID)="{rowData}">
+				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
-			<template #cell(note)="{value}">
-				<s-schueler-leistung-note :data="props.data!" :note="value" :patch-leistung="patchLeistung" />
+			<template #cell(note)="{rowData}">
+				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-data-table>
 	</div>
@@ -22,7 +22,6 @@
 	import { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
-	console.log(props.data?.leistungsdaten)
 
 	const cols: DataTableColumn[] = [
 		{ key: "fachID", label: "Fach", span: 1, sortable: false },

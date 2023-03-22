@@ -10,7 +10,7 @@
 	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{
-		fachlehrer: number,
+		fachlehrer: number | null,
 		mapLehrer: Map<number, LehrerListeEintrag>
 	}>();
 	const id: ComputedRef<number | undefined> = computed(() => props.fachlehrer ?? undefined);
