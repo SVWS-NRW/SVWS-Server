@@ -953,6 +953,8 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (node.getElseStatement() != null) {
 			if ((node.getThenStatement() instanceof BlockTree))
 				result += " ";
+			else
+				result += System.lineSeparator() + getIndent();
 			result += "else";
 			if ((node.getElseStatement() instanceof BlockTree))
 				result += " ";
