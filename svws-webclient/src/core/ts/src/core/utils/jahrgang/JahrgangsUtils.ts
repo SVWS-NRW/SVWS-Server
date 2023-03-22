@@ -32,67 +32,96 @@ export class JahrgangsUtils extends JavaObject {
 			return null;
 		if (schulform as unknown === Schulform.GY as unknown) {
 			switch (jahrgang) {
-				case "05": 
+				case "05": {
 					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 8 : 9;
-				case "06": 
+				}
+				case "06": {
 					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 7 : 8;
-				case "07": 
+				}
+				case "07": {
 					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 6 : 7;
-				case "08": 
+				}
+				case "08": {
 					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 5 : 6;
-				case "09": 
+				}
+				case "09": {
 					return gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown) ? 4 : 5;
-				case "10": 
+				}
+				case "10": {
 					return gliederung.istG8() ? null : 4;
-				case "EF": 
+				}
+				case "EF": {
 					return 3;
-				case "Q1": 
+				}
+				case "Q1": {
 					return 2;
-				case "Q2": 
+				}
+				case "Q2": {
 					return 1;
-				case "11": 
+				}
+				case "11": {
 					return 3;
-				case "12": 
+				}
+				case "12": {
 					return 2;
-				case "13": 
+				}
+				case "13": {
 					return 1;
+				}
 			}
 		} else {
 			switch (jahrgang) {
-				case "E1": 
+				case "E1": {
 					return 4;
-				case "E2": 
+				}
+				case "E2": {
 					return 3;
-				case "E3": 
+				}
+				case "E3": {
 					return 3;
-				case "03": 
+				}
+				case "03": {
 					return 2;
-				case "04": 
+				}
+				case "04": {
 					return 1;
-				case "05": 
+				}
+				case "05": {
 					return 6;
-				case "06": 
+				}
+				case "06": {
 					return 5;
-				case "07": 
+				}
+				case "07": {
 					return 4;
-				case "08": 
+				}
+				case "08": {
 					return 3;
-				case "09": 
+				}
+				case "09": {
 					return 2;
-				case "10": 
+				}
+				case "10": {
 					return 1;
-				case "EF": 
+				}
+				case "EF": {
 					return 3;
-				case "Q1": 
+				}
+				case "Q1": {
 					return 2;
-				case "Q2": 
+				}
+				case "Q2": {
 					return 1;
-				case "11": 
+				}
+				case "11": {
 					return 3;
-				case "12": 
+				}
+				case "12": {
 					return 2;
-				case "13": 
+				}
+				case "13": {
 					return 1;
+				}
 			}
 		}
 		return null;

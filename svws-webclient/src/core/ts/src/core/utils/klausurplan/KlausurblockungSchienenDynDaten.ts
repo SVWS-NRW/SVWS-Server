@@ -187,7 +187,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereKnotenGrad() : void {
-		for (let klausurNr1 : number = 0; klausurNr1 < this._klausurenAnzahl; klausurNr1++){
+		for (let klausurNr1 : number = 0; klausurNr1 < this._klausurenAnzahl; klausurNr1++) {
 			let kanten : number = 0;
 			for (let klausurNr2 : number = 0; klausurNr2 < this._klausurenAnzahl; klausurNr2++)
 				if (this._verboten[klausurNr1][klausurNr2])
@@ -195,7 +195,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			this._klausurnummerZuGrad[klausurNr1] = kanten;
 		}
 		for (let i : number = 1; i < this._klausurenAnzahl; i++)
-			for (let j : number = i; j >= 1; j--){
+			for (let j : number = i; j >= 1; j--) {
 				let nummerR : number = this._klausurenSortiertGrad[j];
 				let nummerL : number = this._klausurenSortiertGrad[j - 1];
 				if (this._klausurnummerZuGrad[nummerL] >= this._klausurnummerZuGrad[nummerR])
@@ -226,7 +226,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	gibErzeugeOutput() : List<List<number>> {
 		let out : List<List<number>> = new Vector();
-		for (let i : number = 0; i < this._schienenAnzahl; i++){
+		for (let i : number = 0; i < this._schienenAnzahl; i++) {
 			out.add(new Vector());
 		}
 		for (let klausurID of this._mapKlausurZuNummer.keySet()) {
@@ -255,7 +255,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		let temp : Array<number> | null = Array(this._klausurenAnzahl).fill(0);
 		for (let i : number = 0; i < this._klausurenAnzahl; i++)
 			temp[i] = i;
-		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++){
+		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++) {
 			let i2 : number = this._random.nextInt(this._klausurenAnzahl);
 			let save1 : number = temp[i1];
 			let save2 : number = temp[i2];
@@ -273,10 +273,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage() : Array<number> {
 		let temp : Array<number> | null = this.gibErzeugeKlausurenInZufaelligerReihenfolge();
-		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++){
+		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++) {
 			let nr1 : number = temp[i1];
 			let iTausch : number = i1 + 1;
-			for (let i2 : number = iTausch; i2 < this._klausurenAnzahl; i2++){
+			for (let i2 : number = iTausch; i2 < this._klausurenAnzahl; i2++) {
 				let nr2 : number = temp[i2];
 				if (this._bevorzugt[nr1][nr2] > 0) {
 					let save1 : number = temp[iTausch];
@@ -300,7 +300,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		let temp : Array<number> | null = Array(this._klausurenAnzahl).fill(0);
 		for (let i : number = 0; i < this._klausurenAnzahl; i++)
 			temp[i] = this._klausurenSortiertGrad[i];
-		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++){
+		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++) {
 			let i2 : number = this._random.nextInt(this._klausurenAnzahl);
 			if ((i1 - i2) * (i1 - i2) > this._klausurenAnzahl)
 				continue;
@@ -335,7 +335,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		let temp : Array<number> | null = Array(this._schienenAnzahl).fill(0);
 		for (let i : number = 0; i < this._schienenAnzahl; i++)
 			temp[i] = i;
-		for (let i1 : number = 0; i1 < this._schienenAnzahl; i1++){
+		for (let i1 : number = 0; i1 < this._schienenAnzahl; i1++) {
 			let i2 : number = this._random.nextInt(this._schienenAnzahl);
 			let save1 : number = temp[i1];
 			let save2 : number = temp[i2];
@@ -378,13 +378,13 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			return false;
 		let histogramm : Array<number> | null = Array(this._schienenAnzahl).fill(0);
 		let histogrammX : Array<number> | null = Array(this._schienenAnzahl).fill(0);
-		for (let i : number = 0; i < this._klausurenAnzahl; i++){
+		for (let i : number = 0; i < this._klausurenAnzahl; i++) {
 			histogramm[this._klausurZuSchiene[i]]++;
 			histogrammX[klausurZuSchieneX[i]]++;
 		}
 		let minHisto : number = this._klausurenAnzahl;
 		let minHistoX : number = this._klausurenAnzahl;
-		for (let i : number = 0; i < this._schienenAnzahl; i++){
+		for (let i : number = 0; i < this._schienenAnzahl; i++) {
 			minHisto = Math.min(minHisto, histogramm[i]);
 			minHistoX = Math.min(minHistoX, histogrammX[i]);
 		}
@@ -481,7 +481,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	private gibNachbarsfarbenDerKlausur(klausurNr : number) : number {
 		let summe : number = 0;
 		let benutzt : Array<boolean> | null = Array(this._schienenAnzahl).fill(false);
-		for (let klausurNr2 : number = 0; klausurNr2 < this._klausurenAnzahl; klausurNr2++){
+		for (let klausurNr2 : number = 0; klausurNr2 < this._klausurenAnzahl; klausurNr2++) {
 			let farbe : number = this._klausurZuSchiene[klausurNr2];
 			if ((farbe >= 0) && (this._verboten[klausurNr][klausurNr2]))
 				if (!benutzt[farbe]) {
@@ -711,7 +711,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	aktionZerstoereEinigeSchienenUndVerteileNeu() : void {
 		while (this._schienenAnzahl > 0) {
 			let s : number = this._random.nextInt(this._schienenAnzahl);
-			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++){
+			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++) {
 				if (this._klausurZuSchiene[nr] === s)
 					this._klausurZuSchiene[nr] = -1;
 				if (this._klausurZuSchiene[nr] === this._schienenAnzahl - 1)
@@ -733,7 +733,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	debug(header : string | null) : void {
 		console.log();
 		console.log(JSON.stringify(header));
-		for (let s : number = 0; s < this._schienenAnzahl; s++){
+		for (let s : number = 0; s < this._schienenAnzahl; s++) {
 			let line : string | null = "";
 			line += "    Schiene " + (s + 1) + ": ";
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)

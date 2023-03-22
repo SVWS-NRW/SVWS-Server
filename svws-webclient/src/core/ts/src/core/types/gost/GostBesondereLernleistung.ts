@@ -69,12 +69,15 @@ export class GostBesondereLernleistung extends JavaObject {
 		if (kuerzel === null)
 			return GostBesondereLernleistung.KEINE;
 		switch (kuerzel) {
-			case "K": 
+			case "K": {
 				return GostBesondereLernleistung.KEINE;
-			case "P": 
+			}
+			case "P": {
 				return GostBesondereLernleistung.PROJEKTKURS;
-			case "E": 
+			}
+			case "E": {
 				return GostBesondereLernleistung.EXTERNE;
+			}
 		}
 		return GostBesondereLernleistung.KEINE;
 	}

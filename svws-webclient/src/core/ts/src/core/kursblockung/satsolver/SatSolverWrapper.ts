@@ -61,7 +61,7 @@ export class SatSolverWrapper extends SatSolverA {
 	 */
 	public createNewVars(n : number) : Array<number> {
 		let temp : Array<number> | null = Array(n).fill(0);
-		for (let i : number = 0; i < temp.length; i++){
+		for (let i : number = 0; i < temp.length; i++) {
 			temp[i] = this._solver.createNewVar();
 		}
 		return temp;
@@ -333,17 +333,17 @@ export class SatSolverWrapper extends SatSolverA {
 	}
 
 	private c_bitonic_sort_power_two(list : LinkedCollection<number>) : void {
-		for (let window : number = 2; window <= list.size(); window *= 2){
+		for (let window : number = 2; window <= list.size(); window *= 2) {
 			this.c_bitonic_sort_spiral(list, window);
-			for (let difference : number = Math.trunc(window / 2); difference >= 2; difference /= 2){
+			for (let difference : number = Math.trunc(window / 2); difference >= 2; difference /= 2) {
 				this.c_bitonic_sort_difference(list, difference);
 			}
 		}
 	}
 
 	private c_bitonic_sort_spiral(list : LinkedCollection<number>, size : number) : void {
-		for (let i : number = 0; i < list.size(); i += size){
-			for (let i1 : number = i, i2 : number = i + size - 1; i1 < i2; i1++, i2--){
+		for (let i : number = 0; i < list.size(); i += size) {
+			for (let i1 : number = i, i2 : number = i + size - 1; i1 < i2; i1++, i2--) {
 				this.c_bitonic_comparator(list, i1, i2);
 			}
 		}
@@ -351,8 +351,8 @@ export class SatSolverWrapper extends SatSolverA {
 
 	private c_bitonic_sort_difference(list : LinkedCollection<number>, size : number) : void {
 		let half : number = Math.trunc(size / 2);
-		for (let i : number = 0; i < list.size(); i += size){
-			for (let j : number = 0; j < half; j++){
+		for (let i : number = 0; i < list.size(); i += size) {
+			for (let j : number = 0; j < half; j++) {
 				this.c_bitonic_comparator(list, i + j, i + j + half);
 			}
 		}

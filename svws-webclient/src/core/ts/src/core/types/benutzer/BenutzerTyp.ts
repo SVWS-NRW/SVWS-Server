@@ -71,14 +71,18 @@ export class BenutzerTyp extends JavaObject {
 	 */
 	public static getByID(id : number) : BenutzerTyp | null {
 		switch (id) {
-			case 0: 
+			case 0: {
 				return BenutzerTyp.ALLGEMEIN;
-			case 1: 
+			}
+			case 1: {
 				return BenutzerTyp.LEHRER;
-			case 2: 
+			}
+			case 2: {
 				return BenutzerTyp.SCHUELER;
-			case 3: 
+			}
+			case 3: {
 				return BenutzerTyp.ERZIEHER;
+			}
 		}
 		return null;
 	}

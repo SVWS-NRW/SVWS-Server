@@ -33,28 +33,28 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
 		let out : List<List<number>> = new Vector();
 		switch (pConfig.get_lk_gk_modus()) {
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE: {
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:{
 				KlausurterminblockungAlgorithmus.berechne_helper(pInput, pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK: {
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK:{
 				let nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK: {
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK:{
 				let nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT: {
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT:{
 				let nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
 				let nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
 				break;
 			}
-			default: {
+			default:{
 				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!")
 			}
 		}
@@ -79,7 +79,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;
 		do {
-			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++){
+			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++) {
 				let zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
 			}

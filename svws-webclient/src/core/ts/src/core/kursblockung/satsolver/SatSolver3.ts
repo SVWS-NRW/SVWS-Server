@@ -235,7 +235,7 @@ export class SatSolver3 extends SatSolverA {
 				maxIndex = index;
 			}
 			if (countDown === 0) {
-				for (let i : number = index; i >= 0; i--){
+				for (let i : number = index; i >= 0; i--) {
 					if (backtrackV[i] !== null) {
 						this.unitpropagation_undo(cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]));
 					}
@@ -245,7 +245,7 @@ export class SatSolver3 extends SatSolverA {
 				index = 0;
 				if ((this.learnClauseMin >= 1) && (this.learnClauseMin <= SatSolver3.MAX_LEARNED_CLAUSE_SIZE)) {
 					let clause : Array<number> = Array(this.learnClauseMin).fill(0);
-					for (let i : number = 0; i < clause.length; i++){
+					for (let i : number = 0; i < clause.length; i++) {
 						clause[i] = -backtrackLearn[i].nr;
 					}
 					this.addClause(clause);
@@ -309,7 +309,7 @@ export class SatSolver3 extends SatSolverA {
 			return;
 		}
 		this.learnClauseMin = size;
-		for (let i : number = 0; i < size; i++){
+		for (let i : number = 0; i < size; i++) {
 			backtrackLearn[i] = backtrackV[i];
 		}
 	}
@@ -319,7 +319,7 @@ export class SatSolver3 extends SatSolverA {
 		let changed : boolean = true;
 		while (changed) {
 			changed = false;
-			for (let nr : number = 1; nr <= this.vSize; nr++){
+			for (let nr : number = 1; nr <= this.vSize; nr++) {
 				let varP : Variable | null = this.vArrayPos[nr];
 				if (varP.index < 0) {
 					continue;
@@ -366,7 +366,7 @@ export class SatSolver3 extends SatSolverA {
 
 	private static fill(index : number) : string | null {
 		let s : string | null = "";
-		for (let i : number = 0; i < index; i++){
+		for (let i : number = 0; i < index; i++) {
 			s = s! + "    ";
 		}
 		return s;

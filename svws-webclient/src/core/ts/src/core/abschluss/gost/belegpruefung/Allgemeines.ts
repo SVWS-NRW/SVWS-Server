@@ -35,12 +35,12 @@ export class Allgemeines extends GostBelegpruefung {
 
 	protected pruefeGesamt() : void {
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
+		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			if (!this.manager.istBelegtSeitEF(fachbelegung))
 				this.addFehler(GostBelegungsfehler.E1BEL_10);
 		}
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
+		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach !== null)

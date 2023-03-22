@@ -42,7 +42,7 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 			return +1;
 		let o1Kursdifferenzen : Array<number> | null = b1.kursdifferenzHistogramm;
 		let o2Kursdifferenzen : Array<number> | null = b2.kursdifferenzHistogramm;
-		for (let i : number = kdMax1; i >= 0; i--){
+		for (let i : number = kdMax1; i >= 0; i--) {
 			if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
 				return -1;
 			if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])

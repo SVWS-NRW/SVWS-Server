@@ -39,7 +39,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		let algorithmenS : Array<KursblockungAlgorithmusS> = [new KursblockungAlgorithmusSSchnellW(random, this.logger, dynDaten), new KursblockungAlgorithmusSZufaellig(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatching(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatchingW(random, this.logger, dynDaten)];
 		let zeitProK : number = 100;
 		do {
-			for (let iK : number = 0; iK < algorithmenK.length; iK++){
+			for (let iK : number = 0; iK < algorithmenK.length; iK++) {
 				let zeitEndeK : number = System.currentTimeMillis() + zeitProK;
 				do {
 					KursblockungAlgorithmus.verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
@@ -56,7 +56,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 	private static verwendeAlgorithmusK(kursblockungAlgorithmusK : KursblockungAlgorithmusK, zeitEndeK : number, dynDaten : KursblockungDynDaten, algorithmenS : Array<KursblockungAlgorithmusS>, outputs : Vector<GostBlockungsergebnisManager>, pInput : GostBlockungsdatenManager) : void {
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
 		dynDaten.aktionZustandSpeichernK();
-		for (let iS : number = 0; iS < algorithmenS.length; iS++){
+		for (let iS : number = 0; iS < algorithmenS.length; iS++) {
 			algorithmenS[iS].berechne();
 			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
 				dynDaten.aktionZustandSpeichernK();

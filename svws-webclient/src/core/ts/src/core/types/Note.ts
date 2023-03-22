@@ -246,20 +246,27 @@ export class Note extends JavaObject {
 		if (noteSekI === null)
 			return null;
 		switch (noteSekI) {
-			case 1: 
+			case 1: {
 				return Note.SEHR_GUT;
-			case 2: 
+			}
+			case 2: {
 				return Note.GUT;
-			case 3: 
+			}
+			case 3: {
 				return Note.BEFRIEDIGEND;
-			case 4: 
+			}
+			case 4: {
 				return Note.AUSREICHEND;
-			case 5: 
+			}
+			case 5: {
 				return Note.MANGELHAFT;
-			case 6: 
+			}
+			case 6: {
 				return Note.UNGENUEGEND;
-			default: 
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 
@@ -274,38 +281,54 @@ export class Note extends JavaObject {
 		if (notenpunkte === null)
 			return Note.KEINE;
 		switch (notenpunkte) {
-			case 0: 
+			case 0: {
 				return Note.UNGENUEGEND;
-			case 1: 
+			}
+			case 1: {
 				return Note.MANGELHAFT_MINUS;
-			case 2: 
+			}
+			case 2: {
 				return Note.MANGELHAFT;
-			case 3: 
+			}
+			case 3: {
 				return Note.MANGELHAFT_PLUS;
-			case 4: 
+			}
+			case 4: {
 				return Note.AUSREICHEND_MINUS;
-			case 5: 
+			}
+			case 5: {
 				return Note.AUSREICHEND;
-			case 6: 
+			}
+			case 6: {
 				return Note.AUSREICHEND_PLUS;
-			case 7: 
+			}
+			case 7: {
 				return Note.BEFRIEDIGEND_MINUS;
-			case 8: 
+			}
+			case 8: {
 				return Note.BEFRIEDIGEND;
-			case 9: 
+			}
+			case 9: {
 				return Note.BEFRIEDIGEND_PLUS;
-			case 10: 
+			}
+			case 10: {
 				return Note.GUT_MINUS;
-			case 11: 
+			}
+			case 11: {
 				return Note.GUT;
-			case 12: 
+			}
+			case 12: {
 				return Note.GUT_PLUS;
-			case 13: 
+			}
+			case 13: {
 				return Note.SEHR_GUT_MINUS;
-			case 14: 
+			}
+			case 14: {
 				return Note.SEHR_GUT;
-			case 15: 
+			}
+			case 15: {
 				return Note.SEHR_GUT_PLUS;
+			}
 		}
 		return Note.KEINE;
 	}
@@ -322,56 +345,81 @@ export class Note extends JavaObject {
 			return Note.KEINE;
 		let kuerzelUppercase : string | null = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
-			case "6": 
+			case "6": {
 				return Note.UNGENUEGEND;
-			case "5-": 
+			}
+			case "5-": {
 				return Note.MANGELHAFT_MINUS;
-			case "5": 
+			}
+			case "5": {
 				return Note.MANGELHAFT;
-			case "5+": 
+			}
+			case "5+": {
 				return Note.MANGELHAFT_PLUS;
-			case "4-": 
+			}
+			case "4-": {
 				return Note.AUSREICHEND_MINUS;
-			case "4": 
+			}
+			case "4": {
 				return Note.AUSREICHEND;
-			case "4+": 
+			}
+			case "4+": {
 				return Note.AUSREICHEND_PLUS;
-			case "3-": 
+			}
+			case "3-": {
 				return Note.BEFRIEDIGEND_MINUS;
-			case "3": 
+			}
+			case "3": {
 				return Note.BEFRIEDIGEND;
-			case "3+": 
+			}
+			case "3+": {
 				return Note.BEFRIEDIGEND_PLUS;
-			case "2-": 
+			}
+			case "2-": {
 				return Note.GUT_MINUS;
-			case "2": 
+			}
+			case "2": {
 				return Note.GUT;
-			case "2+": 
+			}
+			case "2+": {
 				return Note.GUT_PLUS;
-			case "1-": 
+			}
+			case "1-": {
 				return Note.SEHR_GUT_MINUS;
-			case "1": 
+			}
+			case "1": {
 				return Note.SEHR_GUT;
-			case "1+": 
+			}
+			case "1+": {
 				return Note.SEHR_GUT_PLUS;
-			case "E1": 
+			}
+			case "E1": {
 				return Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
-			case "E2": 
+			}
+			case "E2": {
 				return Note.E2_MIT_ERFOLG_TEILGENOMMEN;
-			case "E3": 
+			}
+			case "E3": {
 				return Note.E3_TEILGENOMMEN;
-			case "AT": 
+			}
+			case "AT": {
 				return Note.ATTEST;
-			case "AM": 
+			}
+			case "AM": {
 				return Note.ABGEMELDET;
-			case "NB": 
+			}
+			case "NB": {
 				return Note.NICHT_BEURTEILT;
-			case "NT": 
+			}
+			case "NT": {
 				return Note.NICHT_TEILGENOMMEN;
-			case "NE": 
+			}
+			case "NE": {
 				return Note.NICHT_ERTEILT;
-			case "LM": 
+			}
+			case "LM": {
 				return Note.LEHRERMANGEL;
+			}
 		}
 		return Note.KEINE;
 	}
@@ -388,38 +436,54 @@ export class Note extends JavaObject {
 		if (notenpunkte === null)
 			return Note.KEINE;
 		switch (notenpunkte) {
-			case "0": 
+			case "0": {
 				return Note.UNGENUEGEND;
-			case "1": 
+			}
+			case "1": {
 				return Note.MANGELHAFT_MINUS;
-			case "2": 
+			}
+			case "2": {
 				return Note.MANGELHAFT;
-			case "3": 
+			}
+			case "3": {
 				return Note.MANGELHAFT_PLUS;
-			case "4": 
+			}
+			case "4": {
 				return Note.AUSREICHEND_MINUS;
-			case "5": 
+			}
+			case "5": {
 				return Note.AUSREICHEND;
-			case "6": 
+			}
+			case "6": {
 				return Note.AUSREICHEND_PLUS;
-			case "7": 
+			}
+			case "7": {
 				return Note.BEFRIEDIGEND_MINUS;
-			case "8": 
+			}
+			case "8": {
 				return Note.BEFRIEDIGEND;
-			case "9": 
+			}
+			case "9": {
 				return Note.BEFRIEDIGEND_PLUS;
-			case "10": 
+			}
+			case "10": {
 				return Note.GUT_MINUS;
-			case "11": 
+			}
+			case "11": {
 				return Note.GUT;
-			case "12": 
+			}
+			case "12": {
 				return Note.GUT_PLUS;
-			case "13": 
+			}
+			case "13": {
 				return Note.SEHR_GUT_MINUS;
-			case "14": 
+			}
+			case "14": {
 				return Note.SEHR_GUT;
-			case "15": 
+			}
+			case "15": {
 				return Note.SEHR_GUT_PLUS;
+			}
 		}
 		return Note.KEINE;
 	}
@@ -433,13 +497,19 @@ export class Note extends JavaObject {
 		if (this.notenpunkte === null)
 			return false;
 		switch (this.notenpunkte) {
-			case 0: 
-			case 2: 
-			case 5: 
-			case 8: 
-			case 11: 
-			case 14: 
+			case 0: {
+			}
+			case 2: {
+			}
+			case 5: {
+			}
+			case 8: {
+			}
+			case 11: {
+			}
+			case 14: {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -453,28 +523,44 @@ export class Note extends JavaObject {
 		if (this.notenpunkte === null)
 			return Note.KEINE;
 		switch (this.notenpunkte) {
-			case 0: 
+			case 0: {
 				return Note.UNGENUEGEND;
-			case 1: 
-			case 2: 
-			case 3: 
+			}
+			case 1: {
+			}
+			case 2: {
+			}
+			case 3: {
 				return Note.MANGELHAFT;
-			case 4: 
-			case 5: 
-			case 6: 
+			}
+			case 4: {
+			}
+			case 5: {
+			}
+			case 6: {
 				return Note.AUSREICHEND;
-			case 7: 
-			case 8: 
-			case 9: 
+			}
+			case 7: {
+			}
+			case 8: {
+			}
+			case 9: {
 				return Note.BEFRIEDIGEND;
-			case 10: 
-			case 11: 
-			case 12: 
+			}
+			case 10: {
+			}
+			case 11: {
+			}
+			case 12: {
 				return Note.GUT;
-			case 13: 
-			case 14: 
-			case 15: 
+			}
+			case 13: {
+			}
+			case 14: {
+			}
+			case 15: {
 				return Note.SEHR_GUT;
+			}
 		}
 		return Note.KEINE;
 	}
@@ -490,30 +576,47 @@ export class Note extends JavaObject {
 	 */
 	public getNoteSekI() : number | null {
 		switch (this.notenpunkte) {
-			case 15: 
-			case 14: 
-			case 13: 
+			case 15: {
+			}
+			case 14: {
+			}
+			case 13: {
 				return 1;
-			case 12: 
-			case 11: 
-			case 10: 
+			}
+			case 12: {
+			}
+			case 11: {
+			}
+			case 10: {
 				return 2;
-			case 9: 
-			case 8: 
-			case 7: 
+			}
+			case 9: {
+			}
+			case 8: {
+			}
+			case 7: {
 				return 3;
-			case 6: 
-			case 5: 
-			case 4: 
+			}
+			case 6: {
+			}
+			case 5: {
+			}
+			case 4: {
 				return 4;
-			case 3: 
-			case 2: 
-			case 1: 
+			}
+			case 3: {
+			}
+			case 2: {
+			}
+			case 1: {
 				return 5;
-			case 0: 
+			}
+			case 0: {
 				return 6;
-			default: 
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 

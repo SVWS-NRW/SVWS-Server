@@ -62,10 +62,12 @@ export class GostBelegpruefungsArt extends JavaObject {
 		if (kuerzel === null)
 			return null;
 		switch (kuerzel) {
-			case "EF.1": 
+			case "EF.1": {
 				return GostBelegpruefungsArt.EF1;
-			case "Gesamt": 
+			}
+			case "Gesamt": {
 				return GostBelegpruefungsArt.GESAMT;
+			}
 		}
 		return null;
 	}

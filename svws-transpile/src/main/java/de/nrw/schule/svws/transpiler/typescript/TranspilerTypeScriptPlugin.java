@@ -986,14 +986,20 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case RULE -> throw new TranspilerException("Transpiler Error: Case of type " + kind + " currently not supported in switch statements."); // TODO implement					
 				case STATEMENT -> {
 					if (curCase.getExpressions().size() == 0)
-						result += getIndent() + "\tdefault: ";
+						result += getIndent() + "\tdefault:";
 					else
-						result += curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp)).collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ": "));
+						result += curCase.getExpressions().stream().map(exp -> "case " + convertExpression(exp)).collect(Collectors.joining(":" + System.lineSeparator() + getIndent() + "\t", getIndent() + "\t", ":"));
 					indentC++;
-					result += curCase.getStatements().stream().map(stmt -> {
-						String tmp = convertStatement(stmt, false);
-						return tmp;
-					}).collect(Collectors.joining("", "", System.lineSeparator())); 
+					if ((curCase.getStatements().size() == 1) && (curCase.getStatements().get(0) instanceof BlockTree)) {
+						result += convertStatement(curCase.getStatements().get(0), false);
+						result += System.lineSeparator();
+					} else {
+						result += " {";
+						result += curCase.getStatements().stream().map(stmt -> {
+							return convertStatement(stmt, false);
+						}).collect(Collectors.joining("", "", System.lineSeparator()));
+						result += getIndent() + "}" + System.lineSeparator();
+					}
 					indentC--;
 				}
 				default -> throw new TranspilerException("Transpiler Error: Case of type " + kind + " currently not supported in switch statements.");				

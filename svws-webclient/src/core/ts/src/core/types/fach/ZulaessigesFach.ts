@@ -1492,7 +1492,7 @@ export class ZulaessigesFach extends JavaObject {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		this.zulaessig = Array(historie.length).fill(null);
-		for (let i : number = 0; i < historie.length; i++){
+		for (let i : number = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new Vector();
 			for (let kuerzelSfSgl of historie[i].zulaessig) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);

@@ -90,7 +90,7 @@ export class AbiturdatenManager extends JavaObject {
 		super();
 		this.abidaten = abidaten;
 		this.gostFaecher = new HashMap();
-		for (let i : number = 0; i < gostFaecher.size(); i++){
+		for (let i : number = 0; i < gostFaecher.size(); i++) {
 			let fach : GostFach | null = gostFaecher.get(i);
 			if (fach !== null)
 				this.gostFaecher.put(fach.id, fach);
@@ -137,7 +137,7 @@ export class AbiturdatenManager extends JavaObject {
 			return;
 		this.initMapFachbereiche();
 		this.belegpruefungen = this.getPruefungen(this.pruefungsArt);
-		for (let i : number = 0; i < this.belegpruefungen.size(); i++){
+		for (let i : number = 0; i < this.belegpruefungen.size(); i++) {
 			let belegpruefung : GostBelegpruefung = this.belegpruefungen.get(i);
 			belegpruefung.pruefe();
 		}
@@ -196,7 +196,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getWochenstunden() : Array<number> {
 		let stunden : Array<number> = [0, 0, 0, 0, 0, 0];
-		for (let i : number = 0; i < 6; i++){
+		for (let i : number = 0; i < 6; i++) {
 			for (let fb of this.abidaten.fachbelegungen) {
 				let hjb : AbiturFachbelegungHalbjahr | null = fb.belegungen[i];
 				if ((hjb === null) || (JavaObject.equalsTranspiler("AT", (hjb.kursartKuerzel))))
@@ -216,7 +216,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getAnrechenbareKurse() : Array<number> {
 		let anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
 		let bll : GostBesondereLernleistung | null = GostBesondereLernleistung.fromKuerzel(this.abidaten.besondereLernleistung);
-		for (let i : number = 0; i < 6; i++){
+		for (let i : number = 0; i < 6; i++) {
 			for (let fb of this.abidaten.fachbelegungen) {
 				let hjb : AbiturFachbelegungHalbjahr | null = fb.belegungen[i];
 				if ((hjb === null) || (JavaObject.equalsTranspiler("AT", (hjb.kursartKuerzel))))
@@ -314,7 +314,7 @@ export class AbiturdatenManager extends JavaObject {
 		if (fachbelegung === null)
 			return 0;
 		let anzahl : number = 0;
-		for (let i : number = 0; i < GostHalbjahr.maxHalbjahre; i++){
+		for (let i : number = 0; i < GostHalbjahr.maxHalbjahre; i++) {
 			if (fachbelegung.belegungen[i] !== null)
 				anzahl++;
 		}
@@ -1543,7 +1543,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getBelegpruefungErgebnis() : GostBelegpruefungErgebnis {
 		let ergebnis : GostBelegpruefungErgebnis = new GostBelegpruefungErgebnis();
 		ergebnis.erfolgreich = this.belegpruefungErfolgreich;
-		for (let i : number = 0; i < this.belegpruefungsfehler.size(); i++){
+		for (let i : number = 0; i < this.belegpruefungsfehler.size(); i++) {
 			let fehler : GostBelegungsfehler = this.belegpruefungsfehler.get(i);
 			ergebnis.fehlercodes.add(new GostBelegpruefungErgebnisFehler(fehler, this.pruefungsArt));
 		}

@@ -177,7 +177,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	public contains(o : unknown | null) : boolean {
 		if (o === null)
 			return false;
-		for (let i : number = 0; i < this._size; i++){
+		for (let i : number = 0; i < this._size; i++) {
 			if (JavaObject.equalsTranspiler(this._nodes[i], (o)))
 				return true;
 		}
@@ -338,7 +338,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	 */
 	public toString() : string {
 		let sb : StringBuilder = new StringBuilder();
-		for (let i : number = 0; i < this._size; i++){
+		for (let i : number = 0; i < this._size; i++) {
 			sb.append(this._nodes[i]);
 			if (i !== this._size - 1)
 				sb.append(", ");
@@ -523,7 +523,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	private findIndex(obj : unknown | null) : number {
 		if (obj === null)
 			return -1;
-		for (let i : number = 0; i < this._size; i++){
+		for (let i : number = 0; i < this._size; i++) {
 			if (JavaObject.equalsTranspiler(this._nodes[i], (obj)))
 				return i;
 		}

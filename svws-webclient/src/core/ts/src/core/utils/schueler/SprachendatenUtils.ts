@@ -457,18 +457,22 @@ export class SprachendatenUtils extends JavaObject {
 			return 0;
 		}
 		switch (ASDJahrgang) {
-			case "EF": 
+			case "EF": {
 				return 11;
-			case "Q1": 
+			}
+			case "Q1": {
 				return 12;
-			case "Q2": 
+			}
+			case "Q2": {
 				return 13;
-			default: 
+			}
+			default: {
 				try {
 					return JavaInteger.parseInt(ASDJahrgang);
 				} catch(e) {
 					return 0;
 				}
+			}
 		}
 	}
 

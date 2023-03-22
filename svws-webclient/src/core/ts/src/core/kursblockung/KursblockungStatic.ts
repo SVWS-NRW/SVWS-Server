@@ -18,7 +18,7 @@ export class KursblockungStatic extends JavaObject {
 	 */
 	public static gibPermutation(pRandom : Random, n : number) : Array<number> {
 		let temp : Array<number> = Array(n).fill(0);
-		for (let i : number = 0; i < n; i++){
+		for (let i : number = 0; i < n; i++) {
 			temp[i] = i;
 		}
 		KursblockungStatic.aktionPermutiere(pRandom, temp);
@@ -33,7 +33,7 @@ export class KursblockungStatic extends JavaObject {
 	 */
 	public static aktionPermutiere(pRandom : Random, perm : Array<number>) : void {
 		let n : number = perm.length;
-		for (let i1 : number = 0; i1 < n; i1++){
+		for (let i1 : number = 0; i1 < n; i1++) {
 			let i2 : number = pRandom.nextInt(n);
 			let s1 : number = perm[i1];
 			let s2 : number = perm[i2];

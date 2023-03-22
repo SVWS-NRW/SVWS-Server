@@ -78,7 +78,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		let mapKursSchiene : HashMap<KursblockungDynKurs, Array<number> | null> = new HashMap();
 		for (let kurs of this.kurseAlle) {
 			let schienen : Array<number> = Array(nSchienen).fill(0);
-			for (let s : number = 0; s < nSchienen; s++){
+			for (let s : number = 0; s < nSchienen; s++) {
 				schienen[s] = kurs.gibIstSchieneFixiert(s) ? ssw.getVarTRUE() : kurs.gibIstSchieneGesperrt(s) ? ssw.getVarFALSE() : ssw.createNewVar();
 			}
 			mapKursSchiene.put(kurs, schienen);
@@ -110,7 +110,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 			let schienen : Array<number> | null = mapKursSchiene.get(kurs);
 			if (schienen === null)
 				throw new NullPointerException()
-			for (let s : number = 0; s < nSchienen; s++){
+			for (let s : number = 0; s < nSchienen; s++) {
 				list.add(schienen[s]);
 			}
 			let amount : number = kurs.gibSchienenAnzahl();
@@ -145,7 +145,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 								if ((var1 === null) || (var2 === null))
 									throw new NullPointerException()
 								let x : number = ssw.c_new_var_AND(var1!, var2!);
-								for (let s : number = 0; s < nSchienen; s++){
+								for (let s : number = 0; s < nSchienen; s++) {
 									let schienenKurs1 : Array<number> | null = mapKursSchiene.get(kurs1);
 									let schienenKurs2 : Array<number> | null = mapKursSchiene.get(kurs2);
 									if ((schienenKurs1 === null) || (schienenKurs2 === null))
@@ -168,7 +168,7 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		for (let kurs of this.kurseAlle) {
 			let schienen : LinkedCollection<number> = new LinkedCollection();
-			for (let s : number = 0; s < nSchienen; s++){
+			for (let s : number = 0; s < nSchienen; s++) {
 				let schienenKurs : Array<number> | null = mapKursSchiene.get(kurs);
 				if (schienenKurs === null)
 					throw new NullPointerException()

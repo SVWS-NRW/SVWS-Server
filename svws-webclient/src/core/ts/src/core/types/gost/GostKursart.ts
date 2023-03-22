@@ -107,18 +107,24 @@ export class GostKursart extends JavaObject {
 	 */
 	public pruefeWochenstunden(anzahl : number) : boolean {
 		switch (this.kuerzel) {
-			case "GK": 
+			case "GK": {
 				return (anzahl === 3) || (anzahl === 4);
-			case "LK": 
+			}
+			case "LK": {
 				return (anzahl === 5);
-			case "PJK": 
+			}
+			case "PJK": {
 				return (anzahl === 2) || (anzahl === 3);
-			case "VTF": 
+			}
+			case "VTF": {
 				return (anzahl === 2);
-			case "ZK": 
+			}
+			case "ZK": {
 				return (anzahl === 3);
-			default: 
+			}
+			default: {
 				return false;
+			}
 		}
 	}
 
@@ -169,18 +175,24 @@ export class GostKursart extends JavaObject {
 	 */
 	public static fromID(id : number) : GostKursart {
 		switch (id) {
-			case 1: 
+			case 1: {
 				return GostKursart.LK;
-			case 2: 
+			}
+			case 2: {
 				return GostKursart.GK;
-			case 3: 
+			}
+			case 3: {
 				return GostKursart.ZK;
-			case 4: 
+			}
+			case 4: {
 				return GostKursart.PJK;
-			case 5: 
+			}
+			case 5: {
 				return GostKursart.VTF;
-			default: 
+			}
+			default: {
 				throw new DeveloperNotificationException("Invalid ID value.")
+			}
 		}
 	}
 
@@ -204,18 +216,24 @@ export class GostKursart extends JavaObject {
 	 */
 	public static fromIDorNull(id : number) : GostKursart | null {
 		switch (id) {
-			case 1: 
+			case 1: {
 				return GostKursart.LK;
-			case 2: 
+			}
+			case 2: {
 				return GostKursart.GK;
-			case 3: 
+			}
+			case 3: {
 				return GostKursart.ZK;
-			case 4: 
+			}
+			case 4: {
 				return GostKursart.PJK;
-			case 5: 
+			}
+			case 5: {
 				return GostKursart.VTF;
-			default: 
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 

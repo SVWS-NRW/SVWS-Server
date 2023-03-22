@@ -271,7 +271,7 @@ export class Herkunftsarten extends JavaObject {
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
 		this.bezeichnungen = Array(historie.length).fill(null);
-		for (let i : number = 0; i < historie.length; i++){
+		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
 			this.bezeichnungen[i] = new Vector();
 			for (let bez of historie[i].bezeichnungen) {
@@ -345,7 +345,7 @@ export class Herkunftsarten extends JavaObject {
 		if ((schulform === null) || (schulform.daten === null))
 			return null;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
+			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
 				let bez : HerkunftsartKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
 				let sfKuerzel : string | null = bez.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
@@ -376,7 +376,7 @@ export class Herkunftsarten extends JavaObject {
 		if (schulform === null)
 			return result;
 		let herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();
-		for (let i : number = 0; i < herkunftsarten.length; i++){
+		for (let i : number = 0; i < herkunftsarten.length; i++) {
 			let herkunftsart : Herkunftsarten = herkunftsarten[i];
 			if (herkunftsart.hasSchulform(schulform))
 				result.add(herkunftsart);
@@ -396,7 +396,7 @@ export class Herkunftsarten extends JavaObject {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
+			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
 				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
@@ -416,7 +416,7 @@ export class Herkunftsarten extends JavaObject {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.bezeichnungen !== null) {
-			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
+			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
 				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;

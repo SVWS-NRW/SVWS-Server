@@ -61,7 +61,7 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 			return;
 		}
 		let gruppe : Vector<number> = this._dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
-		for (let terminNr : number = 0; terminNr < this._dynDaten.gibTerminAnzahl(); terminNr++){
+		for (let terminNr : number = 0; terminNr < this._dynDaten.gibTerminAnzahl(); terminNr++) {
 			if (this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
 				this.berechneRekursiv();
 				this._dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);

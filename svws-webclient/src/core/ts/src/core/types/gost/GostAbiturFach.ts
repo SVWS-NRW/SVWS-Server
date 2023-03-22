@@ -82,14 +82,18 @@ export class GostAbiturFach extends JavaObject {
 		if (id === null)
 			return null;
 		switch (id) {
-			case 1: 
+			case 1: {
 				return GostAbiturFach.LK1;
-			case 2: 
+			}
+			case 2: {
 				return GostAbiturFach.LK2;
-			case 3: 
+			}
+			case 3: {
 				return GostAbiturFach.AB3;
-			case 4: 
+			}
+			case 4: {
 				return GostAbiturFach.AB4;
+			}
 		}
 		return null;
 	}
@@ -107,14 +111,18 @@ export class GostAbiturFach extends JavaObject {
 		if (strID === null)
 			return null;
 		switch (strID) {
-			case "1": 
+			case "1": {
 				return GostAbiturFach.LK1;
-			case "2": 
+			}
+			case "2": {
 				return GostAbiturFach.LK2;
-			case "3": 
+			}
+			case "3": {
 				return GostAbiturFach.AB3;
-			case "4": 
+			}
+			case "4": {
 				return GostAbiturFach.AB4;
+			}
 		}
 		return null;
 	}
@@ -130,14 +138,18 @@ export class GostAbiturFach extends JavaObject {
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostAbiturFach | null {
 		switch (kuerzel) {
-			case "LK1": 
+			case "LK1": {
 				return GostAbiturFach.LK1;
-			case "LK2": 
+			}
+			case "LK2": {
 				return GostAbiturFach.LK2;
-			case "AB3": 
+			}
+			case "AB3": {
 				return GostAbiturFach.AB3;
-			case "AB4": 
+			}
+			case "AB4": {
 				return GostAbiturFach.AB4;
+			}
 		}
 		return null;
 	}

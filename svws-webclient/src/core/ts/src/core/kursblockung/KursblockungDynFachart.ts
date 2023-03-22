@@ -150,7 +150,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return              Der kleinste Kurs in der Schiene pSchiene, oder null.
 	 */
 	gibKleinstenKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
-		for (let i : number = 0; i < this.kursArr.length; i++){
+		for (let i : number = 0; i < this.kursArr.length; i++) {
 			let kurs : KursblockungDynKurs = this.kursArr[i];
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
@@ -259,7 +259,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	public aktionSchuelerWurdeHinzugefuegt() : void {
 		this.schuelerAnzNow++;
-		for (let i : number = 1; i < this.kursArr.length; i++){
+		for (let i : number = 1; i < this.kursArr.length; i++) {
 			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
 			let kursR : KursblockungDynKurs = this.kursArr[i];
 			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
@@ -277,7 +277,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	public aktionSchuelerWurdeEntfernt() : void {
 		this.schuelerAnzNow--;
-		for (let i : number = this.kursArr.length - 1; i >= 1; i--){
+		for (let i : number = this.kursArr.length - 1; i >= 1; i--) {
 			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
 			let kursR : KursblockungDynKurs = this.kursArr[i];
 			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
@@ -296,7 +296,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	aktionZufaelligerKursWandertNachSchiene(pSchiene : number) : void {
 		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
-		for (let p : number = 0; p < perm.length; p++){
+		for (let p : number = 0; p < perm.length; p++) {
 			let kurs : KursblockungDynKurs | null = this.kursArr[perm[p]];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
 				kurs.aktionSetzeInSchiene(pSchiene);
@@ -312,7 +312,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schuelerArr Das Array mit den Schülerdaten.
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		for (let i : number = 0; i < this.kursArr.length; i++){
+		for (let i : number = 0; i < this.kursArr.length; i++) {
 			this.kursArr[i].debug(schuelerArr);
 		}
 	}

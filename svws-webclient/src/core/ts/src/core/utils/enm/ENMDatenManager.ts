@@ -135,7 +135,7 @@ export class ENMDatenManager extends JavaObject {
 		if (this.daten.noten.size() > 0)
 			return;
 		let noten : Array<Note> = Note.values();
-		for (let i : number = 0; i < noten.length; i++){
+		for (let i : number = 0; i < noten.length; i++) {
 			let note : Note = noten[i];
 			let enmNote : ENMNote = new ENMNote();
 			enmNote.id = note.id;
@@ -157,7 +157,7 @@ export class ENMDatenManager extends JavaObject {
 		if (this.daten.foerderschwerpunkte.size() > 0)
 			return;
 		let foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
-		for (let i : number = 0; i < foerderschwerpunkte.size(); i++){
+		for (let i : number = 0; i < foerderschwerpunkte.size(); i++) {
 			let foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
 			let enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
 			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;

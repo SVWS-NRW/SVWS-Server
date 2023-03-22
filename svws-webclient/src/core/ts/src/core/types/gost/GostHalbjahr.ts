@@ -212,17 +212,21 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	public static getHalbjahreFromJahrgang(jahrgang : string) : Array<GostHalbjahr> {
 		switch (jahrgang) {
-			case "EF": 
+			case "EF": {
 				let ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2]
 				return ef;
-			case "Q1": 
+			}
+			case "Q1": {
 				let q1 : Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12]
 				return q1;
-			case "Q2": 
+			}
+			case "Q2": {
 				let q2 : Array<GostHalbjahr> = [GostHalbjahr.Q21, GostHalbjahr.Q22]
 				return q2;
-			default: 
+			}
+			default: {
 				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
+			}
 		}
 	}
 
@@ -237,20 +241,27 @@ export class GostHalbjahr extends JavaObject {
 		if (id === null)
 			return null;
 		switch (id) {
-			case 0: 
+			case 0: {
 				return GostHalbjahr.EF1;
-			case 1: 
+			}
+			case 1: {
 				return GostHalbjahr.EF2;
-			case 2: 
+			}
+			case 2: {
 				return GostHalbjahr.Q11;
-			case 3: 
+			}
+			case 3: {
 				return GostHalbjahr.Q12;
-			case 4: 
+			}
+			case 4: {
 				return GostHalbjahr.Q21;
-			case 5: 
+			}
+			case 5: {
 				return GostHalbjahr.Q22;
-			default: 
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 
@@ -304,14 +315,18 @@ export class GostHalbjahr extends JavaObject {
 		if ((halbjahr !== 1) && (halbjahr !== 2))
 			return null;
 		switch (jahrgang) {
-			case "EF": 
+			case "EF": {
 				return (halbjahr === 1) ? GostHalbjahr.EF1 : GostHalbjahr.EF2;
-			case "Q1": 
+			}
+			case "Q1": {
 				return (halbjahr === 1) ? GostHalbjahr.Q11 : GostHalbjahr.Q12;
-			case "Q2": 
+			}
+			case "Q2": {
 				return (halbjahr === 1) ? GostHalbjahr.Q21 : GostHalbjahr.Q22;
-			default: 
+			}
+			default: {
 				return null;
+			}
 		}
 	}
 

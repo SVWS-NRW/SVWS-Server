@@ -67,12 +67,15 @@ export class AbiturBelegungsart extends JavaObject {
 		if (kuerzel === null)
 			return AbiturBelegungsart.NICHT_BELEGT;
 		switch (kuerzel) {
-			case "-": 
+			case "-": {
 				return AbiturBelegungsart.NICHT_BELEGT;
-			case "M": 
+			}
+			case "M": {
 				return AbiturBelegungsart.MUENDLICH;
-			case "S": 
+			}
+			case "S": {
 				return AbiturBelegungsart.SCHRIFTLICH;
+			}
 		}
 		return null;
 	}

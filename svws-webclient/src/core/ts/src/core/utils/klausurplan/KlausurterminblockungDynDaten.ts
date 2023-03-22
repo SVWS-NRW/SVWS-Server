@@ -113,7 +113,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
 		switch (pConfig.get_algorithmus()) {
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL:{
 				for (let gostKursklausur of pInput) {
 					let klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr === null)
@@ -124,7 +124,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE:{
 				let mapFachZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
 				for (let gostKursklausur of pInput) {
 					let klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
@@ -147,7 +147,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:{
 				let mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
 				for (let gostKursklausur of pInput) {
 					let klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
@@ -170,7 +170,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
-			default: {
+			default:{
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
 		}
@@ -179,7 +179,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private initialisiereKlausurgruppenGrad() : void {
 		this._klausurGruppenGrad.addAll(this._klausurGruppen);
 		for (let i : number = 1; i < this._klausurGruppenGrad.size(); i++)
-			for (let j : number = i; j >= 1; j--){
+			for (let j : number = i; j >= 1; j--) {
 				let gruppeR : Vector<number> = this._klausurGruppenGrad.get(j);
 				let gruppeL : Vector<number> = this._klausurGruppenGrad.get(j - 1);
 				let gradR : number = this.gibKnotengrad(gruppeR);
@@ -306,7 +306,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		let temp : Array<number> | null = Array(this._terminAnzahl).fill(0);
 		for (let i : number = 0; i < this._terminAnzahl; i++)
 			temp[i] = i;
-		for (let i1 : number = 0; i1 < this._terminAnzahl; i1++){
+		for (let i1 : number = 0; i1 < this._terminAnzahl; i1++) {
 			let i2 : number = this._random.nextInt(this._terminAnzahl);
 			let save1 : number = temp[i1];
 			let save2 : number = temp[i2];
@@ -325,7 +325,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private gibKlausurgruppenInZufaelligerReihenfolge() : Vector<Vector<number>> {
 		let temp : Vector<Vector<number>> = new Vector();
 		temp.addAll(this._klausurGruppen);
-		for (let i1 : number = 0; i1 < temp.size(); i1++){
+		for (let i1 : number = 0; i1 < temp.size(); i1++) {
 			let i2 : number = this._random.nextInt(temp.size());
 			let save1 : Vector<number> = temp.get(i1);
 			let save2 : Vector<number> = temp.get(i2);
@@ -345,7 +345,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		let temp : Vector<Vector<number>> = new Vector();
 		temp.addAll(this._klausurGruppenGrad);
 		let size : number = temp.size();
-		for (let i1 : number = 0; i1 < size; i1++){
+		for (let i1 : number = 0; i1 < size; i1++) {
 			let i2 : number = this._random.nextInt(size);
 			if ((i1 - i2) * (i1 - i2) >= size)
 				continue;
@@ -395,13 +395,13 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			return false;
 		let histogramm : Array<number> | null = Array(this._terminAnzahl).fill(0);
 		let histogrammX : Array<number> | null = Array(this._terminAnzahl).fill(0);
-		for (let i : number = 0; i < this._klausurenAnzahl; i++){
+		for (let i : number = 0; i < this._klausurenAnzahl; i++) {
 			histogramm[this._klausurZuTermin[i]]++;
 			histogrammX[klausurZuTerminX[i]]++;
 		}
 		let minHisto : number = this._klausurenAnzahl;
 		let minHistoX : number = this._klausurenAnzahl;
-		for (let i : number = 0; i < this._terminAnzahl; i++){
+		for (let i : number = 0; i < this._terminAnzahl; i++) {
 			minHisto = Math.min(minHisto, histogramm[i]);
 			minHistoX = Math.min(minHistoX, histogrammX[i]);
 		}
@@ -653,7 +653,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	debug(header : string | null) : void {
 		console.log();
 		console.log(JSON.stringify(header));
-		for (let s : number = 0; s < this._terminAnzahl; s++){
+		for (let s : number = 0; s < this._terminAnzahl; s++) {
 			let line : string | null = "";
 			line += "    Schiene " + (s + 1) + ": ";
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)

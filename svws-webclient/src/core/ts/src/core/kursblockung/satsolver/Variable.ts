@@ -116,13 +116,13 @@ export class Variable extends JavaObject {
 	 */
 	public debug() : void {
 		console.log(JSON.stringify("DEBUGGING VAR " + this.nr));
-		for (let r : number = 0; r < this.statSatFree.length; r++){
-			for (let c : number = 0; c < this.statSatFree[r].length; c++){
+		for (let r : number = 0; r < this.statSatFree.length; r++) {
+			for (let c : number = 0; c < this.statSatFree[r].length; c++) {
 				console.log(JSON.stringify(" " + this.statSatFree[r][c]));
 			}
 			console.log(JSON.stringify("    "));
 			if (this.negation !== null) {
-				for (let c : number = 0; c < this.negation.statSatFree[r].length; c++){
+				for (let c : number = 0; c < this.negation.statSatFree[r].length; c++) {
 					console.log(JSON.stringify(" " + this.negation.statSatFree[r][c]));
 				}
 			}
@@ -137,7 +137,7 @@ export class Variable extends JavaObject {
 	 */
 	getClauseOccurences() : number {
 		let sum : number = 0;
-		for (let free : number = 0; free < 4; free++){
+		for (let free : number = 0; free < 4; free++) {
 			sum += this.statSatFree[0][free];
 		}
 		return sum;

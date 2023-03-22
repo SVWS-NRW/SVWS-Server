@@ -52,7 +52,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		this.hatAufgabenfeldII = false;
 		this.hatAufgabenfeldIII = false;
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
+		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
@@ -129,7 +129,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	private pruefeMehrfacheAbiturfaecher() : void {
 		let abiFaecher : HashSet<GostAbiturFach> = new HashSet();
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
+		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
@@ -139,18 +139,22 @@ export class AbiFaecher extends GostBelegpruefung {
 				continue;
 			}
 			switch (abiturFach) {
-				case GostAbiturFach.LK1: 
+				case GostAbiturFach.LK1: {
 					this.addFehler(GostBelegungsfehler.ABI_21);
 					break;
-				case GostAbiturFach.LK2: 
+				}
+				case GostAbiturFach.LK2: {
 					this.addFehler(GostBelegungsfehler.ABI_22);
 					break;
-				case GostAbiturFach.AB3: 
+				}
+				case GostAbiturFach.AB3: {
 					this.addFehler(GostBelegungsfehler.ABI_23);
 					break;
-				case GostAbiturFach.AB4: 
+				}
+				case GostAbiturFach.AB4: {
 					this.addFehler(GostBelegungsfehler.ABI_24);
 					break;
+				}
 			}
 		}
 	}

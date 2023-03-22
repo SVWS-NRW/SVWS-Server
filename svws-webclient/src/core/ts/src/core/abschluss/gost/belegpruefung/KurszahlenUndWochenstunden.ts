@@ -87,7 +87,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			this.kurszahlenQualifikationsphase.put(kursart, 0);
 		}
 		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
-		for (let i : number = 0; i < alleFachbelegungen.size(); i++){
+		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			let fach : GostFach | null = this.manager.getFach(fachbelegung);
 			let istLKFach : boolean = false;
@@ -128,21 +128,26 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				}
 				let stunden : number = 0;
 				switch (kursart.kuerzel) {
-					case "GK": 
+					case "GK": {
 						stunden = ((fach !== null) && fach.istFremdSpracheNeuEinsetzend) ? 4 : 3;
 						break;
-					case "LK": 
+					}
+					case "LK": {
 						stunden = 5;
 						break;
-					case "PJK": 
+					}
+					case "PJK": {
 						stunden = (fachbelegungHalbjahr.wochenstunden === 3) ? 3 : 2;
 						break;
-					case "VTF": 
+					}
+					case "VTF": {
 						stunden = 2;
 						break;
-					case "ZK": 
+					}
+					case "ZK": {
 						stunden = 3;
 						break;
+					}
 				}
 				let wochenstundenAlt : number | null = this.wochenstunden.get(halbjahr);
 				this.wochenstunden.put(halbjahr, wochenstundenAlt === null ? stunden : wochenstundenAlt! + stunden);

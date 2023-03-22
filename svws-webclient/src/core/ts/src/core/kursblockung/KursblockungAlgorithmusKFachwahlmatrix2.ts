@@ -73,7 +73,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	 */
 	private verteileSuS() : void {
 		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.schuelerAlle.length);
-		for (let p : number = 0; p < perm.length; p++){
+		for (let p : number = 0; p < perm.length; p++) {
 			let i : number = perm[p];
 			let schueler : KursblockungDynSchueler | null = this.schuelerAlle[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();

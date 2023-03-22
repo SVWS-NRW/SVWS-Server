@@ -249,23 +249,23 @@ export class GostKursblockungRegelTyp extends JavaObject {
 		let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		let param : Vector<number> = pRegel.parameter;
 		switch (typ) {
-			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
+			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN:{
 				return [];
 			}
-			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN:{
 				let p0 : number = param.get(0).valueOf();
 				return [p0];
 			}
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:
 			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:
-			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:{
 				let p0 : number = param.get(0).valueOf();
 				let p1 : number = param.get(1).valueOf();
 				return [p0, p1];
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
-			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE:{
 				let p0 : number = param.get(0).valueOf();
 				let p1 : number = param.get(1).valueOf();
 				if (p1 < pSchienenNr)
@@ -275,7 +275,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 				return null;
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
-			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
+			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:{
 				let p0 : number = param.get(0).valueOf();
 				let von : number = param.get(1).valueOf();
 				let bis : number = param.get(2).valueOf();
@@ -285,7 +285,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 					return [p0, von, bis];
 				return null;
 			}
-			default: {
+			default:{
 				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
 			}
 		}

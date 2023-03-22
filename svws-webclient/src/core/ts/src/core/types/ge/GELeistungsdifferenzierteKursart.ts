@@ -60,10 +60,12 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 */
 	public static from(kuerzel : string | null) : GELeistungsdifferenzierteKursart {
 		switch (kuerzel) {
-			case "E": 
+			case "E": {
 				return GELeistungsdifferenzierteKursart.E;
-			case "G": 
+			}
+			case "G": {
 				return GELeistungsdifferenzierteKursart.G;
+			}
 		}
 		return GELeistungsdifferenzierteKursart.Sonstige;
 	}

@@ -107,7 +107,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 				return Array(0).fill(null);
 			let array : Array<E> = Array(this._size).fill(null);
 			let iter : JavaIterator<E> = this.iterator();
-			for (let i : number = 0; i < this._size; i++){
+			for (let i : number = 0; i < this._size; i++) {
 				array[i] = iter.next();
 			}
 			return array;
@@ -116,7 +116,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			if (a.length < this._size)
 				return this.toArray();
 			let iter : JavaIterator<E> = this.iterator();
-			for (let i : number = 0; i < this._size; i++){
+			for (let i : number = 0; i < this._size; i++) {
 				let e : E = iter.next();
 				a[i] = e as unknown as T;
 			}

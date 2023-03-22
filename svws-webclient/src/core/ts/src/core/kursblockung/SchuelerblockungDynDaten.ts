@@ -136,7 +136,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (fachwahl.kursartID < 0)
 				throw new DeveloperNotificationException("fachwahl.kursartID (" + fachwahl.kursartID + ") ist zu gering!")
 		}
-		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++){
+		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size())
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
@@ -155,7 +155,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		for (let kurs of pInput.kurse) {
 			let gefunden : number = 0;
-			for (let r : number = 0; r < nFachwahlen; r++){
+			for (let r : number = 0; r < nFachwahlen; r++) {
 				let fachwahl : GostFachwahl = pInput.fachwahlen.get(r);
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart))
 					gefunden++;
@@ -171,7 +171,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	private aktionInitialisiereDatenstrukturen(pInput : SchuelerblockungInput) : void {
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
+		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
 			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
 			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
@@ -211,7 +211,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		Arrays.fill(this._aktuellGesperrteSchiene, false);
 		this.aktionVerteileMultikurseRekursiv(0);
 		let out : SchuelerblockungOutput = new SchuelerblockungOutput();
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
+		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
 			let wahl : SchuelerblockungOutputFachwahlZuKurs = new SchuelerblockungOutputFachwahlZuKurs();
 			wahl.fachID = this._fachwahlZuFachID[iFachwahl];
 			wahl.kursartID = this._fachwahlZuKursartID[iFachwahl];
@@ -337,15 +337,15 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		if (!pPrintMatrix)
 			return;
 		let data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
-		for (let schiene : number = 0; schiene < this.nSchienen; schiene++){
+		for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
 			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
 			while (sData.length < 5) 
 				sData = " " + sData!;
 			console.log(JSON.stringify(sData));
 		}
 		console.log();
-		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
-			for (let schiene : number = 0; schiene < this.nSchienen; schiene++){
+		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
+			for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
 				let sData : string = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)
 					sData = "INF";

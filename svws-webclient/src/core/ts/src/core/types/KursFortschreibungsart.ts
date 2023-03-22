@@ -100,14 +100,18 @@ export class KursFortschreibungsart extends JavaObject {
 		if (id === null)
 			return KursFortschreibungsart.KEINE;
 		switch (id) {
-			case 0: 
+			case 0: {
 				return KursFortschreibungsart.KEINE;
-			case 1: 
+			}
+			case 1: {
 				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
-			case 2: 
+			}
+			case 2: {
 				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
-			case 3: 
+			}
+			case 3: {
 				return KursFortschreibungsart.KOMPLETT;
+			}
 		}
 		return KursFortschreibungsart.KEINE;
 	}
@@ -124,14 +128,18 @@ export class KursFortschreibungsart extends JavaObject {
 		if (kuerzel === null)
 			return KursFortschreibungsart.KEINE;
 		switch (kuerzel) {
-			case "N": 
+			case "N": {
 				return KursFortschreibungsart.KEINE;
-			case "D": 
+			}
+			case "D": {
 				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
-			case "B": 
+			}
+			case "B": {
 				return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
-			case "K": 
+			}
+			case "K": {
 				return KursFortschreibungsart.KOMPLETT;
+			}
 		}
 		return KursFortschreibungsart.KEINE;
 	}

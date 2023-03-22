@@ -62,7 +62,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 			}
 			return;
 		}
-		for (let schiene : number = 0; schiene < this._minSchienen; schiene++){
+		for (let schiene : number = 0; schiene < this._minSchienen; schiene++) {
 			let schienenAnzahl : number = this._dynDaten.gibAnzahlSchienen();
 			let differenz : number = schiene < schienenAnzahl ? 0 : (schiene - schienenAnzahl + 1);
 			this._dynDaten.aktionSchienenAnzahlVeraendern(+differenz);

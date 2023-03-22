@@ -88,14 +88,18 @@ export class Geschlecht extends JavaObject {
 		if (value === null)
 			return null;
 		switch (value) {
-			case 3: 
+			case 3: {
 				return Geschlecht.M;
-			case 4: 
+			}
+			case 4: {
 				return Geschlecht.W;
-			case 5: 
+			}
+			case 5: {
 				return Geschlecht.D;
-			case 6: 
+			}
+			case 6: {
 				return Geschlecht.X;
+			}
 		}
 		return null;
 	}
@@ -118,20 +122,24 @@ export class Geschlecht extends JavaObject {
 		switch (upperValue) {
 			case "MÄNNLICH":
 			case "MAENNLICH":
-			case "M": 
+			case "M": {
 				return Geschlecht.M;
+			}
 			case "WEIBLICH":
-			case "W": 
+			case "W": {
 				return Geschlecht.W;
+			}
 			case "DIVERS":
-			case "D": 
+			case "D": {
 				return Geschlecht.D;
+			}
 			case "-":
 			case "X":
 			case "OHNE ANGABE":
 			case "OHNE_ANGABE":
-			case "OHNE ANGABE IM GEBURTENREGISTER": 
+			case "OHNE ANGABE IM GEBURTENREGISTER": {
 				return Geschlecht.X;
+			}
 		}
 		return Geschlecht.X;
 	}
@@ -145,14 +153,18 @@ export class Geschlecht extends JavaObject {
 	 */
 	public getAnrede(alter : number) : string | null {
 		switch (this.id) {
-			case 3: 
+			case 3: {
 				return (alter < 18) ? "Lieber" : "Sehr geehrter Herr";
-			case 4: 
+			}
+			case 4: {
 				return (alter < 18) ? "Liebe" : "Sehr geehrte Frau";
-			case 5: 
+			}
+			case 5: {
 				return "Guten Tag";
-			case 6: 
+			}
+			case 6: {
 				return "Guten Tag";
+			}
 		}
 		return "Guten Tag";
 	}

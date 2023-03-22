@@ -108,7 +108,7 @@ export class BilingualeSprache extends JavaObject {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
-		for (let i : number = 0; i < historie.length; i++){
+		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
@@ -178,7 +178,7 @@ export class BilingualeSprache extends JavaObject {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
+			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
@@ -232,7 +232,7 @@ export class BilingualeSprache extends JavaObject {
 		if (schulform === null)
 			return faecher;
 		let fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();
-		for (let i : number = 0; i < fachgruppen.length; i++){
+		for (let i : number = 0; i < fachgruppen.length; i++) {
 			let fg : BilingualeSprache | null = fachgruppen[i];
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);

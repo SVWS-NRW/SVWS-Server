@@ -96,7 +96,7 @@ export class Reformpaedagogik extends JavaObject {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
-		for (let i : number = 0; i < historie.length; i++){
+		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
 			for (let kuerzel of historie[i].schulformen) {
 				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
@@ -179,7 +179,7 @@ export class Reformpaedagogik extends JavaObject {
 		if (schulform === null)
 			return result;
 		let gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();
-		for (let i : number = 0; i < gliederungen.length; i++){
+		for (let i : number = 0; i < gliederungen.length; i++) {
 			let gliederung : Reformpaedagogik = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
@@ -199,7 +199,7 @@ export class Reformpaedagogik extends JavaObject {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
+			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
@@ -219,7 +219,7 @@ export class Reformpaedagogik extends JavaObject {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
 		if (this.daten.schulformen !== null) {
-			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
+			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
 				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;

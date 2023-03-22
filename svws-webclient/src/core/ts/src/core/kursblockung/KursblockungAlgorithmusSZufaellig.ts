@@ -60,7 +60,7 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	private verteileSchuelerAlle() : boolean {
 		let verbesserung : boolean = false;
 		KursblockungStatic.aktionPermutiere(this._random, this.perm);
-		for (let p : number = 0; p < this.schuelerArr.length; p++){
+		for (let p : number = 0; p < this.schuelerArr.length; p++) {
 			let i : number = this.perm[p];
 			verbesserung = verbesserung || this.verteileSchuelerEiner(this.schuelerArr[i]);
 		}

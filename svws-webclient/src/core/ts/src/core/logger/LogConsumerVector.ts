@@ -111,7 +111,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
 			let indent : string = __param0;
 			let result : Vector<string> | null = new Vector();
-			for (let i : number = 0; i < this.logData.size(); i++){
+			for (let i : number = 0; i < this.logData.size(); i++) {
 				let data : LogData = this.logData.get(i);
 				if (data === null)
 					continue;
@@ -174,7 +174,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let indent : string = __param1;
 			let sb : StringBuilder | null = new StringBuilder();
-			for (let i : number = 0; i < this.logData.size(); i++){
+			for (let i : number = 0; i < this.logData.size(); i++) {
 				let data : LogData | null = this.logData.get(i);
 				if (data === null)
 					continue;

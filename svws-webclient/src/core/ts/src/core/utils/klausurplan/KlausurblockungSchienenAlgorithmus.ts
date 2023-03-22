@@ -41,7 +41,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;
 		do {
-			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++){
+			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++) {
 				let zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
 			}

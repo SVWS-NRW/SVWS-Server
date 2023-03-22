@@ -60,12 +60,15 @@ export class GostBelegungsfehlerArt extends JavaObject {
 		if (kuerzel === null)
 			return null;
 		switch (kuerzel) {
-			case "BELEGUNG": 
+			case "BELEGUNG": {
 				return GostBelegungsfehlerArt.BELEGUNG;
-			case "SCHRIFTLICHKEIT": 
+			}
+			case "SCHRIFTLICHKEIT": {
 				return GostBelegungsfehlerArt.SCHRIFTLICHKEIT;
-			case "HINWEIS": 
+			}
+			case "HINWEIS": {
 				return GostBelegungsfehlerArt.HINWEIS;
+			}
 		}
 		return null;
 	}

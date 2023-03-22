@@ -225,7 +225,7 @@ export class KursblockungDynStatistik extends JavaObject {
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS)
 			return +1;
-		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i])
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i])
@@ -251,7 +251,7 @@ export class KursblockungDynStatistik extends JavaObject {
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
 			return +1;
-		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
@@ -285,7 +285,7 @@ export class KursblockungDynStatistik extends JavaObject {
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
 			return +1;
-		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
@@ -311,7 +311,7 @@ export class KursblockungDynStatistik extends JavaObject {
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG)
 			return +1;
-		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i])
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i])
