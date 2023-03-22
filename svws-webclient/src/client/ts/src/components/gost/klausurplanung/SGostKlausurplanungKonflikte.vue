@@ -1,9 +1,7 @@
 <template>
-	<div class="flex">
-		<div class="flex flex-row flex-wrap gap-4">
-			Hier kommt die Konflikt-Ansicht der Klausurplanung hin.
-		</div>
-	</div>
+	<svws-ui-content-card class="pt-8">
+	<span class="opacity-50">Hier wird demnächst die Konflikt-Ansicht der Klausurplanung implementiert.</span>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">

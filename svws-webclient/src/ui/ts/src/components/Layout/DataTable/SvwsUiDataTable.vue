@@ -324,7 +324,7 @@
 
 		&:first-child:not(.data-table__cell-select) {
 			.app-layout--secondary-container & {
-				@apply pl-7 4xl:pl-8;
+				@apply pl-3 2xl:pl-7 4xl:pl-8;
 			}
 		}
 
@@ -399,11 +399,11 @@
 
 	&__th-wrapper {
 		@apply inline-flex flex-row items-center;
-		@apply gap-0.5 pl-1;
+		@apply gap-0.5;
 		@apply font-bold max-md:text-sm-bold;
 
 		&__sortable {
-			@apply w-auto py-1 pr-0 pl-1;
+			@apply w-auto py-1 pr-0 pl-1 -ml-0.5;
 			@apply cursor-pointer select-none;
 
 			&:hover {

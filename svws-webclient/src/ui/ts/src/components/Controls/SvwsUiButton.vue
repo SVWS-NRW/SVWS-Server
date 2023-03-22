@@ -47,7 +47,8 @@
 </template>
 
 <style lang="postcss">
-.button {
+.button,
+.cv-wrapper .cv-header button {
 	@apply rounded-md border;
 	@apply select-none;
 	@apply text-button font-bold;
@@ -77,6 +78,10 @@
 	}
 }
 
+.cv-wrapper .cv-header button {
+	@apply inline-flex;
+}
+
 .button--primary {
 	@apply bg-primary text-white border-primary;
 
@@ -101,7 +106,8 @@
 	}
 }
 
-.button--transparent {
+.button--transparent,
+.cv-wrapper .cv-header button {
 	@apply bg-transparent border-transparent;
 
 	&:hover {
@@ -202,7 +208,8 @@
 	}
 }
 
-.button:disabled {
+.button:disabled,
+.cv-wrapper .cv-header button:disabled {
 	&,
 	&:hover,
 	&:focus,
@@ -225,13 +232,21 @@
 
 .button--small,
 .data-table__tbody .button,
-.router-tab-bar--subnav .button {
+.router-tab-bar--subnav .button,
+.router-tab-bar--subnav .radio--label,
+.cv-wrapper .cv-header button {
 	@apply text-sm font-medium;
+}
+
+.button--small,
+.data-table__tbody .button,
+.router-tab-bar--subnav .button,
+.cv-wrapper .cv-header button {
 	padding: 0.3em 0.75em;
 }
 
 .data-table__tbody .button {
-	@apply -my-2;
+	@apply -my-2 h-full self-center rounded;
 	padding: 0.1em 0.5em;
 }
 

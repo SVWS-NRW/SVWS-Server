@@ -1,8 +1,6 @@
 <template>
-	<svws-ui-content-card :title="'Beratungslehrer'">
-		<div class="content-wrapper">
-			<div class="input-wrapper">Hier kommen die Beratungslehrer hin</div>
-		</div>
+	<svws-ui-content-card :title="'Beratungslehrer'" class="opacity-50">
+		<span>Hier kommen die Beratungslehrer hin.</span>
 	</svws-ui-content-card>
 </template>
 

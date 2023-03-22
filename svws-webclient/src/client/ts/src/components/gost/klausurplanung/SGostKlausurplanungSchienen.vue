@@ -50,46 +50,52 @@
 				</svws-ui-button>
 			</template>
 		</svws-ui-modal>
-		<div class="flex flex-row items-center gap-x-5">
-			<label for="rgQuartalAuswahl">Quartalauswahl: </label>
-			<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
-				<svws-ui-radio-option name="rgQuartalAuswahl" label="beide" value="0" @input="chooseQuartal(0)" model-value="0" />
-				<svws-ui-radio-option name="rgQuartalAuswahl" label="1" value="1" @input="chooseQuartal(1)" />
-				<svws-ui-radio-option name="rgQuartalAuswahl" label="2" value="2" @input="chooseQuartal(2)" />
-			</svws-ui-radio-group>
-			<svws-ui-button class="secondary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
-			<svws-ui-button class="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-			<svws-ui-button class="secondary" @click="modal.openModal()" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
-			<svws-ui-button class="secondary" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
-		</div>
-		<div class="flex flex-row gap-8 mt-5">
-			<s-gost-klausurplanung-schienen-termin :quartal="quartal"
-				:kursklausurmanager="kursklausurmanager"
-				:termin="null"
-				:alle-termine="termine"
-				:faecher-manager="faecherManager"
-				:map-lehrer="mapLehrer"
-				:set-termin-to-kursklausur="setTerminToKursklausur"
-				:drag-status="dragStatus"
-				:map-schueler="mapSchueler" />
-			<div class="flex flex-col">
-				<div class="flex flex-row flex-wrap gap-4 items-start">
-					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
-						:class="dropOverCssClasses(termin)"
-						:kursklausurmanager="kursklausurmanager"
-						:termin="termin"
-						:alle-termine="termine"
-						:faecher-manager="faecherManager"
-						:map-lehrer="mapLehrer"
-						:set-termin-to-kursklausur="setTerminToKursklausur"
-						:drag-status="dragStatus"
-						:drag-klausur="dragKlausur"
-						:map-schueler="mapSchueler"
-						:loesche-klausurtermin="loescheKlausurtermin"
-						:patch-klausurtermin="patchKlausurtermin" />
+		<svws-ui-content-card class="pt-8">
+			<div class="flex flex-wrap justify-between items-start">
+				<div class="flex flex-wrap items-center gap-2">
+					<label class="font-bold hidden" for="rgQuartalAuswahl">Quartal:</label>
+					<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide Quartale" value="0" @input="chooseQuartal(0)" model-value="0" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="1." value="1" @input="chooseQuartal(1)" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="2." value="2" @input="chooseQuartal(2)" />
+					</svws-ui-radio-group>
+				</div>
+				<div class="flex flex-wrap items-center gap-2">
+					<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
+					<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
+					<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+					<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 				</div>
 			</div>
-		</div>
+			<div class="flex flex-row gap-8 mt-4">
+				<s-gost-klausurplanung-schienen-termin :quartal="quartal"
+													   :kursklausurmanager="kursklausurmanager"
+													   :termin="null"
+													   :alle-termine="termine"
+													   :faecher-manager="faecherManager"
+													   :map-lehrer="mapLehrer"
+													   :set-termin-to-kursklausur="setTerminToKursklausur"
+													   :drag-status="dragStatus"
+													   :map-schueler="mapSchueler" />
+				<div class="flex flex-col">
+					<div class="flex flex-row flex-wrap gap-4 items-start">
+						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+															   :class="dropOverCssClasses(termin)"
+															   :kursklausurmanager="kursklausurmanager"
+															   :termin="termin"
+															   :alle-termine="termine"
+															   :faecher-manager="faecherManager"
+															   :map-lehrer="mapLehrer"
+															   :set-termin-to-kursklausur="setTerminToKursklausur"
+															   :drag-status="dragStatus"
+															   :drag-klausur="dragKlausur"
+															   :map-schueler="mapSchueler"
+															   :loesche-klausurtermin="loescheKlausurtermin"
+															   :patch-klausurtermin="patchKlausurtermin" />
+					</div>
+				</div>
+			</div>
+		</svws-ui-content-card>
 	</div>
 </template>
 
