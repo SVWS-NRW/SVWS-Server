@@ -1,6 +1,6 @@
 import {
 	Abiturdaten, AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
-	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
+	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
 } from "@svws-nrw/svws-core";
 import { shallowRef, ShallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -18,6 +18,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 	_gostBelegpruefungErgebnis: ShallowRef<GostBelegpruefungErgebnis> = shallowRef(new GostBelegpruefungErgebnis());
 	gostJahrgang: GostJahrgang = new GostJahrgang();
 	gostJahrgangsdaten: GostJahrgangsdaten = new GostJahrgangsdaten();
+	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten = new GostLaufbahnplanungBeratungsdaten();
 	listGostFaecher: List<GostFach> = new Vector();
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination> = new Map();
 
@@ -79,6 +80,12 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.item.id);
 	}
 
+	patchBeratungsdaten = async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
+		if (this.item === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.item.id);
+	}
+
 }
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
@@ -119,6 +126,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			this.data.listGostFaecher.clear();
 			this.data.gostJahrgang = new GostJahrgang();
 			this.data.gostJahrgangsdaten = new GostJahrgangsdaten();
+			this.data.gostLaufbahnBeratungsdaten = new GostLaufbahnplanungBeratungsdaten();
 			this.data.faecherManager = undefined;
 			this.data.mapFachkombinationen = new Map();
 		} else {
@@ -130,6 +138,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				this.data.gostJahrgang.abiturjahr = this.data.item.abiturjahrgang;
 				this.data.gostJahrgang.jahrgang = this.data.item.jahrgang;
 				this.data.gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, this.data.gostJahrgang.abiturjahr);
+				this.data.gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, item.id);
 				this.data.listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.data.gostJahrgang.abiturjahr);
 				this.data.faecherManager = new GostFaecherManager(this.data.listGostFaecher);
 				this.data.setGostBelegpruefungErgebnis();
@@ -155,6 +164,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			getLaufbahnplanung: this.data.getLaufbahnplanung,
 			schueler: this.data.item,
 			gostJahrgangsdaten: this.data.gostJahrgangsdaten,
+			gostLaufbahnBeratungsdaten: () => this.data.gostLaufbahnBeratungsdaten,
+			patchBeratungsdaten: this.data.patchBeratungsdaten,
 			gostBelegpruefungsArt: this.data._gostBelegpruefungsArt.value,
 			gostBelegpruefungErgebnis: this.data._gostBelegpruefungErgebnis.value,
 			abiturdatenManager: this.data.abiturdatenManager,

@@ -19,9 +19,12 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, GostBelegpruefungsArt, Sprachendaten, GostJahrgangsdaten } from "@svws-nrw/svws-core";
+	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
+		GostBelegpruefungsArt, Sprachendaten, GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
+		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
+		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 		abiturdatenManager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
@@ -38,16 +41,19 @@
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
 
-	// TODO Beratungsdatum (siehe Komponente oben)
 	const inputBeratungsdatum: WritableComputedRef<string> = computed({
-		get: () => "",
-		set: (value) => void value
+		get: () => props.gostLaufbahnBeratungsdaten().beratungsdatum || "",
+		set: (value) => {
+			if (value === "")
+				void props.patchBeratungsdaten({ beratungsdatum: null });
+			else
+				void props.patchBeratungsdaten({ beratungsdatum: value });
+		}
 	});
 
-	// TODO Kommentar (siehe Komponente oben)
 	const kommentar: WritableComputedRef<string> = computed({
-		get: () => "",
-		set: (value) => void value
+		get: () => props.gostLaufbahnBeratungsdaten().kommentar || "",
+		set: (value) => void props.patchBeratungsdaten({ kommentar: value })
 	});
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
