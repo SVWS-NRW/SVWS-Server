@@ -45,8 +45,8 @@ export class GEAbschlussFaecher extends JavaObject {
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(GEAbschlussFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -62,8 +62,8 @@ export class GEAbschlussFaecher extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += GEAbschlussFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -91,8 +91,8 @@ export class GEAbschlussFaecher extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += GEAbschlussFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';

@@ -171,13 +171,13 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.sekIWechsel = typeof obj.sekIWechsel === "undefined" ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = typeof obj.sekIErsteSchulform === "undefined" ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
 		result.sekIIWechsel = typeof obj.sekIIWechsel === "undefined" ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
-		if (!!obj.merkmale) {
-			for (let elem of obj.merkmale) {
+		if (!(obj.merkmale === undefined)) {
+			for (const elem of obj.merkmale) {
 				result.merkmale?.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.alleSchulen) {
-			for (let elem of obj.alleSchulen) {
+		if (!(obj.alleSchulen === undefined)) {
+			for (const elem of obj.alleSchulen) {
 				result.alleSchulen?.add(SchuelerSchulbesuchSchule.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -213,8 +213,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			result += '"merkmale" : []';
 		} else {
 			result += '"merkmale" : [ ';
-			for (let i : number = 0; i < obj.merkmale.size(); i++) {
-				let elem = obj.merkmale.get(i);
+			for (let i = 0; i < obj.merkmale.size(); i++) {
+				const elem = obj.merkmale.get(i);
 				result += SchuelerSchulbesuchMerkmal.transpilerToJSON(elem);
 				if (i < obj.merkmale.size() - 1)
 					result += ',';
@@ -225,8 +225,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			result += '"alleSchulen" : []';
 		} else {
 			result += '"alleSchulen" : [ ';
-			for (let i : number = 0; i < obj.alleSchulen.size(); i++) {
-				let elem = obj.alleSchulen.get(i);
+			for (let i = 0; i < obj.alleSchulen.size(); i++) {
+				const elem = obj.alleSchulen.get(i);
 				result += SchuelerSchulbesuchSchule.transpilerToJSON(elem);
 				if (i < obj.alleSchulen.size() - 1)
 					result += ',';
@@ -314,8 +314,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 				result += '"merkmale" : []';
 			} else {
 				result += '"merkmale" : [ ';
-				for (let i : number = 0; i < obj.merkmale.size(); i++) {
-					let elem = obj.merkmale.get(i);
+				for (let i = 0; i < obj.merkmale.size(); i++) {
+					const elem = obj.merkmale.get(i);
 					result += SchuelerSchulbesuchMerkmal.transpilerToJSON(elem);
 					if (i < obj.merkmale.size() - 1)
 						result += ',';
@@ -328,8 +328,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 				result += '"alleSchulen" : []';
 			} else {
 				result += '"alleSchulen" : [ ';
-				for (let i : number = 0; i < obj.alleSchulen.size(); i++) {
-					let elem = obj.alleSchulen.get(i);
+				for (let i = 0; i < obj.alleSchulen.size(); i++) {
+					const elem = obj.alleSchulen.get(i);
 					result += SchuelerSchulbesuchSchule.transpilerToJSON(elem);
 					if (i < obj.alleSchulen.size() - 1)
 						result += ',';

@@ -58,13 +58,13 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(elem);
 			}
 		}
-		if (!!obj.schienen) {
-			for (let elem of obj.schienen) {
+		if (!(obj.schienen === undefined)) {
+			for (const elem of obj.schienen) {
 				result.schienen?.add(elem);
 			}
 		}
@@ -81,8 +81,8 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += elem;
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -93,8 +93,8 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 			result += '"schienen" : []';
 		} else {
 			result += '"schienen" : [ ';
-			for (let i : number = 0; i < obj.schienen.size(); i++) {
-				let elem = obj.schienen.get(i);
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
 				result += elem;
 				if (i < obj.schienen.size() - 1)
 					result += ',';
@@ -125,8 +125,8 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += elem;
 					if (i < obj.schueler.size() - 1)
 						result += ',';
@@ -139,8 +139,8 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 				result += '"schienen" : []';
 			} else {
 				result += '"schienen" : [ ';
-				for (let i : number = 0; i < obj.schienen.size(); i++) {
-					let elem = obj.schienen.get(i);
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
 					result += elem;
 					if (i < obj.schienen.size() - 1)
 						result += ',';

@@ -36,13 +36,13 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 		if (typeof obj.erfolgreich === "undefined")
 			 throw new Error('invalid json format, missing attribute erfolgreich');
 		result.erfolgreich = obj.erfolgreich;
-		if (!!obj.fehlercodes) {
-			for (let elem of obj.fehlercodes) {
+		if (!(obj.fehlercodes === undefined)) {
+			for (const elem of obj.fehlercodes) {
 				result.fehlercodes?.add(GostBelegpruefungErgebnisFehler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.log) {
-			for (let elem of obj.log) {
+		if (!(obj.log === undefined)) {
+			for (const elem of obj.log) {
 				result.log?.add(elem);
 			}
 		}
@@ -56,8 +56,8 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 			result += '"fehlercodes" : []';
 		} else {
 			result += '"fehlercodes" : [ ';
-			for (let i : number = 0; i < obj.fehlercodes.size(); i++) {
-				let elem = obj.fehlercodes.get(i);
+			for (let i = 0; i < obj.fehlercodes.size(); i++) {
+				const elem = obj.fehlercodes.get(i);
 				result += GostBelegpruefungErgebnisFehler.transpilerToJSON(elem);
 				if (i < obj.fehlercodes.size() - 1)
 					result += ',';
@@ -68,8 +68,8 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 			result += '"log" : []';
 		} else {
 			result += '"log" : [ ';
-			for (let i : number = 0; i < obj.log.size(); i++) {
-				let elem = obj.log.get(i);
+			for (let i = 0; i < obj.log.size(); i++) {
+				const elem = obj.log.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.log.size() - 1)
 					result += ',';
@@ -91,8 +91,8 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 				result += '"fehlercodes" : []';
 			} else {
 				result += '"fehlercodes" : [ ';
-				for (let i : number = 0; i < obj.fehlercodes.size(); i++) {
-					let elem = obj.fehlercodes.get(i);
+				for (let i = 0; i < obj.fehlercodes.size(); i++) {
+					const elem = obj.fehlercodes.get(i);
 					result += GostBelegpruefungErgebnisFehler.transpilerToJSON(elem);
 					if (i < obj.fehlercodes.size() - 1)
 						result += ',';
@@ -105,8 +105,8 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 				result += '"log" : []';
 			} else {
 				result += '"log" : [ ';
-				for (let i : number = 0; i < obj.log.size(); i++) {
-					let elem = obj.log.get(i);
+				for (let i = 0; i < obj.log.size(); i++) {
+					const elem = obj.log.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.log.size() - 1)
 						result += ',';

@@ -29,8 +29,8 @@ export class GostBelegpruefungsdaten extends JavaObject {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsdaten();
 		result.abiturdaten = ((typeof obj.abiturdaten === "undefined") || (obj.abiturdaten === null)) ? null : Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
-		if (!!obj.gostFaecher) {
-			for (let elem of obj.gostFaecher) {
+		if (!(obj.gostFaecher === undefined)) {
+			for (const elem of obj.gostFaecher) {
 				result.gostFaecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -44,8 +44,8 @@ export class GostBelegpruefungsdaten extends JavaObject {
 			result += '"gostFaecher" : []';
 		} else {
 			result += '"gostFaecher" : [ ';
-			for (let i : number = 0; i < obj.gostFaecher.size(); i++) {
-				let elem = obj.gostFaecher.get(i);
+			for (let i = 0; i < obj.gostFaecher.size(); i++) {
+				const elem = obj.gostFaecher.get(i);
 				result += GostFach.transpilerToJSON(elem);
 				if (i < obj.gostFaecher.size() - 1)
 					result += ',';
@@ -67,8 +67,8 @@ export class GostBelegpruefungsdaten extends JavaObject {
 				result += '"gostFaecher" : []';
 			} else {
 				result += '"gostFaecher" : [ ';
-				for (let i : number = 0; i < obj.gostFaecher.size(); i++) {
-					let elem = obj.gostFaecher.get(i);
+				for (let i = 0; i < obj.gostFaecher.size(); i++) {
+					const elem = obj.gostFaecher.get(i);
 					result += GostFach.transpilerToJSON(elem);
 					if (i < obj.gostFaecher.size() - 1)
 						result += ',';

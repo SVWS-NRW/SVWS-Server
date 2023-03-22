@@ -159,7 +159,7 @@ export class GostKursklausur extends JavaObject {
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
 		result.kursKurzbezeichnung = typeof obj.kursKurzbezeichnung === "undefined" ? null : obj.kursKurzbezeichnung === null ? null : obj.kursKurzbezeichnung;
-		for (let i : number = 0; i < obj.kursSchiene.length; i++) {
+		for (let i = 0; i < obj.kursSchiene.length; i++) {
 			result.kursSchiene[i] = obj.kursSchiene[i];
 		}
 		if (typeof obj.idLehrer === "undefined")
@@ -167,8 +167,8 @@ export class GostKursklausur extends JavaObject {
 		result.idLehrer = obj.idLehrer;
 		result.idTermin = typeof obj.idTermin === "undefined" ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = typeof obj.startzeit === "undefined" ? null : obj.startzeit === null ? null : obj.startzeit;
-		if (!!obj.schuelerIds) {
-			for (let elem of obj.schuelerIds) {
+		if (!(obj.schuelerIds === undefined)) {
+			for (const elem of obj.schuelerIds) {
 				result.schuelerIds?.add(elem);
 			}
 		}
@@ -196,8 +196,8 @@ export class GostKursklausur extends JavaObject {
 			result += '"kursSchiene" : []';
 		} else {
 			result += '"kursSchiene" : [ ';
-			for (let i : number = 0; i < obj.kursSchiene.length; i++) {
-				let elem = obj.kursSchiene[i];
+			for (let i = 0; i < obj.kursSchiene.length; i++) {
+				const elem = obj.kursSchiene[i];
 				result += JSON.stringify(elem);
 				if (i < obj.kursSchiene.length - 1)
 					result += ',';
@@ -211,8 +211,8 @@ export class GostKursklausur extends JavaObject {
 			result += '"schuelerIds" : []';
 		} else {
 			result += '"schuelerIds" : [ ';
-			for (let i : number = 0; i < obj.schuelerIds.size(); i++) {
-				let elem = obj.schuelerIds.get(i);
+			for (let i = 0; i < obj.schuelerIds.size(); i++) {
+				const elem = obj.schuelerIds.get(i);
 				result += elem;
 				if (i < obj.schuelerIds.size() - 1)
 					result += ',';
@@ -272,13 +272,13 @@ export class GostKursklausur extends JavaObject {
 			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
 		}
 		if (typeof obj.kursSchiene !== "undefined") {
-			let a = obj.kursSchiene;
+			const a = obj.kursSchiene;
 			if (!a) {
 				result += '"kursSchiene" : []';
 			} else {
 				result += '"kursSchiene" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';
@@ -300,8 +300,8 @@ export class GostKursklausur extends JavaObject {
 				result += '"schuelerIds" : []';
 			} else {
 				result += '"schuelerIds" : [ ';
-				for (let i : number = 0; i < obj.schuelerIds.size(); i++) {
-					let elem = obj.schuelerIds.get(i);
+				for (let i = 0; i < obj.schuelerIds.size(); i++) {
+					const elem = obj.schuelerIds.get(i);
 					result += elem;
 					if (i < obj.schuelerIds.size() - 1)
 						result += ',';

@@ -59,8 +59,8 @@ export class Adressbuch extends JavaObject {
 		if (typeof obj.adressbuchTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute adressbuchTyp');
 		result.adressbuchTyp = obj.adressbuchTyp;
-		if (!!obj.adressbuchEintraege) {
-			for (let elem of obj.adressbuchEintraege) {
+		if (!(obj.adressbuchEintraege === undefined)) {
+			for (const elem of obj.adressbuchEintraege) {
 				result.adressbuchEintraege?.add(AdressbuchEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -78,8 +78,8 @@ export class Adressbuch extends JavaObject {
 			result += '"adressbuchEintraege" : []';
 		} else {
 			result += '"adressbuchEintraege" : [ ';
-			for (let i : number = 0; i < obj.adressbuchEintraege.size(); i++) {
-				let elem = obj.adressbuchEintraege.get(i);
+			for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
+				const elem = obj.adressbuchEintraege.get(i);
 				result += AdressbuchEintrag.transpilerToJSON(elem);
 				if (i < obj.adressbuchEintraege.size() - 1)
 					result += ',';
@@ -113,8 +113,8 @@ export class Adressbuch extends JavaObject {
 				result += '"adressbuchEintraege" : []';
 			} else {
 				result += '"adressbuchEintraege" : [ ';
-				for (let i : number = 0; i < obj.adressbuchEintraege.size(); i++) {
-					let elem = obj.adressbuchEintraege.get(i);
+				for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
+					const elem = obj.adressbuchEintraege.get(i);
 					result += AdressbuchEintrag.transpilerToJSON(elem);
 					if (i < obj.adressbuchEintraege.size() - 1)
 						result += ',';

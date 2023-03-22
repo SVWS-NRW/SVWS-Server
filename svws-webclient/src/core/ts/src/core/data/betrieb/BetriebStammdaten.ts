@@ -189,8 +189,8 @@ export class BetriebStammdaten extends JavaObject {
 		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : obj.GU_ID;
 		result.ErwFuehrungszeugnis = typeof obj.ErwFuehrungszeugnis === "undefined" ? null : obj.ErwFuehrungszeugnis === null ? null : obj.ErwFuehrungszeugnis;
 		result.ExtID = typeof obj.ExtID === "undefined" ? null : obj.ExtID === null ? null : obj.ExtID;
-		if (!!obj.ansprechpartner) {
-			for (let elem of obj.ansprechpartner) {
+		if (!(obj.ansprechpartner === undefined)) {
+			for (const elem of obj.ansprechpartner) {
 				result.ansprechpartner?.add(BetriebAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -230,8 +230,8 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"ansprechpartner" : []';
 		} else {
 			result += '"ansprechpartner" : [ ';
-			for (let i : number = 0; i < obj.ansprechpartner.size(); i++) {
-				let elem = obj.ansprechpartner.get(i);
+			for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+				const elem = obj.ansprechpartner.get(i);
 				result += BetriebAnsprechpartner.transpilerToJSON(elem);
 				if (i < obj.ansprechpartner.size() - 1)
 					result += ',';
@@ -331,8 +331,8 @@ export class BetriebStammdaten extends JavaObject {
 				result += '"ansprechpartner" : []';
 			} else {
 				result += '"ansprechpartner" : [ ';
-				for (let i : number = 0; i < obj.ansprechpartner.size(); i++) {
-					let elem = obj.ansprechpartner.get(i);
+				for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+					const elem = obj.ansprechpartner.get(i);
 					result += BetriebAnsprechpartner.transpilerToJSON(elem);
 					if (i < obj.ansprechpartner.size() - 1)
 						result += ',';

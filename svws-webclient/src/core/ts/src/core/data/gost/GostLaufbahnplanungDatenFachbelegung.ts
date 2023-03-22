@@ -41,10 +41,10 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : obj.abiturFach;
-		for (let i : number = 0; i < obj.kursart.length; i++) {
+		for (let i = 0; i < obj.kursart.length; i++) {
 			result.kursart[i] = obj.kursart[i] === null ? null : obj.kursart[i];
 		}
-		for (let i : number = 0; i < obj.schriftlich.length; i++) {
+		for (let i = 0; i < obj.schriftlich.length; i++) {
 			result.schriftlich[i] = obj.schriftlich[i];
 		}
 		return result;
@@ -58,8 +58,8 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			result += '"kursart" : []';
 		} else {
 			result += '"kursart" : [ ';
-			for (let i : number = 0; i < obj.kursart.length; i++) {
-				let elem = obj.kursart[i];
+			for (let i = 0; i < obj.kursart.length; i++) {
+				const elem = obj.kursart[i];
 				result += (elem == null) ? null : '"' + elem + '"';
 				if (i < obj.kursart.length - 1)
 					result += ',';
@@ -70,8 +70,8 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			result += '"schriftlich" : []';
 		} else {
 			result += '"schriftlich" : [ ';
-			for (let i : number = 0; i < obj.schriftlich.length; i++) {
-				let elem = obj.schriftlich[i];
+			for (let i = 0; i < obj.schriftlich.length; i++) {
+				const elem = obj.schriftlich[i];
 				result += JSON.stringify(elem);
 				if (i < obj.schriftlich.length - 1)
 					result += ',';
@@ -92,13 +92,13 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			let a = obj.kursart;
+			const a = obj.kursart;
 			if (!a) {
 				result += '"kursart" : []';
 			} else {
 				result += '"kursart" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += (elem == null) ? null : '"' + elem + '"';
 					if (i < a.length - 1)
 						result += ',';
@@ -107,13 +107,13 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			}
 		}
 		if (typeof obj.schriftlich !== "undefined") {
-			let a = obj.schriftlich;
+			const a = obj.schriftlich;
 			if (!a) {
 				result += '"schriftlich" : []';
 			} else {
 				result += '"schriftlich" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';

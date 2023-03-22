@@ -46,8 +46,8 @@ export class BenutzergruppeDaten extends JavaObject {
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
-		if (!!obj.kompetenzen) {
-			for (let elem of obj.kompetenzen) {
+		if (!(obj.kompetenzen === undefined)) {
+			for (const elem of obj.kompetenzen) {
 				result.kompetenzen?.add(elem);
 			}
 		}
@@ -63,8 +63,8 @@ export class BenutzergruppeDaten extends JavaObject {
 			result += '"kompetenzen" : []';
 		} else {
 			result += '"kompetenzen" : [ ';
-			for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
-				let elem = obj.kompetenzen.get(i);
+			for (let i = 0; i < obj.kompetenzen.size(); i++) {
+				const elem = obj.kompetenzen.get(i);
 				result += elem;
 				if (i < obj.kompetenzen.size() - 1)
 					result += ',';
@@ -92,8 +92,8 @@ export class BenutzergruppeDaten extends JavaObject {
 				result += '"kompetenzen" : []';
 			} else {
 				result += '"kompetenzen" : [ ';
-				for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
-					let elem = obj.kompetenzen.get(i);
+				for (let i = 0; i < obj.kompetenzen.size(); i++) {
+					const elem = obj.kompetenzen.get(i);
 					result += elem;
 					if (i < obj.kompetenzen.size() - 1)
 						result += ',';

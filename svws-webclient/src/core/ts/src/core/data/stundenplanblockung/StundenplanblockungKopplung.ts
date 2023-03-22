@@ -38,8 +38,8 @@ export class StundenplanblockungKopplung extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!!obj.stundenelemente) {
-			for (let elem of obj.stundenelemente) {
+		if (!(obj.stundenelemente === undefined)) {
+			for (const elem of obj.stundenelemente) {
 				result.stundenelemente?.add(StundenplanblockungStundenelement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -54,8 +54,8 @@ export class StundenplanblockungKopplung extends JavaObject {
 			result += '"stundenelemente" : []';
 		} else {
 			result += '"stundenelemente" : [ ';
-			for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
-				let elem = obj.stundenelemente.get(i);
+			for (let i = 0; i < obj.stundenelemente.size(); i++) {
+				const elem = obj.stundenelemente.get(i);
 				result += StundenplanblockungStundenelement.transpilerToJSON(elem);
 				if (i < obj.stundenelemente.size() - 1)
 					result += ',';
@@ -80,8 +80,8 @@ export class StundenplanblockungKopplung extends JavaObject {
 				result += '"stundenelemente" : []';
 			} else {
 				result += '"stundenelemente" : [ ';
-				for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
-					let elem = obj.stundenelemente.get(i);
+				for (let i = 0; i < obj.stundenelemente.size(); i++) {
+					const elem = obj.stundenelemente.get(i);
 					result += StundenplanblockungStundenelement.transpilerToJSON(elem);
 					if (i < obj.stundenelemente.size() - 1)
 						result += ',';

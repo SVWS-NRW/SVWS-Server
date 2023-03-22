@@ -36,8 +36,8 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 			 throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
-		if (!!obj.jahrgaenge) {
-			for (let elem of obj.jahrgaenge) {
+		if (!(obj.jahrgaenge === undefined)) {
+			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(elem);
 			}
 		}
@@ -52,8 +52,8 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 			result += '"jahrgaenge" : []';
 		} else {
 			result += '"jahrgaenge" : [ ';
-			for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-				let elem = obj.jahrgaenge.get(i);
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
@@ -78,8 +78,8 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 				result += '"jahrgaenge" : []';
 			} else {
 				result += '"jahrgaenge" : [ ';
-				for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-					let elem = obj.jahrgaenge.get(i);
+				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+					const elem = obj.jahrgaenge.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.jahrgaenge.size() - 1)
 						result += ',';

@@ -40,13 +40,13 @@ export class AbschlussErgebnis extends JavaObject {
 			 throw new Error('invalid json format, missing attribute erworben');
 		result.erworben = obj.erworben;
 		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : obj.abschluss;
-		if (!!obj.npFaecher) {
-			for (let elem of obj.npFaecher) {
+		if (!(obj.npFaecher === undefined)) {
+			for (const elem of obj.npFaecher) {
 				result.npFaecher?.add(elem);
 			}
 		}
-		if (!!obj.log) {
-			for (let elem of obj.log) {
+		if (!(obj.log === undefined)) {
+			for (const elem of obj.log) {
 				result.log?.add(elem);
 			}
 		}
@@ -61,8 +61,8 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"npFaecher" : []';
 		} else {
 			result += '"npFaecher" : [ ';
-			for (let i : number = 0; i < obj.npFaecher.size(); i++) {
-				let elem = obj.npFaecher.get(i);
+			for (let i = 0; i < obj.npFaecher.size(); i++) {
+				const elem = obj.npFaecher.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.npFaecher.size() - 1)
 					result += ',';
@@ -73,8 +73,8 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"log" : []';
 		} else {
 			result += '"log" : [ ';
-			for (let i : number = 0; i < obj.log.size(); i++) {
-				let elem = obj.log.get(i);
+			for (let i = 0; i < obj.log.size(); i++) {
+				const elem = obj.log.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.log.size() - 1)
 					result += ',';
@@ -99,8 +99,8 @@ export class AbschlussErgebnis extends JavaObject {
 				result += '"npFaecher" : []';
 			} else {
 				result += '"npFaecher" : [ ';
-				for (let i : number = 0; i < obj.npFaecher.size(); i++) {
-					let elem = obj.npFaecher.get(i);
+				for (let i = 0; i < obj.npFaecher.size(); i++) {
+					const elem = obj.npFaecher.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.npFaecher.size() - 1)
 						result += ',';
@@ -113,8 +113,8 @@ export class AbschlussErgebnis extends JavaObject {
 				result += '"log" : []';
 			} else {
 				result += '"log" : [ ';
-				for (let i : number = 0; i < obj.log.size(); i++) {
-					let elem = obj.log.get(i);
+				for (let i = 0; i < obj.log.size(); i++) {
+					const elem = obj.log.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.log.size() - 1)
 						result += ',';

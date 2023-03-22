@@ -50,8 +50,8 @@ export class ENMKlasse extends JavaObject {
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if (!!obj.klassenlehrer) {
-			for (let elem of obj.klassenlehrer) {
+		if (!(obj.klassenlehrer === undefined)) {
+			for (const elem of obj.klassenlehrer) {
 				result.klassenlehrer?.add(elem);
 			}
 		}
@@ -68,8 +68,8 @@ export class ENMKlasse extends JavaObject {
 			result += '"klassenlehrer" : []';
 		} else {
 			result += '"klassenlehrer" : [ ';
-			for (let i : number = 0; i < obj.klassenlehrer.size(); i++) {
-				let elem = obj.klassenlehrer.get(i);
+			for (let i = 0; i < obj.klassenlehrer.size(); i++) {
+				const elem = obj.klassenlehrer.get(i);
 				result += elem;
 				if (i < obj.klassenlehrer.size() - 1)
 					result += ',';
@@ -100,8 +100,8 @@ export class ENMKlasse extends JavaObject {
 				result += '"klassenlehrer" : []';
 			} else {
 				result += '"klassenlehrer" : [ ';
-				for (let i : number = 0; i < obj.klassenlehrer.size(); i++) {
-					let elem = obj.klassenlehrer.get(i);
+				for (let i = 0; i < obj.klassenlehrer.size(); i++) {
+					const elem = obj.klassenlehrer.get(i);
 					result += elem;
 					if (i < obj.klassenlehrer.size() - 1)
 						result += ',';

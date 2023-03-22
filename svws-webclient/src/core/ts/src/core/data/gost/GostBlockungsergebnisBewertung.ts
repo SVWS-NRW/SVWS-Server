@@ -56,8 +56,8 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisBewertung {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisBewertung();
-		if (!!obj.regelVerletzungen) {
-			for (let elem of obj.regelVerletzungen) {
+		if (!(obj.regelVerletzungen === undefined)) {
+			for (const elem of obj.regelVerletzungen) {
 				result.regelVerletzungen?.add(elem);
 			}
 		}
@@ -73,7 +73,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		if (typeof obj.kursdifferenzMax === "undefined")
 			 throw new Error('invalid json format, missing attribute kursdifferenzMax');
 		result.kursdifferenzMax = obj.kursdifferenzMax;
-		for (let i : number = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+		for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
 			result.kursdifferenzHistogramm[i] = obj.kursdifferenzHistogramm[i];
 		}
 		if (typeof obj.anzahlKurseMitGleicherFachartProSchiene === "undefined")
@@ -88,8 +88,8 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 			result += '"regelVerletzungen" : []';
 		} else {
 			result += '"regelVerletzungen" : [ ';
-			for (let i : number = 0; i < obj.regelVerletzungen.size(); i++) {
-				let elem = obj.regelVerletzungen.get(i);
+			for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
+				const elem = obj.regelVerletzungen.get(i);
 				result += elem;
 				if (i < obj.regelVerletzungen.size() - 1)
 					result += ',';
@@ -104,8 +104,8 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 			result += '"kursdifferenzHistogramm" : []';
 		} else {
 			result += '"kursdifferenzHistogramm" : [ ';
-			for (let i : number = 0; i < obj.kursdifferenzHistogramm.length; i++) {
-				let elem = obj.kursdifferenzHistogramm[i];
+			for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+				const elem = obj.kursdifferenzHistogramm[i];
 				result += JSON.stringify(elem);
 				if (i < obj.kursdifferenzHistogramm.length - 1)
 					result += ',';
@@ -125,8 +125,8 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 				result += '"regelVerletzungen" : []';
 			} else {
 				result += '"regelVerletzungen" : [ ';
-				for (let i : number = 0; i < obj.regelVerletzungen.size(); i++) {
-					let elem = obj.regelVerletzungen.get(i);
+				for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
+					const elem = obj.regelVerletzungen.get(i);
 					result += elem;
 					if (i < obj.regelVerletzungen.size() - 1)
 						result += ',';
@@ -147,13 +147,13 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 			result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
 		}
 		if (typeof obj.kursdifferenzHistogramm !== "undefined") {
-			let a = obj.kursdifferenzHistogramm;
+			const a = obj.kursdifferenzHistogramm;
 			if (!a) {
 				result += '"kursdifferenzHistogramm" : []';
 			} else {
 				result += '"kursdifferenzHistogramm" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';

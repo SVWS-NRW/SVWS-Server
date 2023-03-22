@@ -50,8 +50,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		result.note = obj.note;
 		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : obj.hatBA;
 		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
-		if (!!obj.log) {
-			for (let elem of obj.log) {
+		if (!(obj.log === undefined)) {
+			for (const elem of obj.log) {
 				result.log?.add(elem);
 			}
 		}
@@ -68,8 +68,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 			result += '"log" : []';
 		} else {
 			result += '"log" : [ ';
-			for (let i : number = 0; i < obj.log.size(); i++) {
-				let elem = obj.log.get(i);
+			for (let i = 0; i < obj.log.size(); i++) {
+				const elem = obj.log.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.log.size() - 1)
 					result += ',';
@@ -100,8 +100,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 				result += '"log" : []';
 			} else {
 				result += '"log" : [ ';
-				for (let i : number = 0; i < obj.log.size(); i++) {
-					let elem = obj.log.get(i);
+				for (let i = 0; i < obj.log.size(); i++) {
+					const elem = obj.log.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.log.size() - 1)
 						result += ',';

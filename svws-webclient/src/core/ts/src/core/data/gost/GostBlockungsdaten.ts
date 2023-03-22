@@ -94,33 +94,33 @@ export class GostBlockungsdaten extends JavaObject {
 		if (typeof obj.istAktiv === "undefined")
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if (!!obj.schienen) {
-			for (let elem of obj.schienen) {
+		if (!(obj.schienen === undefined)) {
+			for (const elem of obj.schienen) {
 				result.schienen?.add(GostBlockungSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.regeln) {
-			for (let elem of obj.regeln) {
+		if (!(obj.regeln === undefined)) {
+			for (const elem of obj.regeln) {
 				result.regeln?.add(GostBlockungRegel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.kurse) {
-			for (let elem of obj.kurse) {
+		if (!(obj.kurse === undefined)) {
+			for (const elem of obj.kurse) {
 				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.fachwahlen) {
-			for (let elem of obj.fachwahlen) {
+		if (!(obj.fachwahlen === undefined)) {
+			for (const elem of obj.fachwahlen) {
 				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.ergebnisse) {
-			for (let elem of obj.ergebnisse) {
+		if (!(obj.ergebnisse === undefined)) {
+			for (const elem of obj.ergebnisse) {
 				result.ergebnisse?.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -138,8 +138,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"schienen" : []';
 		} else {
 			result += '"schienen" : [ ';
-			for (let i : number = 0; i < obj.schienen.size(); i++) {
-				let elem = obj.schienen.get(i);
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
 				result += GostBlockungSchiene.transpilerToJSON(elem);
 				if (i < obj.schienen.size() - 1)
 					result += ',';
@@ -150,8 +150,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"regeln" : []';
 		} else {
 			result += '"regeln" : [ ';
-			for (let i : number = 0; i < obj.regeln.size(); i++) {
-				let elem = obj.regeln.get(i);
+			for (let i = 0; i < obj.regeln.size(); i++) {
+				const elem = obj.regeln.get(i);
 				result += GostBlockungRegel.transpilerToJSON(elem);
 				if (i < obj.regeln.size() - 1)
 					result += ',';
@@ -162,8 +162,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"kurse" : []';
 		} else {
 			result += '"kurse" : [ ';
-			for (let i : number = 0; i < obj.kurse.size(); i++) {
-				let elem = obj.kurse.get(i);
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
 				result += GostBlockungKurs.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
 					result += ',';
@@ -174,8 +174,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += Schueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -186,8 +186,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"fachwahlen" : []';
 		} else {
 			result += '"fachwahlen" : [ ';
-			for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
-				let elem = obj.fachwahlen.get(i);
+			for (let i = 0; i < obj.fachwahlen.size(); i++) {
+				const elem = obj.fachwahlen.get(i);
 				result += GostFachwahl.transpilerToJSON(elem);
 				if (i < obj.fachwahlen.size() - 1)
 					result += ',';
@@ -198,8 +198,8 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"ergebnisse" : []';
 		} else {
 			result += '"ergebnisse" : [ ';
-			for (let i : number = 0; i < obj.ergebnisse.size(); i++) {
-				let elem = obj.ergebnisse.get(i);
+			for (let i = 0; i < obj.ergebnisse.size(); i++) {
+				const elem = obj.ergebnisse.get(i);
 				result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
 				if (i < obj.ergebnisse.size() - 1)
 					result += ',';
@@ -233,8 +233,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"schienen" : []';
 			} else {
 				result += '"schienen" : [ ';
-				for (let i : number = 0; i < obj.schienen.size(); i++) {
-					let elem = obj.schienen.get(i);
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
 					result += GostBlockungSchiene.transpilerToJSON(elem);
 					if (i < obj.schienen.size() - 1)
 						result += ',';
@@ -247,8 +247,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"regeln" : []';
 			} else {
 				result += '"regeln" : [ ';
-				for (let i : number = 0; i < obj.regeln.size(); i++) {
-					let elem = obj.regeln.get(i);
+				for (let i = 0; i < obj.regeln.size(); i++) {
+					const elem = obj.regeln.get(i);
 					result += GostBlockungRegel.transpilerToJSON(elem);
 					if (i < obj.regeln.size() - 1)
 						result += ',';
@@ -261,8 +261,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"kurse" : []';
 			} else {
 				result += '"kurse" : [ ';
-				for (let i : number = 0; i < obj.kurse.size(); i++) {
-					let elem = obj.kurse.get(i);
+				for (let i = 0; i < obj.kurse.size(); i++) {
+					const elem = obj.kurse.get(i);
 					result += GostBlockungKurs.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
 						result += ',';
@@ -275,8 +275,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += Schueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
 						result += ',';
@@ -289,8 +289,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"fachwahlen" : []';
 			} else {
 				result += '"fachwahlen" : [ ';
-				for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
-					let elem = obj.fachwahlen.get(i);
+				for (let i = 0; i < obj.fachwahlen.size(); i++) {
+					const elem = obj.fachwahlen.get(i);
 					result += GostFachwahl.transpilerToJSON(elem);
 					if (i < obj.fachwahlen.size() - 1)
 						result += ',';
@@ -303,8 +303,8 @@ export class GostBlockungsdaten extends JavaObject {
 				result += '"ergebnisse" : []';
 			} else {
 				result += '"ergebnisse" : [ ';
-				for (let i : number = 0; i < obj.ergebnisse.size(); i++) {
-					let elem = obj.ergebnisse.get(i);
+				for (let i = 0; i < obj.ergebnisse.size(); i++) {
+					const elem = obj.ergebnisse.get(i);
 					result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
 					if (i < obj.ergebnisse.size() - 1)
 						result += ',';

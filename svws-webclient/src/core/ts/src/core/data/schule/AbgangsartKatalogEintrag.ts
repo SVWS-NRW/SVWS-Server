@@ -31,8 +31,8 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!!obj.historie) {
-			for (let elem of obj.historie) {
+		if (!(obj.historie === undefined)) {
+			for (const elem of obj.historie) {
 				result.historie?.add(AbgangsartKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -46,8 +46,8 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 			result += '"historie" : []';
 		} else {
 			result += '"historie" : [ ';
-			for (let i : number = 0; i < obj.historie.size(); i++) {
-				let elem = obj.historie.get(i);
+			for (let i = 0; i < obj.historie.size(); i++) {
+				const elem = obj.historie.get(i);
 				result += AbgangsartKatalogDaten.transpilerToJSON(elem);
 				if (i < obj.historie.size() - 1)
 					result += ',';
@@ -69,8 +69,8 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 				result += '"historie" : []';
 			} else {
 				result += '"historie" : [ ';
-				for (let i : number = 0; i < obj.historie.size(); i++) {
-					let elem = obj.historie.get(i);
+				for (let i = 0; i < obj.historie.size(); i++) {
+					const elem = obj.historie.get(i);
 					result += AbgangsartKatalogDaten.transpilerToJSON(elem);
 					if (i < obj.historie.size() - 1)
 						result += ',';

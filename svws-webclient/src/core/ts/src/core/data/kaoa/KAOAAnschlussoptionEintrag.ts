@@ -105,13 +105,13 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!!obj.stufen) {
-			for (let elem of obj.stufen) {
+		if (!(obj.stufen === undefined)) {
+			for (const elem of obj.stufen) {
 				result.stufen?.add(elem);
 			}
 		}
-		if (!!obj.anzeigeZusatzmerkmal) {
-			for (let elem of obj.anzeigeZusatzmerkmal) {
+		if (!(obj.anzeigeZusatzmerkmal === undefined)) {
+			for (const elem of obj.anzeigeZusatzmerkmal) {
 				result.anzeigeZusatzmerkmal?.add(elem);
 			}
 		}
@@ -129,8 +129,8 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 			result += '"stufen" : []';
 		} else {
 			result += '"stufen" : [ ';
-			for (let i : number = 0; i < obj.stufen.size(); i++) {
-				let elem = obj.stufen.get(i);
+			for (let i = 0; i < obj.stufen.size(); i++) {
+				const elem = obj.stufen.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.stufen.size() - 1)
 					result += ',';
@@ -141,8 +141,8 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 			result += '"anzeigeZusatzmerkmal" : []';
 		} else {
 			result += '"anzeigeZusatzmerkmal" : [ ';
-			for (let i : number = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
-				let elem = obj.anzeigeZusatzmerkmal.get(i);
+			for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
+				const elem = obj.anzeigeZusatzmerkmal.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.anzeigeZusatzmerkmal.size() - 1)
 					result += ',';
@@ -172,8 +172,8 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 				result += '"stufen" : []';
 			} else {
 				result += '"stufen" : [ ';
-				for (let i : number = 0; i < obj.stufen.size(); i++) {
-					let elem = obj.stufen.get(i);
+				for (let i = 0; i < obj.stufen.size(); i++) {
+					const elem = obj.stufen.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.stufen.size() - 1)
 						result += ',';
@@ -186,8 +186,8 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 				result += '"anzeigeZusatzmerkmal" : []';
 			} else {
 				result += '"anzeigeZusatzmerkmal" : [ ';
-				for (let i : number = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
-					let elem = obj.anzeigeZusatzmerkmal.get(i);
+				for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
+					const elem = obj.anzeigeZusatzmerkmal.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.anzeigeZusatzmerkmal.size() - 1)
 						result += ',';

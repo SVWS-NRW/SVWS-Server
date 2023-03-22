@@ -71,13 +71,13 @@ export class KlassenListeEintrag extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (!!obj.klassenLehrer) {
-			for (let elem of obj.klassenLehrer) {
+		if (!(obj.klassenLehrer === undefined)) {
+			for (const elem of obj.klassenLehrer) {
 				result.klassenLehrer?.add(elem);
 			}
 		}
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -96,8 +96,8 @@ export class KlassenListeEintrag extends JavaObject {
 			result += '"klassenLehrer" : []';
 		} else {
 			result += '"klassenLehrer" : [ ';
-			for (let i : number = 0; i < obj.klassenLehrer.size(); i++) {
-				let elem = obj.klassenLehrer.get(i);
+			for (let i = 0; i < obj.klassenLehrer.size(); i++) {
+				const elem = obj.klassenLehrer.get(i);
 				result += elem;
 				if (i < obj.klassenLehrer.size() - 1)
 					result += ',';
@@ -108,8 +108,8 @@ export class KlassenListeEintrag extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += Schueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -146,8 +146,8 @@ export class KlassenListeEintrag extends JavaObject {
 				result += '"klassenLehrer" : []';
 			} else {
 				result += '"klassenLehrer" : [ ';
-				for (let i : number = 0; i < obj.klassenLehrer.size(); i++) {
-					let elem = obj.klassenLehrer.get(i);
+				for (let i = 0; i < obj.klassenLehrer.size(); i++) {
+					const elem = obj.klassenLehrer.get(i);
 					result += elem;
 					if (i < obj.klassenLehrer.size() - 1)
 						result += ',';
@@ -160,8 +160,8 @@ export class KlassenListeEintrag extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += Schueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
 						result += ',';

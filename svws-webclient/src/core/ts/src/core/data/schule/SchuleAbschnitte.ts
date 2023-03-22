@@ -37,8 +37,8 @@ export class SchuleAbschnitte extends JavaObject {
 		if (typeof obj.abschnittBez === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittBez');
 		result.abschnittBez = obj.abschnittBez;
-		if (!!obj.bezAbschnitte) {
-			for (let elem of obj.bezAbschnitte) {
+		if (!(obj.bezAbschnitte === undefined)) {
+			for (const elem of obj.bezAbschnitte) {
 				result.bezAbschnitte?.add(elem);
 			}
 		}
@@ -53,8 +53,8 @@ export class SchuleAbschnitte extends JavaObject {
 			result += '"bezAbschnitte" : []';
 		} else {
 			result += '"bezAbschnitte" : [ ';
-			for (let i : number = 0; i < obj.bezAbschnitte.size(); i++) {
-				let elem = obj.bezAbschnitte.get(i);
+			for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
+				const elem = obj.bezAbschnitte.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.bezAbschnitte.size() - 1)
 					result += ',';
@@ -79,8 +79,8 @@ export class SchuleAbschnitte extends JavaObject {
 				result += '"bezAbschnitte" : []';
 			} else {
 				result += '"bezAbschnitte" : [ ';
-				for (let i : number = 0; i < obj.bezAbschnitte.size(); i++) {
-					let elem = obj.bezAbschnitte.get(i);
+				for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
+					const elem = obj.bezAbschnitte.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.bezAbschnitte.size() - 1)
 						result += ',';

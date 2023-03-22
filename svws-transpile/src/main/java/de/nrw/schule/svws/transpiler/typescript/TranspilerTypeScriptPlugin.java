@@ -1577,9 +1577,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				result += getIndent() + "if (!!obj." + attribute.getName() + ") {" + System.lineSeparator();
+				result += getIndent() + "if (!(obj." + attribute.getName() + " === undefined)) {" + System.lineSeparator();
 				indentC++;
-				result += getIndent() + "for (let elem of obj." + attribute.getName() + ") {" + System.lineSeparator();
+				result += getIndent() + "for (const elem of obj." + attribute.getName() + ") {" + System.lineSeparator();
 				indentC++;
 				if (paramType.isNotNull() && (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean()))
 					result += getIndent() + "result." + attribute.getName() + "?.add(elem);" + System.lineSeparator();
@@ -1596,7 +1596,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (contentType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false) + " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
-				result += getIndent() + "for (let i : number = 0; i < obj." + attribute.getName() + ".length; i++) {" + System.lineSeparator();
+				result += getIndent() + "for (let i = 0; i < obj." + attribute.getName() + ".length; i++) {" + System.lineSeparator();
 				indentC++;
 				if (contentType.isPrimitive()) {
 					result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator();
@@ -1690,9 +1690,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				result += getIndent() + "} else {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator();
-				result += getIndent() + "for (let i : number = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator();
+				result += getIndent() + "for (let i = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator();
 				indentC++;
-				result += getIndent() + "let elem = " + objAttr + ".get(i);" + System.lineSeparator();
+				result += getIndent() + "const elem = " + objAttr + ".get(i);" + System.lineSeparator();
 				if (paramType.isString()) {
 					if (paramType.isNotNull())
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
@@ -1727,9 +1727,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				result += getIndent() + "} else {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator();
-				result += getIndent() + "for (let i : number = 0; i < " + objAttr + ".length; i++) {" + System.lineSeparator();
+				result += getIndent() + "for (let i = 0; i < " + objAttr + ".length; i++) {" + System.lineSeparator();
 				indentC++;
-				result += getIndent() + "let elem = " + objAttr + "[i];" + System.lineSeparator();
+				result += getIndent() + "const elem = " + objAttr + "[i];" + System.lineSeparator();
 				if (contentType.isString()) {
 					if (contentType.isNotNull())
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
@@ -1834,9 +1834,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				result += getIndent() + "} else {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator();
-				result += getIndent() + "for (let i : number = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator();
+				result += getIndent() + "for (let i = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator();
 				indentC++;
-				result += getIndent() + "let elem = " + objAttr + ".get(i);" + System.lineSeparator();
+				result += getIndent() + "const elem = " + objAttr + ".get(i);" + System.lineSeparator();
 				if (paramType.isString()) {
 					if (paramType.isNotNull())
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
@@ -1863,7 +1863,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (contentType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false) + " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
-				result += getIndent() + "let a = " + objAttr + ";" + System.lineSeparator();
+				result += getIndent() + "const a = " + objAttr + ";" + System.lineSeparator();
 				result += getIndent() + "if (!a) {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "result += '\"" + attribute.getName() + "\" : []';" + System.lineSeparator();
@@ -1871,9 +1871,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				result += getIndent() + "} else {" + System.lineSeparator();
 				indentC++;
 				result += getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator();
-				result += getIndent() + "for (let i : number = 0; i < a.length; i++) {" + System.lineSeparator();
+				result += getIndent() + "for (let i = 0; i < a.length; i++) {" + System.lineSeparator();
 				indentC++;
-				result += getIndent() + "let elem = a[i];" + System.lineSeparator();
+				result += getIndent() + "const elem = a[i];" + System.lineSeparator();
 				if (contentType.isString()) {
 					if (contentType.isNotNull())
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();

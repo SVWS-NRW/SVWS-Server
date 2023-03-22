@@ -93,8 +93,8 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (!!obj.kurse) {
-			for (let elem of obj.kurse) {
+		if (!(obj.kurse === undefined)) {
+			for (const elem of obj.kurse) {
 				result.kurse?.add(elem);
 			}
 		}
@@ -116,8 +116,8 @@ export class SchuelerListeEintrag extends JavaObject {
 			result += '"kurse" : []';
 		} else {
 			result += '"kurse" : [ ';
-			for (let i : number = 0; i < obj.kurse.size(); i++) {
-				let elem = obj.kurse.get(i);
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
 				result += elem;
 				if (i < obj.kurse.size() - 1)
 					result += ',';
@@ -163,8 +163,8 @@ export class SchuelerListeEintrag extends JavaObject {
 				result += '"kurse" : []';
 			} else {
 				result += '"kurse" : [ ';
-				for (let i : number = 0; i < obj.kurse.size(); i++) {
-					let elem = obj.kurse.get(i);
+				for (let i = 0; i < obj.kurse.size(); i++) {
+					const elem = obj.kurse.get(i);
 					result += elem;
 					if (i < obj.kurse.size() - 1)
 						result += ',';

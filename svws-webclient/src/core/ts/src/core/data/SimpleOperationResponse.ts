@@ -30,8 +30,8 @@ export class SimpleOperationResponse extends JavaObject {
 		if (typeof obj.success === "undefined")
 			 throw new Error('invalid json format, missing attribute success');
 		result.success = obj.success;
-		if (!!obj.log) {
-			for (let elem of obj.log) {
+		if (!(obj.log === undefined)) {
+			for (const elem of obj.log) {
 				result.log?.add(elem === null ? null : elem);
 			}
 		}
@@ -45,8 +45,8 @@ export class SimpleOperationResponse extends JavaObject {
 			result += '"log" : []';
 		} else {
 			result += '"log" : [ ';
-			for (let i : number = 0; i < obj.log.size(); i++) {
-				let elem = obj.log.get(i);
+			for (let i = 0; i < obj.log.size(); i++) {
+				const elem = obj.log.get(i);
 				result += (elem == null) ? null : '"' + elem + '"';
 				if (i < obj.log.size() - 1)
 					result += ',';
@@ -68,8 +68,8 @@ export class SimpleOperationResponse extends JavaObject {
 				result += '"log" : []';
 			} else {
 				result += '"log" : [ ';
-				for (let i : number = 0; i < obj.log.size(); i++) {
-					let elem = obj.log.get(i);
+				for (let i = 0; i < obj.log.size(); i++) {
+					const elem = obj.log.get(i);
 					result += (elem == null) ? null : '"' + elem + '"';
 					if (i < obj.log.size() - 1)
 						result += ',';

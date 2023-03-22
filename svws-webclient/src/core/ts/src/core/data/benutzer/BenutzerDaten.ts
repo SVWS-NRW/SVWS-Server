@@ -85,13 +85,13 @@ export class BenutzerDaten extends JavaObject {
 		if (typeof obj.idCredentials === "undefined")
 			 throw new Error('invalid json format, missing attribute idCredentials');
 		result.idCredentials = obj.idCredentials;
-		if (!!obj.gruppen) {
-			for (let elem of obj.gruppen) {
+		if (!(obj.gruppen === undefined)) {
+			for (const elem of obj.gruppen) {
 				result.gruppen?.add(BenutzergruppeDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.kompetenzen) {
-			for (let elem of obj.kompetenzen) {
+		if (!(obj.kompetenzen === undefined)) {
+			for (const elem of obj.kompetenzen) {
 				result.kompetenzen?.add(elem);
 			}
 		}
@@ -111,8 +111,8 @@ export class BenutzerDaten extends JavaObject {
 			result += '"gruppen" : []';
 		} else {
 			result += '"gruppen" : [ ';
-			for (let i : number = 0; i < obj.gruppen.size(); i++) {
-				let elem = obj.gruppen.get(i);
+			for (let i = 0; i < obj.gruppen.size(); i++) {
+				const elem = obj.gruppen.get(i);
 				result += BenutzergruppeDaten.transpilerToJSON(elem);
 				if (i < obj.gruppen.size() - 1)
 					result += ',';
@@ -123,8 +123,8 @@ export class BenutzerDaten extends JavaObject {
 			result += '"kompetenzen" : []';
 		} else {
 			result += '"kompetenzen" : [ ';
-			for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
-				let elem = obj.kompetenzen.get(i);
+			for (let i = 0; i < obj.kompetenzen.size(); i++) {
+				const elem = obj.kompetenzen.get(i);
 				result += elem;
 				if (i < obj.kompetenzen.size() - 1)
 					result += ',';
@@ -164,8 +164,8 @@ export class BenutzerDaten extends JavaObject {
 				result += '"gruppen" : []';
 			} else {
 				result += '"gruppen" : [ ';
-				for (let i : number = 0; i < obj.gruppen.size(); i++) {
-					let elem = obj.gruppen.get(i);
+				for (let i = 0; i < obj.gruppen.size(); i++) {
+					const elem = obj.gruppen.get(i);
 					result += BenutzergruppeDaten.transpilerToJSON(elem);
 					if (i < obj.gruppen.size() - 1)
 						result += ',';
@@ -178,8 +178,8 @@ export class BenutzerDaten extends JavaObject {
 				result += '"kompetenzen" : []';
 			} else {
 				result += '"kompetenzen" : [ ';
-				for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
-					let elem = obj.kompetenzen.get(i);
+				for (let i = 0; i < obj.kompetenzen.size(); i++) {
+					const elem = obj.kompetenzen.get(i);
 					result += elem;
 					if (i < obj.kompetenzen.size() - 1)
 						result += ',';

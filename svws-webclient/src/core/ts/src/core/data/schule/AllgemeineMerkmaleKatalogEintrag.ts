@@ -125,8 +125,8 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute beiSchueler');
 		result.beiSchueler = obj.beiSchueler;
 		result.kuerzelASD = typeof obj.kuerzelASD === "undefined" ? null : obj.kuerzelASD === null ? null : obj.kuerzelASD;
-		if (!!obj.schulformen) {
-			for (let elem of obj.schulformen) {
+		if (!(obj.schulformen === undefined)) {
+			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}
 		}
@@ -147,8 +147,8 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			result += '"schulformen" : []';
 		} else {
 			result += '"schulformen" : [ ';
-			for (let i : number = 0; i < obj.schulformen.size(); i++) {
-				let elem = obj.schulformen.get(i);
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.schulformen.size() - 1)
 					result += ',';
@@ -187,8 +187,8 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 				result += '"schulformen" : []';
 			} else {
 				result += '"schulformen" : [ ';
-				for (let i : number = 0; i < obj.schulformen.size(); i++) {
-					let elem = obj.schulformen.get(i);
+				for (let i = 0; i < obj.schulformen.size(); i++) {
+					const elem = obj.schulformen.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.schulformen.size() - 1)
 						result += ',';

@@ -94,8 +94,8 @@ export class KAOAKategorieEintrag extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if (!!obj.jahrgaenge) {
-			for (let elem of obj.jahrgaenge) {
+		if (!(obj.jahrgaenge === undefined)) {
+			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(elem);
 			}
 		}
@@ -113,8 +113,8 @@ export class KAOAKategorieEintrag extends JavaObject {
 			result += '"jahrgaenge" : []';
 		} else {
 			result += '"jahrgaenge" : [ ';
-			for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-				let elem = obj.jahrgaenge.get(i);
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
@@ -144,8 +144,8 @@ export class KAOAKategorieEintrag extends JavaObject {
 				result += '"jahrgaenge" : []';
 			} else {
 				result += '"jahrgaenge" : [ ';
-				for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-					let elem = obj.jahrgaenge.get(i);
+				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+					const elem = obj.jahrgaenge.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.jahrgaenge.size() - 1)
 						result += ',';

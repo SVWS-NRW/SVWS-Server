@@ -88,8 +88,8 @@ export class SchuelerStundenplan extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (!!obj.zeitraster) {
-			for (let elem of obj.zeitraster) {
+		if (!(obj.zeitraster === undefined)) {
+			for (const elem of obj.zeitraster) {
 				result.zeitraster?.add(StundenplanZeitraster.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -114,8 +114,8 @@ export class SchuelerStundenplan extends JavaObject {
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
-		if (!!obj.unterricht) {
-			for (let elem of obj.unterricht) {
+		if (!(obj.unterricht === undefined)) {
+			for (const elem of obj.unterricht) {
 				result.unterricht?.add(SchuelerStundenplanUnterricht.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -131,8 +131,8 @@ export class SchuelerStundenplan extends JavaObject {
 			result += '"zeitraster" : []';
 		} else {
 			result += '"zeitraster" : [ ';
-			for (let i : number = 0; i < obj.zeitraster.size(); i++) {
-				let elem = obj.zeitraster.get(i);
+			for (let i = 0; i < obj.zeitraster.size(); i++) {
+				const elem = obj.zeitraster.get(i);
 				result += StundenplanZeitraster.transpilerToJSON(elem);
 				if (i < obj.zeitraster.size() - 1)
 					result += ',';
@@ -150,8 +150,8 @@ export class SchuelerStundenplan extends JavaObject {
 			result += '"unterricht" : []';
 		} else {
 			result += '"unterricht" : [ ';
-			for (let i : number = 0; i < obj.unterricht.size(); i++) {
-				let elem = obj.unterricht.get(i);
+			for (let i = 0; i < obj.unterricht.size(); i++) {
+				const elem = obj.unterricht.get(i);
 				result += SchuelerStundenplanUnterricht.transpilerToJSON(elem);
 				if (i < obj.unterricht.size() - 1)
 					result += ',';
@@ -179,8 +179,8 @@ export class SchuelerStundenplan extends JavaObject {
 				result += '"zeitraster" : []';
 			} else {
 				result += '"zeitraster" : [ ';
-				for (let i : number = 0; i < obj.zeitraster.size(); i++) {
-					let elem = obj.zeitraster.get(i);
+				for (let i = 0; i < obj.zeitraster.size(); i++) {
+					const elem = obj.zeitraster.get(i);
 					result += StundenplanZeitraster.transpilerToJSON(elem);
 					if (i < obj.zeitraster.size() - 1)
 						result += ',';
@@ -214,8 +214,8 @@ export class SchuelerStundenplan extends JavaObject {
 				result += '"unterricht" : []';
 			} else {
 				result += '"unterricht" : [ ';
-				for (let i : number = 0; i < obj.unterricht.size(); i++) {
-					let elem = obj.unterricht.get(i);
+				for (let i = 0; i < obj.unterricht.size(); i++) {
+					const elem = obj.unterricht.get(i);
 					result += SchuelerStundenplanUnterricht.transpilerToJSON(elem);
 					if (i < obj.unterricht.size() - 1)
 						result += ',';

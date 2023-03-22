@@ -74,8 +74,8 @@ export class Kalender extends JavaObject {
 		if (typeof obj.kalenderTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute kalenderTyp');
 		result.kalenderTyp = obj.kalenderTyp;
-		if (!!obj.kalenderEintraege) {
-			for (let elem of obj.kalenderEintraege) {
+		if (!(obj.kalenderEintraege === undefined)) {
+			for (const elem of obj.kalenderEintraege) {
 				result.kalenderEintraege?.add(KalenderEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -102,8 +102,8 @@ export class Kalender extends JavaObject {
 			result += '"kalenderEintraege" : []';
 		} else {
 			result += '"kalenderEintraege" : [ ';
-			for (let i : number = 0; i < obj.kalenderEintraege.size(); i++) {
-				let elem = obj.kalenderEintraege.get(i);
+			for (let i = 0; i < obj.kalenderEintraege.size(); i++) {
+				const elem = obj.kalenderEintraege.get(i);
 				result += KalenderEintrag.transpilerToJSON(elem);
 				if (i < obj.kalenderEintraege.size() - 1)
 					result += ',';
@@ -140,8 +140,8 @@ export class Kalender extends JavaObject {
 				result += '"kalenderEintraege" : []';
 			} else {
 				result += '"kalenderEintraege" : [ ';
-				for (let i : number = 0; i < obj.kalenderEintraege.size(); i++) {
-					let elem = obj.kalenderEintraege.get(i);
+				for (let i = 0; i < obj.kalenderEintraege.size(); i++) {
+					const elem = obj.kalenderEintraege.get(i);
 					result += KalenderEintrag.transpilerToJSON(elem);
 					if (i < obj.kalenderEintraege.size() - 1)
 						result += ',';

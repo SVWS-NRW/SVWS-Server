@@ -155,8 +155,8 @@ export class KursartKatalogEintrag extends JavaObject {
 		if (typeof obj.erlaubtGOSt === "undefined")
 			 throw new Error('invalid json format, missing attribute erlaubtGOSt');
 		result.erlaubtGOSt = obj.erlaubtGOSt;
-		if (!!obj.zulaessig) {
-			for (let elem of obj.zulaessig) {
+		if (!(obj.zulaessig === undefined)) {
+			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -179,8 +179,8 @@ export class KursartKatalogEintrag extends JavaObject {
 			result += '"zulaessig" : []';
 		} else {
 			result += '"zulaessig" : [ ';
-			for (let i : number = 0; i < obj.zulaessig.size(); i++) {
-				let elem = obj.zulaessig.get(i);
+			for (let i = 0; i < obj.zulaessig.size(); i++) {
+				const elem = obj.zulaessig.get(i);
 				result += SchulformSchulgliederung.transpilerToJSON(elem);
 				if (i < obj.zulaessig.size() - 1)
 					result += ',';
@@ -225,8 +225,8 @@ export class KursartKatalogEintrag extends JavaObject {
 				result += '"zulaessig" : []';
 			} else {
 				result += '"zulaessig" : [ ';
-				for (let i : number = 0; i < obj.zulaessig.size(); i++) {
-					let elem = obj.zulaessig.get(i);
+				for (let i = 0; i < obj.zulaessig.size(); i++) {
+					const elem = obj.zulaessig.get(i);
 					result += SchulformSchulgliederung.transpilerToJSON(elem);
 					if (i < obj.zulaessig.size() - 1)
 						result += ',';

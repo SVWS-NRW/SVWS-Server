@@ -145,8 +145,8 @@ export class SchuleStammdaten extends JavaObject {
 		if (typeof obj.dauerUnterrichtseinheit === "undefined")
 			 throw new Error('invalid json format, missing attribute dauerUnterrichtseinheit');
 		result.dauerUnterrichtseinheit = obj.dauerUnterrichtseinheit;
-		if (!!obj.abschnitte) {
-			for (let elem of obj.abschnitte) {
+		if (!(obj.abschnitte === undefined)) {
+			for (const elem of obj.abschnitte) {
 				result.abschnitte?.add(Schuljahresabschnitt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -177,8 +177,8 @@ export class SchuleStammdaten extends JavaObject {
 			result += '"abschnitte" : []';
 		} else {
 			result += '"abschnitte" : [ ';
-			for (let i : number = 0; i < obj.abschnitte.size(); i++) {
-				let elem = obj.abschnitte.get(i);
+			for (let i = 0; i < obj.abschnitte.size(); i++) {
+				const elem = obj.abschnitte.get(i);
 				result += Schuljahresabschnitt.transpilerToJSON(elem);
 				if (i < obj.abschnitte.size() - 1)
 					result += ',';
@@ -251,8 +251,8 @@ export class SchuleStammdaten extends JavaObject {
 				result += '"abschnitte" : []';
 			} else {
 				result += '"abschnitte" : [ ';
-				for (let i : number = 0; i < obj.abschnitte.size(); i++) {
-					let elem = obj.abschnitte.get(i);
+				for (let i = 0; i < obj.abschnitte.size(); i++) {
+					const elem = obj.abschnitte.get(i);
 					result += Schuljahresabschnitt.transpilerToJSON(elem);
 					if (i < obj.abschnitte.size() - 1)
 						result += ',';

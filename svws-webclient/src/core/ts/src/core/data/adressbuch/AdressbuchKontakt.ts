@@ -113,15 +113,15 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
 		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
 		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
-		if (!!obj.telefonnummern) {
-			for (let elem of obj.telefonnummern) {
+		if (!(obj.telefonnummern === undefined)) {
+			for (const elem of obj.telefonnummern) {
 				result.telefonnummern?.add(Telefonnummer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
 		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : obj.webAdresse;
-		if (!!obj.kategorien) {
-			for (let elem of obj.kategorien) {
+		if (!(obj.kategorien === undefined)) {
+			for (const elem of obj.kategorien) {
 				result.kategorien?.add(elem === null ? null : elem);
 			}
 		}
@@ -146,8 +146,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += '"telefonnummern" : []';
 		} else {
 			result += '"telefonnummern" : [ ';
-			for (let i : number = 0; i < obj.telefonnummern.size(); i++) {
-				let elem = obj.telefonnummern.get(i);
+			for (let i = 0; i < obj.telefonnummern.size(); i++) {
+				const elem = obj.telefonnummern.get(i);
 				result += Telefonnummer.transpilerToJSON(elem);
 				if (i < obj.telefonnummern.size() - 1)
 					result += ',';
@@ -160,8 +160,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += '"kategorien" : []';
 		} else {
 			result += '"kategorien" : [ ';
-			for (let i : number = 0; i < obj.kategorien.size(); i++) {
-				let elem = obj.kategorien.get(i);
+			for (let i = 0; i < obj.kategorien.size(); i++) {
+				const elem = obj.kategorien.get(i);
 				result += (elem == null) ? null : '"' + elem + '"';
 				if (i < obj.kategorien.size() - 1)
 					result += ',';
@@ -208,8 +208,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += '"telefonnummern" : []';
 			} else {
 				result += '"telefonnummern" : [ ';
-				for (let i : number = 0; i < obj.telefonnummern.size(); i++) {
-					let elem = obj.telefonnummern.get(i);
+				for (let i = 0; i < obj.telefonnummern.size(); i++) {
+					const elem = obj.telefonnummern.get(i);
 					result += Telefonnummer.transpilerToJSON(elem);
 					if (i < obj.telefonnummern.size() - 1)
 						result += ',';
@@ -228,8 +228,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 				result += '"kategorien" : []';
 			} else {
 				result += '"kategorien" : [ ';
-				for (let i : number = 0; i < obj.kategorien.size(); i++) {
-					let elem = obj.kategorien.get(i);
+				for (let i = 0; i < obj.kategorien.size(); i++) {
+					const elem = obj.kategorien.get(i);
 					result += (elem == null) ? null : '"' + elem + '"';
 					if (i < obj.kategorien.size() - 1)
 						result += ',';

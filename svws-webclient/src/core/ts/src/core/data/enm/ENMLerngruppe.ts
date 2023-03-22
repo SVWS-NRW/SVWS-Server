@@ -76,8 +76,8 @@ export class ENMLerngruppe extends JavaObject {
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
 		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
-		if (!!obj.lehrerID) {
-			for (let elem of obj.lehrerID) {
+		if (!(obj.lehrerID === undefined)) {
+			for (const elem of obj.lehrerID) {
 				result.lehrerID?.add(elem);
 			}
 		}
@@ -100,8 +100,8 @@ export class ENMLerngruppe extends JavaObject {
 			result += '"lehrerID" : []';
 		} else {
 			result += '"lehrerID" : [ ';
-			for (let i : number = 0; i < obj.lehrerID.size(); i++) {
-				let elem = obj.lehrerID.get(i);
+			for (let i = 0; i < obj.lehrerID.size(); i++) {
+				const elem = obj.lehrerID.get(i);
 				result += elem;
 				if (i < obj.lehrerID.size() - 1)
 					result += ',';
@@ -142,8 +142,8 @@ export class ENMLerngruppe extends JavaObject {
 				result += '"lehrerID" : []';
 			} else {
 				result += '"lehrerID" : [ ';
-				for (let i : number = 0; i < obj.lehrerID.size(); i++) {
-					let elem = obj.lehrerID.get(i);
+				for (let i = 0; i < obj.lehrerID.size(); i++) {
+					const elem = obj.lehrerID.get(i);
 					result += elem;
 					if (i < obj.lehrerID.size() - 1)
 						result += ',';

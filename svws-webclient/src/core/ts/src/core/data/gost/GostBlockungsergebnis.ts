@@ -79,8 +79,8 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.istVorlage === "undefined")
 			 throw new Error('invalid json format, missing attribute istVorlage');
 		result.istVorlage = obj.istVorlage;
-		if (!!obj.schienen) {
-			for (let elem of obj.schienen) {
+		if (!(obj.schienen === undefined)) {
+			for (const elem of obj.schienen) {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -102,8 +102,8 @@ export class GostBlockungsergebnis extends JavaObject {
 			result += '"schienen" : []';
 		} else {
 			result += '"schienen" : [ ';
-			for (let i : number = 0; i < obj.schienen.size(); i++) {
-				let elem = obj.schienen.get(i);
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
 				result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
 				if (i < obj.schienen.size() - 1)
 					result += ',';
@@ -141,8 +141,8 @@ export class GostBlockungsergebnis extends JavaObject {
 				result += '"schienen" : []';
 			} else {
 				result += '"schienen" : [ ';
-				for (let i : number = 0; i < obj.schienen.size(); i++) {
-					let elem = obj.schienen.get(i);
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
 					result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
 					if (i < obj.schienen.size() - 1)
 						result += ',';

@@ -73,8 +73,8 @@ export class KursDaten extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!!obj.idJahrgaenge) {
-			for (let elem of obj.idJahrgaenge) {
+		if (!(obj.idJahrgaenge === undefined)) {
+			for (const elem of obj.idJahrgaenge) {
 				result.idJahrgaenge?.add(elem);
 			}
 		}
@@ -88,8 +88,8 @@ export class KursDaten extends JavaObject {
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -105,8 +105,8 @@ export class KursDaten extends JavaObject {
 			result += '"idJahrgaenge" : []';
 		} else {
 			result += '"idJahrgaenge" : [ ';
-			for (let i : number = 0; i < obj.idJahrgaenge.size(); i++) {
-				let elem = obj.idJahrgaenge.get(i);
+			for (let i = 0; i < obj.idJahrgaenge.size(); i++) {
+				const elem = obj.idJahrgaenge.get(i);
 				result += elem;
 				if (i < obj.idJahrgaenge.size() - 1)
 					result += ',';
@@ -121,8 +121,8 @@ export class KursDaten extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += Schueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -150,8 +150,8 @@ export class KursDaten extends JavaObject {
 				result += '"idJahrgaenge" : []';
 			} else {
 				result += '"idJahrgaenge" : [ ';
-				for (let i : number = 0; i < obj.idJahrgaenge.size(); i++) {
-					let elem = obj.idJahrgaenge.get(i);
+				for (let i = 0; i < obj.idJahrgaenge.size(); i++) {
+					const elem = obj.idJahrgaenge.get(i);
 					result += elem;
 					if (i < obj.idJahrgaenge.size() - 1)
 						result += ',';
@@ -176,8 +176,8 @@ export class KursDaten extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += Schueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
 						result += ',';

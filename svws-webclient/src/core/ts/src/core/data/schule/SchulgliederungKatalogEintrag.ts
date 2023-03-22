@@ -178,8 +178,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if (typeof obj.istBK === "undefined")
 			 throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
-		if (!!obj.schulformen) {
-			for (let elem of obj.schulformen) {
+		if (!(obj.schulformen === undefined)) {
+			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}
 		}
@@ -198,13 +198,13 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if (typeof obj.istVZ === "undefined")
 			 throw new Error('invalid json format, missing attribute istVZ');
 		result.istVZ = obj.istVZ;
-		if (!!obj.bkAbschlussBerufsbildend) {
-			for (let elem of obj.bkAbschlussBerufsbildend) {
+		if (!(obj.bkAbschlussBerufsbildend === undefined)) {
+			for (const elem of obj.bkAbschlussBerufsbildend) {
 				result.bkAbschlussBerufsbildend?.add(elem);
 			}
 		}
-		if (!!obj.bkAbschlussAllgemeinbildend) {
-			for (let elem of obj.bkAbschlussAllgemeinbildend) {
+		if (!(obj.bkAbschlussAllgemeinbildend === undefined)) {
+			for (const elem of obj.bkAbschlussAllgemeinbildend) {
 				result.bkAbschlussAllgemeinbildend?.add(elem);
 			}
 		}
@@ -222,8 +222,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			result += '"schulformen" : []';
 		} else {
 			result += '"schulformen" : [ ';
-			for (let i : number = 0; i < obj.schulformen.size(); i++) {
-				let elem = obj.schulformen.get(i);
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.schulformen.size() - 1)
 					result += ',';
@@ -241,8 +241,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			result += '"bkAbschlussBerufsbildend" : []';
 		} else {
 			result += '"bkAbschlussBerufsbildend" : [ ';
-			for (let i : number = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
-				let elem = obj.bkAbschlussBerufsbildend.get(i);
+			for (let i = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
+				const elem = obj.bkAbschlussBerufsbildend.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.bkAbschlussBerufsbildend.size() - 1)
 					result += ',';
@@ -253,8 +253,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			result += '"bkAbschlussAllgemeinbildend" : []';
 		} else {
 			result += '"bkAbschlussAllgemeinbildend" : [ ';
-			for (let i : number = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
-				let elem = obj.bkAbschlussAllgemeinbildend.get(i);
+			for (let i = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
+				const elem = obj.bkAbschlussAllgemeinbildend.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.bkAbschlussAllgemeinbildend.size() - 1)
 					result += ',';
@@ -284,8 +284,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 				result += '"schulformen" : []';
 			} else {
 				result += '"schulformen" : [ ';
-				for (let i : number = 0; i < obj.schulformen.size(); i++) {
-					let elem = obj.schulformen.get(i);
+				for (let i = 0; i < obj.schulformen.size(); i++) {
+					const elem = obj.schulformen.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.schulformen.size() - 1)
 						result += ',';
@@ -319,8 +319,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 				result += '"bkAbschlussBerufsbildend" : []';
 			} else {
 				result += '"bkAbschlussBerufsbildend" : [ ';
-				for (let i : number = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
-					let elem = obj.bkAbschlussBerufsbildend.get(i);
+				for (let i = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
+					const elem = obj.bkAbschlussBerufsbildend.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.bkAbschlussBerufsbildend.size() - 1)
 						result += ',';
@@ -333,8 +333,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 				result += '"bkAbschlussAllgemeinbildend" : []';
 			} else {
 				result += '"bkAbschlussAllgemeinbildend" : [ ';
-				for (let i : number = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
-					let elem = obj.bkAbschlussAllgemeinbildend.get(i);
+				for (let i = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
+					const elem = obj.bkAbschlussAllgemeinbildend.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.bkAbschlussAllgemeinbildend.size() - 1)
 						result += ',';

@@ -26,7 +26,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerFachwahl {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerFachwahl();
-		for (let i : number = 0; i < obj.halbjahre.length; i++) {
+		for (let i = 0; i < obj.halbjahre.length; i++) {
 			result.halbjahre[i] = obj.halbjahre[i] === null ? null : obj.halbjahre[i];
 		}
 		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : obj.abiturFach;
@@ -39,8 +39,8 @@ export class GostSchuelerFachwahl extends JavaObject {
 			result += '"halbjahre" : []';
 		} else {
 			result += '"halbjahre" : [ ';
-			for (let i : number = 0; i < obj.halbjahre.length; i++) {
-				let elem = obj.halbjahre[i];
+			for (let i = 0; i < obj.halbjahre.length; i++) {
+				const elem = obj.halbjahre[i];
 				result += (elem == null) ? null : '"' + elem + '"';
 				if (i < obj.halbjahre.length - 1)
 					result += ',';
@@ -56,13 +56,13 @@ export class GostSchuelerFachwahl extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerFachwahl>) : string {
 		let result = '{';
 		if (typeof obj.halbjahre !== "undefined") {
-			let a = obj.halbjahre;
+			const a = obj.halbjahre;
 			if (!a) {
 				result += '"halbjahre" : []';
 			} else {
 				result += '"halbjahre" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += (elem == null) ? null : '"' + elem + '"';
 					if (i < a.length - 1)
 						result += ',';

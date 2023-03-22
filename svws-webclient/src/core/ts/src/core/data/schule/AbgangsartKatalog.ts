@@ -30,8 +30,8 @@ export class AbgangsartKatalog extends JavaObject {
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if (!!obj.eintraege) {
-			for (let elem of obj.eintraege) {
+		if (!(obj.eintraege === undefined)) {
+			for (const elem of obj.eintraege) {
 				result.eintraege?.add(AbgangsartKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -45,8 +45,8 @@ export class AbgangsartKatalog extends JavaObject {
 			result += '"eintraege" : []';
 		} else {
 			result += '"eintraege" : [ ';
-			for (let i : number = 0; i < obj.eintraege.size(); i++) {
-				let elem = obj.eintraege.get(i);
+			for (let i = 0; i < obj.eintraege.size(); i++) {
+				const elem = obj.eintraege.get(i);
 				result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
 				if (i < obj.eintraege.size() - 1)
 					result += ',';
@@ -68,8 +68,8 @@ export class AbgangsartKatalog extends JavaObject {
 				result += '"eintraege" : []';
 			} else {
 				result += '"eintraege" : [ ';
-				for (let i : number = 0; i < obj.eintraege.size(); i++) {
-					let elem = obj.eintraege.get(i);
+				for (let i = 0; i < obj.eintraege.size(); i++) {
+					const elem = obj.eintraege.get(i);
 					result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
 					if (i < obj.eintraege.size() - 1)
 						result += ',';

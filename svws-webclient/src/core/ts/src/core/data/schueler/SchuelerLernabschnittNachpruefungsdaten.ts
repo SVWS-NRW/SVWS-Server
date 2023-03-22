@@ -27,13 +27,13 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefungsdaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerLernabschnittNachpruefungsdaten();
-		if (!!obj.moegliche) {
-			for (let elem of obj.moegliche) {
+		if (!(obj.moegliche === undefined)) {
+			for (const elem of obj.moegliche) {
 				result.moegliche?.add(elem);
 			}
 		}
-		if (!!obj.pruefungen) {
-			for (let elem of obj.pruefungen) {
+		if (!(obj.pruefungen === undefined)) {
+			for (const elem of obj.pruefungen) {
 				result.pruefungen?.add(SchuelerLernabschnittNachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -46,8 +46,8 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 			result += '"moegliche" : []';
 		} else {
 			result += '"moegliche" : [ ';
-			for (let i : number = 0; i < obj.moegliche.size(); i++) {
-				let elem = obj.moegliche.get(i);
+			for (let i = 0; i < obj.moegliche.size(); i++) {
+				const elem = obj.moegliche.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.moegliche.size() - 1)
 					result += ',';
@@ -58,8 +58,8 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 			result += '"pruefungen" : []';
 		} else {
 			result += '"pruefungen" : [ ';
-			for (let i : number = 0; i < obj.pruefungen.size(); i++) {
-				let elem = obj.pruefungen.get(i);
+			for (let i = 0; i < obj.pruefungen.size(); i++) {
+				const elem = obj.pruefungen.get(i);
 				result += SchuelerLernabschnittNachpruefung.transpilerToJSON(elem);
 				if (i < obj.pruefungen.size() - 1)
 					result += ',';
@@ -78,8 +78,8 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 				result += '"moegliche" : []';
 			} else {
 				result += '"moegliche" : [ ';
-				for (let i : number = 0; i < obj.moegliche.size(); i++) {
-					let elem = obj.moegliche.get(i);
+				for (let i = 0; i < obj.moegliche.size(); i++) {
+					const elem = obj.moegliche.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.moegliche.size() - 1)
 						result += ',';
@@ -92,8 +92,8 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 				result += '"pruefungen" : []';
 			} else {
 				result += '"pruefungen" : [ ';
-				for (let i : number = 0; i < obj.pruefungen.size(); i++) {
-					let elem = obj.pruefungen.get(i);
+				for (let i = 0; i < obj.pruefungen.size(); i++) {
+					const elem = obj.pruefungen.get(i);
 					result += SchuelerLernabschnittNachpruefung.transpilerToJSON(elem);
 					if (i < obj.pruefungen.size() - 1)
 						result += ',';

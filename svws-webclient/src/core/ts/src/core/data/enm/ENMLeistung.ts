@@ -125,8 +125,8 @@ export class ENMLeistung extends JavaObject {
 		result.istGemahnt = typeof obj.istGemahnt === "undefined" ? null : obj.istGemahnt === null ? null : obj.istGemahnt;
 		result.tsIstGemahnt = typeof obj.tsIstGemahnt === "undefined" ? null : obj.tsIstGemahnt === null ? null : obj.tsIstGemahnt;
 		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum === null ? null : obj.mahndatum;
-		if (!!obj.teilleistungen) {
-			for (let elem of obj.teilleistungen) {
+		if (!(obj.teilleistungen === undefined)) {
+			for (const elem of obj.teilleistungen) {
 				result.teilleistungen?.add(ENMTeilleistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -155,8 +155,8 @@ export class ENMLeistung extends JavaObject {
 			result += '"teilleistungen" : []';
 		} else {
 			result += '"teilleistungen" : [ ';
-			for (let i : number = 0; i < obj.teilleistungen.size(); i++) {
-				let elem = obj.teilleistungen.get(i);
+			for (let i = 0; i < obj.teilleistungen.size(); i++) {
+				const elem = obj.teilleistungen.get(i);
 				result += ENMTeilleistung.transpilerToJSON(elem);
 				if (i < obj.teilleistungen.size() - 1)
 					result += ',';
@@ -223,8 +223,8 @@ export class ENMLeistung extends JavaObject {
 				result += '"teilleistungen" : []';
 			} else {
 				result += '"teilleistungen" : [ ';
-				for (let i : number = 0; i < obj.teilleistungen.size(); i++) {
-					let elem = obj.teilleistungen.get(i);
+				for (let i = 0; i < obj.teilleistungen.size(); i++) {
+					const elem = obj.teilleistungen.get(i);
 					result += ENMTeilleistung.transpilerToJSON(elem);
 					if (i < obj.teilleistungen.size() - 1)
 						result += ',';

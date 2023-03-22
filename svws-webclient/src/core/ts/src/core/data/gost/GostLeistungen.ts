@@ -80,11 +80,11 @@ export class GostLeistungen extends JavaObject {
 		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema === null ? null : obj.projektkursThema;
 		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
 		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
-		for (let i : number = 0; i < obj.bewertetesHalbjahr.length; i++) {
+		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(GostLeistungenFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -105,8 +105,8 @@ export class GostLeistungen extends JavaObject {
 			result += '"bewertetesHalbjahr" : []';
 		} else {
 			result += '"bewertetesHalbjahr" : [ ';
-			for (let i : number = 0; i < obj.bewertetesHalbjahr.length; i++) {
-				let elem = obj.bewertetesHalbjahr[i];
+			for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
+				const elem = obj.bewertetesHalbjahr[i];
 				result += JSON.stringify(elem);
 				if (i < obj.bewertetesHalbjahr.length - 1)
 					result += ',';
@@ -117,8 +117,8 @@ export class GostLeistungen extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += GostLeistungenFachwahl.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -157,13 +157,13 @@ export class GostLeistungen extends JavaObject {
 			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
 		}
 		if (typeof obj.bewertetesHalbjahr !== "undefined") {
-			let a = obj.bewertetesHalbjahr;
+			const a = obj.bewertetesHalbjahr;
 			if (!a) {
 				result += '"bewertetesHalbjahr" : []';
 			} else {
 				result += '"bewertetesHalbjahr" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';
@@ -176,8 +176,8 @@ export class GostLeistungen extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += GostLeistungenFachwahl.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';

@@ -116,16 +116,16 @@ export class ENMSchueler extends JavaObject {
 		if (typeof obj.istDaZFoerderung === "undefined")
 			 throw new Error('invalid json format, missing attribute istDaZFoerderung');
 		result.istDaZFoerderung = obj.istDaZFoerderung;
-		if (!!obj.sprachenfolge) {
-			for (let elem of obj.sprachenfolge) {
+		if (!(obj.sprachenfolge === undefined)) {
+			for (const elem of obj.sprachenfolge) {
 				result.sprachenfolge?.add(ENMSprachenfolge.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (typeof obj.lernabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute lernabschnitt');
 		result.lernabschnitt = ENMLernabschnitt.transpilerFromJSON(JSON.stringify(obj.lernabschnitt));
-		if (!!obj.leistungsdaten) {
-			for (let elem of obj.leistungsdaten) {
+		if (!(obj.leistungsdaten === undefined)) {
+			for (const elem of obj.leistungsdaten) {
 				result.leistungsdaten?.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -150,8 +150,8 @@ export class ENMSchueler extends JavaObject {
 			result += '"sprachenfolge" : []';
 		} else {
 			result += '"sprachenfolge" : [ ';
-			for (let i : number = 0; i < obj.sprachenfolge.size(); i++) {
-				let elem = obj.sprachenfolge.get(i);
+			for (let i = 0; i < obj.sprachenfolge.size(); i++) {
+				const elem = obj.sprachenfolge.get(i);
 				result += ENMSprachenfolge.transpilerToJSON(elem);
 				if (i < obj.sprachenfolge.size() - 1)
 					result += ',';
@@ -163,8 +163,8 @@ export class ENMSchueler extends JavaObject {
 			result += '"leistungsdaten" : []';
 		} else {
 			result += '"leistungsdaten" : [ ';
-			for (let i : number = 0; i < obj.leistungsdaten.size(); i++) {
-				let elem = obj.leistungsdaten.get(i);
+			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+				const elem = obj.leistungsdaten.get(i);
 				result += ENMLeistung.transpilerToJSON(elem);
 				if (i < obj.leistungsdaten.size() - 1)
 					result += ',';
@@ -213,8 +213,8 @@ export class ENMSchueler extends JavaObject {
 				result += '"sprachenfolge" : []';
 			} else {
 				result += '"sprachenfolge" : [ ';
-				for (let i : number = 0; i < obj.sprachenfolge.size(); i++) {
-					let elem = obj.sprachenfolge.get(i);
+				for (let i = 0; i < obj.sprachenfolge.size(); i++) {
+					const elem = obj.sprachenfolge.get(i);
 					result += ENMSprachenfolge.transpilerToJSON(elem);
 					if (i < obj.sprachenfolge.size() - 1)
 						result += ',';
@@ -230,8 +230,8 @@ export class ENMSchueler extends JavaObject {
 				result += '"leistungsdaten" : []';
 			} else {
 				result += '"leistungsdaten" : [ ';
-				for (let i : number = 0; i < obj.leistungsdaten.size(); i++) {
-					let elem = obj.leistungsdaten.get(i);
+				for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+					const elem = obj.leistungsdaten.get(i);
 					result += ENMLeistung.transpilerToJSON(elem);
 					if (i < obj.leistungsdaten.size() - 1)
 						result += ',';

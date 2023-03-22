@@ -75,7 +75,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 			 throw new Error('invalid json format, missing attribute fachID2');
 		result.fachID2 = obj.fachID2;
 		result.kursart2 = typeof obj.kursart2 === "undefined" ? null : obj.kursart2 === null ? null : obj.kursart2;
-		for (let i : number = 0; i < obj.gueltigInHalbjahr.length; i++) {
+		for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
 			result.gueltigInHalbjahr[i] = obj.gueltigInHalbjahr[i];
 		}
 		if (typeof obj.typ === "undefined")
@@ -99,8 +99,8 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"gueltigInHalbjahr" : []';
 		} else {
 			result += '"gueltigInHalbjahr" : [ ';
-			for (let i : number = 0; i < obj.gueltigInHalbjahr.length; i++) {
-				let elem = obj.gueltigInHalbjahr[i];
+			for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
+				const elem = obj.gueltigInHalbjahr[i];
 				result += JSON.stringify(elem);
 				if (i < obj.gueltigInHalbjahr.length - 1)
 					result += ',';
@@ -135,13 +135,13 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2 + '"') + ',';
 		}
 		if (typeof obj.gueltigInHalbjahr !== "undefined") {
-			let a = obj.gueltigInHalbjahr;
+			const a = obj.gueltigInHalbjahr;
 			if (!a) {
 				result += '"gueltigInHalbjahr" : []';
 			} else {
 				result += '"gueltigInHalbjahr" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';

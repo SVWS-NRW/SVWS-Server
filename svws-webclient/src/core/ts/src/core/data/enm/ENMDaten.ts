@@ -165,53 +165,53 @@ export class ENMDaten extends JavaObject {
 		result.fehlstundenSIIFachbezogen = obj.fehlstundenSIIFachbezogen;
 		result.schulform = typeof obj.schulform === "undefined" ? null : obj.schulform === null ? null : obj.schulform;
 		result.mailadresse = typeof obj.mailadresse === "undefined" ? null : obj.mailadresse === null ? null : obj.mailadresse;
-		if (!!obj.noten) {
-			for (let elem of obj.noten) {
+		if (!(obj.noten === undefined)) {
+			for (const elem of obj.noten) {
 				result.noten?.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.foerderschwerpunkte) {
-			for (let elem of obj.foerderschwerpunkte) {
+		if (!(obj.foerderschwerpunkte === undefined)) {
+			for (const elem of obj.foerderschwerpunkte) {
 				result.foerderschwerpunkte?.add(ENMFoerderschwerpunkt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.jahrgaenge) {
-			for (let elem of obj.jahrgaenge) {
+		if (!(obj.jahrgaenge === undefined)) {
+			for (const elem of obj.jahrgaenge) {
 				result.jahrgaenge?.add(ENMJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.klassen) {
-			for (let elem of obj.klassen) {
+		if (!(obj.klassen === undefined)) {
+			for (const elem of obj.klassen) {
 				result.klassen?.add(ENMKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.floskelgruppen) {
-			for (let elem of obj.floskelgruppen) {
+		if (!(obj.floskelgruppen === undefined)) {
+			for (const elem of obj.floskelgruppen) {
 				result.floskelgruppen?.add(ENMFloskelgruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.lehrer) {
-			for (let elem of obj.lehrer) {
+		if (!(obj.lehrer === undefined)) {
+			for (const elem of obj.lehrer) {
 				result.lehrer?.add(ENMLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(ENMFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.teilleistungsarten) {
-			for (let elem of obj.teilleistungsarten) {
+		if (!(obj.teilleistungsarten === undefined)) {
+			for (const elem of obj.teilleistungsarten) {
 				result.teilleistungsarten?.add(ENMTeilleistungsart.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.lerngruppen) {
-			for (let elem of obj.lerngruppen) {
+		if (!(obj.lerngruppen === undefined)) {
+			for (const elem of obj.lerngruppen) {
 				result.lerngruppen?.add(ENMLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(ENMSchueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -236,8 +236,8 @@ export class ENMDaten extends JavaObject {
 			result += '"noten" : []';
 		} else {
 			result += '"noten" : [ ';
-			for (let i : number = 0; i < obj.noten.size(); i++) {
-				let elem = obj.noten.get(i);
+			for (let i = 0; i < obj.noten.size(); i++) {
+				const elem = obj.noten.get(i);
 				result += ENMNote.transpilerToJSON(elem);
 				if (i < obj.noten.size() - 1)
 					result += ',';
@@ -248,8 +248,8 @@ export class ENMDaten extends JavaObject {
 			result += '"foerderschwerpunkte" : []';
 		} else {
 			result += '"foerderschwerpunkte" : [ ';
-			for (let i : number = 0; i < obj.foerderschwerpunkte.size(); i++) {
-				let elem = obj.foerderschwerpunkte.get(i);
+			for (let i = 0; i < obj.foerderschwerpunkte.size(); i++) {
+				const elem = obj.foerderschwerpunkte.get(i);
 				result += ENMFoerderschwerpunkt.transpilerToJSON(elem);
 				if (i < obj.foerderschwerpunkte.size() - 1)
 					result += ',';
@@ -260,8 +260,8 @@ export class ENMDaten extends JavaObject {
 			result += '"jahrgaenge" : []';
 		} else {
 			result += '"jahrgaenge" : [ ';
-			for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-				let elem = obj.jahrgaenge.get(i);
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
 				result += ENMJahrgang.transpilerToJSON(elem);
 				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
@@ -272,8 +272,8 @@ export class ENMDaten extends JavaObject {
 			result += '"klassen" : []';
 		} else {
 			result += '"klassen" : [ ';
-			for (let i : number = 0; i < obj.klassen.size(); i++) {
-				let elem = obj.klassen.get(i);
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
 				result += ENMKlasse.transpilerToJSON(elem);
 				if (i < obj.klassen.size() - 1)
 					result += ',';
@@ -284,8 +284,8 @@ export class ENMDaten extends JavaObject {
 			result += '"floskelgruppen" : []';
 		} else {
 			result += '"floskelgruppen" : [ ';
-			for (let i : number = 0; i < obj.floskelgruppen.size(); i++) {
-				let elem = obj.floskelgruppen.get(i);
+			for (let i = 0; i < obj.floskelgruppen.size(); i++) {
+				const elem = obj.floskelgruppen.get(i);
 				result += ENMFloskelgruppe.transpilerToJSON(elem);
 				if (i < obj.floskelgruppen.size() - 1)
 					result += ',';
@@ -296,8 +296,8 @@ export class ENMDaten extends JavaObject {
 			result += '"lehrer" : []';
 		} else {
 			result += '"lehrer" : [ ';
-			for (let i : number = 0; i < obj.lehrer.size(); i++) {
-				let elem = obj.lehrer.get(i);
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
 				result += ENMLehrer.transpilerToJSON(elem);
 				if (i < obj.lehrer.size() - 1)
 					result += ',';
@@ -308,8 +308,8 @@ export class ENMDaten extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += ENMFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -320,8 +320,8 @@ export class ENMDaten extends JavaObject {
 			result += '"teilleistungsarten" : []';
 		} else {
 			result += '"teilleistungsarten" : [ ';
-			for (let i : number = 0; i < obj.teilleistungsarten.size(); i++) {
-				let elem = obj.teilleistungsarten.get(i);
+			for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
+				const elem = obj.teilleistungsarten.get(i);
 				result += ENMTeilleistungsart.transpilerToJSON(elem);
 				if (i < obj.teilleistungsarten.size() - 1)
 					result += ',';
@@ -332,8 +332,8 @@ export class ENMDaten extends JavaObject {
 			result += '"lerngruppen" : []';
 		} else {
 			result += '"lerngruppen" : [ ';
-			for (let i : number = 0; i < obj.lerngruppen.size(); i++) {
-				let elem = obj.lerngruppen.get(i);
+			for (let i = 0; i < obj.lerngruppen.size(); i++) {
+				const elem = obj.lerngruppen.get(i);
 				result += ENMLerngruppe.transpilerToJSON(elem);
 				if (i < obj.lerngruppen.size() - 1)
 					result += ',';
@@ -344,8 +344,8 @@ export class ENMDaten extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += ENMSchueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -400,8 +400,8 @@ export class ENMDaten extends JavaObject {
 				result += '"noten" : []';
 			} else {
 				result += '"noten" : [ ';
-				for (let i : number = 0; i < obj.noten.size(); i++) {
-					let elem = obj.noten.get(i);
+				for (let i = 0; i < obj.noten.size(); i++) {
+					const elem = obj.noten.get(i);
 					result += ENMNote.transpilerToJSON(elem);
 					if (i < obj.noten.size() - 1)
 						result += ',';
@@ -414,8 +414,8 @@ export class ENMDaten extends JavaObject {
 				result += '"foerderschwerpunkte" : []';
 			} else {
 				result += '"foerderschwerpunkte" : [ ';
-				for (let i : number = 0; i < obj.foerderschwerpunkte.size(); i++) {
-					let elem = obj.foerderschwerpunkte.get(i);
+				for (let i = 0; i < obj.foerderschwerpunkte.size(); i++) {
+					const elem = obj.foerderschwerpunkte.get(i);
 					result += ENMFoerderschwerpunkt.transpilerToJSON(elem);
 					if (i < obj.foerderschwerpunkte.size() - 1)
 						result += ',';
@@ -428,8 +428,8 @@ export class ENMDaten extends JavaObject {
 				result += '"jahrgaenge" : []';
 			} else {
 				result += '"jahrgaenge" : [ ';
-				for (let i : number = 0; i < obj.jahrgaenge.size(); i++) {
-					let elem = obj.jahrgaenge.get(i);
+				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+					const elem = obj.jahrgaenge.get(i);
 					result += ENMJahrgang.transpilerToJSON(elem);
 					if (i < obj.jahrgaenge.size() - 1)
 						result += ',';
@@ -442,8 +442,8 @@ export class ENMDaten extends JavaObject {
 				result += '"klassen" : []';
 			} else {
 				result += '"klassen" : [ ';
-				for (let i : number = 0; i < obj.klassen.size(); i++) {
-					let elem = obj.klassen.get(i);
+				for (let i = 0; i < obj.klassen.size(); i++) {
+					const elem = obj.klassen.get(i);
 					result += ENMKlasse.transpilerToJSON(elem);
 					if (i < obj.klassen.size() - 1)
 						result += ',';
@@ -456,8 +456,8 @@ export class ENMDaten extends JavaObject {
 				result += '"floskelgruppen" : []';
 			} else {
 				result += '"floskelgruppen" : [ ';
-				for (let i : number = 0; i < obj.floskelgruppen.size(); i++) {
-					let elem = obj.floskelgruppen.get(i);
+				for (let i = 0; i < obj.floskelgruppen.size(); i++) {
+					const elem = obj.floskelgruppen.get(i);
 					result += ENMFloskelgruppe.transpilerToJSON(elem);
 					if (i < obj.floskelgruppen.size() - 1)
 						result += ',';
@@ -470,8 +470,8 @@ export class ENMDaten extends JavaObject {
 				result += '"lehrer" : []';
 			} else {
 				result += '"lehrer" : [ ';
-				for (let i : number = 0; i < obj.lehrer.size(); i++) {
-					let elem = obj.lehrer.get(i);
+				for (let i = 0; i < obj.lehrer.size(); i++) {
+					const elem = obj.lehrer.get(i);
 					result += ENMLehrer.transpilerToJSON(elem);
 					if (i < obj.lehrer.size() - 1)
 						result += ',';
@@ -484,8 +484,8 @@ export class ENMDaten extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += ENMFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';
@@ -498,8 +498,8 @@ export class ENMDaten extends JavaObject {
 				result += '"teilleistungsarten" : []';
 			} else {
 				result += '"teilleistungsarten" : [ ';
-				for (let i : number = 0; i < obj.teilleistungsarten.size(); i++) {
-					let elem = obj.teilleistungsarten.get(i);
+				for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
+					const elem = obj.teilleistungsarten.get(i);
 					result += ENMTeilleistungsart.transpilerToJSON(elem);
 					if (i < obj.teilleistungsarten.size() - 1)
 						result += ',';
@@ -512,8 +512,8 @@ export class ENMDaten extends JavaObject {
 				result += '"lerngruppen" : []';
 			} else {
 				result += '"lerngruppen" : [ ';
-				for (let i : number = 0; i < obj.lerngruppen.size(); i++) {
-					let elem = obj.lerngruppen.get(i);
+				for (let i = 0; i < obj.lerngruppen.size(); i++) {
+					const elem = obj.lerngruppen.get(i);
 					result += ENMLerngruppe.transpilerToJSON(elem);
 					if (i < obj.lerngruppen.size() - 1)
 						result += ',';
@@ -526,8 +526,8 @@ export class ENMDaten extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += ENMSchueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
 						result += ',';

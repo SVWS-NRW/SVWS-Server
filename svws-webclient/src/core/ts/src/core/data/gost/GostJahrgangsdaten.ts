@@ -97,11 +97,11 @@ export class GostJahrgangsdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
 		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
-		for (let i : number = 0; i < obj.istBlockungFestgelegt.length; i++) {
+		for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
 			result.istBlockungFestgelegt[i] = obj.istBlockungFestgelegt[i];
 		}
-		if (!!obj.beratungslehrer) {
-			for (let elem of obj.beratungslehrer) {
+		if (!(obj.beratungslehrer === undefined)) {
+			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -124,8 +124,8 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"istBlockungFestgelegt" : []';
 		} else {
 			result += '"istBlockungFestgelegt" : [ ';
-			for (let i : number = 0; i < obj.istBlockungFestgelegt.length; i++) {
-				let elem = obj.istBlockungFestgelegt[i];
+			for (let i = 0; i < obj.istBlockungFestgelegt.length; i++) {
+				const elem = obj.istBlockungFestgelegt[i];
 				result += JSON.stringify(elem);
 				if (i < obj.istBlockungFestgelegt.length - 1)
 					result += ',';
@@ -136,8 +136,8 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"beratungslehrer" : []';
 		} else {
 			result += '"beratungslehrer" : [ ';
-			for (let i : number = 0; i < obj.beratungslehrer.size(); i++) {
-				let elem = obj.beratungslehrer.get(i);
+			for (let i = 0; i < obj.beratungslehrer.size(); i++) {
+				const elem = obj.beratungslehrer.get(i);
 				result += GostBeratungslehrer.transpilerToJSON(elem);
 				if (i < obj.beratungslehrer.size() - 1)
 					result += ',';
@@ -182,13 +182,13 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW + '"') + ',';
 		}
 		if (typeof obj.istBlockungFestgelegt !== "undefined") {
-			let a = obj.istBlockungFestgelegt;
+			const a = obj.istBlockungFestgelegt;
 			if (!a) {
 				result += '"istBlockungFestgelegt" : []';
 			} else {
 				result += '"istBlockungFestgelegt" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';
@@ -201,8 +201,8 @@ export class GostJahrgangsdaten extends JavaObject {
 				result += '"beratungslehrer" : []';
 			} else {
 				result += '"beratungslehrer" : [ ';
-				for (let i : number = 0; i < obj.beratungslehrer.size(); i++) {
-					let elem = obj.beratungslehrer.get(i);
+				for (let i = 0; i < obj.beratungslehrer.size(); i++) {
+					const elem = obj.beratungslehrer.get(i);
 					result += GostBeratungslehrer.transpilerToJSON(elem);
 					if (i < obj.beratungslehrer.size() - 1)
 						result += ',';

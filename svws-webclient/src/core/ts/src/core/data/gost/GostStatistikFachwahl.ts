@@ -55,7 +55,7 @@ export class GostStatistikFachwahl extends JavaObject {
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
-		for (let i : number = 0; i < obj.fachwahlen.length; i++) {
+		for (let i = 0; i < obj.fachwahlen.length; i++) {
 			result.fachwahlen[i] = (GostStatistikFachwahlHalbjahr.transpilerFromJSON(JSON.stringify(obj.fachwahlen[i])));
 		}
 		return result;
@@ -72,8 +72,8 @@ export class GostStatistikFachwahl extends JavaObject {
 			result += '"fachwahlen" : []';
 		} else {
 			result += '"fachwahlen" : [ ';
-			for (let i : number = 0; i < obj.fachwahlen.length; i++) {
-				let elem = obj.fachwahlen[i];
+			for (let i = 0; i < obj.fachwahlen.length; i++) {
+				const elem = obj.fachwahlen[i];
 				result += GostStatistikFachwahlHalbjahr.transpilerToJSON(elem);
 				if (i < obj.fachwahlen.length - 1)
 					result += ',';
@@ -103,13 +103,13 @@ export class GostStatistikFachwahl extends JavaObject {
 			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
 		}
 		if (typeof obj.fachwahlen !== "undefined") {
-			let a = obj.fachwahlen;
+			const a = obj.fachwahlen;
 			if (!a) {
 				result += '"fachwahlen" : []';
 			} else {
 				result += '"fachwahlen" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += GostStatistikFachwahlHalbjahr.transpilerToJSON(elem);
 					if (i < a.length - 1)
 						result += ',';

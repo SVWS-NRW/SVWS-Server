@@ -86,8 +86,8 @@ export class GostBlockungKurs extends JavaObject {
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if (!!obj.lehrer) {
-			for (let elem of obj.lehrer) {
+		if (!(obj.lehrer === undefined)) {
+			for (const elem of obj.lehrer) {
 				result.lehrer?.add(GostBlockungKursLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -108,8 +108,8 @@ export class GostBlockungKurs extends JavaObject {
 			result += '"lehrer" : []';
 		} else {
 			result += '"lehrer" : [ ';
-			for (let i : number = 0; i < obj.lehrer.size(); i++) {
-				let elem = obj.lehrer.get(i);
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
 				result += GostBlockungKursLehrer.transpilerToJSON(elem);
 				if (i < obj.lehrer.size() - 1)
 					result += ',';
@@ -152,8 +152,8 @@ export class GostBlockungKurs extends JavaObject {
 				result += '"lehrer" : []';
 			} else {
 				result += '"lehrer" : [ ';
-				for (let i : number = 0; i < obj.lehrer.size(); i++) {
-					let elem = obj.lehrer.get(i);
+				for (let i = 0; i < obj.lehrer.size(); i++) {
+					const elem = obj.lehrer.get(i);
 					result += GostBlockungKursLehrer.transpilerToJSON(elem);
 					if (i < obj.lehrer.size() - 1)
 						result += ',';

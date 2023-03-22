@@ -43,8 +43,8 @@ export class GostLeistungenFachwahl extends JavaObject {
 		if (typeof obj.istFSNeu === "undefined")
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
-		if (!!obj.belegungen) {
-			for (let elem of obj.belegungen) {
+		if (!(obj.belegungen === undefined)) {
+			for (const elem of obj.belegungen) {
 				result.belegungen?.add(GostLeistungenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -60,8 +60,8 @@ export class GostLeistungenFachwahl extends JavaObject {
 			result += '"belegungen" : []';
 		} else {
 			result += '"belegungen" : [ ';
-			for (let i : number = 0; i < obj.belegungen.size(); i++) {
-				let elem = obj.belegungen.get(i);
+			for (let i = 0; i < obj.belegungen.size(); i++) {
+				const elem = obj.belegungen.get(i);
 				result += GostLeistungenFachbelegung.transpilerToJSON(elem);
 				if (i < obj.belegungen.size() - 1)
 					result += ',';
@@ -89,8 +89,8 @@ export class GostLeistungenFachwahl extends JavaObject {
 				result += '"belegungen" : []';
 			} else {
 				result += '"belegungen" : [ ';
-				for (let i : number = 0; i < obj.belegungen.size(); i++) {
-					let elem = obj.belegungen.get(i);
+				for (let i = 0; i < obj.belegungen.size(); i++) {
+					const elem = obj.belegungen.get(i);
 					result += GostLeistungenFachbelegung.transpilerToJSON(elem);
 					if (i < obj.belegungen.size() - 1)
 						result += ',';

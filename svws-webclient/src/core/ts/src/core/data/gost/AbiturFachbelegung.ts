@@ -120,7 +120,7 @@ export class AbiturFachbelegung extends JavaObject {
 		result.block2MuendlichePruefungNotenKuerzel = typeof obj.block2MuendlichePruefungNotenKuerzel === "undefined" ? null : obj.block2MuendlichePruefungNotenKuerzel === null ? null : obj.block2MuendlichePruefungNotenKuerzel;
 		result.block2Punkte = typeof obj.block2Punkte === "undefined" ? null : obj.block2Punkte === null ? null : obj.block2Punkte;
 		result.block2Pruefer = typeof obj.block2Pruefer === "undefined" ? null : obj.block2Pruefer === null ? null : obj.block2Pruefer;
-		for (let i : number = 0; i < obj.belegungen.length; i++) {
+		for (let i = 0; i < obj.belegungen.length; i++) {
 			result.belegungen[i] = obj.belegungen[i] == null ? null : (AbiturFachbelegungHalbjahr.transpilerFromJSON(JSON.stringify(obj.belegungen[i])));
 		}
 		return result;
@@ -147,8 +147,8 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"belegungen" : []';
 		} else {
 			result += '"belegungen" : [ ';
-			for (let i : number = 0; i < obj.belegungen.length; i++) {
-				let elem = obj.belegungen[i];
+			for (let i = 0; i < obj.belegungen.length; i++) {
+				const elem = obj.belegungen[i];
 				result += (elem == null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
 				if (i < obj.belegungen.length - 1)
 					result += ',';
@@ -208,13 +208,13 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"block2Pruefer" : ' + ((!obj.block2Pruefer) ? 'null' : obj.block2Pruefer) + ',';
 		}
 		if (typeof obj.belegungen !== "undefined") {
-			let a = obj.belegungen;
+			const a = obj.belegungen;
 			if (!a) {
 				result += '"belegungen" : []';
 			} else {
 				result += '"belegungen" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += (elem == null) ? null : AbiturFachbelegungHalbjahr.transpilerToJSON(elem);
 					if (i < a.length - 1)
 						result += ',';

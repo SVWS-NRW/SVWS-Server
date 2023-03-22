@@ -330,8 +330,8 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.bemerkungen === "undefined")
 			 throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = SchuelerLernabschnittBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
-		if (!!obj.leistungsdaten) {
-			for (let elem of obj.leistungsdaten) {
+		if (!(obj.leistungsdaten === undefined)) {
+			for (const elem of obj.leistungsdaten) {
 				result.leistungsdaten?.add(SchuelerLeistungsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -389,8 +389,8 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"leistungsdaten" : []';
 		} else {
 			result += '"leistungsdaten" : [ ';
-			for (let i : number = 0; i < obj.leistungsdaten.size(); i++) {
-				let elem = obj.leistungsdaten.get(i);
+			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+				const elem = obj.leistungsdaten.get(i);
 				result += SchuelerLeistungsdaten.transpilerToJSON(elem);
 				if (i < obj.leistungsdaten.size() - 1)
 					result += ',';
@@ -544,8 +544,8 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 				result += '"leistungsdaten" : []';
 			} else {
 				result += '"leistungsdaten" : [ ';
-				for (let i : number = 0; i < obj.leistungsdaten.size(); i++) {
-					let elem = obj.leistungsdaten.get(i);
+				for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+					const elem = obj.leistungsdaten.get(i);
 					result += SchuelerLeistungsdaten.transpilerToJSON(elem);
 					if (i < obj.leistungsdaten.size() - 1)
 						result += ',';

@@ -229,8 +229,8 @@ export class FachKatalogEintrag extends JavaObject {
 		if (typeof obj.exportASD === "undefined")
 			 throw new Error('invalid json format, missing attribute exportASD');
 		result.exportASD = obj.exportASD;
-		if (!!obj.zulaessig) {
-			for (let elem of obj.zulaessig) {
+		if (!(obj.zulaessig === undefined)) {
+			for (const elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -259,8 +259,8 @@ export class FachKatalogEintrag extends JavaObject {
 			result += '"zulaessig" : []';
 		} else {
 			result += '"zulaessig" : [ ';
-			for (let i : number = 0; i < obj.zulaessig.size(); i++) {
-				let elem = obj.zulaessig.get(i);
+			for (let i = 0; i < obj.zulaessig.size(); i++) {
+				const elem = obj.zulaessig.get(i);
 				result += SchulformSchulgliederung.transpilerToJSON(elem);
 				if (i < obj.zulaessig.size() - 1)
 					result += ',';
@@ -323,8 +323,8 @@ export class FachKatalogEintrag extends JavaObject {
 				result += '"zulaessig" : []';
 			} else {
 				result += '"zulaessig" : [ ';
-				for (let i : number = 0; i < obj.zulaessig.size(); i++) {
-					let elem = obj.zulaessig.get(i);
+				for (let i = 0; i < obj.zulaessig.size(); i++) {
+					const elem = obj.zulaessig.get(i);
 					result += SchulformSchulgliederung.transpilerToJSON(elem);
 					if (i < obj.zulaessig.size() - 1)
 						result += ',';

@@ -67,7 +67,7 @@ export class SchuelerblockungInputKurs extends JavaObject {
 		if (typeof obj.anzahlSuS === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSuS');
 		result.anzahlSuS = obj.anzahlSuS;
-		for (let i : number = 0; i < obj.schienen.length; i++) {
+		for (let i = 0; i < obj.schienen.length; i++) {
 			result.schienen[i] = obj.schienen[i];
 		}
 		return result;
@@ -85,8 +85,8 @@ export class SchuelerblockungInputKurs extends JavaObject {
 			result += '"schienen" : []';
 		} else {
 			result += '"schienen" : [ ';
-			for (let i : number = 0; i < obj.schienen.length; i++) {
-				let elem = obj.schienen[i];
+			for (let i = 0; i < obj.schienen.length; i++) {
+				const elem = obj.schienen[i];
 				result += JSON.stringify(elem);
 				if (i < obj.schienen.length - 1)
 					result += ',';
@@ -119,13 +119,13 @@ export class SchuelerblockungInputKurs extends JavaObject {
 			result += '"anzahlSuS" : ' + obj.anzahlSuS + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
-			let a = obj.schienen;
+			const a = obj.schienen;
 			if (!a) {
 				result += '"schienen" : []';
 			} else {
 				result += '"schienen" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i = 0; i < a.length; i++) {
+					const elem = a[i];
 					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';

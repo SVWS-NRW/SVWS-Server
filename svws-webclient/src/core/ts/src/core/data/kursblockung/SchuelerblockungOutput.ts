@@ -21,8 +21,8 @@ export class SchuelerblockungOutput extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungOutput {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungOutput();
-		if (!!obj.fachwahlenZuKurs) {
-			for (let elem of obj.fachwahlenZuKurs) {
+		if (!(obj.fachwahlenZuKurs === undefined)) {
+			for (const elem of obj.fachwahlenZuKurs) {
 				result.fachwahlenZuKurs?.add(SchuelerblockungOutputFachwahlZuKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -35,8 +35,8 @@ export class SchuelerblockungOutput extends JavaObject {
 			result += '"fachwahlenZuKurs" : []';
 		} else {
 			result += '"fachwahlenZuKurs" : [ ';
-			for (let i : number = 0; i < obj.fachwahlenZuKurs.size(); i++) {
-				let elem = obj.fachwahlenZuKurs.get(i);
+			for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
+				const elem = obj.fachwahlenZuKurs.get(i);
 				result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
 				if (i < obj.fachwahlenZuKurs.size() - 1)
 					result += ',';
@@ -55,8 +55,8 @@ export class SchuelerblockungOutput extends JavaObject {
 				result += '"fachwahlenZuKurs" : []';
 			} else {
 				result += '"fachwahlenZuKurs" : [ ';
-				for (let i : number = 0; i < obj.fachwahlenZuKurs.size(); i++) {
-					let elem = obj.fachwahlenZuKurs.get(i);
+				for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
+					const elem = obj.fachwahlenZuKurs.get(i);
 					result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
 					if (i < obj.fachwahlenZuKurs.size() - 1)
 						result += ',';

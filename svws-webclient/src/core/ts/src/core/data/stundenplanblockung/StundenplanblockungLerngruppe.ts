@@ -69,43 +69,43 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (!!obj.lehrkraefte1) {
-			for (let elem of obj.lehrkraefte1) {
+		if (!(obj.lehrkraefte1 === undefined)) {
+			for (const elem of obj.lehrkraefte1) {
 				result.lehrkraefte1?.add(StundenplanblockungLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.lehrkraefte2) {
-			for (let elem of obj.lehrkraefte2) {
+		if (!(obj.lehrkraefte2 === undefined)) {
+			for (const elem of obj.lehrkraefte2) {
 				result.lehrkraefte2?.add(StundenplanblockungLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.klassen) {
-			for (let elem of obj.klassen) {
+		if (!(obj.klassen === undefined)) {
+			for (const elem of obj.klassen) {
 				result.klassen?.add(StundenplanblockungKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(StundenplanblockungFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.raeume1) {
-			for (let elem of obj.raeume1) {
+		if (!(obj.raeume1 === undefined)) {
+			for (const elem of obj.raeume1) {
 				result.raeume1?.add(StundenplanblockungRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.raeume2) {
-			for (let elem of obj.raeume2) {
+		if (!(obj.raeume2 === undefined)) {
+			for (const elem of obj.raeume2) {
 				result.raeume2?.add(StundenplanblockungRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.kopplungen) {
-			for (let elem of obj.kopplungen) {
+		if (!(obj.kopplungen === undefined)) {
+			for (const elem of obj.kopplungen) {
 				result.kopplungen?.add(StundenplanblockungKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.stundenelemente) {
-			for (let elem of obj.stundenelemente) {
+		if (!(obj.stundenelemente === undefined)) {
+			for (const elem of obj.stundenelemente) {
 				result.stundenelemente?.add(StundenplanblockungStundenelement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -119,8 +119,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"lehrkraefte1" : []';
 		} else {
 			result += '"lehrkraefte1" : [ ';
-			for (let i : number = 0; i < obj.lehrkraefte1.size(); i++) {
-				let elem = obj.lehrkraefte1.get(i);
+			for (let i = 0; i < obj.lehrkraefte1.size(); i++) {
+				const elem = obj.lehrkraefte1.get(i);
 				result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
 				if (i < obj.lehrkraefte1.size() - 1)
 					result += ',';
@@ -131,8 +131,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"lehrkraefte2" : []';
 		} else {
 			result += '"lehrkraefte2" : [ ';
-			for (let i : number = 0; i < obj.lehrkraefte2.size(); i++) {
-				let elem = obj.lehrkraefte2.get(i);
+			for (let i = 0; i < obj.lehrkraefte2.size(); i++) {
+				const elem = obj.lehrkraefte2.get(i);
 				result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
 				if (i < obj.lehrkraefte2.size() - 1)
 					result += ',';
@@ -143,8 +143,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"klassen" : []';
 		} else {
 			result += '"klassen" : [ ';
-			for (let i : number = 0; i < obj.klassen.size(); i++) {
-				let elem = obj.klassen.get(i);
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
 				result += StundenplanblockungKlasse.transpilerToJSON(elem);
 				if (i < obj.klassen.size() - 1)
 					result += ',';
@@ -155,8 +155,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += StundenplanblockungFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -167,8 +167,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"raeume1" : []';
 		} else {
 			result += '"raeume1" : [ ';
-			for (let i : number = 0; i < obj.raeume1.size(); i++) {
-				let elem = obj.raeume1.get(i);
+			for (let i = 0; i < obj.raeume1.size(); i++) {
+				const elem = obj.raeume1.get(i);
 				result += StundenplanblockungRaum.transpilerToJSON(elem);
 				if (i < obj.raeume1.size() - 1)
 					result += ',';
@@ -179,8 +179,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"raeume2" : []';
 		} else {
 			result += '"raeume2" : [ ';
-			for (let i : number = 0; i < obj.raeume2.size(); i++) {
-				let elem = obj.raeume2.get(i);
+			for (let i = 0; i < obj.raeume2.size(); i++) {
+				const elem = obj.raeume2.get(i);
 				result += StundenplanblockungRaum.transpilerToJSON(elem);
 				if (i < obj.raeume2.size() - 1)
 					result += ',';
@@ -191,8 +191,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"kopplungen" : []';
 		} else {
 			result += '"kopplungen" : [ ';
-			for (let i : number = 0; i < obj.kopplungen.size(); i++) {
-				let elem = obj.kopplungen.get(i);
+			for (let i = 0; i < obj.kopplungen.size(); i++) {
+				const elem = obj.kopplungen.get(i);
 				result += StundenplanblockungKopplung.transpilerToJSON(elem);
 				if (i < obj.kopplungen.size() - 1)
 					result += ',';
@@ -203,8 +203,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 			result += '"stundenelemente" : []';
 		} else {
 			result += '"stundenelemente" : [ ';
-			for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
-				let elem = obj.stundenelemente.get(i);
+			for (let i = 0; i < obj.stundenelemente.size(); i++) {
+				const elem = obj.stundenelemente.get(i);
 				result += StundenplanblockungStundenelement.transpilerToJSON(elem);
 				if (i < obj.stundenelemente.size() - 1)
 					result += ',';
@@ -226,8 +226,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"lehrkraefte1" : []';
 			} else {
 				result += '"lehrkraefte1" : [ ';
-				for (let i : number = 0; i < obj.lehrkraefte1.size(); i++) {
-					let elem = obj.lehrkraefte1.get(i);
+				for (let i = 0; i < obj.lehrkraefte1.size(); i++) {
+					const elem = obj.lehrkraefte1.get(i);
 					result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
 					if (i < obj.lehrkraefte1.size() - 1)
 						result += ',';
@@ -240,8 +240,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"lehrkraefte2" : []';
 			} else {
 				result += '"lehrkraefte2" : [ ';
-				for (let i : number = 0; i < obj.lehrkraefte2.size(); i++) {
-					let elem = obj.lehrkraefte2.get(i);
+				for (let i = 0; i < obj.lehrkraefte2.size(); i++) {
+					const elem = obj.lehrkraefte2.get(i);
 					result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
 					if (i < obj.lehrkraefte2.size() - 1)
 						result += ',';
@@ -254,8 +254,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"klassen" : []';
 			} else {
 				result += '"klassen" : [ ';
-				for (let i : number = 0; i < obj.klassen.size(); i++) {
-					let elem = obj.klassen.get(i);
+				for (let i = 0; i < obj.klassen.size(); i++) {
+					const elem = obj.klassen.get(i);
 					result += StundenplanblockungKlasse.transpilerToJSON(elem);
 					if (i < obj.klassen.size() - 1)
 						result += ',';
@@ -268,8 +268,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += StundenplanblockungFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';
@@ -282,8 +282,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"raeume1" : []';
 			} else {
 				result += '"raeume1" : [ ';
-				for (let i : number = 0; i < obj.raeume1.size(); i++) {
-					let elem = obj.raeume1.get(i);
+				for (let i = 0; i < obj.raeume1.size(); i++) {
+					const elem = obj.raeume1.get(i);
 					result += StundenplanblockungRaum.transpilerToJSON(elem);
 					if (i < obj.raeume1.size() - 1)
 						result += ',';
@@ -296,8 +296,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"raeume2" : []';
 			} else {
 				result += '"raeume2" : [ ';
-				for (let i : number = 0; i < obj.raeume2.size(); i++) {
-					let elem = obj.raeume2.get(i);
+				for (let i = 0; i < obj.raeume2.size(); i++) {
+					const elem = obj.raeume2.get(i);
 					result += StundenplanblockungRaum.transpilerToJSON(elem);
 					if (i < obj.raeume2.size() - 1)
 						result += ',';
@@ -310,8 +310,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"kopplungen" : []';
 			} else {
 				result += '"kopplungen" : [ ';
-				for (let i : number = 0; i < obj.kopplungen.size(); i++) {
-					let elem = obj.kopplungen.get(i);
+				for (let i = 0; i < obj.kopplungen.size(); i++) {
+					const elem = obj.kopplungen.get(i);
 					result += StundenplanblockungKopplung.transpilerToJSON(elem);
 					if (i < obj.kopplungen.size() - 1)
 						result += ',';
@@ -324,8 +324,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 				result += '"stundenelemente" : []';
 			} else {
 				result += '"stundenelemente" : [ ';
-				for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
-					let elem = obj.stundenelemente.get(i);
+				for (let i = 0; i < obj.stundenelemente.size(); i++) {
+					const elem = obj.stundenelemente.get(i);
 					result += StundenplanblockungStundenelement.transpilerToJSON(elem);
 					if (i < obj.stundenelemente.size() - 1)
 						result += ',';

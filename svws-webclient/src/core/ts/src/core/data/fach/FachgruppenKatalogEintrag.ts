@@ -141,8 +141,8 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 		if (typeof obj.farbe === "undefined")
 			 throw new Error('invalid json format, missing attribute farbe');
 		result.farbe = RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
-		if (!!obj.schulformen) {
-			for (let elem of obj.schulformen) {
+		if (!(obj.schulformen === undefined)) {
+			for (const elem of obj.schulformen) {
 				result.schulformen?.add(elem);
 			}
 		}
@@ -169,8 +169,8 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 			result += '"schulformen" : []';
 		} else {
 			result += '"schulformen" : [ ';
-			for (let i : number = 0; i < obj.schulformen.size(); i++) {
-				let elem = obj.schulformen.get(i);
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.schulformen.size() - 1)
 					result += ',';
@@ -211,8 +211,8 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 				result += '"schulformen" : []';
 			} else {
 				result += '"schulformen" : [ ';
-				for (let i : number = 0; i < obj.schulformen.size(); i++) {
-					let elem = obj.schulformen.get(i);
+				for (let i = 0; i < obj.schulformen.size(); i++) {
+					const elem = obj.schulformen.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.schulformen.size() - 1)
 						result += ',';

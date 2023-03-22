@@ -51,33 +51,33 @@ export class StundenplanInputSimple extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanInputSimple {
 		const obj = JSON.parse(json);
 		const result = new StundenplanInputSimple();
-		if (!!obj.lehrkraefte) {
-			for (let elem of obj.lehrkraefte) {
+		if (!(obj.lehrkraefte === undefined)) {
+			for (const elem of obj.lehrkraefte) {
 				result.lehrkraefte?.add(StundenplanInputSimpleLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.klassen) {
-			for (let elem of obj.klassen) {
+		if (!(obj.klassen === undefined)) {
+			for (const elem of obj.klassen) {
 				result.klassen?.add(StundenplanInputSimpleKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(StundenplanInputSimpleFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.raeume) {
-			for (let elem of obj.raeume) {
+		if (!(obj.raeume === undefined)) {
+			for (const elem of obj.raeume) {
 				result.raeume?.add(StundenplanInputSimpleRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.kopplungen) {
-			for (let elem of obj.kopplungen) {
+		if (!(obj.kopplungen === undefined)) {
+			for (const elem of obj.kopplungen) {
 				result.kopplungen?.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.kurse) {
-			for (let elem of obj.kurse) {
+		if (!(obj.kurse === undefined)) {
+			for (const elem of obj.kurse) {
 				result.kurse?.add(StundenplanInputSimpleKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -90,8 +90,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"lehrkraefte" : []';
 		} else {
 			result += '"lehrkraefte" : [ ';
-			for (let i : number = 0; i < obj.lehrkraefte.size(); i++) {
-				let elem = obj.lehrkraefte.get(i);
+			for (let i = 0; i < obj.lehrkraefte.size(); i++) {
+				const elem = obj.lehrkraefte.get(i);
 				result += StundenplanInputSimpleLehrkraft.transpilerToJSON(elem);
 				if (i < obj.lehrkraefte.size() - 1)
 					result += ',';
@@ -102,8 +102,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"klassen" : []';
 		} else {
 			result += '"klassen" : [ ';
-			for (let i : number = 0; i < obj.klassen.size(); i++) {
-				let elem = obj.klassen.get(i);
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
 				result += StundenplanInputSimpleKlasse.transpilerToJSON(elem);
 				if (i < obj.klassen.size() - 1)
 					result += ',';
@@ -114,8 +114,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += StundenplanInputSimpleFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -126,8 +126,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"raeume" : []';
 		} else {
 			result += '"raeume" : [ ';
-			for (let i : number = 0; i < obj.raeume.size(); i++) {
-				let elem = obj.raeume.get(i);
+			for (let i = 0; i < obj.raeume.size(); i++) {
+				const elem = obj.raeume.get(i);
 				result += StundenplanInputSimpleRaum.transpilerToJSON(elem);
 				if (i < obj.raeume.size() - 1)
 					result += ',';
@@ -138,8 +138,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"kopplungen" : []';
 		} else {
 			result += '"kopplungen" : [ ';
-			for (let i : number = 0; i < obj.kopplungen.size(); i++) {
-				let elem = obj.kopplungen.get(i);
+			for (let i = 0; i < obj.kopplungen.size(); i++) {
+				const elem = obj.kopplungen.get(i);
 				result += StundenplanInputSimpleKopplung.transpilerToJSON(elem);
 				if (i < obj.kopplungen.size() - 1)
 					result += ',';
@@ -150,8 +150,8 @@ export class StundenplanInputSimple extends JavaObject {
 			result += '"kurse" : []';
 		} else {
 			result += '"kurse" : [ ';
-			for (let i : number = 0; i < obj.kurse.size(); i++) {
-				let elem = obj.kurse.get(i);
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
 				result += StundenplanInputSimpleKurs.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
 					result += ',';
@@ -170,8 +170,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"lehrkraefte" : []';
 			} else {
 				result += '"lehrkraefte" : [ ';
-				for (let i : number = 0; i < obj.lehrkraefte.size(); i++) {
-					let elem = obj.lehrkraefte.get(i);
+				for (let i = 0; i < obj.lehrkraefte.size(); i++) {
+					const elem = obj.lehrkraefte.get(i);
 					result += StundenplanInputSimpleLehrkraft.transpilerToJSON(elem);
 					if (i < obj.lehrkraefte.size() - 1)
 						result += ',';
@@ -184,8 +184,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"klassen" : []';
 			} else {
 				result += '"klassen" : [ ';
-				for (let i : number = 0; i < obj.klassen.size(); i++) {
-					let elem = obj.klassen.get(i);
+				for (let i = 0; i < obj.klassen.size(); i++) {
+					const elem = obj.klassen.get(i);
 					result += StundenplanInputSimpleKlasse.transpilerToJSON(elem);
 					if (i < obj.klassen.size() - 1)
 						result += ',';
@@ -198,8 +198,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += StundenplanInputSimpleFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';
@@ -212,8 +212,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"raeume" : []';
 			} else {
 				result += '"raeume" : [ ';
-				for (let i : number = 0; i < obj.raeume.size(); i++) {
-					let elem = obj.raeume.get(i);
+				for (let i = 0; i < obj.raeume.size(); i++) {
+					const elem = obj.raeume.get(i);
 					result += StundenplanInputSimpleRaum.transpilerToJSON(elem);
 					if (i < obj.raeume.size() - 1)
 						result += ',';
@@ -226,8 +226,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"kopplungen" : []';
 			} else {
 				result += '"kopplungen" : [ ';
-				for (let i : number = 0; i < obj.kopplungen.size(); i++) {
-					let elem = obj.kopplungen.get(i);
+				for (let i = 0; i < obj.kopplungen.size(); i++) {
+					const elem = obj.kopplungen.get(i);
 					result += StundenplanInputSimpleKopplung.transpilerToJSON(elem);
 					if (i < obj.kopplungen.size() - 1)
 						result += ',';
@@ -240,8 +240,8 @@ export class StundenplanInputSimple extends JavaObject {
 				result += '"kurse" : []';
 			} else {
 				result += '"kurse" : [ ';
-				for (let i : number = 0; i < obj.kurse.size(); i++) {
-					let elem = obj.kurse.get(i);
+				for (let i = 0; i < obj.kurse.size(); i++) {
+					const elem = obj.kurse.get(i);
 					result += StundenplanInputSimpleKurs.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
 						result += ',';

@@ -82,8 +82,8 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (!!obj.bezeichnungen) {
-			for (let elem of obj.bezeichnungen) {
+		if (!(obj.bezeichnungen === undefined)) {
+			for (const elem of obj.bezeichnungen) {
 				result.bezeichnungen?.add(JahrgangsKatalogEintragBezeichnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -100,8 +100,8 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 			result += '"bezeichnungen" : []';
 		} else {
 			result += '"bezeichnungen" : [ ';
-			for (let i : number = 0; i < obj.bezeichnungen.size(); i++) {
-				let elem = obj.bezeichnungen.get(i);
+			for (let i = 0; i < obj.bezeichnungen.size(); i++) {
+				const elem = obj.bezeichnungen.get(i);
 				result += JahrgangsKatalogEintragBezeichnung.transpilerToJSON(elem);
 				if (i < obj.bezeichnungen.size() - 1)
 					result += ',';
@@ -128,8 +128,8 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 				result += '"bezeichnungen" : []';
 			} else {
 				result += '"bezeichnungen" : [ ';
-				for (let i : number = 0; i < obj.bezeichnungen.size(); i++) {
-					let elem = obj.bezeichnungen.get(i);
+				for (let i = 0; i < obj.bezeichnungen.size(); i++) {
+					const elem = obj.bezeichnungen.get(i);
 					result += JahrgangsKatalogEintragBezeichnung.transpilerToJSON(elem);
 					if (i < obj.bezeichnungen.size() - 1)
 						result += ',';

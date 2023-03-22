@@ -26,13 +26,13 @@ export class BenutzerConfig extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerConfig {
 		const obj = JSON.parse(json);
 		const result = new BenutzerConfig();
-		if (!!obj.user) {
-			for (let elem of obj.user) {
+		if (!(obj.user === undefined)) {
+			for (const elem of obj.user) {
 				result.user?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.global) {
-			for (let elem of obj.global) {
+		if (!(obj.global === undefined)) {
+			for (const elem of obj.global) {
 				result.global?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -45,8 +45,8 @@ export class BenutzerConfig extends JavaObject {
 			result += '"user" : []';
 		} else {
 			result += '"user" : [ ';
-			for (let i : number = 0; i < obj.user.size(); i++) {
-				let elem = obj.user.get(i);
+			for (let i = 0; i < obj.user.size(); i++) {
+				const elem = obj.user.get(i);
 				result += BenutzerConfigElement.transpilerToJSON(elem);
 				if (i < obj.user.size() - 1)
 					result += ',';
@@ -57,8 +57,8 @@ export class BenutzerConfig extends JavaObject {
 			result += '"global" : []';
 		} else {
 			result += '"global" : [ ';
-			for (let i : number = 0; i < obj.global.size(); i++) {
-				let elem = obj.global.get(i);
+			for (let i = 0; i < obj.global.size(); i++) {
+				const elem = obj.global.get(i);
 				result += BenutzerConfigElement.transpilerToJSON(elem);
 				if (i < obj.global.size() - 1)
 					result += ',';
@@ -77,8 +77,8 @@ export class BenutzerConfig extends JavaObject {
 				result += '"user" : []';
 			} else {
 				result += '"user" : [ ';
-				for (let i : number = 0; i < obj.user.size(); i++) {
-					let elem = obj.user.get(i);
+				for (let i = 0; i < obj.user.size(); i++) {
+					const elem = obj.user.get(i);
 					result += BenutzerConfigElement.transpilerToJSON(elem);
 					if (i < obj.user.size() - 1)
 						result += ',';
@@ -91,8 +91,8 @@ export class BenutzerConfig extends JavaObject {
 				result += '"global" : []';
 			} else {
 				result += '"global" : [ ';
-				for (let i : number = 0; i < obj.global.size(); i++) {
-					let elem = obj.global.get(i);
+				for (let i = 0; i < obj.global.size(); i++) {
+					const elem = obj.global.get(i);
 					result += BenutzerConfigElement.transpilerToJSON(elem);
 					if (i < obj.global.size() - 1)
 						result += ',';

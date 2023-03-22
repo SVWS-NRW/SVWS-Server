@@ -120,8 +120,8 @@ export class KAOAMerkmalEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute kategorie');
 		result.kategorie = obj.kategorie;
 		result.optionsart = typeof obj.optionsart === "undefined" ? null : obj.optionsart === null ? null : obj.optionsart;
-		if (!!obj.bkAnlagen) {
-			for (let elem of obj.bkAnlagen) {
+		if (!(obj.bkAnlagen === undefined)) {
+			for (const elem of obj.bkAnlagen) {
 				result.bkAnlagen?.add(elem);
 			}
 		}
@@ -141,8 +141,8 @@ export class KAOAMerkmalEintrag extends JavaObject {
 			result += '"bkAnlagen" : []';
 		} else {
 			result += '"bkAnlagen" : [ ';
-			for (let i : number = 0; i < obj.bkAnlagen.size(); i++) {
-				let elem = obj.bkAnlagen.get(i);
+			for (let i = 0; i < obj.bkAnlagen.size(); i++) {
+				const elem = obj.bkAnlagen.get(i);
 				result += '"' + elem + '"';
 				if (i < obj.bkAnlagen.size() - 1)
 					result += ',';
@@ -178,8 +178,8 @@ export class KAOAMerkmalEintrag extends JavaObject {
 				result += '"bkAnlagen" : []';
 			} else {
 				result += '"bkAnlagen" : [ ';
-				for (let i : number = 0; i < obj.bkAnlagen.size(); i++) {
-					let elem = obj.bkAnlagen.get(i);
+				for (let i = 0; i < obj.bkAnlagen.size(); i++) {
+					const elem = obj.bkAnlagen.get(i);
 					result += '"' + elem + '"';
 					if (i < obj.bkAnlagen.size() - 1)
 						result += ',';

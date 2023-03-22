@@ -35,13 +35,13 @@ export class Sprachendaten extends JavaObject {
 		if (typeof obj.schuelerID === "undefined")
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
-		if (!!obj.belegungen) {
-			for (let elem of obj.belegungen) {
+		if (!(obj.belegungen === undefined)) {
+			for (const elem of obj.belegungen) {
 				result.belegungen?.add(Sprachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.pruefungen) {
-			for (let elem of obj.pruefungen) {
+		if (!(obj.pruefungen === undefined)) {
+			for (const elem of obj.pruefungen) {
 				result.pruefungen?.add(Sprachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -55,8 +55,8 @@ export class Sprachendaten extends JavaObject {
 			result += '"belegungen" : []';
 		} else {
 			result += '"belegungen" : [ ';
-			for (let i : number = 0; i < obj.belegungen.size(); i++) {
-				let elem = obj.belegungen.get(i);
+			for (let i = 0; i < obj.belegungen.size(); i++) {
+				const elem = obj.belegungen.get(i);
 				result += Sprachbelegung.transpilerToJSON(elem);
 				if (i < obj.belegungen.size() - 1)
 					result += ',';
@@ -67,8 +67,8 @@ export class Sprachendaten extends JavaObject {
 			result += '"pruefungen" : []';
 		} else {
 			result += '"pruefungen" : [ ';
-			for (let i : number = 0; i < obj.pruefungen.size(); i++) {
-				let elem = obj.pruefungen.get(i);
+			for (let i = 0; i < obj.pruefungen.size(); i++) {
+				const elem = obj.pruefungen.get(i);
 				result += Sprachpruefung.transpilerToJSON(elem);
 				if (i < obj.pruefungen.size() - 1)
 					result += ',';
@@ -90,8 +90,8 @@ export class Sprachendaten extends JavaObject {
 				result += '"belegungen" : []';
 			} else {
 				result += '"belegungen" : [ ';
-				for (let i : number = 0; i < obj.belegungen.size(); i++) {
-					let elem = obj.belegungen.get(i);
+				for (let i = 0; i < obj.belegungen.size(); i++) {
+					const elem = obj.belegungen.get(i);
 					result += Sprachbelegung.transpilerToJSON(elem);
 					if (i < obj.belegungen.size() - 1)
 						result += ',';
@@ -104,8 +104,8 @@ export class Sprachendaten extends JavaObject {
 				result += '"pruefungen" : []';
 			} else {
 				result += '"pruefungen" : [ ';
-				for (let i : number = 0; i < obj.pruefungen.size(); i++) {
-					let elem = obj.pruefungen.get(i);
+				for (let i = 0; i < obj.pruefungen.size(); i++) {
+					const elem = obj.pruefungen.get(i);
 					result += Sprachpruefung.transpilerToJSON(elem);
 					if (i < obj.pruefungen.size() - 1)
 						result += ',';

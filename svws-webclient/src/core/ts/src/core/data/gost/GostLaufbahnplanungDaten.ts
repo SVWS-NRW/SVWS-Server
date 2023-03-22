@@ -129,23 +129,23 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
 		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
-		if (!!obj.beratungslehrer) {
-			for (let elem of obj.beratungslehrer) {
+		if (!(obj.beratungslehrer === undefined)) {
+			for (const elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.fachkombinationen) {
-			for (let elem of obj.fachkombinationen) {
+		if (!(obj.fachkombinationen === undefined)) {
+			for (const elem of obj.fachkombinationen) {
 				result.fachkombinationen?.add(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (!!obj.schueler) {
-			for (let elem of obj.schueler) {
+		if (!(obj.schueler === undefined)) {
+			for (const elem of obj.schueler) {
 				result.schueler?.add(GostLaufbahnplanungDatenSchueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -170,8 +170,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			result += '"beratungslehrer" : []';
 		} else {
 			result += '"beratungslehrer" : [ ';
-			for (let i : number = 0; i < obj.beratungslehrer.size(); i++) {
-				let elem = obj.beratungslehrer.get(i);
+			for (let i = 0; i < obj.beratungslehrer.size(); i++) {
+				const elem = obj.beratungslehrer.get(i);
 				result += GostBeratungslehrer.transpilerToJSON(elem);
 				if (i < obj.beratungslehrer.size() - 1)
 					result += ',';
@@ -182,8 +182,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += GostFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -194,8 +194,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			result += '"fachkombinationen" : []';
 		} else {
 			result += '"fachkombinationen" : [ ';
-			for (let i : number = 0; i < obj.fachkombinationen.size(); i++) {
-				let elem = obj.fachkombinationen.get(i);
+			for (let i = 0; i < obj.fachkombinationen.size(); i++) {
+				const elem = obj.fachkombinationen.get(i);
 				result += GostJahrgangFachkombination.transpilerToJSON(elem);
 				if (i < obj.fachkombinationen.size() - 1)
 					result += ',';
@@ -206,8 +206,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			result += '"schueler" : []';
 		} else {
 			result += '"schueler" : [ ';
-			for (let i : number = 0; i < obj.schueler.size(); i++) {
-				let elem = obj.schueler.get(i);
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
 				result += GostLaufbahnplanungDatenSchueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
 					result += ',';
@@ -262,8 +262,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += '"beratungslehrer" : []';
 			} else {
 				result += '"beratungslehrer" : [ ';
-				for (let i : number = 0; i < obj.beratungslehrer.size(); i++) {
-					let elem = obj.beratungslehrer.get(i);
+				for (let i = 0; i < obj.beratungslehrer.size(); i++) {
+					const elem = obj.beratungslehrer.get(i);
 					result += GostBeratungslehrer.transpilerToJSON(elem);
 					if (i < obj.beratungslehrer.size() - 1)
 						result += ',';
@@ -276,8 +276,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += GostFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';
@@ -290,8 +290,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += '"fachkombinationen" : []';
 			} else {
 				result += '"fachkombinationen" : [ ';
-				for (let i : number = 0; i < obj.fachkombinationen.size(); i++) {
-					let elem = obj.fachkombinationen.get(i);
+				for (let i = 0; i < obj.fachkombinationen.size(); i++) {
+					const elem = obj.fachkombinationen.get(i);
 					result += GostJahrgangFachkombination.transpilerToJSON(elem);
 					if (i < obj.fachkombinationen.size() - 1)
 						result += ',';
@@ -304,8 +304,8 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 				result += '"schueler" : []';
 			} else {
 				result += '"schueler" : [ ';
-				for (let i : number = 0; i < obj.schueler.size(); i++) {
-					let elem = obj.schueler.get(i);
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
 					result += GostLaufbahnplanungDatenSchueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
 						result += ',';

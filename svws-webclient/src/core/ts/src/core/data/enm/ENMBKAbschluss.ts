@@ -110,8 +110,8 @@ export class ENMBKAbschluss extends JavaObject {
 		if (typeof obj.istFachpraktischerTeilAusreichend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;
-		if (!!obj.faecher) {
-			for (let elem of obj.faecher) {
+		if (!(obj.faecher === undefined)) {
+			for (const elem of obj.faecher) {
 				result.faecher?.add(ENMBKFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -136,8 +136,8 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"faecher" : []';
 		} else {
 			result += '"faecher" : [ ';
-			for (let i : number = 0; i < obj.faecher.size(); i++) {
-				let elem = obj.faecher.get(i);
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
 				result += ENMBKFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
 					result += ',';
@@ -192,8 +192,8 @@ export class ENMBKAbschluss extends JavaObject {
 				result += '"faecher" : []';
 			} else {
 				result += '"faecher" : [ ';
-				for (let i : number = 0; i < obj.faecher.size(); i++) {
-					let elem = obj.faecher.get(i);
+				for (let i = 0; i < obj.faecher.size(); i++) {
+					const elem = obj.faecher.get(i);
 					result += ENMBKFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
 						result += ',';

@@ -40,8 +40,8 @@ export class ENMFloskelgruppe extends JavaObject {
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
-		if (!!obj.floskeln) {
-			for (let elem of obj.floskeln) {
+		if (!(obj.floskeln === undefined)) {
+			for (const elem of obj.floskeln) {
 				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
@@ -57,8 +57,8 @@ export class ENMFloskelgruppe extends JavaObject {
 			result += '"floskeln" : []';
 		} else {
 			result += '"floskeln" : [ ';
-			for (let i : number = 0; i < obj.floskeln.size(); i++) {
-				let elem = obj.floskeln.get(i);
+			for (let i = 0; i < obj.floskeln.size(); i++) {
+				const elem = obj.floskeln.get(i);
 				result += ENMFloskel.transpilerToJSON(elem);
 				if (i < obj.floskeln.size() - 1)
 					result += ',';
@@ -86,8 +86,8 @@ export class ENMFloskelgruppe extends JavaObject {
 				result += '"floskeln" : []';
 			} else {
 				result += '"floskeln" : [ ';
-				for (let i : number = 0; i < obj.floskeln.size(); i++) {
-					let elem = obj.floskeln.get(i);
+				for (let i = 0; i < obj.floskeln.size(); i++) {
+					const elem = obj.floskeln.get(i);
 					result += ENMFloskel.transpilerToJSON(elem);
 					if (i < obj.floskeln.size() - 1)
 						result += ',';

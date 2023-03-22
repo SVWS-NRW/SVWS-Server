@@ -37,8 +37,8 @@ export class StundenplanblockungRegel extends JavaObject {
 		if (typeof obj.typ === "undefined")
 			 throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		if (!!obj.parameter) {
-			for (let elem of obj.parameter) {
+		if (!(obj.parameter === undefined)) {
+			for (const elem of obj.parameter) {
 				result.parameter?.add(elem);
 			}
 		}
@@ -53,8 +53,8 @@ export class StundenplanblockungRegel extends JavaObject {
 			result += '"parameter" : []';
 		} else {
 			result += '"parameter" : [ ';
-			for (let i : number = 0; i < obj.parameter.size(); i++) {
-				let elem = obj.parameter.get(i);
+			for (let i = 0; i < obj.parameter.size(); i++) {
+				const elem = obj.parameter.get(i);
 				result += elem;
 				if (i < obj.parameter.size() - 1)
 					result += ',';
@@ -79,8 +79,8 @@ export class StundenplanblockungRegel extends JavaObject {
 				result += '"parameter" : []';
 			} else {
 				result += '"parameter" : [ ';
-				for (let i : number = 0; i < obj.parameter.size(); i++) {
-					let elem = obj.parameter.get(i);
+				for (let i = 0; i < obj.parameter.size(); i++) {
+					const elem = obj.parameter.get(i);
 					result += elem;
 					if (i < obj.parameter.size() - 1)
 						result += ',';
