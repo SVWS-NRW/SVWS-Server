@@ -6,53 +6,53 @@ export class ENMLernabschnitt extends JavaObject {
 
 	/**
 	 * 
-	 *  Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der 
-	 *  zuvor exportierte Lernabschnitt in der DB noch gültig ist  
+	 *  Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der
+	 *  zuvor exportierte Lernabschnitt in der DB noch gültig ist
 	 */
 	public id : number = 0;
 
 	/**
-	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.
 	 */
 	public fehlstundenGesamt : number | null = null;
 
 	/**
-	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.
 	 */
 	public tsFehlstundenGesamt : string | null = null;
 
 	/**
-	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.
 	 */
 	public fehlstundenGesamtUnentschuldigt : number | null = null;
 
 	/**
-	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.
 	 */
 	public tsFehlstundenGesamtUnentschuldigt : string | null = null;
 
 	/**
-	 * Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss 
+	 * Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss
 	 */
 	public pruefungsordnung : string | null = null;
 
 	/**
-	 * Das Kürzel der Note für den Lernbereich 1, die vergeben wurde. 
+	 * Das Kürzel der Note für den Lernbereich 1, die vergeben wurde.
 	 */
 	public lernbereich1note : string | null = null;
 
 	/**
-	 * Das Kürzel der Note für den Lernbereich 2, die vergeben wurde. 
+	 * Das Kürzel der Note für den Lernbereich 2, die vergeben wurde.
 	 */
 	public lernbereich2note : string | null = null;
 
 	/**
-	 * Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt 
+	 * Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt
 	 */
 	public foerderschwerpunkt1 : string | null = null;
 
 	/**
-	 * Das Kürzel des weiteren Förderschwerpunktes oder null bei keinem weiteren Förderschwerpunkt 
+	 * Das Kürzel des weiteren Förderschwerpunktes oder null bei keinem weiteren Förderschwerpunkt
 	 */
 	public foerderschwerpunkt2 : string | null = null;
 

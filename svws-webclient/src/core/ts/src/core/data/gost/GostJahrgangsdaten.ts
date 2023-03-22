@@ -7,63 +7,63 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostJahrgangsdaten extends JavaObject {
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1 für die Vorlage für einen neuen Abiturjahrgang. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1 für die Vorlage für einen neuen Abiturjahrgang.
 	 */
 	public abiturjahr : number = 0;
 
 	/**
-	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist. 
+	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist.
 	 */
 	public jahrgang : string | null = null;
 
 	/**
-	 * Die textuelle Bezeichnung für den Abiturjahrgang 
+	 * Die textuelle Bezeichnung für den Abiturjahrgang
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. 
+	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
 	 */
 	public istAbgeschlossen : boolean = false;
 
 	/**
-	 * Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die 
-	 *  gymnasiale Oberstufe gedruckt wird. 
+	 * Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die
+	 *  gymnasiale Oberstufe gedruckt wird.
 	 */
 	public textBeratungsbogen : string | null = null;
 
 	/**
-	 * Der derzeitige Text, der beim Versenden einer Beratungsdatei per Mail verwendet wird. 
+	 * Der derzeitige Text, der beim Versenden einer Beratungsdatei per Mail verwendet wird.
 	 */
 	public textMailversand : string | null = null;
 
 	/**
-	 * Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird. 
+	 * Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird.
 	 */
 	public hatZusatzkursGE : boolean = true;
 
 	/**
-	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt. 
+	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt.
 	 */
 	public beginnZusatzkursGE : string | null = null;
 
 	/**
-	 * Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird. 
+	 * Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird.
 	 */
 	public hatZusatzkursSW : boolean = true;
 
 	/**
-	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt. 
+	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt.
 	 */
 	public beginnZusatzkursSW : string | null = null;
 
 	/**
-	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...) 
+	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...)
 	 */
 	public istBlockungFestgelegt : Array<boolean> = Array(6).fill(false);
 
 	/**
-	 * Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe 
+	 * Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe
 	 */
 	public readonly beratungslehrer : Vector<GostBeratungslehrer> = new Vector();
 

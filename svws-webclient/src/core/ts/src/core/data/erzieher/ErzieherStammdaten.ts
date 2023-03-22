@@ -6,87 +6,87 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 export class ErzieherStammdaten extends JavaObject {
 
 	/**
-	 * Die ID des Erziehers. 
+	 * Die ID des Erziehers.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, welchem der Erzieher zugeordnet ist. 
+	 * Die ID des Schülers, welchem der Erzieher zugeordnet ist.
 	 */
 	public idSchueler : number = 0;
 
 	/**
-	 * Die ID der Art des Erziehereintrages 
+	 * Die ID der Art des Erziehereintrages
 	 */
 	public idErzieherArt : number | null = null;
 
 	/**
-	 * Die Titel des Erziehers. 
+	 * Die Titel des Erziehers.
 	 */
 	public titel : string | null = null;
 
 	/**
-	 * Die Anrede des Erziehers. 
+	 * Die Anrede des Erziehers.
 	 */
 	public anrede : string | null = null;
 
 	/**
-	 * Der Name des Erziehers. 
+	 * Der Name des Erziehers.
 	 */
 	public nachname : string | null = null;
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Erziehers. 
+	 * Ggf. Zusatz zum Nachnamen des Erziehers.
 	 */
 	public zusatzNachname : string | null = null;
 
 	/**
-	 * Der Vorname des Erziehers. 
+	 * Der Vorname des Erziehers.
 	 */
 	public vorname : string | null = null;
 
 	/**
-	 * Ggf. der Straßenname im Wohnort des Erziehers. 
+	 * Ggf. der Straßenname im Wohnort des Erziehers.
 	 */
 	public strassenname : string | null = null;
 
 	/**
-	 * Ggf. die Hausnummer zur Straße im Wohnort des Erziehers. 
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Erziehers.
 	 */
 	public hausnummer : string | null = null;
 
 	/**
-	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Erziehers. 
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Erziehers.
 	 */
 	public hausnummerZusatz : string | null = null;
 
 	/**
-	 * Die ID des Wohnortes des Erziehers. 
+	 * Die ID des Wohnortes des Erziehers.
 	 */
 	public wohnortID : number | null = null;
 
 	/**
-	 * Die ID des Ortsteils des Erziehers. 
+	 * Die ID des Ortsteils des Erziehers.
 	 */
 	public ortsteilID : number | null = null;
 
 	/**
-	 * Gibt an, ob der Erzieher Anschreiben erhält oder nicht. 
+	 * Gibt an, ob der Erzieher Anschreiben erhält oder nicht.
 	 */
 	public erhaeltAnschreiben : boolean | null = null;
 
 	/**
-	 * Die E-Mailadresse des Erziehers. 
+	 * Die E-Mailadresse des Erziehers.
 	 */
 	public eMail : string | null = null;
 
 	/**
-	 * Die ID der Staatsangehörigkeit des Erziehers. 
+	 * Die ID der Staatsangehörigkeit des Erziehers.
 	 */
 	public staatsangehoerigkeitID : string | null = null;
 
 	/**
-	 * Anmerkungen zum Erziehers. 
+	 * Anmerkungen zum Erziehers.
 	 */
 	public bemerkungen : string | null = null;
 

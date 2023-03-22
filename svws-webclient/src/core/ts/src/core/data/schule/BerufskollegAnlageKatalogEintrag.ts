@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BerufskollegAnlageKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Anlage 
+	 * Das Kürzel der Anlage
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Anlage. 
+	 * Die Bezeichnung der Anlage.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

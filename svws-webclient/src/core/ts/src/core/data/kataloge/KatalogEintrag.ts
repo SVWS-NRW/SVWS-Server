@@ -4,27 +4,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Eintrags. 
+	 * Das Kürzel des Eintrags.
 	 */
 	public kuerzel : string | null = null;
 
 	/**
-	 * Die textuelle Beschreibung des Katalog-Eintrags. 
+	 * Die textuelle Beschreibung des Katalog-Eintrags.
 	 */
 	public text : string | null = null;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar : boolean = false;
 

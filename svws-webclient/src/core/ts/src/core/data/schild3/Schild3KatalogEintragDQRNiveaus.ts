@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 
 	/**
-	 * DQR-Niveau für Gliederung 
+	 * DQR-Niveau für Gliederung
 	 */
 	public Gliederung : string | null = null;
 
 	/**
-	 * DQR-Niveau für die Fachklasse 
+	 * DQR-Niveau für die Fachklasse
 	 */
 	public FKS : string | null = null;
 
 	/**
-	 * DQR-Niveau als Nummer 
+	 * DQR-Niveau als Nummer
 	 */
 	public DQR_Niveau : number | null = null;
 
 	/**
-	 * Gültig ab Schuljahr 
+	 * Gültig ab Schuljahr
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gültig bis Schuljahr 
+	 * Gültig bis Schuljahr
 	 */
 	public gueltigBis : number | null = null;
 

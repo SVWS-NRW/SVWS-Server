@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class StundenplanInputSimpleLehrkraft extends JavaObject {
 
 	/**
-	 * Die ID der Lehrkraft. 
+	 * Die ID der Lehrkraft.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. 
+	 * Das Kürzel der Lehrkraft. Beispielsweise 'BAR'.
 	 */
 	public kuerzel : string = "";
 

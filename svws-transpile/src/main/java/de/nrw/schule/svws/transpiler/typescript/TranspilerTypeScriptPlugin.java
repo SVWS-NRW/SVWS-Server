@@ -109,7 +109,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
         return (comment == null) 
         		? "" 
         		: getIndent() + "/**" + System.lineSeparator() 
-                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> getIndent() + " * " +  s).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
+                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> getIndent() + " * " + s.stripTrailing()).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
                 + getIndent() + " */" + System.lineSeparator();
 	}
 	

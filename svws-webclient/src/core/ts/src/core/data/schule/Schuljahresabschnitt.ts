@@ -3,17 +3,17 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class Schuljahresabschnitt extends JavaObject {
 
 	/**
-	 * Die ID des Schuljahresabschnittes 
+	 * Die ID des Schuljahresabschnittes
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt 
+	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt
 	 */
 	public schuljahr : number = 0;
 
 	/**
-	 * Die Nummer des Abschnitts im Schuljahr 
+	 * Die Nummer des Abschnitts im Schuljahr
 	 */
 	public abschnitt : number = 0;
 

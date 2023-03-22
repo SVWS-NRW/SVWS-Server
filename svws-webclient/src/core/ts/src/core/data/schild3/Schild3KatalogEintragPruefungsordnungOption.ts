@@ -5,82 +5,82 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 
 	/**
-	 * Schulformen für die die Optionen gelten 
+	 * Schulformen für die die Optionen gelten
 	 */
 	public OP_Schulformen : string | null = null;
 
 	/**
-	 * Kürzel der Prüfungsordung 
+	 * Kürzel der Prüfungsordung
 	 */
 	public OP_POKrz : string | null = null;
 
 	/**
-	 * Angezeigter Kurztext in Schild-NRW 
+	 * Angezeigter Kurztext in Schild-NRW
 	 */
 	public OP_Krz : string | null = null;
 
 	/**
-	 * Abgangsart in der Statistik B 
+	 * Abgangsart in der Statistik B
 	 */
 	public OP_Abgangsart_B : string | null = null;
 
 	/**
-	 * Abgangsart in der Statistik NB 
+	 * Abgangsart in der Statistik NB
 	 */
 	public OP_Abgangsart_NB : string | null = null;
 
 	/**
-	 * A=Allgemein B=Berufsbildend 
+	 * A=Allgemein B=Berufsbildend
 	 */
 	public OP_Art : string | null = null;
 
 	/**
-	 * Abschlusskürzel in Schild-NRW 
+	 * Abschlusskürzel in Schild-NRW
 	 */
 	public OP_Typ : string | null = null;
 
 	/**
-	 * Bildungsgang A oder B 
+	 * Bildungsgang A oder B
 	 */
 	public OP_Bildungsgang : string | null = null;
 
 	/**
-	 * Text des Abschlusses 
+	 * Text des Abschlusses
 	 */
 	public OP_Name : string | null = null;
 
 	/**
-	 * Paragraph in der BASS (veraltet?) 
+	 * Paragraph in der BASS (veraltet?)
 	 */
 	public OP_Kommentar : string | null = null;
 
 	/**
-	 * Zulässig für diese Jahrgänge 
+	 * Zulässig für diese Jahrgänge
 	 */
 	public OP_Jahrgaenge : string | null = null;
 
 	/**
-	 * Zulässig für BKIndex 
+	 * Zulässig für BKIndex
 	 */
 	public OP_BKIndex : string | null = null;
 
 	/**
-	 * Zulässig für diese Gliederungen 
+	 * Zulässig für diese Gliederungen
 	 */
 	public OP_BKAnl_Typ : string | null = null;
 
 	/**
-	 * Reihenfolge 
+	 * Reihenfolge
 	 */
 	public OP_Reihenfolge : number | null = null;
 
 	/**
-	 * Gültig ab Schuljahr 
+	 * Gültig ab Schuljahr
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gültig bis Schuljahr 
+	 * Gültig bis Schuljahr
 	 */
 	public gueltigBis : number | null = null;
 

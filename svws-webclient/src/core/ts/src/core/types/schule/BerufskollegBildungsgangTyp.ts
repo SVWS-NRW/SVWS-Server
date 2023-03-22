@@ -18,47 +18,47 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, BerufskollegBildungsgangTyp> = new Map<string, BerufskollegBildungsgangTyp>();
 
 	/**
-	 * Berufsfachschulen 
+	 * Berufsfachschulen
 	 */
 	public static readonly BERUFSFACHSCHULE : BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSFACHSCHULE", 0, [new BildungsgangTypKatalogEintrag(1000, "BF", "Berufsfachschulen", null, null)]);
 
 	/**
-	 * Berufsfachschulen 
+	 * Berufsfachschulen
 	 */
 	public static readonly BERUFSSCHULE : BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSSCHULE", 1, [new BildungsgangTypKatalogEintrag(2000, "BS", "Berufsschule", null, null)]);
 
 	/**
-	 * Berufliches Gymnasium 
+	 * Berufliches Gymnasium
 	 */
 	public static readonly BERUFLICHES_GYMNASIUM : BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFLICHES_GYMNASIUM", 2, [new BildungsgangTypKatalogEintrag(3000, "BY", "Berufliches Gymnasium", null, null)]);
 
 	/**
-	 * Fachoberschule 
+	 * Fachoberschule
 	 */
 	public static readonly FACHOBERSCHULE : BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHOBERSCHULE", 3, [new BildungsgangTypKatalogEintrag(4000, "FO", "Fachoberschule", null, null)]);
 
 	/**
-	 * Fachschule 
+	 * Fachschule
 	 */
 	public static readonly FACHSCHULE : BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHSCHULE", 4, [new BildungsgangTypKatalogEintrag(5000, "FS", "Fachschule", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Berufsschultypen von Bildungsgängen, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Berufsschultypen von Bildungsgängen, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : BildungsgangTypKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Berufsschultypen von Bildungsgängen 
+	 * Die Historie mit den Einträgen der Berufsschultypen von Bildungsgängen
 	 */
 	public readonly historie : Array<BildungsgangTypKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _ebenen : HashMap<string, BerufskollegBildungsgangTyp> = new HashMap();
 

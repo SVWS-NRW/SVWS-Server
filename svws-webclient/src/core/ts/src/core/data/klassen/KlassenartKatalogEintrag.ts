@@ -11,32 +11,32 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class KlassenartKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik 
+	 * Das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Klassenart 
+	 * Die Bezeichnung der Klassenart
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist. 
+	 * Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.
 	 */
 	public zulaessig : List<SchulformSchulgliederung> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Klassenart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Klassenart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

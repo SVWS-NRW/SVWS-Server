@@ -19,57 +19,57 @@ export class Sprachpruefungniveau extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Sprachpruefungniveau> = new Map<string, Sprachpruefungniveau>();
 
 	/**
-	 * Prüfungsniveau angelehnt an 'HA9' 
+	 * Prüfungsniveau angelehnt an 'HA9'
 	 */
 	public static readonly HA9 : Sprachpruefungniveau = new Sprachpruefungniveau("HA9", 0, [new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_HA9", "Hauptschulabschluss nach Klasse 9", null, null)]);
 
 	/**
-	 * Prüfungsniveau angelehnt an 'HA10' 
+	 * Prüfungsniveau angelehnt an 'HA10'
 	 */
 	public static readonly HA10 : Sprachpruefungniveau = new Sprachpruefungniveau("HA10", 1, [new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_HA10", "Hauptschulabschluss nach Klasse 10", null, null)]);
 
 	/**
-	 * Prüfungsniveau angelehnt an 'MSA' 
+	 * Prüfungsniveau angelehnt an 'MSA'
 	 */
 	public static readonly MSA : Sprachpruefungniveau = new Sprachpruefungniveau("MSA", 2, [new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null)]);
 
 	/**
-	 * Prüfungsniveau angelehnt an 'EF' 
+	 * Prüfungsniveau angelehnt an 'EF'
 	 */
 	public static readonly EF : Sprachpruefungniveau = new Sprachpruefungniveau("EF", 3, [new SprachpruefungsniveauKatalogEintrag(4, "NIVEAU_EF", "Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule)", null, null)]);
 
 	/**
-	 * Prüfungsniveau angelehnt an 'FHR' 
+	 * Prüfungsniveau angelehnt an 'FHR'
 	 */
 	public static readonly FHR : Sprachpruefungniveau = new Sprachpruefungniveau("FHR", 4, [new SprachpruefungsniveauKatalogEintrag(5, "NIVEAU_FHR", "Fachhochschulreife (Abschluss an berufsbildenden Schulen)", null, null)]);
 
 	/**
-	 * Prüfungsniveau angelehnt an 'WBK_FF' 
+	 * Prüfungsniveau angelehnt an 'WBK_FF'
 	 */
 	public static readonly WBK_FF : Sprachpruefungniveau = new Sprachpruefungniveau("WBK_FF", 5, [new SprachpruefungsniveauKatalogEintrag(6, "NIVEAU_WBK_FF", "Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache)", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des Sprachprüfungsniveaus 
+	 * Der aktuellen Daten des Sprachprüfungsniveaus
 	 */
 	public readonly daten : SprachpruefungsniveauKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des Sprachprüfungsniveaus 
+	 * Die Historie mit den Einträgen des Sprachprüfungsniveaus
 	 */
 	public readonly historie : Array<SprachpruefungsniveauKatalogEintrag>;
 
 	/**
-	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs 
+	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs
 	 */
 	private static readonly _mapID : HashMap<number, Sprachpruefungniveau> = new HashMap();
 
 	/**
-	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen 
+	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen
 	 */
 	private static readonly _mapKuerzel : HashMap<string, Sprachpruefungniveau> = new HashMap();
 

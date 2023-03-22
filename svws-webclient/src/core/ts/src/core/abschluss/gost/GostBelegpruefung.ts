@@ -8,22 +8,22 @@ import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBe
 export abstract class GostBelegpruefung extends JavaObject {
 
 	/**
-	 * Eine ggf. zuvor durchgeführte Abitur-Belegprüfung, welche in dieser Belegprüfung als Voraussetzung vorhanden sein muss. 
+	 * Eine ggf. zuvor durchgeführte Abitur-Belegprüfung, welche in dieser Belegprüfung als Voraussetzung vorhanden sein muss.
 	 */
 	protected readonly pruefungen_vorher : Array<GostBelegpruefung>;
 
 	/**
-	 * Der Daten-Manager für die Abiturdaten 
+	 * Der Daten-Manager für die Abiturdaten
 	 */
 	protected readonly manager : AbiturdatenManager;
 
 	/**
-	 * Die Art der Belegprüfung (nur EF.1, Gesamte Oberstufe, evtl. weitere) 
+	 * Die Art der Belegprüfung (nur EF.1, Gesamte Oberstufe, evtl. weitere)
 	 */
 	protected readonly pruefungs_art : GostBelegpruefungsArt;
 
 	/**
-	 * Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind. 
+	 * Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind.
 	 */
 	private readonly belegungsfehler : Vector<GostBelegungsfehler> = new Vector();
 

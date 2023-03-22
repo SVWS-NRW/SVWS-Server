@@ -19,77 +19,77 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerRechtsverhaeltnis> = new Map<string, LehrerRechtsverhaeltnis>();
 
 	/**
-	 * Rechtsverhältnis 'Beamter auf Lebenszeit' 
+	 * Rechtsverhältnis 'Beamter auf Lebenszeit'
 	 */
 	public static readonly L : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("L", 0, [new LehrerKatalogRechtsverhaeltnisEintrag(3, "L", "Beamter auf Lebenszeit", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Beamter auf Probe' 
+	 * Rechtsverhältnis 'Beamter auf Probe'
 	 */
 	public static readonly P : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("P", 1, [new LehrerKatalogRechtsverhaeltnisEintrag(2, "P", "Beamter auf Probe", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Beamter auf Probe zur Anstellung' 
+	 * Rechtsverhältnis 'Beamter auf Probe zur Anstellung'
 	 */
 	public static readonly A : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("A", 2, [new LehrerKatalogRechtsverhaeltnisEintrag(1, "A", "Beamter auf Probe zur Anstellung", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' 
+	 * Rechtsverhältnis 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)'
 	 */
 	public static readonly N : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("N", 3, [new LehrerKatalogRechtsverhaeltnisEintrag(7, "N", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Beamter auf Widerruf (LAA)' 
+	 * Rechtsverhältnis 'Beamter auf Widerruf (LAA)'
 	 */
 	public static readonly W : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("W", 4, [new LehrerKatalogRechtsverhaeltnisEintrag(9, "W", "Beamter auf Widerruf (LAA)", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Angestellte, unbefristet (BAT-Vertrag)' 
+	 * Rechtsverhältnis 'Angestellte, unbefristet (BAT-Vertrag)'
 	 */
 	public static readonly U : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("U", 5, [new LehrerKatalogRechtsverhaeltnisEintrag(4, "U", "Angestellte, unbefristet (BAT-Vertrag)", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Angestellte, befristet (BAT-Vertrag)' 
+	 * Rechtsverhältnis 'Angestellte, befristet (BAT-Vertrag)'
 	 */
 	public static readonly B : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("B", 6, [new LehrerKatalogRechtsverhaeltnisEintrag(5, "B", "Angestellte, befristet (BAT-Vertrag)", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Angestellte, nicht BAT-Vertrag' 
+	 * Rechtsverhältnis 'Angestellte, nicht BAT-Vertrag'
 	 */
 	public static readonly J : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("J", 7, [new LehrerKatalogRechtsverhaeltnisEintrag(6, "J", "Angestellte, nicht BAT-Vertrag", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Gestellungsvertrag' 
+	 * Rechtsverhältnis 'Gestellungsvertrag'
 	 */
 	public static readonly S : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("S", 8, [new LehrerKatalogRechtsverhaeltnisEintrag(8, "S", "Gestellungsvertrag", null, null)]);
 
 	/**
-	 * Rechtsverhältnis 'Unentgeltlich Beschäftigte' 
+	 * Rechtsverhältnis 'Unentgeltlich Beschäftigte'
 	 */
 	public static readonly X : LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("X", 9, [new LehrerKatalogRechtsverhaeltnisEintrag(10, "X", "Unentgeltlich Beschäftigte", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des Rechtsverhältnisses, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten des Rechtsverhältnisses, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogRechtsverhaeltnisEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Rechtsverhältnisse 
+	 * Die Historie mit den Einträgen der Rechtsverhältnisse
 	 */
 	public readonly historie : Array<LehrerKatalogRechtsverhaeltnisEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis | null> = new HashMap();
 

@@ -10,22 +10,22 @@ export class LehrerKatalogLehrbefaehigungAnerkennungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für den Anerkennungsgrund einer Lehrbefähigung. 
+	 * Das Kürzel für den Anerkennungsgrund einer Lehrbefähigung.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Anerkennungsgrundes einer Lehrbefähigung. 
+	 * Der Klartext des Anerkennungsgrundes einer Lehrbefähigung.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

@@ -20,107 +20,107 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	private static readonly all_values_by_name : Map<string, BerufskollegOrganisationsformen> = new Map<string, BerufskollegOrganisationsformen>();
 
 	/**
-	 * Organisationsform: Teilzeitunterricht (außerhalb der TZ-Berufsschule) 
+	 * Organisationsform: Teilzeitunterricht (außerhalb der TZ-Berufsschule)
 	 */
 	public static readonly TEILZEIT : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("TEILZEIT", 0, [new OrganisationsformKatalogEintrag(1001000, "T", "Teilzeitunterricht (außerhalb der TZ-Berufsschule)", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule 
+	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule
 	 */
 	public static readonly TEILZEIT_NORMALKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("TEILZEIT_NORMALKLASSE", 1, [new OrganisationsformKatalogEintrag(1002000, "A", "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule 
+	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule
 	 */
 	public static readonly TEILZEIT_BEZIRKSFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("TEILZEIT_BEZIRKSFACHKLASSE", 2, [new OrganisationsformKatalogEintrag(1003000, "C", "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule 
+	 * Organisationsform: Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule
 	 */
 	public static readonly TEILZEIT_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("TEILZEIT_LANDESFACHKLASSE", 3, [new OrganisationsformKatalogEintrag(1004000, "I", "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Vollzeitunterricht 
+	 * Organisationsform: Vollzeitunterricht
 	 */
 	public static readonly VOLLZEIT : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("VOLLZEIT", 4, [new OrganisationsformKatalogEintrag(1005000, "V", "Vollzeitunterricht", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_IM_UNTERRICHT : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_IM_UNTERRICHT", 5, [new OrganisationsformKatalogEintrag(1006000, "B", "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_NICHT_IM_UNTERRICHT : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_NICHT_IM_UNTERRICHT", 6, [new OrganisationsformKatalogEintrag(1007000, "E", "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System 
+	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT", 7, [new OrganisationsformKatalogEintrag(1008000, "G", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Ganztagsunterricht (Normalklasse) im dualen System 
+	 * Organisationsform: Ganztagsunterricht (Normalklasse) im dualen System
 	 */
 	public static readonly DUAL_GANZTAG : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_GANZTAG", 8, [new OrganisationsformKatalogEintrag(1000, "K", "Ganztagsunterricht (Normalklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_IM_UNTERRICHT_BEZIRKSFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_IM_UNTERRICHT_BEZIRKSFACHKLASSE", 9, [new OrganisationsformKatalogEintrag(1009000, "D", "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_NICHT_IM_UNTERRICHT_BEZIRKSFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_NICHT_IM_UNTERRICHT_BEZIRKSFACHKLASSE", 10, [new OrganisationsformKatalogEintrag(1010000, "F", "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System 
+	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_BEZIRKSFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_BEZIRKSFACHKLASSE", 11, [new OrganisationsformKatalogEintrag(1011000, "H", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Ganztagsunterricht (Bezirksfachklasse) im dualen System 
+	 * Organisationsform: Ganztagsunterricht (Bezirksfachklasse) im dualen System
 	 */
 	public static readonly DUAL_GANZTAG_BEZIRKSFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_GANZTAG_BEZIRKSFACHKLASSE", 12, [new OrganisationsformKatalogEintrag(1012000, "L", "Ganztagsunterricht (Bezirksfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_IM_UNTERRICHT_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_IM_UNTERRICHT_LANDESFACHKLASSE", 13, [new OrganisationsformKatalogEintrag(1013000, "O", "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System 
+	 * Organisationsform: Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_NICHT_IM_UNTERRICHT_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_NICHT_IM_UNTERRICHT_LANDESFACHKLASSE", 14, [new OrganisationsformKatalogEintrag(1014000, "P", "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System 
+	 * Organisationsform: Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System
 	 */
 	public static readonly DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_LANDESFACHKLASSE", 15, [new OrganisationsformKatalogEintrag(1015000, "U", "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Organisationsform: Ganztagsunterricht (Landesfachklasse) im dualen System 
+	 * Organisationsform: Ganztagsunterricht (Landesfachklasse) im dualen System
 	 */
 	public static readonly DUAL_GANZTAG_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_GANZTAG_LANDESFACHKLASSE", 16, [new OrganisationsformKatalogEintrag(1016000, "M", "Ganztagsunterricht (Landesfachklasse) im dualen System", Arrays.asList(Schulform.BK, Schulform.SB), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Organisationsform 
+	 * Der aktuellen Daten der Organisationsform
 	 */
 	public readonly daten : OrganisationsformKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Organisationsform 
+	 * Die Historie mit den Einträgen der Organisationsform
 	 */
 	public readonly historie : Array<OrganisationsformKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, BerufskollegOrganisationsformen> = new HashMap();
 

@@ -4,37 +4,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ReligionEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Bezeichnung bzw. der Name der Religion. 
+	 * Die Bezeichnung bzw. der Name der Religion.
 	 */
 	public text : string | null = "";
 
 	/**
-	 * Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint. 
+	 * Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint.
 	 */
 	public textZeugnis : string | null = "";
 
 	/**
-	 * Das Kürzel des Eintrages für die Statistik. 
+	 * Das Kürzel des Eintrages für die Statistik.
 	 */
 	public kuerzel : string | null = "";
 
 	/**
-	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. 
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
 	public sortierung : number = 1;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = true;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar : boolean = true;
 

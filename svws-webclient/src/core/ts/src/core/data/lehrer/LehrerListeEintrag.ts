@@ -4,52 +4,52 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerListeEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers. 
+	 * Die ID des Lehrers.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Lehrers. 
+	 * Das Kürzel des Lehrers.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Ggf. ein akademischer Grad des Lehrers. 
+	 * Ggf. ein akademischer Grad des Lehrers.
 	 */
 	public titel : string | null = null;
 
 	/**
-	 * Der Nachname des Lehrers. 
+	 * Der Nachname des Lehrers.
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Der Vorname des Lehrers. 
+	 * Der Vorname des Lehrers.
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Der Personaltyp des Lehrerlisten-Eintrags. 
+	 * Der Personaltyp des Lehrerlisten-Eintrags.
 	 */
 	public personTyp : string = "";
 
 	/**
-	 * Die Sortierreihenfolge des Lehrerlisten-Eintrags. 
+	 * Die Sortierreihenfolge des Lehrerlisten-Eintrags.
 	 */
 	public sortierung : number = 0;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht. 
+	 * Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht.
 	 */
 	public istRelevantFuerStatistik : boolean = false;
 

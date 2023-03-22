@@ -18,33 +18,33 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	private static readonly SCHIENEN_MAX_ANZAHL : number = 1000;
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
 
 	/**
-	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
 	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap();
 
 	/**
-	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
 	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausur> = new HashMap();
 
 	/**
-	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
 	private readonly _mapSchuelerZuNummer : HashMap<number, number> = new HashMap();
 
 	/**
-	 * Die Anzahl der Klausuren. 
+	 * Die Anzahl der Klausuren.
 	 */
 	private readonly _klausurenAnzahl : number;
 
 	/**
-	 * Jeder Klausurnummer wird eine Schiene zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung. 
-	 *  Am Ende des Algorithmus hat jede Klausur einen Wert >= 0. 
+	 * Jeder Klausurnummer wird eine Schiene zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung.
+	 *  Am Ende des Algorithmus hat jede Klausur einen Wert >= 0.
 	 */
 	private readonly _klausurZuSchiene : Array<number>;
 
@@ -53,27 +53,27 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	private readonly _klausurZuSchiene2 : Array<number>;
 
 	/**
-	 * Jeder Klausurnummer wird der Knotengrad (Anzahl an Nachbarn) zugeordnet. 
+	 * Jeder Klausurnummer wird der Knotengrad (Anzahl an Nachbarn) zugeordnet.
 	 */
 	private readonly _klausurnummerZuGrad : Array<number>;
 
 	/**
-	 * Ein Array aller Klausurnummern, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). 
+	 * Ein Array aller Klausurnummern, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn).
 	 */
 	private readonly _klausurenSortiertGrad : Array<number>;
 
 	/**
-	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin verboten ist. 
+	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin verboten ist.
 	 */
 	private readonly _verboten : Array<Array<boolean>>;
 
 	/**
-	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin bevorzugt wird. 
+	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin bevorzugt wird.
 	 */
 	private readonly _bevorzugt : Array<Array<number>>;
 
 	/**
-	 * Die Anzahl der derzeitigen verwendeten Schienen. 
+	 * Die Anzahl der derzeitigen verwendeten Schienen.
 	 */
 	private _schienenAnzahl : number = 0;
 

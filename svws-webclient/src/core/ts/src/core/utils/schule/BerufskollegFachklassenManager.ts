@@ -15,42 +15,42 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class BerufskollegFachklassenManager extends JavaObject {
 
 	/**
-	 * der Katalog 
+	 * der Katalog
 	 */
 	private readonly _katalog : BerufskollegFachklassenKatalog;
 
 	/**
-	 * Die Version der Daten 
+	 * Die Version der Daten
 	 */
 	private readonly _version : number;
 
 	/**
-	 * Ein Vektor mit allen Katalog-Einträgen 
+	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
 	private readonly _values : Vector<BerufskollegFachklassenKatalogEintrag> = new Vector();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index. 
+	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index.
 	 */
 	private readonly _mapByIndex : HashMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap();
 
 	/**
-	 * Eine HashMap für den Zugriff auf den Index anhand eines Eintrags. 
+	 * Eine HashMap für den Zugriff auf den Index anhand eines Eintrags.
 	 */
 	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels. 
+	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels.
 	 */
 	private readonly _mapByKuerzel : HashMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID. 
+	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID.
 	 */
 	private readonly _mapByID : HashMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID. 
+	 * Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID.
 	 */
 	private readonly _mapDatenByID : HashMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap();
 

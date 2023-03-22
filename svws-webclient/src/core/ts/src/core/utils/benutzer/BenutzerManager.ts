@@ -14,17 +14,17 @@ import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 export class BenutzerManager extends JavaObject {
 
 	/**
-	 * Die Daten des Benutzers, die im Manager vorhanden sind. 
+	 * Die Daten des Benutzers, die im Manager vorhanden sind.
 	 */
 	private readonly _daten : BenutzerDaten;
 
 	/**
-	 * Eine Map zum schnellen Zugriff auf die Benutzergruppendaten 
+	 * Eine Map zum schnellen Zugriff auf die Benutzergruppendaten
 	 */
 	private readonly _mapGruppen : HashMap<number, BenutzergruppeDaten> = new HashMap();
 
 	/**
-	 * Die Ids der Benutzergruppen des Benutzers 
+	 * Die Ids der Benutzergruppen des Benutzers
 	 */
 	private readonly _setGruppenIDs : HashSet<number> = new HashSet();
 
@@ -36,7 +36,7 @@ export class BenutzerManager extends JavaObject {
 	private readonly _mapKompetenzenVonGruppe : HashMap<BenutzerKompetenz, Vector<BenutzergruppeDaten>> = new HashMap();
 
 	/**
-	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist. 
+	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist.
 	 */
 	private readonly _setKompetenzen : HashSet<BenutzerKompetenz> = new HashSet();
 

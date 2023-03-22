@@ -14,22 +14,22 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 export class KursblockungDynSchiene extends JavaObject {
 
 	/**
-	 * Die Nummer der Schiene. Wenn es 14 Schienen gibt, dann gibt es 14 Objekte dieser Klasse mit den Nummern 0 bis 13. 
+	 * Die Nummer der Schiene. Wenn es 14 Schienen gibt, dann gibt es 14 Objekte dieser Klasse mit den Nummern 0 bis 13.
 	 */
 	private readonly nr : number;
 
 	/**
-	 * Logger für Benutzerhinweise, Warnungen und Fehler. 
+	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	private readonly logger : Logger;
 
 	/**
-	 * Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen. 
+	 * Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen.
 	 */
 	private readonly kursMap : HashMap<number, KursblockungDynKurs>;
 
 	/**
-	 * Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert. 
+	 * Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
 	private readonly statistik : KursblockungDynStatistik;
 

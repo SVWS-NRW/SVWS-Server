@@ -3,22 +3,22 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class GostFachwahl extends JavaObject {
 
 	/**
-	 * Die ID des Faches 
+	 * Die ID des Faches
 	 */
 	public fachID : number = -1;
 
 	/**
-	 * Die ID des Schülers 
+	 * Die ID des Schülers
 	 */
 	public schuelerID : number = -1;
 
 	/**
-	 * Die ID der Kursart 
+	 * Die ID der Kursart
 	 */
 	public kursartID : number = -1;
 
 	/**
-	 * Gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht 
+	 * Gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht
 	 */
 	public istSchriftlich : boolean = false;
 

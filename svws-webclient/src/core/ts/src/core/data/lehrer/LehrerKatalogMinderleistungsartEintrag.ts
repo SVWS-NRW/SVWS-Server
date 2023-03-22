@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerKatalogMinderleistungsartEintrag extends JavaObject {
 
 	/**
-	 * Die ID der Mindeleistungsart. 
+	 * Die ID der Mindeleistungsart.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für die Mindeleistungsart, welches für die amtliche Schulstatistik verwendet wird. 
+	 * Das Kürzel für die Mindeleistungsart, welches für die amtliche Schulstatistik verwendet wird.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext der Mindeleistungsart. 
+	 * Der Klartext der Mindeleistungsart.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Mindeleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Mindeleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Mindeleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Mindeleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

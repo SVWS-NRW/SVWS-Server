@@ -7,62 +7,62 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 export class SchuelerBetriebsdaten extends JavaObject {
 
 	/**
-	 * ID des Datensatzes 
+	 * ID des Datensatzes
 	 */
 	public id : number = 0;
 
 	/**
-	 * ID des Schülers 
+	 * ID des Schülers
 	 */
 	public schueler_id : number = 0;
 
 	/**
-	 * AdressID des Betriebeeintrags beim Schüler 
+	 * AdressID des Betriebeeintrags beim Schüler
 	 */
 	public betrieb_id : number = 0;
 
 	/**
-	 * ID der Beschäftigungsart des Schülers 
+	 * ID der Beschäftigungsart des Schülers
 	 */
 	public beschaeftigungsart_id : number | null = null;
 
 	/**
-	 * Datum Vertragsbeginn des Betriebeeintrags beim Schüler 
+	 * Datum Vertragsbeginn des Betriebeeintrags beim Schüler
 	 */
 	public vertragsbeginn : string | null = null;
 
 	/**
-	 * Datum des Vertragsende des Betriebeeintrags beim Schüler 
+	 * Datum des Vertragsende des Betriebeeintrags beim Schüler
 	 */
 	public vertragsende : string | null = null;
 
 	/**
-	 * Ausbildername des Betriebeeintrags beim Schüler 
+	 * Ausbildername des Betriebeeintrags beim Schüler
 	 */
 	public ausbilder : string | null = null;
 
 	/**
-	 * Betrieb erhält Anschreiben Ja/Nein 
+	 * Betrieb erhält Anschreiben Ja/Nein
 	 */
 	public allgadranschreiben : boolean | null = null;
 
 	/**
-	 * Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler 
+	 * Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler
 	 */
 	public praktikum : boolean | null = null;
 
 	/**
-	 * Sortierung des Betriebeeintrags beim Schüler 
+	 * Sortierung des Betriebeeintrags beim Schüler
 	 */
 	public sortierung : number | null = null;
 
 	/**
-	 * AnsprechpartnerID des Betriebeeintrags beim Schüler 
+	 * AnsprechpartnerID des Betriebeeintrags beim Schüler
 	 */
 	public ansprechpartner_id : number | null = null;
 
 	/**
-	 * BetreuungslehrerID des Betriebeeintrags beim Schüler 
+	 * BetreuungslehrerID des Betriebeeintrags beim Schüler
 	 */
 	public betreuungslehrer_id : number | null = null;
 

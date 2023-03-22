@@ -5,17 +5,17 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Abgangsgrundes. 
+	 * Die ID des Abgangsgrundes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für den Abgangsgrund. 
+	 * Das Kürzel für den Abgangsgrund.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Abgangsgrunds. 
+	 * Der Klartext des Abgangsgrunds.
 	 */
 	public text : string = "";
 
@@ -25,12 +25,12 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 	public schluessel : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Abgangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Abgangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Abgangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Abgangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

@@ -5,132 +5,132 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchultraegerKatalogEintrag extends JavaObject {
 
 	/**
-	 * Schulträgernummer des Schulträgers. 
+	 * Schulträgernummer des Schulträgers.
 	 */
 	public SchulNr : string = "";
 
 	/**
-	 * Regionalschlüssel des Schulträgers 
+	 * Regionalschlüssel des Schulträgers
 	 */
 	public RegSchl : string | null = null;
 
 	/**
-	 * KoRe 
+	 * KoRe
 	 */
 	public KoRe : string | null = null;
 
 	/**
-	 * KoHo 
+	 * KoHo
 	 */
 	public KoHo : string | null = null;
 
 	/**
-	 * Bezeichnung 1 des Schulträgers 
+	 * Bezeichnung 1 des Schulträgers
 	 */
 	public ABez1 : string | null = null;
 
 	/**
-	 * Bezeichnung 2 des Schulträgers 
+	 * Bezeichnung 2 des Schulträgers
 	 */
 	public ABez2 : string | null = null;
 
 	/**
-	 * Bezeichnung 3 des Schulträgers 
+	 * Bezeichnung 3 des Schulträgers
 	 */
 	public ABez3 : string | null = null;
 
 	/**
-	 * PLZ des Schulträgers 
+	 * PLZ des Schulträgers
 	 */
 	public PLZ : string | null = null;
 
 	/**
-	 * Ort des Schulträgers 
+	 * Ort des Schulträgers
 	 */
 	public Ort : string | null = null;
 
 	/**
-	 * Straße des Schulträgers 
+	 * Straße des Schulträgers
 	 */
 	public Strasse : string | null = null;
 
 	/**
-	 * Vorwahl des Schulträgers 
+	 * Vorwahl des Schulträgers
 	 */
 	public TelVorw : string | null = null;
 
 	/**
-	 * Telefonnummer des Schulträgers 
+	 * Telefonnummer des Schulträgers
 	 */
 	public Telefon : string | null = null;
 
 	/**
-	 * Ist immer 00 ??? 
+	 * Ist immer 00 ???
 	 */
 	public SF : string | null = null;
 
 	/**
-	 * Öffentlicher oder privater Schulträger 
+	 * Öffentlicher oder privater Schulträger
 	 */
 	public OeffPri : string | null = null;
 
 	/**
-	 * Kurzbezeichnung des Schulträgers 
+	 * Kurzbezeichnung des Schulträgers
 	 */
 	public KurzBez : string | null = null;
 
 	/**
-	 * Schulbetriebsschlüssel des Schulträgers 
+	 * Schulbetriebsschlüssel des Schulträgers
 	 */
 	public SchBetrSchl : number | null = null;
 
 	/**
-	 * Datum des Schulbetriebsschlüssels 
+	 * Datum des Schulbetriebsschlüssels
 	 */
 	public SchBetrSchlDatum : string | null = null;
 
 	/**
-	 * Schülerzahl laut ASD 
+	 * Schülerzahl laut ASD
 	 */
 	public SchuelerZahlASD : number | null = null;
 
 	/**
-	 * Schülerzahl laut VS 
+	 * Schülerzahl laut VS
 	 */
 	public SchuelerZahlVS : number | null = null;
 
 	/**
-	 * Art der Trägerschaft des Schulträgers 
+	 * Art der Trägerschaft des Schulträgers
 	 */
 	public ArtDerTraegerschaft : string | null = null;
 
 	/**
-	 * leer siehe SchulNr 
+	 * leer siehe SchulNr
 	 */
 	public SchultraegerNr : string | null = null;
 
 	/**
-	 * leer Gliederung 
+	 * leer Gliederung
 	 */
 	public Schulgliederung : string | null = null;
 
 	/**
-	 * Leer Ganztagsbetrieb 
+	 * Leer Ganztagsbetrieb
 	 */
 	public Ganztagsbetrieb : string | null = null;
 
 	/**
-	 * Aktiv ja nein des Schulträgers 
+	 * Aktiv ja nein des Schulträgers
 	 */
 	public Aktiv : number | null = null;
 
 	/**
-	 * Gibt die Gültigkeit ab welchem Schuljahr an 
+	 * Gibt die Gültigkeit ab welchem Schuljahr an
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt die Gültigkeit bis zu welchem Schuljahr an 
+	 * Gibt die Gültigkeit bis zu welchem Schuljahr an
 	 */
 	public gueltigBis : number | null = null;
 

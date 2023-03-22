@@ -5,42 +5,42 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 
 	/**
-	 * Nummer des Versetzungsvermerks 
+	 * Nummer des Versetzungsvermerks
 	 */
 	public Nr : string | null = null;
 
 	/**
-	 * Klartext des Versetzungsvermerks 
+	 * Klartext des Versetzungsvermerks
 	 */
 	public Klartext : string | null = null;
 
 	/**
-	 * Statistikkürzel des Versetzungsvermerks (DEPRECATED) 
+	 * Statistikkürzel des Versetzungsvermerks (DEPRECATED)
 	 */
 	public StatistikKrz : string | null = null;
 
 	/**
-	 * Sortierung des Versetzungsvermerks 
+	 * Sortierung des Versetzungsvermerks
 	 */
 	public Sortierung : number | null = null;
 
 	/**
-	 * Schulform des Versetzungsvermerks 
+	 * Schulform des Versetzungsvermerks
 	 */
 	public Schulform : string | null = null;
 
 	/**
-	 * Neues Statistikkürzel des Versetzungsvermerks 
+	 * Neues Statistikkürzel des Versetzungsvermerks
 	 */
 	public StatistikKrzNeu : string | null = null;
 
 	/**
-	 * Gültig ab Schuljahr 
+	 * Gültig ab Schuljahr
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gültig bis Schuljahr 
+	 * Gültig bis Schuljahr
 	 */
 	public gueltigBis : number | null = null;
 

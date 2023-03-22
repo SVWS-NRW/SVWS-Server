@@ -15,42 +15,42 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, StundenplanblockungRegelParameterTyp> = new Map<string, StundenplanblockungRegelParameterTyp>();
 
 	/**
-	 * Der Parameter-Typ der Lehrkraft. 
+	 * Der Parameter-Typ der Lehrkraft.
 	 */
 	public static readonly LEHRKRAFT_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("LEHRKRAFT_ID", 0, );
 
 	/**
-	 * Der Parameter-Typ der Klasse. 
+	 * Der Parameter-Typ der Klasse.
 	 */
 	public static readonly KLASSE_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("KLASSE_ID", 1, );
 
 	/**
-	 * Der Parameter-Typ des Faches. 
+	 * Der Parameter-Typ des Faches.
 	 */
 	public static readonly FACH_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("FACH_ID", 2, );
 
 	/**
-	 * Der Parameter-Typ des Raumes. 
+	 * Der Parameter-Typ des Raumes.
 	 */
 	public static readonly RAUM_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("RAUM_ID", 3, );
 
 	/**
-	 * Der Parameter-Typ der Kopplung. 
+	 * Der Parameter-Typ der Kopplung.
 	 */
 	public static readonly KOPPLUNG_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("KOPPLUNG_ID", 4, );
 
 	/**
-	 * Der Parameter-Typ der Lerngruppe. 
+	 * Der Parameter-Typ der Lerngruppe.
 	 */
 	public static readonly LERNGRUPPE_ID : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("LERNGRUPPE_ID", 5, );
 
 	/**
-	 * Der Parameter-Typ für JA=1 und NEIN=0 Werte. 
+	 * Der Parameter-Typ für JA=1 und NEIN=0 Werte.
 	 */
 	public static readonly WERT_BOOLEAN : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("WERT_BOOLEAN", 6, );
 
 	/**
-	 * Der Parameter-Typ für Integer-Werte. 
+	 * Der Parameter-Typ für Integer-Werte.
 	 */
 	public static readonly WERT_INTEGER : StundenplanblockungRegelParameterTyp = new StundenplanblockungRegelParameterTyp("WERT_INTEGER", 7, );
 

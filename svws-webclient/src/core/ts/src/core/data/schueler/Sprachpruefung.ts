@@ -5,47 +5,47 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Sprachpruefung extends JavaObject {
 
 	/**
-	 * Das einstellige Sprachkürzel des geprüften Faches 
+	 * Das einstellige Sprachkürzel des geprüften Faches
 	 */
 	public sprache : string | null = null;
 
 	/**
-	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde 
+	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde
 	 */
 	public jahrgang : string | null = null;
 
 	/**
-	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung 
+	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung
 	 */
 	public anspruchsniveauId : number | null = null;
 
 	/**
-	 * Sprache, die durch die Prüfung ersetzt wird 
+	 * Sprache, die durch die Prüfung ersetzt wird
 	 */
 	public ersetzteSprache : string | null = null;
 
 	/**
-	 * Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht 
+	 * Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht
 	 */
 	public istHSUPruefung : boolean = false;
 
 	/**
-	 * Prüfung ist eine Sprachfeststellungsprüfung 
+	 * Prüfung ist eine Sprachfeststellungsprüfung
 	 */
 	public istFeststellungspruefung : boolean = false;
 
 	/**
-	 * Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden 
+	 * Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden
 	 */
 	public kannErstePflichtfremdspracheErsetzen : boolean = false;
 
 	/**
-	 * Durch die Prüfung kann die zweite Pflichtfremdsprache ersetzt werden 
+	 * Durch die Prüfung kann die zweite Pflichtfremdsprache ersetzt werden
 	 */
 	public kannZweitePflichtfremdspracheErsetzen : boolean = false;
 
 	/**
-	 * Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden 
+	 * Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden
 	 */
 	public kannWahlpflichtfremdspracheErsetzen : boolean = false;
 
@@ -55,12 +55,12 @@ export class Sprachpruefung extends JavaObject {
 	public kannBelegungAlsFortgefuehrteSpracheErlauben : boolean = false;
 
 	/**
-	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde 
+	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde
 	 */
 	public referenzniveau : string | null = null;
 
 	/**
-	 * Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) 
+	 * Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist)
 	 */
 	public note : number | null = null;
 

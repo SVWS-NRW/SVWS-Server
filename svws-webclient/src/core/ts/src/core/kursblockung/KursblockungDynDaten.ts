@@ -31,67 +31,67 @@ import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_User
 export class KursblockungDynDaten extends JavaObject {
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
 
 	/**
-	 * Logger für Benutzerhinweise, Warnungen und Fehler. 
+	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	private readonly logger : Logger;
 
 	/**
-	 * Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert. 
+	 * Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert.
 	 */
 	private readonly regelMap : HashMap<GostKursblockungRegelTyp, LinkedCollection<GostBlockungRegel>>;
 
 	/**
-	 * Die maximale Blockungszeit in Millisekunden. 
+	 * Die maximale Blockungszeit in Millisekunden.
 	 */
 	private maxTimeMillis : number = 0;
 
 	/**
-	 * Diese Datenstruktur speichert die Schienen und ihre Kurse. 
+	 * Diese Datenstruktur speichert die Schienen und ihre Kurse.
 	 */
 	private schienenArr : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Alles Kurse. 
+	 * Alles Kurse.
 	 */
 	private kursArr : Array<KursblockungDynKurs>;
 
 	/**
-	 * Alle Kurse, die noch über Schienen wandern können. 
+	 * Alle Kurse, die noch über Schienen wandern können.
 	 */
 	private kursArrFrei : Array<KursblockungDynKurs>;
 
 	/**
-	 * Map für schnellen Zugriff auf die Kurse über ihre ID. 
+	 * Map für schnellen Zugriff auf die Kurse über ihre ID.
 	 */
 	private readonly kursMap : HashMap<number, KursblockungDynKurs>;
 
 	/**
-	 * Alle Facharten. Fachart meint Fach + Kursart, z.B. "D;GK". 
+	 * Alle Facharten. Fachart meint Fach + Kursart, z.B. "D;GK".
 	 */
 	private fachartArr : Array<KursblockungDynFachart>;
 
 	/**
-	 * Map für schnellen Zugriff auf die Facharten über FachID und KursartID. 
+	 * Map für schnellen Zugriff auf die Facharten über FachID und KursartID.
 	 */
 	private readonly fachartMap : HashMap<number, HashMap<number, KursblockungDynFachart>>;
 
 	/**
-	 * Alle SuS. 
+	 * Alle SuS.
 	 */
 	private schuelerArr : Array<KursblockungDynSchueler>;
 
 	/**
-	 * Map für schnellen Zugriff auf die SuS über ihre ID. 
+	 * Map für schnellen Zugriff auf die SuS über ihre ID.
 	 */
 	private readonly schuelerMap : HashMap<number, KursblockungDynSchueler>;
 
 	/**
-	 * Das Statistik-Objekt speichert die aktuellen Nichtwahlen, Kursdifferenzen und weitere Daten. 
+	 * Das Statistik-Objekt speichert die aktuellen Nichtwahlen, Kursdifferenzen und weitere Daten.
 	 */
 	private readonly statistik : KursblockungDynStatistik;
 

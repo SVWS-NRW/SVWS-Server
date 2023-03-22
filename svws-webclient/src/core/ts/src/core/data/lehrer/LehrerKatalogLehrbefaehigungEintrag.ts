@@ -10,22 +10,22 @@ export class LehrerKatalogLehrbefaehigungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für die Lehrbefähigung. 
+	 * Das Kürzel für die Lehrbefähigung.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext die Lehrbefähigung. 
+	 * Der Klartext die Lehrbefähigung.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

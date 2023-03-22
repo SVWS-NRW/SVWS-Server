@@ -5,32 +5,32 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchulabschlussBerufsbildendKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Abschlussart 
+	 * Das Kürzel der Abschlussart
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Abschlussart. 
+	 * Die Bezeichnung der Abschlussart.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Das Kürzel der Abschlussart für die amtliche Schulstatistik 
+	 * Das Kürzel der Abschlussart für die amtliche Schulstatistik
 	 */
 	public kuerzelStatistik : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Abschlussart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Abschlussart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Abschlussart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Abschlussart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

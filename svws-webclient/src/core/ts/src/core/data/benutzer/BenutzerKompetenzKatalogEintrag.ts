@@ -5,17 +5,17 @@ import { BenutzerKompetenzGruppe, cast_de_nrw_schule_svws_core_types_benutzer_Be
 export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID der Benutzerkompetenz. 
+	 * Die ID der Benutzerkompetenz.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID der zugehörigen Benutzerkompetenzgruppe. 
+	 * Die ID der zugehörigen Benutzerkompetenzgruppe.
 	 */
 	public gruppe_id : number = -1;
 
 	/**
-	 * Die Bezeichnung der Benutzerkompetenz. 
+	 * Die Bezeichnung der Benutzerkompetenz.
 	 */
 	public bezeichnung : string = "";
 

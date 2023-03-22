@@ -5,57 +5,57 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class NationalitaetenKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das 3-stellige Kürzel des ISO-Standards 3166-1 
+	 * Das 3-stellige Kürzel des ISO-Standards 3166-1
 	 */
 	public iso3 : string = "";
 
 	/**
-	 * Das 2-stellige Kürzel des ISO-Standards 3166-1 
+	 * Das 2-stellige Kürzel des ISO-Standards 3166-1
 	 */
 	public iso2 : string = "";
 
 	/**
-	 * Die 3-stellige Nummer des ISO-Standards 3166-1 
+	 * Die 3-stellige Nummer des ISO-Standards 3166-1
 	 */
 	public isoNumerisch : string | null = null;
 
 	/**
-	 * Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de) 
+	 * Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de)
 	 */
 	public codeDEStatis : string = "";
 
 	/**
-	 * Die Bezeichnung für eine Suche 
+	 * Die Bezeichnung für eine Suche
 	 */
 	public bezeichnungSuche : string = "";
 
 	/**
-	 * Die kurze Bezeichnung 
+	 * Die kurze Bezeichnung
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Bezeichnung für eine Suche 
+	 * Die Bezeichnung für eine Suche
 	 */
 	public bezeichnungLang : string = "";
 
 	/**
-	 * Die Bezeichnung der Staatsangehörigkeit 
+	 * Die Bezeichnung der Staatsangehörigkeit
 	 */
 	public staatsangehoerigkeit : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

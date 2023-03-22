@@ -10,22 +10,22 @@ export class LehrerKatalogFachrichtungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für die Fachrichtung. 
+	 * Das Kürzel für die Fachrichtung.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext die Fachrichtung. 
+	 * Der Klartext die Fachrichtung.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Fachrichtung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Fachrichtung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

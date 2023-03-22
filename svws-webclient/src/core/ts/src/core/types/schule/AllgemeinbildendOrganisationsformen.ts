@@ -20,47 +20,47 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	private static readonly all_values_by_name : Map<string, AllgemeinbildendOrganisationsformen> = new Map<string, AllgemeinbildendOrganisationsformen>();
 
 	/**
-	 * Organisationsform: Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen) 
+	 * Organisationsform: Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)
 	 */
 	public static readonly NICHT_ZUGEORDNET : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("NICHT_ZUGEORDNET", 0, [new OrganisationsformKatalogEintrag(3000000, "*", "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)", Arrays.asList(Schulform.S, Schulform.KS), null, null)]);
 
 	/**
-	 * Organisationsform: Halbtagsunterricht 
+	 * Organisationsform: Halbtagsunterricht
 	 */
 	public static readonly HALBTAG : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("HALBTAG", 1, [new OrganisationsformKatalogEintrag(3001000, "1", "Halbtagsunterricht", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Organisationsform: Teilnahme am gebundenen Ganztag 
+	 * Organisationsform: Teilnahme am gebundenen Ganztag
 	 */
 	public static readonly GANZTAG : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG", 2, [new OrganisationsformKatalogEintrag(3002000, "2", "Teilnahme am gebundenen Ganztag", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Organisationsform: Teilnahme am erweiterten Ganztag 
+	 * Organisationsform: Teilnahme am erweiterten Ganztag
 	 */
 	public static readonly GANZTAG_ERWEITERT : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_ERWEITERT", 3, [new OrganisationsformKatalogEintrag(3003000, "3", "Teilnahme am erweiterten Ganztag", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SK), null, null)]);
 
 	/**
-	 * Organisationsform: Teilnahme am offenen Ganztag 
+	 * Organisationsform: Teilnahme am offenen Ganztag
 	 */
 	public static readonly GANZTAG_OFFEN : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_OFFEN", 4, [new OrganisationsformKatalogEintrag(3004000, "4", "Teilnahme am offenen Ganztag", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Organisationsform 
+	 * Der aktuellen Daten der Organisationsform
 	 */
 	public readonly daten : OrganisationsformKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Organisationsform 
+	 * Die Historie mit den Einträgen der Organisationsform
 	 */
 	public readonly historie : Array<OrganisationsformKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, AllgemeinbildendOrganisationsformen> = new HashMap();
 

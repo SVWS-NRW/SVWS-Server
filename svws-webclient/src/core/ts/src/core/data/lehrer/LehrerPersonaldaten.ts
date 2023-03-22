@@ -5,77 +5,77 @@ import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble
 export class LehrerPersonaldaten extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers. 
+	 * Die ID des Lehrers.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen. 
+	 * Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen.
 	 */
 	public identNrTeil1 : string | null = null;
 
 	/**
-	 * Der hintere Teil der Ident-Nummer – wird üblicherweise NRW-weit fortlaufend vergeben. 
+	 * Der hintere Teil der Ident-Nummer – wird üblicherweise NRW-weit fortlaufend vergeben.
 	 */
 	public identNrTeil2SerNr : string | null = null;
 
 	/**
-	 * Die Personalaktennummer des Lehrers für den Export zu GPC. 
+	 * Die Personalaktennummer des Lehrers für den Export zu GPC.
 	 */
 	public personalaktennummer : string | null = null;
 
 	/**
-	 * Die Personalnummer des LBV. 
+	 * Die Personalnummer des LBV.
 	 */
 	public lbvPersonalnummer : string | null = null;
 
 	/**
-	 * Der zur Personalnummer gehörige Vergütungsschlüssel. 
+	 * Der zur Personalnummer gehörige Vergütungsschlüssel.
 	 */
 	public lbvVerguetungsschluessel : string | null = null;
 
 	/**
-	 * Das Datum, wann der Lehrer an die Schule gekommen ist. 
+	 * Das Datum, wann der Lehrer an die Schule gekommen ist.
 	 */
 	public zugangsdatum : string | null = null;
 
 	/**
-	 * Der Grund für den Zugang des Lehrers - siehe Statistik-Katalog. 
+	 * Der Grund für den Zugang des Lehrers - siehe Statistik-Katalog.
 	 */
 	public zugangsgrund : string | null = null;
 
 	/**
-	 * Das Datum, wann der Lehrer an die Schule verlassen hat. 
+	 * Das Datum, wann der Lehrer an die Schule verlassen hat.
 	 */
 	public abgangsdatum : string | null = null;
 
 	/**
-	 * Der Grund für den Abgang des Lehrers - siehe Statistik-Katalog. 
+	 * Der Grund für den Abgang des Lehrers - siehe Statistik-Katalog.
 	 */
 	public abgangsgrund : string | null = null;
 
 	/**
-	 * Das Pflichtstundensoll des Lehrers. 
+	 * Das Pflichtstundensoll des Lehrers.
 	 */
 	public pflichtstundensoll : number | null = null;
 
 	/**
-	 * Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. 
+	 * Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.
 	 */
 	public rechtsverhaeltnis : string | null = null;
 
 	/**
-	 * Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. 
+	 * Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.
 	 */
 	public beschaeftigungsart : string | null = null;
 
 	/**
-	 * Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. 
+	 * Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.
 	 */
 	public einsatzstatus : string | null = null;
 
 	/**
-	 * Die Schulnummer der Stammschule, sofern diese abweicht. 
+	 * Die Schulnummer der Stammschule, sofern diese abweicht.
 	 */
 	public stammschulnummer : string | null = null;
 

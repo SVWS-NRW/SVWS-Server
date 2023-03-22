@@ -17,42 +17,42 @@ export class Geschlecht extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Geschlecht> = new Map<string, Geschlecht>();
 
 	/**
-	 * Männlich mit Statistikcode 3 
+	 * Männlich mit Statistikcode 3
 	 */
 	public static readonly M : Geschlecht = new Geschlecht("M", 0, 3, "m", "männlich", "männlich");
 
 	/**
-	 * weiblich mit Statistikcode 4 
+	 * weiblich mit Statistikcode 4
 	 */
 	public static readonly W : Geschlecht = new Geschlecht("W", 1, 4, "w", "weiblich", "weiblich");
 
 	/**
-	 * divers mit Statistikcode 5 
+	 * divers mit Statistikcode 5
 	 */
 	public static readonly D : Geschlecht = new Geschlecht("D", 2, 5, "d", "divers", "divers");
 
 	/**
-	 * ohne Angabe mit Statistikcode 6 
+	 * ohne Angabe mit Statistikcode 6
 	 */
 	public static readonly X : Geschlecht = new Geschlecht("X", 3, 6, "x", "ohne Angabe", "ohne Angabe im Geburtenregister");
 
 	/**
-	 * Die ID des Geschlechtes, welche im Rahmen der amtlichen Schulstatistik verwendet wird. 
+	 * Die ID des Geschlechtes, welche im Rahmen der amtlichen Schulstatistik verwendet wird.
 	 */
 	public readonly id : number;
 
 	/**
-	 * Das Geschlecht als einstelliges Kürzel 
+	 * Das Geschlecht als einstelliges Kürzel
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Die Kurz-Bezeichnung des Geschlechtes 
+	 * Die Kurz-Bezeichnung des Geschlechtes
 	 */
 	public readonly text : string;
 
 	/**
-	 * Die ausführliche Bezeichnung des Geschlechtes 
+	 * Die ausführliche Bezeichnung des Geschlechtes
 	 */
 	public readonly textLang : string;
 

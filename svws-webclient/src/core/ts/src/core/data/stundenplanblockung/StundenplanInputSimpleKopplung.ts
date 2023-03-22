@@ -4,18 +4,18 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class StundenplanInputSimpleKopplung extends JavaObject {
 
 	/**
-	 * Die ID der Kopplung. 
+	 * Die ID der Kopplung.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Kopplung. Beispielsweise '5RE' oder 'Q1LK1'. 
+	 * Das Kürzel des Kopplung. Beispielsweise '5RE' oder 'Q1LK1'.
 	 */
 	public kuerzel : string = "";
 
 	/**
 	 * Die Anzahl der Stunden der Kopplung. Muss mindestens so groß sein, wie der Kurs mit den meisten Stunden in
-	 *  dieser Kopplung. 
+	 *  dieser Kopplung.
 	 */
 	public stunden : number = -1;
 

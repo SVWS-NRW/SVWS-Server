@@ -18,7 +18,7 @@ export class Note extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Note> = new Map<string, Note>();
 
 	/**
-	 * leerer Noteneintrag 
+	 * leerer Noteneintrag
 	 */
 	public static readonly KEINE : Note = new Note("KEINE", 0, -1, -1, null, "", "", "--------------------", null, null);
 
@@ -148,52 +148,52 @@ export class Note extends JavaObject {
 	public static readonly ABGEMELDET : Note = new Note("ABGEMELDET", 25, 24, 2000, null, "AM", "(abgemeldet)", "--------------------", null, null);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Die eindeutige ID der Note 
+	 * Die eindeutige ID der Note
 	 */
 	public readonly id : number;
 
 	/**
-	 * Eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt 
+	 * Eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt
 	 */
 	public readonly sortierung : number;
 
 	/**
-	 * Die Notenpunkte, die dieser Note zugeordnet sind 
+	 * Die Notenpunkte, die dieser Note zugeordnet sind
 	 */
 	public readonly notenpunkte : number | null;
 
 	/**
-	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) 
+	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
+	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)
 	 */
 	public readonly text : string;
 
 	/**
-	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. 
+	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird.
 	 */
 	public readonly textZeugnis : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigBis : number | null;
 
 	/**
-	 * Der Noten-Katalog-Eintrag 
+	 * Der Noten-Katalog-Eintrag
 	 */
 	private katalogEintrag : NotenKatalogEintrag | null = null;
 

@@ -6,32 +6,32 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das Kürzel der Empfehlung 
+	 * Das Kürzel der Empfehlung
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Übergangsempfehlung. 
+	 * Die Bezeichnung der Übergangsempfehlung.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Der Statistikschlüssel der Übergangsempfehlung 
+	 * Der Statistikschlüssel der Übergangsempfehlung
 	 */
 	public schluessel : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

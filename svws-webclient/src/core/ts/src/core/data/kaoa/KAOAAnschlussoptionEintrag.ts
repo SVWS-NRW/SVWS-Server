@@ -9,37 +9,37 @@ import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzme
 export class KAOAAnschlussoptionEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Anschlussoption. 
+	 * Das Kürzel der Anschlussoption.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Beschreibung der Anschlussoption. 
+	 * Die Beschreibung der Anschlussoption.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII) 
+	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)
 	 */
 	public stufen : List<string> = new Vector();
 
 	/**
-	 * Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden 
+	 * Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden
 	 */
 	public anzeigeZusatzmerkmal : List<string> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

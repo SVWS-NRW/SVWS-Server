@@ -9,7 +9,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 
 	/**
-	 * Alle Lerngruppen. 
+	 * Alle Lerngruppen.
 	 */
 	private readonly _menge : Vector<StundenplanblockungManagerLerngruppe>;
 

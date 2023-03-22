@@ -5,7 +5,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchuelerblockungOutput extends JavaObject {
 
 	/**
-	 * Alle Fachwahlen-Zuordnungen. 
+	 * Alle Fachwahlen-Zuordnungen.
 	 */
 	public fachwahlenZuKurs : Vector<SchuelerblockungOutputFachwahlZuKurs> = new Vector();
 

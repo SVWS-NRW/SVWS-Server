@@ -5,22 +5,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class AbschlussErgebnis extends JavaObject {
 
 	/**
-	 * Gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss erworben wurde. 
+	 * Gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss erworben wurde.
 	 */
 	public erworben : boolean = false;
 
 	/**
-	 * Gibt an, welcher Abschluss geprüft wurde. 
+	 * Gibt an, welcher Abschluss geprüft wurde.
 	 */
 	public abschluss : string | null = null;
 
 	/**
-	 * Eine Liste der Kuerzel für mögliche Nachprüfungsfächer. 
+	 * Eine Liste der Kuerzel für mögliche Nachprüfungsfächer.
 	 */
 	public npFaecher : List<string> | null = null;
 
 	/**
-	 * Der Log der Abschlussberechnung. 
+	 * Der Log der Abschlussberechnung.
 	 */
 	public log : List<string> | null = null;
 

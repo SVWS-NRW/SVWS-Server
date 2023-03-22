@@ -5,37 +5,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Sprachbelegung extends JavaObject {
 
 	/**
-	 * Das einstellige Sprachkürzel des belegten Faches 
+	 * Das einstellige Sprachkürzel des belegten Faches
 	 */
 	public sprache : string = "";
 
 	/**
-	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde 
+	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde
 	 */
 	public reihenfolge : number | null = null;
 
 	/**
-	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde 
+	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
 	 */
 	public belegungVonJahrgang : string | null = null;
 
 	/**
-	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde 
+	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde
 	 */
 	public belegungVonAbschnitt : number | null = null;
 
 	/**
-	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde 
+	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 */
 	public belegungBisJahrgang : string | null = null;
 
 	/**
-	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde 
+	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 */
 	public belegungBisAbschnitt : number | null = null;
 
 	/**
-	 * Das Referenzniveau, welches bisher erreicht wurde 
+	 * Das Referenzniveau, welches bisher erreicht wurde
 	 */
 	public referenzniveau : string | null = null;
 

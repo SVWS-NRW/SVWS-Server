@@ -8,32 +8,32 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class KAOAKategorieEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Kategorie. 
+	 * Das Kürzel der Kategorie.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Beschreibung der Kategorie. 
+	 * Die Beschreibung der Kategorie.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf 
+	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf
 	 */
 	public jahrgaenge : List<string> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

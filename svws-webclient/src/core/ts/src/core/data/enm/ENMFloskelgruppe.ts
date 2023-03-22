@@ -6,22 +6,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class ENMFloskelgruppe extends JavaObject {
 
 	/**
-	 * Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV. 
+	 * Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV.
 	 */
 	public kuerzel : string | null = null;
 
 	/**
-	 * Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten. 
+	 * Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten.
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten und fasst diese ggf. nochmals zusammen (z.B. ALLG) 
+	 * Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten und fasst diese ggf. nochmals zusammen (z.B. ALLG)
 	 */
 	public hauptgruppe : string | null = null;
 
 	/**
-	 * Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. 
+	 * Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind.
 	 */
 	public readonly floskeln : Vector<ENMFloskel> = new Vector();
 

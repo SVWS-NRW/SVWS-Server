@@ -4,27 +4,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schueler extends JavaObject {
 
 	/**
-	 * Die ID des Schülerdatensatzes. 
+	 * Die ID des Schülerdatensatzes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Der Nachname des Schülerdatensatzes. 
+	 * Der Nachname des Schülerdatensatzes.
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Der Vorname des Schülerdatensatzes. 
+	 * Der Vorname des Schülerdatensatzes.
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Der Status des Schülerdatensatzes. 
+	 * Der Status des Schülerdatensatzes.
 	 */
 	public status : number = 0;
 
 	/**
-	 * Die ID des Geschlechtes 
+	 * Die ID des Geschlechtes
 	 */
 	public geschlecht : number = 0;
 

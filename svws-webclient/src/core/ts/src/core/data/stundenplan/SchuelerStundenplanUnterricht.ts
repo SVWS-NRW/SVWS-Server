@@ -4,67 +4,67 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerStundenplanUnterricht extends JavaObject {
 
 	/**
-	 * Die ID der Leistungsdaten, um zusammen gehörige Unterrichtseinheiten zu erkennen. 
+	 * Die ID der Leistungsdaten, um zusammen gehörige Unterrichtseinheiten zu erkennen.
 	 */
 	public idLeistungen : number = -1;
 
 	/**
-	 * Die ID der Unterrichtseinheit 
+	 * Die ID der Unterrichtseinheit
 	 */
 	public idUnterricht : number = -1;
 
 	/**
-	 * Die ID im Zeitraster des Stundenplans 
+	 * Die ID im Zeitraster des Stundenplans
 	 */
 	public idZeitraster : number = -1;
 
 	/**
-	 * Die Kursart der Unterrichtseinheit. 
+	 * Die Kursart der Unterrichtseinheit.
 	 */
 	public kursart : string = "";
 
 	/**
-	 * Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 
+	 * Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0
 	 */
 	public wochentyp : number = -1;
 
 	/**
-	 * Die ID des Faches 
+	 * Die ID des Faches
 	 */
 	public idFach : number = -1;
 
 	/**
-	 * Das Kürzel des Unterrichtsfaches. 
+	 * Das Kürzel des Unterrichtsfaches.
 	 */
 	public fachKuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung des Unterrichtsfaches. 
+	 * Die Bezeichnung des Unterrichtsfaches.
 	 */
 	public fachBezeichnung : string = "";
 
 	/**
-	 * Das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik. 
+	 * Das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik.
 	 */
 	public fachKuerzelStatistik : string = "";
 
 	/**
-	 * Die ID des Lehrers. 
+	 * Die ID des Lehrers.
 	 */
 	public idLehrer : number = -1;
 
 	/**
-	 * Der Nachname des Schülers. 
+	 * Der Nachname des Schülers.
 	 */
 	public lehrerKuerzel : string = "";
 
 	/**
-	 * Der Nachname des Schülers. 
+	 * Der Nachname des Schülers.
 	 */
 	public lehrerNachname : string = "";
 
 	/**
-	 * Der Vorname des Schülers. 
+	 * Der Vorname des Schülers.
 	 */
 	public lehrerVorname : string = "";
 

@@ -22,7 +22,7 @@ import { Foerderschwerpunkt, cast_de_nrw_schule_svws_core_types_schueler_Foerder
 export class ENMDatenManager extends JavaObject {
 
 	/**
-	 * Die ENM-Daten, die von diesem Daten-Manager verwaltet werden. 
+	 * Die ENM-Daten, die von diesem Daten-Manager verwaltet werden.
 	 */
 	public readonly daten : ENMDaten;
 
@@ -57,12 +57,12 @@ export class ENMDatenManager extends JavaObject {
 	private mapKlassen : HashMap<number, ENMKlasse> = new HashMap();
 
 	/**
-	 * Zählt die Id der Lerngruppe hoch. 
+	 * Zählt die Id der Lerngruppe hoch.
 	 */
 	private lerngruppenIDZaehler : number = 1;
 
 	/**
-	 * Temporäre Map für die Lerngruppen. 
+	 * Temporäre Map für die Lerngruppen.
 	 */
 	private mapLerngruppen : HashMap<string, ENMLerngruppe> = new HashMap();
 

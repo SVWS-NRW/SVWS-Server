@@ -6,17 +6,17 @@ import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBe
 export class GostBelegpruefungErgebnisFehler extends JavaObject {
 
 	/**
-	 * Ein eindeutiger Fehlercode für den Fehler 
+	 * Ein eindeutiger Fehlercode für den Fehler
 	 */
 	public code : string = "";
 
 	/**
-	 * Die Art des Belegungsfehlers (siehe {@link GostBelegungsfehlerArt}). 
+	 * Die Art des Belegungsfehlers (siehe {@link GostBelegungsfehlerArt}).
 	 */
 	public art : string = "";
 
 	/**
-	 * Eine textuelle Beschreibung des Fehlers. 
+	 * Eine textuelle Beschreibung des Fehlers.
 	 */
 	public beschreibung : string = "";
 

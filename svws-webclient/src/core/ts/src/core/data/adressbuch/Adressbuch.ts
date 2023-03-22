@@ -7,22 +7,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Adressbuch extends JavaObject {
 
 	/**
-	 * ID des Adressbuchs 
+	 * ID des Adressbuchs
 	 */
 	public id : string = "";
 
 	/**
-	 * Anzeigename des Adressbuchs 
+	 * Anzeigename des Adressbuchs
 	 */
 	public displayname : string | null = null;
 
 	/**
-	 * Beschreibung des Adressbuchs 
+	 * Beschreibung des Adressbuchs
 	 */
 	public beschreibung : string | null = null;
 
 	/**
-	 * Versionskennzeichen des Adressbuchs 
+	 * Versionskennzeichen des Adressbuchs
 	 */
 	public synctoken : number = 0;
 

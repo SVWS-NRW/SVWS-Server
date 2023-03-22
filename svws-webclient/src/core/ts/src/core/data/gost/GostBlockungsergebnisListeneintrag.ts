@@ -5,41 +5,41 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostBlockungsergebnisListeneintrag extends JavaObject {
 
 	/**
-	 * Die ID des Zwischenergebnisses der Blockung 
+	 * Die ID des Zwischenergebnisses der Blockung
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID der Blockung 
+	 * Die ID der Blockung
 	 */
 	public blockungID : number = -1;
 
 	/**
-	 * Der Name der Blockung 
+	 * Der Name der Blockung
 	 */
 	public name : string = "Blockung";
 
 	/**
-	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) 
+	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2)
 	 */
 	public gostHalbjahr : number = 0;
 
 	/**
 	 * Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete
-	 *  Blockungsergebnisse hervorzuheben. 
+	 *  Blockungsergebnisse hervorzuheben.
 	 */
 	public istMarkiert : boolean = false;
 
 	/**
 	 * Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
-	 *  mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst, 
+	 *  mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst,
 	 *  obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat
-	 *  genau eine Vorlage zugeordnet. 
+	 *  genau eine Vorlage zugeordnet.
 	 */
 	public istVorlage : boolean = false;
 
 	/**
-	 * Die Informationen zur aktuellen Bewertung des Blockungsergebnisses 
+	 * Die Informationen zur aktuellen Bewertung des Blockungsergebnisses
 	 */
 	public bewertung : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
 

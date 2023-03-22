@@ -5,47 +5,47 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	/**
-	 * Die Schulnummer der Schule. 
+	 * Die Schulnummer der Schule.
 	 */
 	public schulnummer : string = "";
 
 	/**
-	 * Die ID des Bildungsganges/Schulgliederung an der Schule. 
+	 * Die ID des Bildungsganges/Schulgliederung an der Schule.
 	 */
 	public schulgliederung : string | null = null;
 
 	/**
-	 * Die ID des Grundes für die Entlassung von der Schule. 
+	 * Die ID des Grundes für die Entlassung von der Schule.
 	 */
 	public entlassgrundID : number | null = null;
 
 	/**
-	 * Die ID des Abschlusses, welcher an der Schule erworben wurde. 
+	 * Die ID des Abschlusses, welcher an der Schule erworben wurde.
 	 */
 	public abschlussartID : string | null = null;
 
 	/**
-	 * Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht). 
+	 * Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht).
 	 */
 	public organisationsFormID : string | null = null;
 
 	/**
-	 * Das Datum, ab dem die Schule besucht wurde. 
+	 * Das Datum, ab dem die Schule besucht wurde.
 	 */
 	public datumVon : string | null = null;
 
 	/**
-	 * Das Datum, bis wann die Schule besucht wurde. 
+	 * Das Datum, bis wann die Schule besucht wurde.
 	 */
 	public datumBis : string | null = null;
 
 	/**
-	 * Der Jahrgang, ab dem die Schule besucht wurde. 
+	 * Der Jahrgang, ab dem die Schule besucht wurde.
 	 */
 	public jahrgangVon : string | null = null;
 
 	/**
-	 * Der Jahrgang, bis zu dem die Schule besucht wurde. 
+	 * Der Jahrgang, bis zu dem die Schule besucht wurde.
 	 */
 	public jahrgangBis : string | null = null;
 

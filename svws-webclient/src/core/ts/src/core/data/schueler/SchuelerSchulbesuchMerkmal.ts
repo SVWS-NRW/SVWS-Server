@@ -4,17 +4,17 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerSchulbesuchMerkmal extends JavaObject {
 
 	/**
-	 * Die ID des besonderen Merkmals für die Statistik. 
+	 * Die ID des besonderen Merkmals für die Statistik.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Datum, ab dem das Merkmal vorliegt. 
+	 * Das Datum, ab dem das Merkmal vorliegt.
 	 */
 	public datumVon : string | null = null;
 
 	/**
-	 * Das Datum, bis wann das Merkmal vorliegt. 
+	 * Das Datum, bis wann das Merkmal vorliegt.
 	 */
 	public datumBis : string | null = null;
 

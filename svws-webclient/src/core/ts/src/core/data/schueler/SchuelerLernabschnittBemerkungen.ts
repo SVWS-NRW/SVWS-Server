@@ -4,37 +4,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerLernabschnittBemerkungen extends JavaObject {
 
 	/**
-	 * Der Text für allgemeine Zeugnisbemerkungen. 
+	 * Der Text für allgemeine Zeugnisbemerkungen.
 	 */
 	public zeugnisAllgemein : string = "";
 
 	/**
-	 * Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten. 
+	 * Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten.
 	 */
 	public zeugnisASV : string = "";
 
 	/**
-	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen. 
+	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 */
 	public zeugnisLELS : string = "";
 
 	/**
-	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement. 
+	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement.
 	 */
 	public zeugnisAUE : string = "";
 
 	/**
-	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I. 
+	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I.
 	 */
 	public uebergangESF : string = "";
 
 	/**
-	 * Eine Bemerkung zum Förderschwerpunkt. 
+	 * Eine Bemerkung zum Förderschwerpunkt.
 	 */
 	public foerderschwerpunkt : string = "";
 
 	/**
-	 * Eine Bemerkung zur Versetzungsentscheidung. 
+	 * Eine Bemerkung zur Versetzungsentscheidung.
 	 */
 	public versetzungsentscheidung : string = "";
 

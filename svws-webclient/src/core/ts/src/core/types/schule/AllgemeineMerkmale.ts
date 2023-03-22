@@ -20,127 +20,127 @@ export class AllgemeineMerkmale extends JavaObject {
 	private static readonly all_values_by_name : Map<string, AllgemeineMerkmale> = new Map<string, AllgemeineMerkmale>();
 
 	/**
-	 * Merkmal: Ganztagschule 
+	 * Merkmal: Ganztagschule
 	 */
 	public static readonly GANZTAG : AllgemeineMerkmale = new AllgemeineMerkmale("GANZTAG", 0, [new AllgemeineMerkmaleKatalogEintrag(100000, "GANZTAG", "Ganztagsschule", true, true, null, Arrays.asList(Schulform.H, Schulform.V, Schulform.R, Schulform.GY, Schulform.GE, Schulform.KS, Schulform.S, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G), null, null)]);
 
 	/**
-	 * Merkmal: Offene Ganztagschule 
+	 * Merkmal: Offene Ganztagschule
 	 */
 	public static readonly GANZTAG_OFFEN : AllgemeineMerkmale = new AllgemeineMerkmale("GANZTAG_OFFEN", 1, [new AllgemeineMerkmaleKatalogEintrag(200000, "OFFGANZ", "Offene Ganztagsschule", true, true, null, Arrays.asList(Schulform.KS, Schulform.S, Schulform.G, Schulform.V, Schulform.FW, Schulform.HI, Schulform.WF), null, null)]);
 
 	/**
-	 * Merkmal: Übermittagsbetreuung 
+	 * Merkmal: Übermittagsbetreuung
 	 */
 	public static readonly UEBERMITTAGSBETREUUNG : AllgemeineMerkmale = new AllgemeineMerkmale("UEBERMITTAGSBETREUUNG", 2, [new AllgemeineMerkmaleKatalogEintrag(250000, "ÜMI", "Übermittagsbetreuung", true, true, null, Arrays.asList(Schulform.G, Schulform.KS, Schulform.S), 2012, 2017), new AllgemeineMerkmaleKatalogEintrag(250001, "ÜMI", "Übermittagsbetreuung", true, true, null, Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.H, Schulform.R), 2018, null)]);
 
 	/**
-	 * Merkmal: Selbständige Schule 
+	 * Merkmal: Selbständige Schule
 	 */
 	public static readonly SELBSTAENDIGE_SCHULE : AllgemeineMerkmale = new AllgemeineMerkmale("SELBSTAENDIGE_SCHULE", 3, [new AllgemeineMerkmaleKatalogEintrag(300000, "SELBST", "Selbstständige Schule", true, false, null, Arrays.asList(Schulform.H, Schulform.R, Schulform.KS, Schulform.S, Schulform.GE, Schulform.GY, Schulform.WB, Schulform.BK, Schulform.SB, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Verbundschule 
+	 * Merkmal: Verbundschule
 	 */
 	public static readonly VERBUNDSCHULE : AllgemeineMerkmale = new AllgemeineMerkmale("VERBUNDSCHULE", 4, [new AllgemeineMerkmaleKatalogEintrag(350000, "VERBUND", "Verbundschule", true, false, null, Arrays.asList(Schulform.GY, Schulform.GE, Schulform.R, Schulform.H, Schulform.G), null, null)]);
 
 	/**
-	 * Merkmal: BUS-Projekt 
+	 * Merkmal: BUS-Projekt
 	 */
 	public static readonly BUS : AllgemeineMerkmale = new AllgemeineMerkmale("BUS", 5, [new AllgemeineMerkmaleKatalogEintrag(400000, "BUS", "BUS-Projekt", true, true, null, Arrays.asList(Schulform.GE, Schulform.KS, Schulform.S, Schulform.H, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Schule von 8 bis 1 
+	 * Merkmal: Schule von 8 bis 1
 	 */
 	public static readonly VON_8_BIS_1 : AllgemeineMerkmale = new AllgemeineMerkmale("VON_8_BIS_1", 6, [new AllgemeineMerkmaleKatalogEintrag(500000, "8BIS1", "Schule von 8 bis 1", true, true, null, Arrays.asList(Schulform.KS, Schulform.S, Schulform.G), null, null)]);
 
 	/**
-	 * Merkmal: Schule von 8 bis 1 an anderer Schule 
+	 * Merkmal: Schule von 8 bis 1 an anderer Schule
 	 */
 	public static readonly VON_8_BIS_1_ANDERE : AllgemeineMerkmale = new AllgemeineMerkmale("VON_8_BIS_1_ANDERE", 7, [new AllgemeineMerkmaleKatalogEintrag(550000, "8BIS1AS", "Schule von 8 bis 1 an anderer Schule", true, true, null, Arrays.asList(Schulform.KS, Schulform.S, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: 13+ 
+	 * Merkmal: 13+
 	 */
 	public static readonly DREIZEHN_PLUS : AllgemeineMerkmale = new AllgemeineMerkmale("DREIZEHN_PLUS", 8, [new AllgemeineMerkmaleKatalogEintrag(600000, "13+", "13+", true, true, null, Arrays.asList(Schulform.H, Schulform.KS, Schulform.S, Schulform.GY, Schulform.R, Schulform.G, Schulform.GE, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: 13+ an anderer Schule 
+	 * Merkmal: 13+ an anderer Schule
 	 */
 	public static readonly DREIZEHN_PLUS_ANDERE : AllgemeineMerkmale = new AllgemeineMerkmale("DREIZEHN_PLUS_ANDERE", 9, [new AllgemeineMerkmaleKatalogEintrag(650000, "13+AS", "13+ an anderer Schule", true, true, null, Arrays.asList(Schulform.H, Schulform.KS, Schulform.S, Schulform.GY, Schulform.R, Schulform.G, Schulform.GE, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: JVA-Schüler 
+	 * Merkmal: JVA-Schüler
 	 */
 	public static readonly JVA : AllgemeineMerkmale = new AllgemeineMerkmale("JVA", 10, [new AllgemeineMerkmaleKatalogEintrag(700000, "JVA", "JVA-Schüler", true, true, null, Arrays.asList(Schulform.BK), null, null)]);
 
 	/**
-	 * Merkmal: Reformpädagogik 
+	 * Merkmal: Reformpädagogik
 	 */
 	public static readonly REFORMPAEDAGOGIK : AllgemeineMerkmale = new AllgemeineMerkmale("REFORMPAEDAGOGIK", 11, [new AllgemeineMerkmaleKatalogEintrag(800000, "RefPäd", "Reformpädagogik", true, false, null, Arrays.asList(Schulform.KS, Schulform.S, Schulform.H, Schulform.R, Schulform.GE, Schulform.GY, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Begegnung mit Sprachen -Französisch- 
+	 * Merkmal: Begegnung mit Sprachen -Französisch-
 	 */
 	public static readonly BEGEGNUNG_MIT_SPRACHEN_F : AllgemeineMerkmale = new AllgemeineMerkmale("BEGEGNUNG_MIT_SPRACHEN_F", 12, [new AllgemeineMerkmaleKatalogEintrag(1410000, "BegSprF", "Begegnung mit Sprachen -Französisch-", true, true, "F", Arrays.asList(Schulform.KS, Schulform.S, Schulform.G), null, null)]);
 
 	/**
-	 * Merkmal: Begegnung mit Sprachen -Italienisch- 
+	 * Merkmal: Begegnung mit Sprachen -Italienisch-
 	 */
 	public static readonly BEGEGNUNG_MIT_SPRACHEN_I : AllgemeineMerkmale = new AllgemeineMerkmale("BEGEGNUNG_MIT_SPRACHEN_I", 13, [new AllgemeineMerkmaleKatalogEintrag(1420000, "BegSprI", "Begegnung mit Sprachen -Italienisch-", true, true, "I", Arrays.asList(Schulform.KS, Schulform.S, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Begegnung mit Sprachen -Türkisch- 
+	 * Merkmal: Begegnung mit Sprachen -Türkisch-
 	 */
 	public static readonly BEGEGNUNG_MIT_SPRACHEN_T : AllgemeineMerkmale = new AllgemeineMerkmale("BEGEGNUNG_MIT_SPRACHEN_T", 14, [new AllgemeineMerkmaleKatalogEintrag(1430000, "BegSprT", "Begegnung mit Sprachen -Türkisch-", true, true, "T", Arrays.asList(Schulform.KS, Schulform.S, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Begegnung mit Sprachen -Niederländisch- 
+	 * Merkmal: Begegnung mit Sprachen -Niederländisch-
 	 */
 	public static readonly BEGEGNUNG_MIT_SPRACHEN_N : AllgemeineMerkmale = new AllgemeineMerkmale("BEGEGNUNG_MIT_SPRACHEN_N", 15, [new AllgemeineMerkmaleKatalogEintrag(1440000, "BegSprN", "Begegnung mit Sprachen -Niederländisch-", true, true, "N", Arrays.asList(Schulform.KS, Schulform.S, Schulform.G, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Begegnung mit Sprachen -Sonstige Fremdsprache- 
+	 * Merkmal: Begegnung mit Sprachen -Sonstige Fremdsprache-
 	 */
 	public static readonly BEGEGNUNG_MIT_SPRACHEN_SONSTIGE : AllgemeineMerkmale = new AllgemeineMerkmale("BEGEGNUNG_MIT_SPRACHEN_SONSTIGE", 16, [new AllgemeineMerkmaleKatalogEintrag(1450000, "BegSprSon", "Begegnung mit Sprachen -Sonstige Fremdsprache-", true, true, "X", Arrays.asList(Schulform.KS, Schulform.S, Schulform.G), null, null)]);
 
 	/**
-	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Englisch- 
+	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Englisch-
 	 */
 	public static readonly ARBEITSSPRACHE_GOST_E : AllgemeineMerkmale = new AllgemeineMerkmale("ARBEITSSPRACHE_GOST_E", 17, [new AllgemeineMerkmaleKatalogEintrag(1700000, "ArbSprE", "Arbeitssprache in der gym. Oberstufe -Englisch-", true, true, null, Arrays.asList(Schulform.GE, Schulform.GY), null, null)]);
 
 	/**
-	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Französisch- 
+	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Französisch-
 	 */
 	public static readonly ARBEITSSPRACHE_GOST_F : AllgemeineMerkmale = new AllgemeineMerkmale("ARBEITSSPRACHE_GOST_F", 18, [new AllgemeineMerkmaleKatalogEintrag(1710000, "ArbSprF", "Arbeitssprache in der gym. Oberstufe -Französisch-", true, true, null, Arrays.asList(Schulform.GE, Schulform.GY), null, null)]);
 
 	/**
-	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Sonstige Sprache- 
+	 * Merkmal: Arbeitssprache in der gym. Oberstufe -Sonstige Sprache-
 	 */
 	public static readonly ARBEITSSPRACHE_GOST_SONSTIGE : AllgemeineMerkmale = new AllgemeineMerkmale("ARBEITSSPRACHE_GOST_SONSTIGE", 19, [new AllgemeineMerkmaleKatalogEintrag(1720000, "ArbSprSon", "Arbeitssprache in der gym. Oberstufe -Sonstige Sprache-", true, true, null, Arrays.asList(Schulform.GE, Schulform.GY, Schulform.V), null, null)]);
 
 	/**
-	 * Merkmal: Internat 
+	 * Merkmal: Internat
 	 */
 	public static readonly INTERNAT : AllgemeineMerkmale = new AllgemeineMerkmale("INTERNAT", 20, [new AllgemeineMerkmaleKatalogEintrag(2000000, "INTERNAT", "Internat", true, true, null, Arrays.asList(Schulform.H, Schulform.V, Schulform.R, Schulform.GY, Schulform.GE, Schulform.KS, Schulform.S, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.BK, Schulform.SB, Schulform.SR, Schulform.SG), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des allgemeinen Merkmals, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten des allgemeinen Merkmals, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : AllgemeineMerkmaleKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des allgemeinen Merkmals 
+	 * Die Historie mit den Einträgen des allgemeinen Merkmals
 	 */
 	public readonly historie : Array<AllgemeineMerkmaleKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapByKuerzel : HashMap<string, AllgemeineMerkmale | null> = new HashMap();
 

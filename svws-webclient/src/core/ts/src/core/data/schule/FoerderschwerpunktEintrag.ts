@@ -4,32 +4,32 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class FoerderschwerpunktEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Eintrags. 
+	 * Das Kürzel des Eintrags.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die textuelle Beschreibung des Katalog-Eintrags. 
+	 * Die textuelle Beschreibung des Katalog-Eintrags.
 	 */
 	public text : string = "";
 
 	/**
-	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik. 
+	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik.
 	 */
 	public kuerzelStatistik : string = "";
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar : boolean = false;
 

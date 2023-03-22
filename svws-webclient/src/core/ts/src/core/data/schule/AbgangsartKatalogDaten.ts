@@ -8,27 +8,27 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class AbgangsartKatalogDaten extends JavaObject {
 
 	/**
-	 * Die ID des Eintrags. 
+	 * Die ID des Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Beschreibung der Abgangsart. 
+	 * Die Beschreibung der Abgangsart.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist. 
+	 * Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist.
 	 */
 	public zulaessig : List<SchulformGliederungJahrgaenge> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

@@ -12,42 +12,42 @@ import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_Schu
 export class SchuelerStundenplanManager extends JavaObject {
 
 	/**
-	 * Die Stundenplandaten, die im Manager vorhanden sind 
+	 * Die Stundenplandaten, die im Manager vorhanden sind
 	 */
 	private readonly _daten : SchuelerStundenplan;
 
 	/**
-	 * Eine Map idUnterricht -> SchuelerStundenplanUnterricht 
+	 * Eine Map idUnterricht -> SchuelerStundenplanUnterricht
 	 */
 	private readonly _mapUnterricht : HashMap<number, SchuelerStundenplanUnterricht> = new HashMap();
 
 	/**
-	 * Eine Map idZeitraster -> Liste von Unterricht 
+	 * Eine Map idZeitraster -> Liste von Unterricht
 	 */
 	private readonly _mapZeitrasterUnterricht : HashMap<number, Vector<SchuelerStundenplanUnterricht>> = new HashMap();
 
 	/**
-	 * Eine Map wochentyp, idZeitraster -> Liste von Unterricht 
+	 * Eine Map wochentyp, idZeitraster -> Liste von Unterricht
 	 */
 	private readonly _mapWocheZeitrasterUnterricht : HashMap<number, HashMap<number, Vector<SchuelerStundenplanUnterricht>>> = new HashMap();
 
 	/**
-	 * Eine Map idZeitraster -> Zeitraster 
+	 * Eine Map idZeitraster -> Zeitraster
 	 */
 	private readonly _mapZeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
 
 	/**
-	 * Eine Map wochentag, stunde -> Zeitraster 
+	 * Eine Map wochentag, stunde -> Zeitraster
 	 */
 	private readonly _mapWochentagStundeZeitraster : HashMap<number, HashMap<number, StundenplanZeitraster>> = new HashMap();
 
 	/**
-	 * Eine Map wochentag -> Liste von Zeitrastern 
+	 * Eine Map wochentag -> Liste von Zeitrastern
 	 */
 	private readonly _mapWochentagZeitraster : HashMap<number, Vector<StundenplanZeitraster>> = new HashMap();
 
 	/**
-	 * Eine Map stunde -> Liste von Zeitrastern 
+	 * Eine Map stunde -> Liste von Zeitrastern
 	 */
 	private readonly _mapStundeZeitraster : HashMap<number, Vector<StundenplanZeitraster>> = new HashMap();
 

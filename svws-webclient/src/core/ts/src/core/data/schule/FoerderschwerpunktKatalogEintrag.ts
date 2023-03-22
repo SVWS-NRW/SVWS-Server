@@ -8,32 +8,32 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das Kürzel des Förderschwerpunktes, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 * Das Kürzel des Förderschwerpunktes, welches im Rahmen der amtlichen Schulstatistik verwendet wird
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die textuelle Beschreibung des Förderschwerpunktes. 
+	 * Die textuelle Beschreibung des Förderschwerpunktes.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. 
+	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt.
 	 */
 	public schulformen : List<string> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

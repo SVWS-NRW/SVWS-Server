@@ -5,12 +5,12 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostBlockungsergebnisSchiene extends JavaObject {
 
 	/**
-	 * Die ID der Schiene 
+	 * Die ID der Schiene
 	 */
 	public id : number = -1;
 
 	/**
-	 * Eine Liste der Kurse, welche dieser Schiene zugeordnet sind. 
+	 * Eine Liste der Kurse, welche dieser Schiene zugeordnet sind.
 	 */
 	public readonly kurse : Vector<GostBlockungsergebnisKurs> = new Vector();
 

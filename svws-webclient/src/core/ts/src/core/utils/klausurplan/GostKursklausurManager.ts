@@ -11,52 +11,52 @@ import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_Gos
 export class GostKursklausurManager extends JavaObject {
 
 	/**
-	 * Die Kursklausuren, die im Manager vorhanden sind 
+	 * Die Kursklausuren, die im Manager vorhanden sind
 	 */
 	private readonly _klausuren : List<GostKursklausur>;
 
 	/**
-	 * Die Klausurtermine, die im Manager vorhanden sind 
+	 * Die Klausurtermine, die im Manager vorhanden sind
 	 */
 	private readonly _termine : List<GostKlausurtermin> = new Vector();
 
 	/**
-	 * Eine Map quartal -> Liste von GostKlausurterminen 
+	 * Eine Map quartal -> Liste von GostKlausurterminen
 	 */
 	private readonly _mapQuartalKlausurtermine : HashMap<number, Vector<GostKlausurtermin>> = new HashMap();
 
 	/**
-	 * Eine Map id -> GostKursklausur 
+	 * Eine Map id -> GostKursklausur
 	 */
 	private readonly _mapIdKursklausur : HashMap<number, GostKursklausur> = new HashMap();
 
 	/**
-	 * Eine Map idTermin -> Liste von GostKursklausuren 
+	 * Eine Map idTermin -> Liste von GostKursklausuren
 	 */
 	private readonly _mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> = new HashMap();
 
 	/**
-	 * Eine Map quartal, idTermin -> Liste von GostKursklausuren 
+	 * Eine Map quartal, idTermin -> Liste von GostKursklausuren
 	 */
 	private readonly _mapQuartalTerminKursklausuren : HashMap<number, HashMap<number, Vector<GostKursklausur>>> = new HashMap();
 
 	/**
-	 * Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren 
+	 * Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren
 	 */
 	private readonly _mapQuartalKursartTerminKursklausuren : HashMap<number, HashMap<string, HashMap<number, Vector<GostKursklausur>>>> = new HashMap();
 
 	/**
-	 * Eine Map quartal -> Liste von GostKursklausuren 
+	 * Eine Map quartal -> Liste von GostKursklausuren
 	 */
 	private readonly _mapQuartalKursKlausuren : HashMap<number, Vector<GostKursklausur>> = new HashMap();
 
 	/**
-	 * Eine Map idTermin -> Liste von Schüler-IDs 
+	 * Eine Map idTermin -> Liste von Schüler-IDs
 	 */
 	private readonly _mapTerminSchuelerids : HashMap<number, Vector<number>> = new HashMap();
 
 	/**
-	 * Eine Map idTermin -> GostKlausurtermin 
+	 * Eine Map idTermin -> GostKlausurtermin
 	 */
 	private readonly _mapIdKlausurtermin : HashMap<number, GostKlausurtermin> = new HashMap();
 

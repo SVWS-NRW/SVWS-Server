@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class Pair<A, B> extends JavaObject {
 
 	/**
-	 * Der erster Wert des Paares 
+	 * Der erster Wert des Paares
 	 */
 	public a : A;
 
 	/**
-	 * Der zweite Wert des Paares 
+	 * Der zweite Wert des Paares
 	 */
 	public b : B | null = null;
 

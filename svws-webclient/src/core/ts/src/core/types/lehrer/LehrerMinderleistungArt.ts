@@ -19,117 +19,117 @@ export class LehrerMinderleistungArt extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerMinderleistungArt> = new Map<string, LehrerMinderleistungArt>();
 
 	/**
-	 * Minderleistungsart 'Pflichtstundenermäßigung aus Altersgründen' 
+	 * Minderleistungsart 'Pflichtstundenermäßigung aus Altersgründen'
 	 */
 	public static readonly ID_200 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_200", 0, [new LehrerKatalogMinderleistungsartEintrag(37, "200", "Pflichtstundenermäßigung aus Altersgründen", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)' 
+	 * Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)'
 	 */
 	public static readonly ID_210 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_210", 1, [new LehrerKatalogMinderleistungsartEintrag(38, "210", "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)' 
+	 * Minderleistungsart 'Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)'
 	 */
 	public static readonly ID_220 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_220", 2, [new LehrerKatalogMinderleistungsartEintrag(39, "220", "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Beurlaubung, Rückkehr im Laufe des Schuljahres' 
+	 * Minderleistungsart 'Beurlaubung, Rückkehr im Laufe des Schuljahres'
 	 */
 	public static readonly ID_230 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_230", 3, [new LehrerKatalogMinderleistungsartEintrag(40, "230", "Beurlaubung, Rückkehr im Laufe des Schuljahres", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Langfristige Erkrankung' 
+	 * Minderleistungsart 'Langfristige Erkrankung'
 	 */
 	public static readonly ID_240 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_240", 4, [new LehrerKatalogMinderleistungsartEintrag(41, "240", "Langfristige Erkrankung", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG' 
+	 * Minderleistungsart 'Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG'
 	 */
 	public static readonly ID_250 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_250", 5, [new LehrerKatalogMinderleistungsartEintrag(42, "250", "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG' 
+	 * Minderleistungsart 'Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG'
 	 */
 	public static readonly ID_255 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_255", 6, [new LehrerKatalogMinderleistungsartEintrag(53, "255", "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Wiedereingliederungsmaßnahme' 
+	 * Minderleistungsart 'Wiedereingliederungsmaßnahme'
 	 */
 	public static readonly ID_260 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_260", 7, [new LehrerKatalogMinderleistungsartEintrag(43, "260", "Wiedereingliederungsmaßnahme", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit' 
+	 * Minderleistungsart 'Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit'
 	 */
 	public static readonly ID_270 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_270", 8, [new LehrerKatalogMinderleistungsartEintrag(44, "270", "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Rückgabe der Vorgriffsstunden' 
+	 * Minderleistungsart 'Rückgabe der Vorgriffsstunden'
 	 */
 	public static readonly ID_275 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_275", 9, [new LehrerKatalogMinderleistungsartEintrag(51, "275", "Rückgabe der Vorgriffsstunden", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Seiteneinsteigerentlastung' 
+	 * Minderleistungsart 'Seiteneinsteigerentlastung'
 	 */
 	public static readonly ID_280 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_280", 10, [new LehrerKatalogMinderleistungsartEintrag(45, "280", "Seiteneinsteigerentlastung", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Ermäßigungs-/Freistellungsphase "Teilzeitbeschäftigung im Blockmodell" (§ 65 LBG) (vormals Sabbatjahr)' 
+	 * Minderleistungsart 'Ermäßigungs-/Freistellungsphase "Teilzeitbeschäftigung im Blockmodell" (§ 65 LBG) (vormals Sabbatjahr)'
 	 */
 	public static readonly ID_290 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_290", 11, [new LehrerKatalogMinderleistungsartEintrag(46, "290", "Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Sonstige Ermäßigungen aus besonderen persönlichen Gründen' 
+	 * Minderleistungsart 'Sonstige Ermäßigungen aus besonderen persönlichen Gründen'
 	 */
 	public static readonly ID_300 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_300", 12, [new LehrerKatalogMinderleistungsartEintrag(47, "300", "Sonstige Ermäßigungen aus besonderen persönlichen Gründen", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr ' 
+	 * Minderleistungsart 'Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr '
 	 */
 	public static readonly ID_350 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_350", 13, [new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)' 
+	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)'
 	 */
 	public static readonly ID_360 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_360", 14, [new LehrerKatalogMinderleistungsartEintrag(49, "360", "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen COVID-19' 
+	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen COVID-19'
 	 */
 	public static readonly ID_365 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_365", 15, [new LehrerKatalogMinderleistungsartEintrag(54, "365", "Unterschreitung der Pflichtstundenzahl wegen COVID-19", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite' 
+	 * Minderleistungsart 'Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite'
 	 */
 	public static readonly ID_370 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_370", 16, [new LehrerKatalogMinderleistungsartEintrag(50, "370", "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)]);
 
 	/**
-	 * Minderleistungsart 'Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes' 
+	 * Minderleistungsart 'Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes'
 	 */
 	public static readonly ID_380 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_380", 17, [new LehrerKatalogMinderleistungsartEintrag(52, "380", "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Art von Minderleistung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Art von Minderleistung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogMinderleistungsartEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Art von Minderleistung 
+	 * Die Historie mit den Einträgen der Art von Minderleistung
 	 */
 	public readonly historie : Array<LehrerKatalogMinderleistungsartEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt | null> = new HashMap();
 

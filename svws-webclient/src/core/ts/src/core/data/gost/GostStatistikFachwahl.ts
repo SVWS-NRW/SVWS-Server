@@ -5,32 +5,32 @@ import { GostStatistikFachwahlHalbjahr, cast_de_nrw_schule_svws_core_data_gost_G
 export class GostStatistikFachwahl extends JavaObject {
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird.
 	 */
 	public abiturjahr : number = 0;
 
 	/**
-	 * Die ID des Faches, für welches die Fachwahldaten ermittelt wurden. 
+	 * Die ID des Faches, für welches die Fachwahldaten ermittelt wurden.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das eindeutige Kürzel des Faches 
+	 * Das eindeutige Kürzel des Faches
 	 */
 	public kuerzel : string | null = null;
 
 	/**
-	 * Die Bezeichnung des Faches 
+	 * Die Bezeichnung des Faches
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Das Statistik-Kürzel des Faches 
+	 * Das Statistik-Kürzel des Faches
 	 */
 	public kuerzelStatistik : string | null = null;
 
 	/**
-	 * Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe 
+	 * Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe
 	 */
 	public fachwahlen : Array<GostStatistikFachwahlHalbjahr> = Array(6).fill(null);
 

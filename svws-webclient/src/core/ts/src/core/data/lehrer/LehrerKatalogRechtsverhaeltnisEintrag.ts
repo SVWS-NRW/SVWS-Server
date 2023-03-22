@@ -10,22 +10,22 @@ export class LehrerKatalogRechtsverhaeltnisEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für das Rechtsverhältnis. 
+	 * Das Kürzel für das Rechtsverhältnis.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Rechtsverhältnisses. 
+	 * Der Klartext des Rechtsverhältnisses.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr das Rechtsverhältnis einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr das Rechtsverhältnis einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr das Rechtsverhältnis gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr das Rechtsverhältnis gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

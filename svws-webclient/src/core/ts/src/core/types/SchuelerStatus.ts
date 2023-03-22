@@ -18,77 +18,77 @@ export class SchuelerStatus extends JavaObject {
 	private static readonly all_values_by_name : Map<string, SchuelerStatus> = new Map<string, SchuelerStatus>();
 
 	/**
-	 * Status Neuaufnahme mit dem Wert 0 
+	 * Status Neuaufnahme mit dem Wert 0
 	 */
 	public static readonly NEUAUFNAHME : SchuelerStatus = new SchuelerStatus("NEUAUFNAHME", 0, 0, "Neuaufnahme", null, null);
 
 	/**
-	 * Status Warteliste mit dem Wert 1 
+	 * Status Warteliste mit dem Wert 1
 	 */
 	public static readonly WARTELISTE : SchuelerStatus = new SchuelerStatus("WARTELISTE", 1, 1, "Warteliste", null, null);
 
 	/**
-	 * Status Aktic mit dem Wert 2 
+	 * Status Aktic mit dem Wert 2
 	 */
 	public static readonly AKTIV : SchuelerStatus = new SchuelerStatus("AKTIV", 2, 2, "Aktiv", null, null);
 
 	/**
-	 * Status Beurlaubt mit dem Wert 3 
+	 * Status Beurlaubt mit dem Wert 3
 	 */
 	public static readonly BEURLAUBT : SchuelerStatus = new SchuelerStatus("BEURLAUBT", 3, 3, "Beurlaubt", null, null);
 
 	/**
-	 * Status Extern mit dem Wert 6 
+	 * Status Extern mit dem Wert 6
 	 */
 	public static readonly EXTERN : SchuelerStatus = new SchuelerStatus("EXTERN", 4, 6, "Extern", null, null);
 
 	/**
-	 * Status Abschluss mit dem Wert 8 
+	 * Status Abschluss mit dem Wert 8
 	 */
 	public static readonly ABSCHLUSS : SchuelerStatus = new SchuelerStatus("ABSCHLUSS", 5, 8, "Abschluss", null, null);
 
 	/**
-	 * Status Abgänger mit dem Wert 9 
+	 * Status Abgänger mit dem Wert 9
 	 */
 	public static readonly ABGANG : SchuelerStatus = new SchuelerStatus("ABGANG", 6, 9, "Abgang", null, null);
 
 	/**
-	 * Status Abgänger mit dem Wert 10 
+	 * Status Abgänger mit dem Wert 10
 	 */
 	public static readonly EHEMALIGE : SchuelerStatus = new SchuelerStatus("EHEMALIGE", 7, 10, "Ehemalige", null, null);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Die Zuordnung des Schüler-Status zu der ID 
+	 * Die Zuordnung des Schüler-Status zu der ID
 	 */
 	private static readonly _mapID : HashMap<number, SchuelerStatus> = new HashMap();
 
 	/**
-	 * Die Zuordnung des Schüler-Status zu der ID 
+	 * Die Zuordnung des Schüler-Status zu der ID
 	 */
 	private static readonly _mapBezeichnungen : HashMap<string, SchuelerStatus> = new HashMap();
 
 	/**
-	 * Die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird. 
+	 * Die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird.
 	 */
 	public readonly id : number;
 
 	/**
-	 * Die textuelle Bezeichnung des Schülerstatus. 
+	 * Die textuelle Bezeichnung des Schülerstatus.
 	 */
 	public readonly bezeichnung : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigBis : number | null;
 

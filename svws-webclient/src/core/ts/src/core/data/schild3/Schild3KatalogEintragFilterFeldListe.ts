@@ -5,42 +5,42 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 
 	/**
-	 * ID für den Eintrag welche Felder im Attributsfilter zur Verfügung stehen. 
+	 * ID für den Eintrag welche Felder im Attributsfilter zur Verfügung stehen.
 	 */
 	public ID : number | null = null;
 
 	/**
-	 * Bezeichnung im Attributsfilter 
+	 * Bezeichnung im Attributsfilter
 	 */
 	public Bezeichnung : string | null = null;
 
 	/**
-	 * Datenbankfeld im Attributsfilter 
+	 * Datenbankfeld im Attributsfilter
 	 */
 	public DBFeld : string | null = null;
 
 	/**
-	 * Typ des Feldes im Attributsfilter 
+	 * Typ des Feldes im Attributsfilter
 	 */
 	public Typ : string | null = null;
 
 	/**
-	 * Mögliche Werte des Feldes im Attributsfilter 
+	 * Mögliche Werte des Feldes im Attributsfilter
 	 */
 	public Werte : string | null = null;
 
 	/**
-	 * Standardwert im Attributsfilter 
+	 * Standardwert im Attributsfilter
 	 */
 	public StdWert : string | null = null;
 
 	/**
-	 * Operator  im Attributsfilter (größer-kleiner) 
+	 * Operator  im Attributsfilter (größer-kleiner)
 	 */
 	public Operator : string | null = null;
 
 	/**
-	 * Zusatzbedingung im Attributsfilter 
+	 * Zusatzbedingung im Attributsfilter
 	 */
 	public Zusatzbedingung : string | null = null;
 

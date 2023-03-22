@@ -8,82 +8,82 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/**
-	 * Der Nachname des Kontakts. 
+	 * Der Nachname des Kontakts.
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. 
+	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes.
 	 */
 	public zusatzNachname : string = "";
 
 	/**
-	 * Der Vorname des Schülerdatensatzes. 
+	 * Der Vorname des Schülerdatensatzes.
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Der Straßenname des Kontakts. 
+	 * Der Straßenname des Kontakts.
 	 */
 	public strassenname : string | null = null;
 
 	/**
-	 * Die Hausnummer des Kontakts. 
+	 * Die Hausnummer des Kontakts.
 	 */
 	public hausnummer : string | null = null;
 
 	/**
-	 * Ggf. der Hausnummerzusatz des Kontakts. 
+	 * Ggf. der Hausnummerzusatz des Kontakts.
 	 */
 	public hausnummerZusatz : string | null = null;
 
 	/**
-	 * Die Postleitzahl des Kontakts. 
+	 * Die Postleitzahl des Kontakts.
 	 */
 	public plz : string | null = null;
 
 	/**
-	 * Der Ort des Kontakts. 
+	 * Der Ort des Kontakts.
 	 */
 	public ort : string | null = null;
 
 	/**
-	 * Die Telefonnummern des Kontakts. 
+	 * Die Telefonnummern des Kontakts.
 	 */
 	public telefonnummern : List<Telefonnummer> = new Vector();
 
 	/**
-	 * Die Mailadresse des Kontakts. 
+	 * Die Mailadresse des Kontakts.
 	 */
 	public email : string | null = null;
 
 	/**
-	 * Die Webadresse des Kontakts 
+	 * Die Webadresse des Kontakts
 	 */
 	public webAdresse : string | null = "";
 
 	/**
-	 * Die Kategorien dieses Kontakts 
+	 * Die Kategorien dieses Kontakts
 	 */
 	public kategorien : List<string | null> | null = new Vector();
 
 	/**
-	 *  Die Organisation dieses Kontakts 
+	 *  Die Organisation dieses Kontakts
 	 */
 	public organisation : string | null = null;
 
 	/**
-	 *  Die Rolle innerhalb der Organisation dieses Kontakts 
+	 *  Die Rolle innerhalb der Organisation dieses Kontakts
 	 */
 	public rolle : string | null = null;
 
 	/**
-	 * Die ID des Adressbuchkontakts des Kinds 
+	 * Die ID des Adressbuchkontakts des Kinds
 	 */
 	public idKind : string | null = null;
 
 	/**
-	 * Die ID des Adressbuchkontakts der Eltern 
+	 * Die ID des Adressbuchkontakts der Eltern
 	 */
 	public idEltern : string | null = null;
 

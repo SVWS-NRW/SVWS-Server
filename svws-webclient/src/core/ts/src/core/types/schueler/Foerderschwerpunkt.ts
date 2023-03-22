@@ -23,112 +23,112 @@ export class Foerderschwerpunkt extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Foerderschwerpunkt> = new Map<string, Foerderschwerpunkt>();
 
 	/**
-	 * Förderschwerpunkt - kein Förderschwerpunkt 
+	 * Förderschwerpunkt - kein Förderschwerpunkt
 	 */
 	public static readonly KEINER : Foerderschwerpunkt = new Foerderschwerpunkt("KEINER", 0, [new FoerderschwerpunktKatalogEintrag(0, "**", "kein Förderschwerpunkt", Arrays.asList(Schulform.BK, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.V, Schulform.WB), null, null)]);
 
 	/**
-	 * Förderschwerpunkt - Sehen (Blinde) 
+	 * Förderschwerpunkt - Sehen (Blinde)
 	 */
 	public static readonly BL : Foerderschwerpunkt = new Foerderschwerpunkt("BL", 1, [new FoerderschwerpunktKatalogEintrag(1000, "BL", "Sehen (Blinde)", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Emotionale und soziale Entwicklung 
+	 * Förderschwerpunkt - Emotionale und soziale Entwicklung
 	 */
 	public static readonly EZ : Foerderschwerpunkt = new Foerderschwerpunkt("EZ", 2, [new FoerderschwerpunktKatalogEintrag(2000, "EZ", "Emotionale und soziale Entwicklung", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Geistige Entwicklung 
+	 * Förderschwerpunkt - Geistige Entwicklung
 	 */
 	public static readonly GB : Foerderschwerpunkt = new Foerderschwerpunkt("GB", 3, [new FoerderschwerpunktKatalogEintrag(3000, "GB", "Geistige Entwicklung", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Hören und Kommunikation (Gehörlose) 
+	 * Förderschwerpunkt - Hören und Kommunikation (Gehörlose)
 	 */
 	public static readonly GH : Foerderschwerpunkt = new Foerderschwerpunkt("GH", 4, [new FoerderschwerpunktKatalogEintrag(4000, "GH", "Hören und Kommunikation (Gehörlose)", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SR, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Körperliche und motorische Entwicklung 
+	 * Förderschwerpunkt - Körperliche und motorische Entwicklung
 	 */
 	public static readonly KB : Foerderschwerpunkt = new Foerderschwerpunkt("KB", 5, [new FoerderschwerpunktKatalogEintrag(5000, "KB", "Körperliche und motorische Entwicklung", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Schule für Kranke 
+	 * Förderschwerpunkt - Schule für Kranke
 	 */
 	public static readonly KR : Foerderschwerpunkt = new Foerderschwerpunkt("KR", 6, [new FoerderschwerpunktKatalogEintrag(6000, "KR", "Schule für Kranke", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.S, Schulform.KS), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Lernen 
+	 * Förderschwerpunkt - Lernen
 	 */
 	public static readonly LB : Foerderschwerpunkt = new Foerderschwerpunkt("LB", 7, [new FoerderschwerpunktKatalogEintrag(7000, "LB", "Lernen", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Präventive Förderung im Bereich Emotionale und soziale Entwicklung 
+	 * Förderschwerpunkt - Präventive Förderung im Bereich Emotionale und soziale Entwicklung
 	 */
 	public static readonly PE : Foerderschwerpunkt = new Foerderschwerpunkt("PE", 8, [new FoerderschwerpunktKatalogEintrag(8000, "PE", "Präventive Förderung im Bereich Emotionale und soziale Entwicklung", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, 2010)]);
 
 	/**
-	 * Förderschwerpunkt - Präventive Förderung 
+	 * Förderschwerpunkt - Präventive Förderung
 	 */
 	public static readonly PF : Foerderschwerpunkt = new Foerderschwerpunkt("PF", 9, [new FoerderschwerpunktKatalogEintrag(9000, "PF", "Präventive Förderung", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, 2010)]);
 
 	/**
-	 * Förderschwerpunkt - Präventive Förderung im Bereich Lernen 
+	 * Förderschwerpunkt - Präventive Förderung im Bereich Lernen
 	 */
 	public static readonly PL : Foerderschwerpunkt = new Foerderschwerpunkt("PL", 10, [new FoerderschwerpunktKatalogEintrag(10000, "PL", "Präventive Förderung im Bereich Lernen", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, 2010)]);
 
 	/**
-	 * Förderschwerpunkt - Präventive Förderung im Bereich Sprache 
+	 * Förderschwerpunkt - Präventive Förderung im Bereich Sprache
 	 */
 	public static readonly PS : Foerderschwerpunkt = new Foerderschwerpunkt("PS", 11, [new FoerderschwerpunktKatalogEintrag(11000, "PS", "Präventive Förderung im Bereich Sprache", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, 2010)]);
 
 	/**
-	 * Förderschwerpunkt - Sprache 
+	 * Förderschwerpunkt - Sprache
 	 */
 	public static readonly SB : Foerderschwerpunkt = new Foerderschwerpunkt("SB", 12, [new FoerderschwerpunktKatalogEintrag(12000, "SB", "Sprache", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Hören und Kommunikation (Schwerhörige) 
+	 * Förderschwerpunkt - Hören und Kommunikation (Schwerhörige)
 	 */
 	public static readonly SG : Foerderschwerpunkt = new Foerderschwerpunkt("SG", 13, [new FoerderschwerpunktKatalogEintrag(13000, "SG", "Hören und Kommunikation (Schwerhörige)", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SR, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Sehen (Sehbehinderte) 
+	 * Förderschwerpunkt - Sehen (Sehbehinderte)
 	 */
 	public static readonly SH : Foerderschwerpunkt = new Foerderschwerpunkt("SH", 14, [new FoerderschwerpunktKatalogEintrag(14000, "SH", "Sehen (Sehbehinderte)", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), 2011, null)]);
 
 	/**
-	 * Förderschwerpunkt - Kein Förderschwerpunkt 
+	 * Förderschwerpunkt - Kein Förderschwerpunkt
 	 */
 	public static readonly XX : Foerderschwerpunkt = new Foerderschwerpunkt("XX", 15, [new FoerderschwerpunktKatalogEintrag(15000, "XX", "Kein Förderschwerpunkt", Arrays.asList(Schulform.SB, Schulform.SG), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des Förderschwerpunktes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten des Förderschwerpunktes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : FoerderschwerpunktKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des Förderschwerpunktes 
+	 * Die Historie mit den Einträgen des Förderschwerpunktes
 	 */
 	public readonly historie : Array<FoerderschwerpunktKatalogEintrag>;
 
 	/**
-	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu dem Kürzel des Förderschwerpunktes 
+	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu dem Kürzel des Förderschwerpunktes
 	 */
 	private static readonly _foerderschwerpunkteKuerzel : HashMap<string, Foerderschwerpunkt> = new HashMap();
 
 	/**
-	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu der ID des Förderschwerpunktes 
+	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu der ID des Förderschwerpunktes
 	 */
 	private static readonly _foerderschwerpunkteID : HashMap<number, Foerderschwerpunkt> = new HashMap();
 
 	/**
-	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt 
+	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt
 	 */
 	private schulformen : Array<Vector<Schulform>>;
 

@@ -4,22 +4,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID der Kompetenzgruppe. 
+	 * Die ID der Kompetenzgruppe.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Bezeichnung der Kompetenzgruppe. 
+	 * Die Bezeichnung der Kompetenzgruppe.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Spalte bei der Darstellung der Benutzerverwaltung in Schild. 
+	 * Die Spalte bei der Darstellung der Benutzerverwaltung in Schild.
 	 */
 	public spalte : number = -1;
 
 	/**
-	 * Die Zeile bei der Darstellung der Benutzerverwaltung in Schild. 
+	 * Die Zeile bei der Darstellung der Benutzerverwaltung in Schild.
 	 */
 	public zeile : number = -1;
 

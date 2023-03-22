@@ -10,22 +10,22 @@ import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 export class GostFachwahlManager extends JavaObject {
 
 	/**
-	 * Die Liste mit den einzelnen Fachwahlen 
+	 * Die Liste mit den einzelnen Fachwahlen
 	 */
 	private readonly fachwahlen : Vector<GostFachwahl> = new Vector();
 
 	/**
-	 * Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart 
+	 * Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart
 	 */
 	private readonly mapFachKursart : HashMap<number, HashMap<GostKursart, HashSet<number>>> = new HashMap();
 
 	/**
-	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID 
+	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID
 	 */
 	private readonly mapFach : HashMap<number, Vector<GostFachwahl>> = new HashMap();
 
 	/**
-	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID 
+	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID
 	 */
 	private readonly mapSchueler : HashMap<number, Vector<GostFachwahl>> = new HashMap();
 

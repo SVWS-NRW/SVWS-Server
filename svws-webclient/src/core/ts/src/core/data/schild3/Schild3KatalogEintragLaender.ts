@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragLaender extends JavaObject {
 
 	/**
-	 * Bundesländer/Nachbarländer Kurztext 
+	 * Bundesländer/Nachbarländer Kurztext
 	 */
 	public Kurztext : string | null = null;
 
 	/**
-	 * Bundesländer/Nachbarländer Langtext 
+	 * Bundesländer/Nachbarländer Langtext
 	 */
 	public Langtext : string | null = null;
 
 	/**
-	 * Bundesländer/Nachbarländer Sortierung 
+	 * Bundesländer/Nachbarländer Sortierung
 	 */
 	public Sortierung : number | null = null;
 
 	/**
-	 * Gültig ab Schuljahr 
+	 * Gültig ab Schuljahr
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gültig bis Schuljahr 
+	 * Gültig bis Schuljahr
 	 */
 	public gueltigBis : number | null = null;
 

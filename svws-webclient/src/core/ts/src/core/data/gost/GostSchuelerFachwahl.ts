@@ -5,12 +5,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostSchuelerFachwahl extends JavaObject {
 
 	/**
-	 * Die Fachwahlen des Schülers für die sechs Halbjahre der gymnasialen Oberstufe 
+	 * Die Fachwahlen des Schülers für die sechs Halbjahre der gymnasialen Oberstufe
 	 */
 	public halbjahre : Array<string | null> = Array(6).fill(null);
 
 	/**
-	 * Die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null 
+	 * Die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null
 	 */
 	public abiturFach : number | null = null;
 

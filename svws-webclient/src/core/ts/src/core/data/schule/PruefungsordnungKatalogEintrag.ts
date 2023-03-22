@@ -5,52 +5,52 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class PruefungsordnungKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Eintrags. 
+	 * Die ID des Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung 
+	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird 
+	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
 	 */
 	public kuerzelSchild : string | null = "";
 
 	/**
-	 * Die Bezeichnung der Verordnung. 
+	 * Die Bezeichnung der Verordnung.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde 
+	 * Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde
 	 */
 	public gvJahr : number | null = null;
 
 	/**
-	 * Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung 
+	 * Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung
 	 */
 	public gvNr : string = "";
 
 	/**
-	 * Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung 
+	 * Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung
 	 */
 	public gvSeiten : string = "";
 
 	/**
-	 * ggf. ein Link zu einer Version der Verordnung 
+	 * ggf. ein Link zu einer Version der Verordnung
 	 */
 	public link : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

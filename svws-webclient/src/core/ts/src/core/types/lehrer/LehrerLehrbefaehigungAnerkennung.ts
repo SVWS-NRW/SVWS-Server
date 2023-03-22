@@ -19,47 +19,47 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerLehrbefaehigungAnerkennung> = new Map<string, LehrerLehrbefaehigungAnerkennung>();
 
 	/**
-	 * Anerkennung der Lehrbefähigung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  
+	 * Anerkennung der Lehrbefähigung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'
 	 */
 	public static readonly ID_1 : LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_1", 0, [new LehrerKatalogLehrbefaehigungAnerkennungEintrag(1, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)]);
 
 	/**
-	 * Anerkennung der Lehrbefähigung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'  
+	 * Anerkennung der Lehrbefähigung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'
 	 */
 	public static readonly ID_2 : LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_2", 1, [new LehrerKatalogLehrbefaehigungAnerkennungEintrag(2, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)]);
 
 	/**
-	 * Anerkennung der Lehrbefähigung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'  
+	 * Anerkennung der Lehrbefähigung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'
 	 */
 	public static readonly ID_3 : LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_3", 2, [new LehrerKatalogLehrbefaehigungAnerkennungEintrag(3, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)]);
 
 	/**
-	 * Anerkennung der Lehrbefähigung 'sonstige'  
+	 * Anerkennung der Lehrbefähigung 'sonstige'
 	 */
 	public static readonly ID_9 : LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_9", 3, [new LehrerKatalogLehrbefaehigungAnerkennungEintrag(4, "9", "sonstige", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Lehrbefähigung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Lehrbefähigung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogLehrbefaehigungAnerkennungEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Lehrbefähigung 
+	 * Die Historie mit den Einträgen der Lehrbefähigung
 	 */
 	public readonly historie : Array<LehrerKatalogLehrbefaehigungAnerkennungEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
 

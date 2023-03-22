@@ -4,27 +4,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class StundenplanZeitraster extends JavaObject {
 
 	/**
-	 * Die ID des Zeitraster-Eintrages. 
+	 * Die ID des Zeitraster-Eintrages.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag) 
+	 * Der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 */
 	public wochentag : number = -1;
 
 	/**
-	 * Die Nummer der Unterrichtsstunde an dem Wochentag 
+	 * Die Nummer der Unterrichtsstunde an dem Wochentag
 	 */
 	public unterrichtstunde : number = -1;
 
 	/**
-	 * Die Uhrzeit, wann die Unterrichtsstunde beginnt. 
+	 * Die Uhrzeit, wann die Unterrichtsstunde beginnt.
 	 */
 	public stundenbeginn : string = "";
 
 	/**
-	 * Die Uhrzeit, wann die Unterrichtsstunde endet. 
+	 * Die Uhrzeit, wann die Unterrichtsstunde endet.
 	 */
 	public stundenende : string = "";
 

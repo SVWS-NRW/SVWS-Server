@@ -15,7 +15,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostKursblockungRegelParameterTyp> = new Map<string, GostKursblockungRegelParameterTyp>();
 
 	/**
-	 * Der Parameter-Typ Kursart 
+	 * Der Parameter-Typ Kursart
 	 */
 	public static readonly KURSART : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURSART", 0, );
 
@@ -25,17 +25,17 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	public static readonly SCHIENEN_NR : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHIENEN_NR", 1, );
 
 	/**
-	 * Der Parameter-Typ Kurs-ID 
+	 * Der Parameter-Typ Kurs-ID
 	 */
 	public static readonly KURS_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURS_ID", 2, );
 
 	/**
-	 * Der Parameter Typ Schüler-ID 
+	 * Der Parameter Typ Schüler-ID
 	 */
 	public static readonly SCHUELER_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHUELER_ID", 3, );
 
 	/**
-	 * Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung. 
+	 * Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung.
 	 */
 	public static readonly BOOLEAN : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4, );
 

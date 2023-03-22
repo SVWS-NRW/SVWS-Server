@@ -4,22 +4,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostJahrgang extends JavaObject {
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. -1 bei der Vorlage für neue Abiturjahrgänge. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. -1 bei der Vorlage für neue Abiturjahrgänge.
 	 */
 	public abiturjahr : number = -1;
 
 	/**
-	 * Die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist. 
+	 * Die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist.
 	 */
 	public jahrgang : string | null = null;
 
 	/**
-	 * Die textuelle Bezeichnung für den Abiturjahrgang 
+	 * Die textuelle Bezeichnung für den Abiturjahrgang
 	 */
 	public bezeichnung : string | null = "Allgemein / Vorlage";
 
 	/**
-	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. 
+	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet.
 	 */
 	public istAbgeschlossen : boolean = false;
 

@@ -13,77 +13,77 @@ import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../co
 export class KursblockungDynKurs extends JavaObject {
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
 
 	/**
-	 * Die ID des Kurses, welche von der Datenbank kommt. 
+	 * Die ID des Kurses, welche von der Datenbank kommt.
 	 */
 	private readonly databaseID : number;
 
 	/**
-	 * Die interne ID des Kurses. 
+	 * Die interne ID des Kurses.
 	 */
 	private readonly internalID : number;
 
 	/**
-	 * Die Fachart die zu diesem Kurs gehört. 
+	 * Die Fachart die zu diesem Kurs gehört.
 	 */
 	private readonly fachart : KursblockungDynFachart;
 
 	/**
-	 * Schienen in denen der Kurs gerade ist, zum Teil fixiert. 
+	 * Schienen in denen der Kurs gerade ist, zum Teil fixiert.
 	 */
 	private readonly schienenLage : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage}
 	 */
 	private readonly schienenLageSaveS : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage}
 	 */
 	private readonly schienenLageSaveK : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenLage}
 	 */
 	private readonly schienenLageSaveG : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Anzahl der Fixierungen. 
+	 * Anzahl der Fixierungen.
 	 */
 	private readonly schienenLageFixiert : number;
 
 	/**
-	 * Schienen die getauscht werden könnten. 
+	 * Schienen die getauscht werden könnten.
 	 */
 	private readonly schienenFrei : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei}
 	 */
 	private readonly schienenFreiSaveS : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei}
 	 */
 	private readonly schienenFreiSaveK : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei} 
+	 * Zum Speichern des Arrays {@link KursblockungDynKurs#schienenFrei}
 	 */
 	private readonly schienenFreiSaveG : Array<KursblockungDynSchiene>;
 
 	/**
-	 * Die Anzahl an SuS in diesem Kurs. 
+	 * Die Anzahl an SuS in diesem Kurs.
 	 */
 	private schuelerAnz : number = 0;
 
 	/**
-	 * Logger für Benutzerhinweise, Warnungen und Fehler. 
+	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	private readonly logger : Logger;
 

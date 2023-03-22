@@ -5,107 +5,107 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerStammdaten extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers. 
+	 * Die ID des Lehrers.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Lehrers. 
+	 * Das Kürzel des Lehrers.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung des Personals-Typs des Lehrers. 
+	 * Die Bezeichnung des Personals-Typs des Lehrers.
 	 */
 	public personalTyp : string = "";
 
 	/**
-	 * Ggf. die Anrede des Lehrers. 
+	 * Ggf. die Anrede des Lehrers.
 	 */
 	public anrede : string | null = null;
 
 	/**
-	 * Ggf. ein akademischer Grad des Lehrers. 
+	 * Ggf. ein akademischer Grad des Lehrers.
 	 */
 	public titel : string | null = null;
 
 	/**
-	 * Ggf. die Amtsbezeichnung des Lehrers. 
+	 * Ggf. die Amtsbezeichnung des Lehrers.
 	 */
 	public amtsbezeichnung : string | null = null;
 
 	/**
-	 * Der Nachname des Lehrers. 
+	 * Der Nachname des Lehrers.
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Der Vorname des Lehrers. 
+	 * Der Vorname des Lehrers.
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Die ID des Geschlechtes 
+	 * Die ID des Geschlechtes
 	 */
 	public geschlecht : number = 0;
 
 	/**
-	 * Das Geburtsdatum des Lehrers. 
+	 * Das Geburtsdatum des Lehrers.
 	 */
 	public geburtsdatum : string | null = null;
 
 	/**
-	 * Ggf. die ID für die Staatsangehörigkeit des Lehrers. 
+	 * Ggf. die ID für die Staatsangehörigkeit des Lehrers.
 	 */
 	public staatsangehoerigkeitID : string | null = null;
 
 	/**
-	 * Ggf. der Straßenname im Wohnort des Lehrers. 
+	 * Ggf. der Straßenname im Wohnort des Lehrers.
 	 */
 	public strassenname : string | null = null;
 
 	/**
-	 * Ggf. die Hausnummer zur Straße im Wohnort des Lehrers. 
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
 	 */
 	public hausnummer : string | null = null;
 
 	/**
-	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers. 
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
 	 */
 	public hausnummerZusatz : string | null = null;
 
 	/**
-	 * Ggf. die ID des Wohnortes des Lehrers. 
+	 * Ggf. die ID des Wohnortes des Lehrers.
 	 */
 	public wohnortID : number | null = null;
 
 	/**
-	 * Ggf. die ID des Ortsteils im Wohnort des Lehrers. 
+	 * Ggf. die ID des Ortsteils im Wohnort des Lehrers.
 	 */
 	public ortsteilID : number | null = null;
 
 	/**
-	 * Ggf. die Telefonnummer des Lehrers. 
+	 * Ggf. die Telefonnummer des Lehrers.
 	 */
 	public telefon : string | null = null;
 
 	/**
-	 * Ggf. die Mobilnummer des Lehrers. 
+	 * Ggf. die Mobilnummer des Lehrers.
 	 */
 	public telefonMobil : string | null = null;
 
 	/**
-	 * Ggf. die private Email-Adresse des Lehrers. 
+	 * Ggf. die private Email-Adresse des Lehrers.
 	 */
 	public emailPrivat : string | null = null;
 
 	/**
-	 * Ggf. die dienstliche Email-Adresse des Lehrers. 
+	 * Ggf. die dienstliche Email-Adresse des Lehrers.
 	 */
 	public emailDienstlich : string | null = null;
 
 	/**
-	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.) 
+	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.)
 	 */
 	public foto : string | null = null;
 

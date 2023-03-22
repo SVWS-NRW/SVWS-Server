@@ -18,112 +18,112 @@ export class BerufskollegBerufsebene1 extends JavaObject {
 	private static readonly all_values_by_name : Map<string, BerufskollegBerufsebene1> = new Map<string, BerufskollegBerufsebene1>();
 
 	/**
-	 * Berufsebene 1 : Agrarwirtschaft 
+	 * Berufsebene 1 : Agrarwirtschaft
 	 */
 	public static readonly AW : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("AW", 0, [new BerufskollegBerufsebeneKatalogEintrag(100001000, 1, "AW", "Agrarwirtschaft", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Agrarwirtschaft, Bio- und Umwelttechnologie 
+	 * Berufsebene 1 : Agrarwirtschaft, Bio- und Umwelttechnologie
 	 */
 	public static readonly AB : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("AB", 1, [new BerufskollegBerufsebeneKatalogEintrag(100002000, 1, "AB", "Agrarwirtschaft, Bio- und Umwelttechnologie", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Ernährung 
+	 * Berufsebene 1 : Ernährung
 	 */
 	public static readonly ER : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("ER", 2, [new BerufskollegBerufsebeneKatalogEintrag(100003000, 1, "ER", "Ernährung", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Ernährung und Hauswirtschaft 
+	 * Berufsebene 1 : Ernährung und Hauswirtschaft
 	 */
 	public static readonly EU : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("EU", 3, [new BerufskollegBerufsebeneKatalogEintrag(100004000, 1, "EU", "Ernährung und Hauswirtschaft", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Ernährung/Hauswirtschaft 
+	 * Berufsebene 1 : Ernährung/Hauswirtschaft
 	 */
 	public static readonly EH : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("EH", 4, [new BerufskollegBerufsebeneKatalogEintrag(100005000, 1, "EH", "Ernährung/Hauswirtschaft", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Ernährungs- und Versorgungsmanagement 
+	 * Berufsebene 1 : Ernährungs- und Versorgungsmanagement
 	 */
 	public static readonly EV : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("EV", 5, [new BerufskollegBerufsebeneKatalogEintrag(100006000, 1, "EV", "Ernährungs- und Versorgungsmanagement", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Gestaltung 
+	 * Berufsebene 1 : Gestaltung
 	 */
 	public static readonly GT : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("GT", 6, [new BerufskollegBerufsebeneKatalogEintrag(100007000, 1, "GT", "Gestaltung", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Gesundheit und Soziales 
+	 * Berufsebene 1 : Gesundheit und Soziales
 	 */
 	public static readonly GU : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("GU", 7, [new BerufskollegBerufsebeneKatalogEintrag(100008000, 1, "GU", "Gesundheit und Soziales", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Gesundheit/Erziehung und Soziales 
+	 * Berufsebene 1 : Gesundheit/Erziehung und Soziales
 	 */
 	public static readonly GE : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("GE", 8, [new BerufskollegBerufsebeneKatalogEintrag(100009000, 1, "GE", "Gesundheit/Erziehung und Soziales", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Gesundheit/Soziales 
+	 * Berufsebene 1 : Gesundheit/Soziales
 	 */
 	public static readonly GS : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("GS", 9, [new BerufskollegBerufsebeneKatalogEintrag(100010000, 1, "GS", "Gesundheit/Soziales", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Informatik 
+	 * Berufsebene 1 : Informatik
 	 */
 	public static readonly IF : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("IF", 10, [new BerufskollegBerufsebeneKatalogEintrag(100011000, 1, "IF", "Informatik", null, null)]);
 
 	/**
-	 * Berufsebene 1 : ohne besondere Zuordnung 
+	 * Berufsebene 1 : ohne besondere Zuordnung
 	 */
 	public static readonly OZ : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("OZ", 11, [new BerufskollegBerufsebeneKatalogEintrag(100012000, 1, "OZ", "ohne besondere Zuordnung", null, null)]);
 
 	/**
-	 * Berufsebene 1 : ohne Fachbereich / Schulversuch 
+	 * Berufsebene 1 : ohne Fachbereich / Schulversuch
 	 */
 	public static readonly SV : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("SV", 12, [new BerufskollegBerufsebeneKatalogEintrag(100013000, 1, "SV", "ohne Fachbereich / Schulversuch", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Sozialwesen 
+	 * Berufsebene 1 : Sozialwesen
 	 */
 	public static readonly SW : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("SW", 13, [new BerufskollegBerufsebeneKatalogEintrag(100014000, 1, "SW", "Sozialwesen", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Technik 
+	 * Berufsebene 1 : Technik
 	 */
 	public static readonly TE : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("TE", 14, [new BerufskollegBerufsebeneKatalogEintrag(100015000, 1, "TE", "Technik", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Technik/Naturwissenschaften 
+	 * Berufsebene 1 : Technik/Naturwissenschaften
 	 */
 	public static readonly TN : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("TN", 15, [new BerufskollegBerufsebeneKatalogEintrag(100016000, 1, "TN", "Technik/Naturwissenschaften", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Wirtschaft 
+	 * Berufsebene 1 : Wirtschaft
 	 */
 	public static readonly WI : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("WI", 16, [new BerufskollegBerufsebeneKatalogEintrag(100017000, 1, "WI", "Wirtschaft", null, null)]);
 
 	/**
-	 * Berufsebene 1 : Wirtschaft und Verwaltung 
+	 * Berufsebene 1 : Wirtschaft und Verwaltung
 	 */
 	public static readonly WV : BerufskollegBerufsebene1 = new BerufskollegBerufsebene1("WV", 17, [new BerufskollegBerufsebeneKatalogEintrag(100018000, 1, "WV", "Wirtschaft und Verwaltung", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Berufsebene, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Berufsebene, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : BerufskollegBerufsebeneKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Berufsebene 
+	 * Die Historie mit den Einträgen der Berufsebene
 	 */
 	public readonly historie : Array<BerufskollegBerufsebeneKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Berufsebenen der Ebene 1, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Berufsebenen der Ebene 1, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _ebenen : HashMap<string, BerufskollegBerufsebene1> = new HashMap();
 

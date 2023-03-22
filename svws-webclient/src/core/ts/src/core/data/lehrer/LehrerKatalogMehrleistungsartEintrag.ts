@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerKatalogMehrleistungsartEintrag extends JavaObject {
 
 	/**
-	 * Die ID der Mehrleistungsart. 
+	 * Die ID der Mehrleistungsart.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für die Mehrleistungsart, welches für die amtliche Schulstatistik verwendet wird. 
+	 * Das Kürzel für die Mehrleistungsart, welches für die amtliche Schulstatistik verwendet wird.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext der Mehrleistungsart. 
+	 * Der Klartext der Mehrleistungsart.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

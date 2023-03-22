@@ -19,92 +19,92 @@ export class Sprachreferenzniveau extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Sprachreferenzniveau> = new Map<string, Sprachreferenzniveau>();
 
 	/**
-	 * Referenzniveau nach GeR A1. 
+	 * Referenzniveau nach GeR A1.
 	 */
 	public static readonly A1 : Sprachreferenzniveau = new Sprachreferenzniveau("A1", 0, [new SprachreferenzniveauKatalogEintrag(1, "A1", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR A1 Plus 
+	 * Referenzniveau nach GeR A1 Plus
 	 */
 	public static readonly A1P : Sprachreferenzniveau = new Sprachreferenzniveau("A1P", 1, [new SprachreferenzniveauKatalogEintrag(2, "A1+", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR A1A2 
+	 * Referenzniveau nach GeR A1A2
 	 */
 	public static readonly A1A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A1A2", 2, [new SprachreferenzniveauKatalogEintrag(3, "A1/A2", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR A2 
+	 * Referenzniveau nach GeR A2
 	 */
 	public static readonly A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A2", 3, [new SprachreferenzniveauKatalogEintrag(4, "A2", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR A2 Plus 
+	 * Referenzniveau nach GeR A2 Plus
 	 */
 	public static readonly A2P : Sprachreferenzniveau = new Sprachreferenzniveau("A2P", 4, [new SprachreferenzniveauKatalogEintrag(5, "A2+", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR A2B1. 
+	 * Referenzniveau nach GeR A2B1.
 	 */
 	public static readonly A2B1 : Sprachreferenzniveau = new Sprachreferenzniveau("A2B1", 5, [new SprachreferenzniveauKatalogEintrag(6, "A2/B1", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR B1. 
+	 * Referenzniveau nach GeR B1.
 	 */
 	public static readonly B1 : Sprachreferenzniveau = new Sprachreferenzniveau("B1", 6, [new SprachreferenzniveauKatalogEintrag(7, "B1", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR B1 Plus. 
+	 * Referenzniveau nach GeR B1 Plus.
 	 */
 	public static readonly B1P : Sprachreferenzniveau = new Sprachreferenzniveau("B1P", 7, [new SprachreferenzniveauKatalogEintrag(8, "B1+", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR B1B2. 
+	 * Referenzniveau nach GeR B1B2.
 	 */
 	public static readonly B1B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B1B2", 8, [new SprachreferenzniveauKatalogEintrag(9, "B1/B2", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR B2. 
+	 * Referenzniveau nach GeR B2.
 	 */
 	public static readonly B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B2", 9, [new SprachreferenzniveauKatalogEintrag(10, "B2", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR B2C1. 
+	 * Referenzniveau nach GeR B2C1.
 	 */
 	public static readonly B2C1 : Sprachreferenzniveau = new Sprachreferenzniveau("B2C1", 10, [new SprachreferenzniveauKatalogEintrag(11, "B2/C1", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR C1. 
+	 * Referenzniveau nach GeR C1.
 	 */
 	public static readonly C1 : Sprachreferenzniveau = new Sprachreferenzniveau("C1", 11, [new SprachreferenzniveauKatalogEintrag(12, "C1", null, null)]);
 
 	/**
-	 * Referenzniveau nach GeR C2. 
+	 * Referenzniveau nach GeR C2.
 	 */
 	public static readonly C2 : Sprachreferenzniveau = new Sprachreferenzniveau("C2", 12, [new SprachreferenzniveauKatalogEintrag(13, "C2", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des Sprachprüfungsniveaus 
+	 * Der aktuellen Daten des Sprachprüfungsniveaus
 	 */
 	public readonly daten : SprachreferenzniveauKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des Sprachprüfungsniveaus 
+	 * Die Historie mit den Einträgen des Sprachprüfungsniveaus
 	 */
 	public readonly historie : Array<SprachreferenzniveauKatalogEintrag>;
 
 	/**
-	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs 
+	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs
 	 */
 	private static readonly _mapID : HashMap<number, Sprachreferenzniveau> = new HashMap();
 
 	/**
-	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen 
+	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen
 	 */
 	private static readonly _mapKuerzel : HashMap<string, Sprachreferenzniveau> = new HashMap();
 

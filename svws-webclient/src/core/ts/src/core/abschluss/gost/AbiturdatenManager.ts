@@ -44,37 +44,37 @@ import { Mathematik, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_M
 export class AbiturdatenManager extends JavaObject {
 
 	/**
-	 * Das Abiturdaten-Objekt, welches mithilfe dieses Managers bearbeitet wird 
+	 * Das Abiturdaten-Objekt, welches mithilfe dieses Managers bearbeitet wird
 	 */
 	private readonly abidaten : Abiturdaten;
 
 	/**
-	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang 
+	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang
 	 */
 	private readonly gostFaecher : HashMap<number, GostFach>;
 
 	/**
-	 * Die Art der durchzuführenden Belegprüfung 
+	 * Die Art der durchzuführenden Belegprüfung
 	 */
 	private readonly pruefungsArt : GostBelegpruefungsArt;
 
 	/**
-	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht 
+	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht
 	 */
 	private readonly mapFachbereiche : HashMap<GostFachbereich, Vector<AbiturFachbelegung>> = new HashMap();
 
 	/**
-	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung 
+	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung
 	 */
 	private belegpruefungen : Vector<GostBelegpruefung> = new Vector();
 
 	/**
-	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind. 
+	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
 	 */
 	private belegpruefungsfehler : Vector<GostBelegungsfehler> = new Vector();
 
 	/**
-	 * Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht. 
+	 * Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht.
 	 */
 	private belegpruefungErfolgreich : boolean = false;
 

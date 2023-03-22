@@ -7,97 +7,97 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchuleStammdaten extends JavaObject {
 
 	/**
-	 * Die eindeutige Schulnummer der Schule 
+	 * Die eindeutige Schulnummer der Schule
 	 */
 	public schulNr : number = 0;
 
 	/**
-	 * Die Schulform der Schule 
+	 * Die Schulform der Schule
 	 */
 	public schulform : string = "";
 
 	/**
-	 * Der erste Teil (von dreien) der Bezeichnung der Schule 
+	 * Der erste Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public bezeichnung1 : string = "";
 
 	/**
-	 * Der zweite Teil (von dreien) der Bezeichnung der Schule 
+	 * Der zweite Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public bezeichnung2 : string | null = null;
 
 	/**
-	 * Der dritte Teil (von dreien) der Bezeichnung der Schule 
+	 * Der dritte Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public bezeichnung3 : string | null = null;
 
 	/**
-	 * Der Straßenname der Straße in der die Schule liegt. 
+	 * Der Straßenname der Straße in der die Schule liegt.
 	 */
 	public strassenname : string | null = null;
 
 	/**
-	 * Die Hausnummer zur Straße in der die Schule liegt. 
+	 * Die Hausnummer zur Straße in der die Schule liegt.
 	 */
 	public hausnummer : string | null = null;
 
 	/**
-	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt. 
+	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.
 	 */
 	public hausnummerZusatz : string | null = null;
 
 	/**
-	 * Die Postleitzahl des Gebietes in dem die Schule liegt. 
+	 * Die Postleitzahl des Gebietes in dem die Schule liegt.
 	 */
 	public plz : string | null = null;
 
 	/**
-	 * Der Ort in dem die Schule liegt. 
+	 * Der Ort in dem die Schule liegt.
 	 */
 	public ort : string | null = null;
 
 	/**
-	 * Die Telefonnummer der Schule. 
+	 * Die Telefonnummer der Schule.
 	 */
 	public telefon : string | null = null;
 
 	/**
-	 * Die Faxnummer der Schule. 
+	 * Die Faxnummer der Schule.
 	 */
 	public fax : string | null = null;
 
 	/**
-	 * Die Mailadresse der Schule. 
+	 * Die Mailadresse der Schule.
 	 */
 	public email : string | null = null;
 
 	/**
-	 * Die Adresse der Homepage der Schule (Domain-Name) 
+	 * Die Adresse der Homepage der Schule (Domain-Name)
 	 */
 	public webAdresse : string | null = null;
 
 	/**
-	 * Die ID des Schuljahresabschnittes, in welchem sich die Schule befindet. 
+	 * Die ID des Schuljahresabschnittes, in welchem sich die Schule befindet.
 	 */
 	public idSchuljahresabschnitt : number = 0;
 
 	/**
-	 * Die Anzahl der Abschnitte pro Jahrgangsstufe. 
+	 * Die Anzahl der Abschnitte pro Jahrgangsstufe.
 	 */
 	public anzJGS_Jahr : number = 0;
 
 	/**
-	 * Die Informationen zu den Abschnitten pro Jahr. (meist Haljahre (2) oder Quartale (4) 
+	 * Die Informationen zu den Abschnitten pro Jahr. (meist Haljahre (2) oder Quartale (4)
 	 */
 	public schuleAbschnitte : SchuleAbschnitte = new SchuleAbschnitte();
 
 	/**
-	 * Die Dauer einer Unterrichsteinheit in Minuten. 
+	 * Die Dauer einer Unterrichsteinheit in Minuten.
 	 */
 	public dauerUnterrichtseinheit : number = 0;
 
 	/**
-	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. 
+	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 */
 	public readonly abschnitte : Vector<Schuljahresabschnitt> = new Vector();
 

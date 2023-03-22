@@ -5,12 +5,12 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class BenutzerConfig extends JavaObject {
 
 	/**
-	 * Die Konfiguration, die dem Benutzer zugeordnet ist. 
+	 * Die Konfiguration, die dem Benutzer zugeordnet ist.
 	 */
 	public user : Vector<BenutzerConfigElement> = new Vector();
 
 	/**
-	 * Die globale Konfiguration, die auch für den Benutzer gilt. 
+	 * Die globale Konfiguration, die auch für den Benutzer gilt.
 	 */
 	public global : Vector<BenutzerConfigElement> = new Vector();
 

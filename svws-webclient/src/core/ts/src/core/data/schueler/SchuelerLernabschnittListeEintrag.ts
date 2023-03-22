@@ -5,72 +5,72 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerLernabschnittListeEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Lernabschnitts in der Datenbank. 
+	 * Die ID des Lernabschnitts in der Datenbank.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, zu dem diese Lernabschnittdaten gehören. 
+	 * Die ID des Schülers, zu dem diese Lernabschnittdaten gehören.
 	 */
 	public schuelerID : number = 0;
 
 	/**
-	 * Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören. 
+	 * Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören.
 	 */
 	public schuljahresabschnitt : number = 0;
 
 	/**
-	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt 
+	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt
 	 */
 	public schuljahr : number = 0;
 
 	/**
-	 * Die Nummer des Abschnitts im Schuljahr 
+	 * Die Nummer des Abschnitts im Schuljahr
 	 */
 	public abschnitt : number = 0;
 
 	/**
-	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 */
 	public wechselNr : number | null = null;
 
 	/**
-	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 */
 	public istGewertet : boolean = true;
 
 	/**
-	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 */
 	public istWiederholung : boolean = false;
 
 	/**
-	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. 
+	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.
 	 */
 	public pruefungsOrdnung : string = "";
 
 	/**
-	 * Die ID der Klasse des Schülers. 
+	 * Die ID der Klasse des Schülers.
 	 */
 	public klassenID : number = -1;
 
 	/**
-	 * Die Bezeichnung der Klasse des Schülers 
+	 * Die Bezeichnung der Klasse des Schülers
 	 */
 	public klasse : string = "";
 
 	/**
-	 * Die Statistik-Bezeichnung der Klasse des Schülers 
+	 * Die Statistik-Bezeichnung der Klasse des Schülers
 	 */
 	public klasseStatistik : string = "";
 
 	/**
-	 * Die ID des Jahrgangs des Schülers 
+	 * Die ID des Jahrgangs des Schülers
 	 */
 	public jahrgangID : number = -1;
 
 	/**
-	 * Die Statistik-Bezeichnung des Jahrgangs des Schülers 
+	 * Die Statistik-Bezeichnung des Jahrgangs des Schülers
 	 */
 	public jahrgang : string = "";
 

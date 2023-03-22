@@ -10,232 +10,232 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchuelerLernabschnittsdaten extends JavaObject {
 
 	/**
-	 * Die ID des Lernabschnitts in der Datenbank. 
+	 * Die ID des Lernabschnitts in der Datenbank.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, zu dem diese Lernabschnittdaten gehören. 
+	 * Die ID des Schülers, zu dem diese Lernabschnittdaten gehören.
 	 */
 	public schuelerID : number = 0;
 
 	/**
-	 * Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören. 
+	 * Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören.
 	 */
 	public schuljahresabschnitt : number = 0;
 
 	/**
-	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 */
 	public wechselNr : number | null = null;
 
 	/**
-	 * Das Datum, wann der Lernabschnitt beginnt 
+	 * Das Datum, wann der Lernabschnitt beginnt
 	 */
 	public datumAnfang : string | null = null;
 
 	/**
-	 * Das Datum, wann der Lernabschnitt endet 
+	 * Das Datum, wann der Lernabschnitt endet
 	 */
 	public datumEnde : string | null = null;
 
 	/**
-	 * Das Datum der Konferenz 
+	 * Das Datum der Konferenz
 	 */
 	public datumKonferenz : string | null = null;
 
 	/**
-	 * Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung 
+	 * Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung
 	 */
 	public datumZeugnis : string | null = null;
 
 	/**
-	 * Die Anzahl der Schulbesuchsjahre 
+	 * Die Anzahl der Schulbesuchsjahre
 	 */
 	public anzahlSchulbesuchsjahre : number | null = null;
 
 	/**
-	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 */
 	public istGewertet : boolean = true;
 
 	/**
-	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 */
 	public istWiederholung : boolean = false;
 
 	/**
-	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. 
+	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.
 	 */
 	public pruefungsOrdnung : string = "";
 
 	/**
-	 * Die ID der Klasse des Schülers. 
+	 * Die ID der Klasse des Schülers.
 	 */
 	public klassenID : number = -1;
 
 	/**
-	 * Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist 
+	 * Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist
 	 */
 	public tutorID : number | null = null;
 
 	/**
-	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht. 
+	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht.
 	 */
 	public folgeklassenID : number | null = null;
 
 	/**
-	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. 
+	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 */
 	public schulgliederung : string | null = null;
 
 	/**
-	 * Die ID des Jahrgangs des Schülers 
+	 * Die ID des Jahrgangs des Schülers
 	 */
 	public jahrgangID : number = -1;
 
 	/**
-	 * Die ID der Fachklasse des Schülers an einem Berufskolleg 
+	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
 	 */
 	public fachklasseID : number | null = null;
 
 	/**
-	 * Der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog 
+	 * Der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog
 	 */
 	public schwerpunktID : number | null = null;
 
 	/**
-	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) 
+	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 */
 	public organisationsform : string | null = null;
 
 	/**
-	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) 
+	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 */
 	public Klassenart : string | null = "RK";
 
 	/**
-	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt 
+	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt
 	 */
 	public fehlstundenGesamt : number = 0;
 
 	/**
-	 * Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt 
+	 * Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt
 	 */
 	public fehlstundenUnentschuldigt : number = 0;
 
 	/**
-	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden 
+	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden
 	 */
 	public fehlstundenGrenzwert : number | null = null;
 
 	/**
-	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht 
+	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht
 	 */
 	public hatSchwerbehinderungsNachweis : boolean = false;
 
 	/**
-	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt 
+	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt
 	 */
 	public hatAOSF : boolean = false;
 
 	/**
-	 * Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht 
+	 * Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht
 	 */
 	public hatAutismus : boolean = false;
 
 	/**
-	 * Gibt an, ob zieldifferent unterrichet wird oder nicht 
+	 * Gibt an, ob zieldifferent unterrichet wird oder nicht
 	 */
 	public hatZieldifferentenUnterricht : boolean = false;
 
 	/**
-	 * Die ID des Haupförderschwerpunktes des Schülers 
+	 * Die ID des Haupförderschwerpunktes des Schülers
 	 */
 	public foerderschwerpunkt1ID : number | null = null;
 
 	/**
-	 * Die ID des weiteren Förderschwerpunktes des Schülers 
+	 * Die ID des weiteren Förderschwerpunktes des Schülers
 	 */
 	public foerderschwerpunkt2ID : number | null = null;
 
 	/**
-	 * Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat 
+	 * Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat
 	 */
 	public sonderpaedagogeID : number | null = null;
 
 	/**
-	 * Die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird 
+	 * Die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
 	 */
 	public bilingualerZweig : string | null = null;
 
 	/**
-	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung 
+	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung
 	 */
 	public istFachpraktischerAnteilAusreichend : boolean = true;
 
 	/**
-	 * Das Kürzel des Versetzungsvermerks 
+	 * Das Kürzel des Versetzungsvermerks
 	 */
 	public versetzungsvermerk : string | null = null;
 
 	/**
-	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden 
+	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden
 	 */
 	public noteDurchschnitt : string | null = null;
 
 	/**
-	 * Die Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre für den Hauptschulabschluss nach Klassen 10 
+	 * Die Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre für den Hauptschulabschluss nach Klassen 10
 	 */
 	public noteLernbereichGSbzwAL : number | null = null;
 
 	/**
-	 * Die Lernbereichnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10 
+	 * Die Lernbereichnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10
 	 */
 	public noteLernbereichNW : number | null = null;
 
 	/**
-	 * Die Art des Abschlusses (siehe Katalog) 
+	 * Die Art des Abschlusses (siehe Katalog)
 	 */
 	public abschlussart : number | null = null;
 
 	/**
-	 * Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog) 
+	 * Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog)
 	 */
 	public istAbschlussPrognose : boolean = false;
 
 	/**
-	 * Der erreichte allgemeinbildende Abschluss 
+	 * Der erreichte allgemeinbildende Abschluss
 	 */
 	public abschluss : string | null = null;
 
 	/**
-	 * Der erreichte berufsbezogene Abschluss am Berufskolleg 
+	 * Der erreichte berufsbezogene Abschluss am Berufskolleg
 	 */
 	public abschlussBerufsbildend : string | null = null;
 
 	/**
-	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung 
+	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung
 	 */
 	public textErgebnisPruefungsalgorithmus : string | null = null;
 
 	/**
-	 * Die Art des Zeugnisses 
+	 * Die Art des Zeugnisses
 	 */
 	public zeugnisart : string | null = null;
 
 	/**
-	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. 
+	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
 	 */
 	public nachpruefungen : SchuelerLernabschnittNachpruefungsdaten | null = null;
 
 	/**
-	 * Die Bemerkungen in diesem Lernabschnitt. 
+	 * Die Bemerkungen in diesem Lernabschnitt.
 	 */
 	public bemerkungen : SchuelerLernabschnittBemerkungen = new SchuelerLernabschnittBemerkungen();
 
 	/**
-	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt. 
+	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
 	 */
 	public leistungsdaten : Vector<SchuelerLeistungsdaten> = new Vector();
 

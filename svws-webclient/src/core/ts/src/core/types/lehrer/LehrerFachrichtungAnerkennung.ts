@@ -19,47 +19,47 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerFachrichtungAnerkennung> = new Map<string, LehrerFachrichtungAnerkennung>();
 
 	/**
-	 * Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  
+	 * Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'
 	 */
 	public static readonly ID4 : LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID4", 0, [new LehrerKatalogFachrichtungAnerkennungEintrag(4, "1", "erworben durch LABG/OVP bzw. Laufbahnverordnung", null, null)]);
 
 	/**
-	 * Fachrichtungsanerkennung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'  
+	 * Fachrichtungsanerkennung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'
 	 */
 	public static readonly ID5 : LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID5", 1, [new LehrerKatalogFachrichtungAnerkennungEintrag(5, "2", "Unterrichtserlaubnis (z. B. Zertifikatskurs)", null, null)]);
 
 	/**
-	 * Fachrichtungsanerkennung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'  
+	 * Fachrichtungsanerkennung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'
 	 */
 	public static readonly ID6 : LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID6", 2, [new LehrerKatalogFachrichtungAnerkennungEintrag(6, "3", "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis", null, null)]);
 
 	/**
-	 * Fachrichtungsanerkennung 'sonstige'  
+	 * Fachrichtungsanerkennung 'sonstige'
 	 */
 	public static readonly ID7 : LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID7", 3, [new LehrerKatalogFachrichtungAnerkennungEintrag(7, "9", "sonstige", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten die Anerkennung der Fachrichtung , wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten die Anerkennung der Fachrichtung , wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogFachrichtungAnerkennungEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen für die Anerkennung der Fachrichtung  
+	 * Die Historie mit den Einträgen für die Anerkennung der Fachrichtung
 	 */
 	public readonly historie : Array<LehrerKatalogFachrichtungAnerkennungEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung | null> = new HashMap();
 

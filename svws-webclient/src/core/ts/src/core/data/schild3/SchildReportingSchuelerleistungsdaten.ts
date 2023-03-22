@@ -6,82 +6,82 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 
 	/**
-	 * Die ID der Leistungsdaten 
+	 * Die ID der Leistungsdaten
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID des Schüler-Lernabschnitts, zu dem die Leistungsdaten gehören. 
+	 * Die ID des Schüler-Lernabschnitts, zu dem die Leistungsdaten gehören.
 	 */
 	public abschnittID : number = -1;
 
 	/**
-	 * Die ID des Faches der Leistungsdaten 
+	 * Die ID des Faches der Leistungsdaten
 	 */
 	public fachID : number = -1;
 
 	/**
-	 * Das Kürzel des Faches 
+	 * Das Kürzel des Faches
 	 */
 	public fachKuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung des Faches 
+	 * Die Bezeichnung des Faches
 	 */
 	public fach : string = "";
 
 	/**
-	 * Die ID des Fachlehrers 
+	 * Die ID des Fachlehrers
 	 */
 	public lehrerID : number | null = null;
 
 	/**
-	 * Das Kürzel des Fachlehrers 
+	 * Das Kürzel des Fachlehrers
 	 */
 	public lehrerKuerzel : string | null = null;
 
 	/**
-	 * Die ID des Kurses, sofern vorhanden 
+	 * Die ID des Kurses, sofern vorhanden
 	 */
 	public kursID : number | null = null;
 
 	/**
-	 * Die Bezeichnung des Kurses, sofern vorhanden, sonst leer 
+	 * Die Bezeichnung des Kurses, sofern vorhanden, sonst leer
 	 */
 	public kurs : string = "";
 
 	/**
-	 * Die spezielle Kursart 
+	 * Die spezielle Kursart
 	 */
 	public kursart : string = "";
 
 	/**
-	 * Die allgemeine Kursart 
+	 * Die allgemeine Kursart
 	 */
 	public kursartAllg : string = "";
 
 	/**
-	 * Die Bezeichnung der Note 
+	 * Die Bezeichnung der Note
 	 */
 	public note : string = "";
 
 	/**
-	 * Das Notenkürzel 
+	 * Das Notenkürzel
 	 */
 	public noteKuerzel : string = "";
 
 	/**
-	 * Die Notenpunkte, sofern eine Note gesetzt ist 
+	 * Die Notenpunkte, sofern eine Note gesetzt ist
 	 */
 	public notePunkte : number | null = null;
 
 	/**
-	 * Wert für allgemeine Sortierung der Fächer. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen 
+	 * Wert für allgemeine Sortierung der Fächer. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen
 	 */
 	public sortierungAllg : number | null = null;
 
 	/**
-	 * Wert für Sortierung der Fächer in der Sek-II. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen 
+	 * Wert für Sortierung der Fächer in der Sek-II. Wird mit aufgenommen, um in Reports eine benutzerdefinierte Sortierung zu ermöglichen
 	 */
 	public sortierungSekII : number | null = null;
 

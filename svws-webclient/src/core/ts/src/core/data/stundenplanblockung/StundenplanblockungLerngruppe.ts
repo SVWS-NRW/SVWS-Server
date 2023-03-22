@@ -10,22 +10,22 @@ import { StundenplanblockungRaum, cast_de_nrw_schule_svws_core_data_stundenplanb
 export class StundenplanblockungLerngruppe extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID der Lerngruppe. 
+	 * Die Datenbank-ID der Lerngruppe.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind. 
+	 * Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind.
 	 */
 	public lehrkraefte1 : Vector<StundenplanblockungLehrkraft> = new Vector();
 
 	/**
-	 * Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind. 
+	 * Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind.
 	 */
 	public lehrkraefte2 : Vector<StundenplanblockungLehrkraft> = new Vector();
 
 	/**
-	 * Alle Klassen, die dieser Lerngruppe zugeordnet sind. 
+	 * Alle Klassen, die dieser Lerngruppe zugeordnet sind.
 	 */
 	public klassen : Vector<StundenplanblockungKlasse> = new Vector();
 
@@ -45,12 +45,12 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	public raeume2 : Vector<StundenplanblockungRaum> = new Vector();
 
 	/**
-	 * Alle Kopplungen, die dieser Lerngruppe zugeordnet sind. 
+	 * Alle Kopplungen, die dieser Lerngruppe zugeordnet sind.
 	 */
 	public kopplungen : Vector<StundenplanblockungKopplung> = new Vector();
 
 	/**
-	 * Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind. 
+	 * Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind.
 	 */
 	public stundenelemente : Vector<StundenplanblockungStundenelement> = new Vector();
 

@@ -11,42 +11,42 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class KAOAMerkmalEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Merkmals. 
+	 * Das Kürzel des Merkmals.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Beschreibung des Merkmals. 
+	 * Die Beschreibung des Merkmals.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Die Kategorie, welcher das Merkmal zugeordnet ist. 
+	 * Die Kategorie, welcher das Merkmal zugeordnet ist.
 	 */
 	public kategorie : string = "";
 
 	/**
-	 * Die Optionsart des Merkmals. 
+	 * Die Optionsart des Merkmals.
 	 */
 	public optionsart : string | null = null;
 
 	/**
-	 * Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf 
+	 * Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf
 	 */
 	public bkAnlagen : List<string> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

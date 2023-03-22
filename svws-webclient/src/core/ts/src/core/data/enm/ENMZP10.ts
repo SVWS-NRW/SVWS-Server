@@ -4,37 +4,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ENMZP10 extends JavaObject {
 
 	/**
-	 * Die ID des Faches der zentralen Prüfungen 
+	 * Die ID des Faches der zentralen Prüfungen
 	 */
 	public fachID : number = 0;
 
 	/**
-	 * Das Kürzel der Vornote für dieses Fach 
+	 * Das Kürzel der Vornote für dieses Fach
 	 */
 	public vornote : string | null = null;
 
 	/**
-	 * Das Kürzel der Note,die bei der schriftlichen Prüfung erreicht wurde 
+	 * Das Kürzel der Note,die bei der schriftlichen Prüfung erreicht wurde
 	 */
 	public noteSchriftlichePruefung : string | null = null;
 
 	/**
-	 * Gibt an, ob eine mündliche Prüfung stattfinden muss 
+	 * Gibt an, ob eine mündliche Prüfung stattfinden muss
 	 */
 	public muendlichePruefung : boolean = false;
 
 	/**
-	 * Gibt an, ob eine freiwillige mündliche Prüfung stattfindet 
+	 * Gibt an, ob eine freiwillige mündliche Prüfung stattfindet
 	 */
 	public muendlichePruefungFreiwillig : boolean = false;
 
 	/**
-	 * Das Kürzel der Note,die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet 
+	 * Das Kürzel der Note,die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet
 	 */
 	public noteMuendlichePruefung : string | null = null;
 
 	/**
-	 * Das Kürzel der Abschlussnote nach der ZP10-Prüfung  
+	 * Das Kürzel der Abschlussnote nach der ZP10-Prüfung
 	 */
 	public abschlussnote : string | null = null;
 

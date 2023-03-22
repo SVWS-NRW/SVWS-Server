@@ -17,17 +17,17 @@ import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_User
 export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
-	 * Ein Maximal-Wert für die maximale Anzahl an Terminen. 
+	 * Ein Maximal-Wert für die maximale Anzahl an Terminen.
 	 */
 	private static readonly MAX_TERMINE : number = 1000;
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
 
 	/**
-	 * Die Anzahl der derzeitigen verwendeten Termine. 
+	 * Die Anzahl der derzeitigen verwendeten Termine.
 	 */
 	private _terminAnzahl : number = 0;
 
@@ -37,8 +37,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	/**
 	 * 
-	 *  Jeder KlausurNr wird eine TerminNr zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung. 
-	 *  Am Ende des Algorithmus hat jede Klausur eine zugeordnete TerminNr >= 0. 
+	 *  Jeder KlausurNr wird eine TerminNr zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung.
+	 *  Am Ende des Algorithmus hat jede Klausur eine zugeordnete TerminNr >= 0.
 	 */
 	private readonly _klausurZuTermin : Array<number>;
 
@@ -47,32 +47,32 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private readonly _klausurZuTermin2 : Array<number>;
 
 	/**
-	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
 	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap();
 
 	/**
-	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln.
 	 */
 	private readonly _mapNummerZuKlausur : HashMap<number, GostKursklausur> = new HashMap();
 
 	/**
-	 * Die Anzahl der Klausuren. 
+	 * Die Anzahl der Klausuren.
 	 */
 	private readonly _klausurenAnzahl : number;
 
 	/**
-	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin verboten ist. 
+	 * Bestimmt, ob ein Klausurnummer-Paar am selben Termin verboten ist.
 	 */
 	private readonly _verboten : Array<Array<boolean>>;
 
 	/**
-	 * Alle Klausurgruppen. 
+	 * Alle Klausurgruppen.
 	 */
 	private readonly _klausurGruppen : Vector<Vector<number>> = new Vector();
 
 	/**
-	 * Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). 
+	 * Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn).
 	 */
 	private readonly _klausurGruppenGrad : Vector<Vector<number>> = new Vector();
 

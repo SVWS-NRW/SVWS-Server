@@ -6,37 +6,37 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostBlockungKurs extends JavaObject {
 
 	/**
-	 * Die ID des Kurses 
+	 * Die ID des Kurses
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID des Faches 
+	 * Die ID des Faches
 	 */
 	public fach_id : number = -1;
 
 	/**
-	 * Die Kursart siehe auch ID von {@link GostKursart} 
+	 * Die Kursart siehe auch ID von {@link GostKursart}
 	 */
 	public kursart : number = 0;
 
 	/**
-	 * Die Nummer des Kurses (gezählt ab 1) 
+	 * Die Nummer des Kurses (gezählt ab 1)
 	 */
 	public nummer : number = 0;
 
 	/**
-	 * Gibt an, ob es sich um einen Kooperationskurs an einer anderen Schule handelt 
+	 * Gibt an, ob es sich um einen Kooperationskurs an einer anderen Schule handelt
 	 */
 	public istKoopKurs : boolean = false;
 
 	/**
-	 * Ein Suffix, welches einer Standard-Kursbezeichnung angehangen wird - z.B. um spezielle Kurse zu markieren. 
+	 * Ein Suffix, welches einer Standard-Kursbezeichnung angehangen wird - z.B. um spezielle Kurse zu markieren.
 	 */
 	public suffix : string = "";
 
 	/**
-	 * Die Anzahl der Wochenstunden, welche dem Kurs zugeordnet 
+	 * Die Anzahl der Wochenstunden, welche dem Kurs zugeordnet
 	 */
 	public wochenstunden : number = 3;
 
@@ -46,7 +46,7 @@ export class GostBlockungKurs extends JavaObject {
 	public anzahlSchienen : number = 1;
 
 	/**
-	 * Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. 
+	 * Die Lehrer, die diesem Kurs bereits fest zugeordnet sind.
 	 */
 	public lehrer : Vector<GostBlockungKursLehrer> = new Vector();
 

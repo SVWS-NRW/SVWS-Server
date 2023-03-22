@@ -3,27 +3,27 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class GostStatistikFachwahlHalbjahr extends JavaObject {
 
 	/**
-	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs. 
+	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs.
 	 */
 	public wahlenGKMuendlich : number = 0;
 
 	/**
-	 * Die Anzahl der Wahlen als schriftlicher Grundkurs. 
+	 * Die Anzahl der Wahlen als schriftlicher Grundkurs.
 	 */
 	public wahlenGKSchriftlich : number = 0;
 
 	/**
-	 * Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs. 
+	 * Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs.
 	 */
 	public wahlenGK : number = 0;
 
 	/**
-	 * Die Anzahl der Wahlen als Zusatzkurs. 
+	 * Die Anzahl der Wahlen als Zusatzkurs.
 	 */
 	public wahlenZK : number = 0;
 
 	/**
-	 * Die Gesamtzahl der Wahlen als Leistungskurs. 
+	 * Die Gesamtzahl der Wahlen als Leistungskurs.
 	 */
 	public wahlenLK : number = 0;
 

@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BenutzerConfigElement extends JavaObject {
 
 	/**
-	 * Der Schlüssel des Konfigurationselements 
+	 * Der Schlüssel des Konfigurationselements
 	 */
 	public key : string = "";
 
 	/**
-	 * Der Wert des Konfigurationselements. 
+	 * Der Wert des Konfigurationselements.
 	 */
 	public value : string = "";
 

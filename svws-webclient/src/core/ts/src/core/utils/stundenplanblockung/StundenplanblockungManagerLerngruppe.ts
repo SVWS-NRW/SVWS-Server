@@ -10,37 +10,37 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID der Lerngruppe. 
+	 * Die Datenbank-ID der Lerngruppe.
 	 */
 	_id : number = 0;
 
 	/**
-	 * Die Anzahl an Stunden im Stundenplan. 
+	 * Die Anzahl an Stunden im Stundenplan.
 	 */
 	stunden : number = 0;
 
 	/**
-	 * Die Lehrkräfte der Lerngruppe. 
+	 * Die Lehrkräfte der Lerngruppe.
 	 */
 	_menge_le : Vector<StundenplanblockungManagerLehrkraft | null> = new Vector();
 
 	/**
-	 * Die Klassen der Lerngruppe. 
+	 * Die Klassen der Lerngruppe.
 	 */
 	_menge_kl : Vector<StundenplanblockungManagerKlasse | null> = new Vector();
 
 	/**
-	 * Die Fächer Lerngruppe. 
+	 * Die Fächer Lerngruppe.
 	 */
 	_menge_fa : Vector<StundenplanblockungManagerFach | null> = new Vector();
 
 	/**
-	 * Die Räume Lerngruppe. 
+	 * Die Räume Lerngruppe.
 	 */
 	_menge_ra : Vector<StundenplanblockungManagerRaum | null> = new Vector();
 
 	/**
-	 * Die Kopplungen Lerngruppe. 
+	 * Die Kopplungen Lerngruppe.
 	 */
 	_menge_ko : Vector<StundenplanblockungManagerKopplung | null> = new Vector();
 

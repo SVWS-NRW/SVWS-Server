@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class AdressbuchEintrag extends JavaObject {
 
 	/**
-	 * ID des AdressbuchEintrags 
+	 * ID des AdressbuchEintrags
 	 */
 	public id : string = "";
 
 	/**
-	 * ID des Adressbuchs 
+	 * ID des Adressbuchs
 	 */
 	public adressbuchId : string = "";
 

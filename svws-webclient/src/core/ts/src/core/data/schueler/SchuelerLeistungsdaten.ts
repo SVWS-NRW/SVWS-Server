@@ -6,122 +6,122 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerLeistungsdaten extends JavaObject {
 
 	/**
-	 * Die ID der Leistungsdaten in der Datenbank. 
+	 * Die ID der Leistungsdaten in der Datenbank.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID des Lernabschnitts des Schülers, zu dem diese Leistungsdaten gehören. 
+	 * Die ID des Lernabschnitts des Schülers, zu dem diese Leistungsdaten gehören.
 	 */
 	public lernabschnittID : number = -1;
 
 	/**
-	 * Die ID des Faches, auf welches sich die Leistungsdaten beziehen. 
+	 * Die ID des Faches, auf welches sich die Leistungsdaten beziehen.
 	 */
 	public fachID : number = -1;
 
 	/**
-	 * Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassen unterricht NULL. 
+	 * Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassen unterricht NULL.
 	 */
 	public kursID : number | null = null;
 
 	/**
-	 * Die spezielle Kursart des Schülers, sofern Kursunterricht vorliegt. 
+	 * Die spezielle Kursart des Schülers, sofern Kursunterricht vorliegt.
 	 */
 	public kursart : string | null = null;
 
 	/**
-	 * Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4) 
+	 * Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4)
 	 */
 	public abifach : string | null = null;
 
 	/**
-	 * Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8) 
+	 * Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)
 	 */
 	public istZP10oderZK10 : boolean = false;
 
 	/**
-	 * Die Schulnummer, sofern es sich um Unterricht an einer kooperierenden Schule handelt, ansonsten NULL 
+	 * Die Schulnummer, sofern es sich um Unterricht an einer kooperierenden Schule handelt, ansonsten NULL
 	 */
 	public koopSchule : number | null = null;
 
 	/**
-	 * Die ID des zugehörigen Fach-Lehrers. 
+	 * Die ID des zugehörigen Fach-Lehrers.
 	 */
 	public lehrerID : number | null = null;
 
 	/**
-	 * Die Anzahl der Wochenstunden, welche das Fach unterrichtet wird. 
+	 * Die Anzahl der Wochenstunden, welche das Fach unterrichtet wird.
 	 */
 	public wochenstunden : number = 0;
 
 	/**
-	 * Die ID der Zusatzkraft. 
+	 * Die ID der Zusatzkraft.
 	 */
 	public zusatzkraftID : number | null = null;
 
 	/**
-	 * Die Anzahl der Wochenstunden der Zusatzkraft. 
+	 * Die Anzahl der Wochenstunden der Zusatzkraft.
 	 */
 	public zusatzkraftWochenstunden : number = 0;
 
 	/**
-	 * Gibt an, on das Fach auf dem Zeugnis erscheint oder nicht. 
+	 * Gibt an, on das Fach auf dem Zeugnis erscheint oder nicht.
 	 */
 	public aufZeugnis : boolean = true;
 
 	/**
-	 * Das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT). 
+	 * Das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT).
 	 */
 	public note : string | null = null;
 
 	/**
-	 * Gibt an, ob die Leistung gemahnt wurde oder nicht. 
+	 * Gibt an, ob die Leistung gemahnt wurde oder nicht.
 	 */
 	public istGemahnt : boolean = false;
 
 	/**
-	 * Das Datum, wann die Leistung gemahnt wurde oder null. 
+	 * Das Datum, wann die Leistung gemahnt wurde oder null.
 	 */
 	public Mahndatum : string | null = null;
 
 	/**
-	 * Gibt an, ob es sich um ein epochal unterrichtetes Fach handelt oder nicht. 
+	 * Gibt an, ob es sich um ein epochal unterrichtetes Fach handelt oder nicht.
 	 */
 	public istEpochal : boolean = false;
 
 	/**
-	 * Gibt an, ob es sich um eine Leistung handelt, welche über das "Holen von abgeschlossenen Fächern" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben aus welchem die Daten geholt wurden 
+	 * Gibt an, ob es sich um eine Leistung handelt, welche über das "Holen von abgeschlossenen Fächern" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben aus welchem die Daten geholt wurden
 	 */
 	public geholtJahrgangAbgeschlossen : string | null = null;
 
 	/**
-	 * Die Gewichtung für den allgemeinbildenden Teil (am Berufskolleg) 
+	 * Die Gewichtung für den allgemeinbildenden Teil (am Berufskolleg)
 	 */
 	public gewichtungAllgemeinbildend : number = 1;
 
 	/**
-	 * Die Berufsabschlussnote am Berufskolleg 
+	 * Die Berufsabschlussnote am Berufskolleg
 	 */
 	public noteBerufsabschluss : string | null = null;
 
 	/**
-	 * Der Text für die fachbezogene Lernentwicklung des Schülers 
+	 * Der Text für die fachbezogene Lernentwicklung des Schülers
 	 */
 	public textFachbezogeneLernentwicklung : string = "";
 
 	/**
-	 * Die Facheigenschaft für die Lernstandberichte an Grundschulen (V = voller Umfang, R = reduzierter Umfang) 
+	 * Die Facheigenschaft für die Lernstandberichte an Grundschulen (V = voller Umfang, R = reduzierter Umfang)
 	 */
 	public umfangLernstandsbericht : string = "";
 
 	/**
-	 * Die Gesamt-Anzahl der Fehlstunden für dieses Fach 
+	 * Die Gesamt-Anzahl der Fehlstunden für dieses Fach
 	 */
 	public fehlstundenGesamt : number = 0;
 
 	/**
-	 * Die Anzahl der unentschuldigten Fehlstunden für dieses Fach 
+	 * Die Anzahl der unentschuldigten Fehlstunden für dieses Fach
 	 */
 	public fehlstundenUnentschuldigt : number = 0;
 

@@ -10,32 +10,32 @@ import { StundenplanblockungRaum, cast_de_nrw_schule_svws_core_data_stundenplanb
 export class StundenplanblockungInput extends JavaObject {
 
 	/**
-	 * Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public lehrkraefte : Vector<StundenplanblockungLehrkraft> = new Vector();
 
 	/**
-	 * Alle Klassen, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Klassen, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public klassen : Vector<StundenplanblockungKlasse> = new Vector();
 
 	/**
-	 * Alle Fächer, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Fächer, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public faecher : Vector<StundenplanblockungFach> = new Vector();
 
 	/**
-	 * Alle Räume, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Räume, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public raeume : Vector<StundenplanblockungRaum> = new Vector();
 
 	/**
-	 * Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public kopplungen : Vector<StundenplanblockungKopplung> = new Vector();
 
 	/**
-	 * Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind. 
+	 * Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind.
 	 */
 	public lerngruppen : Vector<StundenplanblockungLerngruppe> = new Vector();
 

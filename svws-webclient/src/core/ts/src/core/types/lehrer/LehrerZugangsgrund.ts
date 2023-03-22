@@ -17,42 +17,42 @@ export class LehrerZugangsgrund extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerZugangsgrund> = new Map<string, LehrerZugangsgrund>();
 
 	/**
-	 * Grund 'Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung' für das Kommen des Lehrers an die Schule 
+	 * Grund 'Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung' für das Kommen des Lehrers an die Schule
 	 */
 	public static readonly NEU : LehrerZugangsgrund = new LehrerZugangsgrund("NEU", 0, [new LehrerKatalogZugangsgrundEintrag(1, "NEU", "Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung", "1", null, null)]);
 
 	/**
-	 * Grund 'Übertritt aus dem Schuldienst eines anderen Bundeslandes' für das Kommen des Lehrers an die Schule 
+	 * Grund 'Übertritt aus dem Schuldienst eines anderen Bundeslandes' für das Kommen des Lehrers an die Schule
 	 */
 	public static readonly AndBuLand : LehrerZugangsgrund = new LehrerZugangsgrund("AndBuLand", 1, [new LehrerKatalogZugangsgrundEintrag(2, "AndBuLand", "Übertritt aus dem Schuldienst eines anderen Bundeslandes", "2", null, null)]);
 
 	/**
-	 * Grund 'Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule' für das Kommen des Lehrers an die Schule 
+	 * Grund 'Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule' für das Kommen des Lehrers an die Schule
 	 */
 	public static readonly WECHSEL : LehrerZugangsgrund = new LehrerZugangsgrund("WECHSEL", 2, [new LehrerKatalogZugangsgrundEintrag(3, "WECHSEL", "Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule", "3", null, null)]);
 
 	/**
-	 * Grund 'Wiedereintritt in den Schuldienst' für das Kommen des Lehrers an die Schule 
+	 * Grund 'Wiedereintritt in den Schuldienst' für das Kommen des Lehrers an die Schule
 	 */
 	public static readonly WIEDER : LehrerZugangsgrund = new LehrerZugangsgrund("WIEDER", 3, [new LehrerKatalogZugangsgrundEintrag(4, "WIEDER", "Wiedereintritt in den Schuldienst", "4", null, null)]);
 
 	/**
-	 * Grund 'Sonstige Zugänge' für das Kommen des Lehrers an die Schule 
+	 * Grund 'Sonstige Zugänge' für das Kommen des Lehrers an die Schule
 	 */
 	public static readonly SONSTIG : LehrerZugangsgrund = new LehrerZugangsgrund("SONSTIG", 4, [new LehrerKatalogZugangsgrundEintrag(5, "SONSTIG", "Sonstige Zugänge", "5", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten des Zugangsgrundes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten des Zugangsgrundes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogZugangsgrundEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des Zugangsgrundes 
+	 * Die Historie mit den Einträgen des Zugangsgrundes
 	 */
 	public readonly historie : Array<LehrerKatalogZugangsgrundEintrag>;
 

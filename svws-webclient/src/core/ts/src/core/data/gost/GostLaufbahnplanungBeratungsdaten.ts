@@ -5,22 +5,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 
 	/**
-	 * Die ID des Beratungslehrers, der die letze Beratung durchgeführt hat 
+	 * Die ID des Beratungslehrers, der die letze Beratung durchgeführt hat
 	 */
 	public beratungslehrerID : number | null = null;
 
 	/**
-	 * Das Beratungsdatum der letzten Beratung im Rahmen der Laufbahnplanung 
+	 * Das Beratungsdatum der letzten Beratung im Rahmen der Laufbahnplanung
 	 */
 	public beratungsdatum : string | null = null;
 
 	/**
-	 * Ein Kommentar zur Beratung 
+	 * Ein Kommentar zur Beratung
 	 */
 	public kommentar : string | null = null;
 
 	/**
-	 * Das Rücklaufdatum des Wahlbogens der letzten Beratung im Rahmen der Laufbahnplanung 
+	 * Das Rücklaufdatum des Wahlbogens der letzten Beratung im Rahmen der Laufbahnplanung
 	 */
 	public ruecklaufdatum : string | null = null;
 

@@ -8,42 +8,42 @@ import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 
 	/**
-	 * Die eindeutige ID des Schülers 
+	 * Die eindeutige ID des Schülers
 	 */
 	public id : number = 0;
 
 	/**
-	 * Der Vorname des Schülers 
+	 * Der Vorname des Schülers
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Der Nachname des Schülers 
+	 * Der Nachname des Schülers
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Das Geschlecht des Schülers 
+	 * Das Geschlecht des Schülers
 	 */
 	public geschlecht : string = "";
 
 	/**
-	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. 
+	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt.
 	 */
 	public bilingualeSprache : string | null = null;
 
 	/**
-	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. 
+	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
 	 */
 	public readonly bewertetesHalbjahr : Array<boolean> = Array(6).fill(false);
 
 	/**
-	 * Ein Array mit den Fachbelegungen in der Oberstufe. 
+	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
 	public readonly fachbelegungen : Vector<GostLaufbahnplanungDatenFachbelegung> = new Vector();
 
 	/**
-	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. 
+	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.
 	 */
 	public sprachendaten : Sprachendaten = new Sprachendaten();
 

@@ -23,82 +23,82 @@ export class GostHalbjahr extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostHalbjahr> = new Map<string, GostHalbjahr>();
 
 	/**
-	 * Einführungsphase 1. Halbjahr = EF1 
+	 * Einführungsphase 1. Halbjahr = EF1
 	 */
 	public static readonly EF1 : GostHalbjahr = new GostHalbjahr("EF1", 0, 0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr");
 
 	/**
-	 * Einführungsphase 2. Halbjahr = EF2 
+	 * Einführungsphase 2. Halbjahr = EF2
 	 */
 	public static readonly EF2 : GostHalbjahr = new GostHalbjahr("EF2", 1, 1, "EF", 2, "EF.2", "E2", "Einführungsphase 2. Halbjahr");
 
 	/**
-	 * Qualifikationsphase 1. Jahr, 1. Halbjahr = Q1.1 
+	 * Qualifikationsphase 1. Jahr, 1. Halbjahr = Q1.1
 	 */
 	public static readonly Q11 : GostHalbjahr = new GostHalbjahr("Q11", 2, 2, "Q1", 1, "Q1.1", "Q1", "Qualifikationsphase 1. Jahr, 1. Halbjahr");
 
 	/**
-	 * Qualifikationsphase 1. Jahr, 2. Halbjahr = Q1.2 
+	 * Qualifikationsphase 1. Jahr, 2. Halbjahr = Q1.2
 	 */
 	public static readonly Q12 : GostHalbjahr = new GostHalbjahr("Q12", 3, 3, "Q1", 2, "Q1.2", "Q2", "Qualifikationsphase 1. Jahr, 2. Halbjahr");
 
 	/**
-	 * Qualifikationsphase 2. Jahr, 1. Halbjahr = Q2.1 
+	 * Qualifikationsphase 2. Jahr, 1. Halbjahr = Q2.1
 	 */
 	public static readonly Q21 : GostHalbjahr = new GostHalbjahr("Q21", 4, 4, "Q2", 1, "Q2.1", "Q3", "Qualifikationsphase 2. Jahr, 1. Halbjahr");
 
 	/**
-	 * Qualifikationsphase 2. Jahr, 2. Halbjahr = Q2.2 
+	 * Qualifikationsphase 2. Jahr, 2. Halbjahr = Q2.2
 	 */
 	public static readonly Q22 : GostHalbjahr = new GostHalbjahr("Q22", 5, 5, "Q2", 2, "Q2.2", "Q4", "Qualifikationsphase 2. Jahr, 2. Halbjahr");
 
 	/**
-	 * Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt. 
+	 * Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt.
 	 */
 	private static readonly _mapID : HashMap<number, GostHalbjahr> = new HashMap();
 
 	/**
-	 * Eine Zuordnung der Halbjahre zu dem Kürzel. 
+	 * Eine Zuordnung der Halbjahre zu dem Kürzel.
 	 */
 	private static readonly _mapKuerzel : HashMap<string, GostHalbjahr> = new HashMap();
 
 	/**
-	 * Eine Zuordnung der Halbjahre zu dem alten Kürzel. 
+	 * Eine Zuordnung der Halbjahre zu dem alten Kürzel.
 	 */
 	private static readonly _mapKuerzelAlt : HashMap<string, GostHalbjahr> = new HashMap();
 
 	/**
-	 * Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe 
+	 * Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe
 	 */
 	public static readonly maxHalbjahre : number = 6;
 
 	/**
-	 * Eine ID für das Halbjahr, welches die Reihenfolge der Halbjahre wiederspiegelt und als Index für Arrays verwendet werden kann. 
+	 * Eine ID für das Halbjahr, welches die Reihenfolge der Halbjahre wiederspiegelt und als Index für Arrays verwendet werden kann.
 	 */
 	public readonly id : number;
 
 	/**
-	 * Das Jahrgangskürzel des Halbjahres 
+	 * Das Jahrgangskürzel des Halbjahres
 	 */
 	public readonly jahrgang : string;
 
 	/**
-	 * Die Nummer des Halbjahres 
+	 * Die Nummer des Halbjahres
 	 */
 	public readonly halbjahr : number;
 
 	/**
-	 * Das eindeutige Kürzel für das Halbjahr der gymnasialen Oberstufe 
+	 * Das eindeutige Kürzel für das Halbjahr der gymnasialen Oberstufe
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Ein eindeutiges Kürzel, welche in alten Tabellen (z.B. LuPO) verwendet wurde. 
+	 * Ein eindeutiges Kürzel, welche in alten Tabellen (z.B. LuPO) verwendet wurde.
 	 */
 	public readonly kuerzelAlt : string;
 
 	/**
-	 * Eine textuelle Beschreibung für das Halbjahr der gymnasialen Oberstufe 
+	 * Eine textuelle Beschreibung für das Halbjahr der gymnasialen Oberstufe
 	 */
 	public readonly beschreibung : string;
 

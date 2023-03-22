@@ -7,17 +7,17 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostBelegpruefungErgebnis extends JavaObject {
 
 	/**
-	 * gibt an, ob die Belegprüfung erfolgreich abgeschlossen wurde 
+	 * gibt an, ob die Belegprüfung erfolgreich abgeschlossen wurde
 	 */
 	public erfolgreich : boolean = false;
 
 	/**
-	 * eine Liste der Belegungsfehler und Hinweise zur Belegung 
+	 * eine Liste der Belegungsfehler und Hinweise zur Belegung
 	 */
 	public fehlercodes : Vector<GostBelegpruefungErgebnisFehler> = new Vector();
 
 	/**
-	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht 
+	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht
 	 */
 	public log : List<string> = new Vector();
 

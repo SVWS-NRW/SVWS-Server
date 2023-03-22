@@ -19,52 +19,52 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerLehramtAnerkennung> = new Map<string, LehrerLehramtAnerkennung>();
 
 	/**
-	 * Lehramtsanerkennung 'Zweite Staatsprüfung für ein Lehramt' 
+	 * Lehramtsanerkennung 'Zweite Staatsprüfung für ein Lehramt'
 	 */
 	public static readonly ST : LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("ST", 0, [new LehrerKatalogLehramtAnerkennungEintrag(1, "ST", "Zweite Staatsprüfung für ein Lehramt", null, null)]);
 
 	/**
-	 * Lehramtsanerkennung 'Anerkennung Lehramt' 
+	 * Lehramtsanerkennung 'Anerkennung Lehramt'
 	 */
 	public static readonly AL : LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AL", 1, [new LehrerKatalogLehramtAnerkennungEintrag(2, "AL", "Anerkennung Lehramt", null, null)]);
 
 	/**
-	 * Lehramtsanerkennung 'Anerkennung geeignete Prüfung' 
+	 * Lehramtsanerkennung 'Anerkennung geeignete Prüfung'
 	 */
 	public static readonly AP : LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AP", 2, [new LehrerKatalogLehramtAnerkennungEintrag(3, "AP", "Anerkennung geeignete Prüfung", null, null)]);
 
 	/**
-	 * Lehramtsanerkennung 'Förderliche Berufstätigkeit' 
+	 * Lehramtsanerkennung 'Förderliche Berufstätigkeit'
 	 */
 	public static readonly BT : LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("BT", 3, [new LehrerKatalogLehramtAnerkennungEintrag(4, "BT", "Förderliche Berufstätigkeit", null, null)]);
 
 	/**
-	 * Lehramtsanerkennung 'ohne' 
+	 * Lehramtsanerkennung 'ohne'
 	 */
 	public static readonly OH : LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("OH", 4, [new LehrerKatalogLehramtAnerkennungEintrag(5, "OH", "ohne", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Lehramtsanerkennung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Lehramtsanerkennung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogLehramtAnerkennungEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Lehramtsanerkennung 
+	 * Die Historie mit den Einträgen der Lehramtsanerkennung
 	 */
 	public readonly historie : Array<LehrerKatalogLehramtAnerkennungEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung | null> = new HashMap();
 

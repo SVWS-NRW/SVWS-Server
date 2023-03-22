@@ -4,57 +4,57 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ENMLeistungBemerkungen extends JavaObject {
 
 	/**
-	 * Informationen zum Arbeits- und Sozialverhalten 
+	 * Informationen zum Arbeits- und Sozialverhalten
 	 */
 	public ASV : string | null = null;
 
 	/**
-	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Arbeits- und Sozialverhalten 
+	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Arbeits- und Sozialverhalten
 	 */
 	public tsASV : string | null = null;
 
 	/**
-	 * Informationen zu dem Außerunterrichtlichen Engagement (AUE) 
+	 * Informationen zu dem Außerunterrichtlichen Engagement (AUE)
 	 */
 	public AUE : string | null = null;
 
 	/**
-	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE) 
+	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE)
 	 */
 	public tsAUE : string | null = null;
 
 	/**
-	 * Zeugnisbemerkungen 
+	 * Zeugnisbemerkungen
 	 */
 	public ZB : string | null = null;
 
 	/**
-	 * Der Zeitstempel mit den letzten Änderungen zu Zeugnis-Bemerkungen 
+	 * Der Zeitstempel mit den letzten Änderungen zu Zeugnis-Bemerkungen
 	 */
 	public tsZB : string | null = null;
 
 	/**
-	 * Bemerkungen zur Lern und Leistungsentwicklung (LELS) in den Fächern 
+	 * Bemerkungen zur Lern und Leistungsentwicklung (LELS) in den Fächern
 	 */
 	public LELS : string | null = null;
 
 	/**
-	 * Schulform-Empfehlungen 
+	 * Schulform-Empfehlungen
 	 */
 	public schulformEmpf : string | null = null;
 
 	/**
-	 * Individuelle Bemerkungen zur Versetzung 
+	 * Individuelle Bemerkungen zur Versetzung
 	 */
 	public individuelleVersetzungsbemerkungen : string | null = null;
 
 	/**
-	 * Der Zeitstempel mit den letzten Änderungen zu individuellen Bemerkungen zur Versetzung 
+	 * Der Zeitstempel mit den letzten Änderungen zu individuellen Bemerkungen zur Versetzung
 	 */
 	public tsIndividuelleVersetzungsbemerkungen : string | null = null;
 
 	/**
-	 * Förderbemerkungen 
+	 * Förderbemerkungen
 	 */
 	public foerderbemerkungen : string | null = null;
 

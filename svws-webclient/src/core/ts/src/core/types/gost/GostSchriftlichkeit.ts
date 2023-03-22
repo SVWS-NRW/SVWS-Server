@@ -16,22 +16,22 @@ export class GostSchriftlichkeit extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostSchriftlichkeit> = new Map<string, GostSchriftlichkeit>();
 
 	/**
-	 * Ist mündlich. 
+	 * Ist mündlich.
 	 */
 	public static readonly MUENDLICH : GostSchriftlichkeit = new GostSchriftlichkeit("MUENDLICH", 0, false);
 
 	/**
-	 * Ist schriftlich. 
+	 * Ist schriftlich.
 	 */
 	public static readonly SCHRIFTLICH : GostSchriftlichkeit = new GostSchriftlichkeit("SCHRIFTLICH", 1, true);
 
 	/**
-	 * Kann mündlich oder schriftlich sein. 
+	 * Kann mündlich oder schriftlich sein.
 	 */
 	public static readonly BELIEBIG : GostSchriftlichkeit = new GostSchriftlichkeit("BELIEBIG", 2, null);
 
 	/**
-	 * Gibt an, ob eine Schriftlichkeit vorliegt (true), nicht vorliegt (false), oder beliebig sein kann (null) 
+	 * Gibt an, ob eine Schriftlichkeit vorliegt (true), nicht vorliegt (false), oder beliebig sein kann (null)
 	 */
 	public readonly istSchriftlich : boolean | null;
 

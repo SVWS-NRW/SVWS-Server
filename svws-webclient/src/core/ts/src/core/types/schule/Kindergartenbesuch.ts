@@ -18,47 +18,47 @@ export class Kindergartenbesuch extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Kindergartenbesuch> = new Map<string, Kindergartenbesuch>();
 
 	/**
-	 * Kein Kindergartenbesuch 
+	 * Kein Kindergartenbesuch
 	 */
 	public static readonly KEINER : Kindergartenbesuch = new Kindergartenbesuch("KEINER", 0, [new KindergartenbesuchKatalogEintrag(1, 0, "kein Kindergarten", null, null)]);
 
 	/**
-	 * Kindergartenbesuch unter einem Jahr 
+	 * Kindergartenbesuch unter einem Jahr
 	 */
 	public static readonly MAX_1_JAHR : Kindergartenbesuch = new Kindergartenbesuch("MAX_1_JAHR", 1, [new KindergartenbesuchKatalogEintrag(2, 1, "unter 1 Jahr", null, null)]);
 
 	/**
-	 * Kindergartenbesuch unter einem Jahr 
+	 * Kindergartenbesuch unter einem Jahr
 	 */
 	public static readonly MAX_2_JAHRE : Kindergartenbesuch = new Kindergartenbesuch("MAX_2_JAHRE", 2, [new KindergartenbesuchKatalogEintrag(3, 2, "1 bis unter 2 Jahre", null, null)]);
 
 	/**
-	 * Kindergartenbesuch unter einem Jahr 
+	 * Kindergartenbesuch unter einem Jahr
 	 */
 	public static readonly MAX_3_JAHRE : Kindergartenbesuch = new Kindergartenbesuch("MAX_3_JAHRE", 3, [new KindergartenbesuchKatalogEintrag(4, 3, "2 bis unter 3 Jahre", null, null)]);
 
 	/**
-	 * Kindergartenbesuch unter einem Jahr 
+	 * Kindergartenbesuch unter einem Jahr
 	 */
 	public static readonly MIN_3_JAHRE : Kindergartenbesuch = new Kindergartenbesuch("MIN_3_JAHRE", 4, [new KindergartenbesuchKatalogEintrag(5, 4, "3 Jahre und mehr Jahre", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Dauer des Kindergartenbesuchs 
+	 * Der aktuellen Daten der Dauer des Kindergartenbesuchs
 	 */
 	public readonly daten : KindergartenbesuchKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Dauer des Kindergartenbesuchs 
+	 * Die Historie mit den Einträgen der Dauer des Kindergartenbesuchs
 	 */
 	public readonly historie : Array<KindergartenbesuchKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<number, Kindergartenbesuch | null> = new HashMap();
 

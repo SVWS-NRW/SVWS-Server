@@ -5,12 +5,12 @@ import { Random, cast_java_util_Random } from '../../../java/util/Random';
 export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObject {
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	protected readonly _random : Random;
 
 	/**
-	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. 
+	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges.
 	 */
 	protected readonly _dynDaten : KlausurblockungSchienenDynDaten;
 

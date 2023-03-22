@@ -4,57 +4,57 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ENMBKFach extends JavaObject {
 
 	/**
-	 * Die ID des Faches der zentralen Prüfungen. 
+	 * Die ID des Faches der zentralen Prüfungen.
 	 */
 	public fachID : number = 0;
 
 	/**
-	 * Die ID des Lehrers, der das Prüfungsfach unterrichtet. 
+	 * Die ID des Lehrers, der das Prüfungsfach unterrichtet.
 	 */
 	public lehrerID : number = 0;
 
 	/**
-	 * Gibt an, ob das Fach schriftlich ist. 
+	 * Gibt an, ob das Fach schriftlich ist.
 	 */
 	public istSchriftlich : boolean = false;
 
 	/**
-	 * Das Notenkürzel der Vornote für dieses Fach. 
+	 * Das Notenkürzel der Vornote für dieses Fach.
 	 */
 	public vornote : string | null = null;
 
 	/**
-	 * Das Notenkürzel der Note, die bei der schriftlichen Prüfung erreicht wurde. 
+	 * Das Notenkürzel der Note, die bei der schriftlichen Prüfung erreicht wurde.
 	 */
 	public noteSchriftlichePruefung : string | null = null;
 
 	/**
-	 * Gibt an, ob eine mündliche Prüfung stattfinden muss. 
+	 * Gibt an, ob eine mündliche Prüfung stattfinden muss.
 	 */
 	public muendlichePruefung : boolean = false;
 
 	/**
-	 * Gibt an, ob eine freiwillige mündliche Prüfung stattfindet. 
+	 * Gibt an, ob eine freiwillige mündliche Prüfung stattfindet.
 	 */
 	public muendlichePruefungFreiwillig : boolean = false;
 
 	/**
-	 * Das Notenkürzel der Note, die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet. 
+	 * Das Notenkürzel der Note, die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet.
 	 */
 	public noteMuendlichePruefung : string | null = null;
 
 	/**
-	 * Gibt an, ob das Fach in Bezug auf den Berufsabschluss schriftlich ist. 
+	 * Gibt an, ob das Fach in Bezug auf den Berufsabschluss schriftlich ist.
 	 */
 	public istSchriftlichBerufsabschluss : boolean = false;
 
 	/**
-	 * Die Note in Bezug auf den Berufsabschluss. 
+	 * Die Note in Bezug auf den Berufsabschluss.
 	 */
 	public noteBerufsabschluss : string | null = null;
 
 	/**
-	 * Das Notenkürzel der Abschlussnote nach der Prüfung. 
+	 * Das Notenkürzel der Abschlussnote nach der Prüfung.
 	 */
 	public abschlussnote : string | null = null;
 

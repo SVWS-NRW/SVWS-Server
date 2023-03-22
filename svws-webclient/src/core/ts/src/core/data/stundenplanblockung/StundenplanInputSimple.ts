@@ -10,32 +10,32 @@ import { StundenplanInputSimpleKlasse, cast_de_nrw_schule_svws_core_data_stunden
 export class StundenplanInputSimple extends JavaObject {
 
 	/**
-	 * Alle Lehrkräfte. 
+	 * Alle Lehrkräfte.
 	 */
 	public lehrkraefte : Vector<StundenplanInputSimpleLehrkraft> = new Vector();
 
 	/**
-	 * Alle Klassen. 
+	 * Alle Klassen.
 	 */
 	public klassen : Vector<StundenplanInputSimpleKlasse> = new Vector();
 
 	/**
-	 * Alle Fächer. 
+	 * Alle Fächer.
 	 */
 	public faecher : Vector<StundenplanInputSimpleFach> = new Vector();
 
 	/**
-	 * Alle Räume. 
+	 * Alle Räume.
 	 */
 	public raeume : Vector<StundenplanInputSimpleRaum> = new Vector();
 
 	/**
-	 * Alle Kopplungen. 
+	 * Alle Kopplungen.
 	 */
 	public kopplungen : Vector<StundenplanInputSimpleKopplung> = new Vector();
 
 	/**
-	 * Alle Kurse. 
+	 * Alle Kurse.
 	 */
 	public kurse : Vector<StundenplanInputSimpleKurs> = new Vector();
 

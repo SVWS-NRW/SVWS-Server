@@ -6,22 +6,22 @@ import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble
 export class ENMTeilleistungsart extends JavaObject {
 
 	/**
-	 * Die ID der Teilleistungsart (z.B. 42) 
+	 * Die ID der Teilleistungsart (z.B. 42)
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die Bezeichnung der Teilleistungsart (z.B. Somi-1) 
+	 * Die Bezeichnung der Teilleistungsart (z.B. Somi-1)
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Sortierung der Teilleistungsarten (z.B. 12) 
+	 * Sortierung der Teilleistungsarten (z.B. 12)
 	 */
 	public sortierung : number | null = null;
 
 	/**
-	 * Die Gewichtung der Teilleistungsart in Bezug auf die Leistungsdaten (z.B. 0,25) 
+	 * Die Gewichtung der Teilleistungsart in Bezug auf die Leistungsdaten (z.B. 0,25)
 	 */
 	public gewichtung : number | null = null;
 

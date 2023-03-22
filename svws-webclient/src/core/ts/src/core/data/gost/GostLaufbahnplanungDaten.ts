@@ -9,83 +9,83 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostLaufbahnplanungDaten extends JavaObject {
 
 	/**
-	 * Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind. 
+	 * Die Schulnummer der Schule, welcher die Laufbahndaten zugeordnet sind.
 	 */
 	public schulNr : number = 0;
 
 	/**
-	 * Der erste Teil (von dreien) der Bezeichnung der Schule 
+	 * Der erste Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public schulBezeichnung1 : string = "";
 
 	/**
-	 * Der zweite Teil (von dreien) der Bezeichnung der Schule 
+	 * Der zweite Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public schulBezeichnung2 : string = "";
 
 	/**
-	 * Der dritte Teil (von dreien) der Bezeichnung der Schule 
+	 * Der dritte Teil (von dreien) der Bezeichnung der Schule
 	 */
 	public schulBezeichnung3 : string = "";
 
 	/**
-	 * Anmerkungen zu diesen Daten 
+	 * Anmerkungen zu diesen Daten
 	 */
 	public anmerkungen : string = "";
 
 	/**
-	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. 
+	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 */
 	public abiturjahr : number = -1;
 
 	/**
-	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist. 
+	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist.
 	 */
 	public jahrgang : string | null = null;
 
 	/**
-	 * Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die 
-	 *  gymnasiale Oberstufe gedruckt wird. 
+	 * Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die
+	 *  gymnasiale Oberstufe gedruckt wird.
 	 */
 	public textBeratungsbogen : string | null = null;
 
 	/**
-	 * Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird. 
+	 * Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird.
 	 */
 	public hatZusatzkursGE : boolean = true;
 
 	/**
-	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt. 
+	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt.
 	 */
 	public beginnZusatzkursGE : string | null = null;
 
 	/**
-	 * Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird. 
+	 * Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird.
 	 */
 	public hatZusatzkursSW : boolean = true;
 
 	/**
-	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt. 
+	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt.
 	 */
 	public beginnZusatzkursSW : string | null = null;
 
 	/**
-	 * Die Liste der Beratungslehrer für diesen Jahrgang 
+	 * Die Liste der Beratungslehrer für diesen Jahrgang
 	 */
 	public readonly beratungslehrer : Vector<GostBeratungslehrer> = new Vector();
 
 	/**
-	 * Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang 
+	 * Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang
 	 */
 	public readonly faecher : Vector<GostFach> = new Vector();
 
 	/**
-	 * Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang 
+	 * Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang
 	 */
 	public readonly fachkombinationen : Vector<GostJahrgangFachkombination> = new Vector();
 
 	/**
-	 * Die Liste der Schüler mit ihren Laufbahnplanungsdaten. 
+	 * Die Liste der Schüler mit ihren Laufbahnplanungsdaten.
 	 */
 	public readonly schueler : Vector<GostLaufbahnplanungDatenSchueler> = new Vector();
 

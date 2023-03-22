@@ -16,22 +16,22 @@ export class GostBelegpruefungsArt extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostBelegpruefungsArt> = new Map<string, GostBelegpruefungsArt>();
 
 	/**
-	 * Prüfung nur der EF.1 
+	 * Prüfung nur der EF.1
 	 */
 	public static readonly EF1 : GostBelegpruefungsArt = new GostBelegpruefungsArt("EF1", 0, "EF.1", "nur EF.1");
 
 	/**
-	 * Gesamtprüfung über die gesamte Oberstufe 
+	 * Gesamtprüfung über die gesamte Oberstufe
 	 */
 	public static readonly GESAMT : GostBelegpruefungsArt = new GostBelegpruefungsArt("GESAMT", 1, "Gesamt", "die gesamte Oberstufe");
 
 	/**
-	 * Das Kürzel für die Belegprüfungsart 
+	 * Das Kürzel für die Belegprüfungsart
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Eine textuelle Beschreibung für die Art der Belegprüfung 
+	 * Eine textuelle Beschreibung für die Art der Belegprüfung
 	 */
 	public readonly beschreibung : string;
 

@@ -5,27 +5,27 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerKatalogAnrechnungsgrundEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Anrechnungsgrundes. 
+	 * Die ID des Anrechnungsgrundes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für den Anrechnungsgrund, welches für die amtliche Schulstatistik verwendet wird. 
+	 * Das Kürzel für den Anrechnungsgrund, welches für die amtliche Schulstatistik verwendet wird.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Anrechnungsgrundes. 
+	 * Der Klartext des Anrechnungsgrundes.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Anrechnungsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Anrechnungsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Anrechnungsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Anrechnungsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

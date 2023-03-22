@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KalenderEintrag extends JavaObject {
 
 	/**
-	 * ID des Kalendereintrags 
+	 * ID des Kalendereintrags
 	 */
 	public id : string = "";
 
 	/**
-	 * ID des Kalenders 
+	 * ID des Kalenders
 	 */
 	public kalenderId : string = "";
 
@@ -24,37 +24,37 @@ export class KalenderEintrag extends JavaObject {
 	public version : string = "";
 
 	/**
-	 * das serialisierte .ics dieses Kalendereintrags 
+	 * das serialisierte .ics dieses Kalendereintrags
 	 */
 	public data : string = "";
 
 	/**
-	 * der Startzeitpunkt dieses Kalendereintrags als SQL-Timestamp 
+	 * der Startzeitpunkt dieses Kalendereintrags als SQL-Timestamp
 	 */
 	public kalenderStart : string | null = null;
 
 	/**
-	 * der Endzeitpunkt dieses Kalendereintrags als SQL-Timestamp 
+	 * der Endzeitpunkt dieses Kalendereintrags als SQL-Timestamp
 	 */
 	public kalenderEnde : string | null = null;
 
 	/**
-	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat 
+	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat
 	 */
 	public darfSchreiben : boolean = false;
 
 	/**
-	 * ob der angemeldete Nutzer Leserecht auf dem Kalender hat 
+	 * ob der angemeldete Nutzer Leserecht auf dem Kalender hat
 	 */
 	public darfLesen : boolean = false;
 
 	/**
-	 * ob der angemeldete Benutzer Besitzer des Kalenders ist, zu dem dieser Eintrag gehört 
+	 * ob der angemeldete Benutzer Besitzer des Kalenders ist, zu dem dieser Eintrag gehört
 	 */
 	public istBesitzer : boolean = false;
 
 	/**
-	 * der Typ des Kalendereintrags 
+	 * der Typ des Kalendereintrags
 	 */
 	public kalenderTyp : string = "VEVENT";
 

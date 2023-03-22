@@ -7,22 +7,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GEAbschlussFaecher extends JavaObject {
 
 	/**
-	 * Gibt das Schuljahr an, in welchem die Abschlussberechnung durchgeführt werden soll. 
+	 * Gibt das Schuljahr an, in welchem die Abschlussberechnung durchgeführt werden soll.
 	 */
 	public schuljahr : number = 0;
 
 	/**
-	 * Gibt den Abschnitt in des Schuljahres an, in welchem die Abschlussberechnung durchgeführt werden soll. 
+	 * Gibt den Abschnitt in des Schuljahres an, in welchem die Abschlussberechnung durchgeführt werden soll.
 	 */
 	public abschnitt : number = 0;
 
 	/**
-	 * Gibt den Jahrgang an, für den die Abschlussberechnung durchgeführt werden soll. 
+	 * Gibt den Jahrgang an, für den die Abschlussberechnung durchgeführt werden soll.
 	 */
 	public jahrgang : string | null = null;
 
 	/**
-	 * Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen. 
+	 * Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen.
 	 */
 	public faecher : List<GEAbschlussFach> = new Vector();
 

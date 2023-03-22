@@ -5,12 +5,12 @@ import { KlausurterminblockungDynDaten, cast_de_nrw_schule_svws_core_utils_klaus
 export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObject {
 
 	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	protected readonly _random : Random;
 
 	/**
-	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. 
+	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges.
 	 */
 	protected readonly _dynDaten : KlausurterminblockungDynDaten;
 

@@ -16,32 +16,32 @@ export class BenutzerTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, BenutzerTyp> = new Map<string, BenutzerTyp>();
 
 	/**
-	 * Ein allgemeiner Benutzertyp 
+	 * Ein allgemeiner Benutzertyp
 	 */
 	public static readonly ALLGEMEIN : BenutzerTyp = new BenutzerTyp("ALLGEMEIN", 0, 0, "Allgemein");
 
 	/**
-	 * Ein Benutzertyp für Lehrer und weiteres Personal 
+	 * Ein Benutzertyp für Lehrer und weiteres Personal
 	 */
 	public static readonly LEHRER : BenutzerTyp = new BenutzerTyp("LEHRER", 1, 1, "Lehrer/Personal");
 
 	/**
-	 * Ein Benutzertyp für Schüler 
+	 * Ein Benutzertyp für Schüler
 	 */
 	public static readonly SCHUELER : BenutzerTyp = new BenutzerTyp("SCHUELER", 2, 2, "Schüler");
 
 	/**
-	 * Ein Benutzertyp für Erzieher 
+	 * Ein Benutzertyp für Erzieher
 	 */
 	public static readonly ERZIEHER : BenutzerTyp = new BenutzerTyp("ERZIEHER", 3, 3, "Erzieher");
 
 	/**
-	 * Die ID des Benutzertyps 
+	 * Die ID des Benutzertyps
 	 */
 	public readonly id : number;
 
 	/**
-	 * Die textuelle Bezeichnung des Benutzertyps. 
+	 * Die textuelle Bezeichnung des Benutzertyps.
 	 */
 	public readonly bezeichnung : string;
 

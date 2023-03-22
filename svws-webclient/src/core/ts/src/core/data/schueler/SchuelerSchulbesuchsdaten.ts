@@ -10,127 +10,127 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 
 	/**
-	 * Die ID des Schülerdatensatzes. 
+	 * Die ID des Schülerdatensatzes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die Schulnummer der vorher besuchten Schule. 
+	 * Die Schulnummer der vorher besuchten Schule.
 	 */
 	public vorigeSchulnummer : string | null = null;
 
 	/**
-	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. 
+	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule.
 	 */
 	public vorigeAllgHerkunft : string | null = null;
 
 	/**
-	 * Das Entlassdatum an der zuvor besuchten Schule. 
+	 * Das Entlassdatum an der zuvor besuchten Schule.
 	 */
 	public vorigeEntlassdatum : string | null = null;
 
 	/**
-	 * Der Entlassjahrgang an der zuvor besuchten Schule. 
+	 * Der Entlassjahrgang an der zuvor besuchten Schule.
 	 */
 	public vorigeEntlassjahrgang : string | null = null;
 
 	/**
-	 * Die ID der Art der letzten Versetzung an der zuvor besuchten Schule. 
+	 * Die ID der Art der letzten Versetzung an der zuvor besuchten Schule.
 	 */
 	public vorigeArtLetzteVersetzung : string | null = null;
 
 	/**
-	 * Bemerkungen zu der zuvor besuchten Schule. 
+	 * Bemerkungen zu der zuvor besuchten Schule.
 	 */
 	public vorigeBemerkung : string | null = null;
 
 	/**
-	 * Die ID des Grundes für die Entlassung von der zuvor besuchten Schule. 
+	 * Die ID des Grundes für die Entlassung von der zuvor besuchten Schule.
 	 */
 	public vorigeEntlassgrundID : number | null = null;
 
 	/**
-	 * Die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde. 
+	 * Die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde.
 	 */
 	public vorigeAbschlussartID : string | null = null;
 
 	/**
-	 * Das Entlassdatum von dieser Schule. 
+	 * Das Entlassdatum von dieser Schule.
 	 */
 	public entlassungDatum : string | null = null;
 
 	/**
-	 * Der Jahrgang bei der Entlassung von dieser Schule. 
+	 * Der Jahrgang bei der Entlassung von dieser Schule.
 	 */
 	public entlassungJahrgang : string | null = null;
 
 	/**
-	 * Die ID des Grundes für die Entlassung von dieser Schule. 
+	 * Die ID des Grundes für die Entlassung von dieser Schule.
 	 */
 	public entlassungGrundID : number | null = null;
 
 	/**
-	 * Die ID des Abschlusses, welcher an dieser Schule erworben wurde. 
+	 * Die ID des Abschlusses, welcher an dieser Schule erworben wurde.
 	 */
 	public entlassungAbschlussartID : string | null = null;
 
 	/**
-	 * Die Schulnummer der aufnehmenden Schule nach einer Entlassung. 
+	 * Die Schulnummer der aufnehmenden Schule nach einer Entlassung.
 	 */
 	public aufnehmdendSchulnummer : string | null = null;
 
 	/**
-	 * Das Datum beim Wechsel zu einer aufnehmenden Schule. 
+	 * Das Datum beim Wechsel zu einer aufnehmenden Schule.
 	 */
 	public aufnehmdendWechseldatum : string | null = null;
 
 	/**
-	 * Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat. 
+	 * Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat.
 	 */
 	public aufnehmdendBestaetigt : boolean | null = null;
 
 	/**
-	 * Das Jahr der Einschulung in die Grundschule. 
+	 * Das Jahr der Einschulung in die Grundschule.
 	 */
 	public grundschuleEinschulungsjahr : number | null = null;
 
 	/**
-	 * Die ID der Einschulungsart in die Grundschule. 
+	 * Die ID der Einschulungsart in die Grundschule.
 	 */
 	public grundschuleEinschulungsartID : number | null = null;
 
 	/**
-	 * Die Anzahl der Jahre in der Schuleingangsphase der Grundschule. 
+	 * Die Anzahl der Jahre in der Schuleingangsphase der Grundschule.
 	 */
 	public grundschuleJahreEingangsphase : number | null = null;
 
 	/**
-	 * Die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I 
+	 * Die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I
 	 */
 	public grundschuleUebergangsempfehlungID : number | null = null;
 
 	/**
-	 * Das Jahr des Wechsels in die Sekundarstufe I. 
+	 * Das Jahr des Wechsels in die Sekundarstufe I.
 	 */
 	public sekIWechsel : number | null = null;
 
 	/**
-	 * Das Kürzel der ersten Schulform in der Sekundarstufe I 
+	 * Das Kürzel der ersten Schulform in der Sekundarstufe I
 	 */
 	public sekIErsteSchulform : string | null = null;
 
 	/**
-	 * Das Jahr des Wechsels in die Sekundarstufe II. 
+	 * Das Jahr des Wechsels in die Sekundarstufe II.
 	 */
 	public sekIIWechsel : number | null = null;
 
 	/**
-	 * Die Informationen zu den besonderen Merkmalen für die Statistik. 
+	 * Die Informationen zu den besonderen Merkmalen für die Statistik.
 	 */
 	public merkmale : Vector<SchuelerSchulbesuchMerkmal> = new Vector();
 
 	/**
-	 * Die Informationen zu allen bisher besuchten Schulen. 
+	 * Die Informationen zu allen bisher besuchten Schulen.
 	 */
 	public alleSchulen : Vector<SchuelerSchulbesuchSchule> = new Vector();
 

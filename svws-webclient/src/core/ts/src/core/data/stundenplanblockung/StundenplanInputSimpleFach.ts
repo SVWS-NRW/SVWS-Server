@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class StundenplanInputSimpleFach extends JavaObject {
 
 	/**
-	 * Die ID des Faches. 
+	 * Die ID des Faches.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Faches. Beispielsweise 'D' oder 'E5'. 
+	 * Das Kürzel des Faches. Beispielsweise 'D' oder 'E5'.
 	 */
 	public kuerzel : string = "";
 

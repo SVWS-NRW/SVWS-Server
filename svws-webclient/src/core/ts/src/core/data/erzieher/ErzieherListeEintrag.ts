@@ -5,37 +5,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ErzieherListeEintrag extends JavaObject {
 
 	/**
-	 * Die "Partner"-ID des Erziehers mit der Nummer des Erziehers in der DB angehangen (1 oder 2), welche diesem Erzieher im gleichen DB-Datensatz zugeordnet ist und die gleichen Addressdaten, etc. sich teil. 
+	 * Die "Partner"-ID des Erziehers mit der Nummer des Erziehers in der DB angehangen (1 oder 2), welche diesem Erzieher im gleichen DB-Datensatz zugeordnet ist und die gleichen Addressdaten, etc. sich teil.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, welchem der Erzieher zugeordnet ist. 
+	 * Die ID des Schülers, welchem der Erzieher zugeordnet ist.
 	 */
 	public idSchueler : number = 0;
 
 	/**
-	 * Die ID der Art des Erziehereintrages 
+	 * Die ID der Art des Erziehereintrages
 	 */
 	public idErzieherArt : number | null = null;
 
 	/**
-	 * Die Anrede des Erziehers. 
+	 * Die Anrede des Erziehers.
 	 */
 	public anrede : string | null = null;
 
 	/**
-	 * Der Name des Erziehers. 
+	 * Der Name des Erziehers.
 	 */
 	public name : string | null = null;
 
 	/**
-	 * Der Vorname des Erziehers. 
+	 * Der Vorname des Erziehers.
 	 */
 	public vorname : string | null = null;
 
 	/**
-	 * Die E-Mailadresse des  Erziehers. 
+	 * Die E-Mailadresse des  Erziehers.
 	 */
 	public email : string | null = null;
 

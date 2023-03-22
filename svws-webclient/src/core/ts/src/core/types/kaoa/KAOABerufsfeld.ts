@@ -19,107 +19,107 @@ export class KAOABerufsfeld extends JavaObject {
 	private static readonly all_values_by_name : Map<string, KAOABerufsfeld> = new Map<string, KAOABerufsfeld>();
 
 	/**
-	 * KAoA-Berufsfeld: Bau, Architektur, Vermessung 
+	 * KAoA-Berufsfeld: Bau, Architektur, Vermessung
 	 */
 	public static readonly BAV : KAOABerufsfeld = new KAOABerufsfeld("BAV", 0, [new KAOABerufsfeldEintrag(1, "BAV", "Bau, Architektur, Vermessung", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Dienstleistung 
+	 * KAoA-Berufsfeld: Dienstleistung
 	 */
 	public static readonly D : KAOABerufsfeld = new KAOABerufsfeld("D", 1, [new KAOABerufsfeldEintrag(2, "D", "Dienstleistung", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Elektro 
+	 * KAoA-Berufsfeld: Elektro
 	 */
 	public static readonly EL : KAOABerufsfeld = new KAOABerufsfeld("EL", 2, [new KAOABerufsfeldEintrag(3, "EL", "Elektro", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Gesundheit 
+	 * KAoA-Berufsfeld: Gesundheit
 	 */
 	public static readonly G : KAOABerufsfeld = new KAOABerufsfeld("G", 3, [new KAOABerufsfeldEintrag(4, "G", "Gesundheit", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Gesellschafts-,Geisteswissenschaften 
+	 * KAoA-Berufsfeld: Gesellschafts-,Geisteswissenschaften
 	 */
 	public static readonly GESGE : KAOABerufsfeld = new KAOABerufsfeld("GESGE", 4, [new KAOABerufsfeldEintrag(5, "GESGE", "Gesellschafts-,Geisteswissenschaften", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: IT, Computer 
+	 * KAoA-Berufsfeld: IT, Computer
 	 */
 	public static readonly ITC : KAOABerufsfeld = new KAOABerufsfeld("ITC", 5, [new KAOABerufsfeldEintrag(6, "ITC", "IT, Computer", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Kunst, Kultur, Gestaltung 
+	 * KAoA-Berufsfeld: Kunst, Kultur, Gestaltung
 	 */
 	public static readonly KKG : KAOABerufsfeld = new KAOABerufsfeld("KKG", 6, [new KAOABerufsfeldEintrag(7, "KKG", "Kunst, Kultur, Gestaltung", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Landwirtschaft, Natur, Umwelt 
+	 * KAoA-Berufsfeld: Landwirtschaft, Natur, Umwelt
 	 */
 	public static readonly LANAUM : KAOABerufsfeld = new KAOABerufsfeld("LANAUM", 7, [new KAOABerufsfeldEintrag(8, "LANAUM", "Landwirtschaft, Natur, Umwelt", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Metall, Maschinenbau 
+	 * KAoA-Berufsfeld: Metall, Maschinenbau
 	 */
 	public static readonly M : KAOABerufsfeld = new KAOABerufsfeld("M", 8, [new KAOABerufsfeldEintrag(9, "M", "Metall, Maschinenbau", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Medien 
+	 * KAoA-Berufsfeld: Medien
 	 */
 	public static readonly ME : KAOABerufsfeld = new KAOABerufsfeld("ME", 9, [new KAOABerufsfeldEintrag(10, "ME", "Medien", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Naturwissenschaft 
+	 * KAoA-Berufsfeld: Naturwissenschaft
 	 */
 	public static readonly N : KAOABerufsfeld = new KAOABerufsfeld("N", 10, [new KAOABerufsfeldEintrag(11, "N", "Naturwissenschaft", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Produktion, Fertigung 
+	 * KAoA-Berufsfeld: Produktion, Fertigung
 	 */
 	public static readonly PRFE : KAOABerufsfeld = new KAOABerufsfeld("PRFE", 11, [new KAOABerufsfeldEintrag(12, "PRFE", "Produktion, Fertigung", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Soziales, Pädagogik 
+	 * KAoA-Berufsfeld: Soziales, Pädagogik
 	 */
 	public static readonly SP : KAOABerufsfeld = new KAOABerufsfeld("SP", 12, [new KAOABerufsfeldEintrag(13, "SP", "Soziales, Pädagogik", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Technik, Technologiefelder 
+	 * KAoA-Berufsfeld: Technik, Technologiefelder
 	 */
 	public static readonly TEC : KAOABerufsfeld = new KAOABerufsfeld("TEC", 13, [new KAOABerufsfeldEintrag(14, "TEC", "Technik, Technologiefelder", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Verkehr, Logistik 
+	 * KAoA-Berufsfeld: Verkehr, Logistik
 	 */
 	public static readonly VL : KAOABerufsfeld = new KAOABerufsfeld("VL", 14, [new KAOABerufsfeldEintrag(15, "VL", "Verkehr, Logistik", null, null)]);
 
 	/**
-	 * KAoA-Berufsfeld: Wirtschaft, Verwaltung 
+	 * KAoA-Berufsfeld: Wirtschaft, Verwaltung
 	 */
 	public static readonly WIVE : KAOABerufsfeld = new KAOABerufsfeld("WIVE", 15, [new KAOABerufsfeldEintrag(16, "WIVE", "Wirtschaft, Verwaltung", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Die aktuellsten Daten des KAoA-Berufsfeldes 
+	 * Die aktuellsten Daten des KAoA-Berufsfeldes
 	 */
 	public readonly daten : KAOABerufsfeldEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen des KAoA-Berufsfeldes 
+	 * Die Historie mit den Einträgen des KAoA-Berufsfeldes
 	 */
 	public readonly historie : Array<KAOABerufsfeldEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _statusByID : HashMap<number, KAOABerufsfeld> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
+	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind.
 	 */
 	private static readonly _statusByKuerzel : HashMap<string, KAOABerufsfeld> = new HashMap();
 

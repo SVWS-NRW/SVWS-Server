@@ -23,62 +23,62 @@ export class Reformpaedagogik extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Reformpaedagogik> = new Map<string, Reformpaedagogik>();
 
 	/**
-	 * Reformpaedagogik KEIN_EINTRAG - Es ist kein Eintrag zur Reformpädagogik vorhanden 
+	 * Reformpaedagogik KEIN_EINTRAG - Es ist kein Eintrag zur Reformpädagogik vorhanden
 	 */
 	public static readonly KEIN_EINTRAG : Reformpaedagogik = new Reformpaedagogik("KEIN_EINTRAG", 0, [new ReformpaedagogikKatalogEintrag(0, "*", "ohne Eintrag", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Reformpaedagogik Celestin Freinet 
+	 * Reformpaedagogik Celestin Freinet
 	 */
 	public static readonly FREINET : Reformpaedagogik = new Reformpaedagogik("FREINET", 1, [new ReformpaedagogikKatalogEintrag(1000, "C", "Celestin Freinet", Arrays.asList(Schulform.G, Schulform.GY), null, null)]);
 
 	/**
-	 * Reformpaedagogik Janusz Korczak (Pädagogik der Achtung) 
+	 * Reformpaedagogik Janusz Korczak (Pädagogik der Achtung)
 	 */
 	public static readonly KORCZAK : Reformpaedagogik = new Reformpaedagogik("KORCZAK", 2, [new ReformpaedagogikKatalogEintrag(2000, "J", "Janusz Korczak (Pädagogik der Achtung)", Arrays.asList(Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Reformpaedagogik Montessori 
+	 * Reformpaedagogik Montessori
 	 */
 	public static readonly MONTESSORI : Reformpaedagogik = new Reformpaedagogik("MONTESSORI", 3, [new ReformpaedagogikKatalogEintrag(3000, "M", "Montessori", Arrays.asList(Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Reformpaedagogik Peter Petersen/Jena-Plan 
+	 * Reformpaedagogik Peter Petersen/Jena-Plan
 	 */
 	public static readonly PETERSEN : Reformpaedagogik = new Reformpaedagogik("PETERSEN", 4, [new ReformpaedagogikKatalogEintrag(4000, "P", "Peter Petersen/Jena-Plan", Arrays.asList(Schulform.G, Schulform.GY, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SR), null, null)]);
 
 	/**
-	 * Sonstige Reformpaedagogik 
+	 * Sonstige Reformpaedagogik
 	 */
 	public static readonly SONSTIGE : Reformpaedagogik = new Reformpaedagogik("SONSTIGE", 5, [new ReformpaedagogikKatalogEintrag(5000, "S", "sonstige", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Reformpädagogik, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Reformpädagogik, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : ReformpaedagogikKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen zu der Reformpädagogik 
+	 * Die Historie mit den Einträgen zu der Reformpädagogik
 	 */
 	public readonly historie : Array<ReformpaedagogikKatalogEintrag>;
 
 	/**
-	 * Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik 
+	 * Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik
 	 */
 	private static readonly _schulgliederungenKuerzel : HashMap<string, Reformpaedagogik> = new HashMap();
 
 	/**
-	 * Eine Map mit der Zuordnung der Reformpädagogik zu der ID der Reformpädagogik 
+	 * Eine Map mit der Zuordnung der Reformpädagogik zu der ID der Reformpädagogik
 	 */
 	private static readonly _schulgliederungenID : HashMap<number, Reformpaedagogik> = new HashMap();
 
 	/**
-	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt 
+	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt
 	 */
 	private schulformen : Array<Vector<Schulform>>;
 

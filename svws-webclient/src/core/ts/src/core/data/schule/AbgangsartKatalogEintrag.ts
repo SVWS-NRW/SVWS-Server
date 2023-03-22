@@ -7,12 +7,12 @@ import { AbgangsartKatalogDaten, cast_de_nrw_schule_svws_core_data_schule_Abgang
 export class AbgangsartKatalogEintrag extends JavaObject {
 
 	/**
-	 * Das eindeutige Kürzel des Katalog-Eintrags. 
+	 * Das eindeutige Kürzel des Katalog-Eintrags.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Historie des Katalog-Eintrags. 
+	 * Die Historie des Katalog-Eintrags.
 	 */
 	public historie : List<AbgangsartKatalogDaten> = new Vector();
 

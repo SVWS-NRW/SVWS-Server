@@ -10,22 +10,22 @@ export class LehrerKatalogFachrichtungAnerkennungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers. 
+	 * Das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Anerkennungsgrundes einer Fachrichtungen eines Lehrers. 
+	 * Der Klartext des Anerkennungsgrundes einer Fachrichtungen eines Lehrers.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

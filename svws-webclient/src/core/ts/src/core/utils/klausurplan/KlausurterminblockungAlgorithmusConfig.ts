@@ -18,7 +18,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public static readonly LK_GK_MODUS_NUR_GK : number = 2;
 
 	/**
-	 *  Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 *  Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
 	 */
 	public static readonly LK_GK_MODUS_GETRENNT : number = 3;
 

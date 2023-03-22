@@ -5,107 +5,107 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostFach extends JavaObject {
 
 	/**
-	 * Die ID des Faches 
+	 * Die ID des Faches
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das Statistik-Kürzel des Faches 
+	 * Das Statistik-Kürzel des Faches
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Das Fach-Kürzel, welches zur Anzeige verwendet wird. 
+	 * Das Fach-Kürzel, welches zur Anzeige verwendet wird.
 	 */
 	public kuerzelAnzeige : string | null = null;
 
 	/**
-	 * Die Bezeichnung des Faches 
+	 * Die Bezeichnung des Faches
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Die Nummer, welche die Sortierung der Fächer angibt. 
+	 * Die Nummer, welche die Sortierung der Fächer angibt.
 	 */
 	public sortierung : number = 32000;
 
 	/**
-	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht 
+	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
 	 */
 	public istFremdsprache : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fache eine neu einsetzende Fremdsprache ist. 
+	 * Gibt an, ob das Fache eine neu einsetzende Fremdsprache ist.
 	 */
 	public istFremdSpracheNeuEinsetzend : boolean = false;
 
 	/**
-	 * Gibt im Falle eines bilingualen Sachfaches das einstellige Fremdsprachenkürzel an. 
+	 * Gibt im Falle eines bilingualen Sachfaches das einstellige Fremdsprachenkürzel an.
 	 */
 	public biliSprache : string | null = null;
 
 	/**
-	 * Gibt an, ob das Fach als Leistungskurs im Abitur gewählt werden kann. 
+	 * Gibt an, ob das Fach als Leistungskurs im Abitur gewählt werden kann.
 	 */
 	public istMoeglichAbiLK : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach als Grundkurs im Abitur gewählt werden kann. 
+	 * Gibt an, ob das Fach als Grundkurs im Abitur gewählt werden kann.
 	 */
 	public istMoeglichAbiGK : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der EF.1 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der EF.1 gewählt werden kann.
 	 */
 	public istMoeglichEF1 : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der EF.2 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der EF.2 gewählt werden kann.
 	 */
 	public istMoeglichEF2 : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der Q1.1 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der Q1.1 gewählt werden kann.
 	 */
 	public istMoeglichQ11 : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der Q1.2 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der Q1.2 gewählt werden kann.
 	 */
 	public istMoeglichQ12 : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der Q2.1 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der Q2.1 gewählt werden kann.
 	 */
 	public istMoeglichQ21 : boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in der Q2.2 gewählt werden kann. 
+	 * Gibt an, ob das Fach in der Q2.2 gewählt werden kann.
 	 */
 	public istMoeglichQ22 : boolean = false;
 
 	/**
-	 * Die Wochenstundenzahl des Faches in der Qualifikationsphase 
+	 * Die Wochenstundenzahl des Faches in der Qualifikationsphase
 	 */
 	public wochenstundenQualifikationsphase : number = 3;
 
 	/**
-	 * Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches 
+	 * Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches
 	 */
 	public projektKursLeitfach1ID : number | null = null;
 
 	/**
-	 * Das Fach-Kürzel des Leitfaches eines Projektkurses oder Vertiefungsfaches 
+	 * Das Fach-Kürzel des Leitfaches eines Projektkurses oder Vertiefungsfaches
 	 */
 	public projektKursLeitfach1Kuerzel : string | null = null;
 
 	/**
-	 * Die Fach-ID des zweiten Leitfaches eines Projektkurses 
+	 * Die Fach-ID des zweiten Leitfaches eines Projektkurses
 	 */
 	public projektKursLeitfach2ID : number | null = null;
 
 	/**
-	 * Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses 
+	 * Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses
 	 */
 	public projektKursLeitfach2Kuerzel : string | null = null;
 

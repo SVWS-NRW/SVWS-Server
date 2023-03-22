@@ -10,27 +10,27 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
-	 * Die GostKlausurvorgaben, die im Manager vorhanden sind 
+	 * Die GostKlausurvorgaben, die im Manager vorhanden sind
 	 */
 	private readonly _vorgaben : List<GostKlausurvorgabe>;
 
 	/**
-	 * Eine Map quartal -> Liste von GostKlausurvorgaben 
+	 * Eine Map quartal -> Liste von GostKlausurvorgaben
 	 */
 	private readonly _mapQuartalKlausurvorgaben : HashMap<number, Vector<GostKlausurvorgabe>> = new HashMap();
 
 	/**
-	 * Eine Map id -> GostKlausurvorgabe 
+	 * Eine Map id -> GostKlausurvorgabe
 	 */
 	private readonly _mapIdKlausurvorgabe : HashMap<number, GostKlausurvorgabe> = new HashMap();
 
 	/**
-	 * Eine Map quartal -> kursartAllg -> fachId -> GostKlausurvorgabe 
+	 * Eine Map quartal -> kursartAllg -> fachId -> GostKlausurvorgabe
 	 */
 	private readonly _mapQuartalKursartFachKlausurvorgabe : HashMap<number, HashMap<string, HashMap<number, GostKlausurvorgabe>>> = new HashMap();
 
 	/**
-	 * Eine Map kursartAllg -> fachId -> Liste von GostKlausurvorgabe 
+	 * Eine Map kursartAllg -> fachId -> Liste von GostKlausurvorgabe
 	 */
 	private readonly _mapKursartFachKlausurvorgaben : HashMap<string, HashMap<number, List<GostKlausurvorgabe>>> = new HashMap();
 

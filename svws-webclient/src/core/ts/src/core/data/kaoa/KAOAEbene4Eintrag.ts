@@ -6,32 +6,32 @@ import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzme
 export class KAOAEbene4Eintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Eintrags für die SBO Ebene 4. 
+	 * Das Kürzel des Eintrags für die SBO Ebene 4.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Beschreibung des Eintrags für die SBO Ebene 4. 
+	 * Die Beschreibung des Eintrags für die SBO Ebene 4.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Das Zusatzmerkmal, welcher der Eintrag zugeordnet ist. 
+	 * Das Zusatzmerkmal, welcher der Eintrag zugeordnet ist.
 	 */
 	public zusatzmerkmal : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

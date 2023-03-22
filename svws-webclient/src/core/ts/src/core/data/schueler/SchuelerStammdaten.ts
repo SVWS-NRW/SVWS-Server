@@ -6,222 +6,222 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 export class SchuelerStammdaten extends JavaObject {
 
 	/**
-	 * Die ID des Schülerdatensatzes. 
+	 * Die ID des Schülerdatensatzes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Foto (in Base64 kodiert) des Schülerdatensatzes. 
+	 * Das Foto (in Base64 kodiert) des Schülerdatensatzes.
 	 */
 	public foto : string | null = null;
 
 	/**
-	 * Der Nachname des Schülerdatensatzes. 
+	 * Der Nachname des Schülerdatensatzes.
 	 */
 	public nachname : string = "";
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. 
+	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes.
 	 */
 	public zusatzNachname : string = "";
 
 	/**
-	 * Der Vorname des Schülerdatensatzes. 
+	 * Der Vorname des Schülerdatensatzes.
 	 */
 	public vorname : string = "";
 
 	/**
-	 * Alle Vornamen, sofern es mehrere gibt, des Schülerdatensatzes. 
+	 * Alle Vornamen, sofern es mehrere gibt, des Schülerdatensatzes.
 	 */
 	public alleVornamen : string = "";
 
 	/**
-	 * Die ID des Geschlechtes 
+	 * Die ID des Geschlechtes
 	 */
 	public geschlecht : number = 0;
 
 	/**
-	 * Das Geburtsdatum des Schülerdatensatzes. 
+	 * Das Geburtsdatum des Schülerdatensatzes.
 	 */
 	public geburtsdatum : string | null = null;
 
 	/**
-	 * Der Geburtsort des Schülerdatensatzes. 
+	 * Der Geburtsort des Schülerdatensatzes.
 	 */
 	public geburtsort : string | null = null;
 
 	/**
-	 * Der Geburtsname des Schülerdatensatzes. 
+	 * Der Geburtsname des Schülerdatensatzes.
 	 */
 	public geburtsname : string | null = null;
 
 	/**
-	 * Ggf. der Straßenname im Wohnort des Schülers. 
+	 * Ggf. der Straßenname im Wohnort des Schülers.
 	 */
 	public strassenname : string | null = null;
 
 	/**
-	 * Ggf. die Hausnummer zur Straße im Wohnort des Schülers. 
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Schülers.
 	 */
 	public hausnummer : string | null = null;
 
 	/**
-	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers. 
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers.
 	 */
 	public hausnummerZusatz : string | null = null;
 
 	/**
-	 * Die ID des Wohnortes des Schülerdatensatzes. 
+	 * Die ID des Wohnortes des Schülerdatensatzes.
 	 */
 	public wohnortID : number | null = null;
 
 	/**
-	 * Die ID des Ortsteils des Schülerdatensatzes. 
+	 * Die ID des Ortsteils des Schülerdatensatzes.
 	 */
 	public ortsteilID : number | null = null;
 
 	/**
-	 * Die Telefonnummer des Schülerdatensatzes. 
+	 * Die Telefonnummer des Schülerdatensatzes.
 	 */
 	public telefon : string | null = null;
 
 	/**
-	 * Die Mobilnummer des Schülerdatensatzes. 
+	 * Die Mobilnummer des Schülerdatensatzes.
 	 */
 	public telefonMobil : string | null = null;
 
 	/**
-	 * Die private Email-Adresse des Schülerdatensatzes. 
+	 * Die private Email-Adresse des Schülerdatensatzes.
 	 */
 	public emailPrivat : string | null = null;
 
 	/**
-	 * Die schulische Email-Adresse des Schülerdatensatzes. 
+	 * Die schulische Email-Adresse des Schülerdatensatzes.
 	 */
 	public emailSchule : string | null = null;
 
 	/**
-	 * Die ID der Staatsangehörigkeit des Schülerdatensatzes. 
+	 * Die ID der Staatsangehörigkeit des Schülerdatensatzes.
 	 */
 	public staatsangehoerigkeitID : string | null = null;
 
 	/**
-	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes. 
+	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes.
 	 */
 	public staatsangehoerigkeit2ID : string | null = null;
 
 	/**
-	 * Die ID der Religion des Schülerdatensatzes. 
+	 * Die ID der Religion des Schülerdatensatzes.
 	 */
 	public religionID : number | null = null;
 
 	/**
-	 * Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll. 
+	 * Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll.
 	 */
 	public druckeKonfessionAufZeugnisse : boolean = false;
 
 	/**
-	 * Das Datum der Religionsabmeldung des Schülerdatensatzes. 
+	 * Das Datum der Religionsabmeldung des Schülerdatensatzes.
 	 */
 	public religionabmeldung : string | null = null;
 
 	/**
-	 * Das Datum der Religionsanmeldung des Schülerdatensatzes. 
+	 * Das Datum der Religionsanmeldung des Schülerdatensatzes.
 	 */
 	public religionanmeldung : string | null = null;
 
 	/**
-	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist. 
+	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist.
 	 */
 	public hatMigrationshintergrund : boolean = false;
 
 	/**
-	 * Das Zuzugsjahr des Schülerdatensatzes. 
+	 * Das Zuzugsjahr des Schülerdatensatzes.
 	 */
 	public zuzugsjahr : string | null = null;
 
 	/**
-	 * Das Geburtsland des Schülerdatensatzes. 
+	 * Das Geburtsland des Schülerdatensatzes.
 	 */
 	public geburtsland : string | null = null;
 
 	/**
-	 * Die Verkehrssprache der Familie des Schülerdatensatzes. 
+	 * Die Verkehrssprache der Familie des Schülerdatensatzes.
 	 */
 	public verkehrspracheFamilie : string | null = null;
 
 	/**
-	 * Das Geburtsland des Vaters des Schülerdatensatzes. 
+	 * Das Geburtsland des Vaters des Schülerdatensatzes.
 	 */
 	public geburtslandVater : string | null = null;
 
 	/**
-	 * Das Geburtsland der Mutter des Schülerdatensatzes. 
+	 * Das Geburtsland der Mutter des Schülerdatensatzes.
 	 */
 	public geburtslandMutter : string | null = null;
 
 	/**
-	 * Die ID eines sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. 
+	 * Die ID eines sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes.
 	 */
 	public foerderschwerpunktID : number | null = null;
 
 	/**
-	 * Die ID eines zweiten sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. 
+	 * Die ID eines zweiten sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes.
 	 */
 	public foerderschwerpunkt2ID : number | null = null;
 
 	/**
-	 * Gibt an, ob ein AOSF bei dem Schülerdatensatz vorliegt. 
+	 * Gibt an, ob ein AOSF bei dem Schülerdatensatz vorliegt.
 	 */
 	public istAOSF : boolean | null = null;
 
 	/**
-	 * Gibt an, ob zieldifferentes Lerne bei dem Schülerdatensatz vorliegt. 
+	 * Gibt an, ob zieldifferentes Lerne bei dem Schülerdatensatz vorliegt.
 	 */
 	public istLernenZieldifferent : boolean | null = null;
 
 	/**
-	 * Die ID des Status des Schülerdatensatzes. 
+	 * Die ID des Status des Schülerdatensatzes.
 	 */
 	public status : number = 0;
 
 	/**
-	 * Die ID der Art des Fahrschülers des Schülerdatensatzes. 
+	 * Die ID der Art des Fahrschülers des Schülerdatensatzes.
 	 */
 	public fahrschuelerArtID : number | null = null;
 
 	/**
-	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülerdatensatzes. 
+	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülerdatensatzes.
 	 */
 	public haltestelleID : number | null = null;
 
 	/**
-	 * Das Anmeldedatum des Schülerdatensatzes. 
+	 * Das Anmeldedatum des Schülerdatensatzes.
 	 */
 	public anmeldedatum : string | null = null;
 
 	/**
-	 * Das Aufnahmedatum des Schülerdatensatzes. 
+	 * Das Aufnahmedatum des Schülerdatensatzes.
 	 */
 	public aufnahmedatum : string | null = null;
 
 	/**
-	 * Gibt an, ob der Schüler volljährig ist oder nicht. 
+	 * Gibt an, ob der Schüler volljährig ist oder nicht.
 	 */
 	public istVolljaehrig : boolean | null = null;
 
 	/**
-	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht. 
+	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
 	 */
 	public istSchulpflichtErfuellt : boolean | null = null;
 
 	/**
-	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht. 
+	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht.
 	 */
 	public istBerufsschulpflichtErfuellt : boolean | null = null;
 
 	/**
-	 * Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat. 
+	 * Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat.
 	 */
 	public hatMasernimpfnachweis : boolean = false;
 
@@ -231,22 +231,22 @@ export class SchuelerStammdaten extends JavaObject {
 	public keineAuskunftAnDritte : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler BAFÖG erhält oder nicht. 
+	 * Gibt an, ob der Schüler BAFÖG erhält oder nicht.
 	 */
 	public erhaeltSchuelerBAFOEG : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht. 
+	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht.
 	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
 
 	/**
-	 * Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. 
+	 * Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht.
 	 */
 	public istDuplikat : boolean = false;
 
 	/**
-	 * Textfeld mit Bemerkungen zum Schülerdatensatz. 
+	 * Textfeld mit Bemerkungen zum Schülerdatensatz.
 	 */
 	public bemerkungen : string | null = null;
 

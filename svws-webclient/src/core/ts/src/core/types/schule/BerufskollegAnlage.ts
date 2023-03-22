@@ -18,52 +18,52 @@ export class BerufskollegAnlage extends JavaObject {
 	private static readonly all_values_by_name : Map<string, BerufskollegAnlage> = new Map<string, BerufskollegAnlage>();
 
 	/**
-	 * Anlage A: Fachklassen duales System und Ausbildungsvorbereitung 
+	 * Anlage A: Fachklassen duales System und Ausbildungsvorbereitung
 	 */
 	public static readonly A : BerufskollegAnlage = new BerufskollegAnlage("A", 0, [new BerufskollegAnlageKatalogEintrag(1000, "A", "Fachklassen duales System und Ausbildungsvorbereitung", null, null)]);
 
 	/**
-	 * Anlage B: Berufsfachschule 
+	 * Anlage B: Berufsfachschule
 	 */
 	public static readonly B : BerufskollegAnlage = new BerufskollegAnlage("B", 1, [new BerufskollegAnlageKatalogEintrag(2000, "B", "Berufsfachschule", null, null)]);
 
 	/**
-	 * Anlage C: Berufsfachschule und Fachoberschule 
+	 * Anlage C: Berufsfachschule und Fachoberschule
 	 */
 	public static readonly C : BerufskollegAnlage = new BerufskollegAnlage("C", 2, [new BerufskollegAnlageKatalogEintrag(3000, "C", "Berufsfachschule und Fachoberschule", null, null)]);
 
 	/**
-	 * Anlage D: Berufliches Gymnasium und Fachoberschule 
+	 * Anlage D: Berufliches Gymnasium und Fachoberschule
 	 */
 	public static readonly D : BerufskollegAnlage = new BerufskollegAnlage("D", 3, [new BerufskollegAnlageKatalogEintrag(4000, "D", "Berufliches Gymnasium und Fachoberschule", null, null)]);
 
 	/**
-	 * Anlage E: Fachschule 
+	 * Anlage E: Fachschule
 	 */
 	public static readonly E : BerufskollegAnlage = new BerufskollegAnlage("E", 4, [new BerufskollegAnlageKatalogEintrag(5000, "E", "Fachschule", null, null)]);
 
 	/**
-	 * Anlage H: Berufsgrundbildung und Berufsausbildung an einer freien Waldorfschule / Hiberniakolleg 
+	 * Anlage H: Berufsgrundbildung und Berufsausbildung an einer freien Waldorfschule / Hiberniakolleg
 	 */
 	public static readonly H : BerufskollegAnlage = new BerufskollegAnlage("H", 5, [new BerufskollegAnlageKatalogEintrag(6000, "H", "Bildungsgänge an freien Waldorfschulen / Hiberniakolleg", null, null)]);
 
 	/**
-	 * Anlage X: Ehemalige Kollegschule 
+	 * Anlage X: Ehemalige Kollegschule
 	 */
 	public static readonly X : BerufskollegAnlage = new BerufskollegAnlage("X", 6, [new BerufskollegAnlageKatalogEintrag(24000, "X", "Ehemalige Kollegschule", null, null)]);
 
 	/**
-	 * Anlage Z: TODO 
+	 * Anlage Z: TODO
 	 */
 	public static readonly Z : BerufskollegAnlage = new BerufskollegAnlage("Z", 7, [new BerufskollegAnlageKatalogEintrag(26000, "Z", "Kooperationsklasse Hauptschule", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Anlage, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Anlage, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : BerufskollegAnlageKatalogEintrag;
 

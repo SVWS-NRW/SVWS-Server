@@ -20,67 +20,67 @@ export class HerkunftSonstige extends JavaObject {
 	private static readonly all_values_by_name : Map<string, HerkunftSonstige> = new Map<string, HerkunftSonstige>();
 
 	/**
-	 * Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind 
+	 * Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind
 	 */
 	public static readonly AS : HerkunftSonstige = new HerkunftSonstige("AS", 0, [new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, null)]);
 
 	/**
-	 * Keine Schule bzw. kein Förderschulkindergarten (Einschulung) 
+	 * Keine Schule bzw. kein Förderschulkindergarten (Einschulung)
 	 */
 	public static readonly ES : HerkunftSonstige = new HerkunftSonstige("ES", 1, [new HerkunftSonstigeKatalogEintrag(2000, "ES", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V), "Keine Schule bzw. kein Förderschulkindergarten (Einschulung)", null, null)]);
 
 	/**
-	 * Hausfrüherziehung für Hör- bzw. Sehgeschädigte 
+	 * Hausfrüherziehung für Hör- bzw. Sehgeschädigte
 	 */
 	public static readonly FE : HerkunftSonstige = new HerkunftSonstige("FE", 2, [new HerkunftSonstigeKatalogEintrag(3000, "FE", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.KS, Schulform.S), "Hausfrüherziehung für Hör- bzw. Sehgeschädigte", null, null)]);
 
 	/**
-	 * Hochschule, Universität 
+	 * Hochschule, Universität
 	 */
 	public static readonly HU : HerkunftSonstige = new HerkunftSonstige("HU", 3, [new HerkunftSonstigeKatalogEintrag(4000, "HU", Arrays.asList(Schulform.BK, Schulform.SB), "Hochschule, Universität", null, null)]);
 
 	/**
-	 * Förderschulkindergarten (einschließlich frühkindliche Förderung) 
+	 * Förderschulkindergarten (einschließlich frühkindliche Förderung)
 	 */
 	public static readonly SK : HerkunftSonstige = new HerkunftSonstige("SK", 4, [new HerkunftSonstigeKatalogEintrag(5000, "SK", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V), "Förderschulkindergarten (einschließlich frühkindliche Förderung)", null, null)]);
 
 	/**
-	 * Herkunft noch unbekannt (nur Gliederung A12, A13) 
+	 * Herkunft noch unbekannt (nur Gliederung A12, A13)
 	 */
 	public static readonly UN : HerkunftSonstige = new HerkunftSonstige("UN", 5, [new HerkunftSonstigeKatalogEintrag(6000, "UN", Arrays.asList(Schulform.BK, Schulform.SB), "Herkunft noch unbekannt (nur Gliederung A12, A13)", null, null)]);
 
 	/**
-	 * Wehr-, Zivil- oder Bundesfreiwilligendienst 
+	 * Wehr-, Zivil- oder Bundesfreiwilligendienst
 	 */
 	public static readonly WZ : HerkunftSonstige = new HerkunftSonstige("WZ", 6, [new HerkunftSonstigeKatalogEintrag(8000, "WZ", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB), "Wehr-, Zivil- oder Bundesfreiwilligendienst", null, null)]);
 
 	/**
-	 * Berufstätigkeit (z. B. vor Besuch einer Fachschule) 
+	 * Berufstätigkeit (z. B. vor Besuch einer Fachschule)
 	 */
 	public static readonly XB : HerkunftSonstige = new HerkunftSonstige("XB", 7, [new HerkunftSonstigeKatalogEintrag(9000, "XB", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB), "Berufstätigkeit (z. B. vor Besuch einer Fachschule)", null, null)]);
 
 	/**
-	 * Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler 
+	 * Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler
 	 */
 	public static readonly XS : HerkunftSonstige = new HerkunftSonstige("XS", 8, [new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der sonstigen Herkunft, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der sonstigen Herkunft, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : HerkunftSonstigeKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der sonstigen Herkunft 
+	 * Die Historie mit den Einträgen der sonstigen Herkunft
 	 */
 	public readonly historie : Array<HerkunftSonstigeKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten sonstigen Herkünfte, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten sonstigen Herkünfte, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _ebenen : HashMap<string, HerkunftSonstige | null> = new HashMap();
 

@@ -7,22 +7,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Kalender extends JavaObject {
 
 	/**
-	 * ID des Kalenders 
+	 * ID des Kalenders
 	 */
 	public id : string = "";
 
 	/**
-	 * Anzeigename des Kalenders 
+	 * Anzeigename des Kalenders
 	 */
 	public displayname : string | null = null;
 
 	/**
-	 * Beschreibung des Kalenders 
+	 * Beschreibung des Kalenders
 	 */
 	public beschreibung : string | null = null;
 
 	/**
-	 * Versionskennzeichen des Kalenders 
+	 * Versionskennzeichen des Kalenders
 	 */
 	public synctoken : number = 0;
 
@@ -37,17 +37,17 @@ export class Kalender extends JavaObject {
 	public kalenderEintraege : List<KalenderEintrag> = new Vector();
 
 	/**
-	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat 
+	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat
 	 */
 	public darfSchreiben : boolean = false;
 
 	/**
-	 * ob der angemeldete Nutzer Leserecht auf dem Kalender hat 
+	 * ob der angemeldete Nutzer Leserecht auf dem Kalender hat
 	 */
 	public darfLesen : boolean = false;
 
 	/**
-	 * BenutzerId des Besitzers dieses Kalenders 
+	 * BenutzerId des Besitzers dieses Kalenders
 	 */
 	public besitzer : number = 0;
 

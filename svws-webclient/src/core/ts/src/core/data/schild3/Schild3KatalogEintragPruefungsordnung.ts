@@ -5,47 +5,47 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 
 	/**
-	 * Zulässige Schulformen der Prüfungsordnungen 
+	 * Zulässige Schulformen der Prüfungsordnungen
 	 */
 	public PO_Schulform : string | null = null;
 
 	/**
-	 * Erstes Kürzel 
+	 * Erstes Kürzel
 	 */
 	public PO_Krz : string | null = null;
 
 	/**
-	 * Zweites Kürzel 
+	 * Zweites Kürzel
 	 */
 	public PO_Name : string | null = null;
 
 	/**
-	 * Zulässige Gliederungen 
+	 * Zulässige Gliederungen
 	 */
 	public PO_SGL : string | null = null;
 
 	/**
-	 * Deprecated  
+	 * Deprecated
 	 */
 	public PO_MinJahrgang : number | null = null;
 
 	/**
-	 * Deprecated 
+	 * Deprecated
 	 */
 	public PO_MaxJahrgang : number | null = null;
 
 	/**
-	 * Zulässige Jahrgänge 
+	 * Zulässige Jahrgänge
 	 */
 	public PO_Jahrgaenge : string | null = null;
 
 	/**
-	 * Gültig ab Schuljahr 
+	 * Gültig ab Schuljahr
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gültig bis Schuljahr 
+	 * Gültig bis Schuljahr
 	 */
 	public gueltigBis : number | null = null;
 

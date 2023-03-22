@@ -7,102 +7,102 @@ import { Vector, cast_java_util_Vector } from '../../../../java/util/Vector';
 export class GostKursklausur extends JavaObject {
 
 	/**
-	 * Die ID der Kursklausur. 
+	 * Die ID der Kursklausur.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die ID der Klausur-Vorgabe. 
+	 * Die ID der Klausur-Vorgabe.
 	 */
 	public idVorgabe : number = -1;
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird.
 	 */
 	public abijahr : number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird. 
+	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
 	 */
 	public halbjahr : number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird. 
+	 * Das Quartal, in welchem die Klausur gechrieben wird.
 	 */
 	public quartal : number = -1;
 
 	/**
-	 * Die ID des Faches. 
+	 * Die ID des Faches.
 	 */
 	public idFach : number = -1;
 
 	/**
-	 * Das Kürzel einer verallgemeinerten Kursart. 
+	 * Das Kürzel einer verallgemeinerten Kursart.
 	 */
 	public kursart : string = "";
 
 	/**
-	 * Die Dauer der Klausur in Minuten. 
+	 * Die Dauer der Klausur in Minuten.
 	 */
 	public dauer : number = -1;
 
 	/**
-	 * Die Auswahlzeit in Minuten, sofern vorhanden. 
+	 * Die Auswahlzeit in Minuten, sofern vorhanden.
 	 */
 	public auswahlzeit : number = -1;
 
 	/**
-	 * Die Information, ob es sich um eine mündliche Prüfung handelt. 
+	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
 	 */
 	public istMdlPruefung : boolean = false;
 
 	/**
-	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen. 
+	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen.
 	 */
 	public istAudioNotwendig : boolean = false;
 
 	/**
-	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse. 
+	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse.
 	 */
 	public istVideoNotwendig : boolean = false;
 
 	/**
-	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden. 
+	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden.
 	 */
 	public bemerkungVorgabe : string | null = null;
 
 	/**
-	 * Die ID des Klausurkurses. 
+	 * Die ID des Klausurkurses.
 	 */
 	public idKurs : number = -1;
 
 	/**
-	 * Die Kurzbezeichnung des Klausurkurses. 
+	 * Die Kurzbezeichnung des Klausurkurses.
 	 */
 	public kursKurzbezeichnung : string | null = "";
 
 	/**
-	 * Die Schiene des Kurses. 
+	 * Die Schiene des Kurses.
 	 */
 	public kursSchiene : Array<number> = [];
 
 	/**
-	 * Die ID des Kurslehrers. 
+	 * Die ID des Kurslehrers.
 	 */
 	public idLehrer : number = -1;
 
 	/**
-	 * Die ID des Klausurtermins, sofern schon gesetzt. 
+	 * Die ID des Klausurtermins, sofern schon gesetzt.
 	 */
 	public idTermin : number | null = null;
 
 	/**
-	 * Die Startzeit der Klausur, sofern abweichend von Startzeit des gesamten Termins. 
+	 * Die Startzeit der Klausur, sofern abweichend von Startzeit des gesamten Termins.
 	 */
 	public startzeit : string | null = null;
 
 	/**
-	 * Die Liste der IDs der zugehörigen Schüler. 
+	 * Die Liste der IDs der zugehörigen Schüler.
 	 */
 	public schuelerIds : List<number> = new Vector();
 

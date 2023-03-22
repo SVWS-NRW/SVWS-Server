@@ -6,67 +6,67 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class ENMBKAbschluss extends JavaObject {
 
 	/**
-	 * Gibt an, ob der Schüler die Zulassung für die Abschlussprüfung hat. 
+	 * Gibt an, ob der Schüler die Zulassung für die Abschlussprüfung hat.
 	 */
 	public hatZulassung : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler die Abschlussprüfung bestanden hat. 
+	 * Gibt an, ob der Schüler die Abschlussprüfung bestanden hat.
 	 */
 	public hatBestanden : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler die Zulassung zum Erwerb der erweiterten beruflichen Kenntnisse hat. 
+	 * Gibt an, ob der Schüler die Zulassung zum Erwerb der erweiterten beruflichen Kenntnisse hat.
 	 */
 	public hatZulassungErweiterteBeruflicheKenntnisse : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler die erweiterten beruflichen Kenntnisse erworben hat. 
+	 * Gibt an, ob der Schüler die erweiterten beruflichen Kenntnisse erworben hat.
 	 */
 	public hatErworbenErweiterteBeruflicheKenntnisse : boolean = false;
 
 	/**
-	 * Das Notenkürzel der Note der praktischen Prüfung. 
+	 * Das Notenkürzel der Note der praktischen Prüfung.
 	 */
 	public notePraktischePruefung : string | null = null;
 
 	/**
-	 * Das Notenkürzel der Note aus dem Kolloqium. 
+	 * Das Notenkürzel der Note aus dem Kolloqium.
 	 */
 	public noteKolloqium : string | null = null;
 
 	/**
-	 * Gibt an, ob der Schüler die Zulassung zur Berufsabschlussprüfung hat. 
+	 * Gibt an, ob der Schüler die Zulassung zur Berufsabschlussprüfung hat.
 	 */
 	public hatZulassungBerufsabschlusspruefung : boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler die Berufsabschlussprüfung bestanden hat. 
+	 * Gibt an, ob der Schüler die Berufsabschlussprüfung bestanden hat.
 	 */
 	public hatBestandenBerufsabschlusspruefung : boolean = false;
 
 	/**
-	 * Gibt das Thema der Abschlussarbeit an. 
+	 * Gibt das Thema der Abschlussarbeit an.
 	 */
 	public themaAbschlussarbeit : string | null = null;
 
 	/**
-	 * Gibt an, ob eine Berufsabschlussprüfung vorhanden ist oder nicht. 
+	 * Gibt an, ob eine Berufsabschlussprüfung vorhanden ist oder nicht.
 	 */
 	public istVorhandenBerufsabschlusspruefung : boolean = false;
 
 	/**
-	 * Das Notenkürzel der Note aus der Fachpraxis. 
+	 * Das Notenkürzel der Note aus der Fachpraxis.
 	 */
 	public noteFachpraxis : string | null = null;
 
 	/**
-	 * Gibt an, ob der fachpraktische Teil ausreichend ist oder nicht. 
+	 * Gibt an, ob der fachpraktische Teil ausreichend ist oder nicht.
 	 */
 	public istFachpraktischerTeilAusreichend : boolean = false;
 
 	/**
-	 * Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind. 
+	 * Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind.
 	 */
 	public faecher : Vector<ENMBKFach> = new Vector();
 

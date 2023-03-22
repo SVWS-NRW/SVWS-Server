@@ -3,17 +3,17 @@ import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 export class RGBFarbe extends JavaObject {
 
 	/**
-	 * Der Rot-Anteil der Farbe (0-255) 
+	 * Der Rot-Anteil der Farbe (0-255)
 	 */
 	public red : number = 220;
 
 	/**
-	 * Der Grün-Anteil der Farbe (0-255) 
+	 * Der Grün-Anteil der Farbe (0-255)
 	 */
 	public green : number = 220;
 
 	/**
-	 * Der Blau-Anteil der Farbe (0-255) 
+	 * Der Blau-Anteil der Farbe (0-255)
 	 */
 	public blue : number = 220;
 

@@ -6,37 +6,37 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KatalogEintragOrte extends JavaObject {
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: die ID des Katalog-Eintrags 
+	 * Katalog von IT.NRW PLZ Ort: die ID des Katalog-Eintrags
 	 */
 	public ID : number | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: die Postleitzahl 
+	 * Katalog von IT.NRW PLZ Ort: die Postleitzahl
 	 */
 	public PLZ : string | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: der Regionalschlüssel 
+	 * Katalog von IT.NRW PLZ Ort: der Regionalschlüssel
 	 */
 	public RegSchl : string | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: die Ortsbezeichnung 
+	 * Katalog von IT.NRW PLZ Ort: die Ortsbezeichnung
 	 */
 	public Ort : string | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: eine Nummer für die Sortierreihenfolge der Katalog-Einträge 
+	 * Katalog von IT.NRW PLZ Ort: eine Nummer für die Sortierreihenfolge der Katalog-Einträge
 	 */
 	public Sortierung : number | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit ab welchem Schuljahr an 
+	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit ab welchem Schuljahr an
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit bis zu welchem Schuljahr an 
+	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit bis zu welchem Schuljahr an
 	 */
 	public gueltigBis : number | null = null;
 

@@ -3,17 +3,17 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class LinkedCollectionElement<E> extends JavaObject {
 
 	/**
-	 * Der Wert, der in diesem Element gespeichert wird. 
+	 * Der Wert, der in diesem Element gespeichert wird.
 	 */
 	private _value : E;
 
 	/**
-	 * Referenz auf das vorige Element. 
+	 * Referenz auf das vorige Element.
 	 */
 	private _prev : LinkedCollectionElement<E> | null = null;
 
 	/**
-	 * Referenzt auf das nachfolgende Element. 
+	 * Referenzt auf das nachfolgende Element.
 	 */
 	private _next : LinkedCollectionElement<E> | null = null;
 

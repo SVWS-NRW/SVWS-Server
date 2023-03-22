@@ -5,52 +5,52 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ENMSprachenfolge extends JavaObject {
 
 	/**
-	 * Das Kürzel der Sprache, bereinigt von dem Jahrgang, in dem die Sprache eingesetzt hat 
+	 * Das Kürzel der Sprache, bereinigt von dem Jahrgang, in dem die Sprache eingesetzt hat
 	 */
 	public sprache : string | null = null;
 
 	/**
-	 * Die ID des Faches 
+	 * Die ID des Faches
 	 */
 	public fachID : number = 0;
 
 	/**
-	 * Das Kürzel des Faches 
+	 * Das Kürzel des Faches
 	 */
 	public fachKuerzel : string | null = null;
 
 	/**
-	 * Die Reihenfolge des Faches in der Sprachenfolge (Beispiel 1) 
+	 * Die Reihenfolge des Faches in der Sprachenfolge (Beispiel 1)
 	 */
 	public reihenfolge : number = 0;
 
 	/**
-	 * Die Information, ab welchem Jahrgang die Sprache belegt wurde (Beispiel 5) 
+	 * Die Information, ab welchem Jahrgang die Sprache belegt wurde (Beispiel 5)
 	 */
 	public belegungVonJahrgang : number = 0;
 
 	/**
-	 * Die Information, ab welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 1) 
+	 * Die Information, ab welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 1)
 	 */
 	public belegungVonAbschnitt : number = 0;
 
 	/**
-	 * Die Information, bis zu welchem Jahrgang die Sprache belegt wurde (Beispiel 12), sofern die Sprache bereits abgeschlossen ist 
+	 * Die Information, bis zu welchem Jahrgang die Sprache belegt wurde (Beispiel 12), sofern die Sprache bereits abgeschlossen ist
 	 */
 	public belegungBisJahrgang : number | null = null;
 
 	/**
-	 * Die Information, bis zu welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 2), sofern die Sprache bereits abgeschlossen ist 
+	 * Die Information, bis zu welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 2), sofern die Sprache bereits abgeschlossen ist
 	 */
 	public belegungBisAbschnitt : number | null = null;
 
 	/**
-	 * Die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1) 
+	 * Die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1)
 	 */
 	public referenzniveau : string | null = null;
 
 	/**
-	 * Die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. "0, 2, 4, 6") 
+	 * Die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. "0, 2, 4, 6")
 	 */
 	public belegungSekI : number | null = null;
 

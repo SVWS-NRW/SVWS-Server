@@ -8,22 +8,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchuelerblockungInput extends JavaObject {
 
 	/**
-	 * Die Anzahl an vorhandenen Schienen. 
+	 * Die Anzahl an vorhandenen Schienen.
 	 */
 	public schienen : number = 0;
 
 	/**
-	 * Alle Kurse, die zu den Fachwahlen des Schülers passen. 
+	 * Alle Kurse, die zu den Fachwahlen des Schülers passen.
 	 */
 	public kurse : Vector<SchuelerblockungInputKurs> = new Vector();
 
 	/**
-	 * Alle Fachwahlen des Schülers. 
+	 * Alle Fachwahlen des Schülers.
 	 */
 	public fachwahlen : Vector<GostFachwahl> = new Vector();
 
 	/**
-	 * Zu jeder Fachwahl eine textuelle Darstellung. 
+	 * Zu jeder Fachwahl eine textuelle Darstellung.
 	 */
 	public fachwahlenText : Vector<string> = new Vector();
 

@@ -8,24 +8,24 @@ import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationExcep
 export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 
 	/**
-	 * Referenz auf das Array der Elemente im Minimum Heap. 
+	 * Referenz auf das Array der Elemente im Minimum Heap.
 	 */
 	private readonly _elements : Array<T | null>;
 
 	/**
-	 * Die aktuelle Position beim Durchlaufen des Arrays der den Minimum Heap enthält. 
+	 * Die aktuelle Position beim Durchlaufen des Arrays der den Minimum Heap enthält.
 	 */
 	private _current : number = 0;
 
 	/**
-	 * Die aktuelle Größe des Minimum Heaps, also die Anzahl der enthaltenen Elemente. 
+	 * Die aktuelle Größe des Minimum Heaps, also die Anzahl der enthaltenen Elemente.
 	 */
 	private readonly _heap : MinHeap<T>;
 
 	/**
-	 * Die Anzahl der Modifikationen, die bei dem {@link MinHeap} zur Zeit des Erzeugen des 
-	 *  Iterators gemacht wurden. Dieser Wert muss mit dem bei der {@link MinHeap} übereinstimmen. 
-	 *  Ansonsten wird eine {@link ConcurrentModificationException} generiert. 
+	 * Die Anzahl der Modifikationen, die bei dem {@link MinHeap} zur Zeit des Erzeugen des
+	 *  Iterators gemacht wurden. Dieser Wert muss mit dem bei der {@link MinHeap} übereinstimmen.
+	 *  Ansonsten wird eine {@link ConcurrentModificationException} generiert.
 	 */
 	private readonly _expModCount : number;
 

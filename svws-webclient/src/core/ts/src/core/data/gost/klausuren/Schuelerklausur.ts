@@ -4,27 +4,27 @@ import { JavaString, cast_java_lang_String } from '../../../../java/lang/JavaStr
 export class Schuelerklausur extends JavaObject {
 
 	/**
-	 * Die ID des Stundenplans. 
+	 * Die ID des Stundenplans.
 	 */
 	public idSchuelerklausur : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans. 
+	 * Die textuelle Beschreibung des Stundenplans.
 	 */
 	public idKursklausur : number = -1;
 
 	/**
-	 * Das Zeitraster des Stundenplans. 
+	 * Das Zeitraster des Stundenplans.
 	 */
 	public idTermin : number = -1;
 
 	/**
-	 * Das Zeitraster des Stundenplans. 
+	 * Das Zeitraster des Stundenplans.
 	 */
 	public idSchueler : number = -1;
 
 	/**
-	 * Das Datum, ab dem der Stundenpland gültig ist. 
+	 * Das Datum, ab dem der Stundenpland gültig ist.
 	 */
 	public startzeit : string | null = null;
 

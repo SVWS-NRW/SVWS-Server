@@ -19,97 +19,97 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LehrerBeschaeftigungsart> = new Map<string, LehrerBeschaeftigungsart>();
 
 	/**
-	 * Beschaeftigungsart 'Vollzeit' eines Lehrers 
+	 * Beschaeftigungsart 'Vollzeit' eines Lehrers
 	 */
 	public static readonly V : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("V", 0, [new LehrerKatalogBeschaeftigungsartEintrag(1, "V", "Vollzeit", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Teilzeit' eines Lehrers 
+	 * Beschaeftigungsart 'Teilzeit' eines Lehrers
 	 */
 	public static readonly T : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("T", 1, [new LehrerKatalogBeschaeftigungsartEintrag(2, "T", "Teilzeit", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers 
+	 * Beschaeftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers
 	 */
 	public static readonly AT : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("AT", 2, [new LehrerKatalogBeschaeftigungsartEintrag(3, "AT", "Altersteilzeit (Beschäftigungsphase)", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers 
+	 * Beschaeftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
 	public static readonly TA : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TA", 3, [new LehrerKatalogBeschaeftigungsartEintrag(4, "TA", "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers 
+	 * Beschaeftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
 	public static readonly VA : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("VA", 4, [new LehrerKatalogBeschaeftigungsartEintrag(5, "VA", "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Sabbatjahr' eines Lehrers 
+	 * Beschaeftigungsart 'Sabbatjahr' eines Lehrers
 	 */
 	public static readonly TS : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TS", 5, [new LehrerKatalogBeschaeftigungsartEintrag(6, "TS", "Sabbatjahr", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Nebenberufliche Beschäftigtigung' eines Lehrers 
+	 * Beschaeftigungsart 'Nebenberufliche Beschäftigtigung' eines Lehrers
 	 */
 	public static readonly SB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6, [new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigtigung", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Geringfügige Beschäftigtigung' eines Lehrers 
+	 * Beschaeftigungsart 'Geringfügige Beschäftigtigung' eines Lehrers
 	 */
 	public static readonly GB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7, [new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigtigung", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Studierende' eines Lehrers 
+	 * Beschaeftigungsart 'Studierende' eines Lehrers
 	 */
 	public static readonly ST : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("ST", 8, [new LehrerKatalogBeschaeftigungsartEintrag(11, "ST", "Studierende", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers 
+	 * Beschaeftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers
 	 */
 	public static readonly NA : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("NA", 9, [new LehrerKatalogBeschaeftigungsartEintrag(12, "NA", "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Gestellungsvertrag' eines Lehrers 
+	 * Beschaeftigungsart 'Gestellungsvertrag' eines Lehrers
 	 */
 	public static readonly G : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("G", 10, [new LehrerKatalogBeschaeftigungsartEintrag(13, "G", "Gestellungsvertrag", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers 
+	 * Beschaeftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers
 	 */
 	public static readonly X : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("X", 11, [new LehrerKatalogBeschaeftigungsartEintrag(15, "X", "Unentgeltlich Beschäftigte", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers 
+	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers
 	 */
 	public static readonly WT : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WT", 12, [new LehrerKatalogBeschaeftigungsartEintrag(16, "WT", "Beamte auf Widerruf (LAA) in Teilzeit", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers 
+	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers
 	 */
 	public static readonly WV : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WV", 13, [new LehrerKatalogBeschaeftigungsartEintrag(17, "WV", "Beamte auf Widerruf (LAA) in Vollzeit", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Beschäftigungsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Beschäftigungsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : LehrerKatalogBeschaeftigungsartEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Beschäftigungsart 
+	 * Die Historie mit den Einträgen der Beschäftigungsart
 	 */
 	public readonly historie : Array<LehrerKatalogBeschaeftigungsartEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind. 
+	 * Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind.
 	 */
 	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart | null> = new HashMap();
 
 	/**
-	 * Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 * Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind.
 	 */
 	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart | null> = new HashMap();
 

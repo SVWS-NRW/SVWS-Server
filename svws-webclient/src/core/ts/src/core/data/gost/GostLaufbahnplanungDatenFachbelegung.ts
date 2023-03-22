@@ -6,22 +6,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 
 	/**
-	 * Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde. 
+	 * Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde.
 	 */
 	public fachID : number = -1;
 
 	/**
-	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null) 
+	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null)
 	 */
 	public abiturFach : number | null = null;
 
 	/**
-	 * Die ID der Gost-Kursart bei den Einzelbelegungen des Faches in den Halbjahren 
+	 * Die ID der Gost-Kursart bei den Einzelbelegungen des Faches in den Halbjahren
 	 */
 	public readonly kursart : Array<string | null> = Array(GostHalbjahr.maxHalbjahre).fill(null);
 
 	/**
-	 * Gibt an, ob die Einzelbelegung des Faches in den Halbjahren schriftlich ist oder nicht 
+	 * Gibt an, ob die Einzelbelegung des Faches in den Halbjahren schriftlich ist oder nicht
 	 */
 	public readonly schriftlich : Array<boolean> = Array(GostHalbjahr.maxHalbjahre).fill(false);
 

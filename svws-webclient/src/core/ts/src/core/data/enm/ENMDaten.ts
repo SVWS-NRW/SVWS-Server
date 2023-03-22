@@ -16,112 +16,112 @@ import { ENMFloskelgruppe, cast_de_nrw_schule_svws_core_data_enm_ENMFloskelgrupp
 export class ENMDaten extends JavaObject {
 
 	/**
-	 * Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1 
+	 * Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1
 	 */
 	public enmRevision : number = -1;
 
 	/**
-	 * Die Schulnummer, für welche die ENM-Daten generiert wurden. 
+	 * Die Schulnummer, für welche die ENM-Daten generiert wurden.
 	 */
 	public schulnummer : number = 0;
 
 	/**
-	 * Das Schuljahr, für welches die ENM-Daten generiert wurden. 
+	 * Das Schuljahr, für welches die ENM-Daten generiert wurden.
 	 */
 	public schuljahr : number = 0;
 
 	/**
-	 * Die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus) 
+	 * Die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus)
 	 */
 	public anzahlAbschnitte : number = 0;
 
 	/**
-	 * Gibt an, für welchen Abschnitt innerhalb des Schuljahres die ENM-Daten generiert wurden. 
+	 * Gibt an, für welchen Abschnitt innerhalb des Schuljahres die ENM-Daten generiert wurden.
 	 */
 	public aktuellerAbschnitt : number = 0;
 
 	/**
-	 * Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll. 
+	 * Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.
 	 */
 	public publicKey : string | null = null;
 
 	/**
-	 * Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten. 
+	 * Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.
 	 */
 	public lehrerID : number | null = null;
 
 	/**
-	 * Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. 
+	 * Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht.
 	 */
 	public fehlstundenEingabe : boolean = false;
 
 	/**
-	 * Gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen werden oder nicht. 
+	 * Gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen werden oder nicht.
 	 */
 	public fehlstundenSIFachbezogen : boolean = false;
 
 	/**
-	 * Gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen werden oder nicht. 
+	 * Gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen werden oder nicht.
 	 */
 	public fehlstundenSIIFachbezogen : boolean = false;
 
 	/**
-	 * Gibt das Kürzel der Schulform der Schule an. 
+	 * Gibt das Kürzel der Schulform der Schule an.
 	 */
 	public schulform : string | null = null;
 
 	/**
-	 * Gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de). 
+	 * Gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de).
 	 */
 	public mailadresse : string | null = null;
 
 	/**
-	 * Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool) 
+	 * Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool)
 	 */
 	public noten : Vector<ENMNote> = new Vector();
 
 	/**
-	 * Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool) 
+	 * Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool)
 	 */
 	public foerderschwerpunkte : Vector<ENMFoerderschwerpunkt> = new Vector();
 
 	/**
-	 * Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.  
+	 * Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.
 	 */
 	public jahrgaenge : Vector<ENMJahrgang> = new Vector();
 
 	/**
-	 * Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.  
+	 * Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.
 	 */
 	public klassen : Vector<ENMKlasse> = new Vector();
 
 	/**
-	 * Die Informationen der vordefinierten Floskelgruppen und deren Floskeln. 
+	 * Die Informationen der vordefinierten Floskelgruppen und deren Floskeln.
 	 */
 	public floskelgruppen : Vector<ENMFloskelgruppe> = new Vector();
 
 	/**
-	 * Die Informationen zu Lehrern, die in der Notendatei vorhanden sind. 
+	 * Die Informationen zu Lehrern, die in der Notendatei vorhanden sind.
 	 */
 	public lehrer : Vector<ENMLehrer> = new Vector();
 
 	/**
-	 * Die Informationen zu den Fächern, die in der Notendatei vorhanden sind. 
+	 * Die Informationen zu den Fächern, die in der Notendatei vorhanden sind.
 	 */
 	public faecher : Vector<ENMFach> = new Vector();
 
 	/**
-	 * Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind. 
+	 * Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind.
 	 */
 	public teilleistungsarten : Vector<ENMTeilleistungsart> = new Vector();
 
 	/**
-	 * Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind. 
+	 * Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind.
 	 */
 	public lerngruppen : Vector<ENMLerngruppe> = new Vector();
 
 	/**
-	 * Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden. 
+	 * Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden.
 	 */
 	public schueler : Vector<ENMSchueler> = new Vector();
 

@@ -4,23 +4,23 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchuelerblockungInputFachwahl extends JavaObject {
 
 	/**
-	 * Die ID der Fachwahl. 
+	 * Die ID der Fachwahl.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Faches. Beispielsweise des Faches 'D'. 
+	 * Die ID des Faches. Beispielsweise des Faches 'D'.
 	 */
 	public fach : number = 0;
 
 	/**
-	 * Die ID der Kursart. Beispielsweise der Kursart 'LK'. 
+	 * Die ID der Kursart. Beispielsweise der Kursart 'LK'.
 	 */
 	public kursart : number = 0;
 
 	/**
 	 * Eine String-Darstellung der Fachwahl, damit bei Warnungen oder Fehlern dem Benutzer diese angezeigt werden kann,
-	 *  beispielsweise 'Mareike Musterfrau hat D;LK'. 
+	 *  beispielsweise 'Mareike Musterfrau hat D;LK'.
 	 */
 	public representation : string = "";
 

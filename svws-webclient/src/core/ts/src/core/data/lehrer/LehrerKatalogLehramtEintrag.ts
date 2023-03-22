@@ -10,22 +10,22 @@ export class LehrerKatalogLehramtEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für das Lehramt. 
+	 * Das Kürzel für das Lehramt.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext das Lehramt. 
+	 * Der Klartext das Lehramt.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr das Lehramt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr das Lehramt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr das Lehramt gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr das Lehramt gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

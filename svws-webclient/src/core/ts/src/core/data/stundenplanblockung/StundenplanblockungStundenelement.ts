@@ -3,7 +3,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class StundenplanblockungStundenelement extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID des Stundenelementes. 
+	 * Die Datenbank-ID des Stundenelementes.
 	 */
 	public id : number = 0;
 
@@ -13,7 +13,7 @@ export class StundenplanblockungStundenelement extends JavaObject {
 	public stunden : number = -1;
 
 	/**
-	 * Der Typ. (1 = jede Woche, 2 = gedoppelte Einzelstunde) 
+	 * Der Typ. (1 = jede Woche, 2 = gedoppelte Einzelstunde)
 	 */
 	public typ : number = -1;
 

@@ -9,32 +9,32 @@ import { StundenplanInputSimpleKlasse, cast_de_nrw_schule_svws_core_data_stunden
 export class StundenplanInputSimpleKurs extends JavaObject {
 
 	/**
-	 * 0 bis n Lehrkräfte werden dem Kurs zugeordnet. 
+	 * 0 bis n Lehrkräfte werden dem Kurs zugeordnet.
 	 */
 	public lehrkraefte : Vector<StundenplanInputSimpleLehrkraft> = new Vector();
 
 	/**
-	 * 0 bis n Klassen werden dem Kurs zugeordnet. 
+	 * 0 bis n Klassen werden dem Kurs zugeordnet.
 	 */
 	public klassen : Vector<StundenplanInputSimpleKlasse> = new Vector();
 
 	/**
-	 * 0 oder 1 Fach wird dem Kurs zugeordnet. 
+	 * 0 oder 1 Fach wird dem Kurs zugeordnet.
 	 */
 	public faecher : Vector<StundenplanInputSimpleFach> = new Vector();
 
 	/**
-	 * 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird. 
+	 * 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird.
 	 */
 	public raeume : Vector<StundenplanInputSimpleRaum> = new Vector();
 
 	/**
-	 * 0 oder 1 Kopplung wird dem Kurs zugeordnet. 
+	 * 0 oder 1 Kopplung wird dem Kurs zugeordnet.
 	 */
 	public kopplungen : Vector<StundenplanInputSimpleKopplung> = new Vector();
 
 	/**
-	 * Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden. 
+	 * Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden.
 	 */
 	public wochenstunden : number = -1;
 

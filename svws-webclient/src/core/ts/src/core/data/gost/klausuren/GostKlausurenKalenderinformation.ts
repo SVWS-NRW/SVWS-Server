@@ -4,42 +4,42 @@ import { JavaString, cast_java_lang_String } from '../../../../java/lang/JavaStr
 export class GostKlausurenKalenderinformation extends JavaObject {
 
 	/**
-	 * Die ID der Kalenderinformation. 
+	 * Die ID der Kalenderinformation.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Bezeichnung der Kalenderinformation. 
+	 * Die Bezeichnung der Kalenderinformation.
 	 */
 	public bezeichnung : string | null = "";
 
 	/**
-	 * Das Startdatum der Kalenderinformation. 
+	 * Das Startdatum der Kalenderinformation.
 	 */
 	public startdatum : string | null = null;
 
 	/**
-	 * Die Startzeit der Kalenderinformation. 
+	 * Die Startzeit der Kalenderinformation.
 	 */
 	public startzeit : string | null = null;
 
 	/**
-	 * Das Enddatum der Kalenderinformation. 
+	 * Das Enddatum der Kalenderinformation.
 	 */
 	public enddatum : string | null = null;
 
 	/**
-	 * Die Endzeit der Kalenderinformation. 
+	 * Die Endzeit der Kalenderinformation.
 	 */
 	public endzeit : string | null = null;
 
 	/**
-	 * Die textuelle Bemerkung zur Kalenderinformation, sofern vorhanden. 
+	 * Die textuelle Bemerkung zur Kalenderinformation, sofern vorhanden.
 	 */
 	public bemerkung : string | null = null;
 
 	/**
-	 * Die Information, ob es sich um einen Sperrtermin handelt. 
+	 * Die Information, ob es sich um einen Sperrtermin handelt.
 	 */
 	public istSperrtermin : boolean = false;
 

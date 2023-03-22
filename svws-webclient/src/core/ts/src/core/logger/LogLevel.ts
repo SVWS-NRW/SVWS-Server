@@ -15,27 +15,27 @@ export class LogLevel extends JavaObject {
 	private static readonly all_values_by_name : Map<string, LogLevel> = new Map<string, LogLevel>();
 
 	/**
-	 * Das Log-Level, bei dem keine Fehler, etc. ausgegeben werden, sondern nur Informationen der Anwendung 
+	 * Das Log-Level, bei dem keine Fehler, etc. ausgegeben werden, sondern nur Informationen der Anwendung
 	 */
 	public static readonly APP : LogLevel = new LogLevel("APP", 0, 0);
 
 	/**
-	 * Das Log-Level, welches nur Fehler ausgibt. 
+	 * Das Log-Level, welches nur Fehler ausgibt.
 	 */
 	public static readonly ERROR : LogLevel = new LogLevel("ERROR", 1, 10);
 
 	/**
-	 * Das Log-Level, welches auch Warnungen ausgibt. 
+	 * Das Log-Level, welches auch Warnungen ausgibt.
 	 */
 	public static readonly WARNING : LogLevel = new LogLevel("WARNING", 2, 100);
 
 	/**
-	 * Das Log-Level, welches auch Informationen, die keine Warnungen sind, ausgibt. 
+	 * Das Log-Level, welches auch Informationen, die keine Warnungen sind, ausgibt.
 	 */
 	public static readonly INFO : LogLevel = new LogLevel("INFO", 3, 1000);
 
 	/**
-	 * Das Log-Level, welches zum Debuggen alles ausgibt. 
+	 * Das Log-Level, welches zum Debuggen alles ausgibt.
 	 */
 	public static readonly DEBUG : LogLevel = new LogLevel("DEBUG", 4, 10000);
 

@@ -4,17 +4,17 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BenutzergruppeListeEintrag extends JavaObject {
 
 	/**
-	 * Die ID der Benutzergruppe. 
+	 * Die ID der Benutzergruppe.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Bezeichnung der Benutzergruppe. 
+	 * Die Bezeichnung der Benutzergruppe.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. 
+	 * Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.
 	 */
 	public istAdmin : boolean = false;
 

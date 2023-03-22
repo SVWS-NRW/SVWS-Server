@@ -4,62 +4,62 @@ import { JavaString, cast_java_lang_String } from '../../../../java/lang/JavaStr
 export class GostKlausurvorgabe extends JavaObject {
 
 	/**
-	 * Die ID der Klausurvorgabe. 
+	 * Die ID der Klausurvorgabe.
 	 */
 	public idVorgabe : number = -1;
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird, -1 für die Vorlage. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird, -1 für die Vorlage.
 	 */
 	public abiJahrgang : number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird. 
+	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
 	 */
 	public halbjahr : number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird. 
+	 * Das Quartal, in welchem die Klausur gechrieben wird.
 	 */
 	public quartal : number = -1;
 
 	/**
-	 * Die ID des Faches. 
+	 * Die ID des Faches.
 	 */
 	public idFach : number = -1;
 
 	/**
-	 * Das Kürzel einer verallgemeinerten Kursart. 
+	 * Das Kürzel einer verallgemeinerten Kursart.
 	 */
 	public kursart : string = "";
 
 	/**
-	 * Die Dauer der Klausur in Minuten. 
+	 * Die Dauer der Klausur in Minuten.
 	 */
 	public dauer : number = 0;
 
 	/**
-	 * Die Auswahlzeit in Minuten, sofern vorhanden. 
+	 * Die Auswahlzeit in Minuten, sofern vorhanden.
 	 */
 	public auswahlzeit : number = 0;
 
 	/**
-	 * Die Information, ob es sich um eine mündliche Prüfung handelt. 
+	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
 	 */
 	public istMdlPruefung : boolean = false;
 
 	/**
-	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen. 
+	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen.
 	 */
 	public istAudioNotwendig : boolean = false;
 
 	/**
-	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse. 
+	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse.
 	 */
 	public istVideoNotwendig : boolean = false;
 
 	/**
-	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden. 
+	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden.
 	 */
 	public bemerkungVorgabe : string | null = null;
 

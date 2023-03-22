@@ -8,88 +8,88 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class ENMLeistung extends JavaObject {
 
 	/**
-	 * Die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956) 
+	 * Die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956)
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. (Klasse oder Kurs wird erst 
-	 *  in der Lerngruppe unterschieden!) 
+	 * Die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. (Klasse oder Kurs wird erst
+	 *  in der Lerngruppe unterschieden!)
 	 */
 	public lerngruppenID : number = 0;
 
 	/**
-	 * Das Kürzel der Note, die vergeben wurde. 
+	 * Das Kürzel der Note, die vergeben wurde.
 	 */
 	public note : string | null = null;
 
 	/**
-	 * Der Zeitstempel der letzten Änderung an der erteilten Note 
+	 * Der Zeitstempel der letzten Änderung an der erteilten Note
 	 */
 	public tsNote : string | null = null;
 
 	/**
-	 * Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht. 
+	 * Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht.
 	 */
 	public istSchriftlich : boolean | null = null;
 
 	/**
-	 * Gibt an, ob es sich um ein Abiturfach handelt (1,2,3 oder 4) oder nicht (null) 
+	 * Gibt an, ob es sich um ein Abiturfach handelt (1,2,3 oder 4) oder nicht (null)
 	 */
 	public abiturfach : number | null = null;
 
 	/**
-	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden. 
+	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden.
 	 */
 	public fehlstundenFach : number | null = null;
 
 	/**
-	 * Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden 
+	 * Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden
 	 */
 	public tsFehlstundenFach : string | null = null;
 
 	/**
-	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden. 
+	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden.
 	 */
 	public fehlstundenUnentschuldigtFach : number | null = null;
 
 	/**
-	 * Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden 
+	 * Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden
 	 */
 	public tsFehlstundenUnentschuldigtFach : string | null = null;
 
 	/**
-	 * Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen 
+	 * Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen
 	 */
 	public fachbezogeneBemerkungen : string | null = null;
 
 	/**
-	 * Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen 
+	 * Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen
 	 */
 	public tsFachbezogeneBemerkungen : string | null = null;
 
 	/**
-	 * Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule) 
+	 * Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule)
 	 */
 	public neueZuweisungKursart : string | null = null;
 
 	/**
-	 * Gibt an, ob ein Fach gemahnt wurde oder nicht. 
+	 * Gibt an, ob ein Fach gemahnt wurde oder nicht.
 	 */
 	public istGemahnt : boolean | null = null;
 
 	/**
-	 * Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde 
+	 * Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde
 	 */
 	public tsIstGemahnt : string | null = null;
 
 	/**
-	 * Das Mahndatum bei erfolgter Mahnung. 
+	 * Das Mahndatum bei erfolgter Mahnung.
 	 */
 	public mahndatum : string | null = null;
 
 	/**
-	 * Die Teilleistungen, sofern welche vordefiniert sind. 
+	 * Die Teilleistungen, sofern welche vordefiniert sind.
 	 */
 	public teilleistungen : Vector<ENMTeilleistung> = new Vector();
 

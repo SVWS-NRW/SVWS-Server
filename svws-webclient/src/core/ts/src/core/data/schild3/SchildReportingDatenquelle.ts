@@ -7,42 +7,42 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class SchildReportingDatenquelle extends JavaObject {
 
 	/**
-	 * Der Name der Datenquelle 
+	 * Der Name der Datenquelle
 	 */
 	public name : string = "";
 
 	/**
-	 * Die Beschreibung der Datenquelle 
+	 * Die Beschreibung der Datenquelle
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Die Art der Daten, welche von der Datenquelle verwaltet werden 
+	 * Die Art der Daten, welche von der Datenquelle verwaltet werden
 	 */
 	public datenart : string = "";
 
 	/**
-	 * Der Name der Master-Datenquelle 
+	 * Der Name der Master-Datenquelle
 	 */
 	public master : string | null = null;
 
 	/**
-	 * Der Name des identifizierenden Attributs der Master-Datenquelle 
+	 * Der Name des identifizierenden Attributs der Master-Datenquelle
 	 */
 	public masterattribut : string | null = null;
 
 	/**
-	 * Der Typ des Attributs der Master-Datenquelle (z.B. die ID) 
+	 * Der Typ des Attributs der Master-Datenquelle (z.B. die ID)
 	 */
 	public mastertyp : string | null = null;
 
 	/**
-	 * Der Name des Attributs dieser Datenquelle, welches für die Verbindung zu der Master-Datenquelle genutzt wird 
+	 * Der Name des Attributs dieser Datenquelle, welches für die Verbindung zu der Master-Datenquelle genutzt wird
 	 */
 	public linkattribut : string | null = null;
 
 	/**
-	 * Die Liste der JSON-Attribute für diese Datenquelle. 
+	 * Die Liste der JSON-Attribute für diese Datenquelle.
 	 */
 	public attribute : List<SchildReportingDatenquelleAttribut> = new Vector();
 

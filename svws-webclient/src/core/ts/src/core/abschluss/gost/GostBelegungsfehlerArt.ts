@@ -16,22 +16,22 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostBelegungsfehlerArt> = new Map<string, GostBelegungsfehlerArt>();
 
 	/**
-	 * Belegungsfehler 
+	 * Belegungsfehler
 	 */
 	public static readonly BELEGUNG : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("BELEGUNG", 0, "BELEGUNG");
 
 	/**
-	 * Fehler bei der Schriftlichkeit 
+	 * Fehler bei der Schriftlichkeit
 	 */
 	public static readonly SCHRIFTLICHKEIT : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("SCHRIFTLICHKEIT", 1, "SCHRIFTLICHKEIT");
 
 	/**
-	 * Information, aber kein Fehler 
+	 * Information, aber kein Fehler
 	 */
 	public static readonly HINWEIS : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("HINWEIS", 2, "HINWEIS");
 
 	/**
-	 * Das Kürzel für die Belegungsfehlerart 
+	 * Das Kürzel für die Belegungsfehlerart
 	 */
 	public readonly kuerzel : string;
 

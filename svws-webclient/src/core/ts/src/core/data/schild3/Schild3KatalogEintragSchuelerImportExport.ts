@@ -5,52 +5,52 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 
 	/**
-	 * Tabelle mit den Daten für den Import-Export 
+	 * Tabelle mit den Daten für den Import-Export
 	 */
 	public Tabelle : string | null = null;
 
 	/**
-	 * Anzeigename 
+	 * Anzeigename
 	 */
 	public TabellenAnzeige : string | null = null;
 
 	/**
-	 * Master-Tabelle 
+	 * Master-Tabelle
 	 */
 	public MasterTable : string | null = null;
 
 	/**
-	 * SQL-Befehl für dem Export 
+	 * SQL-Befehl für dem Export
 	 */
 	public ExpCmd : string | null = null;
 
 	/**
-	 * SQL-Befehl zum Ermitteln der Feldnamen 
+	 * SQL-Befehl zum Ermitteln der Feldnamen
 	 */
 	public SrcGetFieldsSQL : string | null = null;
 
 	/**
-	 * SQL-Befehl zum Enternen der Daten 
+	 * SQL-Befehl zum Enternen der Daten
 	 */
 	public DeleteSQL : string | null = null;
 
 	/**
-	 * SQL-Befehl zum Ermitteln der IDs 
+	 * SQL-Befehl zum Ermitteln der IDs
 	 */
 	public DstGetIDSQL : string | null = null;
 
 	/**
-	 * Hauptfeld 
+	 * Hauptfeld
 	 */
 	public HauptFeld : string | null = null;
 
 	/**
-	 * Detail-Feld 
+	 * Detail-Feld
 	 */
 	public DetailFeld : string | null = null;
 
 	/**
-	 * Reihenfolge 
+	 * Reihenfolge
 	 */
 	public Reihenfolge : number | null = null;
 

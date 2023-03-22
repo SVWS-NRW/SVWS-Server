@@ -19,52 +19,52 @@ export class Uebergangsempfehlung extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Uebergangsempfehlung> = new Map<string, Uebergangsempfehlung>();
 
 	/**
-	 * Übergangsempfehlung Hauptschule 
+	 * Übergangsempfehlung Hauptschule
 	 */
 	public static readonly HAUPTSCHULE : Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE", 0, [new UebergangsempfehlungKatalogEintrag(1, "H", "Hauptschule", Schulform.H, null, null, null)]);
 
 	/**
-	 * Übergangsempfehlung Hauptschule / Realschule (eingeschränkt) 
+	 * Übergangsempfehlung Hauptschule / Realschule (eingeschränkt)
 	 */
 	public static readonly HAUPTSCHULE_REALSCHULE : Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE_REALSCHULE", 1, [new UebergangsempfehlungKatalogEintrag(5, "H/R", "Hauptschule / Realschule (eingeschränkt)", Schulform.H, Schulform.R, null, null)]);
 
 	/**
-	 * Übergangsempfehlung Realschule 
+	 * Übergangsempfehlung Realschule
 	 */
 	public static readonly REALSCHULE : Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE", 2, [new UebergangsempfehlungKatalogEintrag(2, "R", "Realschule", Schulform.R, null, null, null)]);
 
 	/**
-	 * Übergangsempfehlung Realschule / Gymnasium (eingeschränkt) 
+	 * Übergangsempfehlung Realschule / Gymnasium (eingeschränkt)
 	 */
 	public static readonly REALSCHULE_GYMNASIUM : Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE_GYMNASIUM", 3, [new UebergangsempfehlungKatalogEintrag(6, "R/GY", "Realschule / Gymnasium (eingeschränkt)", Schulform.R, Schulform.GY, null, null)]);
 
 	/**
-	 * Übergangsempfehlung Gymnasium 
+	 * Übergangsempfehlung Gymnasium
 	 */
 	public static readonly GYMNASIUM : Uebergangsempfehlung = new Uebergangsempfehlung("GYMNASIUM", 4, [new UebergangsempfehlungKatalogEintrag(3, "GY", "Gymnasium", Schulform.GY, null, null, null)]);
 
 	/**
-	 * Keine Übergangsempfehlung 
+	 * Keine Übergangsempfehlung
 	 */
 	public static readonly KEINE : Uebergangsempfehlung = new Uebergangsempfehlung("KEINE", 5, [new UebergangsempfehlungKatalogEintrag(4, "OHNE", "Keine Empfehlung", null, null, null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Übergangsempfehlung 
+	 * Der aktuellen Daten der Übergangsempfehlung
 	 */
 	public readonly daten : UebergangsempfehlungKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Übergangsempfehlung 
+	 * Die Historie mit den Einträgen der Übergangsempfehlung
 	 */
 	public readonly historie : Array<UebergangsempfehlungKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung | null> = new HashMap();
 

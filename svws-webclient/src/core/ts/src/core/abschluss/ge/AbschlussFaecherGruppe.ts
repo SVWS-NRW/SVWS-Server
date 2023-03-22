@@ -11,7 +11,7 @@ import { Predicate, cast_java_util_function_Predicate } from '../../../java/util
 export class AbschlussFaecherGruppe extends JavaObject {
 
 	/**
-	 * Eine Liste mit allen Fächern dieser Fachgruppe 
+	 * Eine Liste mit allen Fächern dieser Fachgruppe
 	 */
 	private readonly faecher : Vector<GEAbschlussFach> = new Vector();
 

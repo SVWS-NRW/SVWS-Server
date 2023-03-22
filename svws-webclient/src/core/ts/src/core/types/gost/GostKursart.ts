@@ -23,39 +23,39 @@ export class GostKursart extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostKursart> = new Map<string, GostKursart>();
 
 	/**
-	 * Leistungskurs = LK 
+	 * Leistungskurs = LK
 	 */
 	public static readonly LK : GostKursart = new GostKursart("LK", 0, 1, "LK", "Leistungskurs", Arrays.asList(ZulaessigeKursart.LK1, ZulaessigeKursart.LK2));
 
 	/**
-	 * Grundkurs = GK 
+	 * Grundkurs = GK
 	 */
 	public static readonly GK : GostKursart = new GostKursart("GK", 1, 2, "GK", "Grundkurs", Arrays.asList(ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP));
 
 	/**
-	 * Zusatzkurs = ZK 
+	 * Zusatzkurs = ZK
 	 */
 	public static readonly ZK : GostKursart = new GostKursart("ZK", 2, 3, "ZK", "Zusatzkurs", Arrays.asList(ZulaessigeKursart.ZK));
 
 	/**
-	 * Projektkurs = PJK 
+	 * Projektkurs = PJK
 	 */
 	public static readonly PJK : GostKursart = new GostKursart("PJK", 3, 4, "PJK", "Projektkurs", Arrays.asList(ZulaessigeKursart.PJK));
 
 	/**
-	 * Vertiefungskurs = VTF 
+	 * Vertiefungskurs = VTF
 	 */
 	public static readonly VTF : GostKursart = new GostKursart("VTF", 4, 5, "VTF", "Vertiefungskurs", Arrays.asList(ZulaessigeKursart.VTF));
 
 	private static readonly FACHART_ID_FAKTOR : number = 1000;
 
 	/**
-	 * Die Zuordnung der Kursarten zu dem Kürzel der Kursart 
+	 * Die Zuordnung der Kursarten zu dem Kürzel der Kursart
 	 */
 	private static readonly _mapKuerzel : HashMap<string, GostKursart> = new HashMap();
 
 	/**
-	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart 
+	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart
 	 */
 	private static readonly _mapZulKursart : HashMap<ZulaessigeKursart, GostKursart> = new HashMap();
 
@@ -65,17 +65,17 @@ export class GostKursart extends JavaObject {
 	public readonly id : number;
 
 	/**
-	 * Das Kürzel der Kursart der Gymnasialen Oberstufe 
+	 * Das Kürzel der Kursart der Gymnasialen Oberstufe
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe 
+	 * Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
 	 */
 	public readonly beschreibung : string;
 
 	/**
-	 * Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören 
+	 * Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören
 	 */
 	private readonly kursarten : List<ZulaessigeKursart>;
 

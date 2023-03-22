@@ -7,7 +7,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class AdressbuchKontaktListe extends AdressbuchEintrag {
 
 	/**
-	 * Die Kategorien dieses Kontakts 
+	 * Die Kategorien dieses Kontakts
 	 */
 	public kontakte : List<AdressbuchKontakt | null> | null = new Vector();
 

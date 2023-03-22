@@ -5,17 +5,17 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
 	/**
-	 * Das Kürzel der Schulform 
+	 * Das Kürzel der Schulform
 	 */
 	public schulform : string = "";
 
 	/**
-	 * Die Kurz-Bezeichnung der Herkunftsart 
+	 * Die Kurz-Bezeichnung der Herkunftsart
 	 */
 	public kurzBezeichnung : string = "";
 
 	/**
-	 * Die Bezeichnung der Herkunftsart 
+	 * Die Bezeichnung der Herkunftsart
 	 */
 	public bezeichnung : string = "";
 

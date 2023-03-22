@@ -14,37 +14,37 @@ import { AbgangsartKatalogDaten, cast_de_nrw_schule_svws_core_data_schule_Abgang
 export class AbgangsartenManager extends JavaObject {
 
 	/**
-	 * der Katalog für die allgemeinbildenden Schulformen 
+	 * der Katalog für die allgemeinbildenden Schulformen
 	 */
 	private readonly _katalogAllgemein : AbgangsartKatalog;
 
 	/**
-	 * der Katalog für die berufsbildenden Schulformen 
+	 * der Katalog für die berufsbildenden Schulformen
 	 */
 	private readonly _katalogBeruf : AbgangsartKatalog;
 
 	/**
-	 * Die Version der Daten für die Kombination der beiden Kataloge 
+	 * Die Version der Daten für die Kombination der beiden Kataloge
 	 */
 	private readonly _version : number;
 
 	/**
-	 * Die kombinierten Daten der beiden Kataloge 
+	 * Die kombinierten Daten der beiden Kataloge
 	 */
 	private readonly _alle : Vector<AbgangsartKatalogEintrag> = new Vector();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels. 
+	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels.
 	 */
 	private readonly _mapByKuerzel : HashMap<string, AbgangsartKatalogEintrag> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand der ID. 
+	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand der ID.
 	 */
 	private readonly _mapByID : HashMap<number, AbgangsartKatalogEintrag> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Daten der Abgangsarten anhand der ID. 
+	 * Eine HashMap für den schnellen Zugriff auf die Daten der Abgangsarten anhand der ID.
 	 */
 	private readonly _mapDatenByID : HashMap<number, AbgangsartKatalogDaten> = new HashMap();
 

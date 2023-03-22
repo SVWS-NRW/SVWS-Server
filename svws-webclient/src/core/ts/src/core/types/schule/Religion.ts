@@ -18,77 +18,77 @@ export class Religion extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Religion> = new Map<string, Religion>();
 
 	/**
-	 * Religion: alevitisch 
+	 * Religion: alevitisch
 	 */
 	public static readonly AR : Religion = new Religion("AR", 0, [new ReligionKatalogEintrag(1000, "AR", "alevitisch", null, null)]);
 
 	/**
-	 * Religion: evangelisch 
+	 * Religion: evangelisch
 	 */
 	public static readonly ER : Religion = new Religion("ER", 1, [new ReligionKatalogEintrag(2000, "ER", "evangelisch", null, null)]);
 
 	/**
-	 * Religion: jüdisch 
+	 * Religion: jüdisch
 	 */
 	public static readonly HR : Religion = new Religion("HR", 2, [new ReligionKatalogEintrag(3000, "HR", "jüdisch", null, null)]);
 
 	/**
-	 * Religion: islamisch 
+	 * Religion: islamisch
 	 */
 	public static readonly IR : Religion = new Religion("IR", 3, [new ReligionKatalogEintrag(4000, "IR", "islamisch", null, null)]);
 
 	/**
-	 * Religion: katholisch 
+	 * Religion: katholisch
 	 */
 	public static readonly KR : Religion = new Religion("KR", 4, [new ReligionKatalogEintrag(5000, "KR", "katholisch", null, null)]);
 
 	/**
-	 * Religion: mennonitische BG NRW 
+	 * Religion: mennonitische BG NRW
 	 */
 	public static readonly ME : Religion = new Religion("ME", 5, [new ReligionKatalogEintrag(6000, "ME", "mennonitische BG NRW", null, null)]);
 
 	/**
-	 * Religion: ohne Bekenntnis 
+	 * Religion: ohne Bekenntnis
 	 */
 	public static readonly OH : Religion = new Religion("OH", 6, [new ReligionKatalogEintrag(7000, "OH", "ohne Bekenntnis", null, null)]);
 
 	/**
-	 * Religion: griechisch-orthodox 
+	 * Religion: griechisch-orthodox
 	 */
 	public static readonly OR : Religion = new Religion("OR", 7, [new ReligionKatalogEintrag(8000, "OR", "griechisch-orthodox", null, null)]);
 
 	/**
-	 * Religion: syrisch-orthodox 
+	 * Religion: syrisch-orthodox
 	 */
 	public static readonly SO : Religion = new Religion("SO", 8, [new ReligionKatalogEintrag(9000, "SO", "syrisch-orthodox", null, null)]);
 
 	/**
-	 * Religion: sonstige orthodoxe 
+	 * Religion: sonstige orthodoxe
 	 */
 	public static readonly XO : Religion = new Religion("XO", 9, [new ReligionKatalogEintrag(10000, "XO", "sonstige orthodoxe", null, null)]);
 
 	/**
-	 * Religion: andere Religionen 
+	 * Religion: andere Religionen
 	 */
 	public static readonly XR : Religion = new Religion("XR", 10, [new ReligionKatalogEintrag(11000, "XR", "andere Religionen", null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Religionen 
+	 * Der aktuellen Daten der Religionen
 	 */
 	public readonly daten : ReligionKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Religionen 
+	 * Die Historie mit den Einträgen der Religionen
 	 */
 	public readonly historie : Array<ReligionKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapKuerzel : HashMap<string, Religion | null> = new HashMap();
 

@@ -7,17 +7,17 @@ import { BerufskollegFachklassenKatalogDaten, cast_de_nrw_schule_svws_core_data_
 export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
 	/**
-	 * Der Fachklassenschlüssel. 
+	 * Der Fachklassenschlüssel.
 	 */
 	public schluessel : string = "";
 
 	/**
-	 * Der Fachklassenschlüssel - Teil 2. 
+	 * Der Fachklassenschlüssel - Teil 2.
 	 */
 	public schluessel2 : string = "";
 
 	/**
-	 * Die Historie des Katalog-Eintrags. 
+	 * Die Historie des Katalog-Eintrags.
 	 */
 	public historie : List<BerufskollegFachklassenKatalogDaten> = new Vector();
 

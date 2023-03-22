@@ -11,12 +11,12 @@ import { System, cast_java_lang_System } from '../../../java/lang/System';
 export class KlausurterminblockungAlgorithmusGreedy3 extends KlausurterminblockungAlgorithmusAbstract {
 
 	/**
-	 * Die kleinste Schienenanzahl, die bisher gefunden wurde. 
+	 * Die kleinste Schienenanzahl, die bisher gefunden wurde.
 	 */
 	private _minTermine : number = 0;
 
 	/**
-	 * Bis zu welchem Zeitpunkt die Rekursion laufen darf. 
+	 * Bis zu welchem Zeitpunkt die Rekursion laufen darf.
 	 */
 	private _zeitEnde : number = 0;
 

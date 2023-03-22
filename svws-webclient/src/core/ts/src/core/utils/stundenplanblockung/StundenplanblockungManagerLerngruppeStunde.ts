@@ -4,22 +4,22 @@ import { StundenplanblockungManagerLerngruppe, cast_de_nrw_schule_svws_core_util
 export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID des Stundenelementes. 
+	 * Die Datenbank-ID des Stundenelementes.
 	 */
 	_id : number = 0;
 
 	/**
-	 * Die Anzahl an Stunden in der Lerngruppe. 
+	 * Die Anzahl an Stunden in der Lerngruppe.
 	 */
 	wochenstunden : number = 1;
 
 	/**
-	 * Die Anzahl an Stunden im Stundenplan. 
+	 * Die Anzahl an Stunden im Stundenplan.
 	 */
 	typ : number = 1;
 
 	/**
-	 * Das Eltern-Objekt. 
+	 * Das Eltern-Objekt.
 	 */
 	readonly _gr : StundenplanblockungManagerLerngruppe;
 

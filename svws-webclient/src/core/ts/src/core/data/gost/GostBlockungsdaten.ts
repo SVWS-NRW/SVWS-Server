@@ -13,57 +13,57 @@ import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKu
 export class GostBlockungsdaten extends JavaObject {
 
 	/**
-	 * Die ID der Blockung 
+	 * Die ID der Blockung
 	 */
 	public id : number = -1;
 
 	/**
-	 * Der Name der Blockung 
+	 * Der Name der Blockung
 	 */
 	public name : string = "Neue Blockung";
 
 	/**
-	 * Der Abiturjahrgang, dem die Kursblockung zugeordnet ist 
+	 * Der Abiturjahrgang, dem die Kursblockung zugeordnet ist
 	 */
 	public abijahrgang : number = -1;
 
 	/**
-	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) 
+	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2)
 	 */
 	public gostHalbjahr : number = GostHalbjahr.EF1.id;
 
 	/**
-	 * Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. 
+	 * Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde.
 	 */
 	public istAktiv : boolean = false;
 
 	/**
-	 * Die Definition der Schienen 
+	 * Die Definition der Schienen
 	 */
 	public schienen : List<GostBlockungSchiene> = new Vector();
 
 	/**
-	 * Die Definition der Regeln 
+	 * Die Definition der Regeln
 	 */
 	public regeln : List<GostBlockungRegel> = new Vector();
 
 	/**
-	 * Die für die Blockung angelegten Kurse 
+	 * Die für die Blockung angelegten Kurse
 	 */
 	public kurse : List<GostBlockungKurs> = new Vector();
 
 	/**
-	 * Die SchülerInnen für die Blockung. 
+	 * Die SchülerInnen für die Blockung.
 	 */
 	public schueler : List<Schueler> = new Vector();
 
 	/**
-	 * Die Fachwahlen für die Blockung 
+	 * Die Fachwahlen für die Blockung
 	 */
 	public fachwahlen : List<GostFachwahl> = new Vector();
 
 	/**
-	 * Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  
+	 * Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.
 	 */
 	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new Vector();
 

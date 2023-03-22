@@ -5,32 +5,32 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BerufskollegBerufsebeneKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die Berufsebene. 
+	 * Die Berufsebene.
 	 */
 	public ebene : number = 0;
 
 	/**
-	 * Das Kürzel der Berufsebene 
+	 * Das Kürzel der Berufsebene
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Berufsebene. 
+	 * Die Bezeichnung der Berufsebene.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Berufsebene einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Berufsebene einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Berufsebene gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Berufsebene gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

@@ -18,67 +18,67 @@ export class PersonalTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, PersonalTyp> = new Map<string, PersonalTyp>();
 
 	/**
-	 * Lehrkraft fest der Schule zugeodnet hat eine Identnummer 
+	 * Lehrkraft fest der Schule zugeodnet hat eine Identnummer
 	 */
 	public static readonly LEHRKRAFT : PersonalTyp = new PersonalTyp("LEHRKRAFT", 0, 1, "LEHRKRAFT", "Lehrkraft", null, null);
 
 	/**
-	 * Verwaltungskraft ohne Identnummer 
+	 * Verwaltungskraft ohne Identnummer
 	 */
 	public static readonly SEKRETARIAT : PersonalTyp = new PersonalTyp("SEKRETARIAT", 1, 2, "SEKRETARIAT", "Sekretär/Sekretärin", null, null);
 
 	/**
-	 * angestelltes Personal (z.B. Sozialarbeiter*in ohne Identnummer 
+	 * angestelltes Personal (z.B. Sozialarbeiter*in ohne Identnummer
 	 */
 	public static readonly PERSONAL : PersonalTyp = new PersonalTyp("PERSONAL", 2, 3, "PERSONAL", "Angestelltes Personal ohne Identnummer", null, null);
 
 	/**
-	 * externe Lehrkräfte mit Identnummer von anderen Schulen abgeordnet 
+	 * externe Lehrkräfte mit Identnummer von anderen Schulen abgeordnet
 	 */
 	public static readonly EXTERN : PersonalTyp = new PersonalTyp("EXTERN", 3, 4, "EXTERN", "Externe Lehrkraft, z.B. abgeordnet oder im Rahmen einer Kooperation", null, null);
 
 	/**
-	 * Sonstige Personaltypen 
+	 * Sonstige Personaltypen
 	 */
 	public static readonly SONSTIGE : PersonalTyp = new PersonalTyp("SONSTIGE", 4, 5, "SONSTIGE", "Sonstiges Personal", null, null);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps 
+	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps
 	 */
 	private static readonly _mapBezeichnungen : HashMap<string, PersonalTyp> = new HashMap();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps 
+	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps
 	 */
 	private static readonly _mapID : HashMap<number, PersonalTyp> = new HashMap();
 
 	/**
-	 * Die ID des Personal-Typs als Integer 
+	 * Die ID des Personal-Typs als Integer
 	 */
 	public readonly id : number;
 
 	/**
-	 * Das Kürzel des Personal-Typs als String 
+	 * Das Kürzel des Personal-Typs als String
 	 */
 	public readonly kuerzel : string;
 
 	/**
-	 * Die Bezeichnung des Personal-Typs als String 
+	 * Die Bezeichnung des Personal-Typs als String
 	 */
 	public readonly bezeichnung : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigBis : number | null;
 

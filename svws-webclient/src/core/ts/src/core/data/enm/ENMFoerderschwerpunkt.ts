@@ -4,17 +4,17 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class ENMFoerderschwerpunkt extends JavaObject {
 
 	/**
-	 * Die ID des Förderschwerpunktes. 
+	 * Die ID des Förderschwerpunktes.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 * Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird
 	 */
 	public kuerzel : string | null = null;
 
 	/**
-	 * Die textuelle Bezeichnung des Förderschwerpunktes. 
+	 * Die textuelle Bezeichnung des Förderschwerpunktes.
 	 */
 	public beschreibung : string | null = null;
 

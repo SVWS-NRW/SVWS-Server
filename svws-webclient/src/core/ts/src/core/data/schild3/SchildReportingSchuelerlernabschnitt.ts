@@ -5,77 +5,77 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
 	/**
-	 * Die ID des Lernabschnitts 
+	 * Die ID des Lernabschnitts
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des Schülers, zu dem die Lernabschnittsdaten gehören. 
+	 * Die ID des Schülers, zu dem die Lernabschnittsdaten gehören.
 	 */
 	public schuelerID : number = 0;
 
 	/**
-	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt 
+	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt
 	 */
 	public schuljahr : number = 0;
 
 	/**
-	 * Die Nummer des Abschnitts im Schuljahr 
+	 * Die Nummer des Abschnitts im Schuljahr
 	 */
 	public abschnitt : number = 0;
 
 	/**
-	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 */
 	public wechselNr : number | null = null;
 
 	/**
-	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 */
 	public istGewertet : boolean = true;
 
 	/**
-	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht 
+	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 */
 	public istWiederholung : boolean = false;
 
 	/**
-	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. 
+	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.
 	 */
 	public pruefungsOrdnung : string = "";
 
 	/**
-	 * Die Bezeichnung der Klasse des Schülers 
+	 * Die Bezeichnung der Klasse des Schülers
 	 */
 	public klasse : string = "";
 
 	/**
-	 * Die Statistik-Bezeichnung der Klasse des Schülers 
+	 * Die Statistik-Bezeichnung der Klasse des Schülers
 	 */
 	public klasseStatistik : string = "";
 
 	/**
-	 * Die Bezeichnung des Jahrgangs 
+	 * Die Bezeichnung des Jahrgangs
 	 */
 	public jahrgang : string = "";
 
 	/**
-	 * Die Statistik-Bezeichnung des Jahrgangs 
+	 * Die Statistik-Bezeichnung des Jahrgangs
 	 */
 	public jahrgangStatistik : string = "";
 
 	/**
-	 * Das Datum der Zeugniskonferenz 
+	 * Das Datum der Zeugniskonferenz
 	 */
 	public datumZeugniskonferenz : string = "";
 
 	/**
-	 * Das Datum des Zeugnisses 
+	 * Das Datum des Zeugnisses
 	 */
 	public datumZeugnis : string = "";
 
 	/**
-	 * Das Ergebnis des Prüfungsalgorithmus 
+	 * Das Ergebnis des Prüfungsalgorithmus
 	 */
 	public logPruefungsalgorithmus : string = "";
 

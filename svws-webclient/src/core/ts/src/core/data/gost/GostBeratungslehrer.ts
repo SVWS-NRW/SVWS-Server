@@ -4,22 +4,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostBeratungslehrer extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers. 
+	 * Die ID des Lehrers.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel des Lehrers. 
+	 * Das Kürzel des Lehrers.
 	 */
 	public kuerzel : string | null = null;
 
 	/**
-	 * Der Nachname des Lehrers. 
+	 * Der Nachname des Lehrers.
 	 */
 	public nachname : string | null = null;
 
 	/**
-	 * Der Vorname des Lehrers. 
+	 * Der Vorname des Lehrers.
 	 */
 	public vorname : string | null = null;
 

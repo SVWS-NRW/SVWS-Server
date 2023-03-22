@@ -6,17 +6,17 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class StundenplanblockungManagerKopplung extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID der Kopplung. 
+	 * Die Datenbank-ID der Kopplung.
 	 */
 	private _id : number = 0;
 
 	/**
-	 * Das Kürzel der Kopplung. Beispielsweise '7RE'. 
+	 * Das Kürzel der Kopplung. Beispielsweise '7RE'.
 	 */
 	private _kuerzel : string = "";
 
 	/**
-	 * Alle Lerngruppen der Kopplungen. 
+	 * Alle Lerngruppen der Kopplungen.
 	 */
 	private _lerngruppen : Vector<StundenplanblockungManagerLerngruppe | null> = new Vector();
 

@@ -8,32 +8,32 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das Kürzel der sonstigen Herkunft, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 * Das Kürzel der sonstigen Herkunft, welches im Rahmen der amtlichen Schulstatistik verwendet wird
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann. 
+	 * Die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann.
 	 */
 	public schulformen : List<string> = new Vector();
 
 	/**
-	 * Die textuelle Beschreibung der sonstigen Herkunft. 
+	 * Die textuelle Beschreibung der sonstigen Herkunft.
 	 */
 	public beschreibung : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

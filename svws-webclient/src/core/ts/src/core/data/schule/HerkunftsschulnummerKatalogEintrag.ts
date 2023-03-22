@@ -11,32 +11,32 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die Herkunfts-Schulnummer 
+	 * Die Herkunfts-Schulnummer
 	 */
 	public schulnummer : number = -1;
 
 	/**
-	 * Die Bezeichnung der Herkunfts-Schulnummer 
+	 * Die Bezeichnung der Herkunfts-Schulnummer
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist. 
+	 * Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.
 	 */
 	public zulaessig : List<SchulformSchulgliederung> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr die Herkunfts-Schulnummer gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr die Herkunfts-Schulnummer gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

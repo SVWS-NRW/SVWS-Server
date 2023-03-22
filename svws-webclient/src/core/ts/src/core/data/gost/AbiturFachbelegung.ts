@@ -10,82 +10,82 @@ import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble
 export class AbiturFachbelegung extends JavaObject {
 
 	/**
-	 * Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde. 
+	 * Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde.
 	 */
 	public fachID : number = -1;
 
 	/**
-	 * Die letzte Kursart der Gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde 
+	 * Die letzte Kursart der Gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
 	 */
 	public letzteKursart : string | null = null;
 
 	/**
-	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null) 
+	 * Gibt an, als welches Abiturfach das Fach belegt wurde (1,2,3,4 oder null)
 	 */
 	public abiturFach : number | null = null;
 
 	/**
-	 * Gibt an, ob es sich um die Belegung einer neuen Fremdsprache handelt 
+	 * Gibt an, ob es sich um die Belegung einer neuen Fremdsprache handelt
 	 */
 	public istFSNeu : boolean = false;
 
 	/**
-	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung 
+	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung
 	 */
 	public block1PunktSumme : number | null = null;
 
 	/**
-	 * Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung 
+	 * Der Durchschnitt der Notenpunkte im Block I des Abiturs für die Fachbelegung
 	 */
 	public block1NotenpunkteDurchschnitt : number | null = null;
 
 	/**
-	 * Das Notenkürzel der Abiturprüfungsnote, sofern dies die Belegung eines Abiturfaches ist. 
+	 * Das Notenkürzel der Abiturprüfungsnote, sofern dies die Belegung eines Abiturfaches ist.
 	 */
 	public block2NotenKuerzelPruefung : string | null = null;
 
 	/**
-	 * Der Zwischenstand der erreichten Punkte im Abitur vor einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist. 
+	 * Der Zwischenstand der erreichten Punkte im Abitur vor einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist.
 	 */
 	public block2PunkteZwischenstand : number | null = null;
 
 	/**
-	 * Gibt an, ob eine mündliche Abweichungsprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist (nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr). 
+	 * Gibt an, ob eine mündliche Abweichungsprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist (nur bis Abiturjahrgang 2019, ab 2020 gibt es keine Abweichungsprüfungen mehr).
 	 */
 	public block2MuendlichePruefungAbweichung : boolean | null = null;
 
 	/**
-	 * Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist. 
+	 * Gibt an, ob eine mündliche Bestehensprüfung angesetzt werden muss, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
 	 */
 	public block2MuendlichePruefungBestehen : boolean | null = null;
 
 	/**
-	 * Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist. 
+	 * Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
 	 */
 	public block2MuendlichePruefungFreiwillig : boolean | null = null;
 
 	/**
-	 * Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist. 
+	 * Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist.
 	 */
 	public block2MuendlichePruefungReihenfolge : number | null = null;
 
 	/**
-	 * Das Notenkürzel der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt. 
+	 * Das Notenkürzel der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt.
 	 */
 	public block2MuendlichePruefungNotenKuerzel : string | null = null;
 
 	/**
-	 * Die erreichten Punkte im Abitur nach einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist. 
+	 * Die erreichten Punkte im Abitur nach einer evtl. mündlichen Prüfung, sofern dies die Belegung eines Abiturfaches ist.
 	 */
 	public block2Punkte : number | null = null;
 
 	/**
-	 * Die Lehrer-ID des Prüfers im Rahmen der Abiturprüfung. 
+	 * Die Lehrer-ID des Prüfers im Rahmen der Abiturprüfung.
 	 */
 	public block2Pruefer : number | null = null;
 
 	/**
-	 * Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs 
+	 * Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs
 	 */
 	public readonly belegungen : Array<AbiturFachbelegungHalbjahr | null> = Array(GostHalbjahr.maxHalbjahre).fill(null);
 

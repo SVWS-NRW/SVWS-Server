@@ -4,42 +4,42 @@ import { JavaString, cast_java_lang_String } from '../../../../java/lang/JavaStr
 export class GostKlausurtermin extends JavaObject {
 
 	/**
-	 * Die ID des Klausurtermins. 
+	 * Die ID des Klausurtermins.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird.
 	 */
 	public abijahr : number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird. 
+	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
 	 */
 	public halbjahr : number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird. 
+	 * Das Quartal, in welchem die Klausur gechrieben wird.
 	 */
 	public quartal : number = -1;
 
 	/**
-	 * Das Datum des Klausurtermins, falls schon gesetzt. 
+	 * Das Datum des Klausurtermins, falls schon gesetzt.
 	 */
 	public datum : string | null = null;
 
 	/**
-	 * Die Startzeit des Klausurtermins, falls schon gesetzt. 
+	 * Die Startzeit des Klausurtermins, falls schon gesetzt.
 	 */
 	public startzeit : string | null = null;
 
 	/**
-	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt. 
+	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt.
 	 */
 	public bezeichnung : string | null = null;
 
 	/**
-	 * Die textuelle Bemerkung zum Termin, sofern vorhanden. 
+	 * Die textuelle Bemerkung zum Termin, sofern vorhanden.
 	 */
 	public bemerkung : string | null = null;
 

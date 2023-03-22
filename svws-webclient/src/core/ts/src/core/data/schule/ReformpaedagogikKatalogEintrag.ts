@@ -8,32 +8,32 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class ReformpaedagogikKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel. 
+	 * Das Kürzel.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung. 
+	 * Die Bezeichnung.
 	 */
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Kürzel der Schulformen, bei welchen der Eintrag vorkommen darf. 
+	 * Die Kürzel der Schulformen, bei welchen der Eintrag vorkommen darf.
 	 */
 	public schulformen : List<string> = new Vector();
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

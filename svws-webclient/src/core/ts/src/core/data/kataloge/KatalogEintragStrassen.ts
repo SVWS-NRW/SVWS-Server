@@ -4,22 +4,22 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KatalogEintragStrassen extends JavaObject {
 
 	/**
-	 * Katalog von ITNRW Straßen: zugehörige Ort 
+	 * Katalog von ITNRW Straßen: zugehörige Ort
 	 */
 	public Ort : string | null = null;
 
 	/**
-	 * Katalog von ITNRW Straßen: zugehöriger Regionalschlüssel 
+	 * Katalog von ITNRW Straßen: zugehöriger Regionalschlüssel
 	 */
 	public RegSchl : string | null = null;
 
 	/**
-	 * Katalog von ITNRW Straßen: Straßenname 
+	 * Katalog von ITNRW Straßen: Straßenname
 	 */
 	public Strasse : string | null = null;
 
 	/**
-	 * Katalog von ITNRW Straßen: aktueller Stand 
+	 * Katalog von ITNRW Straßen: aktueller Stand
 	 */
 	public Stand : string | null = null;
 

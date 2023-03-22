@@ -17,27 +17,27 @@ import { AbschlussFaecherGruppen, cast_de_nrw_schule_svws_core_abschluss_ge_Absc
 export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
 	/**
-	 * Filter für alle nicht ausgeglichenen Defizite 
+	 * Filter für alle nicht ausgeglichenen Defizite
 	 */
 	filterDefizit : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => f.note > 4 && (!f.ausgeglichen) };
 
 	/**
-	 * Filter für alle mangelhaften Fächer 
+	 * Filter für alle mangelhaften Fächer
 	 */
 	filterMangelhaft : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => f.note === 5 };
 
 	/**
-	 * Filter für alle ungenügenden Fächer 
+	 * Filter für alle ungenügenden Fächer
 	 */
 	filterUngenuegend : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => f.note === 6 };
 
 	/**
-	 * Filter für alle Fächer, welche als E-Kurs belegt wurden. 
+	 * Filter für alle Fächer, welche als E-Kurs belegt wurden.
 	 */
 	filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
 
 	/**
-	 * Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. 
+	 * Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden.
 	 */
 	filterWeitereFremdsprachen : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (!JavaObject.equalsTranspiler("E", (f.kuerzel)) && (f.istFremdsprache !== null) && (f.istFremdsprache === true)) };
 

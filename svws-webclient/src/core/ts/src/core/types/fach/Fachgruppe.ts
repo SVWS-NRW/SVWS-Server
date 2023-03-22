@@ -24,182 +24,182 @@ export class Fachgruppe extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Fachgruppe> = new Map<string, Fachgruppe>();
 
 	/**
-	 * Fachgruppe Deutsch 
+	 * Fachgruppe Deutsch
 	 */
 	public static readonly FG_D : Fachgruppe = new Fachgruppe("FG_D", 0, [new FachgruppenKatalogEintrag(1, 1, 110, "Deutsch", "D", new RGBFarbe(253, 233, 217), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, true, null, null)]);
 
 	/**
-	 * Fachgruppe Arbeitslehre 
+	 * Fachgruppe Arbeitslehre
 	 */
 	public static readonly FG_AL : Fachgruppe = new Fachgruppe("FG_AL", 1, [new FachgruppenKatalogEintrag(2, 2, 400, "Arbeitslehre", "AL", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 12, true, null, null)]);
 
 	/**
-	 * Fachgruppe Fremdsprachen 
+	 * Fachgruppe Fremdsprachen
 	 */
 	public static readonly FG_FS : Fachgruppe = new Fachgruppe("FG_FS", 2, [new FachgruppenKatalogEintrag(3, 2, 100, "Fremdsprachen", "FS", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 9, true, null, null)]);
 
 	/**
-	 * Fachgruppe Kunst und Musik 
+	 * Fachgruppe Kunst und Musik
 	 */
 	public static readonly FG_MS : Fachgruppe = new Fachgruppe("FG_MS", 3, [new FachgruppenKatalogEintrag(4, 3, 500, "Kunst und Musik", "MS", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 13, true, null, null)]);
 
 	/**
-	 * Fachgruppe Literatur, instrumental- oder vokalpraktischer Kurs 
+	 * Fachgruppe Literatur, instrumental- oder vokalpraktischer Kurs
 	 */
 	public static readonly FG_ME : Fachgruppe = new Fachgruppe("FG_ME", 4, [new FachgruppenKatalogEintrag(5, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 13, false, null, null)]);
 
 	/**
-	 * Fachgruppe Gesellschaftswissenschaft 
+	 * Fachgruppe Gesellschaftswissenschaft
 	 */
 	public static readonly FG_GS : Fachgruppe = new Fachgruppe("FG_GS", 5, [new FachgruppenKatalogEintrag(6, 5, 300, "Gesellschaftswissenschaft", "GS", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 11, true, null, null)]);
 
 	/**
-	 * Fachgruppe Philosophie 
+	 * Fachgruppe Philosophie
 	 */
 	public static readonly FG_PL : Fachgruppe = new Fachgruppe("FG_PL", 6, [new FachgruppenKatalogEintrag(7, 5, null, "Philosophie", "PL", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 11, false, null, null)]);
 
 	/**
-	 * Fachgruppe Religion 
+	 * Fachgruppe Religion
 	 */
 	public static readonly FG_RE : Fachgruppe = new Fachgruppe("FG_RE", 7, [new FachgruppenKatalogEintrag(8, 6, 900, "Religion", "RE", new RGBFarbe(215, 228, 188), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 6, true, null, null)]);
 
 	/**
-	 * Fachgruppe Mathematik 
+	 * Fachgruppe Mathematik
 	 */
 	public static readonly FG_M : Fachgruppe = new Fachgruppe("FG_M", 8, [new FachgruppenKatalogEintrag(9, 7, 700, "Mathematik", "M", new RGBFarbe(197, 217, 241), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 15, true, null, null)]);
 
 	/**
-	 * Fachgruppe Naturwissenschaften 
+	 * Fachgruppe Naturwissenschaften
 	 */
 	public static readonly FG_NW : Fachgruppe = new Fachgruppe("FG_NW", 9, [new FachgruppenKatalogEintrag(10, 8, 200, "Naturwissenschaften", "NW", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
 
 	/**
-	 * Fachgruppe weiteres naturwissenschaftliches / technisches Fach 
+	 * Fachgruppe weiteres naturwissenschaftliches / technisches Fach
 	 */
 	public static readonly FG_WN : Fachgruppe = new Fachgruppe("FG_WN", 10, [new FachgruppenKatalogEintrag(11, 8, null, "weiteres naturwissenschaftliches / technisches Fach", "WN", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 10, false, null, null)]);
 
 	/**
-	 * Fachgruppe Sport 
+	 * Fachgruppe Sport
 	 */
 	public static readonly FG_SP : Fachgruppe = new Fachgruppe("FG_SP", 11, [new FachgruppenKatalogEintrag(12, 9, 600, "Sport", "SP", new RGBFarbe(255, 255, 255), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 14, true, null, null)]);
 
 	/**
-	 * Fachgruppe Vertiefungskurs 
+	 * Fachgruppe Vertiefungskurs
 	 */
 	public static readonly FG_VX : Fachgruppe = new Fachgruppe("FG_VX", 12, [new FachgruppenKatalogEintrag(13, 10, 1500, "Vertiefungskurs", "VX", new RGBFarbe(216, 216, 216), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Projektkurs 
+	 * Fachgruppe Projektkurs
 	 */
 	public static readonly FG_PX : Fachgruppe = new Fachgruppe("FG_PX", 13, [new FachgruppenKatalogEintrag(14, 11, 1600, "Projektkurs", "PX", new RGBFarbe(191, 191, 191), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Berufsübergreifender Bereich 
+	 * Fachgruppe Berufsübergreifender Bereich
 	 */
 	public static readonly FG_BUE : Fachgruppe = new Fachgruppe("FG_BUE", 14, [new FachgruppenKatalogEintrag(15, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 1, false, null, null)]);
 
 	/**
-	 * Fachgruppe Berufsbezogener Bereich 
+	 * Fachgruppe Berufsbezogener Bereich
 	 */
 	public static readonly FG_BBS : Fachgruppe = new Fachgruppe("FG_BBS", 15, [new FachgruppenKatalogEintrag(16, null, 20, "Berufsbezogener Bereich", "BBS", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 2, false, null, null)]);
 
 	/**
-	 * Fachgruppe Berufsbezogener Bereich (Schwerpunkt) 
+	 * Fachgruppe Berufsbezogener Bereich (Schwerpunkt)
 	 */
 	public static readonly FG_BBS_SCHWERPUNKT : Fachgruppe = new Fachgruppe("FG_BBS_SCHWERPUNKT", 16, [new FachgruppenKatalogEintrag(17, null, 25, "Berufsbezogener Bereich (Schwerpunkt)", "BBS", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Differenzierungsbereich 
+	 * Fachgruppe Differenzierungsbereich
 	 */
 	public static readonly FG_DF : Fachgruppe = new Fachgruppe("FG_DF", 17, [new FachgruppenKatalogEintrag(18, null, 30, "Differenzierungsbereich", "DF", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 3, false, null, null)]);
 
 	/**
-	 * Fachgruppe Berufspraktikum 
+	 * Fachgruppe Berufspraktikum
 	 */
 	public static readonly FG_BP : Fachgruppe = new Fachgruppe("FG_BP", 18, [new FachgruppenKatalogEintrag(19, null, 40, "Berufspraktikum", "BP", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 4, false, null, null)]);
 
 	/**
-	 * Fachgruppe besondere Lernleistung 
+	 * Fachgruppe besondere Lernleistung
 	 */
 	public static readonly FG_BLL : Fachgruppe = new Fachgruppe("FG_BLL", 19, [new FachgruppenKatalogEintrag(20, null, 60, "besondere Lernleistung", "BLL", new RGBFarbe(), Arrays.asList(Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 8, false, null, null)]);
 
 	/**
-	 * Fachgruppe Wahlpflichtbereich 
+	 * Fachgruppe Wahlpflichtbereich
 	 */
 	public static readonly FG_WP : Fachgruppe = new Fachgruppe("FG_WP", 20, [new FachgruppenKatalogEintrag(21, null, 800, "Wahlpflichtbereich", "WP", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 16, false, null, null)]);
 
 	/**
-	 * Fachgruppe Zusätzliche Unterrichtsveranstaltungen 
+	 * Fachgruppe Zusätzliche Unterrichtsveranstaltungen
 	 */
 	public static readonly FG_ZUV : Fachgruppe = new Fachgruppe("FG_ZUV", 21, [new FachgruppenKatalogEintrag(22, null, 1000, "Zusätzliche Unterrichtsveranstaltungen", "ZUV", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Angleichungskurse 
+	 * Fachgruppe Angleichungskurse
 	 */
 	public static readonly FG_ANG : Fachgruppe = new Fachgruppe("FG_ANG", 22, [new FachgruppenKatalogEintrag(23, null, 1100, "Angleichungskurse", "ANG", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Sprache 
+	 * Fachgruppe Sprache
 	 */
 	public static readonly FG_D_SP : Fachgruppe = new Fachgruppe("FG_D_SP", 23, [new FachgruppenKatalogEintrag(24, null, 1200, "Sprache", "D_SP", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
 	/**
-	 * Fachgruppe Sachunterricht 
+	 * Fachgruppe Sachunterricht
 	 */
 	public static readonly FG_SU : Fachgruppe = new Fachgruppe("FG_SU", 24, [new FachgruppenKatalogEintrag(25, null, 1300, "Sachunterricht", "SU", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
 	/**
-	 * Fachgruppe Förderunterricht 
+	 * Fachgruppe Förderunterricht
 	 */
 	public static readonly FG_FOE : Fachgruppe = new Fachgruppe("FG_FOE", 25, [new FachgruppenKatalogEintrag(26, null, 1400, "Förderunterricht", "FOE", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
 	/**
-	 * Fachgruppe Abschlussarbeit 
+	 * Fachgruppe Abschlussarbeit
 	 */
 	public static readonly FG_ABA : Fachgruppe = new Fachgruppe("FG_ABA", 26, [new FachgruppenKatalogEintrag(27, null, 1700, "Abschlussarbeit", "ABA", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Projektarbeit 
+	 * Fachgruppe Projektarbeit
 	 */
 	public static readonly FG_PA : Fachgruppe = new Fachgruppe("FG_PA", 27, [new FachgruppenKatalogEintrag(28, null, 1800, "Projektarbeit", "PA", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
 	/**
-	 * Fachgruppe Informatik (Sek I) 
+	 * Fachgruppe Informatik (Sek I)
 	 */
 	public static readonly FG_IF : Fachgruppe = new Fachgruppe("FG_IF", 28, [new FachgruppenKatalogEintrag(29, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Fachgruppe 
+	 * Der aktuellen Daten der Fachgruppe
 	 */
 	public readonly daten : FachgruppenKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Fachgruppe 
+	 * Die Historie mit den Einträgen der Fachgruppe
 	 */
 	public readonly historie : Array<FachgruppenKatalogEintrag>;
 
 	/**
-	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
+	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
 	private static readonly _mapEintragByID : HashMap<number, FachgruppenKatalogEintrag> = new HashMap();
 
 	/**
-	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
+	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
 	private static readonly _mapByID : HashMap<number, Fachgruppe> = new HashMap();
 
 	/**
-	 * Eine Map, welche dem Kürzel der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
+	 * Eine Map, welche dem Kürzel der Fachgruppe die Instanz dieser Aufzählung zuordnet.
 	 */
 	private static readonly _mapByKuerzel : HashMap<string, Fachgruppe> = new HashMap();
 
 	/**
-	 * Die Schulformen, bei welchen die Fachgruppe vorkommt 
+	 * Die Schulformen, bei welchen die Fachgruppe vorkommt
 	 */
 	private schulformen : Array<Vector<Schulform>>;
 

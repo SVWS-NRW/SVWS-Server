@@ -4,12 +4,12 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class BenutzerKennwort extends JavaObject {
 
 	/**
-	 * Der Benutzername. 
+	 * Der Benutzername.
 	 */
 	public user : string | null = null;
 
 	/**
-	 * Das Kennwort des Benutzers. 
+	 * Das Kennwort des Benutzers.
 	 */
 	public password : string | null = null;
 

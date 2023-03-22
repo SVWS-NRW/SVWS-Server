@@ -5,47 +5,47 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 export class GostJahrgangFachkombination extends JavaObject {
 
 	/**
-	 * Die ID der Fachkombination 
+	 * Die ID der Fachkombination
 	 */
 	public id : number = 0;
 
 	/**
-	 * Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt 
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt
 	 */
 	public abiturjahr : number = 0;
 
 	/**
-	 * Die ID des Faches (Fach 1), dessen Wahl die Kombination mit einem anderen Fach verlangt oder ausschließt 
+	 * Die ID des Faches (Fach 1), dessen Wahl die Kombination mit einem anderen Fach verlangt oder ausschließt
 	 */
 	public fachID1 : number = 0;
 
 	/**
-	 * Die Kursart der Fachwahl von Fach 1, falls die Fachkombination auf diese Kursart bei Fach 1 eingeschränkt ist 
+	 * Die Kursart der Fachwahl von Fach 1, falls die Fachkombination auf diese Kursart bei Fach 1 eingeschränkt ist
 	 */
 	public kursart1 : string | null = null;
 
 	/**
-	 * Die ID des Faches (Fach 2), welches in der Kombination verlangt oder ausgeschlossen wird 
+	 * Die ID des Faches (Fach 2), welches in der Kombination verlangt oder ausgeschlossen wird
 	 */
 	public fachID2 : number = 0;
 
 	/**
-	 * Die Kursart der Fachwahl von Fach 2, falls die Fachkombination auf diese Kursart bei Fach 2 eingeschränkt ist 
+	 * Die Kursart der Fachwahl von Fach 2, falls die Fachkombination auf diese Kursart bei Fach 2 eingeschränkt ist
 	 */
 	public kursart2 : string | null = null;
 
 	/**
-	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...) 
+	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...)
 	 */
 	public gueltigInHalbjahr : Array<boolean> = Array(6).fill(false);
 
 	/**
-	 * Der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig) 
+	 * Der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)
 	 */
 	public typ : number = 0;
 
 	/**
-	 * Der erläuternde Hinweistext zu der Fachkombination 
+	 * Der erläuternde Hinweistext zu der Fachkombination
 	 */
 	public hinweistext : string = "";
 

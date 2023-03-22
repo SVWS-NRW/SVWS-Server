@@ -16,27 +16,27 @@ export class GostFremdsprachenart extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostFremdsprachenart> = new Map<string, GostFremdsprachenart>();
 
 	/**
-	 * Ist eine fortgeführte Fremdsprache. 
+	 * Ist eine fortgeführte Fremdsprache.
 	 */
 	public static readonly FORTGEFUEHRT : GostFremdsprachenart = new GostFremdsprachenart("FORTGEFUEHRT", 0, 0, "fortgeführt");
 
 	/**
-	 * Ist eine neueinsetzende Fremdsprache. 
+	 * Ist eine neueinsetzende Fremdsprache.
 	 */
 	public static readonly NEU : GostFremdsprachenart = new GostFremdsprachenart("NEU", 1, 1, "neu einsetzend");
 
 	/**
-	 * Kann neueinsetzende oder fortgeführte Fremdsprache sein. 
+	 * Kann neueinsetzende oder fortgeführte Fremdsprache sein.
 	 */
 	public static readonly BELIEBIG : GostFremdsprachenart = new GostFremdsprachenart("BELIEBIG", 2, 2, "beliebig");
 
 	/**
-	 * eine eindeutige ID für die Fremdsprachenart 
+	 * eine eindeutige ID für die Fremdsprachenart
 	 */
 	public readonly id : number;
 
 	/**
-	 * Die Bezeichnung der Fremdsprachenart als Text 
+	 * Die Bezeichnung der Fremdsprachenart als Text
 	 */
 	public readonly bezeichnung : string;
 

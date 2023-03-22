@@ -5,17 +5,17 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class StundenplanblockungRegel extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID der Regel. 
+	 * Die Datenbank-ID der Regel.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Der Type der Regel - siehe {@link GostKursblockungRegelTyp} 
+	 * Der Type der Regel - siehe {@link GostKursblockungRegelTyp}
 	 */
 	public typ : number = -1;
 
 	/**
-	 * Eine Liste der Regel-Parameter 
+	 * Eine Liste der Regel-Parameter
 	 */
 	public parameter : Vector<number> = new Vector();
 

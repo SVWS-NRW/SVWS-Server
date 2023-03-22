@@ -10,22 +10,22 @@ export class LehrerKatalogLehramtAnerkennungEintrag extends JavaObject {
 	public id : number = 0;
 
 	/**
-	 * Das Kürzel für den Anerkennungsgrund eines Lehramts. 
+	 * Das Kürzel für den Anerkennungsgrund eines Lehramts.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Der Klartext des Anerkennungsgrundes eines Lehramts. 
+	 * Der Klartext des Anerkennungsgrundes eines Lehramts.
 	 */
 	public text : string = "";
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigVon : number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis : number | null = null;
 

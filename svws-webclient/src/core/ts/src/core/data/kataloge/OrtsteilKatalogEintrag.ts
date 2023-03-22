@@ -5,32 +5,32 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class OrtsteilKatalogEintrag extends JavaObject {
 
 	/**
-	 * Die ID des Katalog-Eintrags. 
+	 * Die ID des Katalog-Eintrags.
 	 */
 	public id : number = 0;
 
 	/**
-	 * Die ID des zugehörigen Ortes. 
+	 * Die ID des zugehörigen Ortes.
 	 */
 	public ort_id : number | null = null;
 
 	/**
-	 * Der Name des Ortsteils. 
+	 * Der Name des Ortsteils.
 	 */
 	public ortsteil : string | null = null;
 
 	/**
-	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. 
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
 	public sortierung : number = 0;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
 	public istSichtbar : boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar : boolean = false;
 

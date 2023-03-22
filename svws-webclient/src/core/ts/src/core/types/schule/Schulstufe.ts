@@ -20,52 +20,52 @@ export class Schulstufe extends JavaObject {
 	private static readonly all_values_by_name : Map<string, Schulstufe> = new Map<string, Schulstufe>();
 
 	/**
-	 * Die Vorschulstufe 
+	 * Die Vorschulstufe
 	 */
 	public static readonly VORSCHULSTUFE : Schulstufe = new Schulstufe("VORSCHULSTUFE", 0, [new SchulstufeKatalogEintrag(0, "V", "Vorschulstufe", Arrays.asList(Schulform.S, Schulform.KS), null, null)]);
 
 	/**
-	 * Die Primarstufe 
+	 * Die Primarstufe
 	 */
 	public static readonly PRIMARSTUFE : Schulstufe = new Schulstufe("PRIMARSTUFE", 1, [new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, null)]);
 
 	/**
-	 * Die Sekundarstufe I 
+	 * Die Sekundarstufe I
 	 */
 	public static readonly SEKUNDARSTUFE_I : Schulstufe = new Schulstufe("SEKUNDARSTUFE_I", 2, [new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.PS, Schulform.S, Schulform.KS, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
 	/**
-	 * Die Sekundarstufe II 
+	 * Die Sekundarstufe II
 	 */
 	public static readonly SEKUNDARSTUFE_II : Schulstufe = new Schulstufe("SEKUNDARSTUFE_II", 3, [new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.PS, Schulform.SG), null, null)]);
 
 	/**
-	 * Die Tertiärstufe 
+	 * Die Tertiärstufe
 	 */
 	public static readonly TERTIAERSTUFE : Schulstufe = new Schulstufe("TERTIAERSTUFE", 4, [new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(), null, null)]);
 
 	/**
-	 * Die Quartärstufe 
+	 * Die Quartärstufe
 	 */
 	public static readonly QUARTAERSTUFE : Schulstufe = new Schulstufe("QUARTAERSTUFE", 5, [new SchulstufeKatalogEintrag(4000, "Q", "Quartärstufe", Arrays.asList(Schulform.WB), null, null)]);
 
 	/**
-	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
 	public static VERSION : number = 1;
 
 	/**
-	 * Der aktuellen Daten der Schulstufe, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 * Der aktuellen Daten der Schulstufe, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null
 	 */
 	public readonly daten : SchulstufeKatalogEintrag;
 
 	/**
-	 * Die Historie mit den Einträgen der Schulstufe 
+	 * Die Historie mit den Einträgen der Schulstufe
 	 */
 	public readonly historie : Array<SchulstufeKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln 
+	 * Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln
 	 */
 	private static readonly _mapByKuerzel : HashMap<string, Schulstufe> = new HashMap();
 

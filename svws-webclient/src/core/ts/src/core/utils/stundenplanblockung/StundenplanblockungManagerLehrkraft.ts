@@ -6,22 +6,22 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class StundenplanblockungManagerLehrkraft extends JavaObject {
 
 	/**
-	 * Die Datenbank-ID der Lehrkraft. 
+	 * Die Datenbank-ID der Lehrkraft.
 	 */
 	readonly _id : number;
 
 	/**
-	 * Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. 
+	 * Das Kürzel der Lehrkraft. Beispielsweise 'BAR'.
 	 */
 	_kuerzel : string = "";
 
 	/**
-	 * TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann. 
+	 * TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann.
 	 */
 	_darf_vertreten : boolean = false;
 
 	/**
-	 * Alle Lerngruppen der Lehrkraft. 
+	 * Alle Lerngruppen der Lehrkraft.
 	 */
 	readonly _menge_gr : Vector<StundenplanblockungManagerLerngruppe | null>;
 
