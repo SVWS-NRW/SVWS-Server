@@ -98,7 +98,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 */
 	private static @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> getMapByID() {
 		if (_mapID.size() == 0)
-			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapID.put(h.id, h);
 		return _mapID;
 	}
@@ -112,7 +112,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapKuerzel.put(h.kuerzel, h);
 		return _mapKuerzel;
 	}
@@ -126,7 +126,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzelAlt() {
 		if (_mapKuerzelAlt.size() == 0)
-			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
 				_mapKuerzelAlt.put(h.kuerzelAlt, h);
 		return _mapKuerzelAlt;
 	}

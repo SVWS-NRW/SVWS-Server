@@ -134,7 +134,7 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, GostHalbjahr> {
 		if (GostHalbjahr._mapID.size() === 0)
-			for (let h of GostHalbjahr.values())
+			for (const h of GostHalbjahr.values())
 				GostHalbjahr._mapID.put(h.id, h);
 		return GostHalbjahr._mapID;
 	}
@@ -147,7 +147,7 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostHalbjahr> {
 		if (GostHalbjahr._mapKuerzel.size() === 0)
-			for (let h of GostHalbjahr.values())
+			for (const h of GostHalbjahr.values())
 				GostHalbjahr._mapKuerzel.put(h.kuerzel, h);
 		return GostHalbjahr._mapKuerzel;
 	}
@@ -160,7 +160,7 @@ export class GostHalbjahr extends JavaObject {
 	 */
 	private static getMapByKuerzelAlt() : HashMap<string, GostHalbjahr> {
 		if (GostHalbjahr._mapKuerzelAlt.size() === 0)
-			for (let h of GostHalbjahr.values())
+			for (const h of GostHalbjahr.values())
 				GostHalbjahr._mapKuerzelAlt.put(h.kuerzelAlt, h);
 		return GostHalbjahr._mapKuerzelAlt;
 	}

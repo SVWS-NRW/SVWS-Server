@@ -242,7 +242,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled for each loop
 	 */
 	public String convertEnhancedForLoop(EnhancedForLoopTree node) {
-		String result = "for (let %s of %s)".formatted(
+		boolean isFinal = transpiler.hasFinalModifier(node.getVariable());
+		String result = "for (%s %s of %s)".formatted(
+			isFinal ? "const" : "let",
 			node.getVariable().getName(),
 			convertExpression(node.getExpression())
 		);
