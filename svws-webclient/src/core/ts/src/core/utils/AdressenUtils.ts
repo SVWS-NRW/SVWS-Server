@@ -18,16 +18,16 @@ export class AdressenUtils extends JavaObject {
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
 	public static splitStrasse(strasse : string | null) : Array<string> {
-		let result : Array<string> = Array(3).fill(null);
+		const result : Array<string> = Array(3).fill(null);
 		if (strasse === null) {
 			result[0] = "";
 			result[1] = "";
 			result[2] = "";
 			return result;
 		}
-		let tmp : string = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
+		const tmp : string = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
 		result[0] = JavaString.replaceFirst(tmp, " *([0-9]+ *[-\\+]+)* *[0-9]+\\D*$", "");
-		let rest : string = tmp.substring(result[0].length).trim();
+		const rest : string = tmp.substring(result[0].length).trim();
 		result[1] = JavaString.replaceFirst(rest, "\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length).trim();
 		if (result[0].length > 55)

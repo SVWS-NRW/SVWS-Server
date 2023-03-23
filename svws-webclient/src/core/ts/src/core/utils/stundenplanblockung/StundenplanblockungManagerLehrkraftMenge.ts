@@ -32,7 +32,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	public addOrException(pLehrkraftID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pLehrkraftID) === true)
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!")
-		let le : StundenplanblockungManagerLehrkraft | null = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
+		const le : StundenplanblockungManagerLehrkraft | null = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
 		this._map.put(pLehrkraftID, le);
 		this._menge.add(le);
 	}
@@ -46,7 +46,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
 	public getOrException(pLehrkraftID : number) : StundenplanblockungManagerLehrkraft {
-		let lehrkraft : StundenplanblockungManagerLehrkraft | null = this._map.get(pLehrkraftID);
+		const lehrkraft : StundenplanblockungManagerLehrkraft | null = this._map.get(pLehrkraftID);
 		if (lehrkraft === null)
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!")
 		return lehrkraft;
@@ -60,7 +60,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 * @return         Liefert eine zufällige Lehrkraft.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerLehrkraft {
-		let size : number = this._menge.size();
+		const size : number = this._menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lehrkräfte!")
 		return this._menge.get(pRandom.nextInt(size));
@@ -74,7 +74,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
 	public removeOrException(pLehrkraftID : number) : void {
-		let lehrkraft : StundenplanblockungManagerLehrkraft = this.getOrException(pLehrkraftID);
+		const lehrkraft : StundenplanblockungManagerLehrkraft = this.getOrException(pLehrkraftID);
 		this._map.remove(pLehrkraftID);
 		this._menge.remove(lehrkraft);
 	}

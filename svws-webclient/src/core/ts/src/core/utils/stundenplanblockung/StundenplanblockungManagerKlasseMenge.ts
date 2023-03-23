@@ -32,7 +32,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	public addOrException(pKlasseID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pKlasseID) === true)
 			throw new NullPointerException("Die Klasse-ID " + pKlasseID + " existiert bereits!")
-		let kl : StundenplanblockungManagerKlasse | null = new StundenplanblockungManagerKlasse(pKlasseID, pKuerzel);
+		const kl : StundenplanblockungManagerKlasse | null = new StundenplanblockungManagerKlasse(pKlasseID, pKuerzel);
 		this._map.put(pKlasseID, kl);
 		this._menge.add(kl);
 	}
@@ -46,7 +46,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
 	public getOrException(pKlasseID : number) : StundenplanblockungManagerKlasse {
-		let klasse : StundenplanblockungManagerKlasse | null = this._map.get(pKlasseID);
+		const klasse : StundenplanblockungManagerKlasse | null = this._map.get(pKlasseID);
 		if (klasse === null)
 			throw new NullPointerException("Klasse-ID " + pKlasseID + " unbekannt!")
 		return klasse;
@@ -59,7 +59,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 * @return         Eine zufällige Lehrkraft oder null, falls es gar keine Lehrkräfte gibt.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerKlasse {
-		let size : number = this._menge.size();
+		const size : number = this._menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Klassen!")
 		return this._menge.get(pRandom.nextInt(size));
@@ -73,7 +73,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
 	public removeOrException(pKlasseID : number) : void {
-		let klasse : StundenplanblockungManagerKlasse = this.getOrException(pKlasseID);
+		const klasse : StundenplanblockungManagerKlasse = this.getOrException(pKlasseID);
 		this._map.remove(pKlasseID);
 		this._menge.remove(klasse);
 	}

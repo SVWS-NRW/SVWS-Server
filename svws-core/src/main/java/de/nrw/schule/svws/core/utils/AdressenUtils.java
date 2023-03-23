@@ -18,16 +18,16 @@ public class AdressenUtils {
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
 	public static @NotNull String@NotNull[] splitStrasse(String strasse) {
-		@NotNull String @NotNull[] result = new String[3];
+		final @NotNull String @NotNull[] result = new String[3];
 		if (strasse == null) {
 			result[0] = "";
 			result[1] = "";
 			result[2] = "";
 			return result;
 		}
-		@NotNull String tmp = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
+		final @NotNull String tmp = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
 		result[0] = tmp.replaceFirst(" *([0-9]+ *[-\\+]+)* *[0-9]+\\D*$", "");
-		@NotNull String rest = tmp.substring(result[0].length()).trim();
+		final @NotNull String rest = tmp.substring(result[0].length()).trim();
 		result[1] = rest.replaceFirst("\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length()).trim();
 		if (result[0].length() > 55)

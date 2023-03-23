@@ -61,15 +61,15 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		super();
 		this._katalog = katalog;
 		this._version = katalog.version;
-		for (let katIndex of katalog.indizes) {
+		for (const katIndex of katalog.indizes) {
 			this._values.addAll(katIndex.fachklassen);
 			this._mapByIndex.put(katIndex.index, katIndex);
-			for (let eintrag of katIndex.fachklassen) {
+			for (const eintrag of katIndex.fachklassen) {
 				this._mapIndexByEintrag.put(eintrag, katIndex.index);
 				let kuerzel : string | null = "" + katIndex.index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 				this._mapByKuerzel.put(kuerzel, eintrag);
-				for (let daten of eintrag.historie) {
-					let alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
+				for (const daten of eintrag.historie) {
+					const alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 					if (alt !== null)
 						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei der Fachklasse \'" + kuerzel! + "\'")
 					this._mapDatenByID.put(daten.id, daten);
@@ -112,7 +112,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			return this._version;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let index : number = __param0 as number;
-			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
+			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex.version;
@@ -120,7 +120,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
-			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
+			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
 			return katIndex.version;
@@ -178,10 +178,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let kuerzel : string = __param0;
 			let schuljahr : number = __param1 as number;
-			let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
+			const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
 			if (eintrag === null)
 				return null;
-			for (let daten of eintrag.historie)
+			for (const daten of eintrag.historie)
 				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
 					return daten;
 			return null;
@@ -201,8 +201,8 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist
 	 */
 	public getKuerzel(id : number) : string | null {
-		let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
-		let index : number | null = this._mapIndexByEintrag.get(eintrag);
+		const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
+		const index : number | null = this._mapIndexByEintrag.get(eintrag);
 		return (eintrag === null) || (index === null) ? null : "" + index! + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 	}
 
@@ -231,7 +231,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	public getTeilKatalog(__param0 : Schulgliederung | null | number) : BerufskollegFachklassenKatalogIndex {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let index : number = __param0 as number;
-			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
+			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex;
@@ -239,7 +239,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null)
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
-			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
+			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
 			if (katIndex === null)
 				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
 			return katIndex;

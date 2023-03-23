@@ -37,7 +37,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	public void addOrException(long pLehrkraftID, @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pLehrkraftID) == true)
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!");
-		StundenplanblockungManagerLehrkraft le = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
+		final StundenplanblockungManagerLehrkraft le = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
 		_map.put(pLehrkraftID, le);
 		_menge.add(le);
 	}
@@ -51,7 +51,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraft getOrException(long pLehrkraftID) throws NullPointerException {
-		StundenplanblockungManagerLehrkraft lehrkraft = _map.get(pLehrkraftID);
+		final StundenplanblockungManagerLehrkraft lehrkraft = _map.get(pLehrkraftID);
 		if (lehrkraft == null)
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!");
 		return lehrkraft;
@@ -65,7 +65,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @return         Liefert eine zufällige Lehrkraft.
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraft getRandomOrException(@NotNull Random pRandom) {
-		int size = _menge.size();
+		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lehrkräfte!");
 		return _menge.get(pRandom.nextInt(size));
@@ -79,7 +79,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
 	public void removeOrException(long pLehrkraftID) throws NullPointerException {
-		@NotNull StundenplanblockungManagerLehrkraft lehrkraft = getOrException(pLehrkraftID);
+		final @NotNull StundenplanblockungManagerLehrkraft lehrkraft = getOrException(pLehrkraftID);
 		_map.remove(pLehrkraftID);
 		_menge.remove(lehrkraft);
 	}

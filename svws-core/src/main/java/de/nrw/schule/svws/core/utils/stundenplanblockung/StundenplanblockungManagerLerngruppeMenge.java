@@ -36,7 +36,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	public @NotNull StundenplanblockungManagerLerngruppe createOrException(long pLerngruppeID) throws NullPointerException {
 		if (_map.containsKey(pLerngruppeID) == true)
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!");
-		StundenplanblockungManagerLerngruppe gr = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
+		final StundenplanblockungManagerLerngruppe gr = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		_map.put(pLerngruppeID, gr);
 		_menge.add(gr);
 		return gr;
@@ -51,7 +51,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @return Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe getOrException(long pLerngruppeID) throws NullPointerException {
-		StundenplanblockungManagerLerngruppe gr = _map.get(pLerngruppeID);
+		final StundenplanblockungManagerLerngruppe gr = _map.get(pLerngruppeID);
 		if (gr == null)
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!");
 		return gr;
@@ -65,7 +65,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @return         Liefert eine zufällige Lerngruppe.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe getRandomOrException(@NotNull Random pRandom) {
-		int size = _menge.size();
+		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lerngruppen!");
 		return _menge.get(pRandom.nextInt(size));
@@ -79,7 +79,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 */
 	public void removeOrException(long pLerngruppeID) throws NullPointerException {
-		@NotNull StundenplanblockungManagerLerngruppe gr = getOrException(pLerngruppeID);
+		final @NotNull StundenplanblockungManagerLerngruppe gr = getOrException(pLerngruppeID);
 		_map.remove(pLerngruppeID);
 		_menge.remove(gr);
 	}

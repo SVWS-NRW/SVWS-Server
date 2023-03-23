@@ -32,7 +32,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	public addOrException(pKopplungID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pKopplungID) === true)
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!")
-		let ko : StundenplanblockungManagerKopplung | null = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
+		const ko : StundenplanblockungManagerKopplung | null = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
 		this._map.put(pKopplungID, ko);
 		this._menge.add(ko);
 	}
@@ -46,7 +46,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @return Das {@link StundenplanblockungManagerKopplung}-Objekt zur übergebenen ID.
 	 */
 	public getOrException(pKopplungID : number) : StundenplanblockungManagerKopplung {
-		let ko : StundenplanblockungManagerKopplung | null = this._map.get(pKopplungID);
+		const ko : StundenplanblockungManagerKopplung | null = this._map.get(pKopplungID);
 		if (ko === null)
 			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!")
 		return ko;
@@ -60,7 +60,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @return         Liefert eine zufällige Kopplung.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerKopplung {
-		let size : number = this._menge.size();
+		const size : number = this._menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Kopplungen!")
 		return this._menge.get(pRandom.nextInt(size));
@@ -74,7 +74,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
 	 */
 	public removeOrException(pKopplungID : number) : void {
-		let ko : StundenplanblockungManagerKopplung = this.getOrException(pKopplungID);
+		const ko : StundenplanblockungManagerKopplung = this.getOrException(pKopplungID);
 		this._map.remove(pKopplungID);
 		this._menge.remove(ko);
 	}

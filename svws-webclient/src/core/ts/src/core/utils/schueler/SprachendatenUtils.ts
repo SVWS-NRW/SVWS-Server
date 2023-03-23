@@ -42,7 +42,7 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		let belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
+		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
 		if (belegung !== null && SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) > 0) {
 			return SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) <= 10;
 		}
@@ -62,7 +62,7 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache)) || mindestBelegdauer === null || mindestBelegdauer <= 0) {
 			return false;
 		}
-		let belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
+		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
 		if (belegung === null) {
 			return false;
 		}
@@ -98,8 +98,8 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return null;
 		}
-		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
-		for (let belegung of belegungen) {
+		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
+		for (const belegung of belegungen) {
 			if (JavaObject.equalsTranspiler(sprache, (belegung.sprache))) {
 				return belegung;
 			}
@@ -121,14 +121,14 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Vector mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
 	 */
 	public static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungbeginnStart : string | null, belegungbeginnEnde : string | null, mindestBelegdauer : number | null) : Vector<Sprachbelegung> {
-		let belegungen : Vector<Sprachbelegung> = new Vector();
+		const belegungen : Vector<Sprachbelegung> = new Vector();
 		if (sprachendaten !== null && sprachendaten.belegungen !== null && belegungbeginnStart !== null && !JavaObject.equalsTranspiler(belegungbeginnStart, ("")) && belegungbeginnEnde !== null && !JavaObject.equalsTranspiler(belegungbeginnEnde, ("")) && mindestBelegdauer !== null && mindestBelegdauer >= 0) {
 			let belegtVonJahrgangNumerisch : number;
 			let belegtBisJahrgangNumerisch : number;
 			let letzterJahrgangSekI : number;
-			let gefundeneSprachen : HashSet<string | null> | null = new HashSet();
-			let alleBelegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
-			for (let belegung of alleBelegungen) {
+			const gefundeneSprachen : HashSet<string | null> | null = new HashSet();
+			const alleBelegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
+			for (const belegung of alleBelegungen) {
 				if (belegung.belegungVonJahrgang !== null) {
 					belegtVonJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
 					belegtBisJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
@@ -151,7 +151,7 @@ export class SprachendatenUtils extends JavaObject {
 			}
 		}
 		if (belegungen.size() > 0) {
-			let comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.ASDJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.ASDJahrgangNumerisch(b.belegungVonJahrgang)) };
+			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.ASDJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.ASDJahrgangNumerisch(b.belegungVonJahrgang)) };
 			belegungen.sort(comparator);
 		}
 		return belegungen;
@@ -174,9 +174,9 @@ export class SprachendatenUtils extends JavaObject {
 		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
 			return true;
 		}
-		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
-			for (let pruefung of pruefungen) {
+			for (const pruefung of pruefungen) {
 				if (!JavaObject.equalsTranspiler(sprache, (pruefung.sprache)) && !JavaObject.equalsTranspiler(sprache, (pruefung.ersetzteSprache))) {
 					continue;
 				}
@@ -200,15 +200,15 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Liste alle Sprachen, die in der GOSt fortgeführt werden können.
 	 */
 	public static getFortfuehrbareSprachenInGOSt(sprachendaten : Sprachendaten | null) : Vector<string> {
-		let sprachen : Vector<string> = new Vector();
+		const sprachen : Vector<string> = new Vector();
 		if (sprachendaten !== null) {
-			let belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
-			for (let belegung of belegungen) {
+			const belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
+			for (const belegung of belegungen) {
 				sprachen.add(belegung.sprache);
 			}
-			let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+			const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 			if (pruefungen !== null) {
-				for (let pruefung of pruefungen) {
+				for (const pruefung of pruefungen) {
 					if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 						if (!(pruefung.ersetzteSprache === null || JavaObject.equalsTranspiler(pruefung.ersetzteSprache, ("")))) {
 							sprachen.add(pruefung.ersetzteSprache);
@@ -250,9 +250,9 @@ export class SprachendatenUtils extends JavaObject {
 		if (anzahlSprachen >= 1) {
 			return true;
 		}
-		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
-			for (let pruefung of pruefungen) {
+			for (const pruefung of pruefungen) {
 				if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					return true;
 				}
@@ -274,15 +274,15 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
-		let anzahlSprachen : number = belegungen.size();
+		const belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
+		const anzahlSprachen : number = belegungen.size();
 		if (anzahlSprachen >= 2) {
 			return true;
 		}
 		if (anzahlSprachen === 1) {
-			let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+			const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 			if (pruefungen !== null) {
-				for (let pruefung of pruefungen) {
+				for (const pruefung of pruefungen) {
 					if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 						if (!JavaObject.equalsTranspiler(belegungen.get(0).sprache, (pruefung.sprache))) {
 							return true;
@@ -306,7 +306,7 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
+		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
 		if (anzahlSprachen >= 1) {
 			return true;
 		}
@@ -325,11 +325,11 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
-			for (let pruefungS1 of pruefungen) {
+			for (const pruefungS1 of pruefungen) {
 				if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefungS1.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefungS1.note !== null) && (pruefungS1.note <= 4)) {
-					for (let pruefungEF of pruefungen) {
+					for (const pruefungEF of pruefungen) {
 						if (pruefungEF.istFeststellungspruefung && JavaObject.equalsTranspiler(pruefungEF.ersetzteSprache, (pruefungS1.ersetzteSprache)) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId === Sprachpruefungniveau.EF.daten.id && (pruefungEF.note !== null) && (pruefungEF.note <= 4)) {
 							return true;
 						}
@@ -354,17 +354,17 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return null;
 		}
-		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
-			for (let pruefung of pruefungen) {
+			for (const pruefung of pruefungen) {
 				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					return pruefung.ersetzteSprache;
 				}
 			}
 		}
-		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
+		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
+			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
 			if (sprachbelegungen.size() > 0) {
 				return sprachbelegungen.get(0).sprache;
 			}
@@ -388,9 +388,9 @@ export class SprachendatenUtils extends JavaObject {
 		}
 		let pruefungErsteSprache : string | null = "";
 		let pruefungZweiteSprache : string | null = "";
-		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
+		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
-			for (let pruefung of pruefungen) {
+			for (const pruefung of pruefungen) {
 				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					pruefungErsteSprache = pruefung.ersetzteSprache;
 				}
@@ -402,11 +402,11 @@ export class SprachendatenUtils extends JavaObject {
 		if (!JavaObject.equalsTranspiler(pruefungZweiteSprache, (""))) {
 			return pruefungZweiteSprache;
 		}
-		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
+		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
+			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
 			if (!JavaObject.equalsTranspiler(pruefungErsteSprache, (""))) {
-				for (let sprachbelegung of sprachbelegungen) {
+				for (const sprachbelegung of sprachbelegungen) {
 					if (!JavaObject.equalsTranspiler(sprachbelegung.sprache, (pruefungErsteSprache))) {
 						return sprachbelegung.sprache;
 					}
@@ -432,9 +432,9 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return null;
 		}
-		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
+		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
+			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
 			if (sprachbelegungen.size() > 0) {
 				return sprachbelegungen.get(0).sprache;
 			}

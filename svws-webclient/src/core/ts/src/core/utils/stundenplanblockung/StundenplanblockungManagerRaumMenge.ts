@@ -32,7 +32,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	public addOrException(pRaumID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pRaumID) === true)
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!")
-		let ra : StundenplanblockungManagerRaum = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
+		const ra : StundenplanblockungManagerRaum = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
 		this._map.put(pRaumID, ra);
 		this._menge.add(ra);
 	}
@@ -46,7 +46,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 * @return Das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID.
 	 */
 	public getOrException(pRaumID : number) : StundenplanblockungManagerRaum {
-		let ra : StundenplanblockungManagerRaum | null = this._map.get(pRaumID);
+		const ra : StundenplanblockungManagerRaum | null = this._map.get(pRaumID);
 		if (ra === null)
 			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!")
 		return ra;
@@ -60,7 +60,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 * @return         Liefert einen zufälligen Raum.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerRaum {
-		let size : number = this._menge.size();
+		const size : number = this._menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Räume!")
 		return this._menge.get(pRandom.nextInt(size));
@@ -74,7 +74,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 */
 	public removeOrException(pRaumID : number) : void {
-		let ra : StundenplanblockungManagerRaum = this.getOrException(pRaumID);
+		const ra : StundenplanblockungManagerRaum = this.getOrException(pRaumID);
 		this._map.remove(pRaumID);
 		this._menge.remove(ra);
 	}

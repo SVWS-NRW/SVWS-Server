@@ -49,15 +49,15 @@ public class BerufskollegFachklassenManager {
 	public BerufskollegFachklassenManager(@NotNull BerufskollegFachklassenKatalog katalog) {
 		this._katalog = katalog;
 		this._version = katalog.version;
-		for (BerufskollegFachklassenKatalogIndex katIndex : katalog.indizes) {
+		for (final BerufskollegFachklassenKatalogIndex katIndex : katalog.indizes) {
 			_values.addAll(katIndex.fachklassen);
 			_mapByIndex.put(katIndex.index, katIndex);
-			for (@NotNull BerufskollegFachklassenKatalogEintrag eintrag : katIndex.fachklassen) {
+			for (final @NotNull BerufskollegFachklassenKatalogEintrag eintrag : katIndex.fachklassen) {
 				this._mapIndexByEintrag.put(eintrag, katIndex.index);
 				String kuerzel = "" + katIndex.index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 				this._mapByKuerzel.put(kuerzel, eintrag);
-				for (@NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
-					BerufskollegFachklassenKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
+				for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
+					final BerufskollegFachklassenKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
 					if (alt != null)
 						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'");
 					this._mapDatenByID.put(daten.id, daten);
@@ -85,7 +85,7 @@ public class BerufskollegFachklassenManager {
 	 * @return die Version des Teilkatalogs
 	 */
 	public long getVersion(int index) {
-		BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
+		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
 		if (katIndex == null)
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.");
 		return katIndex.version;
@@ -103,7 +103,7 @@ public class BerufskollegFachklassenManager {
 	public long getVersion(Schulgliederung gliederung) {
 		if (gliederung.daten.bkIndex == null)
 			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.");
-		BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
+			final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
 		if (katIndex == null)
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.");
 		return katIndex.version;
@@ -146,10 +146,10 @@ public class BerufskollegFachklassenManager {
 	 *         keine Daten für das übergebene Schuljahr hat 
 	 */
 	public BerufskollegFachklassenKatalogDaten getDaten(@NotNull String kuerzel, int schuljahr) {
-		BerufskollegFachklassenKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
+		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
 		if (eintrag == null)
 			return null;
-		for (@NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie)
+		for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie)
 			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr)) &&
 			    ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
 				return daten;
@@ -167,8 +167,8 @@ public class BerufskollegFachklassenManager {
 	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist 
 	 */
 	public String getKuerzel(long id) {
-		BerufskollegFachklassenKatalogEintrag eintrag = this._mapByID.get(id);
-		Integer index = this._mapIndexByEintrag.get(eintrag);
+		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByID.get(id);
+		final Integer index = this._mapIndexByEintrag.get(eintrag);
 		return (eintrag == null) || (index == null) ? null : "" + index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 	}
 
@@ -193,7 +193,7 @@ public class BerufskollegFachklassenManager {
 	 * @return der Teilkatalog
 	 */
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalog(int index) {
-		BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
+		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
 		if (katIndex == null)
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.");
 		return katIndex;
@@ -211,7 +211,7 @@ public class BerufskollegFachklassenManager {
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalog(Schulgliederung gliederung) {
 		if (gliederung.daten.bkIndex == null)
 			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.");
-		BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
+		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
 		if (katIndex == null)
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.");
 		return katIndex;

@@ -165,7 +165,7 @@ public class SchuelerStundenplanManager {
 	 */
 	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(int wochentyp,
 			long idZeitraster, boolean inklWoche0) {
-		HashMap<@NotNull Long, @NotNull Vector<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp = _mapWocheZeitrasterUnterricht
+			final HashMap<@NotNull Long, @NotNull Vector<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp = _mapWocheZeitrasterUnterricht
 				.get(wochentyp);
 		if (mapZeitrasterUnterricht_Wochentyp == null) {
 			// TODO Exceptionhandling?
@@ -176,13 +176,13 @@ public class SchuelerStundenplanManager {
 		if (retList == null)
 			retList = new Vector<>();
 		if (wochentyp != 0 && inklWoche0) {
-			HashMap<@NotNull Long, @NotNull Vector<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Woche0 = _mapWocheZeitrasterUnterricht
+			final HashMap<@NotNull Long, @NotNull Vector<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Woche0 = _mapWocheZeitrasterUnterricht
 					.get(0);
 			if (mapZeitrasterUnterricht_Woche0 == null) {
 				// TODO Exceptionhandling?
 				return retList;
 			}
-			List<@NotNull SchuelerStundenplanUnterricht> listUnterricht_Woche0 = mapZeitrasterUnterricht_Woche0
+			final List<@NotNull SchuelerStundenplanUnterricht> listUnterricht_Woche0 = mapZeitrasterUnterricht_Woche0
 					.get(idZeitraster);
 			if (listUnterricht_Woche0 == null) {
 				// TODO Exceptionhandling?
@@ -212,7 +212,7 @@ public class SchuelerStundenplanManager {
 	 * @return das Zeitraster-Objekt
 	 */
 	public StundenplanZeitraster getZeitrasterByWochentagStunde(int wochentag, int stunde) {
-		HashMap<@NotNull Integer, @NotNull StundenplanZeitraster> map = _mapWochentagStundeZeitraster.get(wochentag);
+		final HashMap<@NotNull Integer, @NotNull StundenplanZeitraster> map = _mapWochentagStundeZeitraster.get(wochentag);
 		if (map == null) {
 			// TODO Exceptionhandling
 			return null;
@@ -250,7 +250,7 @@ public class SchuelerStundenplanManager {
 	 */
 	public SchuelerStundenplanManager(@NotNull SchuelerStundenplan daten) {
 		_daten = daten;
-		for (StundenplanZeitraster sz : _daten.zeitraster) {
+		for (final StundenplanZeitraster sz : _daten.zeitraster) {
 			if (sz.wochentag < minWochentag)
 				minWochentag = sz.wochentag;
 			if (sz.wochentag > maxWochentag)
@@ -312,7 +312,7 @@ public class SchuelerStundenplanManager {
 
 //		_mapWocheUnterricht = _daten.unterricht.stream().collect(Collectors.groupingBy(u -> u.wochentyp));
 		/*
-		 * _mapWochenTypUnterricht = new HashMap<>(); for (@NotNull
+		 * _mapWochenTypUnterricht = new HashMap<>(); for (final @NotNull
 		 * SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
 		 * 
 		 * @NotNull List<@NotNull SchuelerStundenplanUnterricht> ssul =
@@ -352,7 +352,7 @@ public class SchuelerStundenplanManager {
 	 * @return die Wochentypen als Vector von Integern
 	 */
 	public @NotNull Vector<@NotNull Integer> getWochentypen() {
-		Vector<@NotNull Integer> retVec = new Vector<>(_mapWocheZeitrasterUnterricht.keySet());
+		final Vector<@NotNull Integer> retVec = new Vector<>(_mapWocheZeitrasterUnterricht.keySet());
 		if (!isAbWochen()) {
 			return retVec;
 		}

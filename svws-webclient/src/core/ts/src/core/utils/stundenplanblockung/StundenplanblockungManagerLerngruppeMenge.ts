@@ -35,7 +35,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	public createOrException(pLerngruppeID : number) : StundenplanblockungManagerLerngruppe {
 		if (this._map.containsKey(pLerngruppeID) === true)
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!")
-		let gr : StundenplanblockungManagerLerngruppe | null = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
+		const gr : StundenplanblockungManagerLerngruppe | null = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		this._map.put(pLerngruppeID, gr);
 		this._menge.add(gr);
 		return gr;
@@ -50,7 +50,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 * @return Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
 	 */
 	public getOrException(pLerngruppeID : number) : StundenplanblockungManagerLerngruppe {
-		let gr : StundenplanblockungManagerLerngruppe | null = this._map.get(pLerngruppeID);
+		const gr : StundenplanblockungManagerLerngruppe | null = this._map.get(pLerngruppeID);
 		if (gr === null)
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!")
 		return gr;
@@ -64,7 +64,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 * @return         Liefert eine zufällige Lerngruppe.
 	 */
 	public getRandomOrException(pRandom : Random) : StundenplanblockungManagerLerngruppe {
-		let size : number = this._menge.size();
+		const size : number = this._menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lerngruppen!")
 		return this._menge.get(pRandom.nextInt(size));
@@ -78,7 +78,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 */
 	public removeOrException(pLerngruppeID : number) : void {
-		let gr : StundenplanblockungManagerLerngruppe = this.getOrException(pLerngruppeID);
+		const gr : StundenplanblockungManagerLerngruppe = this.getOrException(pLerngruppeID);
 		this._map.remove(pLerngruppeID);
 		this._menge.remove(gr);
 	}

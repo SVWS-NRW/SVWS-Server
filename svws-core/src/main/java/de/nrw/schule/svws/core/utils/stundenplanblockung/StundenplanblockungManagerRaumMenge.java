@@ -36,7 +36,7 @@ public class StundenplanblockungManagerRaumMenge {
 	public void addOrException(long pRaumID, @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pRaumID) == true)
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!");
-		@NotNull StundenplanblockungManagerRaum ra = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
+		final @NotNull StundenplanblockungManagerRaum ra = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
 		_map.put(pRaumID, ra);
 		_menge.add(ra);
 	}
@@ -50,7 +50,7 @@ public class StundenplanblockungManagerRaumMenge {
 	 * @return Das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID.
 	 */
 	public @NotNull StundenplanblockungManagerRaum getOrException(long pRaumID) throws NullPointerException {
-		StundenplanblockungManagerRaum ra = _map.get(pRaumID);
+		final StundenplanblockungManagerRaum ra = _map.get(pRaumID);
 		if (ra == null)
 			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!");
 		return ra;
@@ -64,7 +64,7 @@ public class StundenplanblockungManagerRaumMenge {
 	 * @return         Liefert einen zufälligen Raum.
 	 */
 	public @NotNull StundenplanblockungManagerRaum getRandomOrException(@NotNull Random pRandom) {
-		int size = _menge.size();
+		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Räume!");
 		return _menge.get(pRandom.nextInt(size));
@@ -78,7 +78,7 @@ public class StundenplanblockungManagerRaumMenge {
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 */
 	public void removeOrException(long pRaumID) throws NullPointerException {
-		@NotNull StundenplanblockungManagerRaum ra = getOrException(pRaumID);
+		final @NotNull StundenplanblockungManagerRaum ra = getOrException(pRaumID);
 		_map.remove(pRaumID);
 		_menge.remove(ra);
 	}

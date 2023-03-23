@@ -51,10 +51,10 @@ public class AbgangsartenManager {
 		this._version = katalogAllgemein.version + katalogBeruf.version;
 		_alle.addAll(katalogAllgemein.eintraege);
 		_alle.addAll(katalogBeruf.eintraege);
-		for (@NotNull AbgangsartKatalogEintrag eintrag : _alle) {
+		for (final @NotNull AbgangsartKatalogEintrag eintrag : _alle) {
 			this._mapByKuerzel.put(eintrag.kuerzel, eintrag);
-			for (@NotNull AbgangsartKatalogDaten daten : eintrag.historie) {
-				AbgangsartKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
+			for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie) {
+				final AbgangsartKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
 				if (alt != null)
 					throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'");
 				this._mapDatenByID.put(daten.id, daten);
@@ -107,10 +107,10 @@ public class AbgangsartenManager {
 	 *         keine Daten für das übergebene Schuljahr hat 
 	 */
 	public AbgangsartKatalogDaten getDaten(@NotNull String kuerzel, int schuljahr) {
-		AbgangsartKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
+		final AbgangsartKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
 		if (eintrag == null)
 			return null;
-		for (@NotNull AbgangsartKatalogDaten daten : eintrag.historie)
+		for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie)
 			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr)) &&
 			    ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
 				return daten;
@@ -126,7 +126,7 @@ public class AbgangsartenManager {
 	 * @return das Kürzel der Abgangsart oder null, falls die ID ungültig ist 
 	 */
 	public String getKuerzel(long id) {
-		AbgangsartKatalogEintrag eintrag = this._mapByID.get(id);
+		final AbgangsartKatalogEintrag eintrag = this._mapByID.get(id);
 		return eintrag == null ? null : eintrag.kuerzel;
 	}
 
@@ -170,7 +170,7 @@ public class AbgangsartenManager {
 	public static SchulabschlussAllgemeinbildend getAbschlussAllgemeinbildend(@NotNull AbgangsartKatalogEintrag abschlussart) {
 		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
 			throw new RuntimeException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
-		@NotNull String kuerzelAbschluss = abschlussart.kuerzel.length() == 1 ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
+		final @NotNull String kuerzelAbschluss = abschlussart.kuerzel.length() == 1 ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.getByKuerzelStatistik(kuerzelAbschluss);
 	}
 
