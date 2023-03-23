@@ -319,7 +319,7 @@ export class KursblockungDynDaten extends JavaObject {
 				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
 				if (kursID1 === kursID2)
-					throw new UserNotificationException("Die Regel \'KURS_VERBIETEN_MIT_KURS\' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
+					throw new UserNotificationException("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
 				let length : number = daten.length;
@@ -332,7 +332,7 @@ export class KursblockungDynDaten extends JavaObject {
 				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
 				if (kursID1 === kursID2)
-					throw new UserNotificationException("Die Regel \'KURS_ZUSAMMEN_MIT_KURS\' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
+					throw new UserNotificationException("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN as unknown) {
 				let length : number = daten.length;
@@ -558,7 +558,7 @@ export class KursblockungDynDaten extends JavaObject {
 						if (schieneLage.contains(dynSchiene))
 							continue;
 						if (!schieneFrei.contains(dynSchiene))
-							throw new UserNotificationException("Die Regel \'KURS_FIXIERE_IN_SCHIENE\' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
+							throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
 						schieneFrei.remove(dynSchiene);
 						schieneLage.addLast(dynSchiene);
 					}

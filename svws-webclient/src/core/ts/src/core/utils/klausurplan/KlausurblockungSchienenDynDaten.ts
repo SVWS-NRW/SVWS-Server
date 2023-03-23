@@ -228,14 +228,14 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
 			if (klausurID === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!")
 			if (klausurNr === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurNr\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!")
 			const schiene : number = this._klausurZuSchiene[klausurNr.valueOf()];
 			if (schiene < 0)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei \'schiene\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'schiene'!")
 			if (schiene >= this._schienenAnzahl)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei \'schiene\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'schiene'!")
 			out.get(schiene).add(klausurID);
 		}
 		return out;

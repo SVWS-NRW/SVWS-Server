@@ -65,7 +65,7 @@ export class AbgangsartenManager extends JavaObject {
 			for (const daten of eintrag.historie) {
 				const alt : AbgangsartKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 				if (alt !== null)
-					throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei den Abgangsarten \'" + eintrag.kuerzel + "\' und \'" + alt.kuerzel + "\'")
+					throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'")
 				this._mapDatenByID.put(daten.id, daten);
 			}
 		}

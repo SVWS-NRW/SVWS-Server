@@ -521,14 +521,14 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
 			if (klausurID === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!")
 			if (klausurNr === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei \'klausurNr\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!")
 			const terminNr : number = this._klausurZuTermin[klausurNr.valueOf()];
 			if (terminNr < 0)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei \'terminNr\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'terminNr'!")
 			if (terminNr >= this._terminAnzahl)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei \'terminNr\'!")
+				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'terminNr'!")
 			out.get(terminNr).add(klausurID);
 		}
 		return out;

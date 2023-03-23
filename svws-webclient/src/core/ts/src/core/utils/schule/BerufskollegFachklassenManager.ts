@@ -71,7 +71,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				for (const daten of eintrag.historie) {
 					const alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 					if (alt !== null)
-						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei der Fachklasse \'" + kuerzel! + "\'")
+						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel! + "'")
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}

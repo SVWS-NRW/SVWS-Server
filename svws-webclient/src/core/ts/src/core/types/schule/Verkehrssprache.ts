@@ -1669,7 +1669,7 @@ export class Verkehrssprache extends JavaObject {
 	/**
 	 * Nda'nda' (nnz)
 	 */
-	public static readonly NNZ : Verkehrssprache = new Verkehrssprache("NNZ", 330, [new VerkehrsspracheKatalogEintrag(328000, "nnz", "Nda\'nda\'", null, null, null)]);
+	public static readonly NNZ : Verkehrssprache = new Verkehrssprache("NNZ", 330, [new VerkehrsspracheKatalogEintrag(328000, "nnz", "Nda'nda'", null, null, null)]);
 
 	/**
 	 * Norwegisch (nor)

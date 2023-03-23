@@ -118,7 +118,7 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Fach Braille'sche Punktschrift
 	 */
-	public static readonly BN : ZulaessigesFach = new ZulaessigesFach("BN", 18, [new FachKatalogEintrag(19000000, "BN", "Braille\'sche Punktschrift", "BN", null, null, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly BN : ZulaessigesFach = new ZulaessigesFach("BN", 18, [new FachKatalogEintrag(19000000, "BN", "Braille'sche Punktschrift", "BN", null, null, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Fach Betriebspraxis

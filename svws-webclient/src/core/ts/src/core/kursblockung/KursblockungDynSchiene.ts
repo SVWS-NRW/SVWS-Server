@@ -58,7 +58,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	public aktionKursHinzufuegen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
 		if (this.kursMap.containsKey(kursID)) {
-			let fehler : string | null = "Kurs \'" + kurs1.toString()! + "\' soll in Schiene " + this.nr + ", ist aber bereits drin.";
+			let fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll in Schiene " + this.nr + ", ist aber bereits drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
@@ -75,7 +75,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	public aktionKursEntfernen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
 		if (!this.kursMap.containsKey(kursID)) {
-			let fehler : string | null = "Kurs \'" + kurs1.toString()! + "\' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
+			let fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}

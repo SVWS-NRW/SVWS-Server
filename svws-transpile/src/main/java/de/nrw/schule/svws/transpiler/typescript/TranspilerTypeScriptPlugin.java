@@ -744,7 +744,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case INT_LITERAL, LONG_LITERAL, FLOAT_LITERAL, DOUBLE_LITERAL, BOOLEAN_LITERAL -> "" + node.getValue();
 			case CHAR_LITERAL -> "'" + node.getValue() + "'";
 			case STRING_LITERAL -> "\"" + ((String)node.getValue()).replace("\\", "\\\\").replace("\t", "\\t").replace("\b", "\\b")
-				        .replace("\n", "\\n").replace("\r", "\\r").replace("\f", "\\f").replace("\'", "\\'")
+				        .replace("\n", "\\n").replace("\r", "\\r").replace("\f", "\\f")
 				        .replace("\"", "\\\"") + "\"";
 			case NULL_LITERAL -> "null";
 			default -> throw new TranspilerException("Transpiler Exception: Unknown literal type " + node.getKind() + ".");

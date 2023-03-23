@@ -233,7 +233,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (this.aktionBelegeKurs(iFachwahl, kurs) === true) {
 				this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false)
-					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 		}
 		this._aktuellNichtwahlen += schienenAnzahl;
@@ -265,9 +265,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null)
-					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKurs(iFachwahl, kurs) === false)
-					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 		if ((this._aktuellNichtwahlen < this._aktuellNichtwahlenBest) || ((this._aktuellNichtwahlen === this._aktuellNichtwahlenBest) && (this._aktuellBewertung < this._aktuellBewertungBest))) {
 			this._aktuellNichtwahlenBest = this._aktuellNichtwahlen;
@@ -284,9 +284,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null)
-					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false)
-					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 	}
 
