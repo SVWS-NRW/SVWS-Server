@@ -21,8 +21,8 @@ public class GostFaecherManager {
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
 	public static @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
-		int va = (a == null) ? Integer.MIN_VALUE : a.sortierung;
-		int vb = (b == null) ? Integer.MIN_VALUE : b.sortierung;
+		final int va = (a == null) ? Integer.MIN_VALUE : a.sortierung;
+		final int vb = (b == null) ? Integer.MIN_VALUE : b.sortierung;
 		return Integer.compare(va, vb); 
 	};
 
@@ -63,7 +63,7 @@ public class GostFaecherManager {
 	private boolean addInternal(@NotNull GostFach fach) throws DeveloperNotificationException {
 		if (fach.id < 0) 
 			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!");
-		GostFach old = _map.put(fach.id, fach);
+		final GostFach old = _map.put(fach.id, fach);
 		if (old != null)
 			return false;
 		return _faecher.add(fach);
@@ -88,7 +88,7 @@ public class GostFaecherManager {
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
 	public boolean add(@NotNull GostFach fach) {
-		boolean result = addInternal(fach);
+		final boolean result = addInternal(fach);
 		sort();
 		return result;
 	}
@@ -103,7 +103,7 @@ public class GostFaecherManager {
 	 */
 	public boolean addAll(@NotNull Collection<@NotNull GostFach> faecher) {
 		boolean result = true;
-		for (@NotNull GostFach fach : faecher)
+		for (final @NotNull GostFach fach : faecher)
 			if (!addInternal(fach))
 				result = false;
 		sort();
@@ -129,7 +129,7 @@ public class GostFaecherManager {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public @NotNull GostFach getOrException(long pFachID) throws DeveloperNotificationException {
-		GostFach fach = _map.get(pFachID);
+		final GostFach fach = _map.get(pFachID);
 		if (fach == null)
 			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.");
 		return fach;
@@ -173,8 +173,8 @@ public class GostFaecherManager {
 	 * @return ein Vector mit den Fächern
 	 */
 	public @NotNull Vector<@NotNull GostFach> toVector() {
-		@NotNull Vector<@NotNull GostFach> result = new Vector<>();
-		for (@NotNull GostFach fach : _faecher)
+		final @NotNull Vector<@NotNull GostFach> result = new Vector<>();
+		for (final @NotNull GostFach fach : _faecher)
 			result.add(fach);
 		return result;
 	}

@@ -20,10 +20,10 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 	}
 
 	public compare(o1 : GostBlockungsergebnisListeneintrag, o2 : GostBlockungsergebnisListeneintrag) : number {
-		let b1 : GostBlockungsergebnisBewertung = o1.bewertung;
-		let b2 : GostBlockungsergebnisBewertung = o2.bewertung;
-		let o1Wert1 : number = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;
-		let o2Wert1 : number = b2.regelVerletzungen.size() + b2.anzahlKurseNichtZugeordnet;
+		const b1 : GostBlockungsergebnisBewertung = o1.bewertung;
+		const b2 : GostBlockungsergebnisBewertung = o2.bewertung;
+		const o1Wert1 : number = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;
+		const o2Wert1 : number = b2.regelVerletzungen.size() + b2.anzahlKurseNichtZugeordnet;
 		if (o1Wert1 < o2Wert1)
 			return -1;
 		if (o1Wert1 > o2Wert1)

@@ -25,8 +25,8 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 
 	@Override
 	public int compare(@NotNull GostBlockungsergebnisListeneintrag o1, @NotNull GostBlockungsergebnisListeneintrag o2) {
-		@NotNull GostBlockungsergebnisBewertung b1 = o1.bewertung; 
-		@NotNull GostBlockungsergebnisBewertung b2 = o2.bewertung;
+		final @NotNull GostBlockungsergebnisBewertung b1 = o1.bewertung; 
+		final @NotNull GostBlockungsergebnisBewertung b2 = o2.bewertung;
 		
 		// Bewertungskriterium 1: Je weniger nicht erfüllter Regeln, desto besser.
 		final int o1Wert1 = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;

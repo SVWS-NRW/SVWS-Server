@@ -152,7 +152,7 @@ public class GostBlockungsergebnisManager {
 		// Schienen von '_parent' kopieren und hinzufügen.
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
-			@NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
+			final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
 			
 			// Hinzufügen.

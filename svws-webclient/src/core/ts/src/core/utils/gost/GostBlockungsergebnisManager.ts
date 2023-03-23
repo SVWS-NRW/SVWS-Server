@@ -186,8 +186,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
-		for (let gSchiene of this._parent.daten().schienen) {
-			let eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
+		for (const gSchiene of this._parent.daten().schienen) {
+			const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
 			this._ergebnis.schienen.add(eSchiene);
 			if (this._map_schienenNr_schiene.put(gSchiene.nummer, eSchiene) !== null)

@@ -41,7 +41,7 @@ public class GostFachwahlManager {
 	 * @param fachwahlen   die Fachwahlen
 	 */
 	public GostFachwahlManager(@NotNull List<@NotNull GostFachwahl> fachwahlen) {
-		for (@NotNull GostFachwahl fw : fachwahlen)
+		for (final @NotNull GostFachwahl fw : fachwahlen)
 			add(fw);
 	}
 
@@ -96,7 +96,7 @@ public class GostFachwahlManager {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getFachwahlen(long idFach) {
-		Vector<@NotNull GostFachwahl> fwFach = mapSchueler.get(idFach);
+		final Vector<@NotNull GostFachwahl> fwFach = mapSchueler.get(idFach);
 		return (fwFach == null) ? new Vector<>() : fwFach;
 	}
 
@@ -110,7 +110,7 @@ public class GostFachwahlManager {
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getSchuelerFachwahlen(long idSchueler) {
-		Vector<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
+		final Vector<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
 		return (fwSchueler == null) ? new Vector<>() : fwSchueler;
 	}
 
@@ -125,10 +125,10 @@ public class GostFachwahlManager {
 	 * @return true, falls die Fachwahl existiert und ansonsten false
 	 */
 	public boolean hatFachwahl(long idSchueler, long idFach, @NotNull GostKursart kursart) {
-		HashMap<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>> mapKursart = mapFachKursart.get(idFach);
+		final HashMap<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>> mapKursart = mapFachKursart.get(idFach);
 		if (mapKursart == null)
 			return false;
-		HashSet<@NotNull Long> schueler = mapKursart.get(kursart);
+		final HashSet<@NotNull Long> schueler = mapKursart.get(kursart);
 		if (schueler == null)
 			return false;
 		return schueler.contains(idSchueler);

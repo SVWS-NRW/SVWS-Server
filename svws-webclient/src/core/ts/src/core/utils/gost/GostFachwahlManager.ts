@@ -50,7 +50,7 @@ export class GostFachwahlManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
 			let fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
-			for (let fw of fachwahlen)
+			for (const fw of fachwahlen)
 				this.add(fw);
 		} else throw new Error('invalid method overload');
 	}
@@ -100,7 +100,7 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public getFachwahlen(idFach : number) : List<GostFachwahl> {
-		let fwFach : Vector<GostFachwahl> | null = this.mapSchueler.get(idFach);
+		const fwFach : Vector<GostFachwahl> | null = this.mapSchueler.get(idFach);
 		return (fwFach === null) ? new Vector() : fwFach;
 	}
 
@@ -113,7 +113,7 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
 	public getSchuelerFachwahlen(idSchueler : number) : List<GostFachwahl> {
-		let fwSchueler : Vector<GostFachwahl> | null = this.mapSchueler.get(idSchueler);
+		const fwSchueler : Vector<GostFachwahl> | null = this.mapSchueler.get(idSchueler);
 		return (fwSchueler === null) ? new Vector() : fwSchueler;
 	}
 
@@ -127,10 +127,10 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return true, falls die Fachwahl existiert und ansonsten false
 	 */
 	public hatFachwahl(idSchueler : number, idFach : number, kursart : GostKursart) : boolean {
-		let mapKursart : HashMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(idFach);
+		const mapKursart : HashMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(idFach);
 		if (mapKursart === null)
 			return false;
-		let schueler : HashSet<number> | null = mapKursart.get(kursart);
+		const schueler : HashSet<number> | null = mapKursart.get(kursart);
 		if (schueler === null)
 			return false;
 		return schueler.contains(idSchueler);

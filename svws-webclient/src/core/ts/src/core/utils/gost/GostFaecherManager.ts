@@ -16,8 +16,8 @@ export class GostFaecherManager extends JavaObject {
 	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
 	 */
 	public static comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
-		let va : number = (a === null) ? JavaInteger.MIN_VALUE : a.sortierung;
-		let vb : number = (b === null) ? JavaInteger.MIN_VALUE : b.sortierung;
+		const va : number = (a === null) ? JavaInteger.MIN_VALUE : a.sortierung;
+		const vb : number = (b === null) ? JavaInteger.MIN_VALUE : b.sortierung;
 		return JavaInteger.compare(va, vb);
 	} };
 
@@ -68,7 +68,7 @@ export class GostFaecherManager extends JavaObject {
 	private addInternal(fach : GostFach) : boolean {
 		if (fach.id < 0)
 			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!")
-		let old : GostFach | null = this._map.put(fach.id, fach);
+		const old : GostFach | null = this._map.put(fach.id, fach);
 		if (old !== null)
 			return false;
 		return this._faecher.add(fach);
@@ -91,7 +91,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
 	public add(fach : GostFach) : boolean {
-		let result : boolean = this.addInternal(fach);
+		const result : boolean = this.addInternal(fach);
 		this.sort();
 		return result;
 	}
@@ -105,7 +105,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
-		for (let fach of faecher)
+		for (const fach of faecher)
 			if (!this.addInternal(fach))
 				result = false;
 		this.sort();
@@ -130,7 +130,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public getOrException(pFachID : number) : GostFach {
-		let fach : GostFach | null = this._map.get(pFachID);
+		const fach : GostFach | null = this._map.get(pFachID);
 		if (fach === null)
 			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.")
 		return fach;
@@ -170,8 +170,8 @@ export class GostFaecherManager extends JavaObject {
 	 * @return ein Vector mit den Fächern
 	 */
 	public toVector() : Vector<GostFach> {
-		let result : Vector<GostFach> = new Vector();
-		for (let fach of this._faecher)
+		const result : Vector<GostFach> = new Vector();
+		for (const fach of this._faecher)
 			result.add(fach);
 		return result;
 	}
