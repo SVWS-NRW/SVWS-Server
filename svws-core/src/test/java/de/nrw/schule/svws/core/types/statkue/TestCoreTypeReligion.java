@@ -14,6 +14,9 @@ import de.nrw.schule.svws.core.types.schule.Religion;
 @DisplayName("Teste den Core-Type Religion")
 public class TestCoreTypeReligion {
 	
+	/**
+	 * Führt grundlegende Tests zu dem Core-Type Religion aus.
+	 */
     @Test
     @DisplayName("Teste den Typ Religion")
     void testReligion() {

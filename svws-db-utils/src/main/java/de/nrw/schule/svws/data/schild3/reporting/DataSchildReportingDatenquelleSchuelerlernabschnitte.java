@@ -92,36 +92,32 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
     }
 
 	private final Comparator<SchildReportingSchuelerlernabschnitt> comparatorLernabschnitte = (la1, la2) -> {
-		if (la1.schuljahr != la2.schuljahr) {
+		if (la1.schuljahr != la2.schuljahr)
 			return Integer.compare(la1.schuljahr, la2.schuljahr);
-		} else {
-			if (la1.abschnitt != la2.abschnitt) {
-				return Integer.compare(la1.abschnitt, la2.abschnitt);
-			} else {
-				if ((la1.wechselNr != null && la2.wechselNr != null) || (la1.wechselNr == null && la2.wechselNr == null)) {
-					if ((la1.wechselNr != null) && !la1.wechselNr.equals(la2.wechselNr)) {
-						return Integer.compare(la1.wechselNr, la2.wechselNr);
-					} else {
-						// Dieser Fall darf bei korrekten Daten nicht auftreten, weil es dann zwei identische Lernabschnitte geben würde.
-						// Prüfe aber dennoch zusätzlich die Wertung und Wiederholung.
-						int checkA1 = 1;
-						if (!la1.istGewertet)
-							checkA1 -= 1;
-						if (la1.istWiederholung)
-							checkA1 += 2;
-						int checkA2 = 1;
-						if (!la2.istGewertet)
-							checkA2 -= 1;
-						if (la2.istWiederholung)
-							checkA2 += 2;
-						return Integer.compare(checkA1, checkA2);
-					}
-				} else if (la1.wechselNr == null) {
-					return -1;
-				} else {
-					return 1;
-				}
+		if (la1.abschnitt != la2.abschnitt) {
+			return Integer.compare(la1.abschnitt, la2.abschnitt);
+		}
+		if ((la1.wechselNr != null && la2.wechselNr != null) || (la1.wechselNr == null && la2.wechselNr == null)) {
+			if ((la1.wechselNr != null) && !la1.wechselNr.equals(la2.wechselNr)) {
+				return Integer.compare(la1.wechselNr, la2.wechselNr);
 			}
+			// Dieser Fall darf bei korrekten Daten nicht auftreten, weil es dann zwei identische Lernabschnitte geben würde.
+			// Prüfe aber dennoch zusätzlich die Wertung und Wiederholung.
+			int checkA1 = 1;
+			if (!la1.istGewertet)
+				checkA1 -= 1;
+			if (la1.istWiederholung)
+				checkA1 += 2;
+			int checkA2 = 1;
+			if (!la2.istGewertet)
+				checkA2 -= 1;
+			if (la2.istWiederholung)
+				checkA2 += 2;
+			return Integer.compare(checkA1, checkA2);
+		} else if (la1.wechselNr == null) {
+			return -1;
+		} else {
+			return 1;
 		}
 	};
 

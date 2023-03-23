@@ -14,6 +14,9 @@ import de.nrw.schule.svws.core.types.lehrer.LehrerMinderleistungArt;
 @DisplayName("Teste den Core-Type LehrerMinderleistungArt")
 public class TestCoreTypeLehrerMinderleistungArt {
 	
+    /**
+     * Führt grundlegende Tests zu dem Core-Type LehrerMinderleistungArt aus.
+     */
     @Test
     @DisplayName("Teste den Typ LehrerMinderleistungArt")
     void testLehrerMinderleistungArt() {

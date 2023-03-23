@@ -101,7 +101,26 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return daten;
 	}
 
+	/**
+	 * TODO
+	 * 
+	 * @param <One> TODO
+	 * @param <Two> TODO
+	 * @param <Three> TODO
+	 * @param <Four> TODO
+	 * @param <Five> TODO
+	 */
 	@FunctionalInterface interface Function5<One, Two, Three, Four, Five> {
+		/**
+		 * TODO
+		 * 
+		 * @param one     TODO
+		 * @param two     TODO
+		 * @param three   TODO
+		 * @param four    TODO
+		 * 
+		 * @return TODO
+		 */
 		public Five apply(One one, Two two, Three three, Four four);
 	}
 
@@ -131,7 +150,7 @@ public class DataGostKlausurenKursklausur extends DataManager<Long> {
 //			String ss[] = kurs.Schienen.split(",");
 //			for (int i = 0; i < ss.length; i++)
 //				kk.kursSchiene[i] = Integer.parseInt(ss[i]);			
-		} catch (NumberFormatException nfe) {
+		} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
 			// TODO ExceptionHandling?
 		}
 		kk.idTermin = k.Termin_ID;

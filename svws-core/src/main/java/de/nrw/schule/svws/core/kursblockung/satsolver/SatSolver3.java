@@ -305,7 +305,9 @@ public class SatSolver3 extends SatSolverA {
 				// UNDO ALL
 				for (int i = index; i >= 0; i--) {
 					if (backtrackV[i] != null) {
-						unitpropagation_undo((Variable) backtrackV[i]); // TODO BAR Transpiler Cast Meldung 
+						@SuppressWarnings("cast")
+						Variable bvi = (Variable) backtrackV[i];
+						unitpropagation_undo(bvi); // TODO BAR Transpiler Cast Meldung 
 					}
 					backtrackV[i] = null;
 					backtrackB[i] = false;

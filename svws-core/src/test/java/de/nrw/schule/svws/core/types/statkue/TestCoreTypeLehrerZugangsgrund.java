@@ -14,6 +14,9 @@ import de.nrw.schule.svws.core.types.lehrer.LehrerZugangsgrund;
 @DisplayName("Teste den Core-Type LehrerZugangsgrund")
 public class TestCoreTypeLehrerZugangsgrund {
 	
+	/**
+	 * Führt grundlegende Tests zu dem Core-Type LehrerZugangsgrund aus.
+	 */
     @Test
     @DisplayName("Teste den Typ LehrerZugangsgrund")
     void testLehrerZugangsgrund() {

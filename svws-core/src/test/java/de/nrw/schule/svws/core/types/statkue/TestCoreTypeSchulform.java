@@ -15,6 +15,9 @@ import de.nrw.schule.svws.core.types.schule.Schulform;
 @DisplayName("Teste den Core-Type Schulform")
 public class TestCoreTypeSchulform {
 	
+	/**
+	 * Führt grundlegende Tests zu dem Core-Type Schulform aus.
+	 */
     @Test
     @DisplayName("Teste den Typ Schulform")
     void testSchulform() {

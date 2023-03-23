@@ -14,6 +14,9 @@ import de.nrw.schule.svws.core.types.Geschlecht;
 @DisplayName("Teste den Core-Type Geschlecht")
 public class TestCoreTypeGeschlecht {
 	
+    /**
+     * Führt grundlegende Tests zu der Defintion zu dem Core-Type-Geschlecht durch.
+     */
     @Test
     @DisplayName("Teste den Typ Geschlecht")
     void testGeschlecht() {

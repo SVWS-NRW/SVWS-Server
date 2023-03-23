@@ -416,6 +416,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 			return false;
 		@NotNull
 		Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		@SuppressWarnings("cast")
 		int key = (Integer) e.getKey();
 		if (iv.contains(key) == false)
 			return false;

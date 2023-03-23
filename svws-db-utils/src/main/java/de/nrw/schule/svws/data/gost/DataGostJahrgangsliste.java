@@ -257,35 +257,35 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 										abifachHalbjahr[abifachNr - 1] = halbjahr;
 									}
 								}
-							} catch (NumberFormatException nfe) {
+							} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
 								// kein gültiges Abbiturfach bei dem Lernabschnitt angegeben
 							}
 							// Setze Fachwahl für das Halbjahr
 							switch (halbjahr) {
-							case EF1 -> {
-								fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
-							case EF2 -> {
-								fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
-							case Q11 -> {
-								fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
-							case Q12 -> {
-								fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
-							case Q21 -> {
-								fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
-							case Q22 -> {
-								fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
-								fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
-							}
+								case EF1 -> {
+									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case EF2 -> {
+									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q11 -> {
+									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q12 -> {
+									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q21 -> {
+									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q22 -> {
+									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
 							}
 						}
 					}
