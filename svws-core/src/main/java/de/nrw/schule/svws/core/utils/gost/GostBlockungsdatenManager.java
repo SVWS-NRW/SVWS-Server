@@ -39,7 +39,7 @@ public class GostBlockungsdatenManager {
 	/** Ein Comparator für Regeln der Blockung */
 	private static final @NotNull Comparator<@NotNull GostBlockungRegel> compRegel = (@NotNull GostBlockungRegel a,
 			@NotNull GostBlockungRegel b) -> {
-		int result = Integer.compare(a.typ, b.typ);
+		final int result = Integer.compare(a.typ, b.typ);
 		if (result != 0)
 			return result;
 		return Long.compare(a.id, b.id);
@@ -48,7 +48,7 @@ public class GostBlockungsdatenManager {
 	/** Ein Comparator für die Lehrkräfte eines Kurses */
 	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> compLehrkraefte = (
 			@NotNull GostBlockungKursLehrer a, @NotNull GostBlockungKursLehrer b) -> {
-		int result = Integer.compare(a.reihenfolge, b.reihenfolge);
+		final int result = Integer.compare(a.reihenfolge, b.reihenfolge);
 		if (result != 0)
 			return result;
 		return Long.compare(a.id, b.id);
@@ -126,7 +126,7 @@ public class GostBlockungsdatenManager {
 	 * @param pDaten          die Blockungsdaten
 	 * @param pFaecherManager der Fächer-Manager 
 	 */
-	public GostBlockungsdatenManager(@NotNull GostBlockungsdaten pDaten, @NotNull GostFaecherManager pFaecherManager) {
+	public GostBlockungsdatenManager(final @NotNull GostBlockungsdaten pDaten, final @NotNull GostFaecherManager pFaecherManager) {
 		_faecherManager = pFaecherManager;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
@@ -150,11 +150,11 @@ public class GostBlockungsdatenManager {
 	}
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursFachKursartNummer() {
-		@NotNull Comparator<@NotNull GostBlockungKurs> comp = (@NotNull GostBlockungKurs a,
+		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (@NotNull GostBlockungKurs a,
 				@NotNull GostBlockungKurs b) -> {
-			@NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
-			@NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
-			int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
+			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
+			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
+			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach != 0)
 				return cmpFach;
 
@@ -169,16 +169,16 @@ public class GostBlockungsdatenManager {
 	}
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursKursartFachNummer() {
-		@NotNull Comparator<@NotNull GostBlockungKurs> comp = (@NotNull GostBlockungKurs a,
+		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (@NotNull GostBlockungKurs a,
 				@NotNull GostBlockungKurs b) -> {
 			if (a.kursart < b.kursart)
 				return -1;
 			if (a.kursart > b.kursart)
 				return +1;
 
-			@NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
-			@NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
-			int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
+			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
+			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
+			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach != 0)
 				return cmpFach;
 
@@ -188,7 +188,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
-		@NotNull Comparator<@NotNull GostFachwahl> comp = (@NotNull GostFachwahl a, @NotNull GostFachwahl b) -> {
+		final @NotNull Comparator<@NotNull GostFachwahl> comp = (@NotNull GostFachwahl a, @NotNull GostFachwahl b) -> {
 			if (a.schuelerID < b.schuelerID)
 				return -1;
 			if (a.schuelerID > b.schuelerID)
@@ -199,8 +199,8 @@ public class GostBlockungsdatenManager {
 			if (a.kursartID > b.kursartID)
 				return +1;
 
-			@NotNull GostFach aFach = _faecherManager.getOrException(a.fachID);
-			@NotNull GostFach bFach = _faecherManager.getOrException(b.fachID);
+			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fachID);
+			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fachID);
 			return GostFaecherManager.comp.compare(aFach, bFach);
 		};
 		return comp;
@@ -225,7 +225,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public int getOfBewertung1Wert(long pErgebnisID) throws DeveloperNotificationException {
-		@NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
+		final @NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
 		int summe = 0;
 		summe += e.bewertung.anzahlKurseNichtZugeordnet;
 		summe += e.bewertung.regelVerletzungen.size();
@@ -242,7 +242,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public double getOfBewertung1Intervall(long pErgebnisID) throws DeveloperNotificationException {
-		double summe = getOfBewertung1Wert(pErgebnisID);
+		final double summe = getOfBewertung1Wert(pErgebnisID);
 		return 1 - 1 / (0.25 * summe + 1);
 	}
 
@@ -256,7 +256,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public int getOfBewertung2Wert(long pErgebnisID) throws DeveloperNotificationException {
-		@NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
+		final @NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
 		int summe = 0;
 		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
 		summe += e.bewertung.anzahlSchuelerKollisionen;
@@ -273,7 +273,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public double getOfBewertung2Intervall(long pErgebnisID) throws DeveloperNotificationException {
-		double summe = getOfBewertung2Wert(pErgebnisID);
+		final double summe = getOfBewertung2Wert(pErgebnisID);
 		return 1 - 1 / (0.25 * summe + 1);
 	}
 
@@ -287,7 +287,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public int getOfBewertung3Wert(long pErgebnisID) throws DeveloperNotificationException {
-		@NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
+		final @NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
 		return e.bewertung.kursdifferenzMax;
 	}
 
@@ -319,7 +319,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public int getOfBewertung4Wert(long pErgebnisID) throws DeveloperNotificationException {
-		@NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
+		final @NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
 		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
@@ -335,7 +335,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public double getOfBewertung4Intervall(long pErgebnisID) throws DeveloperNotificationException {
-		int wert = getOfBewertung4Wert(pErgebnisID);
+		final int wert = getOfBewertung4Wert(pErgebnisID);
 		return 1 - 1 / (0.25 * wert + 1);
 	}
 
@@ -360,8 +360,8 @@ public class GostBlockungsdatenManager {
 	 * @return Die Anzahl verschiedenen Kursarten. 
 	 */
 	public int getKursartenAnzahl() {
-		@NotNull HashSet<@NotNull Integer> setKursartenIDs = new HashSet<>();
-		for (@NotNull GostFachwahl fachwahl : _daten.fachwahlen)
+		final @NotNull HashSet<@NotNull Integer> setKursartenIDs = new HashSet<>();
+		for (final @NotNull GostFachwahl fachwahl : _daten.fachwahlen)
 			setKursartenIDs.add(fachwahl.kursartID);
 		return setKursartenIDs.size();
 	}
@@ -489,7 +489,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
 	public void addErgebnisListe(@NotNull List<@NotNull GostBlockungsergebnisListeneintrag> pErgebnisse) throws DeveloperNotificationException {
-		for (@NotNull GostBlockungsergebnisListeneintrag ergebnis : pErgebnisse)
+		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : pErgebnisse)
 			addErgebnisOhneSortierung(ergebnis);
 
 		// Liste sortieren
@@ -505,7 +505,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public @NotNull GostBlockungsergebnisListeneintrag getErgebnis(long pErgebnisID) throws DeveloperNotificationException {
-		GostBlockungsergebnisListeneintrag e = _mapErgebnis.get(pErgebnisID);
+		final GostBlockungsergebnisListeneintrag e = _mapErgebnis.get(pErgebnisID);
 		if (e == null)
 			throw new DeveloperNotificationException("Ergebnis mit ID = " + pErgebnisID + " nicht vorhanden!");
 		return e;
@@ -528,7 +528,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void removeErgebnisByID(long pErgebnisID) throws DeveloperNotificationException {
 		// Gibt es das Ergebnis?
-		@NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
+		final @NotNull GostBlockungsergebnisListeneintrag e = getErgebnis(pErgebnisID);
 
 		// Entfernen des Ergebnisses. Neusortierung nicht nötig.
 		_daten.ergebnisse.remove(e);
@@ -560,7 +560,7 @@ public class GostBlockungsdatenManager {
 			throw new DeveloperNotificationException("GostBlockungsergebnis.blockungID=" + pErgebnis.blockungID + " zu klein!");
 
 		// Bewertung aktualisieren.
-		for (@NotNull GostBlockungsergebnisListeneintrag eintrag : _daten.ergebnisse)
+		for (final @NotNull GostBlockungsergebnisListeneintrag eintrag : _daten.ergebnisse)
 			if (eintrag.id == pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
 
@@ -575,7 +575,7 @@ public class GostBlockungsdatenManager {
 			throw new DeveloperNotificationException("GostBlockungKurs.id =  " + pKurs.id + " --> doppelt!");
 		if (pKurs.anzahlSchienen < 1)
 			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + pKurs.anzahlSchienen + " --> zu gering!");
-		int nSchienen = getSchienenAnzahl();
+		final int nSchienen = getSchienenAnzahl();
 		if (pKurs.anzahlSchienen > nSchienen)
 			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + nSchienen + " --> zu groß!");
 		if (pKurs.nummer < 1)
@@ -617,7 +617,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addKursListe(@NotNull List<@NotNull GostBlockungKurs> pKurse) throws DeveloperNotificationException {
 		// Hinzufügen der Kurse.
-		for (@NotNull GostBlockungKurs gKurs : pKurse)
+		for (final @NotNull GostBlockungKurs gKurs : pKurse)
 			addKursOhneSortierung(gKurs);
 
 		// Sortieren der Kursmengen.
@@ -633,7 +633,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public @NotNull GostBlockungKurs getKurs(long pKursID) throws DeveloperNotificationException {
-		GostBlockungKurs kurs = _mapKurse.get(pKursID);
+		final GostBlockungKurs kurs = _mapKurse.get(pKursID);
 		if (kurs == null)
 			throw new DeveloperNotificationException("Kurs mit ID = " + pKursID + " existiert nicht in der Blockung!");
 		return kurs;
@@ -646,7 +646,7 @@ public class GostBlockungsdatenManager {
 	 * @return TRUE, falls der Kurs mit der übergebenen ID existiert.
 	 */
 	public boolean getKursExistiert(long pKursID) {
-		GostBlockungKurs kurs = _mapKurse.get(pKursID);
+		final GostBlockungKurs kurs = _mapKurse.get(pKursID);
 		return kurs != null;
 	}
 
@@ -667,9 +667,9 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public @NotNull String getNameOfKurs(long pKursID) throws DeveloperNotificationException {
-		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		@NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
-		@NotNull String sSuffix = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
+		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		final @NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
+		final @NotNull String sSuffix = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix;
 	}
 	
@@ -681,8 +681,8 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist. 
 	 */
 	public @NotNull String getNameOfFachwahl(@NotNull GostFachwahl pFachwahl) throws DeveloperNotificationException {
-		@NotNull GostFach gFach = _faecherManager.getOrException(pFachwahl.fachID);
-		@NotNull GostKursart gKursart = GostKursart.fromID(pFachwahl.kursartID);
+		final @NotNull GostFach gFach = _faecherManager.getOrException(pFachwahl.fachID);
+		final @NotNull GostKursart gKursart = GostKursart.fromID(pFachwahl.kursartID);
 		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
 	}	
 
@@ -694,7 +694,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public void setSuffixOfKurs(long pKursID, @NotNull String pSuffix) throws DeveloperNotificationException {
-		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		kurs.suffix = pSuffix;
 	}
 
@@ -740,7 +740,7 @@ public class GostBlockungsdatenManager {
 			throw new UserNotificationException("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!");
 
 		// Entfernen des Kurses.
-		@NotNull GostBlockungKurs kurs = this.getKurs(pKursID);
+		final @NotNull GostBlockungKurs kurs = this.getKurs(pKursID);
 		_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		_mapKurse.remove(pKursID);
@@ -765,7 +765,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public @NotNull List<@NotNull GostBlockungKursLehrer> getOfKursLehrkraefteSortiert(long pKursID) throws DeveloperNotificationException {
-		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		return kurs.lehrer;
 	}
 
@@ -779,7 +779,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public GostBlockungKursLehrer getOfKursLehrkraftMitNummer(long pKursID, int pReihenfolgeNr) throws DeveloperNotificationException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
+		for (final @NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge == pReihenfolgeNr)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr. " + pReihenfolgeNr + "!");
@@ -794,7 +794,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public boolean getOfKursLehrkraftMitNummerExists(long pKursID, int pReihenfolgeNr) throws DeveloperNotificationException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
+		for (final @NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge == pReihenfolgeNr)
 				return true;
 		return false;
@@ -810,7 +810,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public GostBlockungKursLehrer getOfKursLehrkraftMitID(long pKursID, int pLehrkraftID) throws DeveloperNotificationException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
+		for (final @NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id == pLehrkraftID)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID);
@@ -825,7 +825,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public boolean getOfKursLehrkraftMitIDExists(long pKursID, int pLehrkraftID) throws DeveloperNotificationException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
+		for (final @NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id == pLehrkraftID)
 				return true;
 		return false;
@@ -840,10 +840,10 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es die Lehrkraft oder die ReihenfolgeNr im Kurs bereits gibt.
 	 */
 	public void patchOfKursAddLehrkraft(long pKursID, @NotNull GostBlockungKursLehrer pKursLehrer) throws DeveloperNotificationException {
-		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		@NotNull List<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
+		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		final @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		// Datenkonsistenz überprüfen
-		for (@NotNull GostBlockungKursLehrer lehrkraft : lehrer) {
+		for (final @NotNull GostBlockungKursLehrer lehrkraft : lehrer) {
 			if (lehrkraft.id == pKursLehrer.id)
 				throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat bereits Lehrkraft (" + pKursLehrer.id + ")!");
 			if (lehrkraft.reihenfolge == pKursLehrer.reihenfolge)
@@ -862,8 +862,8 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
 	 */
 	public void patchOfKursRemoveLehrkraft(long pKursID, long pLehrkraftID) throws DeveloperNotificationException {
-		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		@NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
+		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		final @NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		for (int i = 0 ; i < lehrer.size() ; i++)
 			if (lehrer.get(i).id == pLehrkraftID) {
 				lehrer.removeElementAt(i);
@@ -912,7 +912,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addSchienListe(@NotNull List<@NotNull GostBlockungSchiene> pSchienen) throws DeveloperNotificationException {
 		// Hinzufügen der Schienen.
-		for (@NotNull GostBlockungSchiene schiene : pSchienen)
+		for (final @NotNull GostBlockungSchiene schiene : pSchienen)
 			addSchieneOhneSortierung(schiene);
 
 		// Sortieren der Schienenmenge.
@@ -927,7 +927,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht in der Blockung existiert.
 	 */
 	public @NotNull GostBlockungSchiene getSchiene(long pSchienenID) throws DeveloperNotificationException {
-		GostBlockungSchiene schiene = _mapSchienen.get(pSchienenID);
+		final GostBlockungSchiene schiene = _mapSchienen.get(pSchienenID);
 		if (schiene == null)
 			throw new DeveloperNotificationException("Schiene (" + pSchienenID + ") existiert nicht in der Blockung!");
 		return schiene;
@@ -990,12 +990,12 @@ public class GostBlockungsdatenManager {
 		// (1)
 		if (getIstBlockungsVorlage() == false)
 			throw new DeveloperNotificationException("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!");
-		@NotNull GostBlockungSchiene schieneR = this.getSchiene(pSchienenID);
+		final @NotNull GostBlockungSchiene schieneR = this.getSchiene(pSchienenID);
 
 		// (2)
 		_mapSchienen.remove(pSchienenID);
 		_daten.schienen.remove(schieneR);
-		for (@NotNull GostBlockungSchiene schiene : _daten.schienen)
+		for (final @NotNull GostBlockungSchiene schiene : _daten.schienen)
 			if (schiene.nummer > schieneR.nummer)
 				schiene.nummer--;
 
@@ -1005,10 +1005,10 @@ public class GostBlockungsdatenManager {
 				throw new DeveloperNotificationException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1) + "!");
 
 		// (4)
-		Iterator<@NotNull GostBlockungRegel> iRegel = _daten.regeln.iterator();
+		final Iterator<@NotNull GostBlockungRegel> iRegel = _daten.regeln.iterator();
 		while (iRegel.hasNext()) {
-			@NotNull GostBlockungRegel r = iRegel.next();
-			long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
+			final @NotNull GostBlockungRegel r = iRegel.next();
+			final long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
 			if (a == null)
 				iRegel.remove();
 			else
@@ -1074,7 +1074,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addRegelListe(@NotNull List<@NotNull GostBlockungRegel> pRegeln) throws DeveloperNotificationException {
 		// Regeln hinzufügen.
-		for (@NotNull GostBlockungRegel regel : pRegeln)
+		for (final @NotNull GostBlockungRegel regel : pRegeln)
 			addRegelOhneSortierung(regel);
 
 		// Sortieren der Regelmenge.
@@ -1089,7 +1089,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Regel nicht in der Blockung existiert.
 	 */
 	public @NotNull GostBlockungRegel getRegel(long pRegelID) throws DeveloperNotificationException {
-		GostBlockungRegel regel = _mapRegeln.get(pRegelID);
+		final GostBlockungRegel regel = _mapRegeln.get(pRegelID);
 		if (regel == null)
 			throw new DeveloperNotificationException("Regel.id (" + pRegelID + ") existiert nicht in der Blockung!");
 		return regel;
@@ -1151,7 +1151,7 @@ public class GostBlockungsdatenManager {
 			throw new UserNotificationException("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!");
 
 		// Regel entfernen.
-		@NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
+		final @NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
 		_mapRegeln.remove(pRegelID);
 		_daten.regeln.remove(regel);
 	}
@@ -1199,7 +1199,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind. 
 	 */
 	public void addSchuelerListe(@NotNull List<@NotNull Schueler> pSchueler) throws DeveloperNotificationException {
-		for (@NotNull Schueler schueler : pSchueler)
+		for (final @NotNull Schueler schueler : pSchueler)
 			addSchueler(schueler);
 	}
 
@@ -1212,7 +1212,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException  Falls die Schüler-ID unbekannt ist. 
 	 */
 	public @NotNull Schueler getSchueler(long pSchuelerID) throws DeveloperNotificationException {
-		Schueler schueler = _map_id_schueler.get(pSchuelerID);
+		final Schueler schueler = _map_id_schueler.get(pSchuelerID);
 		if (schueler == null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") existiert nicht!");
 		return schueler;
@@ -1234,8 +1234,8 @@ public class GostBlockungsdatenManager {
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 */
 	public int getSchuelerAnzahlMitFachwahlen() {
-		HashSet<@NotNull Long> setSchuelerIDs = new HashSet<>();
-		for (@NotNull GostFachwahl fachwahl : _daten.fachwahlen)
+		final HashSet<@NotNull Long> setSchuelerIDs = new HashSet<>();
+		for (final @NotNull GostFachwahl fachwahl : _daten.fachwahlen)
 			setSchuelerIDs.add(fachwahl.schuelerID);
 		return setSchuelerIDs.size();
 	}
@@ -1259,7 +1259,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) throws DeveloperNotificationException {
-		@NotNull GostFachwahl fachwahl = getOfSchuelerOfFachFachwahl(pSchuelerID, pFachID);
+		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfFachFachwahl(pSchuelerID, pFachID);
 		return GostKursart.fromID(fachwahl.kursartID);
 	}
 
@@ -1273,11 +1273,11 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public @NotNull GostFachwahl getOfSchuelerOfFachFachwahl(long pSchuelerID, long pFachID) throws DeveloperNotificationException {
-		HashMap<@NotNull Long, @NotNull GostFachwahl> mapFachFachwahl = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		final HashMap<@NotNull Long, @NotNull GostFachwahl> mapFachFachwahl = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
 		if (mapFachFachwahl == null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") unbekannt!");
 
-		GostFachwahl fachwahl = mapFachFachwahl.get(pFachID);
+		final GostFachwahl fachwahl = mapFachFachwahl.get(pFachID);
 		if (fachwahl == null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + "), Fach-ID (" + pFachID + ") unbekannt!");
 
@@ -1292,7 +1292,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist. 
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getOfSchuelerFacharten(long pSchuelerID) throws DeveloperNotificationException {
-		List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _map_schuelerID_fachwahlen.get(pSchuelerID);
+		final List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _map_schuelerID_fachwahlen.get(pSchuelerID);
 		if (fachwahlenDesSchuelers == null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") unbekannt!");
 		return fachwahlenDesSchuelers;
@@ -1308,10 +1308,10 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist. 
 	 */
 	public boolean getOfSchuelerHatFachart(long pSchuelerID, long pFach, long pKursart) throws DeveloperNotificationException {
-		HashMap<@NotNull Long, @NotNull GostFachwahl> map = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		final HashMap<@NotNull Long, @NotNull GostFachwahl> map = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
 		if (map == null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") unbekannt!");
-		GostFachwahl wahl = map.get(pFach);
+		final GostFachwahl wahl = map.get(pFach);
 		if (wahl == null)
 			return false;
 		return wahl.kursartID == pKursart;
@@ -1333,7 +1333,7 @@ public class GostBlockungsdatenManager {
 		}
 
 		// _map_schulerID_fachID_fachwahl: Teil 2
-		long fachID = pFachwahl.fachID;
+		final long fachID = pFachwahl.fachID;
 		if (mapSFA.put(fachID, pFachwahl) != null)
 			throw new DeveloperNotificationException("Schüler-ID (" + pFachwahl.schuelerID + "), (Fach-ID" + fachID + ") doppelt!");
 
@@ -1347,7 +1347,7 @@ public class GostBlockungsdatenManager {
 		fachwahlenDesSchuelers.sort(_compFachwahlen);
 
 		// _map_fachartID_fachwahlen
-		long fachartID = GostKursart.getFachartIDByFachwahl(pFachwahl);
+		final long fachartID = GostKursart.getFachartIDByFachwahl(pFachwahl);
 		getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
 
 		// fachwahlen
@@ -1361,7 +1361,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind. 
 	 */
 	public void addFachwahlListe(@NotNull List<@NotNull GostFachwahl> pFachwahlen) throws DeveloperNotificationException {
-		for (@NotNull GostFachwahl gFachwahl : pFachwahlen)
+		for (final @NotNull GostFachwahl gFachwahl : pFachwahlen)
 			addFachwahl(gFachwahl);
 	}
 
