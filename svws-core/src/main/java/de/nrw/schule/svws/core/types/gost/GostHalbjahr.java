@@ -160,7 +160,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return ein Array mit allen Halbjahren der Einführungsphase der gymnasialen Oberstufe
      */
 	public static @NotNull GostHalbjahr@NotNull [] getEinfuehrungsphase() {
-		@NotNull GostHalbjahr@NotNull [] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
+		final @NotNull GostHalbjahr@NotNull [] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
 		return ef;
 	}	
 
@@ -171,7 +171,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return ein Array mit allen Halbjahren der Qualifikationsphase der gymnasialen Oberstufe
      */
 	public static @NotNull GostHalbjahr@NotNull [] getQualifikationsphase() {
-		@NotNull GostHalbjahr@NotNull [] q = { GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+		final @NotNull GostHalbjahr@NotNull [] q = { GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
 		return q;
 	}	
 	
@@ -186,13 +186,13 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	public static @NotNull GostHalbjahr@NotNull[] getHalbjahreFromJahrgang(@NotNull String jahrgang) {
 		switch (jahrgang) {
 			case "EF":
-				@NotNull GostHalbjahr@NotNull[] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
+				final @NotNull GostHalbjahr@NotNull[] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
 				return ef;
 			case "Q1":
-				@NotNull GostHalbjahr@NotNull[] q1 = { GostHalbjahr.Q11, GostHalbjahr.Q12 };
+				final @NotNull GostHalbjahr@NotNull[] q1 = { GostHalbjahr.Q11, GostHalbjahr.Q12 };
 				return q1;
 			case "Q2":
-				@NotNull GostHalbjahr@NotNull[] q2 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				final @NotNull GostHalbjahr@NotNull[] q2 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
 				return q2;
 			default:
 				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe"); 
@@ -232,7 +232,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @throws NullPointerException Falls die ID keinem Halbjahr zugeordnet werden kann.
      */
     public static @NotNull GostHalbjahr fromIDorException(int pGostHalbjahID) throws NullPointerException {
-    	GostHalbjahr halbjahr = GostHalbjahr.fromID(pGostHalbjahID);
+    	final GostHalbjahr halbjahr = GostHalbjahr.fromID(pGostHalbjahID);
 		if (halbjahr == null)
 			throw new NullPointerException("GostHalbjahr nicht gefunden!");    	
 		return halbjahr;
@@ -295,7 +295,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 */
 	public static GostHalbjahr fromAbiturjahrSchuljahrUndHalbjahr(int abiturjahr, int schuljahr, int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
-		int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
+		final int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
 		return GostHalbjahr.fromID(id);
 	}
 	
@@ -398,7 +398,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	public static boolean pruefeQualifikationsphase(@NotNull GostHalbjahr... halbjahre) {
 		if ((halbjahre == null) || (halbjahre.length != 4))
 			return false;
-		@NotNull List<@NotNull GostHalbjahr> list = Arrays.asList(halbjahre);
+		final @NotNull List<@NotNull GostHalbjahr> list = Arrays.asList(halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
 	}
 

@@ -189,7 +189,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return ein Array mit allen Halbjahren der Einführungsphase der gymnasialen Oberstufe
 	 */
 	public static getEinfuehrungsphase() : Array<GostHalbjahr> {
-		let ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2];
+		const ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2];
 		return ef;
 	}
 
@@ -199,7 +199,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return ein Array mit allen Halbjahren der Qualifikationsphase der gymnasialen Oberstufe
 	 */
 	public static getQualifikationsphase() : Array<GostHalbjahr> {
-		let q : Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22];
+		const q : Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22];
 		return q;
 	}
 
@@ -213,15 +213,15 @@ export class GostHalbjahr extends JavaObject {
 	public static getHalbjahreFromJahrgang(jahrgang : string) : Array<GostHalbjahr> {
 		switch (jahrgang) {
 			case "EF": {
-				let ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2]
+				const ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2]
 				return ef;
 			}
 			case "Q1": {
-				let q1 : Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12]
+				const q1 : Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12]
 				return q1;
 			}
 			case "Q2": {
-				let q2 : Array<GostHalbjahr> = [GostHalbjahr.Q21, GostHalbjahr.Q22]
+				const q2 : Array<GostHalbjahr> = [GostHalbjahr.Q21, GostHalbjahr.Q22]
 				return q2;
 			}
 			default: {
@@ -275,7 +275,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @throws NullPointerException Falls die ID keinem Halbjahr zugeordnet werden kann.
 	 */
 	public static fromIDorException(pGostHalbjahID : number) : GostHalbjahr {
-		let halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(pGostHalbjahID);
+		const halbjahr : GostHalbjahr | null = GostHalbjahr.fromID(pGostHalbjahID);
 		if (halbjahr === null)
 			throw new NullPointerException("GostHalbjahr nicht gefunden!")
 		return halbjahr;
@@ -341,7 +341,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @return das Halbjahr der gymnasialen Oberstufe oder null
 	 */
 	public static fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr : number, schuljahr : number, halbjahr : number) : GostHalbjahr | null {
-		let id : number = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
+		const id : number = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
 		return GostHalbjahr.fromID(id);
 	}
 
@@ -433,7 +433,7 @@ export class GostHalbjahr extends JavaObject {
 	public static pruefeQualifikationsphase(...halbjahre : Array<GostHalbjahr>) : boolean {
 		if ((halbjahre === null) || (halbjahre.length !== 4))
 			return false;
-		let list : List<GostHalbjahr> = Arrays.asList(...halbjahre);
+		const list : List<GostHalbjahr> = Arrays.asList(...halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
 	}
 
@@ -515,7 +515,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostHalbjahr | null {
-		let tmp : GostHalbjahr | undefined = this.all_values_by_name.get(name);
+		const tmp : GostHalbjahr | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

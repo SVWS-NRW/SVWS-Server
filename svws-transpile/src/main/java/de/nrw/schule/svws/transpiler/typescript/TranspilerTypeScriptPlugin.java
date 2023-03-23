@@ -221,16 +221,17 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertBlockVariable(VariableTree node) {
 		// TODO ??? getNameExpression for node.getName()
 		// Prüfe Bezeichner auf Schlüsselwörter
+		boolean isFinal = transpiler.hasFinalModifier(node);
 		pruefeBezeichner(node.getName().toString());
 		TypeNode typeNode = new TypeNode(this, node.getType(), true, transpiler.hasNotNullAnnotation(node));
 		ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
-			return "let %s : %s".formatted(node.getName(),  typeNode.transpile(false));
+			return "%s %s : %s".formatted(isFinal ? "const" : "let", node.getName(),  typeNode.transpile(false));
 		String strInitializer = convertExpression(initializer);
 		ExpressionType typeInitializer = transpiler.getExpressionType(initializer);
 		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType) && (typeInitializer.isPrimitiveOrBoxedPrimitive()))
 			strInitializer += ".valueOf()";
-		return "let %s : %s = %s".formatted(node.getName(),  typeNode.transpile(false), strInitializer);
+		return "%s %s : %s = %s".formatted(isFinal ? "const" : "let", node.getName(),  typeNode.transpile(false), strInitializer);
 	}
 	
 	
@@ -264,7 +265,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String convertForLoop(ForLoopTree node) {
 		String result = "for (%s; %s; %s)".formatted(
-			"let " + node.getInitializer().stream().map(st -> convertStatement(st, true)).collect(Collectors.joining(", ")).replace("let ", ""),
+			"let " + node.getInitializer().stream().map(st -> convertStatement(st, true)).collect(Collectors.joining(", ")).replace("let ", "").replace("const ", ""),
 			convertExpression(node.getCondition()),
 			node.getUpdate().stream().map(es -> convertExpressionStatement(es)).collect(Collectors.joining(", "))			
 		);
@@ -2247,7 +2248,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append(" * @returns the enumeration values or null").append(System.lineSeparator());
 		sb.append(getIndent()).append(" */").append(System.lineSeparator());
 		sb.append(getIndent()).append("public static valueOf(name : string) : ").append(node.getSimpleName()).append(" | null {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\tlet tmp : ").append(node.getSimpleName()).append(" | undefined = this.all_values_by_name.get(name);").append(System.lineSeparator());
+		sb.append(getIndent()).append("\tconst tmp : ").append(node.getSimpleName()).append(" | undefined = this.all_values_by_name.get(name);").append(System.lineSeparator());
 		sb.append(getIndent()).append("\treturn (!tmp) ? null : tmp;").append(System.lineSeparator());
 		sb.append(getIndent()).append("}").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
