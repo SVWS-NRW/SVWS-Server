@@ -39,7 +39,7 @@ public class GostKlausurvorgabenManager {
 	public GostKlausurvorgabenManager(@NotNull List<@NotNull GostKlausurvorgabe> vorgaben) {
 		_vorgaben = vorgaben;
 
-		for (@NotNull GostKlausurvorgabe v : _vorgaben) {
+		for (final @NotNull GostKlausurvorgabe v : _vorgaben) {
 			_mapIdKlausurvorgabe.put(v.idVorgabe, v);
 			addVorgabeToInternalMaps(v);
 		}
@@ -108,27 +108,27 @@ public class GostKlausurvorgabenManager {
 
 	private void removeUpdateKlausurvorgabeCommons(@NotNull GostKlausurvorgabe vorgabe) {
 		// aus _mapQuartalKlausurvorgaben löschen
-		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
+		final Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
 				.get(vorgabe.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben != null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
 		}
 		// aus _mapQuartalKursartFachKlausurvorgabe löschen
-		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
+		final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
 				.get(vorgabe.quartal);
 		if (map1 != null) {
-			HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(vorgabe.kursart);
+			final HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(vorgabe.kursart);
 			if (map2 != null) {
-				GostKlausurvorgabe kv = map2.get(vorgabe.idFach);
+				final GostKlausurvorgabe kv = map2.get(vorgabe.idFach);
 				if (kv == vorgabe)
 					map2.remove(vorgabe.idFach);
 			}
 		}
 		// aus _mapKursartFachKlausurvorgaben löschen
-		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map3 = _mapKursartFachKlausurvorgaben
+		final HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map3 = _mapKursartFachKlausurvorgaben
 				.get(vorgabe.kursart);
 		if (map3 != null) {
-			List<@NotNull GostKlausurvorgabe> list = map3.get(vorgabe.idFach);
+			final List<@NotNull GostKlausurvorgabe> list = map3.get(vorgabe.idFach);
 			if (list != null) {
 				list.remove(vorgabe);
 			}
@@ -187,11 +187,11 @@ public class GostKlausurvorgabenManager {
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe gibGostKlausurvorgabe(int quartal, String kursartAllg, long idFach) {
-		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
+		final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
 				.get(quartal);
 		if (map1 == null)
 			return null;
-		HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(kursartAllg);
+			final HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(kursartAllg);
 		if (map2 != null)
 			return map2.get(idFach);
 		return null;
@@ -209,8 +209,8 @@ public class GostKlausurvorgabenManager {
 	 */
 	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(int quartal, String kursartAllg, long idFach) {
 		if (quartal > 0) {
-			List<@NotNull GostKlausurvorgabe> retList = new Vector<>();
-			GostKlausurvorgabe vorgabe = gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
+			final List<@NotNull GostKlausurvorgabe> retList = new Vector<>();
+			final GostKlausurvorgabe vorgabe = gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
 			if (vorgabe != null)
 				retList.add(vorgabe);
 			return retList;
@@ -228,11 +228,11 @@ public class GostKlausurvorgabenManager {
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
 	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(String kursartAllg, long idFach) {
-		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map1 = _mapKursartFachKlausurvorgaben
-				.get(kursartAllg);
+		final HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map1 = _mapKursartFachKlausurvorgaben
+			.get(kursartAllg);
 		if (map1 == null)
 			return new Vector<>();
-		List<@NotNull GostKlausurvorgabe> list = map1.get(idFach);
+		final List<@NotNull GostKlausurvorgabe> list = map1.get(idFach);
 		if (list == null)
 			return new Vector<>();
 		return list;

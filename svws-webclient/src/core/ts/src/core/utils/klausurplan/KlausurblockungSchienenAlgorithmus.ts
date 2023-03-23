@@ -32,11 +32,11 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
 	public berechne(pInput : List<GostKursklausur>, pMaxTimeMillis : number) : List<List<number>> {
-		let zeitEndeGesamt : number = System.currentTimeMillis() + pMaxTimeMillis;
-		let seed : number = new Random().nextLong();
-		let random : Random = new Random(seed);
-		let dynDaten : KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(random, pInput);
-		let algorithmen : Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten)];
+		const zeitEndeGesamt : number = System.currentTimeMillis() + pMaxTimeMillis;
+		const seed : number = new Random().nextLong();
+		const random : Random = new Random(seed);
+		const dynDaten : KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(random, pInput);
+		const algorithmen : Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten)];
 		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;

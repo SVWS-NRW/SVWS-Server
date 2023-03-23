@@ -28,17 +28,17 @@ public class KlausurblockungSchienenAlgorithmus {
 	public @NotNull List<@NotNull List<@NotNull Long>> berechne(@NotNull List<@NotNull GostKursklausur> pInput, long pMaxTimeMillis) {
 		
 		// End-Zeitpunkt berechnet.
-		long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;
+		final long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;
 
 		// Random-Objekt erzeugen
-		long seed = new Random().nextLong(); // Trick, um den Seed zu kennen.
-		@NotNull Random random = new Random(seed);
+		final long seed = new Random().nextLong(); // Trick, um den Seed zu kennen.
+		final @NotNull Random random = new Random(seed);
 
 		// Konvertierung: KlausurblockungSchienenInput --> KlausurblockungSchienenDynDaten
-		KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(random, pInput);
+		final KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(random, pInput);
 
 		// Algorithmen erzeugen
-		@NotNull KlausurblockungSchienenAlgorithmusAbstract @NotNull [] algorithmen = new KlausurblockungSchienenAlgorithmusAbstract @NotNull [] {
+		final @NotNull KlausurblockungSchienenAlgorithmusAbstract @NotNull [] algorithmen = new KlausurblockungSchienenAlgorithmusAbstract @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Klausuren auf ihre Schienen ...
 				new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), // Backtracking
 				new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), // DSatur

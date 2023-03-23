@@ -77,10 +77,10 @@ export class BenutzerManager extends JavaObject {
 			let pDaten : BenutzerDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten(__param0);
 			this.init();
 			this._daten = pDaten;
-			for (let kID of pDaten.kompetenzen) {
+			for (const kID of pDaten.kompetenzen) {
 				if (kID === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
-				let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID!);
+				const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID!);
 				if (komp === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID! + " existiert nicht.")
 				if (this._setKompetenzen.contains(komp))
@@ -88,7 +88,7 @@ export class BenutzerManager extends JavaObject {
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
 			}
-			for (let bgd of this._daten.gruppen)
+			for (const bgd of this._daten.gruppen)
 				this.addGruppe(bgd);
 		} else throw new Error('invalid method overload');
 	}
@@ -103,12 +103,12 @@ export class BenutzerManager extends JavaObject {
 			return;
 		this._mapGruppen.put(bgd.id, bgd);
 		this._setGruppenIDs.add(bgd.id);
-		for (let kid of bgd.kompetenzen) {
-			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
+		for (const kid of bgd.kompetenzen) {
+			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
 			if (komp === null)
 				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid! + " existiert nicht.")
 			this._setKompetenzenAlle.add(komp);
-			let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+			const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 			if (gruppen === null)
 				throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
 			gruppen.add(bgd);
@@ -125,10 +125,10 @@ export class BenutzerManager extends JavaObject {
 			return;
 		this._mapGruppen.remove(bgd.id);
 		this._setGruppenIDs.remove(bgd.id);
-		for (let kid of bgd.kompetenzen) {
-			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
+		for (const kid of bgd.kompetenzen) {
+			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
 			if (komp !== null) {
-				let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+				const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 				if (gruppen === null)
 					throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
 				for (let i : number = gruppen.size() - 1; i >= 0; i--)
@@ -146,7 +146,7 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
 	 */
 	public istInAdminGruppe() : boolean {
-		for (let bg of this._mapGruppen.values()) {
+		for (const bg of this._mapGruppen.values()) {
 			if (bg.istAdmin)
 				return true;
 		}
@@ -157,7 +157,7 @@ export class BenutzerManager extends JavaObject {
 	 * Initialisiert die lokalen Datenstrukturen.
 	 */
 	private init() : void {
-		for (let p of BenutzerKompetenz.values())
+		for (const p of BenutzerKompetenz.values())
 			this._mapKompetenzenVonGruppe.put(p, new Vector());
 	}
 
@@ -171,7 +171,7 @@ export class BenutzerManager extends JavaObject {
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
 	public getGruppen(kompetenz : BenutzerKompetenz) : List<BenutzergruppeDaten> {
-		let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
+		const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
 		if (gruppen === null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.")
 		return gruppen;
@@ -290,7 +290,7 @@ export class BenutzerManager extends JavaObject {
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen)
+		for (const kompetenz of kompetenzen)
 			if (!this._setKompetenzenAlle.contains(kompetenz))
 				return false;
 		return true;
@@ -308,7 +308,7 @@ export class BenutzerManager extends JavaObject {
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen)
+		for (const kompetenz of kompetenzen)
 			if (this._setKompetenzenAlle.contains(kompetenz))
 				return true;
 		return false;
@@ -348,7 +348,7 @@ export class BenutzerManager extends JavaObject {
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.")
 		this._daten.kompetenzen.removeElement(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
-		let gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
+		const gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
 		if (gruppen.size() === 0)
 			this._setKompetenzenAlle.remove(kompetenz);
 	}

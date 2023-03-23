@@ -91,7 +91,7 @@ export class GostKursklausurManager extends JavaObject {
 			let termine : List<GostKlausurtermin> = cast_java_util_List(__param1);
 			this._klausuren = klausuren;
 			this.helpKonstruktor();
-			for (let t of termine) {
+			for (const t of termine) {
 				this.addTermin(t);
 			}
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
@@ -102,7 +102,7 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private helpKonstruktor() : void {
-		for (let kk of this._klausuren) {
+		for (const kk of this._klausuren) {
 			this._mapIdKursklausur.put(kk.id, kk);
 			this.addKlausurToInternalMaps(kk);
 			let listKursklausurenMapQuartalKursKlausuren : Vector<GostKursklausur> | null = this._mapQuartalKursKlausuren.get(kk.quartal);
@@ -149,11 +149,11 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public updateKursklausur(klausur : GostKursklausur) : void {
-		let terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin === null ? -1 : klausur.idTermin);
+		const terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin === null ? -1 : klausur.idTermin);
 		if (terminNeuKlausuren === null || !terminNeuKlausuren.contains(klausur)) {
 			let oldTerminId : number = -2;
-			for (let key of this._mapTerminKursklausuren.keySet()) {
-				let entry : Vector<GostKursklausur> | null = this._mapTerminKursklausuren.get(key);
+			for (const key of this._mapTerminKursklausuren.keySet()) {
+				const entry : Vector<GostKursklausur> | null = this._mapTerminKursklausuren.get(key);
 				if (entry === null) {
 				} else {
 					if (entry.contains(klausur)) {
@@ -162,18 +162,18 @@ export class GostKursklausurManager extends JavaObject {
 					}
 				}
 			}
-			let quartalMap : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
+			const quartalMap : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
 			if (quartalMap !== null) {
-				let listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
+				const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
 				if (listOldQuartalTerminKursklausuren !== null)
 					listOldQuartalTerminKursklausuren.remove(klausur);
 			} else {
 			}
-			let quartalKursartMap : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
+			const quartalKursartMap : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
 			if (quartalKursartMap !== null) {
-				let kursartMap : HashMap<number, Vector<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursart);
+				const kursartMap : HashMap<number, Vector<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursart);
 				if (kursartMap !== null) {
-					let listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
+					const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren !== null)
 						listOldQuartalTerminKursklausuren.remove(klausur);
 				} else {
@@ -188,12 +188,12 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	private updateSchuelerIdsZuTermin(idTermin : number) : void {
-		let listSchuelerIds : Vector<number> | null = new Vector();
+		const listSchuelerIds : Vector<number> | null = new Vector();
 		this._mapTerminSchuelerids.put(idTermin, listSchuelerIds);
-		let listKlausurenZuTermin : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin);
+		const listKlausurenZuTermin : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin);
 		if (listKlausurenZuTermin === null)
 			return;
-		for (let k of listKlausurenZuTermin) {
+		for (const k of listKlausurenZuTermin) {
 			listSchuelerIds.addAll(k.schuelerIds);
 		}
 	}
@@ -231,7 +231,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param klausuren die Liste von GostKursklausur-Objekten
 	 */
 	public addKlausuren(klausuren : List<GostKursklausur>) : void {
-		for (let klausur of klausuren) {
+		for (const klausur of klausuren) {
 			this.addKlausur(klausur);
 		}
 	}
@@ -242,7 +242,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public removeTermin(termin : GostKlausurtermin) : void {
-		let listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
+		const listKlausurtermineMapQuartalKlausurtermine : Vector<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
 		if (listKlausurtermineMapQuartalKlausurtermine === null) {
 			return;
 		}
@@ -250,7 +250,7 @@ export class GostKursklausurManager extends JavaObject {
 		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(termin.id);
 		if (listKlausurenZuTermin !== null) {
 			listKlausurenZuTermin = new Vector(listKlausurenZuTermin);
-			for (let k of listKlausurenZuTermin) {
+			for (const k of listKlausurenZuTermin) {
 				k.idTermin = null;
 				this.updateKursklausur(k);
 			}
@@ -290,7 +290,7 @@ export class GostKursklausurManager extends JavaObject {
 	public getKursklausuren(__param0? : null | number) : List<GostKursklausur> | null {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
 			let idTermin : number | null = __param0;
-			let klausuren : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
+			const klausuren : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
 			return klausuren !== null ? klausuren : new Vector();
 		} else if ((typeof __param0 === "undefined")) {
 			return this._klausuren;
@@ -326,11 +326,11 @@ export class GostKursklausurManager extends JavaObject {
 			return this.getKursklausuren(-1);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
-			let mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
+			const mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 			if (mapTerminKursklausuren === null) {
 				return new Vector();
 			}
-			let klausuren : List<GostKursklausur> | null = mapTerminKursklausuren.get(-1);
+			const klausuren : List<GostKursklausur> | null = mapTerminKursklausuren.get(-1);
 			return klausuren !== null ? klausuren : new Vector();
 		} else throw new Error('invalid method overload');
 	}
@@ -344,10 +344,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausurenKursartOhneTermin(quartal : number) : List<List<GostKursklausur>> {
-		let retList : List<List<GostKursklausur>> | null = new Vector();
-		let mapKursartTerminKursklausuren : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
+		const retList : List<List<GostKursklausur>> | null = new Vector();
+		const mapKursartTerminKursklausuren : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapKursartTerminKursklausuren !== null) {
-			for (let mapKursarten of mapKursartTerminKursklausuren.values()) {
+			for (const mapKursarten of mapKursartTerminKursklausuren.values()) {
 				if (mapKursarten !== null)
 					retList.add(mapKursarten.get(-1));
 			}
@@ -375,7 +375,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste der betroffenen Schüler-IDs
 	 */
 	public gibSchuelerIDsZuTermin(idTermin : number) : List<number> | null {
-		let schuelerIds : List<number> | null = this._mapTerminSchuelerids.get(idTermin);
+		const schuelerIds : List<number> | null = this._mapTerminSchuelerids.get(idTermin);
 		return schuelerIds !== null || !this._mapIdKlausurtermin.containsKey(idTermin) ? schuelerIds : new Vector();
 	}
 
@@ -414,7 +414,7 @@ export class GostKursklausurManager extends JavaObject {
 			return this._termine;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
 			let quartal : number = __param0 as number;
-			let termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+			const termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 			return termine !== null ? termine : new Vector();
 		} else throw new Error('invalid method overload');
 	}
@@ -442,11 +442,11 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public gibKonfliktTerminInternKursklausur(termin : GostKlausurtermin, klausur : GostKursklausur) : List<number> {
-		let konflikte : List<number> = new Vector();
-		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(termin.id);
+		const konflikte : List<number> = new Vector();
+		const listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(termin.id);
 		if (listKlausurenZuTermin === null)
 			return konflikte;
-		for (let klausurInTermin of listKlausurenZuTermin) {
+		for (const klausurInTermin of listKlausurenZuTermin) {
 			konflikte.addAll(this.gibKonfliktKursklausurKursklausur(klausur, klausurInTermin));
 		}
 		return konflikte;
@@ -498,8 +498,8 @@ export class GostKursklausurManager extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let idTermin : number = __param0 as number;
 			let idKursklausur : number = __param1 as number;
-			let klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
-			let termin : GostKlausurtermin | null = this._mapIdKlausurtermin.get(idTermin);
+			const klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
+			const termin : GostKlausurtermin | null = this._mapIdKlausurtermin.get(idTermin);
 			if (klausur === null || termin === null) {
 				return new Vector();
 			}
@@ -517,12 +517,12 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public gibAnzahlKonflikteZuTermin(idTermin : number) : number {
 		let anzahl : number = 0;
-		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(idTermin);
+		const listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausuren(idTermin);
 		if (listKlausurenZuTermin !== null) {
-			let copyListKlausurenZuTermin : List<GostKursklausur> | null = new Vector(listKlausurenZuTermin);
-			for (let k1 of listKlausurenZuTermin) {
+			const copyListKlausurenZuTermin : List<GostKursklausur> | null = new Vector(listKlausurenZuTermin);
+			for (const k1 of listKlausurenZuTermin) {
 				copyListKlausurenZuTermin.remove(k1);
-				for (let k2 of copyListKlausurenZuTermin)
+				for (const k2 of copyListKlausurenZuTermin)
 					anzahl += this.gibKonfliktKursklausurKursklausur(k1.id, k2.id).size();
 			}
 		}
@@ -560,8 +560,8 @@ export class GostKursklausurManager extends JavaObject {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let idKursklausur1 : number = __param0 as number;
 			let idKursklausur2 : number = __param1 as number;
-			let klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
-			let klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
+			const klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
+			const klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
 			if (klausur1 === null || klausur2 === null) {
 				return new Vector();
 			}
@@ -572,7 +572,7 @@ export class GostKursklausurManager extends JavaObject {
 			if (klausur1 as unknown === klausur2 as unknown) {
 				return new Vector();
 			}
-			let konflikte : List<number> | null = new Vector(klausur1.schuelerIds);
+			const konflikte : List<number> | null = new Vector(klausur1.schuelerIds);
 			konflikte.retainAll(klausur2.schuelerIds);
 			return konflikte;
 		} else throw new Error('invalid method overload');

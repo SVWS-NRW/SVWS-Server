@@ -115,10 +115,10 @@ public class ENMDatenManager {
 	public void addNoten() {
 		if (daten.noten.size() > 0)
 			return;
-		@NotNull Note@NotNull[] noten = Note.values();
+		final @NotNull Note@NotNull[] noten = Note.values();
     	for (int i = 0; i < noten.length; i++) {
-    		@NotNull Note note = noten[i]; 
-    		@NotNull ENMNote enmNote = new ENMNote();
+    		final @NotNull Note note = noten[i]; 
+    		final @NotNull ENMNote enmNote = new ENMNote();
     		enmNote.id = note.id;
     		enmNote.kuerzel = note.kuerzel;
     		enmNote.notenpunkte = note.notenpunkte;
@@ -138,15 +138,15 @@ public class ENMDatenManager {
 	public void addFoerderschwerpunkte(@NotNull Schulform schulform) {
 		if (daten.foerderschwerpunkte.size() > 0)
 			return;
-		@NotNull List<@NotNull Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
-    	for (int i = 0; i < foerderschwerpunkte.size(); i++) {
-    		Foerderschwerpunkt foerderschwerpunkt = foerderschwerpunkte.get(i);
-    		ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();
-    		enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
-    		enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
-    		enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
-    		daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
-    	}		
+		final @NotNull List<@NotNull Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
+		for (int i = 0; i < foerderschwerpunkte.size(); i++) {
+			final Foerderschwerpunkt foerderschwerpunkt = foerderschwerpunkte.get(i);
+			final ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();
+			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
+			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
+			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
+			daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
+		}		
 	}
 
 
@@ -165,16 +165,16 @@ public class ENMDatenManager {
 	public boolean addLehrer(long id, String kuerzel, String nachname, String vorname, @NotNull Geschlecht geschlecht, String eMailDienstlich) {
 		if (mapLehrer.get(id) != null) 
 			return false;		
-		@NotNull ENMLehrer enmLehrer = new ENMLehrer();
-    	enmLehrer.id = id;
-    	enmLehrer.kuerzel = kuerzel;
+		final @NotNull ENMLehrer enmLehrer = new ENMLehrer();
+		enmLehrer.id = id;
+		enmLehrer.kuerzel = kuerzel;
 		enmLehrer.nachname = nachname;
 		enmLehrer.vorname = vorname;
 		enmLehrer.geschlecht = geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = eMailDienstlich;
 		daten.lehrer.add(enmLehrer);
-    	mapLehrer.put(id, enmLehrer);
-    	return true;
+		mapLehrer.put(id, enmLehrer);
+		return true;
 	}
 	
 	
@@ -199,7 +199,7 @@ public class ENMDatenManager {
 			                   String bilingualeSprache, boolean istZieldifferent, boolean istDaZFoerderung) {
 		if (mapSchueler.get(id) != null) 
 			return false;	
-		@NotNull ENMSchueler enmSchueler = new ENMSchueler();
+		final @NotNull ENMSchueler enmSchueler = new ENMSchueler();
 		enmSchueler.id = id; 
 		enmSchueler.jahrgangID = jahrgangID;
 		enmSchueler.klasseID = klasseID;
@@ -210,8 +210,8 @@ public class ENMDatenManager {
 		enmSchueler.istZieldifferent = istZieldifferent;
 		enmSchueler.istDaZFoerderung = istDaZFoerderung;
 		daten.schueler.add(enmSchueler);
-    	mapSchueler.put(id, enmSchueler);
-    	return true;
+		mapSchueler.put(id, enmSchueler);
+		return true;
 	}
 
 	
@@ -229,16 +229,16 @@ public class ENMDatenManager {
 	public boolean addFach(long id, @NotNull String kuerzel, @NotNull String kuerzelAnzeige, int sortierung, boolean istFremdsprache) {
 		if (mapFaecher.get(id) != null) 
 			return false;		
-		@NotNull ENMFach enmFach = new ENMFach();
+		final @NotNull ENMFach enmFach = new ENMFach();
 		enmFach.id = id;
 		enmFach.kuerzel = kuerzel;
 		enmFach.kuerzelAnzeige = kuerzelAnzeige;
 		enmFach.sortierung = sortierung;
 		enmFach.istFremdsprache = istFremdsprache;
 		daten.faecher.add(enmFach);
-    	mapFaecher.put(id, enmFach);
-    	mapFaecherByKuerzel.put(kuerzelAnzeige, enmFach);
-    	return true;
+		mapFaecher.put(id, enmFach);
+		mapFaecherByKuerzel.put(kuerzelAnzeige, enmFach);
+		return true;
 	}
 	
 	
@@ -257,7 +257,7 @@ public class ENMDatenManager {
 	public boolean addJahrgang(long id, String kuerzel, String kuerzelAnzeige, String beschreibung, String stufe, int sortierung) {
 		if (mapJahrgaenge.get(id) != null) 
 			return false;		
-		@NotNull ENMJahrgang enmJahrgang = new ENMJahrgang();
+		final @NotNull ENMJahrgang enmJahrgang = new ENMJahrgang();
 		enmJahrgang.id = id;
 		enmJahrgang.kuerzel = kuerzel;
 		enmJahrgang.kuerzelAnzeige = kuerzelAnzeige;
@@ -265,8 +265,8 @@ public class ENMDatenManager {
 		enmJahrgang.stufe = stufe;
 		enmJahrgang.sortierung = sortierung;
 		daten.jahrgaenge.add(enmJahrgang);
-    	mapJahrgaenge.put(id, enmJahrgang);
-    	return true;
+		mapJahrgaenge.put(id, enmJahrgang);
+		return true;
 	}
 	
 	
@@ -283,14 +283,14 @@ public class ENMDatenManager {
 	public boolean addKlasse(long id, String kuerzel, String kuerzelAnzeige, int sortierung) {
 		if (mapKlassen.get(id) != null) 
 			return false;		
-		@NotNull ENMKlasse enmKlasse = new ENMKlasse();
+		final @NotNull ENMKlasse enmKlasse = new ENMKlasse();
 		enmKlasse.id = id;
 		enmKlasse.kuerzel = kuerzel;
 		enmKlasse.kuerzelAnzeige = kuerzelAnzeige;
 		enmKlasse.sortierung = sortierung;
 		daten.klassen.add(enmKlasse);
-    	mapKlassen.put(id, enmKlasse);
-    	return true;
+		mapKlassen.put(id, enmKlasse);
+		return true;
 	}
 	
 	
@@ -396,7 +396,7 @@ public class ENMDatenManager {
 						String kursartKuerzel, String bilingualeSprache, int wochenstunden) {
 		if (mapLerngruppen.get(strID) != null)
 			return;
-		@NotNull ENMLerngruppe lerngruppe = new ENMLerngruppe();
+		final @NotNull ENMLerngruppe lerngruppe = new ENMLerngruppe();
 		lerngruppe.id = lerngruppenIDZaehler++;
 		lerngruppe.kID = kID;
 		lerngruppe.fachID = fachID;
@@ -484,7 +484,7 @@ public class ENMDatenManager {
 				String tsNote, boolean istSchriftlich, Integer abiturfach, Integer fehlstundenFach, String tsFehlstundenFach, 
 				Integer fehlstundenUnentschuldigtFach, String tsFehlstundenUnentschuldigtFach, String fachbezogeneBemerkungen,  
 				String tsFachbezogeneBemerkungen, String neueZuweisungKursart, boolean istGemahnt, String tsIstGemahnt, String mahndatum) {
-		@NotNull ENMLeistung enmLeistung = new ENMLeistung();
+		final @NotNull ENMLeistung enmLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;

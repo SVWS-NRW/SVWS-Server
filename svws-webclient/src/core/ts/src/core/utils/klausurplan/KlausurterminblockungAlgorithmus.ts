@@ -31,25 +31,25 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 * @return Eine Liste (Termine) von Listen (KlausurIDs)
 	 */
 	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
-		let out : List<List<number>> = new Vector();
+		const out : List<List<number>> = new Vector();
 		switch (pConfig.get_lk_gk_modus()) {
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:{
 				KlausurterminblockungAlgorithmus.berechne_helper(pInput, pConfig, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK:{
-				let nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
+				const nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK:{
-				let nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
+				const nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT:{
-				let nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
-				let nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
+				const nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
+				const nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
 				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
 				break;
@@ -62,25 +62,25 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	private static filter(pInput : List<GostKursklausur>, pLK : boolean) : List<GostKursklausur> {
-		let temp : List<GostKursklausur> = new Vector();
-		for (let gostKursklausur of pInput)
+		const temp : List<GostKursklausur> = new Vector();
+		for (const gostKursklausur of pInput)
 			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === pLK)
 				temp.add(gostKursklausur);
 		return temp;
 	}
 
 	private static berechne_helper(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
-		let zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.get_max_time_millis();
-		let seed : number = new Random().nextLong();
-		let random : Random = new Random(seed);
-		let dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
-		let algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy3(random, dynDaten)];
+		const zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.get_max_time_millis();
+		const seed : number = new Random().nextLong();
+		const random : Random = new Random(seed);
+		const dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
+		const algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy3(random, dynDaten)];
 		dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 		dynDaten.aktionZustand2Speichern();
 		let zeitProAlgorithmus : number = 10;
 		do {
 			for (let iAlgo : number = 0; iAlgo < algorithmen.length; iAlgo++) {
-				let zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
+				const zeitEndeRunde : number = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
 			}
 			zeitProAlgorithmus *= 2;

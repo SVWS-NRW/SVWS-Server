@@ -28,28 +28,28 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 			return -1;
 		if (o1Wert1 > o2Wert1)
 			return +1;
-		let o1Wert2 : number = b1.anzahlSchuelerNichtZugeordnet + b1.anzahlSchuelerKollisionen;
-		let o2Wert2 : number = b2.anzahlSchuelerNichtZugeordnet + b2.anzahlSchuelerKollisionen;
+		const o1Wert2 : number = b1.anzahlSchuelerNichtZugeordnet + b1.anzahlSchuelerKollisionen;
+		const o2Wert2 : number = b2.anzahlSchuelerNichtZugeordnet + b2.anzahlSchuelerKollisionen;
 		if (o1Wert2 < o2Wert2)
 			return -1;
 		if (o1Wert2 > o2Wert2)
 			return +1;
-		let kdMax1 : number = b1.kursdifferenzMax;
-		let kdMax2 : number = b2.kursdifferenzMax;
+		const kdMax1 : number = b1.kursdifferenzMax;
+		const kdMax2 : number = b2.kursdifferenzMax;
 		if (kdMax1 < kdMax2)
 			return -1;
 		if (kdMax1 > kdMax2)
 			return +1;
-		let o1Kursdifferenzen : Array<number> | null = b1.kursdifferenzHistogramm;
-		let o2Kursdifferenzen : Array<number> | null = b2.kursdifferenzHistogramm;
+		const o1Kursdifferenzen : Array<number> | null = b1.kursdifferenzHistogramm;
+		const o2Kursdifferenzen : Array<number> | null = b2.kursdifferenzHistogramm;
 		for (let i : number = kdMax1; i >= 0; i--) {
 			if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
 				return -1;
 			if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
 				return +1;
 		}
-		let o1Wert4 : number = b1.anzahlKurseMitGleicherFachartProSchiene;
-		let o2Wert4 : number = b2.anzahlKurseMitGleicherFachartProSchiene;
+		const o1Wert4 : number = b1.anzahlKurseMitGleicherFachartProSchiene;
+		const o2Wert4 : number = b2.anzahlKurseMitGleicherFachartProSchiene;
 		if (o1Wert4 < o2Wert4)
 			return -1;
 		if (o1Wert4 > o2Wert4)

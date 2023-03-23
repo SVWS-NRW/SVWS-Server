@@ -45,7 +45,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	public constructor(vorgaben : List<GostKlausurvorgabe>) {
 		super();
 		this._vorgaben = vorgaben;
-		for (let v of this._vorgaben) {
+		for (const v of this._vorgaben) {
 			this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
 			this.addVorgabeToInternalMaps(v);
 		}
@@ -100,22 +100,22 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
-		let listKlausurvorgabenMapQuartalKlausurvorgaben : Vector<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
+		const listKlausurvorgabenMapQuartalKlausurvorgaben : Vector<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben !== null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
 		}
-		let map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(vorgabe.quartal);
+		const map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(vorgabe.quartal);
 		if (map1 !== null) {
-			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursart);
+			const map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursart);
 			if (map2 !== null) {
-				let kv : GostKlausurvorgabe | null = map2.get(vorgabe.idFach);
+				const kv : GostKlausurvorgabe | null = map2.get(vorgabe.idFach);
 				if (kv as unknown === vorgabe as unknown)
 					map2.remove(vorgabe.idFach);
 			}
 		}
-		let map3 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(vorgabe.kursart);
+		const map3 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(vorgabe.kursart);
 		if (map3 !== null) {
-			let list : List<GostKlausurvorgabe> | null = map3.get(vorgabe.idFach);
+			const list : List<GostKlausurvorgabe> | null = map3.get(vorgabe.idFach);
 			if (list !== null) {
 				list.remove(vorgabe);
 			}
@@ -192,10 +192,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			let quartal : number = __param0 as number;
 			let kursartAllg : string | null = __param1;
 			let idFach : number = __param2 as number;
-			let map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(quartal);
+			const map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(quartal);
 			if (map1 === null)
 				return null;
-			let map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(kursartAllg);
+			const map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(kursartAllg);
 			if (map2 !== null)
 				return map2.get(idFach);
 			return null;
@@ -234,8 +234,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			let kursartAllg : string | null = __param1;
 			let idFach : number = __param2 as number;
 			if (quartal > 0) {
-				let retList : List<GostKlausurvorgabe> | null = new Vector();
-				let vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
+				const retList : List<GostKlausurvorgabe> | null = new Vector();
+				const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
 				if (vorgabe !== null)
 					retList.add(vorgabe);
 				return retList;
@@ -244,10 +244,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
 			let kursartAllg : string | null = __param0;
 			let idFach : number = __param1 as number;
-			let map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
+			const map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
 			if (map1 === null)
 				return new Vector();
-			let list : List<GostKlausurvorgabe> | null = map1.get(idFach);
+			const list : List<GostKlausurvorgabe> | null = map1.get(idFach);
 			if (list === null)
 				return new Vector();
 			return list;

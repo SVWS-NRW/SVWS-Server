@@ -53,7 +53,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 			return;
 		if ((this._saved) && (System.currentTimeMillis() > this._zeitEnde))
 			return;
-		let klausurNr : number = this._dynDaten.gibAnzahlSchienen() === 0 ? this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : this._dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben();
+		const klausurNr : number = this._dynDaten.gibAnzahlSchienen() === 0 ? this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : this._dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben();
 		if (klausurNr < 0) {
 			if (!this._saved || this._dynDaten.gibIstBesserAlsZustand1()) {
 				this._minSchienen = this._dynDaten.gibAnzahlSchienen();
@@ -63,8 +63,8 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 			return;
 		}
 		for (let schiene : number = 0; schiene < this._minSchienen; schiene++) {
-			let schienenAnzahl : number = this._dynDaten.gibAnzahlSchienen();
-			let differenz : number = schiene < schienenAnzahl ? 0 : (schiene - schienenAnzahl + 1);
+			const schienenAnzahl : number = this._dynDaten.gibAnzahlSchienen();
+			const differenz : number = schiene < schienenAnzahl ? 0 : (schiene - schienenAnzahl + 1);
 			this._dynDaten.aktionSchienenAnzahlVeraendern(+differenz);
 			if (this._dynDaten.aktionSetzeKlausurInSchiene(klausurNr, schiene) === true) {
 				this.berechneRekursiv();

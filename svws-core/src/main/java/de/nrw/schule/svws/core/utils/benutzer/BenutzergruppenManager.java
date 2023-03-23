@@ -41,7 +41,7 @@ public class BenutzergruppenManager {
     public BenutzergruppenManager(@NotNull BenutzergruppeDaten pDaten) {
         this._daten = pDaten;
         // Aktualisiere die lokalen Datenstrukturen
-        for (Long kID : pDaten.kompetenzen) {
+        for (final Long kID : pDaten.kompetenzen) {
             if (kID == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
             if (_setKompetenzen.contains(kID))
@@ -134,7 +134,7 @@ public class BenutzergruppenManager {
     public boolean hatKompetenzen(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
+        for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (!_setKompetenzen.contains(kompetenz.daten.id))
                 return false;
         return true;
@@ -151,7 +151,7 @@ public class BenutzergruppenManager {
     public boolean hatKompetenzenMindestensEine(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
+        for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (_setKompetenzen.contains(kompetenz.daten.id))
                 return true;
         return false;

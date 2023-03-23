@@ -64,10 +64,10 @@ public class BenutzerManager {
         init();
         this._daten = pDaten;
         // Aktualisiere die lokalen Datenstrukturen - die direkt zugeordnete Kompetenzen
-        for (@NotNull Long kID : pDaten.kompetenzen) {
+        for (final @NotNull Long kID : pDaten.kompetenzen) {
             if (kID == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
-            BenutzerKompetenz komp = BenutzerKompetenz.getByID(kID);
+            final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kID);
             if (komp == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.");
             if (_setKompetenzen.contains(komp))
@@ -77,7 +77,7 @@ public class BenutzerManager {
         }
         // Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten
         // Kompetenzen
-        for (@NotNull BenutzergruppeDaten bgd : _daten.gruppen)
+        for (final @NotNull BenutzergruppeDaten bgd : _daten.gruppen)
             addGruppe(bgd);
     }
 
@@ -91,14 +91,14 @@ public class BenutzerManager {
             return;
         _mapGruppen.put(bgd.id, bgd);
         _setGruppenIDs.add(bgd.id);
-        for (@NotNull Long kid : bgd.kompetenzen) {
-            BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
+        for (final @NotNull Long kid : bgd.kompetenzen) {
+            final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
             if (komp == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.");
             // Aktualisiere die Menge der zugeordneten Kompetenzen
             _setKompetenzenAlle.add(komp);
             // Speichere über welche Gruppe die Kompetenz zugeordnet wurde.
-            Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp) ;
+            final Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp) ;
             if (gruppen == null)
                 throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
             gruppen.add(bgd);
@@ -116,10 +116,10 @@ public class BenutzerManager {
     		return;
     	_mapGruppen.remove(bgd.id);
     	_setGruppenIDs.remove(bgd.id);
-    	 for (@NotNull Long kid : bgd.kompetenzen) {
-            BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
+    	 for (final @NotNull Long kid : bgd.kompetenzen) {
+            final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
     		if (komp != null){
-    		    Vector< @NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
+    		    final Vector< @NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
     		    if (gruppen == null)
                     throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
 		        for (int i = gruppen.size() - 1; i >= 0; i--)
@@ -138,7 +138,7 @@ public class BenutzerManager {
      */
 
     public boolean  istInAdminGruppe() {
-       for(BenutzergruppeDaten bg : _mapGruppen.values()) {
+       for(final BenutzergruppeDaten bg : _mapGruppen.values()) {
            if(bg.istAdmin)
                return true;
        }
@@ -165,7 +165,7 @@ public class BenutzerManager {
      */
     private void init() {
     	// Erzeuge leere Vektoren für einzelnen Komptenzen
-    	for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
+    	for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
     		_mapKompetenzenVonGruppe.put(p, new Vector<>());
     }
 
@@ -179,7 +179,7 @@ public class BenutzerManager {
      * @return die Liste der Benutzergruppen-Daten
      */
     public @NotNull List<@NotNull BenutzergruppeDaten> getGruppen(@NotNull BenutzerKompetenz kompetenz) {
-        Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(kompetenz);
+        final Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(kompetenz);
         if (gruppen == null)
             throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.");
         return gruppen;
@@ -298,7 +298,7 @@ public class BenutzerManager {
     public boolean hatKompetenzen(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
+        for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (!_setKompetenzenAlle.contains(kompetenz))
                 return false;
         return true;
@@ -316,7 +316,7 @@ public class BenutzerManager {
     public boolean hatKompetenzenMindestensEine(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
+        for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (_setKompetenzenAlle.contains(kompetenz))
                 return true;
         return false;
@@ -357,8 +357,7 @@ public class BenutzerManager {
             throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.");
         this._daten.kompetenzen.removeElement(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz);
-        @NotNull
-        List<@NotNull BenutzergruppeDaten> gruppen = getGruppen(kompetenz);
+        final @NotNull List<@NotNull BenutzergruppeDaten> gruppen = getGruppen(kompetenz);
         if (gruppen.size() == 0)
             _setKompetenzenAlle.remove(kompetenz);
     }

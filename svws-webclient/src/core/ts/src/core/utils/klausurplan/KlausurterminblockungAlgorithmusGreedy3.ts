@@ -60,14 +60,14 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 			}
 			return;
 		}
-		let gruppe : Vector<number> = this._dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
+		const gruppe : Vector<number> = this._dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
 		for (let terminNr : number = 0; terminNr < this._dynDaten.gibTerminAnzahl(); terminNr++) {
 			if (this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
 				this.berechneRekursiv();
 				this._dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
 			}
 		}
-		let terminNr : number = this._dynDaten.gibErzeugeNeuenTermin();
+		const terminNr : number = this._dynDaten.gibErzeugeNeuenTermin();
 		if (!this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr))
 			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!")
 		this.berechneRekursiv();

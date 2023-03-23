@@ -136,8 +136,8 @@ export class ENMDatenManager extends JavaObject {
 			return;
 		let noten : Array<Note> = Note.values();
 		for (let i : number = 0; i < noten.length; i++) {
-			let note : Note = noten[i];
-			let enmNote : ENMNote = new ENMNote();
+			const note : Note = noten[i];
+			const enmNote : ENMNote = new ENMNote();
 			enmNote.id = note.id;
 			enmNote.kuerzel = note.kuerzel;
 			enmNote.notenpunkte = note.notenpunkte;
@@ -156,10 +156,10 @@ export class ENMDatenManager extends JavaObject {
 	public addFoerderschwerpunkte(schulform : Schulform) : void {
 		if (this.daten.foerderschwerpunkte.size() > 0)
 			return;
-		let foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
+		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
 		for (let i : number = 0; i < foerderschwerpunkte.size(); i++) {
-			let foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
-			let enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
+			const foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
+			const enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
 			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
 			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
 			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
@@ -182,7 +182,7 @@ export class ENMDatenManager extends JavaObject {
 	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null) : boolean {
 		if (this.mapLehrer.get(id) !== null)
 			return false;
-		let enmLehrer : ENMLehrer = new ENMLehrer();
+		const enmLehrer : ENMLehrer = new ENMLehrer();
 		enmLehrer.id = id;
 		enmLehrer.kuerzel = kuerzel;
 		enmLehrer.nachname = nachname;
@@ -214,7 +214,7 @@ export class ENMDatenManager extends JavaObject {
 	public addSchueler(id : number, jahrgangID : number, klasseID : number, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, bilingualeSprache : string | null, istZieldifferent : boolean, istDaZFoerderung : boolean) : boolean {
 		if (this.mapSchueler.get(id) !== null)
 			return false;
-		let enmSchueler : ENMSchueler = new ENMSchueler();
+		const enmSchueler : ENMSchueler = new ENMSchueler();
 		enmSchueler.id = id;
 		enmSchueler.jahrgangID = jahrgangID;
 		enmSchueler.klasseID = klasseID;
@@ -243,7 +243,7 @@ export class ENMDatenManager extends JavaObject {
 	public addFach(id : number, kuerzel : string, kuerzelAnzeige : string, sortierung : number, istFremdsprache : boolean) : boolean {
 		if (this.mapFaecher.get(id) !== null)
 			return false;
-		let enmFach : ENMFach = new ENMFach();
+		const enmFach : ENMFach = new ENMFach();
 		enmFach.id = id;
 		enmFach.kuerzel = kuerzel;
 		enmFach.kuerzelAnzeige = kuerzelAnzeige;
@@ -270,7 +270,7 @@ export class ENMDatenManager extends JavaObject {
 	public addJahrgang(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, beschreibung : string | null, stufe : string | null, sortierung : number) : boolean {
 		if (this.mapJahrgaenge.get(id) !== null)
 			return false;
-		let enmJahrgang : ENMJahrgang = new ENMJahrgang();
+		const enmJahrgang : ENMJahrgang = new ENMJahrgang();
 		enmJahrgang.id = id;
 		enmJahrgang.kuerzel = kuerzel;
 		enmJahrgang.kuerzelAnzeige = kuerzelAnzeige;
@@ -295,7 +295,7 @@ export class ENMDatenManager extends JavaObject {
 	public addKlasse(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, sortierung : number) : boolean {
 		if (this.mapKlassen.get(id) !== null)
 			return false;
-		let enmKlasse : ENMKlasse = new ENMKlasse();
+		const enmKlasse : ENMKlasse = new ENMKlasse();
 		enmKlasse.id = id;
 		enmKlasse.kuerzel = kuerzel;
 		enmKlasse.kuerzelAnzeige = kuerzelAnzeige;
@@ -400,7 +400,7 @@ export class ENMDatenManager extends JavaObject {
 	public addLerngruppe(strID : string, kID : number, fachID : number, kursartID : number | null, bezeichnung : string | null, kursartKuerzel : string | null, bilingualeSprache : string | null, wochenstunden : number) : void {
 		if (this.mapLerngruppen.get(strID) !== null)
 			return;
-		let lerngruppe : ENMLerngruppe = new ENMLerngruppe();
+		const lerngruppe : ENMLerngruppe = new ENMLerngruppe();
 		lerngruppe.id = this.lerngruppenIDZaehler++;
 		lerngruppe.kID = kID;
 		lerngruppe.fachID = fachID;
@@ -477,7 +477,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
 	 */
 	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenFach : number | null, tsFehlstundenFach : string | null, fehlstundenUnentschuldigtFach : number | null, tsFehlstundenUnentschuldigtFach : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : void {
-		let enmLeistung : ENMLeistung = new ENMLeistung();
+		const enmLeistung : ENMLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;

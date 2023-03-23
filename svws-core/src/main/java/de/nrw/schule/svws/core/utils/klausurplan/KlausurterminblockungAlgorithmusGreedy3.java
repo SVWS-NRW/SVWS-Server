@@ -74,7 +74,7 @@ public class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		}
 
 		// Wähle eine nächste Klausurgruppe und verteile sie rekursiv. 
-		@NotNull Vector<@NotNull Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
+		final @NotNull Vector<@NotNull Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
 
 		// 1. Fall: Die Gruppe passt noch in einen vorhandenen Termin.
 		for (int terminNr = 0; terminNr < _dynDaten.gibTerminAnzahl(); terminNr++) {
@@ -85,7 +85,7 @@ public class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		}
 		
 		// 2. Fall: Die Gruppe muss in einen neu erzeugten Termin.
-		int terminNr = _dynDaten.gibErzeugeNeuenTermin();
+		final int terminNr = _dynDaten.gibErzeugeNeuenTermin();
 		if (!_dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!");
 		berechneRekursiv();
 		_dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);

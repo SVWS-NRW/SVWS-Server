@@ -86,9 +86,9 @@ public class KlausurterminblockungDynDaten {
 	
 	private void checkKlausurgruppenOrException() {
 		// TODO BAR genauere Meldung der Exception
-		for (@NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) {
-			for (int nr1 : gruppe)
-				for (int nr2 : gruppe)
+		for (final @NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) {
+			for (final int nr1 : gruppe)
+				for (final int nr2 : gruppe)
 					if (_verboten[nr1][nr2])
 						throw new UserNotificationException("Klausurgruppe hat einen Schülerkonflikt!");
 		}
@@ -100,11 +100,11 @@ public class KlausurterminblockungDynDaten {
 		switch (pConfig.get_algorithmus()) {
 			// Jede Gruppe besteht aus einer einzelnen Klausur
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
-				for (@NotNull GostKursklausur gostKursklausur : pInput) {
-					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
 					
-					@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+					final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
 					gruppe.add(klausurNr);
 					_klausurGruppen.add(gruppe);
 				}
@@ -112,15 +112,15 @@ public class KlausurterminblockungDynDaten {
 			}
 			// Jede Gruppe besteht aus allen Klausuren des selben Faches.
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
-				@NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
-				for (@NotNull GostKursklausur gostKursklausur : pInput) {
-					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+				final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
+				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
 					
 					long fachID = gostKursklausur.idFach;
 					if (fachID < 0   ) {
 						// Ohne FachID --> Erzeuge eigene Gruppe
-						@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+						final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
 						gruppe.add(klausurNr);
 						_klausurGruppen.add(gruppe);
 					} else {
@@ -139,15 +139,15 @@ public class KlausurterminblockungDynDaten {
 			}
 			// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
-				@NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
-				for (@NotNull GostKursklausur gostKursklausur : pInput) {
-					Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+				final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
+				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
 					
-					long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
+					final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
 					if (schienenID < 0   ) {
 						// Ohne schienenID --> Erzeuge eigene Gruppe
-						@NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+						final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
 						gruppe.add(klausurNr);
 						_klausurGruppen.add(gruppe);
 					} else {
@@ -178,10 +178,10 @@ public class KlausurterminblockungDynDaten {
 		// InsertionSort von '_klausurenSortiertGrad'.
 		for (int i = 1; i < _klausurGruppenGrad.size(); i++)
 			for (int j = i; j >= 1; j--) {
-				@NotNull Vector<@NotNull Integer> gruppeR = _klausurGruppenGrad.get(j);
-				@NotNull Vector<@NotNull Integer> gruppeL = _klausurGruppenGrad.get(j-1);
-				int gradR = gibKnotengrad(gruppeR); 
-				int gradL = gibKnotengrad(gruppeL);
+				final @NotNull Vector<@NotNull Integer> gruppeR = _klausurGruppenGrad.get(j);
+				final @NotNull Vector<@NotNull Integer> gruppeL = _klausurGruppenGrad.get(j-1);
+				final int gradR = gibKnotengrad(gruppeR); 
+				final int gradL = gibKnotengrad(gruppeL);
 				if (gradL >= gradR) break; // bereits richtig einsortiert.
 				_klausurGruppenGrad.set(j, gruppeL);
 				_klausurGruppenGrad.set(j-1, gruppeR);
@@ -190,26 +190,26 @@ public class KlausurterminblockungDynDaten {
 
 	private int gibKnotengrad(@NotNull Vector<@NotNull Integer> pGruppe) {
 		int grad = 0;
-		for (@NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) 
+		for (final @NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) 
 			if (gibIstVerboten(pGruppe, gruppe))
 				grad++;
 		return grad;
 	}
 
 	private boolean gibIstVerboten(@NotNull Vector<@NotNull Integer> pGruppe1, @NotNull Vector<@NotNull Integer> pGruppe2) {
-		for (int klausurNr1 : pGruppe1) 
-			for (int klausurNr2 : pGruppe2) 
+		for (final int klausurNr1 : pGruppe1) 
+			for (final int klausurNr2 : pGruppe2) 
 				if (_verboten[klausurNr1][klausurNr2])
 					return true;
 		return false;
 	}
 
 	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
-		for (@NotNull GostKursklausur gostKursklausur : pInput) {
+		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");				
 			// Mapping: datenbankKlausurID --> laufende Nummer
-			int klausurNummer = _mapKlausurZuNummer.size();
+			final int klausurNummer = _mapKlausurZuNummer.size();
 			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
 			_mapNummerZuKlausur.put(klausurNummer, gostKursklausur);
 		}
@@ -218,9 +218,9 @@ public class KlausurterminblockungDynDaten {
 	private void initialisiereMatrixVerboten(@NotNull List<@NotNull GostKursklausur> pInput) {
 		
 		// Erzeuge eine Map: SchülerID --> Liste seiner KlausurNummern
-		@NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
-		for (@NotNull GostKursklausur gostKursklausur : pInput) {
-			for (@NotNull Long schuelerID : gostKursklausur.schuelerIds) {
+		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
+		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
 				// Liste des Schülers holen
 				LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
 				if (list == null) {
@@ -228,15 +228,15 @@ public class KlausurterminblockungDynDaten {
 					mapSchuelerKlausuren.put(schuelerID, list);
 				}
 				// Liste des Schülers füllen
-				Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+				final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
 				if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
 				list.addLast(klausurNr);
 			}
 		}
 		
 		// Verbiete Klausur-Paare
-		for (@NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
-			LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
+		for (final @NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
+			final LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
 			if (list == null) throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
 			for (int klausurNr1 : list) 
 				for (int klausurNr2 : list) 
@@ -300,15 +300,15 @@ public class KlausurterminblockungDynDaten {
 	 * @return ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge. 
 	 */
 	private @NotNull int[] gibTermineInZufaelligerReihenfolge() {
-		int[] temp = new int[_terminAnzahl];
+		final int[] temp = new int[_terminAnzahl];
 
 		for (int i = 0; i < _terminAnzahl; i++)
 			temp[i] = i;
 
 		for (int i1 = 0; i1 < _terminAnzahl; i1++) {
-			int i2 = _random.nextInt(_terminAnzahl);
-			int save1 = temp[i1];
-			int save2 = temp[i2];
+			final int i2 = _random.nextInt(_terminAnzahl);
+			final int save1 = temp[i1];
+			final int save2 = temp[i2];
 			temp[i1] = save2;
 			temp[i2] = save1;
 		}
@@ -323,14 +323,14 @@ public class KlausurterminblockungDynDaten {
 	 */
 	private @NotNull Vector<@NotNull Vector<@NotNull Integer>> gibKlausurgruppenInZufaelligerReihenfolge() {
 		// Kopieren
-		@NotNull Vector<@NotNull Vector<@NotNull Integer>> temp = new Vector<>();
+		final @NotNull Vector<@NotNull Vector<@NotNull Integer>> temp = new Vector<>();
 		temp.addAll(_klausurGruppen);
 		
 		// Permutieren
 		for (int i1 = 0; i1 < temp.size(); i1++) {
-			int i2 = _random.nextInt(temp.size());
-			@NotNull Vector<@NotNull Integer> save1 = temp.get(i1);
-			@NotNull Vector<@NotNull Integer> save2 = temp.get(i2);
+			final int i2 = _random.nextInt(temp.size());
+			final @NotNull Vector<@NotNull Integer> save1 = temp.get(i1);
+			final @NotNull Vector<@NotNull Integer> save2 = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -345,17 +345,17 @@ public class KlausurterminblockungDynDaten {
 	 */
 	@NotNull @NotNull Vector<@NotNull Vector<@NotNull Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
 		// Kopieren
-		@NotNull Vector<@NotNull Vector<@NotNull Integer>> temp = new Vector<>();
+		final @NotNull Vector<@NotNull Vector<@NotNull Integer>> temp = new Vector<>();
 		temp.addAll(_klausurGruppenGrad);
 
 		// Permutiere nahe beieinander liegende Indizes.
-		int size = temp.size();
+		final int size = temp.size();
 		for (int i1 = 0; i1 < size; i1++) {
-			int i2 = _random.nextInt(size);
+			final int i2 = _random.nextInt(size);
 			if ((i1 - i2) * (i1 - i2) >= size) continue;
 			// Tausche nur dann, wenn Abstand der Indizes kleiner als Wurzel(size) ist.
-			@NotNull Vector<@NotNull Integer> save1 = temp.get(i1);
-			@NotNull Vector<@NotNull Integer> save2 = temp.get(i2);
+			final @NotNull Vector<@NotNull Integer> save1 = temp.get(i1);
+			final @NotNull Vector<@NotNull Integer> save2 = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -373,9 +373,9 @@ public class KlausurterminblockungDynDaten {
 		int min = _klausurenAnzahl;
 		Vector<@NotNull Integer> gruppeMin = null;
 		
-		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
+		for (final @NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) 
 			if (gibIstKlausurgruppeUnverteilt(gruppe)) {
-				int terminmoeglichekeiten = gibTerminmoeglichkeiten(gruppe);
+				final int terminmoeglichekeiten = gibTerminmoeglichkeiten(gruppe);
 				if (terminmoeglichekeiten < min) {
 					min = terminmoeglichekeiten;
 					gruppeMin = gruppe;
@@ -409,8 +409,8 @@ public class KlausurterminblockungDynDaten {
 		 */
 		
 		// Kriterium 3: Besser ist, wenn ein Termin möglichst wenig Klausuren hat.  
-		int[] histogramm = new int[_terminAnzahl]; // TODO als Methode
-		int[] histogrammX = new int[_terminAnzahl];
+		final int[] histogramm = new int[_terminAnzahl]; // TODO als Methode
+		final int[] histogrammX = new int[_terminAnzahl];
 		for (int i = 0; i < _klausurenAnzahl; i++) {
 			histogramm[_klausurZuTermin[i]]++;
 			histogrammX[klausurZuTerminX[i]]++;
@@ -433,7 +433,7 @@ public class KlausurterminblockungDynDaten {
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden. 
 	 */
 	private boolean gibIstKlausurgruppeUnverteilt(@NotNull Vector<@NotNull Integer> pGruppe) {
-		for (int klausurNr : pGruppe) 
+		for (final int klausurNr : pGruppe) 
 			if (_klausurZuTermin[klausurNr] >= 0)
 				return false;
 		return true;
@@ -453,12 +453,12 @@ public class KlausurterminblockungDynDaten {
 		// Überprüfe, ob das setzen aller Klausuren möglich ist.
 		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
 			if (_klausurZuTermin[nr2] == pTermin)
-				for (int nr : pGruppe)
+				for (final int nr : pGruppe)
 					if (_verboten[nr][nr2])
 						return false;
 		
 		// Setze alle Klausuren.
-		for (int nr : pGruppe)
+		for (final int nr : pGruppe)
 			_klausurZuTermin[nr] = pTermin;
 		
 		return true;
@@ -472,7 +472,7 @@ public class KlausurterminblockungDynDaten {
 	void aktionEntferneKlausurgruppeAusTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu groß!");
-		for (int nr : pGruppe) {
+		for (final int nr : pGruppe) {
 			if (_klausurZuTermin[nr] != pTermin) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!");
 			_klausurZuTermin[nr] = -1;
 		}
@@ -484,10 +484,10 @@ public class KlausurterminblockungDynDaten {
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
 	void aktionSetzeKlausurgruppeInNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
-		for (int klausurNr : pGruppe)
+		for (final int klausurNr : pGruppe)
 			if (_klausurZuTermin[klausurNr] >= 0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin("+klausurNr+") --> Die Klausur ist bereits einem Termin zugeordnet!");
 		
-		for (int klausurNr : pGruppe)
+		for (final int klausurNr : pGruppe)
 			_klausurZuTermin[klausurNr] = _terminAnzahl;
 		
 		_terminAnzahl++;
@@ -500,7 +500,7 @@ public class KlausurterminblockungDynDaten {
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen. 
 	 */
 	private void aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
-		for (int terminNr : gibTermineInZufaelligerReihenfolge()) 
+		for (final int terminNr : gibTermineInZufaelligerReihenfolge()) 
 			if (aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
 				return; // Alle Klausuren wurden erfolgreich in den Termin gesetzt.
 	
@@ -533,16 +533,16 @@ public class KlausurterminblockungDynDaten {
 	 */
 	@NotNull List<@NotNull List<@NotNull Long>> gibErzeugeOutput() {
 		
-		@NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
+		final @NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
 		for (int i = 0; i < _terminAnzahl; i++) 
 			out.add(new Vector<>());
 	
-		for (@NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {
-			Integer klausurNr = _mapKlausurZuNummer.get(klausurID);
+		for (final @NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {
+			final Integer klausurNr = _mapKlausurZuNummer.get(klausurID);
 			if (klausurID == null) throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");
 			if (klausurNr == null) throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!");
 	
-			int terminNr = _klausurZuTermin[klausurNr];
+			final int terminNr = _klausurZuTermin[klausurNr];
 			if (terminNr <              0) throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'terminNr'!");
 			if (terminNr >= _terminAnzahl) throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'terminNr'!");
 	
@@ -614,7 +614,7 @@ public class KlausurterminblockungDynDaten {
 	void aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig() {
 		aktionClear();
 
-		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+		for (final @NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -626,9 +626,9 @@ public class KlausurterminblockungDynDaten {
 		aktionClear();
 	
 		while (gibExistierenNichtverteilteKlausuren()) {
-			int terminNr = gibErzeugeNeuenTermin();
+			final int terminNr = gibErzeugeNeuenTermin();
 			
-			for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
+			for (final @NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenInZufaelligerReihenfolge())
 				if (gibIstKlausurgruppeUnverteilt(gruppe)) 
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
@@ -643,7 +643,7 @@ public class KlausurterminblockungDynDaten {
 	void aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig() {
 		aktionClear();
 		
-		for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+		for (final @NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
@@ -655,9 +655,9 @@ public class KlausurterminblockungDynDaten {
 		aktionClear();
 		
 		while (gibExistierenNichtverteilteKlausuren()) {
-			int terminNr = gibErzeugeNeuenTermin();
+			final int terminNr = gibErzeugeNeuenTermin();
 			
-			for (@NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+			for (final @NotNull Vector<@NotNull Integer> gruppe : gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 				if (gibIstKlausurgruppeUnverteilt(gruppe)) 
 					aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
 		}
@@ -677,7 +677,7 @@ public class KlausurterminblockungDynDaten {
 			line += "    Schiene " + (s + 1) + ": ";
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuTermin[nr] == s) {
-					GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr); 
+					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr); 
 					if (gostKlausur == null) throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get("+nr+") ist NULL!");
 					line += " "+gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene);
 				}

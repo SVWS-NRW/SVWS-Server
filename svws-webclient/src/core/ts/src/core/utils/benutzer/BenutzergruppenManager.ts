@@ -53,7 +53,7 @@ export class BenutzergruppenManager extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
 			let pDaten : BenutzergruppeDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten(__param0);
 			this._daten = pDaten;
-			for (let kID of pDaten.kompetenzen) {
+			for (const kID of pDaten.kompetenzen) {
 				if (kID === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
 				if (this._setKompetenzen.contains(kID))
@@ -143,7 +143,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public hatKompetenzen(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen)
+		for (const kompetenz of kompetenzen)
 			if (!this._setKompetenzen.contains(kompetenz.daten.id))
 				return false;
 		return true;
@@ -159,7 +159,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public hatKompetenzenMindestensEine(kompetenzen : List<BenutzerKompetenz>) : boolean {
 		if (this._daten.istAdmin)
 			return true;
-		for (let kompetenz of kompetenzen)
+		for (const kompetenz of kompetenzen)
 			if (this._setKompetenzen.contains(kompetenz.daten.id))
 				return true;
 		return false;

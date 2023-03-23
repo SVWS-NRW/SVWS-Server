@@ -50,13 +50,13 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 		// reset
 		_dynDaten.aktionKlausurenAusSchienenEntfernen();
 		
-		@NotNull LinkedCollection<@NotNull Integer> setS = new LinkedCollection<>();
+		final @NotNull LinkedCollection<@NotNull Integer> setS = new LinkedCollection<>();
 
 		while (_dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
 			setS.clear();
 			// Starte mit dem Knoten (Klausur), der die meistens Nachbarn hat.
-			int nr1 = _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();
-			int s = _dynDaten.aktionSetzeKlausurInNeueSchiene(nr1);
+			final int nr1 = _dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();
+			final int s = _dynDaten.aktionSetzeKlausurInNeueSchiene(nr1);
 			setS.addLast(nr1);
 
 			// Wähle den Knoten (Klausur), der nicht zu allen Knoten in setS benachbart ist,

@@ -49,11 +49,11 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				this._dynDaten.aktionZustand2Speichern();
 		} else if ((typeof __param0 === "undefined")) {
 			this._dynDaten.aktionKlausurenAusSchienenEntfernen();
-			let setS : LinkedCollection<number> = new LinkedCollection();
+			const setS : LinkedCollection<number> = new LinkedCollection();
 			while (this._dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
 				setS.clear();
-				let nr1 : number = this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();
-				let s : number = this._dynDaten.aktionSetzeKlausurInNeueSchiene(nr1);
+				const nr1 : number = this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();
+				const s : number = this._dynDaten.aktionSetzeKlausurInNeueSchiene(nr1);
 				setS.addLast(nr1);
 				let nr2 : number = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				while (nr2 >= 0) {
