@@ -29,33 +29,33 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 		@NotNull GostBlockungsergebnisBewertung b2 = o2.bewertung;
 		
 		// Bewertungskriterium 1: Je weniger nicht erfüllter Regeln, desto besser.
-		int o1Wert1 = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;
-		int o2Wert1 = b2.regelVerletzungen.size() + b2.anzahlKurseNichtZugeordnet;
+		final int o1Wert1 = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;
+		final int o2Wert1 = b2.regelVerletzungen.size() + b2.anzahlKurseNichtZugeordnet;
 		if (o1Wert1 < o2Wert1) return -1;
 		if (o1Wert1 > o2Wert1) return +1;
 
 		// Bewertungskriterium 2: Je weniger nicht zugeordnete Fachwahlen und Kollisionen, desto besser.
-		int o1Wert2 = b1.anzahlSchuelerNichtZugeordnet + b1.anzahlSchuelerKollisionen;
-		int o2Wert2 = b2.anzahlSchuelerNichtZugeordnet + b2.anzahlSchuelerKollisionen;
+		final int o1Wert2 = b1.anzahlSchuelerNichtZugeordnet + b1.anzahlSchuelerKollisionen;
+		final int o2Wert2 = b2.anzahlSchuelerNichtZugeordnet + b2.anzahlSchuelerKollisionen;
 		if (o1Wert2 < o2Wert2) return -1;
 		if (o1Wert2 > o2Wert2) return +1;
 
 		// Bewertungskriterium 3: Je kleiner die Größte Kursdifferenz, desto besser.
-		int kdMax1 = b1.kursdifferenzMax;
-		int kdMax2 = b2.kursdifferenzMax;
+		final int kdMax1 = b1.kursdifferenzMax;
+		final int kdMax2 = b2.kursdifferenzMax;
 		if (kdMax1 < kdMax2) return -1;
 		if (kdMax1 > kdMax2) return +1;
 		
-		int[] o1Kursdifferenzen = b1.kursdifferenzHistogramm;
-		int[] o2Kursdifferenzen = b2.kursdifferenzHistogramm;
+		final int[] o1Kursdifferenzen = b1.kursdifferenzHistogramm;
+		final int[] o2Kursdifferenzen = b2.kursdifferenzHistogramm;
 		for (int i = kdMax1; i >= 0; i--) {
 			if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i]) return -1;
 			if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i]) return +1;
 		}
 
 		// Bewertungskriterium 4: Je weniger Facharten in der selben Schiene sind, desto besser.
-		int o1Wert4 = b1.anzahlKurseMitGleicherFachartProSchiene;
-		int o2Wert4 = b2.anzahlKurseMitGleicherFachartProSchiene;
+		final int o1Wert4 = b1.anzahlKurseMitGleicherFachartProSchiene;
+		final int o2Wert4 = b2.anzahlKurseMitGleicherFachartProSchiene;
 		if (o1Wert4 < o2Wert4) return -1;
 		if (o1Wert4 > o2Wert4) return +1;
 

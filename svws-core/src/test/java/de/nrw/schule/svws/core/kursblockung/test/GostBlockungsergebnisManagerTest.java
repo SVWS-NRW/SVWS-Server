@@ -101,7 +101,7 @@ public class GostBlockungsergebnisManagerTest {
 		HashMap<Long, HashSet<Long>> mapKuSchiene = new HashMap<>();
 		for (GostBlockungKurs gKurs : input.daten().kurse) {
 			// mapFaKu
-			long fachartID = GostKursart.getFachartID(gKurs);
+			long fachartID = GostKursart.getFachartIDByKurs(gKurs);
 			HashSet<Long> setK = mapFaKu.get(fachartID);
 			if (setK == null) {
 				setK = new HashSet<>();
@@ -123,7 +123,7 @@ public class GostBlockungsergebnisManagerTest {
 				mapFW = new HashMap<>();
 				mapScFaKu.put(gFachwahl.schuelerID, mapFW);
 			}
-			long fachartID = GostKursart.getFachartID(gFachwahl);
+			long fachartID = GostKursart.getFachartIDByFachwahl(gFachwahl);
 			if (mapFW.put(fachartID, null) != null)
 				fail("Schüler-ID " + gFachwahl.schuelerID + ", Fachart-ID " + fachartID + " doppelt!");
 		}

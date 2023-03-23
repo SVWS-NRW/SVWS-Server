@@ -26,7 +26,7 @@ public class GostAbiturjahrUtils {
 	public static Integer getGostAbiturjahr(@NotNull Schulform schulform, @NotNull Schulgliederung gliederung, int aktuellesSchuljahr, @NotNull String jahrgang) {
 		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
 			return null;
-		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		final Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		return restjahre == null ? null : aktuellesSchuljahr + restjahre;		
 	}
 
@@ -46,14 +46,14 @@ public class GostAbiturjahrUtils {
 	public static String getGostAbiturjahrJahrgang(@NotNull Schulform schulform, @NotNull Schulgliederung gliederung, int schuljahr, int abiturjahr) {
 		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
 			return null;
-		int restlicheJahre = abiturjahr - schuljahr;
+		final int restlicheJahre = abiturjahr - schuljahr;
 		if (restlicheJahre <= 1)
 			return "Q2";
 		if (restlicheJahre == 2)
 			return "Q1";
 		if (restlicheJahre == 3)
 			return "EF";
-		int sekIJahre = gliederung.istG8() || ((schulform == Schulform.GY) && (gliederung == Schulgliederung.DEFAULT)) 
+		final int sekIJahre = gliederung.istG8() || ((schulform == Schulform.GY) && (gliederung == Schulgliederung.DEFAULT)) 
 				      ? 9 : 10;
 		if (restlicheJahre >= sekIJahre)
 			return null;

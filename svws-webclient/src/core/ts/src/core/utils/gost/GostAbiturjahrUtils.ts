@@ -28,7 +28,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 	public static getGostAbiturjahr(schulform : Schulform, gliederung : Schulgliederung, aktuellesSchuljahr : number, jahrgang : string) : number | null {
 		if ((schulform.daten === null) || (!schulform.daten.hatGymOb))
 			return null;
-		let restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		const restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		return restjahre === null ? null : aktuellesSchuljahr + restjahre!;
 	}
 
@@ -47,14 +47,14 @@ export class GostAbiturjahrUtils extends JavaObject {
 	public static getGostAbiturjahrJahrgang(schulform : Schulform, gliederung : Schulgliederung, schuljahr : number, abiturjahr : number) : string | null {
 		if ((schulform.daten === null) || (!schulform.daten.hatGymOb))
 			return null;
-		let restlicheJahre : number = abiturjahr - schuljahr;
+		const restlicheJahre : number = abiturjahr - schuljahr;
 		if (restlicheJahre <= 1)
 			return "Q2";
 		if (restlicheJahre === 2)
 			return "Q1";
 		if (restlicheJahre === 3)
 			return "EF";
-		let sekIJahre : number = gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 9 : 10;
+		const sekIJahre : number = gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 9 : 10;
 		if (restlicheJahre >= sekIJahre)
 			return null;
 		let strJG : string | null = "" + (sekIJahre - (restlicheJahre - 4));
