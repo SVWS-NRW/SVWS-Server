@@ -997,12 +997,14 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					if ((curCase.getStatements().size() == 1) && (curCase.getStatements().get(0) instanceof BlockTree)) {
 						result += convertStatement(curCase.getStatements().get(0), false);
 						result += System.lineSeparator();
-					} else {
+					} else if (curCase.getStatements().size() > 0) {
 						result += " {";
 						result += curCase.getStatements().stream().map(stmt -> {
 							return convertStatement(stmt, false);
 						}).collect(Collectors.joining("", "", System.lineSeparator()));
 						result += getIndent() + "}" + System.lineSeparator();
+					} else {
+						result += System.lineSeparator();
 					}
 					indentC--;
 				}

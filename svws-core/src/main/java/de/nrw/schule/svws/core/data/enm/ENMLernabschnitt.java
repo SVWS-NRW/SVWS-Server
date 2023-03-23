@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class ENMLernabschnitt {
 
-	/** 
+	/**
 	 * Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der 
 	 * zuvor exportierte Lernabschnitt in der DB noch gültig ist  
 	 */
