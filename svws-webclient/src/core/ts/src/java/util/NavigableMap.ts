@@ -10,13 +10,12 @@ export interface NavigableMap<K, V> extends SortedMap<K, V> {
 
     comparator() : Comparator<K>;
 
-    subMap(fromKey : K, toKey : K) : SortedMap<K, V>;    
-    headMap(toKey : K) : SortedMap<K, V>;
-    tailMap(fromKey : K) : SortedMap<K, V>;
-
+    subMap(fromKey : K, toKey : K) : SortedMap<K, V>;
     subMap(fromKey : K, fromInclusive : boolean, toKey : K, toInclusive : boolean) : NavigableMap<K, V>;
+    headMap(toKey : K) : SortedMap<K, V>;
     headMap(toKey : K, inclusive : boolean) : NavigableMap<K, V>;
     tailMap(fromKey : K, inclusive : boolean) : NavigableMap<K, V>;
+    tailMap(fromKey : K) : SortedMap<K, V>;
 
     firstKey() : K;
     lastKey() : K;
@@ -38,10 +37,10 @@ export interface NavigableMap<K, V> extends SortedMap<K, V> {
 
     ceilingEntry(key : K) : JavaMapEntry<K, V> | null;
     ceilingKey(key : K) : K | null;
-    
+
     floorEntry(key : K) : JavaMapEntry<K, V> | null;
     floorKey(key : K) : K | null;
- 
+
     higherEntry(key : K) : JavaMapEntry<K, V> | null;
     higherKey(key : K) : K | null;
 

@@ -1,17 +1,17 @@
 import { Exception } from '../../java/lang/Exception';
 
 export class IOException extends Exception {
-    
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.io.IOException',
-            'java.lang.Exception',
-            'java.lang.Throwable',
-            'java.lang.Object',
-            'java.lang.Serializable',
-        ].includes(name);
+			'java.io.IOException',
+			'java.lang.Exception',
+			'java.lang.Throwable',
+			'java.lang.Object',
+			'java.lang.Serializable',
+		].includes(name);
 	}
-    
+
 }
 
 

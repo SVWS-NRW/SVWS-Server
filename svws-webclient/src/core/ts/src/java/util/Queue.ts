@@ -23,6 +23,7 @@ export interface Queue<E> extends Collection<E> {
 
     remove(o : any) : boolean;
 
+    remove() : E;
 
     containsAll(c : Collection<any> | null) : boolean;
 
@@ -37,7 +38,7 @@ export interface Queue<E> extends Collection<E> {
     equals(obj : any) : boolean;
 
     hashCode() : number;
- 
+
 
     element() : E;
 
@@ -46,8 +47,6 @@ export interface Queue<E> extends Collection<E> {
     peek() : E | null;
 
     poll() : E | null;
-    
-    remove() : E;
 }
 
 

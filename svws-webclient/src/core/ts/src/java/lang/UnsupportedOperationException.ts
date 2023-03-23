@@ -4,13 +4,13 @@ export class UnsupportedOperationException extends RuntimeException {
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.lang.UnsupportedOperationException',
-            'java.lang.RuntimeException',
-            'java.lang.Exception',
-            'java.lang.Throwable',
-            'java.lang.Object',
-            'java.lang.Serializable',
-        ].includes(name);
+			'java.lang.UnsupportedOperationException',
+			'java.lang.RuntimeException',
+			'java.lang.Exception',
+			'java.lang.Throwable',
+			'java.lang.Object',
+			'java.lang.Serializable',
+		].includes(name);
 	}
 
 }

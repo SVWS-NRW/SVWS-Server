@@ -23,7 +23,7 @@ export interface Deque<E> extends Queue<E> {
     add(e : E | null) : boolean;
 
     remove(o : any) : boolean;
-
+    remove() : E;
 
     containsAll(c : Collection<any> | null) : boolean;
 
@@ -38,7 +38,7 @@ export interface Deque<E> extends Queue<E> {
     equals(obj : any) : boolean;
 
     hashCode() : number;
- 
+
 
     element() : E;
 
@@ -47,9 +47,6 @@ export interface Deque<E> extends Queue<E> {
     peek() : E | null;
 
     poll() : E | null;
-    
-    remove() : E;
-
 
 	addFirst(e : E | null) : void;
     addLast(e : E | null) : void;

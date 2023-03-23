@@ -35,7 +35,7 @@ export interface Collection<E> extends JavaIterable<E> {
     equals(obj : any) : boolean;
 
     hashCode() : number;
-    
+
 }
 
 
