@@ -117,7 +117,7 @@ public class KlausurterminblockungDynDaten {
 					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
 					
-					long fachID = gostKursklausur.idFach;
+					final long fachID = gostKursklausur.idFach;
 					if (fachID < 0   ) {
 						// Ohne FachID --> Erzeuge eigene Gruppe
 						final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
@@ -238,8 +238,8 @@ public class KlausurterminblockungDynDaten {
 		for (final @NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
 			final LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
 			if (list == null) throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
-			for (int klausurNr1 : list) 
-				for (int klausurNr2 : list) 
+			for (final int klausurNr1 : list) 
+				for (final int klausurNr2 : list) 
 					if (klausurNr1 != klausurNr2)
 						_verboten[klausurNr1][klausurNr2] = true;
 		}

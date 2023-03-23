@@ -135,13 +135,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public constructor(__param0 : GostBlockungsdatenManager, __param1 : GostBlockungsergebnis | number) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
-			let pGostBlockungsergebnisID : number = __param1 as number;
+			const pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
+			const pGostBlockungsergebnisID : number = __param1 as number;
 			this._parent = pParent;
 			this.stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis'))))) {
-			let pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
-			let pErgebnis : GostBlockungsergebnis = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis(__param1);
+			const pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
+			const pErgebnis : GostBlockungsergebnis = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis(__param1);
 			this._parent = pParent;
 			this.stateClear(pErgebnis, pErgebnis.id);
 		} else throw new Error('invalid method overload');

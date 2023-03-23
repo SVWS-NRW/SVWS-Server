@@ -113,7 +113,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 			}
 			mapStundeUnterricht.put(sz.unterrichtstunde, sz);
 		}
-		for (let ssu of this._daten.unterricht) {
+		for (const ssu of this._daten.unterricht) {
 			this._mapUnterricht.put(ssu.idUnterricht, ssu);
 			let listZeitrasterUnterricht : Vector<SchuelerStundenplanUnterricht> | null = this._mapZeitrasterUnterricht.get(ssu.idZeitraster);
 			if (listZeitrasterUnterricht === null) {
@@ -239,13 +239,13 @@ export class SchuelerStundenplanManager extends JavaObject {
 	 */
 	public getUnterrichtByWocheZeitrasterId(__param0 : number, __param1 : number, __param2? : boolean) : List<SchuelerStundenplanUnterricht> | null {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
-			let wochentyp : number = __param0 as number;
-			let idZeitraster : number = __param1 as number;
+			const wochentyp : number = __param0 as number;
+			const idZeitraster : number = __param1 as number;
 			return this.getUnterrichtByWocheZeitrasterId(wochentyp, idZeitraster, false);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "boolean")) {
-			let wochentyp : number = __param0 as number;
-			let idZeitraster : number = __param1 as number;
-			let inklWoche0 : boolean = __param2 as boolean;
+			const wochentyp : number = __param0 as number;
+			const idZeitraster : number = __param1 as number;
+			const inklWoche0 : boolean = __param2 as boolean;
 			const mapZeitrasterUnterricht_Wochentyp : HashMap<number, Vector<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(wochentyp);
 			if (mapZeitrasterUnterricht_Wochentyp === null) {
 				return null;

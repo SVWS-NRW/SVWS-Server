@@ -126,7 +126,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 					const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr === null)
 						throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
-					let fachID : number = gostKursklausur.idFach;
+					const fachID : number = gostKursklausur.idFach;
 					if (fachID < 0) {
 						const gruppe : Vector<number> = new Vector();
 						gruppe.add(klausurNr);
@@ -234,8 +234,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			const list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
 			if (list === null)
 				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.")
-			for (let klausurNr1 of list)
-				for (let klausurNr2 of list)
+			for (const klausurNr1 of list)
+				for (const klausurNr2 of list)
 					if (klausurNr1 !== klausurNr2)
 						this._verboten[klausurNr1][klausurNr2] = true;
 		}

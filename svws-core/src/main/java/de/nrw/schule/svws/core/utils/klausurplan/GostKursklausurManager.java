@@ -57,7 +57,7 @@ public class GostKursklausurManager {
 	 * @param termine   die Liste der GostKlausurtermine eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 */
-	public GostKursklausurManager(@NotNull List<@NotNull GostKursklausur> klausuren, @NotNull List<@NotNull GostKlausurtermin> termine) {
+	public GostKursklausurManager(final @NotNull List<@NotNull GostKursklausur> klausuren, final @NotNull List<@NotNull GostKlausurtermin> termine) {
 		_klausuren = klausuren;
 		helpKonstruktor();
 		for (final @NotNull GostKlausurtermin t : termine) {
@@ -72,7 +72,7 @@ public class GostKursklausurManager {
 	 * @param klausuren die Liste der GostKursklausuren eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 */
-	public GostKursklausurManager(@NotNull List<@NotNull GostKursklausur> klausuren) {
+	public GostKursklausurManager(final @NotNull List<@NotNull GostKursklausur> klausuren) {
 		_klausuren = klausuren;
 		helpKonstruktor();
 	}
@@ -294,7 +294,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(Long idTermin) {
+	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(final Long idTermin) {
 		final List<@NotNull GostKursklausur> klausuren = _mapTerminKursklausuren.get(idTermin == null ? -1 : idTermin);
 		return klausuren != null ? klausuren : new Vector<>();
 	}
@@ -315,7 +315,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public List<@NotNull GostKursklausur> getKursklausuren(int quartal) {
+	public List<@NotNull GostKursklausur> getKursklausuren(final int quartal) {
 		return _mapQuartalKursKlausuren.get(quartal);
 	}
 
@@ -337,7 +337,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin(int quartal) {
+	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin(final int quartal) {
 		final HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapTerminKursklausuren == null) {
 			// TODO Fehlerbehandlung?
@@ -419,7 +419,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return das GostKlausurtermin-Objekt
 	 */
-	public GostKlausurtermin gibKlausurtermin(long idTermin) {
+	public GostKlausurtermin gibKlausurtermin(final long idTermin) {
 		return _mapIdKlausurtermin.get(idTermin);
 	}
 
@@ -430,7 +430,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine(int quartal) {
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine(final int quartal) {
 		final List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 		return termine != null ? termine : new Vector<>();
 	}
@@ -471,17 +471,17 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(@NotNull GostKlausurtermin termin, @NotNull GostKursklausur klausur) {
+	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
 		if (klausur.idTermin == termin.id) {
 			return new Vector<>();
 		}
 
-		List<@NotNull Long> schuelerIds = gibSchuelerIDsZuTermin(termin.id);
+		final List<@NotNull Long> schuelerIds = gibSchuelerIDsZuTermin(termin.id);
 		if (schuelerIds == null) {
 			return new Vector<>();
 		}
 
-		@NotNull List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
+		final @NotNull List<@NotNull Long> konflikte = new Vector<>(schuelerIds);
 
 		konflikte.retainAll(klausur.schuelerIds);
 		return konflikte;
@@ -498,7 +498,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(long idTermin, long idKursklausur) {
+	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(final long idTermin, final long idKursklausur) {
 		final GostKursklausur klausur = _mapIdKursklausur.get(idKursklausur);
 		final GostKlausurtermin termin = _mapIdKlausurtermin.get(idTermin);
 
@@ -542,7 +542,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(long idKursklausur1, long idKursklausur2) {
+	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(final long idKursklausur1, final long idKursklausur2) {
 		final GostKursklausur klausur1 = _mapIdKursklausur.get(idKursklausur1);
 		final GostKursklausur klausur2 = _mapIdKursklausur.get(idKursklausur2);
 		if (klausur1 == null || klausur2 == null) {
@@ -562,7 +562,7 @@ public class GostKursklausurManager {
 	 * 
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(@NotNull GostKursklausur klausur1, @NotNull GostKursklausur klausur2) {
+	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(final @NotNull GostKursklausur klausur1, final @NotNull GostKursklausur klausur2) {
 		if (klausur1 == klausur2) {
 			return new Vector<>();
 		}

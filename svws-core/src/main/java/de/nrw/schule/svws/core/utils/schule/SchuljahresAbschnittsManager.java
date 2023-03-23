@@ -70,8 +70,7 @@ public class SchuljahresAbschnittsManager {
 		if (anzahlAbschnitte <= 1) {
 			return "" + abschnitt.schuljahr;
 		} else if (anzahlAbschnitte > 1 && anzahlAbschnitte < 5) {
-			return createRepresentationForAnzahlAbschnitte(anzahlAbschnitte) + abschnitt.abschnitt + " "
-					+ abschnitt.schuljahr;
+			return createRepresentationForAnzahlAbschnitte(anzahlAbschnitte) + abschnitt.abschnitt + " " + abschnitt.schuljahr;
 		} else {
 			return abschnitt.abschnitt + "/" + anzahlAbschnitte + " " + abschnitt.schuljahr;
 		}

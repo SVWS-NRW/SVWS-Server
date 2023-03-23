@@ -106,7 +106,7 @@ public class AbgangsartenManager {
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag 
 	 *         keine Daten für das übergebene Schuljahr hat 
 	 */
-	public AbgangsartKatalogDaten getDaten(@NotNull String kuerzel, int schuljahr) {
+	public AbgangsartKatalogDaten getDaten(final @NotNull String kuerzel, final int schuljahr) {
 		final AbgangsartKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
 		if (eintrag == null)
 			return null;
@@ -115,6 +115,18 @@ public class AbgangsartenManager {
 			    ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
 				return daten;
 		return null;
+	}
+
+
+	/**
+	 * Gibt die Katalog-Daten für die Abgangsart zurück. 
+	 * 
+	 * @param id   die die des Katalog-Eintrags
+	 * 
+	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
+	 */
+	public AbgangsartKatalogDaten getDaten(final long id) {
+		return this._mapDatenByID.get(id);
 	}
 
 
@@ -130,17 +142,6 @@ public class AbgangsartenManager {
 		return eintrag == null ? null : eintrag.kuerzel;
 	}
 
-
-	/**
-	 * Gibt die Katalog-Daten für die Abgangsart zurück. 
-	 * 
-	 * @param id   die die des Katalog-Eintrags
-	 * 
-	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
-	 */
-	public AbgangsartKatalogDaten getDaten(long id) {
-		return this._mapDatenByID.get(id);
-	}
 
 	/**
 	 * Gibt den Katalog für allgemeinbildende Schulformen zurück.

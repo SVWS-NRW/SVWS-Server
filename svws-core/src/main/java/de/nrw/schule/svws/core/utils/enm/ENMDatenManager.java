@@ -58,7 +58,7 @@ public class ENMDatenManager {
 	 * 
 	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer 
 	 */
-	public ENMDatenManager(Long lehrerID) {
+	public ENMDatenManager(final Long lehrerID) {
 		this.daten = new ENMDaten();
 		this.daten.lehrerID = lehrerID;
 	}
@@ -69,7 +69,7 @@ public class ENMDatenManager {
 	 * 
 	 * @param daten   die ENM-Daten
 	 */
-	public ENMDatenManager(@NotNull ENMDaten daten) {
+	public ENMDatenManager(final @NotNull ENMDaten daten) {
 		this.daten = daten;
 	}
 

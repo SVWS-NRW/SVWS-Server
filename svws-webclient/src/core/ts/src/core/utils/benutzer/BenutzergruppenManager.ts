@@ -42,14 +42,14 @@ export class BenutzergruppenManager extends JavaObject {
 	public constructor(__param0 : BenutzergruppeDaten | number, __param1? : string) {
 		super();
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
-			let id : number = __param0 as number;
-			let bezeichnung : string = __param1;
+			const id : number = __param0 as number;
+			const bezeichnung : string = __param1;
 			this._daten = new BenutzergruppeDaten();
 			this._daten.id = id;
 			this._daten.bezeichnung = bezeichnung;
 			this._daten.istAdmin = false;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
-			let pDaten : BenutzergruppeDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten(__param0);
+			const pDaten : BenutzergruppeDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten(__param0);
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
 				if (kID === null)

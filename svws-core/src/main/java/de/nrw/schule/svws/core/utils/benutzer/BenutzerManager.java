@@ -48,7 +48,7 @@ public class BenutzerManager {
      * @param id die ID des Benutzers
      * 
      */
-    public BenutzerManager(long id) {
+    public BenutzerManager(final long id) {
         init();
         _daten = new BenutzerDaten();
         _daten.id = id;
@@ -60,7 +60,7 @@ public class BenutzerManager {
      * 
      * @param pDaten die BenutzerDaten
      */
-    public BenutzerManager(@NotNull BenutzerDaten pDaten) {
+    public BenutzerManager(final @NotNull BenutzerDaten pDaten) {
         init();
         this._daten = pDaten;
         // Aktualisiere die lokalen Datenstrukturen - die direkt zugeordnete Kompetenzen

@@ -46,7 +46,7 @@ public class GostFaecherManager {
 	 * 
 	 * @param faecher   die Liste mit den Fächern
 	 */
-	public GostFaecherManager(@NotNull List<@NotNull GostFach> faecher) {
+	public GostFaecherManager(final @NotNull List<@NotNull GostFach> faecher) {
 		addAll(faecher);
 	}
 

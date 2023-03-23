@@ -105,7 +105,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	private initialisiereMapSchueler(pInput : List<GostKursklausur>) : void {
-		let setSchueler : HashSet<number> = new HashSet();
+		const setSchueler : HashSet<number> = new HashSet();
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				if (schuelerID < 0)
@@ -462,10 +462,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	gibKlausurDieFreiIstMitDenMeistenNachbarsfarben() : number {
 		let maxFarben : number = -1;
 		let maxNr : number = -1;
-		for (let klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+		for (const klausurNr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) {
 			if (this._klausurZuSchiene[klausurNr] >= 0)
 				continue;
-			let farben : number = this.gibNachbarsfarbenDerKlausur(klausurNr);
+			const farben : number = this.gibNachbarsfarbenDerKlausur(klausurNr);
 			if (farben < maxFarben)
 				continue;
 			maxFarben = farben;
@@ -478,7 +478,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		let summe : number = 0;
 		const benutzt : Array<boolean> | null = Array(this._schienenAnzahl).fill(false);
 		for (let klausurNr2 : number = 0; klausurNr2 < this._klausurenAnzahl; klausurNr2++) {
-			let farbe : number = this._klausurZuSchiene[klausurNr2];
+			const farbe : number = this._klausurZuSchiene[klausurNr2];
 			if ((farbe >= 0) && (this._verboten[klausurNr][klausurNr2]))
 				if (!benutzt[farbe]) {
 					benutzt[farbe] = true;
@@ -498,7 +498,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : number {
 		let maxNachbarn : number = -1;
 		let maxNr : number = -1;
-		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+		for (const nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) {
 			if (this._klausurZuSchiene[nr] >= 0)
 				continue;
 			const nachbarn : number = this.gibAnzahlFreierNachbarn(nr);
@@ -753,7 +753,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig() : void {
 		this.aktionKlausurenAusSchienenEntfernen();
-		for (let nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge())
+		for (const nr of this.gibErzeugeKlausurenInZufaelligerReihenfolge())
 			this.aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
 	}
 

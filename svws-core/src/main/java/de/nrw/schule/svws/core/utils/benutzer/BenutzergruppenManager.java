@@ -26,7 +26,7 @@ public class BenutzergruppenManager {
      * @param id            die ID der Benutzergruppe
      * @param bezeichnung   die Bezeichnung der Benutzergruppe
      */
-    public BenutzergruppenManager(long id, @NotNull String bezeichnung) {
+    public BenutzergruppenManager(final long id, final @NotNull String bezeichnung) {
         _daten = new BenutzergruppeDaten();
         _daten.id = id;
         _daten.bezeichnung = bezeichnung;
@@ -38,7 +38,7 @@ public class BenutzergruppenManager {
      * 
      * @param pDaten          die Benutzergruppendaten
      */
-    public BenutzergruppenManager(@NotNull BenutzergruppeDaten pDaten) {
+    public BenutzergruppenManager(final @NotNull BenutzergruppeDaten pDaten) {
         this._daten = pDaten;
         // Aktualisiere die lokalen Datenstrukturen
         for (final Long kID : pDaten.kompetenzen) {

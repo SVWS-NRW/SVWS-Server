@@ -92,7 +92,7 @@ public class GostBlockungsergebnisManager {
 	 *                                 Blockung)
 	 * @param pGostBlockungsergebnisID Die ID des Blockungsergebnisses.
 	 */
-	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager pParent, long pGostBlockungsergebnisID) {
+	public GostBlockungsergebnisManager(final @NotNull GostBlockungsdatenManager pParent, final long pGostBlockungsergebnisID) {
 		_parent = pParent;
 		stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
 	}
@@ -103,7 +103,7 @@ public class GostBlockungsergebnisManager {
 	 * @param pParent   Das Eltern-Objekt. (Daten-Manager für die grundlegenden Definitionen der Blockung)
 	 * @param pErgebnis Das Ergebnis, welches kopiert wird.
 	 */
-	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager pParent, @NotNull GostBlockungsergebnis pErgebnis) {
+	public GostBlockungsergebnisManager(final @NotNull GostBlockungsdatenManager pParent, final @NotNull GostBlockungsergebnis pErgebnis) {
 		_parent = pParent;
 		stateClear(pErgebnis, pErgebnis.id);
 	}

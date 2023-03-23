@@ -84,15 +84,15 @@ export class GostKursklausurManager extends JavaObject {
 	public constructor(__param0 : List<GostKursklausur>, __param1? : List<GostKlausurtermin>) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
-			let klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
-			let termine : List<GostKlausurtermin> = cast_java_util_List(__param1);
+			const klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
+			const termine : List<GostKlausurtermin> = cast_java_util_List(__param1);
 			this._klausuren = klausuren;
 			this.helpKonstruktor();
 			for (const t of termine) {
 				this.addTermin(t);
 			}
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
-			let klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
+			const klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
 			this._klausuren = klausuren;
 			this.helpKonstruktor();
 		} else throw new Error('invalid method overload');
@@ -286,13 +286,13 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public getKursklausuren(__param0? : null | number) : List<GostKursklausur> | null {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
-			let idTermin : number | null = __param0;
+			const idTermin : number | null = __param0;
 			const klausuren : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin === null ? -1 : idTermin);
 			return klausuren !== null ? klausuren : new Vector();
 		} else if ((typeof __param0 === "undefined")) {
 			return this._klausuren;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let quartal : number = __param0 as number;
+			const quartal : number = __param0 as number;
 			return this._mapQuartalKursKlausuren.get(quartal);
 		} else throw new Error('invalid method overload');
 	}
@@ -322,7 +322,7 @@ export class GostKursklausurManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			return this.getKursklausuren(-1);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let quartal : number = __param0 as number;
+			const quartal : number = __param0 as number;
 			const mapTerminKursklausuren : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 			if (mapTerminKursklausuren === null) {
 				return new Vector();
@@ -410,7 +410,7 @@ export class GostKursklausurManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			return this._termine;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let quartal : number = __param0 as number;
+			const quartal : number = __param0 as number;
 			const termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 			return termine !== null ? termine : new Vector();
 		} else throw new Error('invalid method overload');
@@ -480,21 +480,21 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public gibKonfliktTerminKursklausur(__param0 : GostKlausurtermin | number, __param1 : GostKursklausur | number) : List<number> {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
-			let termin : GostKlausurtermin = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin(__param0);
-			let klausur : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+			const termin : GostKlausurtermin = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin(__param0);
+			const klausur : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur.idTermin === termin.id) {
 				return new Vector();
 			}
-			let schuelerIds : List<number> | null = this.gibSchuelerIDsZuTermin(termin.id);
+			const schuelerIds : List<number> | null = this.gibSchuelerIDsZuTermin(termin.id);
 			if (schuelerIds === null) {
 				return new Vector();
 			}
-			let konflikte : List<number> = new Vector(schuelerIds);
+			const konflikte : List<number> = new Vector(schuelerIds);
 			konflikte.retainAll(klausur.schuelerIds);
 			return konflikte;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let idTermin : number = __param0 as number;
-			let idKursklausur : number = __param1 as number;
+			const idTermin : number = __param0 as number;
+			const idKursklausur : number = __param1 as number;
 			const klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
 			const termin : GostKlausurtermin | null = this._mapIdKlausurtermin.get(idTermin);
 			if (klausur === null || termin === null) {
@@ -555,8 +555,8 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public gibKonfliktKursklausurKursklausur(__param0 : GostKursklausur | number, __param1 : GostKursklausur | number) : List<number> {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let idKursklausur1 : number = __param0 as number;
-			let idKursklausur2 : number = __param1 as number;
+			const idKursklausur1 : number = __param0 as number;
+			const idKursklausur2 : number = __param1 as number;
 			const klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
 			const klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
 			if (klausur1 === null || klausur2 === null) {
@@ -564,8 +564,8 @@ export class GostKursklausurManager extends JavaObject {
 			}
 			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
-			let klausur1 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
-			let klausur2 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+			const klausur1 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
+			const klausur2 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur1 as unknown === klausur2 as unknown) {
 				return new Vector();
 			}

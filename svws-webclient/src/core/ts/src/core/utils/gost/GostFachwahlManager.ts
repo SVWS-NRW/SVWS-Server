@@ -49,7 +49,7 @@ export class GostFachwahlManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
-			let fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
+			const fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
 			for (const fw of fachwahlen)
 				this.add(fw);
 		} else throw new Error('invalid method overload');
@@ -81,7 +81,7 @@ export class GostFachwahlManager extends JavaObject {
 			mapKursart = new HashMap();
 			this.mapFachKursart.put(fachwahl.fachID, mapKursart);
 		}
-		let kursart : GostKursart | null = GostKursart.fromFachwahlOrException(fachwahl);
+		const kursart : GostKursart | null = GostKursart.fromFachwahlOrException(fachwahl);
 		let schueler : HashSet<number> | null = mapKursart.get(kursart);
 		if (schueler === null) {
 			schueler = new HashSet();

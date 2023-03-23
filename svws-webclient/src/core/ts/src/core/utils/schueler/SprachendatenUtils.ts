@@ -246,7 +246,7 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
+		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
 		if (anzahlSprachen >= 1) {
 			return true;
 		}

@@ -63,7 +63,7 @@ public class KlausurblockungSchienenAlgorithmus {
 
 			// Alle Algorithmus starten (pro Algorithmus ggf. auch mehrfach).
 			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
-				long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
+				final long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;
 				algorithmen[iAlgo].berechne(zeitEndeRunde);
 			}
 

@@ -40,7 +40,7 @@ public class GostFachwahlManager {
 	 * 
 	 * @param fachwahlen   die Fachwahlen
 	 */
-	public GostFachwahlManager(@NotNull List<@NotNull GostFachwahl> fachwahlen) {
+	public GostFachwahlManager(final @NotNull List<@NotNull GostFachwahl> fachwahlen) {
 		for (final @NotNull GostFachwahl fw : fachwahlen)
 			add(fw);
 	}
@@ -76,7 +76,7 @@ public class GostFachwahlManager {
 			mapKursart = new HashMap<>();
 			mapFachKursart.put(fachwahl.fachID, mapKursart);
 		}
-		GostKursart kursart = GostKursart.fromFachwahlOrException(fachwahl);
+		final GostKursart kursart = GostKursart.fromFachwahlOrException(fachwahl);
 		HashSet<@NotNull Long> schueler = mapKursart.get(kursart);
 		if (schueler == null) {
 			schueler = new HashSet<>();

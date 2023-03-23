@@ -65,7 +65,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
 	 */
-	KlausurblockungSchienenDynDaten(@NotNull Random pRandom, @NotNull List<@NotNull GostKursklausur> pInput) {
+	KlausurblockungSchienenDynDaten(final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput) {
 		_random = pRandom;
 
 		initialisiereMapSchueler(pInput);
@@ -88,7 +88,7 @@ public class KlausurblockungSchienenDynDaten {
 	}
 	
 	private void initialisiereMapSchueler(@NotNull List<@NotNull GostKursklausur> pInput) {
-		@NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
+		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
 				if (schuelerID < 0)  throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
@@ -467,11 +467,11 @@ public class KlausurblockungSchienenDynDaten {
 		int maxFarben = -1;
 		int maxNr = -1;
 
-		for (int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+		for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
 			if (_klausurZuSchiene[klausurNr] >= 0)
 				continue; // Überspringe bereits zugeordnete Knoten.
 
-			int farben = gibNachbarsfarbenDerKlausur(klausurNr);
+			final int farben = gibNachbarsfarbenDerKlausur(klausurNr);
 			if (farben < maxFarben)
 				continue; // Überspringe schlechteren Knoten.
 
@@ -487,7 +487,7 @@ public class KlausurblockungSchienenDynDaten {
 		final boolean[] benutzt = new boolean[_schienenAnzahl];
 
 		for (int klausurNr2 = 0; klausurNr2 < _klausurenAnzahl; klausurNr2++) {
-			int farbe = _klausurZuSchiene[klausurNr2];
+			final int farbe = _klausurZuSchiene[klausurNr2];
 			if ((farbe >= 0) && (_verboten[klausurNr][klausurNr2]))
 				if (!benutzt[farbe]) {
 					benutzt[farbe] = true;
@@ -509,7 +509,7 @@ public class KlausurblockungSchienenDynDaten {
 		int maxNachbarn = -1;
 		int maxNr = -1;
 
-		for (int nr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
 			if (_klausurZuSchiene[nr] >= 0)
 				continue; // Überspringe bereits zugeordnete Knoten.
 
@@ -784,7 +784,7 @@ public class KlausurblockungSchienenDynDaten {
 	void aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig() {
 		aktionKlausurenAusSchienenEntfernen();
 
-		for (int nr : gibErzeugeKlausurenInZufaelligerReihenfolge())
+		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge())
 			aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
 	}
 

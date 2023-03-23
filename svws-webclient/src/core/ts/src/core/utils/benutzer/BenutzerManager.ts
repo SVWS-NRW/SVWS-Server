@@ -66,13 +66,13 @@ export class BenutzerManager extends JavaObject {
 	public constructor(__param0 : BenutzerDaten | number) {
 		super();
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let id : number = __param0 as number;
+			const id : number = __param0 as number;
 			this.init();
 			this._daten = new BenutzerDaten();
 			this._daten.id = id;
 			this._daten.istAdmin = false;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.benutzer.BenutzerDaten'))))) {
-			let pDaten : BenutzerDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten(__param0);
+			const pDaten : BenutzerDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten(__param0);
 			this.init();
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {

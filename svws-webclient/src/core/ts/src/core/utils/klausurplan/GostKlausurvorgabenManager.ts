@@ -153,7 +153,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		if ((typeof __param0 === "undefined")) {
 			return this._vorgaben;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let quartal : number = __param0 as number;
+			const quartal : number = __param0 as number;
 			return this._mapQuartalKlausurvorgaben.get(quartal);
 		} else throw new Error('invalid method overload');
 	}
@@ -183,12 +183,12 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public gibGostKlausurvorgabe(__param0 : number, __param1? : null | string, __param2? : number) : GostKlausurvorgabe | null {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let idVorgabe : number = __param0 as number;
+			const idVorgabe : number = __param0 as number;
 			return this._mapIdKlausurvorgabe.get(idVorgabe);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string") || (__param1 === null)) && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			let quartal : number = __param0 as number;
-			let kursartAllg : string | null = __param1;
-			let idFach : number = __param2 as number;
+			const quartal : number = __param0 as number;
+			const kursartAllg : string | null = __param1;
+			const idFach : number = __param2 as number;
 			const map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(quartal);
 			if (map1 === null)
 				return null;
@@ -227,9 +227,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public gibGostKlausurvorgaben(__param0 : null | number | string, __param1 : null | number | string, __param2? : number) : List<GostKlausurvorgabe> | null {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string") || (__param1 === null)) && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			let quartal : number = __param0 as number;
-			let kursartAllg : string | null = __param1;
-			let idFach : number = __param2 as number;
+			const quartal : number = __param0 as number;
+			const kursartAllg : string | null = __param1;
+			const idFach : number = __param2 as number;
 			if (quartal > 0) {
 				const retList : List<GostKlausurvorgabe> | null = new Vector();
 				const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
@@ -239,8 +239,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			}
 			return this.gibGostKlausurvorgaben(kursartAllg, idFach);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
-			let kursartAllg : string | null = __param0;
-			let idFach : number = __param1 as number;
+			const kursartAllg : string | null = __param0;
+			const idFach : number = __param1 as number;
 			const map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
 			if (map1 === null)
 				return new Vector();

@@ -127,8 +127,8 @@ export class AbgangsartenManager extends JavaObject {
 	 */
 	public getDaten(__param0 : number | string, __param1? : number) : AbgangsartKatalogDaten | null {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let kuerzel : string = __param0;
-			let schuljahr : number = __param1 as number;
+			const kuerzel : string = __param0;
+			const schuljahr : number = __param1 as number;
 			const eintrag : AbgangsartKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
 			if (eintrag === null)
 				return null;
@@ -137,7 +137,7 @@ export class AbgangsartenManager extends JavaObject {
 					return daten;
 			return null;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined")) {
-			let id : number = __param0 as number;
+			const id : number = __param0 as number;
 			return this._mapDatenByID.get(id);
 		} else throw new Error('invalid method overload');
 	}

@@ -32,7 +32,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	 */
 	public berechne(__param0? : number) : void {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			let pZeitEnde : number = __param0 as number;
+			const pZeitEnde : number = __param0 as number;
 			this.berechne();
 			this._dynDaten.aktionZustand1Speichern();
 			while (System.currentTimeMillis() < pZeitEnde) {

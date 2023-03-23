@@ -29,7 +29,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	}
 
 	@Override
-	public void berechne(long pZeitEnde) {
+	public void berechne(final long pZeitEnde) {
 		berechne();
 		_dynDaten.aktionZustand1Speichern();
 

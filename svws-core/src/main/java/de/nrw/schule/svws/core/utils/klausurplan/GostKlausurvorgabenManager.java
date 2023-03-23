@@ -36,7 +36,7 @@ public class GostKlausurvorgabenManager {
 	 * @param vorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs und
 	 *                 Gost-Halbjahres
 	 */
-	public GostKlausurvorgabenManager(@NotNull List<@NotNull GostKlausurvorgabe> vorgaben) {
+	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> vorgaben) {
 		_vorgaben = vorgaben;
 
 		for (final @NotNull GostKlausurvorgabe v : _vorgaben) {
@@ -162,7 +162,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public List<@NotNull GostKlausurvorgabe> getKlausurvorgaben(int quartal) {
+	public List<@NotNull GostKlausurvorgabe> getKlausurvorgaben(final int quartal) {
 		return _mapQuartalKlausurvorgaben.get(quartal);
 	}
 
@@ -173,7 +173,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe gibGostKlausurvorgabe(long idVorgabe) {
+	public GostKlausurvorgabe gibGostKlausurvorgabe(final long idVorgabe) {
 		return _mapIdKlausurvorgabe.get(idVorgabe);
 	}
 
@@ -186,7 +186,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe gibGostKlausurvorgabe(int quartal, String kursartAllg, long idFach) {
+	public GostKlausurvorgabe gibGostKlausurvorgabe(final int quartal, final String kursartAllg, final long idFach) {
 		final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> map1 = _mapQuartalKursartFachKlausurvorgabe
 				.get(quartal);
 		if (map1 == null)
@@ -207,7 +207,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(int quartal, String kursartAllg, long idFach) {
+	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(final int quartal, final String kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new Vector<>();
 			final GostKlausurvorgabe vorgabe = gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
@@ -227,7 +227,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(String kursartAllg, long idFach) {
+	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(final String kursartAllg, final long idFach) {
 		final HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> map1 = _mapKursartFachKlausurvorgaben
 			.get(kursartAllg);
 		if (map1 == null)
