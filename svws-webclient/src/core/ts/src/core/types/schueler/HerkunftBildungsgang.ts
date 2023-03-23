@@ -365,7 +365,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : HerkunftBildungsgang | null {
-		let tmp : HerkunftBildungsgang | undefined = this.all_values_by_name.get(name);
+		const tmp : HerkunftBildungsgang | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

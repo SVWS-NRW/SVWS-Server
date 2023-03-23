@@ -593,7 +593,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerAnrechnungsgrund | null {
-		let tmp : LehrerAnrechnungsgrund | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerAnrechnungsgrund | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

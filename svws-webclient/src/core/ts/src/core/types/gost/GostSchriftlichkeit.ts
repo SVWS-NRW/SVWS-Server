@@ -122,7 +122,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostSchriftlichkeit | null {
-		let tmp : GostSchriftlichkeit | undefined = this.all_values_by_name.get(name);
+		const tmp : GostSchriftlichkeit | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

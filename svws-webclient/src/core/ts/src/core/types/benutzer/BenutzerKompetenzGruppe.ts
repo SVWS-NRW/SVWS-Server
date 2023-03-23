@@ -264,7 +264,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BenutzerKompetenzGruppe | null {
-		let tmp : BenutzerKompetenzGruppe | undefined = this.all_values_by_name.get(name);
+		const tmp : BenutzerKompetenzGruppe | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

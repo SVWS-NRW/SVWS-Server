@@ -186,7 +186,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : AllgemeinbildendOrganisationsformen | null {
-		let tmp : AllgemeinbildendOrganisationsformen | undefined = this.all_values_by_name.get(name);
+		const tmp : AllgemeinbildendOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

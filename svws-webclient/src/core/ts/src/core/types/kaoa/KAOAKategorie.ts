@@ -231,7 +231,7 @@ export class KAOAKategorie extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAKategorie | null {
-		let tmp : KAOAKategorie | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAKategorie | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

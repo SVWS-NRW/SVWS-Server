@@ -134,7 +134,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostFremdsprachenart | null {
-		let tmp : GostFremdsprachenart | undefined = this.all_values_by_name.get(name);
+		const tmp : GostFremdsprachenart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

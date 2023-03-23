@@ -933,7 +933,7 @@ export class Schulgliederung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Schulgliederung | null {
-		let tmp : Schulgliederung | undefined = this.all_values_by_name.get(name);
+		const tmp : Schulgliederung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

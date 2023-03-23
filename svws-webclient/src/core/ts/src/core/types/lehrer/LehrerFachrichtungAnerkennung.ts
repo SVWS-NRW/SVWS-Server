@@ -204,7 +204,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerFachrichtungAnerkennung | null {
-		let tmp : LehrerFachrichtungAnerkennung | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerFachrichtungAnerkennung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

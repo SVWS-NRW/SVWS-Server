@@ -147,7 +147,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostLaufbahnplanungFachkombinationTyp | null {
-		let tmp : GostLaufbahnplanungFachkombinationTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : GostLaufbahnplanungFachkombinationTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

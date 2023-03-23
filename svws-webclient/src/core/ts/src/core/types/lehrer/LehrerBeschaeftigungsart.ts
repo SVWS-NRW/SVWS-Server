@@ -254,7 +254,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerBeschaeftigungsart | null {
-		let tmp : LehrerBeschaeftigungsart | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerBeschaeftigungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

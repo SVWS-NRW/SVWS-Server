@@ -376,7 +376,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Foerderschwerpunkt | null {
-		let tmp : Foerderschwerpunkt | undefined = this.all_values_by_name.get(name);
+		const tmp : Foerderschwerpunkt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

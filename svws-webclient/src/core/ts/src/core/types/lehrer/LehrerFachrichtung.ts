@@ -739,7 +739,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerFachrichtung | null {
-		let tmp : LehrerFachrichtung | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerFachrichtung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

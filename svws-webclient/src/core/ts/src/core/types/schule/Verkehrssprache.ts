@@ -2541,7 +2541,7 @@ export class Verkehrssprache extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Verkehrssprache | null {
-		let tmp : Verkehrssprache | undefined = this.all_values_by_name.get(name);
+		const tmp : Verkehrssprache | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

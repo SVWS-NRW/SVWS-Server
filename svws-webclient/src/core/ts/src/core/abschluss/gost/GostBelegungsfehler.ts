@@ -657,7 +657,7 @@ export class GostBelegungsfehler extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostBelegungsfehler | null {
-		let tmp : GostBelegungsfehler | undefined = this.all_values_by_name.get(name);
+		const tmp : GostBelegungsfehler | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

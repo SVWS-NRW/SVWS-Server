@@ -184,7 +184,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BerufskollegBildungsgangTyp | null {
-		let tmp : BerufskollegBildungsgangTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : BerufskollegBildungsgangTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -189,7 +189,7 @@ export class Einschulungsart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Einschulungsart | null {
-		let tmp : Einschulungsart | undefined = this.all_values_by_name.get(name);
+		const tmp : Einschulungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

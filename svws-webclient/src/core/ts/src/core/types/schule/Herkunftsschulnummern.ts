@@ -266,7 +266,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Herkunftsschulnummern | null {
-		let tmp : Herkunftsschulnummern | undefined = this.all_values_by_name.get(name);
+		const tmp : Herkunftsschulnummern | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

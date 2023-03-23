@@ -247,7 +247,7 @@ export class BerufskollegBerufsebene1 extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BerufskollegBerufsebene1 | null {
-		let tmp : BerufskollegBerufsebene1 | undefined = this.all_values_by_name.get(name);
+		const tmp : BerufskollegBerufsebene1 | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

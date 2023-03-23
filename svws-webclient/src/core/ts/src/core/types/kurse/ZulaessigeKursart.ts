@@ -614,7 +614,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : ZulaessigeKursart | null {
-		let tmp : ZulaessigeKursart | undefined = this.all_values_by_name.get(name);
+		const tmp : ZulaessigeKursart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

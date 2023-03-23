@@ -242,7 +242,7 @@ export class Geschlecht extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Geschlecht | null {
-		let tmp : Geschlecht | undefined = this.all_values_by_name.get(name);
+		const tmp : Geschlecht | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

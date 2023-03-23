@@ -372,7 +372,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAAnschlussoptionen | null {
-		let tmp : KAOAAnschlussoptionen | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAAnschlussoptionen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

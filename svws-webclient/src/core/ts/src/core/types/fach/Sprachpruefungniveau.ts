@@ -215,7 +215,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Sprachpruefungniveau | null {
-		let tmp : Sprachpruefungniveau | undefined = this.all_values_by_name.get(name);
+		const tmp : Sprachpruefungniveau | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -137,7 +137,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : SchildReportingAttributTyp | null {
-		let tmp : SchildReportingAttributTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : SchildReportingAttributTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

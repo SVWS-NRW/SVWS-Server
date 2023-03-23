@@ -318,7 +318,7 @@ export class BilingualeSprache extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BilingualeSprache | null {
-		let tmp : BilingualeSprache | undefined = this.all_values_by_name.get(name);
+		const tmp : BilingualeSprache | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -226,7 +226,7 @@ export class HerkunftSchulform extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : HerkunftSchulform | null {
-		let tmp : HerkunftSchulform | undefined = this.all_values_by_name.get(name);
+		const tmp : HerkunftSchulform | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

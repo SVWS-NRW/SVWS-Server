@@ -259,7 +259,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : SchulabschlussBerufsbildend | null {
-		let tmp : SchulabschlussBerufsbildend | undefined = this.all_values_by_name.get(name);
+		const tmp : SchulabschlussBerufsbildend | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

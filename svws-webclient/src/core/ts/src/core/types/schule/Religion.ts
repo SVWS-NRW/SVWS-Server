@@ -214,7 +214,7 @@ export class Religion extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Religion | null {
-		let tmp : Religion | undefined = this.all_values_by_name.get(name);
+		const tmp : Religion | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -369,7 +369,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostKursblockungRegelTyp | null {
-		let tmp : GostKursblockungRegelTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : GostKursblockungRegelTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

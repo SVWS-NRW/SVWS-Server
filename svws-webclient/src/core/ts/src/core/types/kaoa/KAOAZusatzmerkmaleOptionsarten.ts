@@ -156,7 +156,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAZusatzmerkmaleOptionsarten | null {
-		let tmp : KAOAZusatzmerkmaleOptionsarten | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAZusatzmerkmaleOptionsarten | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

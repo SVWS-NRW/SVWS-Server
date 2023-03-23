@@ -214,7 +214,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerMehrleistungArt | null {
-		let tmp : LehrerMehrleistungArt | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerMehrleistungArt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

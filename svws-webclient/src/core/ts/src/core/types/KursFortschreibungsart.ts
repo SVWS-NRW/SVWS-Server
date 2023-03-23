@@ -237,7 +237,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KursFortschreibungsart | null {
-		let tmp : KursFortschreibungsart | undefined = this.all_values_by_name.get(name);
+		const tmp : KursFortschreibungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -229,7 +229,7 @@ export class PersonalTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : PersonalTyp | null {
-		let tmp : PersonalTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : PersonalTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

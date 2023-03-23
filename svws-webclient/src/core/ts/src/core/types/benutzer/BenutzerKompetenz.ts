@@ -621,7 +621,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BenutzerKompetenz | null {
-		let tmp : BenutzerKompetenz | undefined = this.all_values_by_name.get(name);
+		const tmp : BenutzerKompetenz | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

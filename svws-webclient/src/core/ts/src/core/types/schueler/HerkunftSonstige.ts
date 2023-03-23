@@ -206,7 +206,7 @@ export class HerkunftSonstige extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : HerkunftSonstige | null {
-		let tmp : HerkunftSonstige | undefined = this.all_values_by_name.get(name);
+		const tmp : HerkunftSonstige | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

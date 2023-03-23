@@ -266,7 +266,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : AllgemeineMerkmale | null {
-		let tmp : AllgemeineMerkmale | undefined = this.all_values_by_name.get(name);
+		const tmp : AllgemeineMerkmale | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

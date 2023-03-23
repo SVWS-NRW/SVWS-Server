@@ -171,7 +171,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : WeiterbildungskollegOrganisationsformen | null {
-		let tmp : WeiterbildungskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
+		const tmp : WeiterbildungskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

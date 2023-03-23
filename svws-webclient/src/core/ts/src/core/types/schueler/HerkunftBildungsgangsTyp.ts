@@ -201,7 +201,7 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : HerkunftBildungsgangsTyp | null {
-		let tmp : HerkunftBildungsgangsTyp | undefined = this.all_values_by_name.get(name);
+		const tmp : HerkunftBildungsgangsTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

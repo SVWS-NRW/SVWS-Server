@@ -192,7 +192,7 @@ export class Pruefungsordnung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Pruefungsordnung | null {
-		let tmp : Pruefungsordnung | undefined = this.all_values_by_name.get(name);
+		const tmp : Pruefungsordnung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

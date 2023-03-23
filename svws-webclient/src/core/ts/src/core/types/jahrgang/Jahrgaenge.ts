@@ -447,7 +447,7 @@ export class Jahrgaenge extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Jahrgaenge | null {
-		let tmp : Jahrgaenge | undefined = this.all_values_by_name.get(name);
+		const tmp : Jahrgaenge | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

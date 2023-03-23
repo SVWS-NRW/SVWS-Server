@@ -569,7 +569,7 @@ export class Herkunft extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Herkunft | null {
-		let tmp : Herkunft | undefined = this.all_values_by_name.get(name);
+		const tmp : Herkunft | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -209,7 +209,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerLehramtAnerkennung | null {
-		let tmp : LehrerLehramtAnerkennung | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerLehramtAnerkennung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

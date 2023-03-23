@@ -503,7 +503,7 @@ export class Herkunftsarten extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Herkunftsarten | null {
-		let tmp : Herkunftsarten | undefined = this.all_values_by_name.get(name);
+		const tmp : Herkunftsarten | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

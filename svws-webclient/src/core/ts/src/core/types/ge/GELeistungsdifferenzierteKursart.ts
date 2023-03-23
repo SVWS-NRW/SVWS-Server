@@ -159,7 +159,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GELeistungsdifferenzierteKursart | null {
-		let tmp : GELeistungsdifferenzierteKursart | undefined = this.all_values_by_name.get(name);
+		const tmp : GELeistungsdifferenzierteKursart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

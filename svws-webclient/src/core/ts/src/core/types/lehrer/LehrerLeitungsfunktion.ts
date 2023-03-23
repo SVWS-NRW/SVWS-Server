@@ -200,7 +200,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerLeitungsfunktion | null {
-		let tmp : LehrerLeitungsfunktion | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerLeitungsfunktion | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

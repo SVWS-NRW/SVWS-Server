@@ -168,7 +168,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostBesondereLernleistung | null {
-		let tmp : GostBesondereLernleistung | undefined = this.all_values_by_name.get(name);
+		const tmp : GostBesondereLernleistung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

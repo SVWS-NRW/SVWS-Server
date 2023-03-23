@@ -305,7 +305,7 @@ export class KAOAEbene4 extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAEbene4 | null {
-		let tmp : KAOAEbene4 | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAEbene4 | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

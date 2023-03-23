@@ -142,7 +142,7 @@ export class LogLevel extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LogLevel | null {
-		let tmp : LogLevel | undefined = this.all_values_by_name.get(name);
+		const tmp : LogLevel | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

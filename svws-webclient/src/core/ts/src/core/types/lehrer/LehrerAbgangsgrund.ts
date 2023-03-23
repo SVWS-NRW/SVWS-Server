@@ -203,7 +203,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerAbgangsgrund | null {
-		let tmp : LehrerAbgangsgrund | undefined = this.all_values_by_name.get(name);
+		const tmp : LehrerAbgangsgrund | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

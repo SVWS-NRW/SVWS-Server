@@ -363,7 +363,7 @@ export class KAOAMerkmal extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAMerkmal | null {
-		let tmp : KAOAMerkmal | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAMerkmal | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

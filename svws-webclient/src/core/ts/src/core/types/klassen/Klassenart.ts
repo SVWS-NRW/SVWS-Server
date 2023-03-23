@@ -289,7 +289,7 @@ export class Klassenart extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Klassenart | null {
-		let tmp : Klassenart | undefined = this.all_values_by_name.get(name);
+		const tmp : Klassenart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -771,7 +771,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAZusatzmerkmal | null {
-		let tmp : KAOAZusatzmerkmal | undefined = this.all_values_by_name.get(name);
+		const tmp : KAOAZusatzmerkmal | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

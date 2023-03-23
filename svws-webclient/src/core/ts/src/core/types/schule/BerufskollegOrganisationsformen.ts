@@ -246,7 +246,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : BerufskollegOrganisationsformen | null {
-		let tmp : BerufskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
+		const tmp : BerufskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

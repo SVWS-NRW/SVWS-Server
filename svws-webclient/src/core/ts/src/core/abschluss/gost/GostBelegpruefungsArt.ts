@@ -145,7 +145,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostBelegpruefungsArt | null {
-		let tmp : GostBelegpruefungsArt | undefined = this.all_values_by_name.get(name);
+		const tmp : GostBelegpruefungsArt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

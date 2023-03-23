@@ -312,7 +312,7 @@ export class Schulform extends JavaObject {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Schulform | null {
-		let tmp : Schulform | undefined = this.all_values_by_name.get(name);
+		const tmp : Schulform | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 
