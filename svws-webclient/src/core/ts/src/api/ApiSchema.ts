@@ -1,8 +1,6 @@
 import { BaseApi } from '../api/BaseApi';
-import { JavaBoolean, cast_java_lang_Boolean } from '../java/lang/JavaBoolean';
-import { List, cast_java_util_List } from '../java/util/List';
-import { JavaLong, cast_java_lang_Long } from '../java/lang/JavaLong';
-import { Vector, cast_java_util_Vector } from '../java/util/Vector';
+import { List } from '../java/util/List';
+import { Vector } from '../java/util/Vector';
 
 export class ApiSchema extends BaseApi {
 

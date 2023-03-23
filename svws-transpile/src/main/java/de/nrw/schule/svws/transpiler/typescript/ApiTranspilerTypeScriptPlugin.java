@@ -174,7 +174,14 @@ public class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				String packageName = TranspilerTypeScriptPlugin.getImportPackageName(imp.getKey(), imp.getValue());
 				String importCast = "cast_" + packageName.replace('.', '_') +  "_" + imp.getKey().replace('.', '_');
 				String importPath = "../" + packageName.replace(strIgnoreJavaPackagePrefix + ".", "").replace('.', '/') + "/";
-				fileImports += "import { " + className + ", " + importCast + " } from '" + importPath + className + "';" + System.lineSeparator();
+				boolean hasClass = fileData.contains(className);
+				boolean hasCast = fileData.contains(importCast);
+				if (hasClass && hasCast)
+					fileImports += "import { " + className + ", " + importCast + " } from '" + importPath + className + "';" + System.lineSeparator();
+				else if (hasClass)
+					fileImports += "import { " + className + " } from '" + importPath + className + "';" + System.lineSeparator();
+				else if (hasCast)
+					fileImports += "import { " + importCast + " } from '" + importPath + className + "';" + System.lineSeparator();
 			}
 			fileImports += System.lineSeparator();
 		
