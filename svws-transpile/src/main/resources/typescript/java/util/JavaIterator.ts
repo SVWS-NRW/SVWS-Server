@@ -1,4 +1,4 @@
-import { Consumer } from "./function/Consumer"; 
+import { Consumer } from "./function/Consumer";
 
 export interface JavaIterator<E> {
 
@@ -8,7 +8,7 @@ export interface JavaIterator<E> {
     remove() : void;
 
     // TODO forEachRemaining(action : Consumer<E>) : void;
-    
+
 }
 
 

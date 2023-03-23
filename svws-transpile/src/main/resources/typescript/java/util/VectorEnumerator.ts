@@ -4,30 +4,30 @@ import { Vector } from "./Vector";
 
 export class VectorEnumerator<E> implements Enumeration<E> {
 
-    private vector : Vector<E>;
-    public count : number = 0;
+	private vector : Vector<E>;
+	public count : number = 0;
 
-    public constructor(vector : Vector<E>) {
-        this.vector = vector;
-    }
+	public constructor(vector : Vector<E>) {
+		this.vector = vector;
+	}
 
-    public hasMoreElements() : boolean  {
-        return this.count < this.vector.size();
-    }
+	public hasMoreElements() : boolean  {
+		return this.count < this.vector.size();
+	}
 
-    public nextElement() : E {
-        if (this.count < this.vector.size()) {
-            return this.vector.get(this.count++);
-        }
-        throw new NoSuchElementException("Vector Enumeration");
-    }
+	public nextElement() : E {
+		if (this.count < this.vector.size()) {
+			return this.vector.get(this.count++);
+		}
+		throw new NoSuchElementException("Vector Enumeration");
+	}
 
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.util.VectorEnumerator',
-            'java.util.Enumeration',
-            'java.lang.Object'
-        ].includes(name);
+			'java.util.VectorEnumerator',
+			'java.util.Enumeration',
+			'java.lang.Object'
+		].includes(name);
 	}
 
 }

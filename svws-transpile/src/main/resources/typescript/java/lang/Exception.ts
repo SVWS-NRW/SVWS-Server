@@ -4,11 +4,11 @@ export class Exception extends Throwable {
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.lang.Exception',
-            'java.lang.Throwable',
-            'java.lang.Object',
-            'java.lang.Serializable',
-        ].includes(name);
+			'java.lang.Exception',
+			'java.lang.Throwable',
+			'java.lang.Object',
+			'java.lang.Serializable',
+		].includes(name);
 	}
 
 }

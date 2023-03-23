@@ -4,12 +4,12 @@ export class CloneNotSupportedException extends RuntimeException {
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.lang.CloneNotSupportedException',
-            'java.lang.Exception',
-            'java.lang.Throwable',
-            'java.lang.Object',
-            'java.lang.Serializable',
-        ].includes(name);
+			'java.lang.CloneNotSupportedException',
+			'java.lang.Exception',
+			'java.lang.Throwable',
+			'java.lang.Object',
+			'java.lang.Serializable',
+		].includes(name);
 	}
 
 }

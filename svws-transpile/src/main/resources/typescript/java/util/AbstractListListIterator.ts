@@ -9,75 +9,75 @@ import { IllegalStateException } from '../../java/lang/IllegalStateException';
 
 export class AbstractListListIterator<E> extends AbstractListIterator<E> implements ListIterator<E> {
 
-    constructor(list : AbstractList<E>, index : number) {
-        super(list);
-        this.current = index;
-    }
+	constructor(list : AbstractList<E>, index : number) {
+		super(list);
+		this.current = index;
+	}
 
-    public nextIndex() : number {
-        return this.current;
-    }
-
-
-    public hasPrevious() : boolean {
-        return this.current != 0;
-    }
+	public nextIndex() : number {
+		return this.current;
+	}
 
 
-    public previous() : E {
-        this.checkForComodification();
-        try {
-            let i : number = this.current - 1;
-            let previous : E = this.list.get(i);
-            this.lastReturned = this.current = i;
-            return previous;
-        } catch (e) {
-            this.checkForComodification();
-            throw new NoSuchElementException();
-        }
-    }
+	public hasPrevious() : boolean {
+		return this.current != 0;
+	}
 
 
-    public previousIndex() : number {
-        return this.current - 1;
-    }
+	public previous() : E {
+		this.checkForComodification();
+		try {
+			const i : number = this.current - 1;
+			const previous : E = this.list.get(i);
+			this.lastReturned = this.current = i;
+			return previous;
+		} catch (e) {
+			this.checkForComodification();
+			throw new NoSuchElementException();
+		}
+	}
 
 
-    public set(e : E) : void {
-        if (this.lastReturned < 0)
-            throw new IllegalStateException();
-        this.checkForComodification();
-        try {
-            this.list.set(this.lastReturned, e);
-            this.modCount = this.list.modCount;
-        } catch (e) {
-            throw new ConcurrentModificationException();
-        }
-    }
+	public previousIndex() : number {
+		return this.current - 1;
+	}
 
 
-    public add(e : E) : void {
-        this.checkForComodification();
-        try {
-            let i : number = this.current;
-            this.list.add(i, e);
-            this.lastReturned = -1;
-            this.current = i + 1;
-            this.modCount = this.list.modCount;
-        } catch (e) {
-            throw new ConcurrentModificationException();
-        }
-    }
+	public set(e : E) : void {
+		if (this.lastReturned < 0)
+			throw new IllegalStateException();
+		this.checkForComodification();
+		try {
+			this.list.set(this.lastReturned, e);
+			this.modCount = this.list.modCount;
+		} catch (e) {
+			throw new ConcurrentModificationException();
+		}
+	}
+
+
+	public add(e : E) : void {
+		this.checkForComodification();
+		try {
+			const i : number = this.current;
+			this.list.add(i, e);
+			this.lastReturned = -1;
+			this.current = i + 1;
+			this.modCount = this.list.modCount;
+		} catch (e) {
+			throw new ConcurrentModificationException();
+		}
+	}
 
 
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.util.AbstractListListIterator',
-            'java.util.AbstractListIterator',
-            'java.util.ListIterator',
-            'java.util.JavaIterator',
-            'java.lang.Object'
-        ].includes(name);
+			'java.util.AbstractListListIterator',
+			'java.util.AbstractListIterator',
+			'java.util.ListIterator',
+			'java.util.JavaIterator',
+			'java.lang.Object'
+		].includes(name);
 	}
 
 }

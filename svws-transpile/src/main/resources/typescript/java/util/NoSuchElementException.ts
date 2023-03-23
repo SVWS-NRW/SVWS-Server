@@ -4,13 +4,13 @@ export class NoSuchElementException extends RuntimeException {
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
-            'java.util.NoSuchElementException',
-            'java.lang.RuntimeException',
-            'java.lang.Exception',
-            'java.lang.Throwable',
-            'java.lang.Object',
-            'java.lang.Serializable',
-        ].includes(name);
+			'java.util.NoSuchElementException',
+			'java.lang.RuntimeException',
+			'java.lang.Exception',
+			'java.lang.Throwable',
+			'java.lang.Object',
+			'java.lang.Serializable',
+		].includes(name);
 	}
 
 }

@@ -21,6 +21,10 @@ export interface List<E> extends Collection<E> {
 
     add(e : E | null) : boolean;
 
+    add(index : number, element : E) : void;
+
+    remove(index : number) : E;
+
     remove(o : any) : boolean;
 
     containsAll(c : Collection<any> | null) : boolean;
@@ -45,10 +49,6 @@ export interface List<E> extends Collection<E> {
     get(index : number) : E;
 
     set(index : number, element : E) : E;
-
-    add(index : number, element : E) : void;
-
-    remove(index : number) : E;
 
     removeElementAt(index : number) : void;
 

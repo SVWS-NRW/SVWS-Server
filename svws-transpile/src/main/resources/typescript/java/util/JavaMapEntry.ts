@@ -9,12 +9,12 @@ export abstract class JavaMapEntry<K, V> extends JavaObject {
 
     abstract hashCode() : number;
 
-	public isTranspiledInstanceOf(name : string): boolean {
-		return [
-            'java.util.Map.Entry',
-            'java.lang.Object'
-        ].includes(name);
-	}
+    public isTranspiledInstanceOf(name : string): boolean {
+    	return [
+    		'java.util.Map.Entry',
+    		'java.lang.Object'
+    	].includes(name);
+    }
 }
 
 

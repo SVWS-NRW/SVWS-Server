@@ -10,7 +10,7 @@ export interface JavaSet<E> extends JavaIterable<E> {
     isEmpty() : boolean;
 
     contains(e : any) : boolean;
-    
+
     [Symbol.iterator](): Iterator<E>;
 
     iterator() : JavaIterator<E>;
@@ -37,7 +37,7 @@ export interface JavaSet<E> extends JavaIterable<E> {
     equals(obj : any) : boolean;
 
     hashCode() : number;
-    
+
     // TODO further methods defined in Java...
 
 }
