@@ -574,7 +574,8 @@ public class MethodNode {
 				sb.append(blockIndent);
 				sb.append("\t");
 				VariableNode param = method.getParameter(i);
-				sb.append("let " + param.transpile() + " = " + param.getTypeCast("__param" + i) + ";");
+				sb.append(param.isFinal() ? "const " : "let ");
+				sb.append(param.transpile() + " = " + param.getTypeCast("__param" + i) + ";");
 				sb.append(System.lineSeparator());
 			}
 			

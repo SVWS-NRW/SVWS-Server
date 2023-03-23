@@ -1006,6 +1006,8 @@ public class GostBlockungsdatenManager {
 
 		// (4)
 		final Iterator<@NotNull GostBlockungRegel> iRegel = _daten.regeln.iterator();
+		if (iRegel == null)
+			return;
 		while (iRegel.hasNext()) {
 			final @NotNull GostBlockungRegel r = iRegel.next();
 			final long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);

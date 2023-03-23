@@ -19,6 +19,9 @@ public class VariableNode {
 	/** indicates whether this variable declaration is a static class attribute */
 	private final boolean isStatic;
 	
+	/** indicates whether this variable declaration is marked final */
+	private final boolean isFinal;
+	
 	
 	/**
 	 * Creates a new variable with transpiled variable information.
@@ -30,6 +33,7 @@ public class VariableNode {
 		this.variable = variable;
 		this.isVarArg = variable.toString().contains("...");
 		this.isStatic = plugin.getTranspiler().hasStaticModifier(variable);
+		this.isFinal = plugin.getTranspiler().hasFinalModifier(variable);
 		boolean isNotNull = isVarArg || plugin.getTranspiler().hasNotNullAnnotation(variable);
 		this.typeNode = new TypeNode(plugin, variable.getType(), true, isNotNull);
 		if (this.isVarArg)
@@ -44,6 +48,16 @@ public class VariableNode {
 	 */
 	public boolean isStatic() {
 		return this.isStatic;
+	}
+
+
+	/**
+	 * Returns whether this variable declaration is marked final
+	 *  
+	 * @return true if this variable declaration is marked final and false otherwise
+	 */
+	public boolean isFinal() {
+		return this.isFinal;
 	}
 	
 	
