@@ -6,7 +6,7 @@ import { System } from '../../java/lang/System';
 export class KursblockungDynStatistik extends JavaObject {
 
 	/**
-	 * 
+	 *
 	 *  In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
 	 *  Fachart in der selben Schiene landen. Je kleiner der Wert, desto besser. Erhöht man den Wert der Haupt-Diagonale
 	 *  in der Matrix, so werden Kurse der gleichen Fachart eher selten in eine Schiene getan.

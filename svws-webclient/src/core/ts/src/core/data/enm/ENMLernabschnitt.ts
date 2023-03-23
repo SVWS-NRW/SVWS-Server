@@ -3,7 +3,6 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class ENMLernabschnitt extends JavaObject {
 
 	/**
-	 * 
 	 *  Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der
 	 *  zuvor exportierte Lernabschnitt in der DB noch gültig ist
 	 */

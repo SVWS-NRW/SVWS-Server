@@ -25,16 +25,16 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostKursblockungRegelTyp> = new Map<string, GostKursblockungRegelTyp>();
 
 	/**
-	 * 
+	 *
 	 *  Eine Regel ist nicht definiert.
 	 */
 	public static readonly UNDEFINIERT : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("UNDEFINIERT", 0, 0, "Undefiniert", Collections.emptyList());
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Sperren von Schienen für alle Kurse der Kursart (A). Dabei werden alle Schienen von B bis C
 	 *  gesperrt. Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 *  - Parameter B: von - Nummer der Schiene (int) <br>
 	 *  - Parameter C: bis - Nummer der Schiene (int)
@@ -42,10 +42,10 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, "Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Reservieren der Schienen von B bis C für Kurse einer bestimmten Kursart (A).
 	 *  Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 *  - Parameter B: von - Nummer der Schiene (int) <br>
 	 *  - Parameter C: bis - Nummer der Schiene (int)
@@ -53,70 +53,70 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Fixieren eines Kurses (A) in Schiene (B). Die Schiene B ist 1-indiziert, es gilt
 	 *  {@code 1 <= B <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des Kurses (long) <br>
 	 *  - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	public static readonly KURS_FIXIERE_IN_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_FIXIERE_IN_SCHIENE", 3, 2, "Kurs: Fixiere in Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Sperren einer Schiene (B) für einen Kurs (A). Die Schiene B ist 1-indiziert, es gilt
 	 *  {@code 1 <= B <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des Kurses (long) <br>
 	 *  - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	public static readonly KURS_SPERRE_IN_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_SPERRE_IN_SCHIENE", 4, 3, "Kurs: Sperre in Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Fixieren eines Schülers (A) in einem Kurs (B). <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des Schülers (long) <br>
 	 *  - Parameter B: Datenbank-ID des Kurses (long)
 	 */
 	public static readonly SCHUELER_FIXIEREN_IN_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_FIXIEREN_IN_KURS", 5, 4, "Schüler: Fixiere in Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Verbieten eines Schülers (A) in einem Kurs (B). <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des Schülers (long) <br>
 	 *  - Parameter A: Datenbank-ID des Kurses (long)
 	 */
 	public static readonly SCHUELER_VERBIETEN_IN_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_IN_KURS", 6, 5, "Schüler: Verbiete in Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 *  - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	public static readonly KURS_VERBIETEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_VERBIETEN_MIT_KURS", 7, 7, "Kurs verbiete mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum Forcieren, dass Kurs (A) mit einem Kurs (B) in der selben Schiene landet. <br>
-	 * 
+	 *
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 *  - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	public static readonly KURS_ZUSAMMEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_ZUSAMMEN_MIT_KURS", 8, 8, "Kurs zusammen mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
 	 *  - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
 	 */
 	public static readonly LEHRKRAFT_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAFT_BEACHTEN", 9, 9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(GostKursblockungRegelParameterTyp.BOOLEAN));
 
 	/**
-	 * 
+	 *
 	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
 	 */
 	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 10, 10, "Lehrkräfte beachten", Arrays.asList());

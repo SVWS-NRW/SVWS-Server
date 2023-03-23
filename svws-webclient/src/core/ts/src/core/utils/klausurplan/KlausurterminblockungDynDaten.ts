@@ -32,7 +32,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private _terminAnzahl2 : number = KlausurterminblockungDynDaten.MAX_TERMINE;
 
 	/**
-	 * 
+	 *
 	 *  Jeder KlausurNr wird eine TerminNr zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung.
 	 *  Am Ende des Algorithmus hat jede Klausur eine zugeordnete TerminNr >= 0.
 	 */

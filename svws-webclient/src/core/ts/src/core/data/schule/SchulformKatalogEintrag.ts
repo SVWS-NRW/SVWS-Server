@@ -13,7 +13,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 	public kuerzel : string = "";
 
 	/**
-	 * 
+	 *
 	 *  Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar
 	 *  in der SVWS-DB bei der Schule gespeichert, aber dort aus dem Schulverzeichnis genommen.
 	 *  Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels

@@ -234,7 +234,8 @@ export class SatSolver3 extends SatSolverA {
 			if (countDown === 0) {
 				for (let i : number = index; i >= 0; i--) {
 					if (backtrackV[i] !== null) {
-						this.unitpropagation_undo(cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]));
+						let bvi : Variable | null = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]);
+						this.unitpropagation_undo(bvi);
 					}
 					backtrackV[i] = null;
 					backtrackB[i] = false;
