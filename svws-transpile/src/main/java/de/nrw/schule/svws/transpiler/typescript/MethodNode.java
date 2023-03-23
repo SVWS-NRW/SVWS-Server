@@ -580,7 +580,12 @@ public class MethodNode {
 			}
 			
 			// print the method block
-			sb.append("\t" + method.getBody().replace("\n\t", "\n\t\t"));
+			if ("".equals(method.getBody().trim())) {
+				sb.append(blockIndent);
+				sb.append("\t// empty method body\n");
+			} else {
+				sb.append("\t" + method.getBody().replace("\n\t", "\n\t\t"));
+			}
 			sb.append(blockIndent);
 			sb.append("}");
 		}
