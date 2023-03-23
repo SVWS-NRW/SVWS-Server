@@ -1,10 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
+import { Random } from '../../java/util/Random';
+import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusK, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { Logger } from '../../core/logger/Logger';
+import { System } from '../../java/lang/System';
 
 export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorithmusK {
 

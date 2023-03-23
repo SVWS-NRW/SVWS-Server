@@ -1,12 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { KlausurterminblockungDynDaten, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
-import { KlausurterminblockungAlgorithmusAbstract, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
+import { Random } from '../../../java/util/Random';
+import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
+import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Vector } from '../../../java/util/Vector';
+import { System } from '../../../java/lang/System';
 
 export class KlausurterminblockungAlgorithmusGreedy3 extends KlausurterminblockungAlgorithmusAbstract {
 

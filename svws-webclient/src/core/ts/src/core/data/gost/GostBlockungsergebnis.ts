@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBlockungsergebnisSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
-import { GostBlockungsergebnisBewertung, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
+import { Vector } from '../../../java/util/Vector';
 
 export class GostBlockungsergebnis extends JavaObject {
 

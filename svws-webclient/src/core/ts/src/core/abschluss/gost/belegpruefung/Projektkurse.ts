@@ -1,17 +1,17 @@
-import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObject';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../../core/data/gost/GostFach';
-import { AbiturFachbelegung, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
-import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { AbiturFachbelegungHalbjahr, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
-import { GostBelegpruefung, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
-import { AbiturdatenManager, cast_de_nrw_schule_svws_core_abschluss_gost_AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { GostFachManager, cast_de_nrw_schule_svws_core_abschluss_gost_GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
-import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../../core/types/gost/GostKursart';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { List, cast_java_util_List } from '../../../../java/util/List';
-import { Vector, cast_java_util_Vector } from '../../../../java/util/Vector';
-import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
-import { HashSet, cast_java_util_HashSet } from '../../../../java/util/HashSet';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { GostFach } from '../../../../core/data/gost/GostFach';
+import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
+import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
+import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
+import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
+import { GostKursart } from '../../../../core/types/gost/GostKursart';
+import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { List } from '../../../../java/util/List';
+import { Vector } from '../../../../java/util/Vector';
+import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
+import { HashSet } from '../../../../java/util/HashSet';
 
 export class Projektkurse extends GostBelegpruefung {
 

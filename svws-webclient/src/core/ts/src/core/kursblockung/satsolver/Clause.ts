@@ -1,11 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { AVLSet, cast_de_nrw_schule_svws_core_adt_set_AVLSet } from '../../../core/adt/set/AVLSet';
-import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { AVLSet } from '../../../core/adt/set/AVLSet';
+import { Comparable } from '../../../java/lang/Comparable';
 import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { JavaIterator } from '../../../java/util/JavaIterator';
 
 export class Clause extends JavaObject implements Comparable<Clause> {
 

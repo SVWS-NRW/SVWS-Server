@@ -1,8 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { LehrerKatalogEinsatzstatusEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogEinsatzstatusEintrag } from '../../../core/data/lehrer/LehrerKatalogEinsatzstatusEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { LehrerKatalogEinsatzstatusEintrag } from '../../../core/data/lehrer/LehrerKatalogEinsatzstatusEintrag';
 
 export class LehrerEinsatzstatus extends JavaObject {
 

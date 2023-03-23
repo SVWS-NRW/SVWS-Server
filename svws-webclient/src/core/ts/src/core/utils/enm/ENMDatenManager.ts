@@ -1,23 +1,20 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { ENMKlasse, cast_de_nrw_schule_svws_core_data_enm_ENMKlasse } from '../../../core/data/enm/ENMKlasse';
-import { ENMLeistung, cast_de_nrw_schule_svws_core_data_enm_ENMLeistung } from '../../../core/data/enm/ENMLeistung';
-import { ENMFach, cast_de_nrw_schule_svws_core_data_enm_ENMFach } from '../../../core/data/enm/ENMFach';
-import { ENMJahrgang, cast_de_nrw_schule_svws_core_data_enm_ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { ENMLerngruppe, cast_de_nrw_schule_svws_core_data_enm_ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
-import { ENMLehrer, cast_de_nrw_schule_svws_core_data_enm_ENMLehrer } from '../../../core/data/enm/ENMLehrer';
-import { ENMSchueler, cast_de_nrw_schule_svws_core_data_enm_ENMSchueler } from '../../../core/data/enm/ENMSchueler';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { ENMFoerderschwerpunkt, cast_de_nrw_schule_svws_core_data_enm_ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
+import { ENMLeistung } from '../../../core/data/enm/ENMLeistung';
+import { ENMFach } from '../../../core/data/enm/ENMFach';
+import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
+import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
+import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
+import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
+import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
-import { Note, cast_de_nrw_schule_svws_core_types_Note } from '../../../core/types/Note';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Geschlecht, cast_de_nrw_schule_svws_core_types_Geschlecht } from '../../../core/types/Geschlecht';
-import { ENMNote, cast_de_nrw_schule_svws_core_data_enm_ENMNote } from '../../../core/data/enm/ENMNote';
-import { Foerderschwerpunkt, cast_de_nrw_schule_svws_core_types_schueler_Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';
+import { Note } from '../../../core/types/Note';
+import { List } from '../../../java/util/List';
+import { Geschlecht } from '../../../core/types/Geschlecht';
+import { ENMNote } from '../../../core/data/enm/ENMNote';
+import { Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';
 
 export class ENMDatenManager extends JavaObject {
 

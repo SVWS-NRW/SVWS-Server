@@ -1,13 +1,11 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../core/data/gost/GostFach';
-import { KursblockungDynStatistik, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
-import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
-import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../core/types/gost/GostKursart';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { GostFach } from '../../core/data/gost/GostFach';
+import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
+import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { Random } from '../../java/util/Random';
+import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { GostKursart } from '../../core/types/gost/GostKursart';
 
 export class KursblockungDynFachart extends JavaObject {
 

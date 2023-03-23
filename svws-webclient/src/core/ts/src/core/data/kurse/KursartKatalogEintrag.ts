@@ -1,12 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchulformSchulgliederung, cast_de_nrw_schule_svws_core_data_schule_SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/Pair';
+import { Vector } from '../../../java/util/Vector';
+import { Pair } from '../../../core/adt/Pair';
 
 export class KursartKatalogEintrag extends JavaObject {
 

@@ -1,10 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../java/lang/JavaBoolean';
-import { BKAnlageAFach, cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageAFach } from '../../core/abschluss/bk/a/BKAnlageAFach';
-import { AbschlussErgebnisBerufsbildend, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnisBerufsbildend } from '../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
-import { JavaDouble, cast_java_lang_Double } from '../../java/lang/JavaDouble';
-import { BKAnlageAFaecher, cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageAFaecher } from '../../core/abschluss/bk/a/BKAnlageAFaecher';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { AbschlussErgebnisBerufsbildend } from '../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
+import { BKAnlageAFaecher } from '../../core/abschluss/bk/a/BKAnlageAFaecher';
 
 export class AbschlussManagerBerufsbildend extends JavaObject {
 

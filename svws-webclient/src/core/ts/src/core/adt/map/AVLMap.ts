@@ -1,22 +1,21 @@
 import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
-import { NavigableSet, cast_java_util_NavigableSet } from '../../../java/util/NavigableSet';
-import { JavaSet, cast_java_util_Set } from '../../../java/util/JavaSet';
-import { NavigableMap, cast_java_util_NavigableMap } from '../../../java/util/NavigableMap';
-import { AVLMapIntervall, cast_de_nrw_schule_svws_core_adt_map_AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { NavigableSet } from '../../../java/util/NavigableSet';
+import { JavaSet } from '../../../java/util/JavaSet';
+import { NavigableMap } from '../../../java/util/NavigableMap';
+import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { AVLMapNode, cast_de_nrw_schule_svws_core_adt_map_AVLMapNode } from '../../../core/adt/map/AVLMapNode';
-import { ClassCastException, cast_java_lang_ClassCastException } from '../../../java/lang/ClassCastException';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { AVLMapNode } from '../../../core/adt/map/AVLMapNode';
+import { ClassCastException } from '../../../java/lang/ClassCastException';
 import { SortedMap, cast_java_util_SortedMap } from '../../../java/util/SortedMap';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Collection } from '../../../java/util/Collection';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaMap, cast_java_util_Map } from '../../../java/util/JavaMap';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
-import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
-import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
+import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
+import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 

@@ -1,7 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOAZusatzmerkmaleOptionsarten, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAZusatzmerkmaleOptionsarten';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { KAOAMerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmal } from '../../../core/types/kaoa/KAOAMerkmal';
 
 export class KAOAZusatzmerkmalEintrag extends JavaObject {

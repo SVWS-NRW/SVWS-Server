@@ -1,14 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
-import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
-import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Schueler } from '../../../core/data/schueler/Schueler';
+import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
+import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { List } from '../../../java/util/List';
+import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
+import { Vector } from '../../../java/util/Vector';
+import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostBlockungsdaten extends JavaObject {
 

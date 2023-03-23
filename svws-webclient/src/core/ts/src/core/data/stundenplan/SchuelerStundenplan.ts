@@ -1,9 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { SchuelerStundenplanUnterricht, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
+import { List } from '../../../java/util/List';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerStundenplan extends JavaObject {
 

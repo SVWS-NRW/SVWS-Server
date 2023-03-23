@@ -1,17 +1,14 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
-import { GostKursblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Collections, cast_java_util_Collections } from '../../../java/util/Collections';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
+import { HashMap } from '../../../java/util/HashMap';
+import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
+import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
+import { Collection } from '../../../java/util/Collection';
+import { List } from '../../../java/util/List';
+import { Collections } from '../../../java/util/Collections';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostKursblockungRegelTyp extends JavaObject {
 

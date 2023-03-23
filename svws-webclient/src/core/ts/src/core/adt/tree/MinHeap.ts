@@ -1,20 +1,18 @@
-import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { MinHeapIterator, cast_de_nrw_schule_svws_core_adt_tree_MinHeapIterator } from '../../../core/adt/tree/MinHeapIterator';
-import { StringBuilder, cast_java_lang_StringBuilder } from '../../../java/lang/StringBuilder';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
+import { MinHeapIterator } from '../../../core/adt/tree/MinHeapIterator';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
+import { System } from '../../../java/lang/System';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { Cloneable, cast_java_lang_Cloneable } from '../../../java/lang/Cloneable';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { JavaIterator } from '../../../java/util/JavaIterator';
+import { Collection } from '../../../java/util/Collection';
+import { Cloneable } from '../../../java/lang/Cloneable';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Queue, cast_java_util_Queue } from '../../../java/util/Queue';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
-import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { CloneNotSupportedException, cast_java_lang_CloneNotSupportedException } from '../../../java/lang/CloneNotSupportedException';
+import { Arrays } from '../../../java/util/Arrays';
+import { Queue } from '../../../java/util/Queue';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
 export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 

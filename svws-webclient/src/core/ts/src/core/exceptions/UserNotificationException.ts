@@ -1,6 +1,4 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { RuntimeException, cast_java_lang_RuntimeException } from '../../java/lang/RuntimeException';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { RuntimeException } from '../../java/lang/RuntimeException';
 
 export class UserNotificationException extends RuntimeException {
 

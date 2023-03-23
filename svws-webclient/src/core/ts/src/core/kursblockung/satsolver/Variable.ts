@@ -1,9 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
-import { Clause, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Clause } from '../../../core/kursblockung/satsolver/Clause';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Random } from '../../../java/util/Random';
+import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { Clause } from '../../../core/kursblockung/satsolver/Clause';
 
 export class Variable extends JavaObject {
 

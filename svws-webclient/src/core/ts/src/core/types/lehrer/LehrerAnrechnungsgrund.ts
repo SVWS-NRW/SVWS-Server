@@ -1,8 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { LehrerKatalogAnrechnungsgrundEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogAnrechnungsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { LehrerKatalogAnrechnungsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
 
 export class LehrerAnrechnungsgrund extends JavaObject {
 

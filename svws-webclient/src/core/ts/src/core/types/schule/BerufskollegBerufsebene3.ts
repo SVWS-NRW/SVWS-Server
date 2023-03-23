@@ -1,7 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { BerufskollegBerufsebeneKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegBerufsebeneKatalogEintrag } from '../../../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { BerufskollegBerufsebeneKatalogEintrag } from '../../../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 
 export class BerufskollegBerufsebene3 extends JavaObject {
 

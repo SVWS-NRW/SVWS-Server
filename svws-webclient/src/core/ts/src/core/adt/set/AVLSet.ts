@@ -1,9 +1,9 @@
-import { NavigableSet, cast_java_util_NavigableSet } from '../../../java/util/NavigableSet';
-import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { NavigableSet } from '../../../java/util/NavigableSet';
+import { JavaIterator } from '../../../java/util/JavaIterator';
+import { Collection } from '../../../java/util/Collection';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { SortedSet, cast_java_util_SortedSet } from '../../../java/util/SortedSet';
-import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
+import { AVLMap } from '../../../core/adt/map/AVLMap';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
 export class AVLSet<E> extends JavaObject implements NavigableSet<E> {

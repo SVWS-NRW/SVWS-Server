@@ -1,6 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Comparator } from '../../../java/util/Comparator';
 
 export class IntegerComparator extends JavaObject implements Comparator<number | null> {
 

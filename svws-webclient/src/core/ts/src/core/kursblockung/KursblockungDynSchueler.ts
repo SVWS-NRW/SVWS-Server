@@ -1,15 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { KursblockungDynFachart, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
-import { KursblockungDynStatistik, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
-import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungMatrix, cast_de_nrw_schule_svws_core_kursblockung_KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
-import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
-import { System, cast_java_lang_System } from '../../java/lang/System';
-import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
+import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
+import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { Random } from '../../java/util/Random';
+import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
+import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { Arrays } from '../../java/util/Arrays';
+import { System } from '../../java/lang/System';
+import { HashSet } from '../../java/util/HashSet';
 
 export class KursblockungDynSchueler extends JavaObject {
 

@@ -1,10 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { KAOAKategorieEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAKategorieEintrag } from '../../../core/data/kaoa/KAOAKategorieEintrag';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
+import { HashMap } from '../../../java/util/HashMap';
+import { KAOAKategorieEintrag } from '../../../core/data/kaoa/KAOAKategorieEintrag';
+import { Arrays } from '../../../java/util/Arrays';
 
 export class KAOAKategorie extends JavaObject {
 

@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { GostLeistungenFachbelegung, cast_de_nrw_schule_svws_core_data_gost_GostLeistungenFachbelegung } from '../../../core/data/gost/GostLeistungenFachbelegung';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostFach } from '../../../core/data/gost/GostFach';
+import { Vector } from '../../../java/util/Vector';
+import { GostLeistungenFachbelegung } from '../../../core/data/gost/GostLeistungenFachbelegung';
 
 export class GostLeistungenFachwahl extends JavaObject {
 

@@ -1,6 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 
 export class HashMap2D<K1, K2, V> extends JavaObject {
 

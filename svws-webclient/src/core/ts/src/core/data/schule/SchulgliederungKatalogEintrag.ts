@@ -1,12 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { Schulform } from '../../../core/types/schule/Schulform';
 import { BerufskollegAnlage, cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { SchulabschlussBerufsbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
+import { Vector } from '../../../java/util/Vector';
 
 export class SchulgliederungKatalogEintrag extends JavaObject {
 

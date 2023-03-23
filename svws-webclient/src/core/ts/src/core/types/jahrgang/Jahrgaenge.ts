@@ -1,13 +1,11 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JahrgangsKatalogEintrag, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKatalogEintrag';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { JahrgangsKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { List } from '../../../java/util/List';
+import { JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKatalogEintrag';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
+import { JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
 
 export class Jahrgaenge extends JavaObject {
 

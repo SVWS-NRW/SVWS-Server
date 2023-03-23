@@ -1,7 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { List } from '../../../java/util/List';
 
 export class AbschlussErgebnisBerufsbildend extends JavaObject {
 

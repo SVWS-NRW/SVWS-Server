@@ -1,14 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { GostFach } from '../../../core/data/gost/GostFach';
+import { HashMap } from '../../../java/util/HashMap';
+import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Vector } from '../../../java/util/Vector';
+import { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 

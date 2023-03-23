@@ -1,7 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_ReligionKatalogEintrag } from '../../../core/data/schule/ReligionKatalogEintrag';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { ReligionKatalogEintrag } from '../../../core/data/schule/ReligionKatalogEintrag';
 
 export class Religion extends JavaObject {
 

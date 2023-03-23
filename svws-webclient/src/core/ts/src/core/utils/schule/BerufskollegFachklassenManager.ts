@@ -1,16 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { BerufskollegFachklassenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
-import { BerufskollegFachklassenKatalog, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
-import { RuntimeException, cast_java_lang_RuntimeException } from '../../../java/lang/RuntimeException';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
+import { BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
+import { RuntimeException } from '../../../java/lang/RuntimeException';
+import { HashMap } from '../../../java/util/HashMap';
 import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { BerufskollegFachklassenKatalogIndex, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { BerufskollegFachklassenKatalogDaten, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
+import { Vector } from '../../../java/util/Vector';
+import { BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class BerufskollegFachklassenManager extends JavaObject {
 

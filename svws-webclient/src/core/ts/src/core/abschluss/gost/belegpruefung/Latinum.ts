@@ -1,11 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObject';
-import { AbiturFachbelegung, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
-import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { GostBelegpruefung, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
-import { AbiturdatenManager, cast_de_nrw_schule_svws_core_abschluss_gost_AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { SprachendatenUtils, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
-import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
+import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
+import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
+import { SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
+import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Latinum extends GostBelegpruefung {
 

@@ -1,20 +1,19 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
-import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../core/Service';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GELeistungsdifferenzierteKursart, cast_de_nrw_schule_svws_core_types_ge_GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../core/logger/LogLevel';
-import { Predicate, cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
-import { AbschlussFaecherGruppe, cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
-import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
-import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { AbschlussManager, cast_de_nrw_schule_svws_core_abschluss_AbschlussManager } from '../../../core/abschluss/AbschlussManager';
-import { AbschlussFaecherGruppen, cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFaecherGruppen';
+import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
+import { Service } from '../../../core/Service';
+import { JavaString } from '../../../java/lang/JavaString';
+import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
+import { LogLevel } from '../../../core/logger/LogLevel';
+import { Predicate } from '../../../java/util/function/Predicate';
+import { AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
+import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
+import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
+import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { List } from '../../../java/util/List';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
+import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
+import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFaecherGruppen';
 
 export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 

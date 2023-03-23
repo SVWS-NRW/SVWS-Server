@@ -1,20 +1,18 @@
-import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObject';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../../core/data/gost/GostFach';
-import { HashMap, cast_java_util_HashMap } from '../../../../java/util/HashMap';
-import { AbiturFachbelegung, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
-import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { AbiturFachbelegungHalbjahr, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
-import { GostBelegpruefung, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
-import { AbiturdatenManager, cast_de_nrw_schule_svws_core_abschluss_gost_AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../../core/types/gost/GostKursart';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { GostFach } from '../../../../core/data/gost/GostFach';
+import { HashMap } from '../../../../java/util/HashMap';
+import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
+import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
+import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { Projektkurse, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse } from '../../../../core/abschluss/gost/belegpruefung/Projektkurse';
-import { JavaInteger, cast_java_lang_Integer } from '../../../../java/lang/JavaInteger';
-import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../../java/lang/NullPointerException';
-import { Note, cast_de_nrw_schule_svws_core_types_Note } from '../../../../core/types/Note';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { List, cast_java_util_List } from '../../../../java/util/List';
-import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
+import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
+import { NullPointerException } from '../../../../java/lang/NullPointerException';
+import { Note } from '../../../../core/types/Note';
+import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { List } from '../../../../java/util/List';
+import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 

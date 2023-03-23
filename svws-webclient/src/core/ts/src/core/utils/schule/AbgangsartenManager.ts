@@ -1,15 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { RuntimeException, cast_java_lang_RuntimeException } from '../../../java/lang/RuntimeException';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { AbgangsartKatalog, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
-import { AbgangsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { SchulabschlussBerufsbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { AbgangsartKatalogDaten, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { RuntimeException } from '../../../java/lang/RuntimeException';
+import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { HashMap } from '../../../java/util/HashMap';
+import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
+import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
+import { List } from '../../../java/util/List';
+import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
+import { Vector } from '../../../java/util/Vector';
+import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
 
 export class AbgangsartenManager extends JavaObject {
 

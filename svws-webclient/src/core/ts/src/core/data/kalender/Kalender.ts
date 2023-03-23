@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { KalenderEintrag, cast_de_nrw_schule_svws_core_data_kalender_KalenderEintrag } from '../../../core/data/kalender/KalenderEintrag';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { KalenderEintrag } from '../../../core/data/kalender/KalenderEintrag';
+import { List } from '../../../java/util/List';
+import { Vector } from '../../../java/util/Vector';
 
 export class Kalender extends JavaObject {
 

@@ -1,19 +1,17 @@
-import { StringBuilder, cast_java_lang_StringBuilder } from '../../../java/lang/StringBuilder';
-import { IndexOutOfBoundsException, cast_java_lang_IndexOutOfBoundsException } from '../../../java/lang/IndexOutOfBoundsException';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Deque, cast_java_util_Deque } from '../../../java/util/Deque';
-import { LinkedCollectionElement, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
-import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
+import { IndexOutOfBoundsException } from '../../../java/lang/IndexOutOfBoundsException';
+import { Deque } from '../../../java/util/Deque';
+import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
+import { Comparator } from '../../../java/util/Comparator';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { JavaIterator } from '../../../java/util/JavaIterator';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { Cloneable, cast_java_lang_Cloneable } from '../../../java/lang/Cloneable';
+import { Cloneable } from '../../../java/lang/Cloneable';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { LinkedCollectionDescendingIterator, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionDescendingIterator } from '../../../core/adt/collection/LinkedCollectionDescendingIterator';
-import { LinkedCollectionIterator, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionIterator } from '../../../core/adt/collection/LinkedCollectionIterator';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { NoSuchElementException, cast_java_util_NoSuchElementException } from '../../../java/util/NoSuchElementException';
-import { CloneNotSupportedException, cast_java_lang_CloneNotSupportedException } from '../../../java/lang/CloneNotSupportedException';
+import { LinkedCollectionDescendingIterator } from '../../../core/adt/collection/LinkedCollectionDescendingIterator';
+import { LinkedCollectionIterator } from '../../../core/adt/collection/LinkedCollectionIterator';
+import { Arrays } from '../../../java/util/Arrays';
+import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
 export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneable {
 

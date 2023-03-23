@@ -1,6 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { KlausurterminblockungDynDaten, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Random } from '../../../java/util/Random';
+import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
 
 export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObject {
 

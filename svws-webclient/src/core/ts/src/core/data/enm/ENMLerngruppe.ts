@@ -1,8 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Vector } from '../../../java/util/Vector';
 
 export class ENMLerngruppe extends JavaObject {
 

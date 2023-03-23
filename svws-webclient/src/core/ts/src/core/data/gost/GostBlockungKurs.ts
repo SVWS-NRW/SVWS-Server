@@ -1,7 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
+import { Vector } from '../../../java/util/Vector';
 
 export class GostBlockungKurs extends JavaObject {
 

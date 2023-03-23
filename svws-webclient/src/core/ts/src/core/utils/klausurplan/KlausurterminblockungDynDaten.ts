@@ -1,18 +1,14 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { KlausurterminblockungAlgorithmusConfig, cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
-import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_UserNotificationException } from '../../../core/exceptions/UserNotificationException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
+import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { HashMap } from '../../../java/util/HashMap';
+import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Random } from '../../../java/util/Random';
+import { List } from '../../../java/util/List';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
+import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 
 export class KlausurterminblockungDynDaten extends JavaObject {
 

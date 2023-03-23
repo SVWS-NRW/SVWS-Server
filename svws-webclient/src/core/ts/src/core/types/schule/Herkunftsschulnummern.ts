@@ -1,11 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { HerkunftsschulnummerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsschulnummerKatalogEintrag } from '../../../core/data/schule/HerkunftsschulnummerKatalogEintrag';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/Pair';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { HerkunftsschulnummerKatalogEintrag } from '../../../core/data/schule/HerkunftsschulnummerKatalogEintrag';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Arrays } from '../../../java/util/Arrays';
+import { Pair } from '../../../core/adt/Pair';
 
 export class Herkunftsschulnummern extends JavaObject {
 

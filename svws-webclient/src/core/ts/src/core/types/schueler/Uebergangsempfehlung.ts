@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { UebergangsempfehlungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schueler_UebergangsempfehlungKatalogEintrag } from '../../../core/data/schueler/UebergangsempfehlungKatalogEintrag';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { UebergangsempfehlungKatalogEintrag } from '../../../core/data/schueler/UebergangsempfehlungKatalogEintrag';
+import { Schulform } from '../../../core/types/schule/Schulform';
 
 export class Uebergangsempfehlung extends JavaObject {
 

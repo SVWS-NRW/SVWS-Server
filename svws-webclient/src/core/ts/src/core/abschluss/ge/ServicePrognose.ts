@@ -1,17 +1,16 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
-import { ServiceAbschlussHA10, cast_de_nrw_schule_svws_core_abschluss_ge_ServiceAbschlussHA10 } from '../../../core/abschluss/ge/ServiceAbschlussHA10';
-import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../core/Service';
-import { ServiceBerechtigungMSAQ, cast_de_nrw_schule_svws_core_abschluss_ge_ServiceBerechtigungMSAQ } from '../../../core/abschluss/ge/ServiceBerechtigungMSAQ';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../core/logger/LogLevel';
-import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
-import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
-import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { ServiceAbschlussMSA, cast_de_nrw_schule_svws_core_abschluss_ge_ServiceAbschlussMSA } from '../../../core/abschluss/ge/ServiceAbschlussMSA';
-import { AbschlussManager, cast_de_nrw_schule_svws_core_abschluss_AbschlussManager } from '../../../core/abschluss/AbschlussManager';
-import { ServiceAbschlussHA9, cast_de_nrw_schule_svws_core_abschluss_ge_ServiceAbschlussHA9 } from '../../../core/abschluss/ge/ServiceAbschlussHA9';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
+import { ServiceAbschlussHA10 } from '../../../core/abschluss/ge/ServiceAbschlussHA10';
+import { Service } from '../../../core/Service';
+import { ServiceBerechtigungMSAQ } from '../../../core/abschluss/ge/ServiceBerechtigungMSAQ';
+import { LogLevel } from '../../../core/logger/LogLevel';
+import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
+import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
+import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { List } from '../../../java/util/List';
+import { ServiceAbschlussMSA } from '../../../core/abschluss/ge/ServiceAbschlussMSA';
+import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
+import { ServiceAbschlussHA9 } from '../../../core/abschluss/ge/ServiceAbschlussHA9';
 
 export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 

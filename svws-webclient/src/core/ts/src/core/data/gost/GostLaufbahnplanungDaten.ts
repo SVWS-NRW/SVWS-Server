@@ -1,10 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBeratungslehrer, cast_de_nrw_schule_svws_core_data_gost_GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { GostJahrgangFachkombination, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
-import { GostLaufbahnplanungDatenSchueler, cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDatenSchueler } from '../../../core/data/gost/GostLaufbahnplanungDatenSchueler';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer';
+import { GostFach } from '../../../core/data/gost/GostFach';
+import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
+import { GostLaufbahnplanungDatenSchueler } from '../../../core/data/gost/GostLaufbahnplanungDatenSchueler';
+import { Vector } from '../../../java/util/Vector';
 
 export class GostLaufbahnplanungDaten extends JavaObject {
 

@@ -1,8 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { SchulabschlussAllgemeinbildendKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulabschlussAllgemeinbildendKatalogEintrag } from '../../../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../../../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 
 export class SchulabschlussAllgemeinbildend extends JavaObject {
 

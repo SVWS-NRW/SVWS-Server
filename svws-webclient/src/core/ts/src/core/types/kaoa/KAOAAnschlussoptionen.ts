@@ -1,11 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Schulstufe, cast_de_nrw_schule_svws_core_types_schule_Schulstufe } from '../../../core/types/schule/Schulstufe';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { KAOAAnschlussoptionEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAAnschlussoptionEintrag } from '../../../core/data/kaoa/KAOAAnschlussoptionEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Schulstufe } from '../../../core/types/schule/Schulstufe';
+import { HashMap } from '../../../java/util/HashMap';
+import { KAOAAnschlussoptionEintrag } from '../../../core/data/kaoa/KAOAAnschlussoptionEintrag';
+import { Arrays } from '../../../java/util/Arrays';
+import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAAnschlussoptionen extends JavaObject {
 

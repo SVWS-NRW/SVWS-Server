@@ -1,7 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { AbgangsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
+import { List } from '../../../java/util/List';
+import { Vector } from '../../../java/util/Vector';
 
 export class AbgangsartKatalog extends JavaObject {
 

@@ -1,7 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { GostBelegungsfehlerArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehlerArt } from '../../../core/abschluss/gost/GostBelegungsfehlerArt';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { GostBelegungsfehlerArt } from '../../../core/abschluss/gost/GostBelegungsfehlerArt';
 
 export class GostBelegungsfehler extends JavaObject {
 

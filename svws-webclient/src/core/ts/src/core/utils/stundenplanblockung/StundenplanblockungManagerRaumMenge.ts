@@ -1,11 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungManagerRaum, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaum } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaum';
-import { Random, cast_java_util_Random } from '../../../java/util/Random';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { Random } from '../../../java/util/Random';
+import { HashMap } from '../../../java/util/HashMap';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerRaumMenge extends JavaObject {
 

@@ -1,15 +1,13 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
-import { StundenplanblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Collections, cast_java_util_Collections } from '../../../java/util/Collections';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
+import { HashMap } from '../../../java/util/HashMap';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { Collection } from '../../../java/util/Collection';
+import { List } from '../../../java/util/List';
+import { Collections } from '../../../java/util/Collections';
+import { Arrays } from '../../../java/util/Arrays';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class StundenplanblockungRegelTyp extends JavaObject {
 

@@ -1,9 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { ENMTeilleistung, cast_de_nrw_schule_svws_core_data_enm_ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
+import { Vector } from '../../../java/util/Vector';
 
 export class ENMLeistung extends JavaObject {
 

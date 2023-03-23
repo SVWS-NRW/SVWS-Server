@@ -1,9 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { SchulformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulformKatalogEintrag } from '../../../core/data/schule/SchulformKatalogEintrag';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { SchulformKatalogEintrag } from '../../../core/data/schule/SchulformKatalogEintrag';
+import { List } from '../../../java/util/List';
+import { Vector } from '../../../java/util/Vector';
 
 export class Schulform extends JavaObject {
 

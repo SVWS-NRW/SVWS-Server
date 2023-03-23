@@ -2341,10 +2341,11 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * 
 	 * @param unit   the transpiler unit containing the import information
 	 * @param strIgnoreJavaPackagePrefix   the package prefix to be ignored
+	 * @param body   the file body of the transpiled class
 	 * 
 	 * @return the imports for the transpiled typescript class
 	 */
-	public static String getImports(TranspilerUnit unit, String strIgnoreJavaPackagePrefix) {
+	public static String getImports(TranspilerUnit unit, String strIgnoreJavaPackagePrefix, String body) {
 		String packageName = unit.getPackageName();
 		String shortPackageName = packageName.replace(strIgnoreJavaPackagePrefix + ".", "");
 		String importPathPrefix = "../".repeat((int)(shortPackageName.chars().filter(c -> c == '.').count()) + 1);
@@ -2358,8 +2359,20 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			String importCast = "cast_" + value.replace('.', '_') +  "_" + key.replace('.', '_');
 			switch (value + "." + key) {
 				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean" -> {
-					result += "import { Java%s, %s } from '%s';".formatted(key, importCast, importPathPrefix + "java/lang/Java" + key);
-					result += System.lineSeparator();
+					String importName = "Java" + key;
+					String importLocation = importPathPrefix + "java/lang/Java" + key;
+					boolean hasClass = body.contains(importName);
+					boolean hasCast = body.contains(importCast);
+					if (hasClass && hasCast) {
+						result += "import { Java%s, %s } from '%s';".formatted(key, importCast, importLocation);
+						result += System.lineSeparator();
+					} else if (hasClass) {
+						result += "import { Java%s } from '%s';".formatted(key, importLocation);
+						result += System.lineSeparator();						
+					} else if (hasCast) {
+						result += "import { %s } from '%s';".formatted(importCast, importLocation);
+						result += System.lineSeparator();
+					}
 				}
 				case "java.lang.reflect.Array" -> { /**/ }
 				case "java.lang.Character" -> { /**/ }
@@ -2369,8 +2382,18 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					String importName = getImportName(key, value);
 					String importPackage = getImportPackageName(key, value).replace(strIgnoreJavaPackagePrefix + ".", "");
 					String importPath = importPathPrefix + importPackage.replace('.', '/') + "/";
-					result += "import { %s, %s } from '%s';".formatted(importName, importCast, importPath + importName);
-					result += System.lineSeparator();
+					boolean hasClass = body.contains(importName);
+					boolean hasCast = body.contains(importCast);
+					if (hasClass && hasCast) {
+						result += "import { %s, %s } from '%s';".formatted(importName, importCast, importPath + importName);
+						result += System.lineSeparator();
+					} else if (hasClass) {
+						result += "import { %s } from '%s';".formatted(importName, importPath + importName);
+						result += System.lineSeparator();
+					} else if (hasCast) {
+						result += "import { %s } from '%s';".formatted(importCast, importPath + importName);
+						result += System.lineSeparator();
+					}
 				}
 			}
 		}
@@ -2391,14 +2414,16 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			super.outputFiles.add(fileName);
 			try {
 				Files.createDirectories(path.getParent());
+				TranspilerUnit transpilerUnit = transpiler.getTranspilerUnit(classTree);
 				StringBuilder sb = new StringBuilder();
-				sb.append(getImports(transpiler.getTranspilerUnit(classTree), strIgnoreJavaPackagePrefix));
 				if (classTree.getKind() == Tree.Kind.CLASS) {
 					transpileClass(sb, classTree);					
 				} else if (classTree.getKind() == Tree.Kind.ENUM) {
 					transpileEnum(sb, classTree);
 				}
-				Files.writeString(path, sb.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+				String data = sb.toString();
+				String imports = getImports(transpilerUnit, strIgnoreJavaPackagePrefix, data); 
+				Files.writeString(path, imports + data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 			} catch (@SuppressWarnings("unused") IOException e) {
 				throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
 			}

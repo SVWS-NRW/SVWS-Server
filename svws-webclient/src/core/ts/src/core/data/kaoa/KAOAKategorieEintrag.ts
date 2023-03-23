@@ -1,9 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { Vector } from '../../../java/util/Vector';
 
 export class KAOAKategorieEintrag extends JavaObject {
 

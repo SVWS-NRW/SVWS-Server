@@ -1,11 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { HashMap } from '../../../java/util/HashMap';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { Vector } from '../../../java/util/Vector';
 import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
 
 export class GostKursklausurManager extends JavaObject {

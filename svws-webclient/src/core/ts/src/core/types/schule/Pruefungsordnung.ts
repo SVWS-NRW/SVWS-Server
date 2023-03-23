@@ -1,7 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { PruefungsordnungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_PruefungsordnungKatalogEintrag } from '../../../core/data/schule/PruefungsordnungKatalogEintrag';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { PruefungsordnungKatalogEintrag } from '../../../core/data/schule/PruefungsordnungKatalogEintrag';
 
 export class Pruefungsordnung extends JavaObject {
 

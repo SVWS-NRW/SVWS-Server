@@ -1,6 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Schuljahresabschnitt, cast_de_nrw_schule_svws_core_data_schule_Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 
 export class SchuljahresAbschnittsManager extends JavaObject {
 

@@ -1,9 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Comparable, cast_java_lang_Comparable } from '../../java/lang/Comparable';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { Comparable } from '../../java/lang/Comparable';
+import { Arrays } from '../../java/util/Arrays';
+import { LogLevel } from '../../core/logger/LogLevel';
+import { System } from '../../java/lang/System';
 
 export class LogData extends JavaObject implements Comparable<LogData | null> {
 

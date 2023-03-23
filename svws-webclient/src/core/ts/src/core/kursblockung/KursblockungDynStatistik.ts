@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { Arrays } from '../../java/util/Arrays';
+import { System } from '../../java/lang/System';
 
 export class KursblockungDynStatistik extends JavaObject {
 

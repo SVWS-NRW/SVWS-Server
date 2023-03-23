@@ -1,5 +1,4 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
+import { JavaObject } from '../../../java/lang/JavaObject';
 
 export class GostSchriftlichkeit extends JavaObject {
 

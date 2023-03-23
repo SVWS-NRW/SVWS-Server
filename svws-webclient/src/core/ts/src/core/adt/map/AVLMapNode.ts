@@ -1,7 +1,6 @@
 import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 

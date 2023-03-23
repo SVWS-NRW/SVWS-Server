@@ -1,12 +1,11 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { FoerderschwerpunktKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_FoerderschwerpunktKatalogEintrag } from '../../../core/data/schule/FoerderschwerpunktKatalogEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { List } from '../../../java/util/List';
+import { FoerderschwerpunktKatalogEintrag } from '../../../core/data/schule/FoerderschwerpunktKatalogEintrag';
+import { JavaString } from '../../../java/lang/JavaString';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
 
 export class Foerderschwerpunkt extends JavaObject {
 

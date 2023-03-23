@@ -1,9 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { KAOAEbene4Eintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAEbene4Eintrag } from '../../../core/data/kaoa/KAOAEbene4Eintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { KAOAEbene4Eintrag } from '../../../core/data/kaoa/KAOAEbene4Eintrag';
+import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAEbene4 extends JavaObject {
 

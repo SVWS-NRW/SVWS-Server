@@ -1,11 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { SchuelerSchulbesuchSchule, cast_de_nrw_schule_svws_core_data_schueler_SchuelerSchulbesuchSchule } from '../../../core/data/schueler/SchuelerSchulbesuchSchule';
-import { SchuelerSchulbesuchMerkmal, cast_de_nrw_schule_svws_core_data_schueler_SchuelerSchulbesuchMerkmal } from '../../../core/data/schueler/SchuelerSchulbesuchMerkmal';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { SchuelerSchulbesuchSchule } from '../../../core/data/schueler/SchuelerSchulbesuchSchule';
+import { SchuelerSchulbesuchMerkmal } from '../../../core/data/schueler/SchuelerSchulbesuchMerkmal';
+import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 

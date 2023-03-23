@@ -1,11 +1,11 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { StundenplanblockungManagerFach, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFach } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFach';
-import { StundenplanblockungManagerRaum, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaum } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaum';
-import { StundenplanblockungManagerLehrkraft, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { StundenplanblockungManagerKlasse, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKlasse } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasse';
-import { StundenplanblockungManagerKopplung, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { StundenplanblockungManagerFach } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFach';
+import { StundenplanblockungManagerRaum } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaum';
+import { StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { StundenplanblockungManagerKlasse } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasse';
+import { StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
+import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerLerngruppe extends JavaObject {
 

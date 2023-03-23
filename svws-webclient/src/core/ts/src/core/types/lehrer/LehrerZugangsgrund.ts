@@ -1,6 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { LehrerKatalogZugangsgrundEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogZugangsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { LehrerKatalogZugangsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
 
 export class LehrerZugangsgrund extends JavaObject {
 

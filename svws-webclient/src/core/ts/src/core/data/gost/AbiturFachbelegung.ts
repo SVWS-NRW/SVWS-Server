@@ -1,11 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { AbiturFachbelegungHalbjahr, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
-import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
+import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 
 export class AbiturFachbelegung extends JavaObject {
 

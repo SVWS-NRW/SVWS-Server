@@ -1,14 +1,12 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { KursblockungDynFachart, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
-import { KursblockungDynSchiene, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
-import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { System, cast_java_lang_System } from '../../java/lang/System';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
+import { Random } from '../../java/util/Random';
+import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
+import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
+import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Logger } from '../../core/logger/Logger';
+import { System } from '../../java/lang/System';
+import { LogLevel } from '../../core/logger/LogLevel';
 
 export class KursblockungDynKurs extends JavaObject {
 

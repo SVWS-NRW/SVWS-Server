@@ -1,8 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { LehrerKatalogLehrbefaehigungAnerkennungEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehrbefaehigungAnerkennungEintrag } from '../../../core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { LehrerKatalogLehrbefaehigungAnerkennungEintrag } from '../../../core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 
 export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 

@@ -1,12 +1,10 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { KAOAKategorie, cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { KAOAMerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAMerkmalEintrag } from '../../../core/data/kaoa/KAOAMerkmalEintrag';
-import { KAOAMerkmaleOptionsarten, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { KAOAMerkmalEintrag } from '../../../core/data/kaoa/KAOAMerkmalEintrag';
+import { KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
+import { Arrays } from '../../../java/util/Arrays';
 
 export class KAOAMerkmal extends JavaObject {
 

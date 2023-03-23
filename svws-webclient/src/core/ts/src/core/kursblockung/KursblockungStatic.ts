@@ -1,5 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { Random } from '../../java/util/Random';
 
 export class KursblockungStatic extends JavaObject {
 

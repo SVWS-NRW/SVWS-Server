@@ -1,8 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
+import { List } from '../../../java/util/List';
+import { Vector } from '../../../java/util/Vector';
 
 export class GEAbschlussFaecher extends JavaObject {
 

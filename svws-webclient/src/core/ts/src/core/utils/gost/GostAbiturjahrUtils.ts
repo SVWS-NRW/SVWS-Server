@@ -1,9 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { JahrgangsUtils, cast_de_nrw_schule_svws_core_utils_jahrgang_JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 
 export class GostAbiturjahrUtils extends JavaObject {
 

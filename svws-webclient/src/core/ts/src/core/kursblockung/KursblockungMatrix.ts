@@ -1,10 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { StringBuilder, cast_java_lang_StringBuilder } from '../../java/lang/StringBuilder';
-import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
-import { System, cast_java_lang_System } from '../../java/lang/System';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { Random } from '../../java/util/Random';
+import { StringBuilder } from '../../java/lang/StringBuilder';
+import { JavaLong } from '../../java/lang/JavaLong';
+import { Arrays } from '../../java/util/Arrays';
+import { System } from '../../java/lang/System';
 
 export class KursblockungMatrix extends JavaObject {
 

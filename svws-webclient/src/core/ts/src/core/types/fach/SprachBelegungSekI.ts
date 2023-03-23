@@ -1,7 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { Comparable } from '../../../java/lang/Comparable';
+import { JavaString } from '../../../java/lang/JavaString';
 
 export class SprachBelegungSekI extends JavaObject implements Comparable<SprachBelegungSekI | null> {
 

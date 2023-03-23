@@ -1,12 +1,11 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { ZulaessigeKursart, cast_de_nrw_schule_svws_core_types_kurse_ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { List } from '../../../java/util/List';
+import { ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Arrays } from '../../../java/util/Arrays';
+import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject {
 

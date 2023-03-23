@@ -1,5 +1,5 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 

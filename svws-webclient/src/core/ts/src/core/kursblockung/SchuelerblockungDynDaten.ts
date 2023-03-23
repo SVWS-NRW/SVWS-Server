@@ -1,20 +1,17 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput } from '../../core/data/kursblockung/SchuelerblockungOutput';
-import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
-import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../core/data/gost/GostFachwahl';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { System, cast_java_lang_System } from '../../java/lang/System';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { SchuelerblockungInput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungMatrix, cast_de_nrw_schule_svws_core_kursblockung_KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
-import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
-import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
-import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_UserNotificationException } from '../../core/exceptions/UserNotificationException';
-import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
+import { JavaObject } from '../../java/lang/JavaObject';
+import { SchuelerblockungOutput } from '../../core/data/kursblockung/SchuelerblockungOutput';
+import { SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
+import { SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
+import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { JavaInteger } from '../../java/lang/JavaInteger';
+import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
+import { Random } from '../../java/util/Random';
+import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
+import { Arrays } from '../../java/util/Arrays';
+import { Vector } from '../../java/util/Vector';
+import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
+import { HashSet } from '../../java/util/HashSet';
 
 export class SchuelerblockungDynDaten extends JavaObject {
 

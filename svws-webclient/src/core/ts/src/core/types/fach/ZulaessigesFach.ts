@@ -1,18 +1,15 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Fachgruppe, cast_de_nrw_schule_svws_core_types_fach_Fachgruppe } from '../../../core/types/fach/Fachgruppe';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../core/data/RGBFarbe';
-import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
-import { SchulformSchulgliederung, cast_de_nrw_schule_svws_core_data_schule_SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
+import { HashMap } from '../../../java/util/HashMap';
+import { Schulform } from '../../../core/types/schule/Schulform';
+import { RGBFarbe } from '../../../core/data/RGBFarbe';
+import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { FachKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_FachKatalogEintrag } from '../../../core/data/fach/FachKatalogEintrag';
-import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/Pair';
+import { List } from '../../../java/util/List';
+import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
+import { FachKatalogEintrag } from '../../../core/data/fach/FachKatalogEintrag';
+import { Pair } from '../../../core/adt/Pair';
 
 export class ZulaessigesFach extends JavaObject {
 

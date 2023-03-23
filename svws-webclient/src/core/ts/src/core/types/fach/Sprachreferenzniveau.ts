@@ -1,8 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { SprachreferenzniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_SprachreferenzniveauKatalogEintrag } from '../../../core/data/fach/SprachreferenzniveauKatalogEintrag';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap } from '../../../java/util/HashMap';
+import { SprachreferenzniveauKatalogEintrag } from '../../../core/data/fach/SprachreferenzniveauKatalogEintrag';
 
 export class Sprachreferenzniveau extends JavaObject {
 
