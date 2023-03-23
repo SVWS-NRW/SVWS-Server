@@ -93,7 +93,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 	}
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
-		let iter : JavaIterator<JavaMapEntry<any, any>> = this.iterator();
+		const iter : JavaIterator<JavaMapEntry<any, any>> = this.iterator();
 		const result : Iterator<JavaMapEntry<any, any>> = {
 			next() : IteratorResult<JavaMapEntry<any, any>> {
 				if (iter.hasNext())

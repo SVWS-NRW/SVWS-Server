@@ -2060,7 +2060,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				throw new TranspilerException("Transpiler Error: Iterable types of Kind " + type.getKind() + " not yet supported");
 			}
 			sb.append(getIndent()).append("public [Symbol.iterator](): Iterator<").append(typeParam).append("> {").append(System.lineSeparator());
-			sb.append(getIndent()).append("\tlet iter : JavaIterator<").append(typeParam).append("> = this.iterator();").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tconst iter : JavaIterator<").append(typeParam).append("> = this.iterator();").append(System.lineSeparator());
 			sb.append(getIndent()).append("\tconst result : Iterator<").append(typeParam).append("> = {").append(System.lineSeparator());
 			sb.append(getIndent()).append("\t\tnext() : IteratorResult<").append(typeParam).append("> {").append(System.lineSeparator());
 			sb.append(getIndent()).append("\t\t\tif (iter.hasNext())").append(System.lineSeparator());

@@ -94,7 +94,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 	}
 
 	public [Symbol.iterator](): Iterator<V> {
-		let iter : JavaIterator<V> = this.iterator();
+		const iter : JavaIterator<V> = this.iterator();
 		const result : Iterator<V> = {
 			next() : IteratorResult<V> {
 				if (iter.hasNext())

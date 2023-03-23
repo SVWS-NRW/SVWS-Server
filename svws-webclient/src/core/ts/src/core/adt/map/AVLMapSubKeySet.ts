@@ -194,7 +194,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	}
 
 	public [Symbol.iterator](): Iterator<K> {
-		let iter : JavaIterator<K> = this.iterator();
+		const iter : JavaIterator<K> = this.iterator();
 		const result : Iterator<K> = {
 			next() : IteratorResult<K> {
 				if (iter.hasNext())

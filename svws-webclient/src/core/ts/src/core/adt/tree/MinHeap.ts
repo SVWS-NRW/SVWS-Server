@@ -543,7 +543,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	public [Symbol.iterator](): Iterator<T> {
-		let iter : JavaIterator<T> = this.iterator();
+		const iter : JavaIterator<T> = this.iterator();
 		const result : Iterator<T> = {
 			next() : IteratorResult<T> {
 				if (iter.hasNext())

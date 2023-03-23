@@ -639,7 +639,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public [Symbol.iterator](): Iterator<E> {
-		let iter : JavaIterator<E> = this.iterator();
+		const iter : JavaIterator<E> = this.iterator();
 		const result : Iterator<E> = {
 			next() : IteratorResult<E> {
 				if (iter.hasNext())
