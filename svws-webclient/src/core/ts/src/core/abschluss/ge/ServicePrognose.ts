@@ -31,8 +31,8 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 		let hatLBAL : boolean = false;
 		if (faecher.faecher === null)
 			return false;
-		let tmp : List<GEAbschlussFach> = faecher.faecher;
-		for (let fach of tmp) {
+		const tmp : List<GEAbschlussFach> = faecher.faecher;
+		for (const fach of tmp) {
 			if (fach === null)
 				continue;
 			hatLBNW = hatLBNW || JavaObject.equalsTranspiler("LBNW", (fach.kuerzel));
@@ -52,21 +52,21 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 	public handle(input : GEAbschlussFaecher) : AbschlussErgebnis {
 		if (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input)) {
 			this.logger.logLn(LogLevel.DEBUG, "Fehler: Es wurden nicht genügend leistungsdiffernzierte Fächer gefunden.");
-			let prognose : AbschlussErgebnis = AbschlussManager.getErgebnis(null, false);
+			const prognose : AbschlussErgebnis = AbschlussManager.getErgebnis(null, false);
 			prognose.log = this.log.getStrings();
 			return prognose;
 		}
 		if (!AbschlussManager.pruefeKuerzelDuplikate(input)) {
 			this.logger.logLn(LogLevel.DEBUG, "Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
-			let prognose : AbschlussErgebnis = AbschlussManager.getErgebnis(null, false);
+			const prognose : AbschlussErgebnis = AbschlussManager.getErgebnis(null, false);
 			prognose.log = this.log.getStrings();
 			return prognose;
 		}
 		let abschluss : SchulabschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.OA;
 		let np_faecher : List<string> | null = null;
 		if (!JavaObject.equalsTranspiler("10", (input.jahrgang))) {
-			let ha9 : ServiceAbschlussHA9 = new ServiceAbschlussHA9();
-			let ha9output : AbschlussErgebnis = ha9.handle(input);
+			const ha9 : ServiceAbschlussHA9 = new ServiceAbschlussHA9();
+			const ha9output : AbschlussErgebnis = ha9.handle(input);
 			np_faecher = ha9output.npFaecher;
 			if (ha9output.erworben)
 				abschluss = SchulabschlussAllgemeinbildend.HA9;
@@ -76,8 +76,8 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 			if (JavaObject.equalsTranspiler("10", (input.jahrgang))) {
 				abschluss = SchulabschlussAllgemeinbildend.HA9;
 			}
-		let ha10 : ServiceAbschlussHA10 = new ServiceAbschlussHA10();
-		let ha10output : AbschlussErgebnis = ha10.handle(input);
+		const ha10 : ServiceAbschlussHA10 = new ServiceAbschlussHA10();
+		const ha10output : AbschlussErgebnis = ha10.handle(input);
 		if (ha10output.erworben)
 			abschluss = SchulabschlussAllgemeinbildend.HA10;
 		else
@@ -85,14 +85,14 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 				np_faecher = ha10output.npFaecher;
 		this.log.append(ha10.getLog());
 		if ((!JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.OA, (abschluss))) || (!ServicePrognose.hatLernbereichsnoten(input))) {
-			let msa : ServiceAbschlussMSA = new ServiceAbschlussMSA();
-			let msaOutput : AbschlussErgebnis = msa.handle(input);
+			const msa : ServiceAbschlussMSA = new ServiceAbschlussMSA();
+			const msaOutput : AbschlussErgebnis = msa.handle(input);
 			this.logger.logLn(LogLevel.INFO, "");
 			this.log.append(msa.getLog());
 			if (msaOutput.erworben) {
 				abschluss = SchulabschlussAllgemeinbildend.MSA;
-				let msaq : ServiceBerechtigungMSAQ = new ServiceBerechtigungMSAQ();
-				let msaqOutput : AbschlussErgebnis = msaq.handle(input);
+				const msaq : ServiceBerechtigungMSAQ = new ServiceBerechtigungMSAQ();
+				const msaqOutput : AbschlussErgebnis = msaq.handle(input);
 				if (msaqOutput.erworben) {
 					abschluss = SchulabschlussAllgemeinbildend.MSA_Q;
 				} else {
@@ -104,7 +104,7 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 				np_faecher = msaOutput.npFaecher;
 			}
 		}
-		let prognose : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(abschluss, np_faecher);
+		const prognose : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(abschluss, np_faecher);
 		prognose.erworben = (!JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.OA, (abschluss)));
 		prognose.log = this.log.getStrings();
 		return prognose;

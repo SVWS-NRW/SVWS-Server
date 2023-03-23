@@ -50,19 +50,19 @@ public class Allgemeines extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeGesamt() {
-		@NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
 		
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			if (!manager.istBelegtSeitEF(fachbelegung))
 				addFehler(GostBelegungsfehler.E1BEL_10);
 		}
 
 		// Prüfe, ob alle Fächer nicht-Abiturfächern in Q2.2 mündlich belegt sind. Das 4. Abiturfach wird gesondert geprüft
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
-			GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach != null)
 				continue;
 			if (manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
@@ -72,7 +72,7 @@ public class Allgemeines extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob in einem Halbjahr mehrere Religionsfächer belegt wurden.
-		for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
+		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			if (manager.zaehleBelegungInHalbjahren(manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
 				addFehler(GostBelegungsfehler.IGF_10);
 		}

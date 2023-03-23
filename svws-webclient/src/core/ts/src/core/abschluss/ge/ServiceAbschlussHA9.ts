@@ -70,7 +70,7 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
-		let faecher : AbschlussFaecherGruppen = new AbschlussFaecherGruppen(new AbschlussFaecherGruppe(input.faecher, Arrays.asList("D", "M"), null), new AbschlussFaecherGruppe(input.faecher, null, Arrays.asList("D", "M", "LBNW", "LBAL")));
+		const faecher : AbschlussFaecherGruppen = new AbschlussFaecherGruppen(new AbschlussFaecherGruppe(input.faecher, Arrays.asList("D", "M"), null), new AbschlussFaecherGruppe(input.faecher, null, Arrays.asList("D", "M", "LBNW", "LBAL")));
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M"))) {
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht alle nötigen Leistungen für die Fächergruppe 1 gefunden.");
@@ -81,27 +81,27 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
-		let weitereFS : List<GEAbschlussFach> = faecher.fg2.entferneFaecher(this.filterWeitereFremdsprachen);
+		const weitereFS : List<GEAbschlussFach> = faecher.fg2.entferneFaecher(this.filterWeitereFremdsprachen);
 		if (weitereFS.size() > 0) {
-			for (let fs of weitereFS) {
+			for (const fs of weitereFS) {
 				if (fs.bezeichnung === null)
 					continue;
 				this.logger.logLn(LogLevel.DEBUG, " -> Ignoriere weitere Fremdsprache: " + fs.bezeichnung + "(" + fs.note + ")");
 			}
 		}
 		this.logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
-		let tmpFaecher : List<GEAbschlussFach> = faecher.getFaecher(this.filterEKurse);
-		for (let f of tmpFaecher) {
+		const tmpFaecher : List<GEAbschlussFach> = faecher.getFaecher(this.filterEKurse);
+		for (const f of tmpFaecher) {
 			if (f.kuerzel === null)
 				continue;
-			let note : number = f.note;
-			let note_neu : number = (note === 1) ? 1 : note - 1;
+			const note : number = f.note;
+			const note_neu : number = (note === 1) ? 1 : note - 1;
 			this.logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
 			f.note = note_neu;
 		}
 		this.logger.logLn(LogLevel.DEBUG, " -> FG1: Fächer " + faecher.fg1.toString()!);
 		this.logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString()!);
-		let abschlussergebnis : AbschlussErgebnis = this.pruefeDefizite(faecher, "");
+		const abschlussergebnis : AbschlussErgebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.INFO, " => HA 9: APO-SI §40 (3)");
@@ -123,12 +123,12 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
 	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {
-		let fg1_defizite : number = faecher.fg1.getFaecherAnzahl(this.filterDefizit);
-		let fg2_defizite : number = faecher.fg2.getFaecherAnzahl(this.filterDefizit);
-		let ges_defizite : number = fg1_defizite + fg2_defizite;
-		let fg1_mangelhaft : number = faecher.fg1.getFaecherAnzahl(this.filterMangelhaft);
-		let fg1_ungenuegend : number = faecher.fg1.getFaecherAnzahl(this.filterUngenuegend);
-		let fg2_ungenuegend : number = faecher.fg2.getFaecherAnzahl(this.filterUngenuegend);
+		const fg1_defizite : number = faecher.fg1.getFaecherAnzahl(this.filterDefizit);
+		const fg2_defizite : number = faecher.fg2.getFaecherAnzahl(this.filterDefizit);
+		const ges_defizite : number = fg1_defizite + fg2_defizite;
+		const fg1_mangelhaft : number = faecher.fg1.getFaecherAnzahl(this.filterMangelhaft);
+		const fg1_ungenuegend : number = faecher.fg1.getFaecherAnzahl(this.filterUngenuegend);
+		const fg2_ungenuegend : number = faecher.fg2.getFaecherAnzahl(this.filterUngenuegend);
 		if (fg1_defizite > 0)
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizit)!);
 		if (fg2_defizite > 0)
@@ -150,11 +150,11 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: Insgesamt mehr als 3 Defizite");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);
 		}
-		let hatNP : boolean = (fg1_mangelhaft === 2) || (ges_defizite === 3);
+		const hatNP : boolean = (fg1_mangelhaft === 2) || (ges_defizite === 3);
 		if (hatNP) {
-			let np_faecher : List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(this.filterMangelhaft) : faecher.getKuerzel(this.filterMangelhaft);
+			const np_faecher : List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(this.filterMangelhaft) : faecher.getKuerzel(this.filterMangelhaft);
 			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
-			let abschlussergebnis : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, np_faecher);
+			const abschlussergebnis : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, np_faecher);
 			this.logger.logLn(LogLevel.INFO, " -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)!);
 			return abschlussergebnis;
 		}

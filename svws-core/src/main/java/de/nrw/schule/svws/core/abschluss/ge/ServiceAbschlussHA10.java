@@ -67,7 +67,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
         }
         
         // Bestimme die Fächergruppen für die Berechnung des Abschlusses
-        @NotNull AbschlussFaecherGruppen faecher = new AbschlussFaecherGruppen(
+        final @NotNull AbschlussFaecherGruppen faecher = new AbschlussFaecherGruppen(
         	new AbschlussFaecherGruppe(input.faecher, Arrays.asList("D", "M", "LBNW", "LBAL"), null),
         	new AbschlussFaecherGruppe(input.faecher, null,
                 Arrays.asList(
@@ -91,9 +91,9 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
         }
         
         // Ignoriere alle Fremdsprachen ausser Englisch
-        @NotNull List<@NotNull GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
+        final @NotNull List<@NotNull GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
         if (weitereFS.size() > 0) {
-        	for (GEAbschlussFach fs : weitereFS) {
+        	for (final GEAbschlussFach fs : weitereFS) {
         		if (fs.bezeichnung == null)
         			continue;
         		logger.logLn(LogLevel.DEBUG, " -> Ignoriere weitere Fremdsprache: " + fs.bezeichnung + "(" + fs.note + ")");
@@ -102,12 +102,12 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 
         // Verbessere ggf. die Noten aller E-Kurse in beiden Fächergruppen um eine Note
         logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
-        @NotNull List<@NotNull GEAbschlussFach> tmpFaecher = faecher.getFaecher(filterEKurse);
-        for (@NotNull GEAbschlussFach f : tmpFaecher) {
+        final @NotNull List<@NotNull GEAbschlussFach> tmpFaecher = faecher.getFaecher(filterEKurse);
+        for (final @NotNull GEAbschlussFach f : tmpFaecher) {
     		if (f.kuerzel == null)
     			continue;
-            int note = f.note;
-            int note_neu = (note == 1) ? 1 : note - 1;
+            final int note = f.note;
+            final int note_neu = (note == 1) ? 1 : note - 1;
             logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
             f.note = note_neu;
         }
@@ -117,7 +117,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
         logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString());
 
         // Prüfe anhand der Defizite, ob ein Abschluss erworben wurde
-        @NotNull AbschlussErgebnis abschlussergebnis = this.pruefeDefizite(faecher, "");
+        final @NotNull AbschlussErgebnis abschlussergebnis = this.pruefeDefizite(faecher, "");
         if (abschlussergebnis.erworben) {
             logger.logLn(LogLevel.DEBUG, "______________________________");
             logger.logLn(LogLevel.INFO, " => HA 10: APO-SI §41 (1)");
@@ -141,12 +141,12 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
      */
     private @NotNull AbschlussErgebnis pruefeDefizite(@NotNull AbschlussFaecherGruppen faecher, @NotNull String log_indent) {
         // Bestimme die Defizite in den beiden Fächergruppen
-        long fg1_defizite = faecher.fg1.getFaecherAnzahl(filterDefizit);        
-        long fg2_defizite = faecher.fg2.getFaecherAnzahl(filterDefizit);
-        long ges_defizite = fg1_defizite + fg2_defizite;
-        long fg1_mangelhaft = faecher.fg1.getFaecherAnzahl(filterMangelhaft);
-        long fg1_ungenuegend = faecher.fg1.getFaecherAnzahl(filterUngenuegend);
-        long fg2_ungenuegend = faecher.fg2.getFaecherAnzahl(filterUngenuegend);
+        final long fg1_defizite = faecher.fg1.getFaecherAnzahl(filterDefizit);        
+        final long fg2_defizite = faecher.fg2.getFaecherAnzahl(filterDefizit);
+        final long ges_defizite = fg1_defizite + fg2_defizite;
+        final long fg1_mangelhaft = faecher.fg1.getFaecherAnzahl(filterMangelhaft);
+        final long fg1_ungenuegend = faecher.fg1.getFaecherAnzahl(filterUngenuegend);
+        final long fg2_ungenuegend = faecher.fg2.getFaecherAnzahl(filterUngenuegend);
 
         if (fg1_defizite > 0)
             logger.logLn(LogLevel.DEBUG, log_indent + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(filterDefizit));
@@ -180,17 +180,17 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
         }
 
         // Nachprüfungen -> Bestimmung der möglichen Fächer der einzelnen Fächergruppen
-        boolean hatNP = (fg1_mangelhaft == 2) || (ges_defizite == 3);
+        final boolean hatNP = (fg1_mangelhaft == 2) || (ges_defizite == 3);
         if (hatNP) {
             // Nachprüfung kann prinzipiell bei allen Fächern mit mangelhaft, welche nicht Teil der ZP10-Prüfung sind, erfolgen
             // bei 2x5 in FG1 muss die Nachprüfung allerdings in FG1 erfolgen!
             logger.logLn(LogLevel.DEBUG, log_indent + " -> zu viele Defizite: " +
                     ((fg1_mangelhaft == 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
             logger.logLn(LogLevel.INFO, " -> Hinweis: Nachprüfungen in ZP10-Fächern nicht möglich");
-            @NotNull List<@NotNull String> np_faecher = (fg1_mangelhaft == 2) 
+            final @NotNull List<@NotNull String> np_faecher = (fg1_mangelhaft == 2) 
             		? faecher.fg1.getKuerzel(filterMangelhaftOhneZP10Faecher) 
             		: faecher.getKuerzel(filterMangelhaftOhneZP10Faecher);
-            @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
+            final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
             logger.logLn(LogLevel.INFO, AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)
                     ? (" -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis))
                     : " -> also: kein Nachprüfungsmöglichkeit.");

@@ -70,17 +70,17 @@ public class AbiFaecher extends GostBelegpruefung {
 		hatAufgabenfeldIII = false;
 		
 		// Bestimme die Abiturfächer aus den Belegungsdaten
-		@NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
-			GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach); 
+			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach); 
 			if (abiturFach == null)
 				continue;
 			mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			anzahlAbiFaecher++;
 			// Bestimme Aufgabenfelder
 			// TODO Erstelle Enum GOStAufgabenfeld
-			GostFach fach = manager.getFach(fachbelegung);
+			final GostFach fach = manager.getFach(fachbelegung);
 			if (fach == null)
 				continue;
 			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach))
@@ -130,8 +130,8 @@ public class AbiFaecher extends GostBelegpruefung {
 	 * Prüfe, ob der erste LK eine fortgeführte Fremdsprache, eine klassische Naturwissenschaft, Mathematik oder Deutsch ist
 	 */
 	private void pruefeLK1() {
-		AbiturFachbelegung lk1 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
-		GostFach lk1fach = manager.getFach(lk1);
+		final AbiturFachbelegung lk1 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
+		final GostFach lk1fach = manager.getFach(lk1);
 		if ((lk1 == null) || (lk1fach == null) || !((GostFachbereich.DEUTSCH.hat(lk1fach)) || 
                 (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu) ||
                 (GostFachbereich.MATHEMATIK.hat(lk1fach)) ||
@@ -156,10 +156,10 @@ public class AbiFaecher extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.ABI_19);
 		if (anzahlSportReligion > 1)
 			addFehler(GostBelegungsfehler.ABI_11);
-		AbiturFachbelegung lk1 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
-		GostFach lk1fach = manager.getFach(lk1);
-		AbiturFachbelegung ab3 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
-		GostFach ab3fach = manager.getFach(ab3);
+		final AbiturFachbelegung lk1 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
+		final GostFach lk1fach = manager.getFach(lk1);
+		final AbiturFachbelegung ab3 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
+		final GostFach ab3fach = manager.getFach(ab3);
 		if (((lk1fach != null) && (GostFachbereich.SPORT.hat(lk1fach.kuerzel))) ||
 		    ((ab3fach != null) && (GostFachbereich.SPORT.hat(ab3fach.kuerzel))))
 			addFehler(GostBelegungsfehler.ABI_15);
@@ -171,11 +171,11 @@ public class AbiFaecher extends GostBelegpruefung {
 	 * Abiturfächer mehrfach belegt zu haben. 
 	 */
 	private void pruefeMehrfacheAbiturfaecher() {
-		@NotNull HashSet<@NotNull GostAbiturFach> abiFaecher = new HashSet<>(); 
-		@NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull HashSet<@NotNull GostAbiturFach> abiFaecher = new HashSet<>(); 
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
-			GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach); 
+			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach); 
 			if (abiturFach == null)
 				continue;
 			if (!abiFaecher.contains(abiturFach)) {
@@ -207,14 +207,14 @@ public class AbiFaecher extends GostBelegpruefung {
 	 * 
 	 */
 	private void pruefeSchriftlichkeitAB3undAB4() {
-		AbiturFachbelegung ab3 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
+		final AbiturFachbelegung ab3 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 != null) {
 			if (!manager.pruefeBelegungMitSchriftlichkeit(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21 ))
 				addFehler(GostBelegungsfehler.ABI_17);
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22 ))
 				addFehler(GostBelegungsfehler.ABI_12);
 		}
-		AbiturFachbelegung ab4 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
+		final AbiturFachbelegung ab4 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 != null) {
 			if (!manager.pruefeBelegungMitSchriftlichkeit(ab4, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21 ))
 				addFehler(GostBelegungsfehler.ABI_18);

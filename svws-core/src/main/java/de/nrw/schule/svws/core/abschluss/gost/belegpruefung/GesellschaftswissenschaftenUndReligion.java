@@ -191,7 +191,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
 			return;
 		// ob die Kursart "Zusatzkurs" überhaupt in einem Halbjahr gewählt wurde
-		List<@NotNull AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
+		final List<@NotNull AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
 		if (fachbelegungenZK.size() == 0)
 			return;
 
@@ -200,14 +200,14 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.ZK_13);
 		
 		// Prüfe die gefilterten Belegungen
-		for (AbiturFachbelegung fachbelegung : fachbelegungenZK) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungenZK) {
 			// Prüfe, ob die Belegung für den Zusatzkurs bilingual ist
-			GostFach fach = manager.getFach(fachbelegung);
+			final GostFach fach = manager.getFach(fachbelegung);
 			if ((fach == null) || (GostFachManager.istBilingual(fach)))
 				addFehler(GostBelegungsfehler.ZK_13);
 			
 			// Bestimme die Halbjahre des Zusatzkurses
-			@NotNull List<@NotNull GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
+			final @NotNull List<@NotNull GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 			// Prüfe, ob zwei Zusatzkurse in aufeinanderfolgenden Halbjahren belegt wurden
 			if (halbjahre.size() == 2) {
 				if (((manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12)) 
@@ -289,7 +289,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 */
 	private void pruefeReligionEF() {
 		// Prüfe nacheinander für die Halbjahre EF.1 und EF.2 
-		for (GostHalbjahr halbjahr : GostHalbjahr.getEinfuehrungsphase()) {
+		for (final GostHalbjahr halbjahr : GostHalbjahr.getEinfuehrungsphase()) {
 			// Wurde Religion in dem Halbjahr belegt?
 			if (manager.pruefeBelegungExistiertEinzeln(religion, halbjahr))
 				continue;
@@ -312,7 +312,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * Gesellschaftswissenschaft belegt wurde.
 	 */
 	private void pruefeReligionQ1() {
-		for (GostHalbjahr halbjahr : GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
+		for (final GostHalbjahr halbjahr : GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
 			// Wurde Religion in dem Halbjahr belegt?
 			if (manager.pruefeBelegungExistiertEinzeln(religion, halbjahr))
 				continue;
@@ -372,7 +372,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			return; 
 
 		// Prüfe ob die Belegungen in den einzelnen Halbjahren und in deren Vorgänger-Halbjahren korrekt sind oder Lücken aufweisen
-		for (AbiturFachbelegungHalbjahr belegung : philosophie.belegungen) {
+		for (final AbiturFachbelegungHalbjahr belegung : philosophie.belegungen) {
 			if (belegung == null)
 				continue;
 			GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);

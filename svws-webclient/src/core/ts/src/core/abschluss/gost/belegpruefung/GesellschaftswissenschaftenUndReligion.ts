@@ -143,16 +143,16 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	private pruefeZusatzkurs(fachbelegungen : List<AbiturFachbelegung> | null) : void {
 		if ((fachbelegungen === null) || (fachbelegungen.size() === 0))
 			return;
-		let fachbelegungenZK : List<AbiturFachbelegung> | null = this.manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
+		const fachbelegungenZK : List<AbiturFachbelegung> | null = this.manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
 		if (fachbelegungenZK.size() === 0)
 			return;
 		if (fachbelegungenZK.size() > 1)
 			this.addFehler(GostBelegungsfehler.ZK_13);
-		for (let fachbelegung of fachbelegungenZK) {
-			let fach : GostFach | null = this.manager.getFach(fachbelegung);
+		for (const fachbelegung of fachbelegungenZK) {
+			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach === null) || (GostFachManager.istBilingual(fach)))
 				this.addFehler(GostBelegungsfehler.ZK_13);
-			let halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
+			const halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 			if (halbjahre.size() === 2) {
 				if (((this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22)))) {
 					if (this.zusatzkursFachbelegungen !== null)
@@ -212,7 +212,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * ob eine weitere Gesellschaftswissenschaft belegt wurde.
 	 */
 	private pruefeReligionEF() : void {
-		for (let halbjahr of GostHalbjahr.getEinfuehrungsphase()) {
+		for (const halbjahr of GostHalbjahr.getEinfuehrungsphase()) {
 			if (this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr))
 				continue;
 			if ((!this.manager.pruefeBelegung(this.philosophie, halbjahr)) || (this.manager.pruefeDurchgaengigkeit(this.philosophie) && (this.manager.zaehleBelegungInHalbjahren(this.gesellschaftswissenschaften, halbjahr) <= 1))) {
@@ -228,7 +228,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * Gesellschaftswissenschaft belegt wurde.
 	 */
 	private pruefeReligionQ1() : void {
-		for (let halbjahr of GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
+		for (const halbjahr of GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
 			if (this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr))
 				continue;
 			if (!this.manager.pruefeBelegung(this.philosophie, halbjahr)) {
@@ -256,7 +256,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	private pruefeReligionKontinuitaet() : void {
 		if (this.philosophie === null)
 			return;
-		for (let belegung of this.philosophie.belegungen) {
+		for (const belegung of this.philosophie.belegungen) {
 			if (belegung === null)
 				continue;
 			let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);

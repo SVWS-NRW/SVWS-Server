@@ -33,15 +33,15 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	protected pruefeGesamt() : void {
-		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
 			if (!this.manager.istBelegtSeitEF(fachbelegung))
 				this.addFehler(GostBelegungsfehler.E1BEL_10);
 		}
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
-			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach !== null)
 				continue;
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
@@ -49,7 +49,7 @@ export class Allgemeines extends GostBelegpruefung {
 				break;
 			}
 		}
-		for (let halbjahr of GostHalbjahr.values()) {
+		for (const halbjahr of GostHalbjahr.values()) {
 			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
 				this.addFehler(GostBelegungsfehler.IGF_10);
 		}

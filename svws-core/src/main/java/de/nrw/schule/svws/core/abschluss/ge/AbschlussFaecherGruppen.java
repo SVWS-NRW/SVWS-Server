@@ -64,7 +64,7 @@ public class AbschlussFaecherGruppen {
      * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
      */
     public @NotNull List<@NotNull GEAbschlussFach> getFaecher(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-    	@NotNull List<@NotNull GEAbschlussFach> faecher = fg1.getFaecher(filter);
+    	final @NotNull List<@NotNull GEAbschlussFach> faecher = fg1.getFaecher(filter);
     	faecher.addAll(fg2.getFaecher(filter));
     	return faecher; 
     }
@@ -92,7 +92,7 @@ public class AbschlussFaecherGruppen {
      * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
      */
     public @NotNull List<@NotNull String> getKuerzel(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-    	@NotNull List<@NotNull String> faecher = fg1.getKuerzel(filter);
+    	final @NotNull List<@NotNull String> faecher = fg1.getKuerzel(filter);
     	faecher.addAll(fg2.getKuerzel(filter));
     	return faecher; 
     }
@@ -106,10 +106,10 @@ public class AbschlussFaecherGruppen {
      * 
      * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
      */
-    public @NotNull String getKuerzelListe(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-    	@NotNull StringBuilder sb = new StringBuilder();
-    	@NotNull List<@NotNull String> faecher = getKuerzel(filter);
-    	for (String fach : faecher) {
+    public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    	final @NotNull StringBuilder sb = new StringBuilder();
+    	final @NotNull List<@NotNull String> faecher = getKuerzel(filter);
+    	for (final String fach : faecher) {
     		if (sb.length() > 0)
     			sb.append(", ");
     		sb.append(fach);
@@ -128,16 +128,16 @@ public class AbschlussFaecherGruppen {
      * 
      * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
      */
-    public @NotNull String getKuerzelListe(@NotNull Predicate<@NotNull GEAbschlussFach> filterFG1, @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2) {
-    	@NotNull StringBuilder sb = new StringBuilder();
-    	@NotNull List<@NotNull String> faecherFG1 = fg1.getKuerzel(filterFG1);
-    	@NotNull List<@NotNull String> faecherFG2 = fg2.getKuerzel(filterFG2);
-    	for (String fach : faecherFG1) {
+    public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG1, final @NotNull Predicate<@NotNull GEAbschlussFach> filterFG2) {
+    	final @NotNull StringBuilder sb = new StringBuilder();
+    	final @NotNull List<@NotNull String> faecherFG1 = fg1.getKuerzel(filterFG1);
+    	final @NotNull List<@NotNull String> faecherFG2 = fg2.getKuerzel(filterFG2);
+    	for (final String fach : faecherFG1) {
     		if (sb.length() > 0)
     			sb.append(", ");
     		sb.append(fach);
     	}
-    	for (String fach : faecherFG2) {
+    	for (final String fach : faecherFG2) {
     		if (sb.length() > 0)
     			sb.append(", ");
     		sb.append(fach);

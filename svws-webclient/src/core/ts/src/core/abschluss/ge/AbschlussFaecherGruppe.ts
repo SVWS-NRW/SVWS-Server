@@ -27,7 +27,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		if (faecherAlle === null)
 			return;
 		for (let i : number = 0; i < faecherAlle.size(); i++) {
-			let fach : GEAbschlussFach = faecherAlle.get(i);
+			const fach : GEAbschlussFach = faecherAlle.get(i);
 			if (fach.kuerzel === null)
 				continue;
 			if ((faecherFiltern !== null) && faecherFiltern.contains(fach.kuerzel))
@@ -50,12 +50,12 @@ export class AbschlussFaecherGruppe extends JavaObject {
 			return true;
 		if (this.isEmpty())
 			return false;
-		for (let kuerzel of faecherAbgleich) {
+		for (const kuerzel of faecherAbgleich) {
 			if (!this.contains(kuerzel))
 				return false;
 		}
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (!faecherAbgleich.contains(fach.kuerzel))
 				return false;
 		}
@@ -83,7 +83,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		if (kuerzel === null)
 			return false;
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if ((fach !== null) && (JavaObject.equalsTranspiler(fach.kuerzel, (kuerzel))))
 				return true;
 		}
@@ -98,9 +98,9 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return die Liste der tatsächlich entfernten Fächer
 	 */
 	public entferneFaecher(filter : Predicate<GEAbschlussFach>) : List<GEAbschlussFach> {
-		let selected : Vector<GEAbschlussFach> = new Vector();
+		const selected : Vector<GEAbschlussFach> = new Vector();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
 				selected.add(fach);
 		}
@@ -119,7 +119,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 */
 	public getFach(filter : Predicate<GEAbschlussFach>) : GEAbschlussFach | null {
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
 				return fach;
 		}
@@ -134,9 +134,9 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getFaecher(filter : Predicate<GEAbschlussFach>) : List<GEAbschlussFach> {
-		let result : Vector<GEAbschlussFach> = new Vector();
+		const result : Vector<GEAbschlussFach> = new Vector();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
 				result.add(fach);
 		}
@@ -153,7 +153,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	public getFaecherAnzahl(filter : Predicate<GEAbschlussFach>) : number {
 		let count : number = 0;
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
 				count++;
 		}
@@ -168,9 +168,9 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<string> {
-		let result : Vector<string> = new Vector();
+		const result : Vector<string> = new Vector();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach) && (fach.kuerzel !== null))
 				result.add(fach.kuerzel);
 		}
@@ -186,9 +186,9 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
 	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : string {
-		let sb : StringBuilder = new StringBuilder();
+		const sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach)) {
 				if (sb.length() > 0)
 					sb.append(", ");
@@ -203,9 +203,9 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * die toString Methode der Klasse AbschlussFach verwendet.
 	 */
 	public toString() : string {
-		let sb : StringBuilder = new StringBuilder();
+		const sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
-			let fach : GEAbschlussFach = this.faecher.get(i);
+			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (sb.length() > 0)
 				sb.append(", ");
 			let diffkursinfo : string = "";

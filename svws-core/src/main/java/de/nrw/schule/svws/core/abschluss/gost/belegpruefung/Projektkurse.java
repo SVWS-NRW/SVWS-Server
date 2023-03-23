@@ -51,13 +51,13 @@ public class Projektkurse extends GostBelegpruefung {
 		projektkursHalbjahre = new Vector<>();
 		
 		// Bestimme die belegten Projektfächer
-		@NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
+		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
-			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
+			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			if (manager.zaehleBelegung(fachbelegung) <= 0)
 				continue;
 			
-			GostFach fach = manager.getFach(fachbelegung);
+			final GostFach fach = manager.getFach(fachbelegung);
 			if ((fach != null) && GostFachManager.istProjektkurs(fach)) {
 				projektkursBelegung.add(fachbelegung);
 			}
@@ -96,11 +96,11 @@ public class Projektkurse extends GostBelegpruefung {
 	private void pruefeBelegungEF() {
 		if (projektkursBelegung == null)
 			return;
-		for (AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			for (AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
+		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
+			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
 				if (belegungHalbjahr == null)
 					continue;
-				GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);				
+				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);				
 				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2))
 					addFehler(GostBelegungsfehler.PF_10);
 			}
@@ -117,13 +117,13 @@ public class Projektkurse extends GostBelegpruefung {
 			return;
 		
 		// Prüfe ggf. auch mehrere Projektfächer, da abgebrochene Einzelbelegungen vorliegen können
-		for (AbiturFachbelegung fachbelegung : projektkursBelegung) {
+		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			// Prüfe die einzelnen Halbjahresbelegungen der Projektfächer
-			for (AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
+			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
 				if (belegungHalbjahr == null)
 					continue;
 				
-				GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
+				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
 					continue;
 				
@@ -132,7 +132,7 @@ public class Projektkurse extends GostBelegpruefung {
 					continue; 
 				
 				// Der Projektkurs ist nur anrechenbar, sofern das Fach im nachfolgenden Halbjahr belegt wurde.
-				GostHalbjahr nextHalbjahr = halbjahr.next();
+				final GostHalbjahr nextHalbjahr = halbjahr.next();
 				if (nextHalbjahr == null) {
 					addFehler(GostBelegungsfehler.PF_18);
 					continue;
@@ -171,14 +171,14 @@ public class Projektkurse extends GostBelegpruefung {
 			return;
 		
 		// Erstelle eine Menge zur Prüfung, ob in einem Halbjahr mehr als ein Projektkurs belegt wurde. 
-		@NotNull HashSet<@NotNull GostHalbjahr> pjkHalbjahre = new HashSet<>();
+		final @NotNull HashSet<@NotNull GostHalbjahr> pjkHalbjahre = new HashSet<>();
 		
 		// Gehe alle Projektfächer durch und prüfe die Halbjahresbelegungen auf ungültige Einzelbelegungen
-		for (AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			for (AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
+		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
+			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
 				if (belegungHalbjahr == null)
 					continue;
-				GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
+				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
 					continue;
 				
@@ -200,7 +200,7 @@ public class Projektkurse extends GostBelegpruefung {
 				// Prüfe, ob im Folgehalbjahr eine Belegung möglich ist
 				//    und ob kein anrechenbares Projektfach existiert oder die Einzelbelegung vor den Halbjahren
 				//    des anrechenbaren Projektfaches liegt
-				GostHalbjahr nextHalbjahr = halbjahr.next();
+				final GostHalbjahr nextHalbjahr = halbjahr.next();
 				if ((nextHalbjahr != null) && (GostFachManager.istWaehlbar(manager.getFach(fachbelegung), nextHalbjahr))
 						&& ((projektkurs == null) || (projektkursHalbjahre == null) || (halbjahr.compareTo(projektkursHalbjahre.get(0)) < 0))) 
 					continue;
@@ -219,12 +219,12 @@ public class Projektkurse extends GostBelegpruefung {
 		if (projektkursBelegung == null)
 			return;
 
-		for (AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			GostFach fach = manager.getFach(fachbelegung);
+		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
+			final GostFach fach = manager.getFach(fachbelegung);
 			if (fach == null)
 				continue;
-			AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
 			if ((leitfach1 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1))
 				continue;
 			if ((leitfach2 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2))
@@ -307,7 +307,7 @@ public class Projektkurse extends GostBelegpruefung {
 			return false;
 		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) != GostKursart.PJK)
 			return false;
-		GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
+		final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
 		if ((projektkurs == null) || (projektkursHalbjahre == null) || (manager.istProjektKursBesondereLernleistung()))
 			return false;
 		return (halbjahr == projektkursHalbjahre.get(0)) || (halbjahr == projektkursHalbjahre.get(1)); 		

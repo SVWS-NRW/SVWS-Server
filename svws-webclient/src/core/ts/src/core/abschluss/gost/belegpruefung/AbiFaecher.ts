@@ -50,15 +50,15 @@ export class AbiFaecher extends GostBelegpruefung {
 		this.hatAufgabenfeldI = false;
 		this.hatAufgabenfeldII = false;
 		this.hatAufgabenfeldIII = false;
-		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
-			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
 				continue;
 			this.mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			this.anzahlAbiFaecher++;
-			let fach : GostFach | null = this.manager.getFach(fachbelegung);
+			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if (fach === null)
 				continue;
 			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach))
@@ -91,8 +91,8 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Prüfe, ob der erste LK eine fortgeführte Fremdsprache, eine klassische Naturwissenschaft, Mathematik oder Deutsch ist
 	 */
 	private pruefeLK1() : void {
-		let lk1 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
-		let lk1fach : GostFach | null = this.manager.getFach(lk1);
+		const lk1 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
+		const lk1fach : GostFach | null = this.manager.getFach(lk1);
 		if ((lk1 === null) || (lk1fach === null) || !((GostFachbereich.DEUTSCH.hat(lk1fach)) || (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu) || (GostFachbereich.MATHEMATIK.hat(lk1fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach))))
 			this.addFehler(GostBelegungsfehler.LK1_11);
 	}
@@ -113,10 +113,10 @@ export class AbiFaecher extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.ABI_19);
 		if (this.anzahlSportReligion > 1)
 			this.addFehler(GostBelegungsfehler.ABI_11);
-		let lk1 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
-		let lk1fach : GostFach | null = this.manager.getFach(lk1);
-		let ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
-		let ab3fach : GostFach | null = this.manager.getFach(ab3);
+		const lk1 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
+		const lk1fach : GostFach | null = this.manager.getFach(lk1);
+		const ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
+		const ab3fach : GostFach | null = this.manager.getFach(ab3);
 		if (((lk1fach !== null) && (GostFachbereich.SPORT.hat(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hat(ab3fach.kuerzel))))
 			this.addFehler(GostBelegungsfehler.ABI_15);
 	}
@@ -126,11 +126,11 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Abiturfächer mehrfach belegt zu haben.
 	 */
 	private pruefeMehrfacheAbiturfaecher() : void {
-		let abiFaecher : HashSet<GostAbiturFach> = new HashSet();
-		let alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
+		const abiFaecher : HashSet<GostAbiturFach> = new HashSet();
+		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
-			let fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
-			let abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach === null)
 				continue;
 			if (!abiFaecher.contains(abiturFach)) {
@@ -165,14 +165,14 @@ export class AbiFaecher extends GostBelegpruefung {
 	 *
 	 */
 	private pruefeSchriftlichkeitAB3undAB4() : void {
-		let ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
+		const ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 !== null) {
 			if (!this.manager.pruefeBelegungMitSchriftlichkeit(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 				this.addFehler(GostBelegungsfehler.ABI_17);
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22))
 				this.addFehler(GostBelegungsfehler.ABI_12);
 		}
-		let ab4 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
+		const ab4 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 !== null) {
 			if (!this.manager.pruefeBelegungMitSchriftlichkeit(ab4, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 				this.addFehler(GostBelegungsfehler.ABI_18);
