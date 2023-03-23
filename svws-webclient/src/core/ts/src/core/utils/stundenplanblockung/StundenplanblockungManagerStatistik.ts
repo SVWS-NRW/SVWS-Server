@@ -8,6 +8,7 @@ export class StundenplanblockungManagerStatistik extends JavaObject {
 	 */
 	public constructor() {
 		super();
+		// empty block
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

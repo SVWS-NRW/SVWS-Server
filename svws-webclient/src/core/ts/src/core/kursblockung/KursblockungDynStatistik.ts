@@ -405,7 +405,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	aktionKursdifferenzEntfernen(pIndex : number) : void {
 		this.bewertungKursdifferenzen[pIndex]--;
 		if (pIndex === this.bewertungKursdifferenzenMaxIndex)
-			while ((this.bewertungKursdifferenzen[this.bewertungKursdifferenzenMaxIndex] === 0) && (this.bewertungKursdifferenzenMaxIndex > 0)) 
+			while ((this.bewertungKursdifferenzen[this.bewertungKursdifferenzenMaxIndex] === 0) && (this.bewertungKursdifferenzenMaxIndex > 0))
 				this.bewertungKursdifferenzenMaxIndex--;
 	}
 

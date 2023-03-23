@@ -336,7 +336,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		let data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
 			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
-			while (sData.length < 5) 
+			while (sData.length < 5)
 				sData = " " + sData!;
 			console.log(JSON.stringify(sData));
 		}
@@ -346,7 +346,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				let sData : string = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)
 					sData = "INF";
-				while (sData.length < 5) 
+				while (sData.length < 5)
 					sData = " " + sData!;
 				console.log(JSON.stringify(sData));
 			}

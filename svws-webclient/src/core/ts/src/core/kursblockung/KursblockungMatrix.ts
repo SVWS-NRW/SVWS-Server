@@ -371,7 +371,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let c : number = 0; c < this.cols; c++) {
 				let wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
 				let sWert : string | null = "" + wert;
-				while (sWert.length < zellenbreite) 
+				while (sWert.length < zellenbreite)
 					sWert = " " + sWert!;
 				let sZusatz : string = this.r2c[r] === c ? "*" : " ";
 				sb.append(sWert! + sZusatz!);

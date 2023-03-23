@@ -50,7 +50,7 @@ export class StundenplanZeitraster extends JavaObject {
 	public constructor(__param0? : number, __param1? : number, __param2? : number, __param3? : string, __param4? : string) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
-			// empty method body
+			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string"))) {
 			let id : number = __param0 as number;
 			let wochentag : number = __param1 as number;

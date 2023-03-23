@@ -23,6 +23,7 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	protected init() : void {
+		// empty block
 	}
 
 	protected pruefeEF1() : void {

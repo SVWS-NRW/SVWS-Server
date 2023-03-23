@@ -77,6 +77,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
+		// empty block
 	}
 
 	protected pruefeGesamt() : void {

@@ -467,7 +467,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 				setSave.add(cast_java_util_Map_Entry(o));
 		let changed : boolean = false;
 		let iterOfEntries : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
-		while (iterOfEntries.hasNext()) 
+		while (iterOfEntries.hasNext())
 			if (setSave.contains(iterOfEntries.next()) === false) {
 				iterOfEntries.remove();
 				changed = true;
@@ -564,7 +564,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	bcGetVectorOfKeys() : Vector<K | null> {
 		let v : Vector<K | null> | null = new Vector();
 		let iter : JavaIterator<K | null> | null = this.navigableKeySet().iterator();
-		while (iter.hasNext()) 
+		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
 	}
@@ -578,7 +578,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	bcGetVectorOfValues() : Vector<V | null> {
 		let v : Vector<V | null> | null = new Vector();
 		let iter : JavaIterator<V | null> | null = this.values().iterator();
-		while (iter.hasNext()) 
+		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
 	}
@@ -592,7 +592,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	bcGetVectorOfEntries() : Vector<JavaMapEntry<K | null, V | null> | null> {
 		let v : Vector<JavaMapEntry<K | null, V | null> | null> | null = new Vector();
 		let iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.entrySet().iterator();
-		while (iter.hasNext()) 
+		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
 	}

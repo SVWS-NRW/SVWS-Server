@@ -110,6 +110,7 @@ export class StundenplanblockungManager extends JavaObject {
 	 * Wirft eine Exception, falls die Daten nicht konsistent sind.
 	 */
 	public miscCheckConsistencyOrException() : void {
+		// empty block
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

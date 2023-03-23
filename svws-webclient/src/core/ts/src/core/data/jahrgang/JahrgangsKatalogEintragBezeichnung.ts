@@ -33,7 +33,7 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	public constructor(__param0? : Schulform, __param1? : string) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			// empty method body
+			// empty block
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
 			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
 			let bezeichnung : string = __param1;

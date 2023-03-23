@@ -227,6 +227,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
+					// empty block
 				}
 			}
 		}
@@ -324,7 +325,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 		let tmp : Array<T> = this.newArray(this._nodes[0], this._size);
 		let current : T | null;
 		let i : number = 0;
-		while ((current = copy.poll()) !== null) 
+		while ((current = copy.poll()) !== null)
 			tmp[i++] = current;
 		return tmp;
 	}

@@ -64,7 +64,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			this._size = 0;
 			this._modCount = 0;
 			let iter : JavaIterator<E> = c.iterator();
-			while (iter.hasNext()) 
+			while (iter.hasNext())
 				this.add(iter.next());
 			this._modCount = c._modCount;
 		} else throw new Error('invalid method overload');
@@ -82,7 +82,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		if (this.isEmpty())
 			return false;
 		let iter : JavaIterator<E> = this.iterator();
-		while (iter.hasNext()) 
+		while (iter.hasNext())
 			if (JavaObject.equalsTranspiler(iter.next(), (obj)))
 				return true;
 		return false;
@@ -250,6 +250,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
+					// empty block
 				}
 			}
 		}

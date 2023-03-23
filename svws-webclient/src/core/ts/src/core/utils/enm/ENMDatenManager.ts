@@ -428,6 +428,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param klassenlehrerIDs   die IDs der Klassenlehrer
 	 */
 	public addSchuelerKlassenlehrer(schueler : ENMSchueler, ...klassenlehrerIDs : Array<number>) : void {
+		// empty block
 	}
 
 	/**
@@ -446,6 +447,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param belegungSekI           die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. 0, 2, 4, 6)
 	 */
 	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : string | null, fachID : number, fachKuerzel : string | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : number | null, belegungBisAbschnitt : number | null, referenzniveau : string | null, belegungSekI : number | null) : void {
+		// empty block
 	}
 
 	/**
@@ -506,6 +508,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
 	 */
 	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, datum : string | null, bemerkung : string | null, notenKuerzel : string | null) : void {
+		// empty block
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

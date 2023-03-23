@@ -284,10 +284,11 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled while loop
 	 */
 	public String convertWhileLoop(WhileLoopTree node) {
-		return "while %s %s".formatted(
-			convertExpression(node.getCondition()),
-			convertStatement(node.getStatement(), false)			
-		);		
+		String result = "while %s".formatted(convertExpression(node.getCondition()));
+		if (node.getStatement() instanceof BlockTree)
+			result += " ";
+		result += convertStatement(node.getStatement(), false); 
+		return result;
 	}
 	
 	
@@ -1137,32 +1138,36 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			return null;
 		List<? extends StatementTree> childs = node.getStatements();
 		String result = "";
-		for (int i = (ignoreFirst ? 1 : 0); i < childs.size(); i++) {
-			StatementTree child = childs.get(i);
-			String strChild = switch (child.getKind()) {
-				case VARIABLE -> convertBlockVariable((VariableTree) child) + ";";
-				case ENHANCED_FOR_LOOP -> convertEnhancedForLoop((EnhancedForLoopTree) child);
-				case FOR_LOOP -> convertForLoop((ForLoopTree) child);
-				case WHILE_LOOP -> convertWhileLoop((WhileLoopTree) child);
-				case DO_WHILE_LOOP -> convertDoWhileLoop((DoWhileLoopTree)child);
-				case EXPRESSION_STATEMENT -> {
-					String converted = convertExpressionStatement((ExpressionStatementTree) child);
-					if (converted != null)
-						converted += ";";
-					yield converted;
-				}
-				case IF -> convertIf((IfTree) child);
-				case SWITCH -> convertSwitch((SwitchTree) child, false);
-				case RETURN -> convertReturn((ReturnTree) child);
-				case BREAK -> convertBreak((BreakTree) child);
-				case CONTINUE -> convertContinue((ContinueTree) child);
-				case TRY -> convertTry((TryTree) child);
-				case THROW -> convertThrow((ThrowTree)child);
-				case EMPTY_STATEMENT -> "";
-				default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind() + " currently not supported in statement blocks.");
-			};
-			if (strChild != null)
-				result += getIndent() + strChild + System.lineSeparator();
+		if (childs.size() == 0) {
+			result += getIndent() + "// empty block" + System.lineSeparator();
+		} else {
+			for (int i = (ignoreFirst ? 1 : 0); i < childs.size(); i++) {
+				StatementTree child = childs.get(i);
+				String strChild = switch (child.getKind()) {
+					case VARIABLE -> convertBlockVariable((VariableTree) child) + ";";
+					case ENHANCED_FOR_LOOP -> convertEnhancedForLoop((EnhancedForLoopTree) child);
+					case FOR_LOOP -> convertForLoop((ForLoopTree) child);
+					case WHILE_LOOP -> convertWhileLoop((WhileLoopTree) child);
+					case DO_WHILE_LOOP -> convertDoWhileLoop((DoWhileLoopTree)child);
+					case EXPRESSION_STATEMENT -> {
+						String converted = convertExpressionStatement((ExpressionStatementTree) child);
+						if (converted != null)
+							converted += ";";
+						yield converted;
+					}
+					case IF -> convertIf((IfTree) child);
+					case SWITCH -> convertSwitch((SwitchTree) child, false);
+					case RETURN -> convertReturn((ReturnTree) child);
+					case BREAK -> convertBreak((BreakTree) child);
+					case CONTINUE -> convertContinue((ContinueTree) child);
+					case TRY -> convertTry((TryTree) child);
+					case THROW -> convertThrow((ThrowTree)child);
+					case EMPTY_STATEMENT -> "";
+					default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind() + " currently not supported in statement blocks.");
+				};
+				if (strChild != null)
+					result += getIndent() + strChild + System.lineSeparator();
+			}
 		}
 		return result;
 	}

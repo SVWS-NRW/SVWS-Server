@@ -21,6 +21,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	protected init() : void {
+		// empty block
 	}
 
 	protected pruefeEF1() : void {
