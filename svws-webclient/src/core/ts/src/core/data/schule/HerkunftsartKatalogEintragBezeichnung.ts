@@ -40,7 +40,8 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	public constructor(__param0? : Schulform, __param1? : string, __param2? : string) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+			// empty method body
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
 			let kurzBezeichnung : string = __param1;
 			let bezeichnung : string = __param2;

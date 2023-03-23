@@ -48,7 +48,8 @@ export class GostFachwahlManager extends JavaObject {
 	public constructor(__param0? : List<GostFachwahl>) {
 		super();
 		if ((typeof __param0 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
+			// empty method body
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
 			let fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
 			for (const fw of fachwahlen)
 				this.add(fw);

@@ -60,7 +60,8 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 	public constructor(__param0? : number, __param1? : Schulgliederung, __param2? : null | number, __param3? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null))) {
+			// empty method body
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null))) {
 			let id : number = __param0 as number;
 			let gliederung : Schulgliederung = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param1);
 			let gueltigVon : number | null = __param2;

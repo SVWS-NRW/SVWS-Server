@@ -49,7 +49,8 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 			this.art = f.getArt().kuerzel;
 			this.beschreibung = f.getText(pruef_art);
 		} else if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			} else throw new Error('invalid method overload');
+			// empty method body
+		} else throw new Error('invalid method overload');
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -134,7 +134,7 @@ export class ENMDatenManager extends JavaObject {
 	public addNoten() : void {
 		if (this.daten.noten.size() > 0)
 			return;
-		let noten : Array<Note> = Note.values();
+		const noten : Array<Note> = Note.values();
 		for (let i : number = 0; i < noten.length; i++) {
 			const note : Note = noten[i];
 			const enmNote : ENMNote = new ENMNote();

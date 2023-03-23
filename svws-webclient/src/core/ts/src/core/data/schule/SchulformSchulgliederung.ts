@@ -35,7 +35,8 @@ export class SchulformSchulgliederung extends JavaObject {
 	public constructor(__param0? : Schulform, __param1? : Schulgliederung | null) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
+			// empty method body
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
 			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
 			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param1);
 			this.schulform = schulform.daten.kuerzel;
