@@ -229,7 +229,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			fachartgruppe.add(eKurs);
 		}
 		for (let gFachwahl of this._parent.daten().fachwahlen) {
-			let fachartID : number = GostKursart.getFachartID(gFachwahl);
+			let fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
 			if (this._map_fachartID_kurse.containsKey(fachartID) === false)
 				this._map_fachartID_kurse.put(fachartID, new Vector());
 		}
@@ -1004,7 +1004,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			input.fachwahlenText.add(representation);
 		}
 		for (let fachwahl of fachwahlenDesSchuelers) {
-			let fachartID : number = GostKursart.getFachartID(fachwahl);
+			let fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
 			let kurse : Vector<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
 			for (let kurs of kurse) {
 				let inKurs : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();

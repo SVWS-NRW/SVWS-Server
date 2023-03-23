@@ -108,7 +108,7 @@ public enum GostKursart {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull GostKursart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (@NotNull GostKursart k : GostKursart.values())
+			for (final @NotNull GostKursart k : GostKursart.values())
 				_mapKuerzel.put(k.kuerzel, k);
 		return _mapKuerzel;
 	}
@@ -122,8 +122,8 @@ public enum GostKursart {
 	 */
 	private static @NotNull HashMap<@NotNull ZulaessigeKursart, @NotNull GostKursart> getMapByZulKursart() {
 		if (_mapZulKursart.size() == 0)
-			for (@NotNull GostKursart k : GostKursart.values())
-				for (@NotNull ZulaessigeKursart zulKursart : k.kursarten) 
+			for (final @NotNull GostKursart k : GostKursart.values())
+				for (final @NotNull ZulaessigeKursart zulKursart : k.kursarten) 
 					_mapZulKursart.put(zulKursart, k);
 		return _mapZulKursart;
 	}
@@ -230,7 +230,7 @@ public enum GostKursart {
 	 * 
 	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
 	 */
-	public static long getFachartID(@NotNull GostFachwahl pFachwahl) {
+	public static long getFachartIDByFachwahl(@NotNull GostFachwahl pFachwahl) {
 		return getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
 	}
 	
@@ -241,7 +241,7 @@ public enum GostKursart {
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
-	public static long getFachartID(@NotNull GostBlockungKurs pKurs) {
+	public static long getFachartIDByKurs(@NotNull GostBlockungKurs pKurs) {
 		return getFachartID(pKurs.fach_id, pKurs.kursart);
 	}
 	

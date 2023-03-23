@@ -136,7 +136,7 @@ export class GostKursart extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, GostKursart> {
 		if (GostKursart._mapKuerzel.size() === 0)
-			for (let k of GostKursart.values())
+			for (const k of GostKursart.values())
 				GostKursart._mapKuerzel.put(k.kuerzel, k);
 		return GostKursart._mapKuerzel;
 	}
@@ -149,8 +149,8 @@ export class GostKursart extends JavaObject {
 	 */
 	private static getMapByZulKursart() : HashMap<ZulaessigeKursart, GostKursart> {
 		if (GostKursart._mapZulKursart.size() === 0)
-			for (let k of GostKursart.values())
-				for (let zulKursart of k.kursarten)
+			for (const k of GostKursart.values())
+				for (const zulKursart of k.kursarten)
 					GostKursart._mapZulKursart.put(zulKursart, k);
 		return GostKursart._mapZulKursart;
 	}
@@ -267,7 +267,9 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
 	 */
-	public static getFachartID(pFachID : number, pKursartID : number) : number;
+	public static getFachartID(pFachID : number, pKursartID : number) : number {
+		return pFachID * GostKursart.FACHART_ID_FAKTOR + pKursartID;
+	}
 
 	/**
 	 * Berechnet anhand des Fachwahl-Objektes die FachartID.
@@ -275,7 +277,9 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
 	 */
-	public static getFachartID(pFachwahl : GostFachwahl) : number;
+	public static getFachartIDByFachwahl(pFachwahl : GostFachwahl) : number {
+		return GostKursart.getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
+	}
 
 	/**
 	 * Berechnet anhand des Kurs-Objektes die FachartID.
@@ -284,23 +288,8 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
-	public static getFachartID(pKurs : GostBlockungKurs) : number;
-
-	/**
-	 * Implementation for method overloads of 'getFachartID'
-	 */
-	public static getFachartID(__param0 : GostBlockungKurs | GostFachwahl | number, __param1? : number) : number {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let pFachID : number = __param0 as number;
-			let pKursartID : number = __param1 as number;
-			return pFachID * GostKursart.FACHART_ID_FAKTOR + pKursartID;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFachwahl')))) && (typeof __param1 === "undefined")) {
-			let pFachwahl : GostFachwahl = cast_de_nrw_schule_svws_core_data_gost_GostFachwahl(__param0);
-			return GostKursart.getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungKurs')))) && (typeof __param1 === "undefined")) {
-			let pKurs : GostBlockungKurs = cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs(__param0);
-			return GostKursart.getFachartID(pKurs.fach_id, pKurs.kursart);
-		} else throw new Error('invalid method overload');
+	public static getFachartIDByKurs(pKurs : GostBlockungKurs) : number {
+		return GostKursart.getFachartID(pKurs.fach_id, pKurs.kursart);
 	}
 
 	/**

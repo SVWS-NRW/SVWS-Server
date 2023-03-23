@@ -1346,7 +1346,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		}
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
-		let fachartID : number = GostKursart.getFachartID(pFachwahl);
+		let fachartID : number = GostKursart.getFachartIDByFachwahl(pFachwahl);
 		this.getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
 		this._daten.fachwahlen.add(pFachwahl);
 	}

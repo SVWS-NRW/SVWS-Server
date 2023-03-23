@@ -206,7 +206,7 @@ public class GostBlockungsergebnisManager {
 		
 		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
 		for (@NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			long fachartID = GostKursart.getFachartID(gFachwahl);
+			long fachartID = GostKursart.getFachartIDByFachwahl(gFachwahl);
 			if (_map_fachartID_kurse.containsKey(fachartID) == false)
 				_map_fachartID_kurse.put(fachartID, new Vector<>());
 		}
@@ -1064,7 +1064,7 @@ public class GostBlockungsergebnisManager {
 
 		// Alle für den Schüler wählbaren Kurse.
 		for (GostFachwahl fachwahl : fachwahlenDesSchuelers) {
-			long fachartID = GostKursart.getFachartID(fachwahl);
+			long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
 			@NotNull Vector<@NotNull GostBlockungsergebnisKurs> kurse = getOfFachartKursmenge(fachartID);
 			for (@NotNull GostBlockungsergebnisKurs kurs : kurse) {
 				@NotNull SchuelerblockungInputKurs inKurs = new SchuelerblockungInputKurs();

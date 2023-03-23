@@ -1347,7 +1347,7 @@ public class GostBlockungsdatenManager {
 		fachwahlenDesSchuelers.sort(_compFachwahlen);
 
 		// _map_fachartID_fachwahlen
-		long fachartID = GostKursart.getFachartID(pFachwahl);
+		long fachartID = GostKursart.getFachartIDByFachwahl(pFachwahl);
 		getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
 
 		// fachwahlen
