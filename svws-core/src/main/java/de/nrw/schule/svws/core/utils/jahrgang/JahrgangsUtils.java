@@ -21,7 +21,7 @@ public class JahrgangsUtils {
 	 * 
 	 * @return die restlichen Jahre oder null 
 	 */
-	public static Integer getRestlicheJahre(@NotNull Schulform schulform, @NotNull Schulgliederung gliederung, @NotNull String jahrgang) {
+	public static Integer getRestlicheJahre(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final @NotNull String jahrgang) {
 		// TODO Benutze einen noch zu definierenden Core-Type für Jahrgänge und verschiebe diese Methode in diesen Core-Type
 		if (gliederung == null)
 			return null;

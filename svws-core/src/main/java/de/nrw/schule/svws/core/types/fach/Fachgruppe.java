@@ -450,15 +450,15 @@ public enum Fachgruppe {
      *                   {@link FachgruppenKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-    private Fachgruppe(@NotNull FachgruppenKatalogEintrag@NotNull[] historie) {
+    private Fachgruppe(final @NotNull FachgruppenKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
         this.daten = historie[historie.length - 1];
         // Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
         this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
         for (int i = 0; i < historie.length; i++) {
             this.schulformen[i] = new Vector<>();
-            for (@NotNull String kuerzel : historie[i].schulformen) {
-                Schulform sf = Schulform.getByKuerzel(kuerzel);
+            for (final @NotNull String kuerzel : historie[i].schulformen) {
+                final Schulform sf = Schulform.getByKuerzel(kuerzel);
                 if (sf != null)
                     this.schulformen[i].add(sf);
             }
@@ -474,8 +474,8 @@ public enum Fachgruppe {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> getMapEintragByID() {
 		if (_mapEintragByID.size() == 0)
-			for (Fachgruppe g : Fachgruppe.values())
-			    for (FachgruppenKatalogEintrag k : g.historie)
+			for (final Fachgruppe g : Fachgruppe.values())
+			    for (final FachgruppenKatalogEintrag k : g.historie)
 			        _mapEintragByID.put(k.id, k);
 		return _mapEintragByID;
 	}
@@ -489,7 +489,7 @@ public enum Fachgruppe {
      */
     private static @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> getMapByID() {
         if (_mapByID.size() == 0)
-            for (Fachgruppe g : Fachgruppe.values())
+            for (final Fachgruppe g : Fachgruppe.values())
                 _mapByID.put(g.daten.id, g);
         return _mapByID;
     }
@@ -503,7 +503,7 @@ public enum Fachgruppe {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0)
-			for (Fachgruppe g : Fachgruppe.values())
+			for (final Fachgruppe g : Fachgruppe.values())
 				_mapByKuerzel.put(g.daten.kuerzel, g);				
 		return _mapByKuerzel;
 	}
@@ -527,12 +527,12 @@ public enum Fachgruppe {
 	 * 
 	 * @return true, falls die Fachgruppe in der Schulform zulässig ist, ansonsten false.
 	 */
-	private boolean hasSchulform(Schulform schulform) {
+	private boolean hasSchulform(final Schulform schulform) {
         if ((schulform == null) || (schulform.daten == null))
             return false;
         if (daten.schulformen != null) {
             for (int i = 0; i < daten.schulformen.size(); i++) {
-                String sfKuerzel = daten.schulformen.get(i);
+                final String sfKuerzel = daten.schulformen.get(i);
                 if (sfKuerzel.equals(schulform.daten.kuerzel))
                     return true;
             }           
@@ -584,13 +584,13 @@ public enum Fachgruppe {
 	 * 
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull Fachgruppe> get(Schulform schulform) {
-		@NotNull Vector<@NotNull Fachgruppe> faecher = new Vector<>();
+	public static @NotNull List<@NotNull Fachgruppe> get(final Schulform schulform) {
+		final @NotNull Vector<@NotNull Fachgruppe> faecher = new Vector<>();
 		if (schulform == null)
 			return faecher;
-		@NotNull Fachgruppe@NotNull[] fachgruppen = Fachgruppe.values();
+		final @NotNull Fachgruppe@NotNull[] fachgruppen = Fachgruppe.values();
 		for (int i = 0; i < fachgruppen.length; i++) {
-			Fachgruppe fg = fachgruppen[i];
+			final Fachgruppe fg = fachgruppen[i];
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

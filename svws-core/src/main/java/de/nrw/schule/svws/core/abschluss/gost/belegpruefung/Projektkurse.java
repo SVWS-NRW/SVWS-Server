@@ -302,7 +302,7 @@ public class Projektkurse extends GostBelegpruefung {
 	 * 
 	 * @return true, wenn die Fachbelegung anrechenbar ist.
 	 */
-	public boolean istAnrechenbar(AbiturFachbelegungHalbjahr fachbelegungHalbjahr) {
+	public boolean istAnrechenbar(final AbiturFachbelegungHalbjahr fachbelegungHalbjahr) {
 		if (fachbelegungHalbjahr == null)
 			return false;
 		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) != GostKursart.PJK)

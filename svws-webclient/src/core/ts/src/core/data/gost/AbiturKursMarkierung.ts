@@ -45,12 +45,12 @@ export class AbiturKursMarkierung extends JavaObject {
 			this.fuerBerechnung = false;
 			this.aufAbiturZeugnis = true;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && (typeof __param1 === "undefined")) {
-			let fuerBerechnung : boolean = __param0 as boolean;
+			const fuerBerechnung : boolean = __param0 as boolean;
 			this.fuerBerechnung = fuerBerechnung;
 			this.aufAbiturZeugnis = true;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let fuerBerechnung : boolean = __param0 as boolean;
-			let aufAbiturZeugnis : boolean = __param1 as boolean;
+			const fuerBerechnung : boolean = __param0 as boolean;
+			const aufAbiturZeugnis : boolean = __param1 as boolean;
 			this.fuerBerechnung = fuerBerechnung;
 			this.aufAbiturZeugnis = aufAbiturZeugnis;
 		} else throw new Error('invalid method overload');

@@ -41,7 +41,7 @@ public enum Geschlecht {
      * @param text        die textuelle Kurz-Bezeichnung des Geschlechtes
      * @param textLang    die ausführliche textuelle Bezeichnung des Geschlechtes
      */
-    private Geschlecht(int id, @NotNull String kuerzel, @NotNull String text, @NotNull String textLang) {
+    private Geschlecht(final int id, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textLang) {
         this.id = id;
         this.kuerzel = kuerzel;
         this.text = text;
@@ -56,7 +56,7 @@ public enum Geschlecht {
      * 
      * @return das Geschlecht oder null, falls die ID fehlerhaft ist
      */
-    public static Geschlecht fromValue(Integer value) {
+    public static Geschlecht fromValue(final Integer value) {
     	if (value == null)
     		return null;
     	switch (value) {
@@ -79,10 +79,10 @@ public enum Geschlecht {
      * 
      * @return das Geschlecht als Type
      */
-    public static @NotNull Geschlecht fromStringValue(String text) {
+    public static @NotNull Geschlecht fromStringValue(final String text) {
     	if ((text == null) || "".equals(text))
     		return Geschlecht.X;
-    	String upperValue = text.toUpperCase();
+    	final String upperValue = text.toUpperCase();
     	switch (upperValue) {
     		case "MÄNNLICH", "MAENNLICH", "M":
     			return Geschlecht.M;
@@ -104,7 +104,7 @@ public enum Geschlecht {
      * 
      * @return die Anrede
      */
-    public String getAnrede(int alter) {
+    public String getAnrede(final int alter) {
 		switch (this.id) {
 			case 3 : return (alter < 18) ? "Lieber" : "Sehr geehrter Herr"; 
 			case 4 : return (alter < 18) ? "Liebe" : "Sehr geehrte Frau"; 

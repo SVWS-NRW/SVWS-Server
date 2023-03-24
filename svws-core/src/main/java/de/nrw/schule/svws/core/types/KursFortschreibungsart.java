@@ -52,7 +52,7 @@ public enum KursFortschreibungsart {
 	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis     gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private KursFortschreibungsart(int id, @NotNull String kuerzel, @NotNull String beschreibung, Integer gueltigVon, Integer gueltigBis) {
+	private KursFortschreibungsart(final int id, final @NotNull String kuerzel, final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
     	this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
@@ -69,7 +69,7 @@ public enum KursFortschreibungsart {
 	 * 
 	 * @return die Kurs-Fortschreibungsart 
 	 */
-	public static KursFortschreibungsart fromID(Integer id) {
+	public static KursFortschreibungsart fromID(final Integer id) {
 		if (id == null)
 			return KursFortschreibungsart.KEINE;
 		switch (id) {
@@ -90,7 +90,7 @@ public enum KursFortschreibungsart {
 	 * 
 	 * @return die Kurs-Fortschreibungsart 
 	 */
-	public static KursFortschreibungsart fromKuerzel(String kuerzel) {
+	public static KursFortschreibungsart fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return KursFortschreibungsart.KEINE;
 		switch (kuerzel) {
@@ -111,8 +111,8 @@ public enum KursFortschreibungsart {
 	 * 
 	 * @return true, falls das kürzel gültig ist.
 	 */
-	public static boolean isValidKuerzel(String kuerzel) {
-		for (KursFortschreibungsart art : KursFortschreibungsart.values())
+	public static boolean isValidKuerzel(final String kuerzel) {
+		for (final KursFortschreibungsart art : KursFortschreibungsart.values())
 			if (art.kuerzel.equals(kuerzel))
 				return true;
 		return false;

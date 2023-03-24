@@ -38,7 +38,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	/**
 	 * Falls TRUE wird die {@link AVLMap} aufsteigend, andernfalls absteigend interpretiert.
 	 */
-	private boolean _asc;
+	private final boolean _asc;
 
 	/**
 	 * Erstellt eine neue Sub-Map relativ zur übergebenen {@link AVLMap}.
@@ -47,8 +47,8 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @param intervall Das {@link AVLMapIntervall} auf das sich diese Sub-Map bezieht.
 	 * @param asc       Falls TRUE wird die {@link AVLMap} aufsteigend, andernfalls absteigend interpretiert.
 	 */
-	AVLMapSubMap(@NotNull AVLMap<@NotNull K, @NotNull V> parent, @NotNull AVLMapIntervall<@NotNull K> intervall,
-			boolean asc) {
+	AVLMapSubMap(final @NotNull AVLMap<@NotNull K, @NotNull V> parent, final @NotNull AVLMapIntervall<@NotNull K> intervall,
+			final boolean asc) {
 		_par = parent;
 		_iv = intervall;
 		_asc = asc;
@@ -61,27 +61,27 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	@Override
 	public @NotNull String toString() {
 		String s = "";
-		for (Entry<K, V> e : entrySet())
+		for (final Entry<K, V> e : entrySet())
 			s += (s.length() == 0 ? "" : ", ") + e;
 		return "Entries = [" + s + "], iv = " + _iv + ", asc = " + _asc;
 	}
 
 	@Override
-	public boolean equals(@NotNull Object o) {
+	public boolean equals(final @NotNull Object o) {
 		if (o == this)
 			return true;
 
 		if (o instanceof Map<?, ?> == false)
 			return false;
 
-		Map<?, ?> mapO = (Map<?, ?>) o;
+		final Map<?, ?> mapO = (Map<?, ?>) o;
 
 		if (mapO.size() != size())
 			return false;
 
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
-		for (@NotNull
+		for (final @NotNull
 		Entry<@NotNull K, @NotNull V> e : entrySet())
 			if (e.getValue().equals(mapO.get(e.getKey())) == false)
 				return false;
@@ -92,7 +92,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	@Override
 	public int hashCode() { // code adapted TreeMap
 		int h = 0;
-		for (Entry<K, V> entry : entrySet())
+		for (final Entry<K, V> entry : entrySet())
 			h += entry.hashCode();
 		return h;
 	}
@@ -138,38 +138,38 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	@Override
-	public boolean containsKey(@NotNull Object key) {
+	public boolean containsKey(final @NotNull Object key) {
 		return _par.bcContainsKey(key, _iv);
 	}
 
 	@Override
-	public boolean containsValue(@NotNull Object value) {
+	public boolean containsValue(final @NotNull Object value) {
 		return _par.bcContainsValue(value, _iv);
 	}
 
 	@Override
-	public V get(@NotNull Object key) { // return NULL erlaubt.
+	public V get(final @NotNull Object key) { // return NULL erlaubt.
 		return _par.bcGetValueOfKeyOrNull(key, _iv);
 	}
 
 	@Override
-	public V put(@NotNull K key, @NotNull V value) { // return NULL erlaubt.
+	public V put(final @NotNull K key, final @NotNull V value) { // return NULL erlaubt.
 		return _par.bcAddEntryReturnOldValueOrNull(key, value, _iv);
 	}
 
 	@Override
-	public V remove(@NotNull Object key) { // return NULL erlaubt.
+	public V remove(final @NotNull Object key) { // return NULL erlaubt.
 		return _par.bcRemoveKeyReturnOldValueOrNull(key, _iv);
 	}
 
 	@Override
-	public void putAll(@NotNull Map<? extends @NotNull K, ? extends @NotNull V> map) {
+	public void putAll(final @NotNull Map<? extends @NotNull K, ? extends @NotNull V> map) {
 		_par.bcAddAllEntriesOfMap(map, _iv);
 	}
 
 	@Override
 	public void clear() {
-		Iterator<Entry<K, V>> iter = this.bcGetSubEntrySetIterator();
+		final Iterator<Entry<K, V>> iter = this.bcGetSubEntrySetIterator();
 		while (iter.hasNext()) {
 			iter.next();
 			iter.remove();
@@ -177,42 +177,42 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	@Override
-	public Entry<@NotNull K, @NotNull V> lowerEntry(@NotNull K key) { // return NULL erlaubt.
+	public Entry<@NotNull K, @NotNull V> lowerEntry(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetLowerEntryOrNull(key, _iv) : _par.bcGetHigherEntryOrNull(key, _iv);
 	}
 
 	@Override
-	public K lowerKey(@NotNull K key) { // return NULL erlaubt.
+	public K lowerKey(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetLowerKeyOrNull(key, _iv) : _par.bcGetHigherKeyOrNull(key, _iv);
 	}
 
 	@Override
-	public Entry<@NotNull K, @NotNull V> floorEntry(@NotNull K key) { // return NULL erlaubt.
+	public Entry<@NotNull K, @NotNull V> floorEntry(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetFloorEntryOrNull(key, _iv) : _par.bcGetCeilingEntryOrNull(key, _iv);
 	}
 
 	@Override
-	public K floorKey(@NotNull K key) { // return NULL erlaubt.
+	public K floorKey(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetFloorKeyOrNull(key, _iv) : _par.bcGetCeilingKeyOrNull(key, _iv);
 	}
 
 	@Override
-	public Entry<@NotNull K, @NotNull V> ceilingEntry(@NotNull K key) { // return NULL erlaubt.
+	public Entry<@NotNull K, @NotNull V> ceilingEntry(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetCeilingEntryOrNull(key, _iv) : _par.bcGetFloorEntryOrNull(key, _iv);
 	}
 
 	@Override
-	public K ceilingKey(@NotNull K key) { // return NULL erlaubt.
+	public K ceilingKey(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetCeilingKeyOrNull(key, _iv) : _par.bcGetFloorKeyOrNull(key, _iv);
 	}
 
 	@Override
-	public Entry<@NotNull K, @NotNull V> higherEntry(@NotNull K key) { // return NULL erlaubt.
+	public Entry<@NotNull K, @NotNull V> higherEntry(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetHigherEntryOrNull(key, _iv) : _par.bcGetLowerEntryOrNull(key, _iv);
 	}
 
 	@Override
-	public K higherKey(@NotNull K key) { // return NULL erlaubt.
+	public K higherKey(final @NotNull K key) { // return NULL erlaubt.
 		return _asc ? _par.bcGetHigherKeyOrNull(key, _iv) : _par.bcGetLowerKeyOrNull(key, _iv);
 	}
 
@@ -252,33 +252,33 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull K, @NotNull V> subMap(@NotNull K fromKey, boolean fromInclusive,
-			@NotNull K toKey, boolean toInclusive) {
+	public @NotNull NavigableMap<@NotNull K, @NotNull V> subMap(final @NotNull K fromKey, final boolean fromInclusive,
+			final @NotNull K toKey, final boolean toInclusive) {
 		return _createMap(fromKey, fromInclusive, toKey, toInclusive, _asc);
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull K, @NotNull V> headMap(@NotNull K toKey, boolean inclusive) {
+	public @NotNull NavigableMap<@NotNull K, @NotNull V> headMap(final @NotNull K toKey, final boolean inclusive) {
 		return _createMap(_iv.from, _iv.fromInc, toKey, inclusive, _asc);
 	}
 
 	@Override
-	public @NotNull NavigableMap<@NotNull K, @NotNull V> tailMap(@NotNull K fromKey, boolean inclusive) {
+	public @NotNull NavigableMap<@NotNull K, @NotNull V> tailMap(final @NotNull K fromKey, final boolean inclusive) {
 		return _createMap(fromKey, inclusive, _iv.to, _iv.toInc, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull K, @NotNull V> subMap(@NotNull K fromKey, @NotNull K toKey) {
+	public @NotNull SortedMap<@NotNull K, @NotNull V> subMap(final @NotNull K fromKey, final @NotNull K toKey) {
 		return _createMap(fromKey, true, toKey, false, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull K, @NotNull V> headMap(@NotNull K toKey) {
+	public @NotNull SortedMap<@NotNull K, @NotNull V> headMap(final @NotNull K toKey) {
 		return _createMap(_iv.from, _iv.fromInc, toKey, false, _asc);
 	}
 
 	@Override
-	public @NotNull SortedMap<@NotNull K, @NotNull V> tailMap(@NotNull K fromKey) {
+	public @NotNull SortedMap<@NotNull K, @NotNull V> tailMap(final @NotNull K fromKey) {
 		return _createMap(fromKey, true, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -293,7 +293,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls der Schlüssel (Key) noch nicht existierte, sonst FALSE.
 	 */
-	boolean bcAddKey(@NotNull K e) {
+	boolean bcAddKey(final @NotNull K e) {
 		return _par.bcAddKey(e, _iv);
 	}
 
@@ -305,7 +305,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 */
-	boolean bcAddAllKeys(@NotNull Collection<? extends @NotNull K> c) {
+	boolean bcAddAllKeys(final @NotNull Collection<? extends @NotNull K> c) {
 		return _par.bcAddAllKeys(c, _iv);
 	}
 
@@ -316,7 +316,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls das Entry (e.getKey(), e.getValue()) neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddEntryReturnBool(@NotNull Entry<@NotNull K, @NotNull V> e) {
+	boolean bcAddEntryReturnBool(final @NotNull Entry<@NotNull K, @NotNull V> e) {
 		return _par.bcAddEntryReturnBool(e, _iv);
 	}
 
@@ -328,7 +328,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls mindestens ein Entry neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddAllEntries(@NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c) {
+	boolean bcAddAllEntries(final @NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c) {
 		return _par.bcAddAllEntries(c, _iv);
 	}
 
@@ -340,7 +340,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllKeys(@NotNull Collection<@NotNull ?> c) {
+	boolean bcContainsAllKeys(final @NotNull Collection<@NotNull ?> c) {
 		return _par.bcContainsAllKeys(c, _iv);
 	}
 
@@ -352,7 +352,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls das übergebene Entry bereits in dieser Datenstruktur existiert.
 	 */
-	boolean bcContainsEntry(@NotNull Object o) {
+	boolean bcContainsEntry(final @NotNull Object o) {
 		return _par.bcContainsEntry(o, _iv);
 	}
 
@@ -364,7 +364,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllEntries(@NotNull Collection<@NotNull ?> c) {
+	boolean bcContainsAllEntries(final @NotNull Collection<@NotNull ?> c) {
 		return _par.bcContainsAllEntries(c, _iv);
 	}
 
@@ -378,7 +378,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 * 
 	 */
-	boolean bcContainsAllValues(@NotNull Collection<@NotNull ?> c) {
+	boolean bcContainsAllValues(final @NotNull Collection<@NotNull ?> c) {
 		return _par.bcContainsAllValues(c, _iv);
 	}
 
@@ -390,7 +390,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls der Schlüssel existierte und somit entfernt wurde.
 	 */
-	boolean bcRemoveKeyReturnBool(@NotNull Object o) {
+	boolean bcRemoveKeyReturnBool(final @NotNull Object o) {
 		return _par.bcRemoveKeyReturnBool(o, _iv);
 	}
 
@@ -402,7 +402,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	boolean bcRemoveAllKeys(@NotNull Collection<@NotNull ?> c) {
+	boolean bcRemoveAllKeys(final @NotNull Collection<@NotNull ?> c) {
 		return _par.bcRemoveAllKeys(c, _iv);
 	}
 
@@ -413,7 +413,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
-	boolean bcRemoveEntry(@NotNull Object o) {
+	boolean bcRemoveEntry(final @NotNull Object o) {
 		return _par.bcRemoveEntry(o, _iv);
 	}
 
@@ -425,7 +425,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	boolean bcRemoveAllEntries(@NotNull Collection<@NotNull ?> c) {
+	boolean bcRemoveAllEntries(final @NotNull Collection<@NotNull ?> c) {
 		return _par.bcRemoveAllEntries(c, _iv);
 	}
 
@@ -458,23 +458,23 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
 	@SuppressWarnings("unchecked")
-	boolean bcRetainAllKeys(@NotNull Collection<@NotNull ?> c) {
+	boolean bcRetainAllKeys(final @NotNull Collection<@NotNull ?> c) {
 		// Wandle die Collection in eine Map um, damit der Zugriff schnell ist.
 		// Dies ist erlaubt, da die Schlüssel eine natürliche Ordnung aufweisen.
-		@NotNull
+		final @NotNull
 		AVLMap<@NotNull K, @NotNull K> mapRetain = new AVLMap<>();
-		for (@NotNull
+		for (final @NotNull
 		Object obj : c) {
-			@NotNull
+			final @NotNull
 			K key = (@NotNull K) obj;
 			mapRetain.put(key, key);
 		}
 
 		// Iteriere und lösche falls nötig...
 		boolean changed = false;
-		Iterator<K> iterOfKeys = bcGetSubKeySetIterator();
+		final Iterator<K> iterOfKeys = bcGetSubKeySetIterator();
 		while (iterOfKeys.hasNext()) {
-			K key = iterOfKeys.next();
+			final K key = iterOfKeys.next();
 			if (mapRetain.containsKey(key) == false) {
 				iterOfKeys.remove();
 				changed = true;
@@ -492,23 +492,23 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
 	@SuppressWarnings("unchecked")
-	boolean bcRetainAllEntries(@NotNull Collection<@NotNull ?> c) {
+	boolean bcRetainAllEntries(final @NotNull Collection<@NotNull ?> c) {
 		// Vorsicht: c könnte verschiedene Entries mit dem selben KEY haben.
 
 		// Sammle alle Entries, die bleiben sollen.
-		@NotNull
+		final @NotNull
 		AVLMap<@NotNull K, @NotNull V> mapSave = new AVLMap<>();
 
-		@NotNull
+		final @NotNull
 		Set<@NotNull Entry<@NotNull K, @NotNull V>> setSave = mapSave.entrySet();
-		for (@NotNull
+		for (final @NotNull
 		Object o : c)
 			if (_par.bcContainsEntry(o, _iv))
 				setSave.add((@NotNull Entry<@NotNull K, @NotNull V>) o);
 
 		// Iteriere und lösche falls nötig...
 		boolean changed = false;
-		Iterator<Entry<K, V>> iterOfEntries = bcGetSubEntrySetIterator();
+		final Iterator<Entry<K, V>> iterOfEntries = bcGetSubEntrySetIterator();
 		while (iterOfEntries.hasNext())
 			if (setSave.contains(iterOfEntries.next()) == false) {
 				iterOfEntries.remove();
@@ -538,7 +538,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Das nächste Entry relativ zu einem übergebenen Entry.
 	 */
-	AVLMapNode<@NotNull K, @NotNull V> bcGetNextEntryOrNull(@NotNull AVLMapNode<@NotNull K, @NotNull V> node) {
+	AVLMapNode<@NotNull K, @NotNull V> bcGetNextEntryOrNull(final @NotNull AVLMapNode<@NotNull K, @NotNull V> node) {
 		return _asc ? _par.bcGetNextEntryOrNull(node, _iv) : _par.bcGetPrevEntryOrNull(node, _iv);
 	}
 
@@ -553,7 +553,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Vorgänger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	K bcGetFloorKeyOrNull(@NotNull K e) {
+	K bcGetFloorKeyOrNull(final @NotNull K e) {
 		return _asc ? _par.bcGetFloorKeyOrNull(e, _iv) : _par.bcGetCeilingKeyOrNull(e, _iv);
 	}
 
@@ -568,7 +568,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	K bcGetCeilingKeyOrNull(@NotNull K e) {
+	K bcGetCeilingKeyOrNull(final @NotNull K e) {
 		return _asc ? _par.bcGetCeilingKeyOrNull(e, _iv) : _par.bcGetFloorKeyOrNull(e, _iv);
 	}
 
@@ -581,7 +581,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	K bcGetLowerKeyOrNull(@NotNull K e) {
+	K bcGetLowerKeyOrNull(final @NotNull K e) {
 		return _asc ? _par.bcGetLowerKeyOrNull(e, _iv) : _par.bcGetHigherKeyOrNull(e, _iv);
 	}
 
@@ -594,7 +594,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	K bcGetHigherKeyOrNull(@NotNull K e) {
+	K bcGetHigherKeyOrNull(final @NotNull K e) {
 		return _asc ? _par.bcGetHigherKeyOrNull(e, _iv) : _par.bcGetLowerKeyOrNull(e, _iv);
 	}
 
@@ -604,10 +604,9 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	Vector<K> bcGetVectorOfKeys() {
-		Vector<K> v = new Vector<>();
-		Iterator<K> iter = navigableKeySet().iterator();
+	@NotNull Vector<K> bcGetVectorOfKeys() {
+		final Vector<K> v = new Vector<>();
+		final Iterator<K> iter = navigableKeySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -619,10 +618,9 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	Vector<V> bcGetVectorOfValues() {
-		Vector<V> v = new Vector<>();
-		Iterator<V> iter = values().iterator();
+	@NotNull Vector<V> bcGetVectorOfValues() {
+		final Vector<V> v = new Vector<>();
+		final Iterator<V> iter = values().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -634,10 +632,9 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	Vector<Entry<K, V>> bcGetVectorOfEntries() {
-		Vector<Entry<K, V>> v = new Vector<>();
-		Iterator<Entry<K, V>> iter = entrySet().iterator();
+	@NotNull Vector<Entry<K, V>> bcGetVectorOfEntries() {
+		final Vector<Entry<K, V>> v = new Vector<>();
+		final Iterator<Entry<K, V>> iter = entrySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -649,8 +646,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Einen {@link Iterator} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull K> bcGetSubKeySetIterator() {
+	@NotNull Iterator<@NotNull K> bcGetSubKeySetIterator() {
 		return new AVLMapSubKeySetIterator<>(this);
 	}
 
@@ -660,8 +656,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Einen {@link Iterator} von Werten (Values) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull V> bcGetSubCollectionIterator() {
+	@NotNull Iterator<@NotNull V> bcGetSubCollectionIterator() {
 		return new AVLMapSubCollectionIterator<>(this);
 	}
 
@@ -671,8 +666,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link Iterator} von Entries relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull Entry<@NotNull K, @NotNull V>> bcGetSubEntrySetIterator() {
+	@NotNull Iterator<@NotNull Entry<@NotNull K, @NotNull V>> bcGetSubEntrySetIterator() {
 		return new AVLMapSubEntrySetIterator<>(this);
 	}
 
@@ -682,8 +676,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull K> bcGetSubKeySetDescending() {
+	@NotNull NavigableSet<@NotNull K> bcGetSubKeySetDescending() {
 		return new AVLMapSubKeySet<>(new AVLMapSubMap<>(_par, _iv, !_asc));
 	}
 
@@ -693,8 +686,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link Iterator} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull K> bcGetSubKeySetDescendingIterator() {
+	@NotNull Iterator<@NotNull K> bcGetSubKeySetDescendingIterator() {
 		return new AVLMapSubKeySetIterator<>(new AVLMapSubMap<>(_par, _iv, !_asc));
 	}
 
@@ -709,9 +701,8 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull K> bcGetSubKeySet(@NotNull K fromElement, boolean fromInclusive, @NotNull K toElement,
-			boolean toInclusive) {
+	@NotNull NavigableSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final boolean fromInclusive, final @NotNull K toElement,
+			final boolean toInclusive) {
 		return _createSet(fromElement, fromInclusive, toElement, toInclusive, _asc);
 	}
 
@@ -724,8 +715,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull K> bcGetSubKeyHeadSet(@NotNull K toElement, boolean inclusive) {
+	@NotNull NavigableSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement, final boolean inclusive) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, inclusive, _asc);
 	}
 
@@ -738,8 +728,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull K> bcGetSubKeyTailSet(@NotNull K fromElement, boolean inclusive) {
+	@NotNull NavigableSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement, final boolean inclusive) {
 		return _createSet(fromElement, inclusive, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -755,8 +744,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull K> bcGetSubKeySet(@NotNull K fromElement, @NotNull K toElement) {
+	@NotNull SortedSet<@NotNull K> bcGetSubKeySet(final @NotNull K fromElement, final @NotNull K toElement) {
 		return _createSet(fromElement, true, toElement, false, _asc);
 	}
 
@@ -770,8 +758,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull K> bcGetSubKeyHeadSet(@NotNull K toElement) {
+	@NotNull SortedSet<@NotNull K> bcGetSubKeyHeadSet(final @NotNull K toElement) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, false, _asc);
 	}
 
@@ -785,8 +772,7 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull K> bcGetSubKeyTailSet(@NotNull K fromElement) {
+	@NotNull SortedSet<@NotNull K> bcGetSubKeyTailSet(final @NotNull K fromElement) {
 		return _createSet(fromElement, true, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -794,8 +780,8 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	// ########################## PRIVATE #####################################
 	// ########################################################################
 
-	private @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _createMap(@NotNull K from, boolean fromInc, @NotNull K to,
-			boolean toInc, boolean asc) {
+	private @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _createMap(final @NotNull K from, final boolean fromInc, final @NotNull K to,
+			final boolean toInc, final boolean asc) {
 		if (_par.bcCheckOutOfIntervall(from, fromInc, _iv))
 			throw new IllegalArgumentException("FROM-KEY " + from + "/" + fromInc + " nicht in " + _iv);
 		if (_par.bcCheckOutOfIntervall(to, toInc, _iv))
@@ -804,8 +790,8 @@ public class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		return new AVLMapSubMap<>(_par, new AVLMapIntervall<>(from, fromInc, to, toInc), asc);
 	}
 
-	private @NotNull AVLMapSubKeySet<@NotNull K, @NotNull V> _createSet(@NotNull K from, boolean fromInc, @NotNull K to,
-			boolean toInc, boolean asc) {
+	private @NotNull AVLMapSubKeySet<@NotNull K, @NotNull V> _createSet(final @NotNull K from, final boolean fromInc, final @NotNull K to,
+			final boolean toInc, final boolean asc) {
 		return new AVLMapSubKeySet<>(_createMap(from, fromInc, to, toInc, asc));
 	}
 

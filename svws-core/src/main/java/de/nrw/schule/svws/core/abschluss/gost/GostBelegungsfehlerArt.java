@@ -26,7 +26,7 @@ public enum GostBelegungsfehlerArt {
 	 * 
 	 * @param kuerzel        das Kürzel der Fehler-Art
 	 */
-	private GostBelegungsfehlerArt(@NotNull String kuerzel) {
+	private GostBelegungsfehlerArt(final @NotNull String kuerzel) {
 		this.kuerzel = kuerzel;
 	}
 
@@ -38,7 +38,7 @@ public enum GostBelegungsfehlerArt {
      *  
      * @return die Belegungsfehler-Art
      */
-	public static GostBelegungsfehlerArt fromKuerzel(String kuerzel) {
+	public static GostBelegungsfehlerArt fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return null;
 		switch (kuerzel) {

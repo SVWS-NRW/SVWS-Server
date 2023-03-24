@@ -26,8 +26,7 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 	/**
 	 * Der zum Schlüsselwert zugeordnete Wert des Baum-Eintrags.
 	 */
-	@NotNull
-	V _val;
+	@NotNull V _val;
 
 	/**
 	 * Der Vorgänger-Knoten.
@@ -65,7 +64,7 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 	 * @param key Der Schlüssel (Key). Der Wert darf nicht NULL sein.
 	 * @param val Der Wert (Value), welcher dem Schlüssel (Key) zugeordnet ist. Der Wert darf nicht NULL sein.
 	 */
-	AVLMapNode(@NotNull K key, @NotNull V val) {
+	AVLMapNode(final @NotNull K key, final @NotNull V val) {
 		_key = key;
 		_val = val;
 	}
@@ -76,10 +75,10 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 	}
 
 	@Override
-	public boolean equals(@NotNull Object o) {
+	public boolean equals(final @NotNull Object o) {
 		if (o instanceof Entry<?, ?> == false)
 			return false;
-		Entry<?, ?> e = (Entry<?, ?>) o;
+		final Entry<?, ?> e = (Entry<?, ?>) o;
 		return _key.equals(e.getKey()) && (_val.equals(e.getValue()));
 	}
 
@@ -99,7 +98,7 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 	}
 
 	@Override
-	public @NotNull V setValue(@NotNull V value) {
+	public @NotNull V setValue(final @NotNull V value) {
 		throw new UnsupportedOperationException(); // Kann sonst den Zustand zerstören.
 		// V old = _val;
 		// _val = value;

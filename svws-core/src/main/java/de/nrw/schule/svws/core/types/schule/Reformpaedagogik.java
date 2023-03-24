@@ -131,15 +131,15 @@ public enum Reformpaedagogik {
 	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private Reformpaedagogik(@NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
+	private Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
 		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
-			for (@NotNull String kuerzel : historie[i].schulformen) {
-				Schulform sf = Schulform.getByKuerzel(kuerzel);
+			for (final @NotNull String kuerzel : historie[i].schulformen) {
+				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
 					this.schulformen[i].add(sf);
 			}
@@ -155,7 +155,7 @@ public enum Reformpaedagogik {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
-			for (Reformpaedagogik r : Reformpaedagogik.values())
+			for (final Reformpaedagogik r : Reformpaedagogik.values())
 				_schulgliederungenKuerzel.put(r.daten.kuerzel, r);				
 		return _schulgliederungenKuerzel;
 	}
@@ -169,8 +169,8 @@ public enum Reformpaedagogik {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> getMapSchulgliederungByID() {
 		if (_schulgliederungenID.size() == 0)
-			for (Reformpaedagogik r : Reformpaedagogik.values()) {
-				for (ReformpaedagogikKatalogEintrag k : r.historie)
+			for (final Reformpaedagogik r : Reformpaedagogik.values()) {
+				for (final ReformpaedagogikKatalogEintrag k : r.historie)
 					_schulgliederungenID.put(k.id, r);
 			}
 		return _schulgliederungenID;
@@ -184,7 +184,7 @@ public enum Reformpaedagogik {
 	 * 
 	 * @return die Reformpädagogik oder null, falls das Kürzel ungültig ist
 	 */
-	public static Reformpaedagogik getByKuerzel(String kuerzel) {
+	public static Reformpaedagogik getByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return Reformpaedagogik.KEIN_EINTRAG;
 		return getMapSchulgliederungByKuerzel().get(kuerzel);
@@ -198,7 +198,7 @@ public enum Reformpaedagogik {
 	 * 
 	 * @return die Reformpädagogik oder null, falls die ID ungültig ist
 	 */
-	public static Reformpaedagogik getByID(Long id) {
+	public static Reformpaedagogik getByID(final Long id) {
 		return getMapSchulgliederungByID().get(id);
 	}
 
@@ -221,13 +221,13 @@ public enum Reformpaedagogik {
 	 * 
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
-	public static @NotNull List<@NotNull Reformpaedagogik> get(Schulform schulform) {
-		@NotNull Vector<@NotNull Reformpaedagogik> result = new Vector<>();
+	public static @NotNull List<@NotNull Reformpaedagogik> get(final Schulform schulform) {
+		final @NotNull Vector<@NotNull Reformpaedagogik> result = new Vector<>();
 		if (schulform == null)
 			return result;
-		@NotNull Reformpaedagogik@NotNull[] gliederungen = Reformpaedagogik.values();
+		final @NotNull Reformpaedagogik@NotNull[] gliederungen = Reformpaedagogik.values();
 		for (int i = 0; i < gliederungen.length; i++) {
-			@NotNull Reformpaedagogik gliederung = gliederungen[i];
+			final @NotNull Reformpaedagogik gliederung = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -244,12 +244,12 @@ public enum Reformpaedagogik {
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulformByKuerzel(String kuerzel) {
+	public boolean hasSchulformByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}			
@@ -266,12 +266,12 @@ public enum Reformpaedagogik {
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulform(Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}			

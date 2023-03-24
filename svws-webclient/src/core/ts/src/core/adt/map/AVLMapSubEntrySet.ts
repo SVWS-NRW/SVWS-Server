@@ -55,7 +55,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		if ((typeof __param0 === "undefined")) {
 			return this._sub.bcGetVectorOfEntries().toArray();
 		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
-			let a : Array<T | null> = __param0;
+			const a : Array<T | null> = __param0;
 			return this._sub.bcGetVectorOfEntries().toArray(a);
 		} else throw new Error('invalid method overload');
 	}

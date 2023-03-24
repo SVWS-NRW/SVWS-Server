@@ -66,15 +66,15 @@ public class KAOAAnschlussoptionEintrag {
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOAAnschlussoptionEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, 
-	        @NotNull List<@NotNull Schulstufe> stufen, @NotNull List<@NotNull KAOAZusatzmerkmal> anzeigeZusatzmerkmal,
-	        Integer gueltigVon, Integer gueltigBis) {
+	public KAOAAnschlussoptionEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung, 
+	        final @NotNull List<@NotNull Schulstufe> stufen, final @NotNull List<@NotNull KAOAZusatzmerkmal> anzeigeZusatzmerkmal,
+	        final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
-		for (Schulstufe stufe : stufen)
+		for (final Schulstufe stufe : stufen)
 		    this.stufen.add(stufe.daten.kuerzel);
-		for (KAOAZusatzmerkmal m : anzeigeZusatzmerkmal)
+		for (final KAOAZusatzmerkmal m : anzeigeZusatzmerkmal)
 		    this.anzeigeZusatzmerkmal.add(m.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

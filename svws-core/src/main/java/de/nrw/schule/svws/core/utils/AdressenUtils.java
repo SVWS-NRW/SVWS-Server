@@ -17,7 +17,7 @@ public class AdressenUtils {
 	 * 
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
-	public static @NotNull String@NotNull[] splitStrasse(String strasse) {
+	public static @NotNull String@NotNull[] splitStrasse(final String strasse) {
 		final @NotNull String @NotNull[] result = new String[3];
 		if (strasse == null) {
 			result[0] = "";
@@ -50,7 +50,7 @@ public class AdressenUtils {
 	 * 
 	 * @return die kombinierte Strassenangabe
 	 */
-	public static String combineStrasse(String name, String hausNummer, String zusatz) {
+	public static String combineStrasse(final String name, final String hausNummer, final String zusatz) {
 		if ((name == null) || (hausNummer == null) || (zusatz == null))
 			return null;
 		if ("".equals(hausNummer.trim()) && ("".equals(zusatz.trim())))

@@ -33,7 +33,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @throws NullPointerException  Falls die Lerngruppe-ID bereits existiert.
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
-	public @NotNull StundenplanblockungManagerLerngruppe createOrException(long pLerngruppeID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerLerngruppe createOrException(final long pLerngruppeID) throws NullPointerException {
 		if (_map.containsKey(pLerngruppeID) == true)
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!");
 		final StundenplanblockungManagerLerngruppe gr = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
@@ -50,7 +50,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
 	 */
-	public @NotNull StundenplanblockungManagerLerngruppe getOrException(long pLerngruppeID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerLerngruppe getOrException(final long pLerngruppeID) throws NullPointerException {
 		final StundenplanblockungManagerLerngruppe gr = _map.get(pLerngruppeID);
 		if (gr == null)
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!");
@@ -64,7 +64,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
 	 * @return         Liefert eine zufällige Lerngruppe.
 	 */
-	public @NotNull StundenplanblockungManagerLerngruppe getRandomOrException(@NotNull Random pRandom) {
+	public @NotNull StundenplanblockungManagerLerngruppe getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lerngruppen!");
@@ -78,7 +78,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 */
-	public void removeOrException(long pLerngruppeID) throws NullPointerException {
+	public void removeOrException(final long pLerngruppeID) throws NullPointerException {
 		final @NotNull StundenplanblockungManagerLerngruppe gr = getOrException(pLerngruppeID);
 		_map.remove(pLerngruppeID);
 		_menge.remove(gr);
@@ -99,7 +99,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @param pRaumID Die Datenbank-ID des Raumes.
 	 * @return TRUE, falls die Lerngruppe-ID existiert.
 	 */
-	public boolean exists(long pRaumID) {
+	public boolean exists(final long pRaumID) {
 		return _map.containsKey(pRaumID);
 	}
 

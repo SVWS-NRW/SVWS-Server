@@ -16,7 +16,7 @@ public class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	/**
 	 * Mit diesem Algorithmus werden die SuS verteilt.
 	 */
-	private @NotNull KursblockungAlgorithmusSSchnellW algoS;
+	private final @NotNull KursblockungAlgorithmusSSchnellW algoS;
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
@@ -26,8 +26,8 @@ public class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKOptimiereBest(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKOptimiereBest(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		algoS = new KursblockungAlgorithmusSSchnellW(pRandom, pLogger, pDynDat);
 	}
@@ -38,7 +38,7 @@ public class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	}
 
 	@Override
-	public void berechne(long pEndzeit) {
+	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;

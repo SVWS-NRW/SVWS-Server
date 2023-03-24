@@ -161,7 +161,7 @@ export class Schulform extends JavaObject {
 	 */
 	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformen.size() === 0) {
-			for (let s of Schulform.values()) {
+			for (const s of Schulform.values()) {
 				if (s.daten !== null)
 					Schulform._schulformen.put(s.daten.kuerzel, s);
 			}
@@ -177,7 +177,7 @@ export class Schulform extends JavaObject {
 	 */
 	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformenNummer.size() === 0)
-			for (let s of Schulform.values())
+			for (const s of Schulform.values())
 				if ((s.daten !== null) && (s.daten.nummer !== null))
 					Schulform._schulformenNummer.put(s.daten.nummer, s);
 		return Schulform._schulformenNummer;
@@ -213,8 +213,8 @@ export class Schulform extends JavaObject {
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static get() : List<Schulform> {
-		let result : Vector<Schulform> = new Vector();
-		for (let sf of Schulform.values())
+		const result : Vector<Schulform> = new Vector();
+		for (const sf of Schulform.values())
 			if ((sf.daten !== null) && (sf.daten.nummer !== null))
 				result.add(sf);
 		return result;
@@ -226,8 +226,8 @@ export class Schulform extends JavaObject {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static getMitGymOb() : List<Schulform> {
-		let result : Vector<Schulform> = new Vector();
-		for (let sf of Schulform.values())
+		const result : Vector<Schulform> = new Vector();
+		for (const sf of Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);
 		return result;

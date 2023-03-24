@@ -273,7 +273,7 @@ public enum AllgemeineMerkmale {
 	 * @param historie   die Historie der allgemeinen Merkmale, welche ein Array von 
 	 *                   {@link AllgemeineMerkmaleKatalogEintrag} ist  
 	 */
-	private AllgemeineMerkmale(@NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie) {
+	private AllgemeineMerkmale(final @NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -289,7 +289,7 @@ public enum AllgemeineMerkmale {
 	 */
 	private static @NotNull HashMap<@NotNull String, AllgemeineMerkmale> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
-			for (AllgemeineMerkmale s : AllgemeineMerkmale.values()) {
+			for (final AllgemeineMerkmale s : AllgemeineMerkmale.values()) {
 				if (s.daten != null)
 					_mapByKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -305,7 +305,7 @@ public enum AllgemeineMerkmale {
 	 * 
 	 * @return das allgemeine Merkmal oder null, falls das Kürzel ungültig ist
 	 */
-	public static AllgemeineMerkmale getByKuerzel(String kuerzel) {
+	public static AllgemeineMerkmale getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

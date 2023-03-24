@@ -47,8 +47,8 @@ public class KursblockungDynFachart {
 	 * @param pGostFach    Referenz zum zugehörigen GOST-Fach.
 	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
 	 * @param pStatistik   Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. */
-	public KursblockungDynFachart(@NotNull Random pRandom, int pNr, @NotNull GostFach pGostFach,
-			@NotNull GostKursart pGostKursart, @NotNull KursblockungDynStatistik pStatistik) {
+	public KursblockungDynFachart(final @NotNull Random pRandom, final int pNr, final @NotNull GostFach pGostFach,
+			final @NotNull GostKursart pGostKursart, final @NotNull KursblockungDynStatistik pStatistik) {
 		_random = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
@@ -110,8 +110,7 @@ public class KursblockungDynFachart {
 	/** Liefert das Array aller Kurse dieser Fachart.
 	 * 
 	 * @return Das Array aller Kurse dieser Fachart. */
-	@NotNull
-	KursblockungDynKurs @NotNull [] gibKurse() {
+	@NotNull KursblockungDynKurs @NotNull [] gibKurse() {
 		return kursArr;
 	}
 
@@ -120,17 +119,17 @@ public class KursblockungDynFachart {
 	 * @param  pSchiene     Die Schiene, in der gesucht wird.
 	 * @param  kursGesperrt Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
 	 * @return              Der kleinste Kurs in der Schiene pSchiene, oder null. */
-	KursblockungDynKurs gibKleinstenKursInSchiene(int pSchiene, @NotNull boolean[] kursGesperrt) {
+	KursblockungDynKurs gibKleinstenKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
 		for (int i = 0; i < kursArr.length; i++) {
 
 			// Überspringe gesperrte Kurse.
-			@NotNull KursblockungDynKurs kurs = kursArr[i];
+			final @NotNull KursblockungDynKurs kurs = kursArr[i];
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
 
 			// Suche passende Schiene.
-			for (int c : kurs.gibSchienenLage()) {
+			for (final int c : kurs.gibSchienenLage()) {
 				if (c == pSchiene) {
 					return kurs;
 				}
@@ -143,7 +142,7 @@ public class KursblockungDynFachart {
 	 * 
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist. */
 	boolean gibHatMultikurs() {
-		for (@NotNull KursblockungDynKurs kurs : kursArr) {
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
 			if (kurs.gibSchienenAnzahl() > 1) {
 				return true;
 			}
@@ -156,8 +155,8 @@ public class KursblockungDynFachart {
 	 * @param  pSchiene     Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist. */
-	boolean gibHatKursInSchiene(int pSchiene, @NotNull boolean[] kursGesperrt) {
-		for (@NotNull KursblockungDynKurs kurs : kursArr) {
+	boolean gibHatKursInSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
@@ -173,8 +172,8 @@ public class KursblockungDynFachart {
 	 * @param  pSchiene     Die Schiene, die angefragt wurde.
 	 * @param  kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf. */
-	public boolean gibHatKursMitFreierSchiene(int pSchiene, @NotNull boolean[] kursGesperrt) {
-		for (@NotNull KursblockungDynKurs kurs : kursArr) {
+	public boolean gibHatKursMitFreierSchiene(final int pSchiene, final @NotNull boolean[] kursGesperrt) {
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
@@ -192,7 +191,7 @@ public class KursblockungDynFachart {
 	/** Ordnet alle Kurse der Fachart zu. Die Kurse haben noch keine SuS und sind somit automatisch sortiert.
 	 * 
 	 * @param pKursArr Alle Kurse der Fachart. */
-	public void aktionSetKurse(@NotNull KursblockungDynKurs @NotNull [] pKursArr) {
+	public void aktionSetKurse(final @NotNull KursblockungDynKurs @NotNull [] pKursArr) {
 		kursArr = pKursArr;
 	}
 
@@ -223,10 +222,10 @@ public class KursblockungDynFachart {
 		// Ein Kurs hat +1 SuS --> Sortiere 'kursArr' von links nach rechts.
 		// Beispiel 11[3]223
 		for (int i = 1; i < kursArr.length; i++) {
-			@NotNull KursblockungDynKurs kursL = kursArr[i - 1];
-			@NotNull KursblockungDynKurs kursR = kursArr[i];
-			boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			final @NotNull KursblockungDynKurs kursL = kursArr[i - 1];
+			final @NotNull KursblockungDynKurs kursR = kursArr[i];
+			final boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				kursArr[i - 1] = kursR;
 				kursArr[i] = kursL;
@@ -241,10 +240,10 @@ public class KursblockungDynFachart {
 		// Ein Kurs hat -1 SuS --> Sortiere 'kursArr' von rechts nach links.
 		// Beispiel 1122[1]3
 		for (int i = kursArr.length - 1; i >= 1; i--) {
-			@NotNull KursblockungDynKurs kursL = kursArr[i - 1];
-			@NotNull KursblockungDynKurs kursR = kursArr[i];
-			boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			final @NotNull KursblockungDynKurs kursL = kursArr[i - 1];
+			final @NotNull KursblockungDynKurs kursR = kursArr[i];
+			final boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				kursArr[i - 1] = kursR;
 				kursArr[i] = kursL;
@@ -255,11 +254,11 @@ public class KursblockungDynFachart {
 	/** Lässt einen zufälligen Kurs dieser Fachart in die angegebene Schiene wandern.
 	 * 
 	 * @param pSchiene Die Schiene, in die einer Kurs der Fachart wandern soll. */
-	void aktionZufaelligerKursWandertNachSchiene(int pSchiene) {
-		@NotNull int[] perm = KursblockungStatic.gibPermutation(_random, kursArr.length);
+	void aktionZufaelligerKursWandertNachSchiene(final int pSchiene) {
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, kursArr.length);
 
 		for (int p = 0; p < perm.length; p++) {
-			KursblockungDynKurs kurs = kursArr[perm[p]];
+			final KursblockungDynKurs kurs = kursArr[perm[p]];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
 				kurs.aktionSetzeInSchiene(pSchiene);
 				return;
@@ -272,7 +271,7 @@ public class KursblockungDynFachart {
 	/** Debug Ausgabe. Nur für Testzwecke.
 	 * 
 	 * @param schuelerArr Das Array mit den Schülerdaten. */
-	void debug(@NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
+	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
 		for (int i = 0; i < kursArr.length; i++) {
 			kursArr[i].debug(schuelerArr);
 		}

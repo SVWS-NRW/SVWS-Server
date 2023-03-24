@@ -105,7 +105,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	public getText() : string {
 		if (this.indent <= 0)
 			return this.text;
-		let indentChars : Array<string> | null = Array(this.indent).fill("");
+		const indentChars : Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');
 		return indentChars.join("") + this.text!;
 	}

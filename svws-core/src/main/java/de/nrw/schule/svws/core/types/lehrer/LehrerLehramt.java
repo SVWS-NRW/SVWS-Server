@@ -267,7 +267,7 @@ public enum LehrerLehramt {
 	 * 
 	 * @param historie   die Historie des Lehramtes, welches ein Array von {@link LehrerKatalogLehramtEintrag} ist  
 	 */
-	private LehrerLehramt(@NotNull LehrerKatalogLehramtEintrag@NotNull[] historie) {
+	private LehrerLehramt(final @NotNull LehrerKatalogLehramtEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -282,7 +282,7 @@ public enum LehrerLehramt {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehramt> getMapLehraemterByID() {
 		if (_aemterByID.size() == 0)
-			for (LehrerLehramt l : LehrerLehramt.values())
+			for (final LehrerLehramt l : LehrerLehramt.values())
 				_aemterByID.put(l.daten.id, l);				
 		return _aemterByID;
 	}
@@ -296,7 +296,7 @@ public enum LehrerLehramt {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehramt> getMapLehraemterByKuerzel() {
 		if (_aemterByKuerzel.size() == 0)
-			for (LehrerLehramt l : LehrerLehramt.values())
+			for (final LehrerLehramt l : LehrerLehramt.values())
 				_aemterByKuerzel.put(l.daten.kuerzel, l);				
 		return _aemterByKuerzel;
 	}
@@ -309,7 +309,7 @@ public enum LehrerLehramt {
 	 * 
 	 * @return das Lehramt oder null, falls die ID ungültig ist
 	 */
-	public static LehrerLehramt getByID(long id) {
+	public static LehrerLehramt getByID(final long id) {
 		return getMapLehraemterByID().get(id);
 	}
 
@@ -321,7 +321,7 @@ public enum LehrerLehramt {
 	 * 
 	 * @return das Lehramt oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerLehramt getByKuerzel(String kuerzel) {
+	public static LehrerLehramt getByKuerzel(final String kuerzel) {
 		return getMapLehraemterByKuerzel().get(kuerzel);
 	}
 

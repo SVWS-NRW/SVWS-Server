@@ -97,7 +97,7 @@ public enum BenutzerKompetenzGruppe {
      *
      * @param daten    die Daten der Benutzerkompetenz-Gruppe
      */
-    private BenutzerKompetenzGruppe(@NotNull BenutzerKompetenzGruppenKatalogEintrag daten) {
+    private BenutzerKompetenzGruppe(final @NotNull BenutzerKompetenzGruppenKatalogEintrag daten) {
         this.daten = daten;
     }
 
@@ -110,7 +110,7 @@ public enum BenutzerKompetenzGruppe {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenzGruppe> getMapID() {
 		if (_mapID.size() == 0)
-			for (BenutzerKompetenzGruppe p : BenutzerKompetenzGruppe.values())
+			for (final BenutzerKompetenzGruppe p : BenutzerKompetenzGruppe.values())
 				_mapID.put(p.daten.id, p);				
 		return _mapID;
 	}
@@ -123,7 +123,7 @@ public enum BenutzerKompetenzGruppe {
      *  
      * @return die Benutzerkompetenz-Gruppen oder null, falls die ID fehlerhaft ist
      */
-    public static BenutzerKompetenzGruppe getByID(long id) {
+    public static BenutzerKompetenzGruppe getByID(final long id) {
     	return getMapID().get(id);
     }
 

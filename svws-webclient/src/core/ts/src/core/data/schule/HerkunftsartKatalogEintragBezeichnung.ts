@@ -41,9 +41,9 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
-			let kurzBezeichnung : string = __param1;
-			let bezeichnung : string = __param2;
+			const schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
+			const kurzBezeichnung : string = __param1;
+			const bezeichnung : string = __param2;
 			this.schulform = schulform.daten.kuerzel;
 			this.kurzBezeichnung = kurzBezeichnung;
 			this.bezeichnung = bezeichnung;

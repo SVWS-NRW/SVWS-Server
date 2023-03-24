@@ -37,7 +37,7 @@ public class RGBFarbe {
 	 * 
 	 * @param color24Bit   RGB-Farbwerte
 	 */ 
-	public RGBFarbe(int color24Bit) {
+	public RGBFarbe(final int color24Bit) {
 		red = color24Bit & 0xFF;
 		green = (color24Bit >> 8) & 0xFF;
 		blue = color24Bit >> 16;
@@ -51,7 +51,7 @@ public class RGBFarbe {
 	 * @param green   der Grün-Anteil (0-255)
 	 * @param blue    der Blau-Anteil (0-255)
 	 */
-	public RGBFarbe(int red, int green, int blue) {
+	public RGBFarbe(final int red, final int green, final int blue) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;

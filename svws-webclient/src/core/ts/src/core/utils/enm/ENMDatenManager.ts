@@ -26,32 +26,32 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für das Befüllen der ENMLehrer-Vektors.
 	 */
-	private mapLehrer : HashMap<number, ENMLehrer> = new HashMap();
+	private readonly mapLehrer : HashMap<number, ENMLehrer> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMSchueler-Vektors.
 	 */
-	private mapSchueler : HashMap<number, ENMSchueler> = new HashMap();
+	private readonly mapSchueler : HashMap<number, ENMSchueler> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private mapFaecher : HashMap<number, ENMFach> = new HashMap();
+	private readonly mapFaecher : HashMap<number, ENMFach> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private mapFaecherByKuerzel : HashMap<string, ENMFach> = new HashMap();
+	private readonly mapFaecherByKuerzel : HashMap<string, ENMFach> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMJahrgang-Vektors.
 	 */
-	private mapJahrgaenge : HashMap<number, ENMJahrgang> = new HashMap();
+	private readonly mapJahrgaenge : HashMap<number, ENMJahrgang> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMKlasse-Vektors.
 	 */
-	private mapKlassen : HashMap<number, ENMKlasse> = new HashMap();
+	private readonly mapKlassen : HashMap<number, ENMKlasse> = new HashMap();
 
 	/**
 	 * Zählt die Id der Lerngruppe hoch.
@@ -61,7 +61,7 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für die Lerngruppen.
 	 */
-	private mapLerngruppen : HashMap<string, ENMLerngruppe> = new HashMap();
+	private readonly mapLerngruppen : HashMap<string, ENMLerngruppe> = new HashMap();
 
 
 	/**

@@ -27,7 +27,7 @@ public class KlausurterminblockungAlgorithmus {
 	 * @param pConfig  Das Konfigurationsobjekt für den Algorithmus. 
 	 * @return Eine Liste (Termine) von Listen (KlausurIDs)
 	 */
-	public @NotNull List<@NotNull List<@NotNull Long>> berechne(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
 		
 		final @NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
 		
@@ -61,7 +61,7 @@ public class KlausurterminblockungAlgorithmus {
 		return out;
 	}
 
-	private static @NotNull List<@NotNull GostKursklausur> filter(@NotNull List<@NotNull GostKursklausur> pInput, boolean pLK) {
+	private static @NotNull List<@NotNull GostKursklausur> filter(final @NotNull List<@NotNull GostKursklausur> pInput, final boolean pLK) {
 		final @NotNull List<@NotNull GostKursklausur> temp = new Vector<>();
 		for (final GostKursklausur gostKursklausur : pInput) 
 			if (gostKursklausur.kursart.equals("LK") == pLK) 
@@ -69,7 +69,7 @@ public class KlausurterminblockungAlgorithmus {
 		return temp;
 	}
 
-	private static void berechne_helper(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig, @NotNull List<@NotNull List<@NotNull Long>> out) {
+	private static void berechne_helper(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig, final @NotNull List<@NotNull List<@NotNull Long>> out) {
 		// End-Zeitpunkt berechnet.
 		final long zeitEndeGesamt = System.currentTimeMillis() + pConfig.get_max_time_millis();
 

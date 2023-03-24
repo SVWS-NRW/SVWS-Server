@@ -37,8 +37,8 @@ public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusSZufaellig(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusSZufaellig(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		schuelerArr = pDynDat.gibSchuelerArrayAlle();
 		perm = KursblockungStatic.gibPermutation(_random, schuelerArr.length);
@@ -75,14 +75,14 @@ public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 
 		KursblockungStatic.aktionPermutiere(_random, perm);
 		for (int p = 0; p < schuelerArr.length; p++) {
-			int i = perm[p];
+			final int i = perm[p];
 			verbesserung |= verteileSchuelerEiner(schuelerArr[i]);
 		}
 
 		return verbesserung;
 	}
 
-	private boolean verteileSchuelerEiner(@NotNull KursblockungDynSchueler schueler) {
+	private boolean verteileSchuelerEiner(final @NotNull KursblockungDynSchueler schueler) {
 		// Kurszuordnung des Schülers speichern.
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 		schueler.aktionZustandSpeichernS();
@@ -92,7 +92,7 @@ public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 		schueler.aktionKurseVerteilenZufaellig();
 
 		// Schlechter? --> Kurszuordnung zurück.
-		int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
 		if (cmp < 0)
 			schueler.aktionZustandLadenS();
 

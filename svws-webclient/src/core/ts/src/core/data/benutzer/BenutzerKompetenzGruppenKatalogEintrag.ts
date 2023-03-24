@@ -47,10 +47,10 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && typeof __param3 === "number")) {
-			let id : number = __param0 as number;
-			let bezeichnung : string = __param1;
-			let spalte : number = __param2 as number;
-			let zeile : number = __param3 as number;
+			const id : number = __param0 as number;
+			const bezeichnung : string = __param1;
+			const spalte : number = __param2 as number;
+			const zeile : number = __param3 as number;
 			this.id = id;
 			this.bezeichnung = bezeichnung;
 			this.spalte = spalte;

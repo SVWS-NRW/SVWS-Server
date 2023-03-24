@@ -438,11 +438,11 @@ export class ZulaessigeKursart extends JavaObject {
 		this.zulaessig = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new Vector();
-			for (let kuerzelSfSgl of historie[i].zulaessig) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
+			for (const kuerzelSfSgl of historie[i].zulaessig) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf === null)
 					continue;
-				let sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				const sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
 			}
 		}
@@ -456,7 +456,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapID.size() === 0)
-			for (let s of ZulaessigeKursart.values())
+			for (const s of ZulaessigeKursart.values())
 				if (s.daten !== null)
 					ZulaessigeKursart._mapID.put(s.daten.id, s);
 		return ZulaessigeKursart._mapID;
@@ -470,7 +470,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapKuerzel.size() === 0)
-			for (let s of ZulaessigeKursart.values())
+			for (const s of ZulaessigeKursart.values())
 				if (s.daten !== null)
 					ZulaessigeKursart._mapKuerzel.put(s.daten.kuerzel, s);
 		return ZulaessigeKursart._mapKuerzel;
@@ -487,7 +487,7 @@ export class ZulaessigeKursart extends JavaObject {
 	private hasSchulform(schulform : Schulform | null) : boolean {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
-		for (let sfsgl of this.zulaessig[0]) {
+		for (const sfsgl of this.zulaessig[0]) {
 			if (sfsgl.a === schulform)
 				return true;
 		}
@@ -503,10 +503,10 @@ export class ZulaessigeKursart extends JavaObject {
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigeKursart | null> {
-		let kursarten : Vector<ZulaessigeKursart | null> = new Vector();
+		const kursarten : Vector<ZulaessigeKursart | null> = new Vector();
 		if (schulform === null)
 			return kursarten;
-		for (let kursart of ZulaessigeKursart.values())
+		for (const kursart of ZulaessigeKursart.values())
 			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;

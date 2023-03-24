@@ -93,24 +93,24 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "number") || (__param1 === null)) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.RGBFarbe')))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number")) && ((typeof __param8 !== "undefined") && typeof __param8 === "boolean") && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
-			let id : number = __param0 as number;
-			let nummer : number | null = __param1;
-			let idSchild : number | null = __param2;
-			let bezeichnung : string = __param3;
-			let kuerzel : string = __param4;
-			let farbe : RGBFarbe = cast_de_nrw_schule_svws_core_data_RGBFarbe(__param5);
-			let schulformen : List<Schulform> = cast_java_util_List(__param6);
-			let sortierung : number = __param7;
-			let fuerZeugnis : boolean = __param8 as boolean;
-			let gueltigVon : number | null = __param9;
-			let gueltigBis : number | null = __param10;
+			const id : number = __param0 as number;
+			const nummer : number | null = __param1;
+			const idSchild : number | null = __param2;
+			const bezeichnung : string = __param3;
+			const kuerzel : string = __param4;
+			const farbe : RGBFarbe = cast_de_nrw_schule_svws_core_data_RGBFarbe(__param5);
+			const schulformen : List<Schulform> = cast_java_util_List(__param6);
+			const sortierung : number = __param7;
+			const fuerZeugnis : boolean = __param8 as boolean;
+			const gueltigVon : number | null = __param9;
+			const gueltigBis : number | null = __param10;
 			this.id = id;
 			this.nummer = nummer;
 			this.idSchild = idSchild;
 			this.bezeichnung = bezeichnung;
 			this.kuerzel = kuerzel;
 			this.farbe = farbe;
-			for (let schulform of schulformen)
+			for (const schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.sortierung = sortierung;
 			this.fuerZeugnis = fuerZeugnis;

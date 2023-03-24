@@ -25,7 +25,7 @@ public class StundenplanblockungManagerLehrkraft {
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel      Das Kürzel der Lehrkraft.
 	 */
-	public StundenplanblockungManagerLehrkraft(long pLehrkraftID, @NotNull String pKuerzel) {
+	public StundenplanblockungManagerLehrkraft(final long pLehrkraftID, final @NotNull String pKuerzel) {
 		_id = pLehrkraftID;
 		_kuerzel = pKuerzel;
 		_menge_gr = new Vector<>();
@@ -54,7 +54,7 @@ public class StundenplanblockungManagerLehrkraft {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Lehrkraft.
 	 */
-	public void setKuerzel(@NotNull String pKuerzel) {
+	public void setKuerzel(final @NotNull String pKuerzel) {
 		_kuerzel = pKuerzel;
 	}
 

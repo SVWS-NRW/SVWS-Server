@@ -168,7 +168,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, AllgemeineMerkmale | null> {
 		if (AllgemeineMerkmale._mapByKuerzel.size() === 0) {
-			for (let s of AllgemeineMerkmale.values()) {
+			for (const s of AllgemeineMerkmale.values()) {
 				if (s.daten !== null)
 					AllgemeineMerkmale._mapByKuerzel.put(s.daten.kuerzel, s);
 			}

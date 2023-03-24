@@ -74,11 +74,11 @@ public class AbiturdatenManager {
 	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen. 
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public AbiturdatenManager(@NotNull Abiturdaten abidaten, final @NotNull List<@NotNull GostFach> gostFaecher, final @NotNull GostBelegpruefungsArt pruefungsArt) {
+	public AbiturdatenManager(final @NotNull Abiturdaten abidaten, final @NotNull List<@NotNull GostFach> gostFaecher, final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		this.abidaten = abidaten;
 		this.gostFaecher = new HashMap<>();
 		for (int i = 0; i < gostFaecher.size(); i++) {
-			GostFach fach = gostFaecher.get(i);
+			final GostFach fach = gostFaecher.get(i);
 			if (fach != null)
 				this.gostFaecher.put(fach.id, fach);
 		}
@@ -96,18 +96,18 @@ public class AbiturdatenManager {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public @NotNull Vector<@NotNull GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungs_art) {
-		@NotNull Vector<@NotNull GostBelegpruefung> pruefungen = new Vector<>();
+		final @NotNull Vector<@NotNull GostBelegpruefung> pruefungen = new Vector<>();
 		pruefungen.add(new Deutsch(this, pruefungs_art));
-		@NotNull Fremdsprachen pruefungFremdsprachen = new Fremdsprachen(this, pruefungs_art);
+		final @NotNull Fremdsprachen pruefungFremdsprachen = new Fremdsprachen(this, pruefungs_art);
 		pruefungen.add(pruefungFremdsprachen);
 		pruefungen.add(new Latinum(this, pruefungs_art));
 		pruefungen.add(new LiterarischKuenstlerisch(this, pruefungs_art));
 		pruefungen.add(new GesellschaftswissenschaftenUndReligion(this, pruefungs_art));
 		pruefungen.add(new Mathematik(this, pruefungs_art));
-		@NotNull Naturwissenschaften pruefungNaturwissenschaften = new Naturwissenschaften(this, pruefungs_art);
+		final @NotNull Naturwissenschaften pruefungNaturwissenschaften = new Naturwissenschaften(this, pruefungs_art);
 		pruefungen.add(pruefungNaturwissenschaften);
 		pruefungen.add(new Sport(this, pruefungs_art));
-		@NotNull Projektkurse pruefungProjektkurse = new Projektkurse(this, pruefungs_art); 
+		final @NotNull Projektkurse pruefungProjektkurse = new Projektkurse(this, pruefungs_art); 
 		pruefungen.add(pruefungProjektkurse);
 		// Die Prüfung zu dem Schwerpunkt muss nach den Prüfungen des naturwissenschaftlichen und der Fremdsprachen durchgeführt werden, da hier eine Abhängigkeit besteht.
 		pruefungen.add(new Schwerpunkt(this, pruefungs_art, pruefungFremdsprachen, pruefungNaturwissenschaften));
@@ -129,7 +129,7 @@ public class AbiturdatenManager {
 		initMapFachbereiche();
 		belegpruefungen = getPruefungen(pruefungsArt);
 		for (int i = 0; i < belegpruefungen.size(); i++) {
-			@NotNull GostBelegpruefung belegpruefung = belegpruefungen.get(i);
+			final @NotNull GostBelegpruefung belegpruefung = belegpruefungen.get(i);
 			belegpruefung.pruefe();
 		}
 		belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(belegpruefungen);
@@ -145,17 +145,17 @@ public class AbiturdatenManager {
 	private void initMapFachbereiche() {
 		// Leere die HashMap und erstelle neue Vektoren für die Zuordnung von Abitur-Fachbelegungen 
 		mapFachbereiche.clear();
-		for (@NotNull GostFachbereich fachbereich : GostFachbereich.values())
+		for (final @NotNull GostFachbereich fachbereich : GostFachbereich.values())
 			mapFachbereiche.put(fachbereich, new Vector<@NotNull AbiturFachbelegung>());
 
 		// Durchwandere alle belegten Fächer und weise diese den Fachbereichen zu
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (zaehleBelegung(fachbelegung) > 0) { // Filtere ggf. leere Belegungen
-				GostFach fach = getFach(fachbelegung);
-				@NotNull List<@NotNull GostFachbereich> fachbereiche = GostFachbereich.getBereiche(fach);
-				for (@NotNull GostFachbereich fachbereich : fachbereiche) {
-					Vector<@NotNull AbiturFachbelegung> listFachbelegungen = mapFachbereiche.get(fachbereich);
+				final GostFach fach = getFach(fachbelegung);
+				final @NotNull List<@NotNull GostFachbereich> fachbereiche = GostFachbereich.getBereiche(fach);
+				for (final @NotNull GostFachbereich fachbereich : fachbereiche) {
+					final Vector<@NotNull AbiturFachbelegung> listFachbelegungen = mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen == null)
 						continue;
 					listFachbelegungen.add(fachbelegung);
@@ -173,7 +173,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls es bereits bewertet ist
 	 */
-	public boolean istBewertet(@NotNull GostHalbjahr halbjahr) {
+	public boolean istBewertet(final @NotNull GostHalbjahr halbjahr) {
 		return abidaten.bewertetesHalbjahr[halbjahr.id];
 	}
 
@@ -195,10 +195,10 @@ public class AbiturdatenManager {
      * @return ein Array mit den Wochenstunden für die sechs Halbjahre 
      */
     public @NotNull int[] getWochenstunden() {
-		@NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
+		final @NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
 		for (int i = 0; i < 6; i++) {
-			for (AbiturFachbelegung fb : abidaten.fachbelegungen) {
-				AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
+			for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
+				final AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
 				if ((hjb == null) || ("AT".equals(hjb.kursartKuerzel)))
 					continue;
 				stunden[i] += hjb.wochenstunden;
@@ -214,14 +214,14 @@ public class AbiturdatenManager {
      * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre 
      */
     public @NotNull int[] getAnrechenbareKurse() {
-    	@NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
-		GostBesondereLernleistung bll = GostBesondereLernleistung.fromKuerzel(abidaten.besondereLernleistung);
+    	final @NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
+		final GostBesondereLernleistung bll = GostBesondereLernleistung.fromKuerzel(abidaten.besondereLernleistung);
 		for (int i = 0; i < 6; i++) {
-			for (AbiturFachbelegung fb : abidaten.fachbelegungen) {
-				AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
+			for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
+				final AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
 				if ((hjb == null) || ("AT".equals(hjb.kursartKuerzel)))
 					continue;
-				GostKursart kursart = GostKursart.fromKuerzel(hjb.kursartKuerzel);
+				final GostKursart kursart = GostKursart.fromKuerzel(hjb.kursartKuerzel);
 				if ((kursart != GostKursart.VTF) && (!((kursart == GostKursart.PJK) && (bll == GostBesondereLernleistung.PROJEKTKURS))))
 					anzahl[i]++;
 			}
@@ -230,14 +230,14 @@ public class AbiturdatenManager {
     }
     
     
-	private static String getSchuelerFachwahlFromBelegung(@NotNull AbiturFachbelegung belegung, @NotNull GostHalbjahr halbjahr) {
+	private static String getSchuelerFachwahlFromBelegung(final @NotNull AbiturFachbelegung belegung, final @NotNull GostHalbjahr halbjahr) {
 		AbiturFachbelegungHalbjahr halbjahresbelegung = belegung.belegungen[halbjahr.id];
 		if (halbjahresbelegung == null) {
 			halbjahresbelegung = new AbiturFachbelegungHalbjahr();
 			halbjahresbelegung.halbjahrKuerzel = halbjahr.kuerzel;
 			belegung.belegungen[halbjahr.id] = halbjahresbelegung;   // TODO prüfen, ob dies zu Fehlern im Manager führt (state)
 		}
-		GostKursart kursart = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
+		final GostKursart kursart = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
 		if (kursart == null)
 			return ("".equals(halbjahresbelegung.kursartKuerzel) ? null : halbjahresbelegung.kursartKuerzel);
 		if ((kursart == GostKursart.ZK) || (kursart == GostKursart.LK))
@@ -253,11 +253,11 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Schüler-Fachwahl
 	 */
- 	public @NotNull GostSchuelerFachwahl getSchuelerFachwahl(long fach_id) {
-		AbiturFachbelegung belegung = getFachbelegungByID(fach_id);
+ 	public @NotNull GostSchuelerFachwahl getSchuelerFachwahl(final long fach_id) {
+		final AbiturFachbelegung belegung = getFachbelegungByID(fach_id);
 		if (belegung == null)
 			return new GostSchuelerFachwahl();
-		@NotNull GostSchuelerFachwahl wahl = new GostSchuelerFachwahl();
+		final @NotNull GostSchuelerFachwahl wahl = new GostSchuelerFachwahl();
 		wahl.halbjahre[0] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
 		wahl.halbjahre[1] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
 		wahl.halbjahre[2] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q11);
@@ -275,7 +275,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return das Fach der gymnasialen Oberstufe (siehe {@link GostFach}) 
 	 */
-	public GostFach getFach(AbiturFachbelegung belegung) {
+	public GostFach getFach(final AbiturFachbelegung belegung) {
 		if (belegung == null)
 			return null;
 		return gostFaecher.get(belegung.fachID);
@@ -292,13 +292,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false 
 	 */
-	public boolean pruefeBelegung(AbiturFachbelegung fachbelegung, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegung(final AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || (belegungHalbjahr.kursartKuerzel == null))
 				return false;
 		}
@@ -314,7 +314,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Anzahl der Belegungen des Faches
 	 */
-	public int zaehleBelegung(AbiturFachbelegung fachbelegung) {
+	public int zaehleBelegung(final AbiturFachbelegung fachbelegung) {
 		if (fachbelegung == null)
 			return 0;
 		int anzahl = 0;
@@ -336,14 +336,14 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern 
 	 */
-	public int zaehleBelegungInHalbjahren(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostHalbjahr... halbjahre) {
+	public int zaehleBelegungInHalbjahren(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return 0;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return 0;
 		int anzahl = 0;
-		for (@NotNull AbiturFachbelegung fachbelegung : fachbelegungen)
-			for (@NotNull GostHalbjahr halbjahr : halbjahre)
+		for (final @NotNull AbiturFachbelegung fachbelegung : fachbelegungen)
+			for (final @NotNull GostHalbjahr halbjahr : halbjahre)
 				if (fachbelegung.belegungen[halbjahr.id] != null)
 					anzahl++;
 		return anzahl;		
@@ -361,13 +361,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungMitKursart(AbiturFachbelegung fachbelegung, @NotNull GostKursart kursart, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungMitKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || (kursart != GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel)))
 				return false;
 		}
@@ -387,12 +387,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertMitKursart(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostKursart kursart, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertMitKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
 		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungMitKursart(fachbelegung, kursart, halbjahre))
 				return true;
 		}
@@ -412,13 +412,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Kursart mindestens einmal in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungHatMindestensEinmalKursart(AbiturFachbelegung fachbelegung, @NotNull GostKursart kursart, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungHatMindestensEinmalKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return false;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
 			if (kursart == GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel))
@@ -439,10 +439,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungMitSchriftlichkeitEinzeln(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr halbjahr) {
+	public boolean pruefeBelegungMitSchriftlichkeitEinzeln(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr halbjahr) {
 		if (fachbelegung == null)
 			return false;
-		AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 		if ((belegungHalbjahr == null) || (belegungHalbjahr.schriftlich == null) || 
 				((schriftlichkeit != GostSchriftlichkeit.BELIEBIG) &&
 				(((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich)) ||
@@ -463,12 +463,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungMitSchriftlichkeit(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungMitSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (GostHalbjahr halbjahr : halbjahre)
+		for (final GostHalbjahr halbjahr : halbjahre)
 			if (!pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr))
 				return false;
 		return true;
@@ -486,13 +486,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungErfuelltNicht(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungErfuelltNicht(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || ((schriftlichkeit != GostSchriftlichkeit.BELIEBIG) &&
 						(((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich)) ||
 						 ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
@@ -514,16 +514,16 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungErfuelltNichtFallsBelegt(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungErfuelltNichtFallsBelegt(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
-			@NotNull Boolean schriftlich = belegungHalbjahr.schriftlich == null ? false : belegungHalbjahr.schriftlich;
+			final @NotNull Boolean schriftlich = belegungHalbjahr.schriftlich == null ? false : belegungHalbjahr.schriftlich;
 			if (((schriftlichkeit != GostSchriftlichkeit.BELIEBIG) &&
 						(((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!schriftlich)) ||
 						 ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (schriftlich)))))
@@ -545,13 +545,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die angegebene Schriftlichkeit mindestens einmal in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungHatMindestensEinmalSchriftlichkeit(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungHatMindestensEinmalSchriftlichkeit(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return false;
-		for (GostHalbjahr halbjahr : halbjahre) {
-			AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+		for (final GostHalbjahr halbjahr : halbjahre) {
+			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
 			if ((schriftlichkeit.istSchriftlich == null) || (schriftlichkeit.istSchriftlich == belegungHalbjahr.schriftlich))
@@ -576,12 +576,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
 		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen)
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen)
 			if (pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
 				return true;
 		return false;
@@ -603,23 +603,23 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, sonst false 
 	 */
-	public boolean pruefeBelegungExistiert(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
-			List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
 				continue;
 			boolean hatBelegung = true;
-			for (GostHalbjahr halbjahr : halbjahre) {
+			for (final GostHalbjahr halbjahr : halbjahre) {
 				boolean hatHalbjahresBelegung = false;
-				for (AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					if (aktFachbelegung.belegungen[halbjahr.id] != null) {
 						hatHalbjahresBelegung = true;
 						break;
@@ -649,18 +649,18 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertEinzeln(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostHalbjahr halbjahr) {
+	public boolean pruefeBelegungExistiertEinzeln(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr halbjahr) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
-			List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
 				continue;
-			for (AbiturFachbelegung aktFachbelegung : alleBelegungen)
+			for (final AbiturFachbelegung aktFachbelegung : alleBelegungen)
 				if (aktFachbelegung.belegungen[halbjahr.id] != null)
 					return true;
 		}
@@ -680,23 +680,23 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls eine durchgehend schriftliche Fachbelegung existiert, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertDurchgehendSchriftlich(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public boolean pruefeBelegungExistiertDurchgehendSchriftlich(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
-			List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
 				continue;
 			boolean hatBelegung = true;
-			for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
+			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean hatHalbjahresBelegung = false;
-				for (AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					if (aktFachbelegung.belegungen[halbjahr.id] != null) {
-						AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
+						final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
 						if (((halbjahr != GostHalbjahr.Q11) && (halbjahr != GostHalbjahr.Q12) && (halbjahr != GostHalbjahr.Q21)) ||
 							((belegungHalbjahr != null) && (belegungHalbjahr.schriftlich != null) && (belegungHalbjahr.schriftlich)))
 						hatHalbjahresBelegung = true;
@@ -725,10 +725,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertMitSchriftlichkeitEinzeln(List<AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, @NotNull GostHalbjahr halbjahr) {
+	public boolean pruefeBelegungExistiertMitSchriftlichkeitEinzeln(final List<AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr halbjahr) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr))
 				return true;
 		}
@@ -747,10 +747,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertMitSchriftlichkeit(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
 				return true;
 		}
@@ -769,10 +769,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Kursart bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungExistiertHatMindestensEinmalKursart(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostKursart kursart, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertHatMindestensEinmalKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungHatMindestensEinmalKursart(fachbelegung, kursart, halbjahre))
 				return true;
 		}
@@ -792,10 +792,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true oder false (siehe oben) 
 	 */
-	public boolean pruefeBelegungExistiertErfuelltNicht(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertErfuelltNicht(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungErfuelltNicht(fachbelegung, schriftlichkeit, halbjahre))
 				return true;
 		}
@@ -816,10 +816,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true oder false (siehe oben) 
 	 */
-	public boolean pruefeBelegungExistiertErfuelltNichtFallsBelegt(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungExistiertErfuelltNichtFallsBelegt(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungErfuelltNichtFallsBelegt(fachbelegung, schriftlichkeit, halbjahre))
 				return true;
 		}
@@ -840,7 +840,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungDurchgehendBelegbar(AbiturFachbelegung fachbelegung, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegbar(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
 		if (!GostFachManager.istDurchgehendBelegbarBisQ22(getFach(fachbelegung)))
@@ -861,10 +861,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungDurchgehendBelegbarExistiert(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegbarExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegungDurchgehendBelegbar(fachbelegung, schriftlichkeit, halbjahre))
 				return true;
 		}
@@ -886,10 +886,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls bei eine Fachbelegung durchgängig belegt wurde und die Schriftlichkeit in den Halbjahren gegeben ist, sonst false 
 	 */
-	public boolean pruefeBelegungDurchgehendBelegtExistiert(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public boolean pruefeBelegungDurchgehendBelegtExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 				if (pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
 					return true;
@@ -909,10 +909,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls mindestens einmal die Kursart belegt wurde, sonst false
 	 */
-	public boolean pruefeAufKursart(AbiturFachbelegung fachbelegung, @NotNull GostKursart kursart) {
+	public boolean pruefeAufKursart(final AbiturFachbelegung fachbelegung, final @NotNull GostKursart kursart) {
 		if (fachbelegung == null)
 			return false;
-		for (AbiturFachbelegungHalbjahr belegunghalbjahr : fachbelegung.belegungen) {
+		for (final AbiturFachbelegungHalbjahr belegunghalbjahr : fachbelegung.belegungen) {
 			if ((belegunghalbjahr != null) && GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) == kursart)
 				return true;
 		}
@@ -931,11 +931,11 @@ public class AbiturdatenManager {
 	 * 
 	 * @return eine Liste mit den Fachbelegungen, welche die kursart haben
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungKursartExistiert(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostKursart kursart) {
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungKursartExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
 		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
 			return result;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeAufKursart(fachbelegung, kursart))
 				result.add(fachbelegung);
 		}
@@ -951,7 +951,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, wenn die Belegung durchgängig ist.
 	 */
-	public boolean pruefeDurchgaengigkeit(AbiturFachbelegung fachbelegung) {
+	public boolean pruefeDurchgaengigkeit(final AbiturFachbelegung fachbelegung) {
 		if ((fachbelegung == null) || (pruefeAufKursart(fachbelegung, GostKursart.ZK)))
 			return false;
 		return pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
@@ -969,25 +969,25 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Anzahl der durchgängigen Belegungen
 	 */	
-	public int zaehleDurchgaengigeBelegungen(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public int zaehleDurchgaengigeBelegungen(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return 0;
 		int anzahl = 0;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
-			GostFach fach = gostFaecher.get(fachbelegung.fachID);
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
+			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
 			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] == null)
 				continue;
-			List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
 				continue;
 			boolean hatBelegung = true;
 			// Beachte zur Fortsetzung alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			@NotNull GostHalbjahr@NotNull[] halbjahre = { GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
-			for (GostHalbjahr halbjahr : halbjahre) {
+			final @NotNull GostHalbjahr@NotNull[] halbjahre = { GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+			for (final GostHalbjahr halbjahr : halbjahre) {
 				boolean hatHalbjahresBelegung = false;
-				for (AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					if (aktFachbelegung.belegungen[halbjahr.id] != null) {
 						hatHalbjahresBelegung = true;
 						break;
@@ -1015,7 +1015,7 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, wenn die Belegung durchgängig ist und die Schriftlichkeit den Anforderungen genügt.
 	 */
-	public boolean pruefeDurchgaengigkeitSchriftlich(AbiturFachbelegung fachbelegung) {
+	public boolean pruefeDurchgaengigkeitSchriftlich(final AbiturFachbelegung fachbelegung) {
 		if (!pruefeDurchgaengigkeit(fachbelegung))
 			return false;
 		return pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21 );
@@ -1032,14 +1032,14 @@ public class AbiturdatenManager {
 	 * @return true, falls unter den Fachbelegungen mindestens ein Fach als Abiturfach von einem der 
 	 *         angegebenen Arten gewählt wurde und false sonst
 	 */
-	public boolean pruefeExistiertAbiFach(List<@NotNull AbiturFachbelegung> fachbelegungen, GostAbiturFach... arten) {
+	public boolean pruefeExistiertAbiFach(final List<@NotNull AbiturFachbelegung> fachbelegungen, final GostAbiturFach... arten) {
 		if ((arten == null) || (arten.length == 0))
 			return true;
 		if (fachbelegungen == null)
 			return false;
-		for (AbiturFachbelegung fachbelegung : fachbelegungen)
-			for (GostAbiturFach art : arten) {
-				GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen)
+			for (final GostAbiturFach art : arten) {
+				final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 				if (abiturFach == art)
 					return true;
 			}
@@ -1057,14 +1057,14 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
-	public boolean hatDoppelteFachbelegungInHalbjahr(@NotNull GostHalbjahr halbjahr) {
-		@NotNull HashSet<@NotNull String> set = new HashSet<>();
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+	public boolean hatDoppelteFachbelegungInHalbjahr(final @NotNull GostHalbjahr halbjahr) {
+		final @NotNull HashSet<@NotNull String> set = new HashSet<>();
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if (fach == null)
 				continue;
-			AbiturFachbelegungHalbjahr belegung = getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
+			final AbiturFachbelegungHalbjahr belegung = getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
 			if (belegung == null)
 				continue;
 			String kuerzel = GostFachManager.getFremdsprache(fach);
@@ -1086,10 +1086,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
-	public boolean hatDoppelteFachbelegung(@NotNull GostHalbjahr... halbjahre) {
+	public boolean hatDoppelteFachbelegung(final @NotNull GostHalbjahr... halbjahre) {
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return false;
-		for (GostHalbjahr halbjahr : halbjahre)
+		for (final GostHalbjahr halbjahr : halbjahre)
 			if (hatDoppelteFachbelegungInHalbjahr(halbjahr))
 				return true;
 		return false;
@@ -1114,10 +1114,10 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public AbiturFachbelegung getFachbelegungByID(long fach_id) {
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+	public AbiturFachbelegung getFachbelegungByID(final long fach_id) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if ((fach != null) && (fach_id == fach.id))
 				return fb;
 		}
@@ -1132,12 +1132,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public AbiturFachbelegung getFachbelegungByKuerzel(String kuerzel) {
+	public AbiturFachbelegung getFachbelegungByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || ("".equals(kuerzel)))
 			return null;
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if ((fach != null) && (kuerzel.equals(fach.kuerzel)))
 				return fb;
 		}
@@ -1153,12 +1153,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return eine Liste der Fachbelegungen aus den Fachbereichen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungen(GostFachbereich... fachbereiche) {
+	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungen(final GostFachbereich... fachbereiche) {
 		if ((fachbereiche == null) || (fachbereiche.length == 0))
 			return abidaten.fachbelegungen;
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		for (GostFachbereich fachbereich : fachbereiche) {
-			List<@NotNull AbiturFachbelegung> fachbelegungen = mapFachbereiche.get(fachbereich);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		for (final GostFachbereich fachbereich : fachbereiche) {
+			final List<@NotNull AbiturFachbelegung> fachbelegungen = mapFachbereiche.get(fachbereich);
 			if (fachbelegungen == null)
 				continue;
 			result.addAll(fachbelegungen);
@@ -1173,12 +1173,12 @@ public class AbiturdatenManager {
 	 * @return eine Liste der Fachbelegungen
 	 */
 	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungenBilingual() {
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fb : fachbelegungen) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen) {
 			if (zaehleBelegung(fb) <= 0)
 				continue;
-			GostFach fach = getFach(fb);
+			final GostFach fach = getFach(fb);
 			if ((fach != null) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach))
 					&& (fach.biliSprache != null) && (!"D".equals(fach.biliSprache)))
 				result.add(fb);
@@ -1195,12 +1195,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterFremdspracheNeuEinsetzend(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterFremdspracheNeuEinsetzend(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if ((fach != null) && fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
 				result.add(fb);
 		}
@@ -1215,12 +1215,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterFremdspracheFortgefuehrt(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterFremdspracheFortgefuehrt(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if ((fach != null) && fach.istFremdsprache && !fach.istFremdSpracheNeuEinsetzend)
 				result.add(fb);
 		}
@@ -1235,12 +1235,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterDurchgehendBelegbar(List<@NotNull AbiturFachbelegung> fachbelegungen) {
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+	public @NotNull List<@NotNull AbiturFachbelegung> filterDurchgehendBelegbar(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
 		if (fachbelegungen == null)
 			return result;
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if (GostFachManager.istDurchgehendBelegbarBisQ22(fach))
 				result.add(fb);
 		}
@@ -1257,11 +1257,11 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungen(List<@NotNull AbiturFachbelegung> fachbelegungen, GostHalbjahr... halbjahre) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungen(final List<@NotNull AbiturFachbelegung> fachbelegungen, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
 			if (pruefeBelegung(fb, halbjahre))
 				result.add(fb);
 		}
@@ -1279,30 +1279,30 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Anzahl der Fachbelegungen
 	 */
-	public int zaehleBelegungenDurchgaengig(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public int zaehleBelegungenDurchgaengig(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		@NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = gostFaecher.get(fb.fachID);
+		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = gostFaecher.get(fb.fachID);
 			if (fach == null)
 				continue;
-			@NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			if (zulFach != ZulaessigesFach.DEFAULT)
 				faecher.add(zulFach);
 		}
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
-		for (ZulaessigesFach zulFach : faecher) {
+		for (final ZulaessigesFach zulFach : faecher) {
 			boolean vorhanden = true;
-			for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
+			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;
-				for (AbiturFachbelegung fb : fachbelegungen) {
-					GostFach fbFach = gostFaecher.get(fb.fachID);
+				for (final AbiturFachbelegung fb : fachbelegungen) {
+					final GostFach fbFach = gostFaecher.get(fb.fachID);
 					if (fbFach == null)
 						continue;
-					@NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
 					if ((zulFach == fbZulFach) && (fb.belegungen[halbjahr.id] != null)) {
 						belegung_vorhanden = true;
 						break;
@@ -1330,32 +1330,32 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Anzahl der Fachbelegungen
 	 */
-	public int zaehleBelegungenDurchgaengigSchriftlichInQPhase(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	public int zaehleBelegungenDurchgaengigSchriftlichInQPhase(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		@NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = gostFaecher.get(fb.fachID);
+		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = gostFaecher.get(fb.fachID);
 			if (fach == null)
 				continue;
-			@NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			if (zulFach != ZulaessigesFach.DEFAULT)
 				faecher.add(zulFach);
 		}
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
-		for (ZulaessigesFach zulFach : faecher) {
+		for (final ZulaessigesFach zulFach : faecher) {
 			boolean vorhanden = true;
-			for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
+			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;
-				for (AbiturFachbelegung fb : fachbelegungen) {
-					GostFach fbFach = gostFaecher.get(fb.fachID);
+				for (final AbiturFachbelegung fb : fachbelegungen) {
+					final GostFach fbFach = gostFaecher.get(fb.fachID);
 					if (fbFach == null)
 						continue;
-					@NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
 					if (zulFach == fbZulFach) {
-						AbiturFachbelegungHalbjahr belegung = fb.belegungen[halbjahr.id];
+						final AbiturFachbelegungHalbjahr belegung = fb.belegungen[halbjahr.id];
 						if (belegung != null) {
 							boolean istSchriftlichkeitOK = true;
 							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21)) && 
@@ -1390,11 +1390,11 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die gefilterten Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungenMitSchriftlichkeit(List<@NotNull AbiturFachbelegung> fachbelegungen, @NotNull GostSchriftlichkeit schriftlichkeit, GostHalbjahr... halbjahre) {
+	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungenMitSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegungen == null)
 			return Collections.emptyList();
-		@NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		for (AbiturFachbelegung fb : fachbelegungen) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
 			if (pruefeBelegungMitSchriftlichkeit(fb, schriftlichkeit, halbjahre))
 				result.add(fb);
 		}
@@ -1409,8 +1409,8 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Fachbelegung oder null
 	 */
-	public AbiturFachbelegung getFachbelegung(@NotNull GostFachbereich fachbereich) {
-		Vector<AbiturFachbelegung> faecher = mapFachbereiche.get(fachbereich);
+	public AbiturFachbelegung getFachbelegung(final @NotNull GostFachbereich fachbereich) {
+		final Vector<AbiturFachbelegung> faecher = mapFachbereiche.get(fachbereich);
 		if ((faecher == null) || (faecher.size() == 0))
 			return null;
 		return faecher.get(0);
@@ -1425,13 +1425,13 @@ public class AbiturdatenManager {
 	 * 
 	 * @return eine Liste mit den Fachbelegungen
 	 */
-	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungByFachkuerzel(String kuerzel) {
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = new Vector<>();
+	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungByFachkuerzel(final String kuerzel) {
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = new Vector<>();
 		if (kuerzel == null)
 			return fachbelegungen;
-		@NotNull Vector<@NotNull AbiturFachbelegung> tmpFachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fachbelegung : tmpFachbelegungen) {
-			GostFach fach = gostFaecher.get(fachbelegung.fachID);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> tmpFachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fachbelegung : tmpFachbelegungen) {
+			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if ((fach == null) || (!kuerzel.equals(fach.kuerzel)))
 				continue;
 			fachbelegungen.add(fachbelegung);
@@ -1450,8 +1450,8 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Belegungsinformationen zu dem Fach
 	 */
-	public AbiturFachbelegungHalbjahr getBelegungHalbjahr(@NotNull AbiturFachbelegung fachbelegung, @NotNull GostHalbjahr halbjahr, @NotNull GostSchriftlichkeit schriftlich) {
-		AbiturFachbelegungHalbjahr belegung = fachbelegung.belegungen[halbjahr.id];
+	public AbiturFachbelegungHalbjahr getBelegungHalbjahr(final @NotNull AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr halbjahr, final @NotNull GostSchriftlichkeit schriftlich) {
+		final AbiturFachbelegungHalbjahr belegung = fachbelegung.belegungen[halbjahr.id];
 		return ((belegung != null) && 
 			    ((schriftlich == GostSchriftlichkeit.BELIEBIG) ||
 					     ((schriftlich == GostSchriftlichkeit.SCHRIFTLICH) && (belegung.schriftlich)) ||
@@ -1467,12 +1467,12 @@ public class AbiturdatenManager {
 	 * 
 	 * @return die Fachbelegung für die Sprache
 	 */
-	public AbiturFachbelegung getSprachbelegung(String sprache) {
+	public AbiturFachbelegung getSprachbelegung(final String sprache) {
 		if (sprache == null)
 			return null;
-		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
-		for (AbiturFachbelegung fb : fachbelegungen) {
-			GostFach fach = getFach(fb);
+		final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = getFach(fb);
 			if ((fach == null) || (!GostFachManager.istFremdsprachenfach(fach, sprache)))
 				continue;
 			if (sprache.equals(GostFachManager.getFremdsprache(fach)))
@@ -1492,20 +1492,20 @@ public class AbiturdatenManager {
 	 * 
 	 * @return eine Liste der Halbjahre in den das Fach mit einer der Kursarten belegt wurde
 	 */
-	public @NotNull Vector<@NotNull GostHalbjahr> getHalbjahreKursart(AbiturFachbelegung fachbelegung, GostKursart... kursarten) {
-		@NotNull Vector<@NotNull GostHalbjahr> halbjahre = new Vector<>();  
+	public @NotNull Vector<@NotNull GostHalbjahr> getHalbjahreKursart(final AbiturFachbelegung fachbelegung, final GostKursart... kursarten) {
+		final @NotNull Vector<@NotNull GostHalbjahr> halbjahre = new Vector<>();  
 		if (fachbelegung != null) {
-			for (AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
+			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
 				if (belegungHalbjahr == null)
 					continue;
-				GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
+				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
 					continue;
 				if ((kursarten == null) || (kursarten.length == 0)) {
 					halbjahre.add(halbjahr);
 					continue;
 				}
-				for (GostKursart kursart : kursarten) {
+				for (final GostKursart kursart : kursarten) {
 					if (kursart.equals(GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel))) {
 						halbjahre.add(halbjahr);
 						break;
@@ -1538,13 +1538,13 @@ public class AbiturdatenManager {
 	 * @return true, falls eine fortgeführte Fremdsprache bei den übergebenen 
 	 *         Fachbelegungen existiert, ansonsten false 
 	 */
-	public boolean hatFortgefuehrteFremdspracheInSprachendaten(List<@NotNull AbiturFachbelegung> fremdsprachen) {
+	public boolean hatFortgefuehrteFremdspracheInSprachendaten(final List<@NotNull AbiturFachbelegung> fremdsprachen) {
 		if (fremdsprachen == null)
 			return false;
 		if (abidaten.sprachendaten == null)
 			return false;
-		for (AbiturFachbelegung fs: fremdsprachen) {
-			GostFach fach = getFach(fs);
+		for (final AbiturFachbelegung fs: fremdsprachen) {
+			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
 			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
@@ -1565,13 +1565,13 @@ public class AbiturdatenManager {
 	 * @return true, falls eine neu einsetzende Fremdsprache bei den übergebenen 
 	 *         Fachbelegungen existiert, ansonsten false 
 	 */
-	public boolean hatNeuEinsetzendeFremdspracheInSprachendaten(List<@NotNull AbiturFachbelegung> fremdsprachen) {
+	public boolean hatNeuEinsetzendeFremdspracheInSprachendaten(final List<@NotNull AbiturFachbelegung> fremdsprachen) {
 		if (fremdsprachen == null)
 			return false;
 		if (abidaten.sprachendaten == null)
 			return false;
-		for (AbiturFachbelegung fs: fremdsprachen) {
-			GostFach fach = getFach(fs);
+		for (final AbiturFachbelegung fs: fremdsprachen) {
+			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
             if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
@@ -1592,8 +1592,8 @@ public class AbiturdatenManager {
 	 * 
 	 * @return true, falls das Fach seit EF1 durchgängig belegt wurde oder eine der Ausnahmen zutrifft, sonsta false 
 	 */
-	public boolean istBelegtSeitEF(@NotNull AbiturFachbelegung fachbelegung) {
-		GostFach fach = getFach(fachbelegung);
+	public boolean istBelegtSeitEF(final @NotNull AbiturFachbelegung fachbelegung) {
+		final GostFach fach = getFach(fachbelegung);
 		if (fach == null)
 			return false;
 		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
@@ -1602,22 +1602,22 @@ public class AbiturdatenManager {
 			return true;
 		if ("PL".equals(fach.kuerzel))
 			return true;
-		for (AbiturFachbelegungHalbjahr belegung : fachbelegung.belegungen) {
+		for (final AbiturFachbelegungHalbjahr belegung : fachbelegung.belegungen) {
 			if (belegung == null)
 				continue;
-			GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
-			GostKursart kursart = GostKursart.fromKuerzel(belegung.kursartKuerzel);
+			final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
+			final GostKursart kursart = GostKursart.fromKuerzel(belegung.kursartKuerzel);
 			if ((halbjahr == null) || (kursart == null))
 				continue;
 			if ((kursart == GostKursart.ZK) || (kursart == GostKursart.PJK) || (kursart == GostKursart.VTF))
 				continue;
 			// Prüfe, ob das vorige Halbjahr auch belegt wurde
-			GostHalbjahr prevHalbjahr = halbjahr.previous();
+			final GostHalbjahr prevHalbjahr = halbjahr.previous();
 			if (prevHalbjahr == null)
 				continue;
 			if (fachbelegung.belegungen[prevHalbjahr.id] == null) {
 				// Prüfe, ob eine Belegung des gleichen Statistik-Faches im Halbjahr zuvor existiert - dies kann bei bilingualen Fächern auftreten
-				List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+				final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 				if ((alleBelegungen == null) || (alleBelegungen.size() <= 1))
 					return false;
 				if (!pruefeBelegungExistiert(alleBelegungen, prevHalbjahr))
@@ -1638,10 +1638,10 @@ public class AbiturdatenManager {
 	 */
 	@JsonIgnore
 	public @NotNull GostBelegpruefungErgebnis getBelegpruefungErgebnis() {
-		@NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();
+		final @NotNull GostBelegpruefungErgebnis ergebnis = new GostBelegpruefungErgebnis();
 		ergebnis.erfolgreich = belegpruefungErfolgreich;
 		for (int i = 0; i < belegpruefungsfehler.size(); i++) {
-			@NotNull GostBelegungsfehler fehler = belegpruefungsfehler.get(i);
+			final @NotNull GostBelegungsfehler fehler = belegpruefungsfehler.get(i);
 			ergebnis.fehlercodes.add(new GostBelegpruefungErgebnisFehler(fehler, pruefungsArt));
 		}
 		// TODO Ergänze das Ergebnis um einen Log der Belegprüfung

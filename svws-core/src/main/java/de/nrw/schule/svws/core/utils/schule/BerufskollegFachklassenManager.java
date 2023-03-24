@@ -119,7 +119,7 @@ public class BerufskollegFachklassenManager {
 	 * 
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
 	 */
-	public BerufskollegFachklassenKatalogEintrag get(@NotNull String kuerzel) {
+	public BerufskollegFachklassenKatalogEintrag get(final @NotNull String kuerzel) {
 		return this._mapByKuerzel.get(kuerzel);
 	}
 
@@ -178,7 +178,7 @@ public class BerufskollegFachklassenManager {
 	 * 
 	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist 
 	 */
-	public String getKuerzel(long id) {
+	public String getKuerzel(final long id) {
 		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByID.get(id);
 		final Integer index = this._mapIndexByEintrag.get(eintrag);
 		return (eintrag == null) || (index == null) ? null : "" + index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;

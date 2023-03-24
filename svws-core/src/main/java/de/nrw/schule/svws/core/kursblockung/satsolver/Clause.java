@@ -32,7 +32,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 	 * 
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 */
-	Clause(@NotNull Variable pX) {
+	Clause(final @NotNull Variable pX) {
 		variables = new Variable[] { pX };
 		free = 1;
 		sat = 0;
@@ -44,7 +44,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 */
-	Clause(@NotNull Variable pX, @NotNull Variable pY) {
+	Clause(final @NotNull Variable pX, final @NotNull Variable pY) {
 		variables = new Variable[] { pX, pY };
 		free = 2;
 		sat = 0;
@@ -57,7 +57,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 * @param pZ Die 3. Variable in dieser Klausel.
 	 */
-	Clause(@NotNull Variable pX, @NotNull Variable pY, @NotNull Variable pZ) {
+	Clause(final @NotNull Variable pX, final @NotNull Variable pY, final @NotNull Variable pZ) {
 		variables = new Variable[] { pX, pY, pZ };
 		free = 3;
 		sat = 0;
@@ -66,7 +66,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 	@Override
 	public @NotNull String toString() {
 		@NotNull String s = "";
-		for (@NotNull Variable v : variables) {
+		for (final @NotNull Variable v : variables) {
 			if (v.index == -1) {
 				return "[SAT]";
 			}
@@ -80,8 +80,8 @@ public class Clause implements Comparable<@NotNull Clause> {
 	}
 
 	private @NotNull AVLSet<@NotNull Integer> getSet() {
-		@NotNull AVLSet<@NotNull Integer> set = new AVLSet<>();
-		for (@NotNull Variable v : variables) {
+		final @NotNull AVLSet<@NotNull Integer> set = new AVLSet<>();
+		for (final @NotNull Variable v : variables) {
 			if (v.index >= 0) {
 				set.add(v.nr);
 			}
@@ -90,23 +90,23 @@ public class Clause implements Comparable<@NotNull Clause> {
 	}
 
 	@Override
-	public int compareTo(@NotNull Clause o) {
-		@NotNull AVLSet<@NotNull Integer> set1 = getSet();
-		@NotNull AVLSet<@NotNull Integer> set2 = o.getSet();
+	public int compareTo(final @NotNull Clause o) {
+		final @NotNull AVLSet<@NotNull Integer> set1 = getSet();
+		final @NotNull AVLSet<@NotNull Integer> set2 = o.getSet();
 
 		if (set1.size() < set2.size())
 			return -1;
 		if (set1.size() > set2.size())
 			return +1;
 
-		Iterator<@NotNull Integer> i1 = set1.iterator();
-		Iterator<@NotNull Integer> i2 = set2.iterator();
+		final Iterator<@NotNull Integer> i1 = set1.iterator();
+		final Iterator<@NotNull Integer> i2 = set2.iterator();
 		
 		if ((i1 == null) || (i2 == null))
 			throw new NullPointerException();
 
 		while (i1.hasNext()) {
-			int cmp = Integer.compare(i1.next(), i2.next());
+			final int cmp = Integer.compare(i1.next(), i2.next());
 			if (cmp != 0)
 				return cmp;
 		}

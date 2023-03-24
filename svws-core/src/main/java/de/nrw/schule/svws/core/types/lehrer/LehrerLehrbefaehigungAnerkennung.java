@@ -56,7 +56,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 * 
 	 * @param historie   die Historie der Lehrbefähigung, welches ein Array von {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag} ist  
 	 */
-	private LehrerLehrbefaehigungAnerkennung(@NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag@NotNull[] historie) {
+	private LehrerLehrbefaehigungAnerkennung(final @NotNull LehrerKatalogLehrbefaehigungAnerkennungEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -71,7 +71,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
-			for (LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
+			for (final LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
 				_anerkennungenByID.put(l.daten.id, l);				
 		return _anerkennungenByID;
 	}
@@ -85,7 +85,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehrbefaehigungAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
-			for (LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
+			for (final LehrerLehrbefaehigungAnerkennung l : LehrerLehrbefaehigungAnerkennung.values())
 				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);				
 		return _anerkennungenByKuerzel;
 	}
@@ -98,7 +98,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 * 
 	 * @return der Anerkennungsgrund für Lehrbefähigungen oder null, falls die ID ungültig ist
 	 */
-	public static LehrerLehrbefaehigungAnerkennung getByID(long id) {
+	public static LehrerLehrbefaehigungAnerkennung getByID(final long id) {
 		return getMapAnerkennungenByID().get(id);
 	}
 
@@ -110,7 +110,7 @@ public enum LehrerLehrbefaehigungAnerkennung {
 	 * 
 	 * @return der Anerkennungsgrund für Lehrbefähigungen oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerLehrbefaehigungAnerkennung getByKuerzel(String kuerzel) {
+	public static LehrerLehrbefaehigungAnerkennung getByKuerzel(final String kuerzel) {
 		return getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 

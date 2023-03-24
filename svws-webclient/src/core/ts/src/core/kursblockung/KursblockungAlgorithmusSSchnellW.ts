@@ -52,7 +52,7 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		let verbesserung : boolean = false;
 		KursblockungStatic.aktionPermutiere(this._random, this.perm);
 		for (let p : number = 0; p < this.schuelerArr.length; p++) {
-			let i : number = this.perm[p];
+			const i : number = this.perm[p];
 			verbesserung = verbesserung || this.verteileSchuelerEiner(this.schuelerArr[i]);
 		}
 		return verbesserung;
@@ -65,7 +65,7 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
-		let cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		const cmp : number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
 		if (cmp < 0)
 			schueler.aktionZustandLadenS();
 		return cmp > 0;

@@ -58,7 +58,7 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @return Ein Array der Länge n mit neu erzeugten Variablennummern.
 	 */
 	public createNewVars(n : number) : Array<number> {
-		let temp : Array<number> | null = Array(n).fill(0);
+		const temp : Array<number> | null = Array(n).fill(0);
 		for (let i : number = 0; i < temp.length; i++) {
 			temp[i] = this._solver.createNewVar();
 		}
@@ -134,7 +134,7 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @return Die Variable z für die {@code z = x AND y} gilt.
 	 */
 	public c_new_var_AND(x : number, y : number) : number {
-		let c : number = this._solver.createNewVar();
+		const c : number = this._solver.createNewVar();
 		this.c_2(x, -c);
 		this.c_2(y, -c);
 		this.c_3(-x, -y, c);
@@ -162,24 +162,24 @@ export class SatSolverWrapper extends SatSolverA {
 	 */
 	public c_exactly_GENERIC(__param0 : Array<number> | LinkedCollection<number>, __param1 : number) : void {
 		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let pArray : Array<number> = __param0;
-			let amount : number = __param1 as number;
+			const pArray : Array<number> = __param0;
+			const amount : number = __param1 as number;
 			this.c_exactly_GENERIC(SatSolverWrapper.toList(pArray), amount);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let pList : LinkedCollection<number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
-			let pAmount : number = __param1 as number;
-			let list : LinkedCollection<number> = new LinkedCollection(pList);
+			const pList : LinkedCollection<number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+			const pAmount : number = __param1 as number;
+			const list : LinkedCollection<number> = new LinkedCollection(pList);
 			if (pAmount > list.size()) {
 				console.log(JSON.stringify("FEHLER: c_exactly_GENERIC --> amount > list.size()"));
 			}
 			if (pAmount === 0) {
-				for (let x of list) {
+				for (const x of list) {
 					this.c_1(-x);
 				}
 				return;
 			}
 			if (pAmount === list.size()) {
-				for (let x of list) {
+				for (const x of list) {
 					this.c_1(+x);
 				}
 				return;
@@ -207,12 +207,12 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
 	public c_at_most_GENERIC(pList : LinkedCollection<number>, pMaximum : number) : void {
-		let list : LinkedCollection<number> = new LinkedCollection(pList);
+		const list : LinkedCollection<number> = new LinkedCollection(pList);
 		if (pMaximum >= list.size()) {
 			return;
 		}
 		if (pMaximum === 0) {
-			for (let x of list) {
+			for (const x of list) {
 				this.c_1(-x);
 			}
 			return;
@@ -256,7 +256,7 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @return Die Variable z für die {@code z = x OR y} gilt.
 	 */
 	private c_new_var_OR(x : number, y : number) : number {
-		let z : number = this._solver.createNewVar();
+		const z : number = this._solver.createNewVar();
 		this.c_2(-x, z);
 		this.c_2(-y, z);
 		this.c_3(x, y, -z);
@@ -272,14 +272,14 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
 	private c_at_most_one_tree(pList : LinkedCollection<number>) : number {
-		let list : LinkedCollection<number> = new LinkedCollection(pList);
+		const list : LinkedCollection<number> = new LinkedCollection(pList);
 		if (list.isEmpty()) {
 			list.add(this.varFALSE);
 		}
 		while (list.size() >= 2) {
-			let a : number = list.removeFirst().valueOf();
-			let b : number = list.removeFirst().valueOf();
-			let c : number = this._solver.createNewVar();
+			const a : number = list.removeFirst().valueOf();
+			const b : number = list.removeFirst().valueOf();
+			const c : number = this._solver.createNewVar();
 			this.c_not_both(a, b);
 			this.c_z_equals_x_or_y(a, b, c);
 			list.add(c);
@@ -290,9 +290,9 @@ export class SatSolverWrapper extends SatSolverA {
 	private c_exactly_NETWORK(list : LinkedCollection<number>, amount : number) : void {
 		this.c_bitonic_sort(list);
 		let i : number = 0;
-		let iter : JavaIterator<number> = list.iterator();
+		const iter : JavaIterator<number> = list.iterator();
 		while (iter.hasNext()) {
-			let value : number = iter.next();
+			const value : number = iter.next();
 			if (i < amount) {
 				this.c_1(+value!);
 			} else {
@@ -305,9 +305,9 @@ export class SatSolverWrapper extends SatSolverA {
 	private c_at_most_NETWORK(list : LinkedCollection<number>, maximum : number) : void {
 		this.c_bitonic_sort(list);
 		let i : number = 0;
-		let iter : JavaIterator<number> = list.iterator();
+		const iter : JavaIterator<number> = list.iterator();
 		while (iter.hasNext()) {
-			let value : number = iter.next();
+			const value : number = iter.next();
 			if (i < maximum)
 				i++;
 			else
@@ -348,7 +348,7 @@ export class SatSolverWrapper extends SatSolverA {
 	}
 
 	private c_bitonic_sort_difference(list : LinkedCollection<number>, size : number) : void {
-		let half : number = Math.trunc(size / 2);
+		const half : number = Math.trunc(size / 2);
 		for (let i : number = 0; i < list.size(); i += size) {
 			for (let j : number = 0; j < half; j++) {
 				this.c_bitonic_comparator(list, i + j, i + j + half);
@@ -360,15 +360,15 @@ export class SatSolverWrapper extends SatSolverA {
 		if (i1 >= i2) {
 			console.log(JSON.stringify("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!"));
 		}
-		let a : number = result.get(i1).valueOf();
-		let b : number = result.get(i2).valueOf();
+		const a : number = result.get(i1).valueOf();
+		const b : number = result.get(i2).valueOf();
 		result.set(i1, this.c_new_var_OR(a, b));
 		result.set(i2, this.c_new_var_AND(a, b));
 	}
 
 	private static toList(pArray : Array<number>) : LinkedCollection<number> {
-		let list : LinkedCollection<number> = new LinkedCollection();
-		for (let x of pArray) {
+		const list : LinkedCollection<number> = new LinkedCollection();
+		for (const x of pArray) {
 			list.addLast(x);
 		}
 		return list;

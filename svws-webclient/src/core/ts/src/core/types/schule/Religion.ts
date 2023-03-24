@@ -116,7 +116,7 @@ export class Religion extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Religion | null> {
 		if (Religion._mapKuerzel.size() === 0) {
-			for (let s of Religion.values()) {
+			for (const s of Religion.values()) {
 				if (s.daten !== null)
 					Religion._mapKuerzel.put(s.daten.kuerzel, s);
 			}

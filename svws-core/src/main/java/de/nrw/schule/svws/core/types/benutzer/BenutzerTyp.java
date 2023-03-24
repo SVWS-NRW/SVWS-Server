@@ -34,7 +34,7 @@ public enum BenutzerTyp {
      * @param id                  die ID des Benutzertyps
      * @param bezeichnung         die Bezeichnung des Benutzertyps
      */
-    private BenutzerTyp(int id, @NotNull String bezeichnung) {
+    private BenutzerTyp(final int id, final @NotNull String bezeichnung) {
         this.id = id;
         this.bezeichnung = bezeichnung;
     }
@@ -47,7 +47,7 @@ public enum BenutzerTyp {
      *  
      * @return die Benutzerkompetenz oder null, falls die ID fehlerhaft ist
      */
-    public static BenutzerTyp getByID(int id) {
+    public static BenutzerTyp getByID(final int id) {
     	switch (id) {
     		case 0: return BenutzerTyp.ALLGEMEIN;
     		case 1: return BenutzerTyp.LEHRER;

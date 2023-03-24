@@ -15,7 +15,6 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description="Die Stammdaten eines Schüler-Eintrags.")
 @TranspilerDTO
-@NotNull
 public class BenutzergruppeDaten {
 
 	/** Die ID der Benutzergruppe. */

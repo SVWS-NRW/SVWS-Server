@@ -59,8 +59,8 @@ public class UebergangsempfehlungKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public UebergangsempfehlungKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung,
-	        Schulform empfehlung, Schulform teilweise, Integer gueltigVon, Integer gueltigBis) {
+	public UebergangsempfehlungKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
+	        final Schulform empfehlung, final Schulform teilweise, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

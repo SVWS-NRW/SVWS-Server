@@ -204,8 +204,8 @@ export class Jahrgaenge extends JavaObject {
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
 			this.bezeichnungen[i] = new Vector();
-			for (let bez of historie[i].bezeichnungen) {
-				let sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
+			for (const bez of historie[i].bezeichnungen) {
+				const sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
 				if (sf !== null)
 					this.schulformen[i].add(sf);
 				this.bezeichnungen[i].add(bez.bezeichnung);
@@ -221,7 +221,7 @@ export class Jahrgaenge extends JavaObject {
 	 */
 	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge | null> {
 		if (Jahrgaenge._mapKuerzel.size() === 0)
-			for (let j of Jahrgaenge.values())
+			for (const j of Jahrgaenge.values())
 				Jahrgaenge._mapKuerzel.put(j.daten.kuerzel, j);
 		return Jahrgaenge._mapKuerzel;
 	}
@@ -234,8 +234,8 @@ export class Jahrgaenge extends JavaObject {
 	 */
 	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge | null> {
 		if (Jahrgaenge._mapID.size() === 0)
-			for (let j of Jahrgaenge.values()) {
-				for (let k of j.historie)
+			for (const j of Jahrgaenge.values()) {
+				for (const k of j.historie)
 					Jahrgaenge._mapID.put(k.id, j);
 			}
 		return Jahrgaenge._mapID;
@@ -275,8 +275,8 @@ export class Jahrgaenge extends JavaObject {
 			return null;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				let bez : JahrgangsKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
-				let sfKuerzel : string | null = bez.schulform;
+				const bez : JahrgangsKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
+				const sfKuerzel : string | null = bez.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return bez.bezeichnung;
 			}
@@ -301,12 +301,12 @@ export class Jahrgaenge extends JavaObject {
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
 	public static get(schulform : Schulform | null) : List<Jahrgaenge | null> {
-		let result : Vector<Jahrgaenge | null> = new Vector();
+		const result : Vector<Jahrgaenge | null> = new Vector();
 		if (schulform === null)
 			return result;
-		let jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();
+		const jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();
 		for (let i : number = 0; i < jahrgaenge.length; i++) {
-			let jahrgang : Jahrgaenge = jahrgaenge[i];
+			const jahrgang : Jahrgaenge = jahrgaenge[i];
 			if (jahrgang.hasSchulform(schulform))
 				result.add(jahrgang);
 		}
@@ -339,7 +339,7 @@ export class Jahrgaenge extends JavaObject {
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -359,7 +359,7 @@ export class Jahrgaenge extends JavaObject {
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
+				const sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}

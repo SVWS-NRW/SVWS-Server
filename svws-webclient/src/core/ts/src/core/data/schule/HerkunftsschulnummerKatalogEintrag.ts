@@ -65,23 +65,23 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null))) {
-			let id : number = __param0 as number;
-			let schulnummer : number = __param1 as number;
-			let bezeichnung : string = __param2;
-			let zulaessig : List<Pair<Schulform, Schulgliederung | null>> | null = cast_java_util_List(__param3);
-			let gueltigVon : number | null = __param4;
-			let gueltigBis : number | null = __param5;
+			const id : number = __param0 as number;
+			const schulnummer : number = __param1 as number;
+			const bezeichnung : string = __param2;
+			const zulaessig : List<Pair<Schulform, Schulgliederung | null>> | null = cast_java_util_List(__param3);
+			const gueltigVon : number | null = __param4;
+			const gueltigBis : number | null = __param5;
 			this.id = id;
 			this.schulnummer = schulnummer;
 			this.bezeichnung = bezeichnung;
 			if (zulaessig !== null) {
-				for (let zul of zulaessig) {
-					let sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
-					let sf : Schulform = zul.a;
+				for (const zul of zulaessig) {
+					const sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
+					const sf : Schulform = zul.a;
 					if (sf.daten === null)
 						continue;
 					sfsgl.schulform = sf.daten.kuerzel;
-					let sgl : Schulgliederung | null = zul.b;
+					const sgl : Schulgliederung | null = zul.b;
 					sfsgl.gliederung = ((sgl === null) || (sgl.daten === null)) ? null : sgl.daten.kuerzel;
 					this.zulaessig.add(sfsgl);
 				}

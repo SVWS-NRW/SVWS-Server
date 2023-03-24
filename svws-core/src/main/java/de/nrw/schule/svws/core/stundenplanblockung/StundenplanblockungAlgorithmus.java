@@ -15,7 +15,7 @@ public class StundenplanblockungAlgorithmus
 		extends Service<@NotNull StundenplanblockungManager, @NotNull StundenplanblockungManager> {
 
 	@Override
-	public @NotNull StundenplanblockungManager handle(@NotNull StundenplanblockungManager pInput) {
+	public @NotNull StundenplanblockungManager handle(final @NotNull StundenplanblockungManager pInput) {
 		return pInput;
 	}
 

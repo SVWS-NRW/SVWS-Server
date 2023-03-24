@@ -64,8 +64,8 @@ public class HerkunftBildungsgangTypKatalogEintrag {
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public HerkunftBildungsgangTypKatalogEintrag(long id, WeiterbildungskollegBildungsgangTyp wbkTyp,
-			BerufskollegBildungsgangTyp bkTyp, Integer gueltigVon, Integer gueltigBis) {
+	public HerkunftBildungsgangTypKatalogEintrag(final long id, final WeiterbildungskollegBildungsgangTyp wbkTyp,
+			final BerufskollegBildungsgangTyp bkTyp, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		if ((wbkTyp != null) && (bkTyp != null))
 			throw new IllegalArgumentException("Fehler im Core-Type: wbkTyp und bkTyp dürfen nicht gleichzeitig gesetzt sein.");

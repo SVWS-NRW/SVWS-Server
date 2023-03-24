@@ -35,7 +35,7 @@ public class GostBelegpruefungErgebnisFehler {
 	 * @param pruef_art   die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um 
 	 *                    die konkrete Ausprägung des Textinformationen bestimmen zu können.
 	 */
-	public GostBelegpruefungErgebnisFehler(@NotNull GostBelegungsfehler f, @NotNull GostBelegpruefungsArt pruef_art) {
+	public GostBelegpruefungErgebnisFehler(final @NotNull GostBelegungsfehler f, final @NotNull GostBelegpruefungsArt pruef_art) {
 		this.code = f.toString();
 		this.art = f.getArt().kuerzel;
 		this.beschreibung = f.getText(pruef_art);

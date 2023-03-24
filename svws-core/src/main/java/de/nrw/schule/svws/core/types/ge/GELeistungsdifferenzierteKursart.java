@@ -27,7 +27,7 @@ public enum GELeistungsdifferenzierteKursart {
      * 
      * @param kuerzel   das Kürzel für die leistungsdifferenzierte Kursart
      */
-    GELeistungsdifferenzierteKursart(@NotNull String kuerzel) {
+    GELeistungsdifferenzierteKursart(final @NotNull String kuerzel) {
         this.kuerzel = kuerzel;
     }
 
@@ -41,7 +41,7 @@ public enum GELeistungsdifferenzierteKursart {
      * 
      * @return das resultierende Objekt dieser Aufzählung
      */
-    public static @NotNull GELeistungsdifferenzierteKursart from(String kuerzel) {
+    public static @NotNull GELeistungsdifferenzierteKursart from(final String kuerzel) {
         switch (kuerzel) {
             case "E":
                 return GELeistungsdifferenzierteKursart.E;
@@ -59,7 +59,7 @@ public enum GELeistungsdifferenzierteKursart {
      * 
      * @return true, falls sie das Kürzel hat und ansonsten false
      */
-    public boolean hat(String kuerzel) {
+    public boolean hat(final String kuerzel) {
     	return this.kuerzel.equals(from(kuerzel).kuerzel);
     }
     

@@ -27,7 +27,7 @@ public class ServicePrognose extends Service<@NotNull GEAbschlussFaecher, @NotNu
 	 * 
 	 * @return true, falls die Lernbereichsnoten vorhanden sind, ansonsten false
 	 */
-    private static boolean hatLernbereichsnoten(@NotNull GEAbschlussFaecher faecher) {
+    private static boolean hatLernbereichsnoten(final @NotNull GEAbschlussFaecher faecher) {
     	boolean hatLBNW = false; 
     	boolean hatLBAL = false;
     	if (faecher.faecher == null)
@@ -52,7 +52,7 @@ public class ServicePrognose extends Service<@NotNull GEAbschlussFaecher, @NotNu
 	 * @return das Ergebnis der Prognoseberechnung
 	 */
 	@Override
-    public @NotNull AbschlussErgebnis handle(@NotNull GEAbschlussFaecher input) {
+    public @NotNull AbschlussErgebnis handle(final @NotNull GEAbschlussFaecher input) {
         // Prüfe, ob genügend leistungsdifferenzierte Kurse vorkommen
         if (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input)) {
             logger.logLn(LogLevel.DEBUG, "Fehler: Es wurden nicht genügend leistungsdiffernzierte Fächer gefunden.");

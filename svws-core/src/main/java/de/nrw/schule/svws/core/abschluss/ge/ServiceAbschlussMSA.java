@@ -21,23 +21,23 @@ import java.util.function.Predicate;
  */
 public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)));	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4)));	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)));	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls1NS = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5)));
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls2NS = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6));
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMitNPOption = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5));	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)));	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4)));	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)));	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5)));
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6));
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5));	
 	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) && "WP".equalsIgnoreCase(f.kuerzel); 
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (@NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel); 	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) && "WP".equalsIgnoreCase(f.kuerzel); 
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel); 	
 
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterBenoetigte3er = (@NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteBenoetigte3erMitNPOption = (@NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note == 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterBenoetigte3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteBenoetigte3erMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note == 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
 	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche = (@NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4)));	
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche3er = (@NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note < 3);	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4)));	
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note < 3);	
 		
-	private @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (@NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 	
 	
 	/**
@@ -47,7 +47,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 	 * 
 	 * @return die Zuordnung der Abschlussfächer zu beiden Fachgruppen 1 und 2
 	 */
-	public static @NotNull AbschlussFaecherGruppen getFaechergruppen(@NotNull List<@NotNull GEAbschlussFach> input) {
+	public static @NotNull AbschlussFaecherGruppen getFaechergruppen(final @NotNull List<@NotNull GEAbschlussFach> input) {
 		final @NotNull AbschlussFaecherGruppen faecher = new AbschlussFaecherGruppen(
         	new AbschlussFaecherGruppe(input, Arrays.asList("D", "M", "E", "WP"), null),
         	new AbschlussFaecherGruppe(input, null, Arrays.asList("D", "M", "E", "WP", "LBNW", "LBAL")
@@ -66,7 +66,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
     @Override
-    public @NotNull AbschlussErgebnis handle(@NotNull GEAbschlussFaecher input) {
+    public @NotNull AbschlussErgebnis handle(final @NotNull GEAbschlussFaecher input) {
         logger.logLn(LogLevel.INFO, "Prüfe MSA:");
         logger.logLn(LogLevel.DEBUG, "==========");
 
@@ -159,7 +159,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
      * 
      * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
      */
-    private @NotNull AbschlussErgebnis pruefeDefizite(@NotNull AbschlussFaecherGruppen faecher, @NotNull String log_indent) {
+    private @NotNull AbschlussErgebnis pruefeDefizite(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String log_indent) {
         // Erfasse den Status der Optionen für das "Beheben" von Defiziten
         boolean ignorieren_genutzt = false;
         boolean ausgleich_genutzt = false;  // gibt an, ob bereits ein Ausgleich genutzt wurde
@@ -300,7 +300,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
      * 
      * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
      */
-    private @NotNull AbschlussErgebnis pruefeFG2(@NotNull AbschlussFaecherGruppen faecher, @NotNull String log_indent, @NotNull List<@NotNull GEAbschlussFach> npFaecher, long benoetige3er, boolean ignorieren_genutzt, boolean ausgleich_genutzt, boolean nachpruefung_genutzt) {
+    private @NotNull AbschlussErgebnis pruefeFG2(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String log_indent, final @NotNull List<@NotNull GEAbschlussFach> npFaecher, final long benoetige3er, final boolean ignorieren_genutzt, final boolean ausgleich_genutzt, final boolean nachpruefung_genutzt) {
         // Prufe, ob weitere Defizite vorliegen
     	final @NotNull List<@NotNull GEAbschlussFach> defizite = faecher.fg2.getFaecher(filterDefizite);
     	final @NotNull List<@NotNull GEAbschlussFach> mangelhaft = faecher.fg2.getFaecher(filterDefizite1NS);

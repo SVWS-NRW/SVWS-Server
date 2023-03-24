@@ -70,14 +70,14 @@ export class NotenKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
-			let id : number = __param0 as number;
-			let sortierung : number = __param1 as number;
-			let notenpunkte : number | null = __param2;
-			let kuerzel : string = __param3;
-			let text : string = __param4;
-			let textZeugnis : string = __param5;
-			let gueltigVon : number | null = __param6;
-			let gueltigBis : number | null = __param7;
+			const id : number = __param0 as number;
+			const sortierung : number = __param1 as number;
+			const notenpunkte : number | null = __param2;
+			const kuerzel : string = __param3;
+			const text : string = __param4;
+			const textZeugnis : string = __param5;
+			const gueltigVon : number | null = __param6;
+			const gueltigBis : number | null = __param7;
 			this.id = id;
 			this.sortierung = sortierung;
 			this.notenpunkte = notenpunkte;

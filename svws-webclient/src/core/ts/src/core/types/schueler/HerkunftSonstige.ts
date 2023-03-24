@@ -108,7 +108,7 @@ export class HerkunftSonstige extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, HerkunftSonstige | null> {
 		if (HerkunftSonstige._ebenen.size() === 0) {
-			for (let s of HerkunftSonstige.values()) {
+			for (const s of HerkunftSonstige.values()) {
 				if (s.daten !== null)
 					HerkunftSonstige._ebenen.put(s.daten.kuerzel, s);
 			}

@@ -62,9 +62,9 @@ public class KAOAZusatzmerkmalEintrag {
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOAZusatzmerkmalEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, 
-	        @NotNull KAOAMerkmal merkmal, @NotNull KAOAZusatzmerkmaleOptionsarten optionsart,
-	        Integer gueltigVon, Integer gueltigBis) {
+	public KAOAZusatzmerkmalEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung, 
+	        final @NotNull KAOAMerkmal merkmal, final @NotNull KAOAZusatzmerkmaleOptionsarten optionsart,
+	        final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

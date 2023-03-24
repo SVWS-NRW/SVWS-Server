@@ -108,8 +108,8 @@ export class BilingualeSprache extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
-			for (let kuerzel of historie[i].schulformen) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+			for (const kuerzel of historie[i].schulformen) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
@@ -124,8 +124,8 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapEintragByID() : HashMap<number, BilingualeSpracheKatalogEintrag> {
 		if (BilingualeSprache._mapEintragByID.size() === 0)
-			for (let s of BilingualeSprache.values())
-				for (let k of s.historie)
+			for (const s of BilingualeSprache.values())
+				for (const k of s.historie)
 					BilingualeSprache._mapEintragByID.put(k.id, k);
 		return BilingualeSprache._mapEintragByID;
 	}
@@ -138,7 +138,7 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapByID() : HashMap<number, BilingualeSprache> {
 		if (BilingualeSprache._mapByID.size() === 0)
-			for (let s of BilingualeSprache.values())
+			for (const s of BilingualeSprache.values())
 				BilingualeSprache._mapByID.put(s.daten.id, s);
 		return BilingualeSprache._mapByID;
 	}
@@ -151,7 +151,7 @@ export class BilingualeSprache extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, BilingualeSprache> {
 		if (BilingualeSprache._mapByKuerzel.size() === 0)
-			for (let s of BilingualeSprache.values())
+			for (const s of BilingualeSprache.values())
 				BilingualeSprache._mapByKuerzel.put(s.daten.kuerzel, s);
 		return BilingualeSprache._mapByKuerzel;
 	}
@@ -177,7 +177,7 @@ export class BilingualeSprache extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -226,12 +226,12 @@ export class BilingualeSprache extends JavaObject {
 	 * @return die bilingualen Sprache in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<BilingualeSprache> {
-		let faecher : Vector<BilingualeSprache> = new Vector();
+		const faecher : Vector<BilingualeSprache> = new Vector();
 		if (schulform === null)
 			return faecher;
-		let fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();
+		const fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();
 		for (let i : number = 0; i < fachgruppen.length; i++) {
-			let fg : BilingualeSprache | null = fachgruppen[i];
+			const fg : BilingualeSprache | null = fachgruppen[i];
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

@@ -432,28 +432,28 @@ export class Herkunft extends JavaObject {
 		Herkunft.all_values_by_ordinal.push(this);
 		Herkunft.all_values_by_name.set(name, this);
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schueler.HerkunftSonstige'))))) {
-			let h : HerkunftSonstige = cast_de_nrw_schule_svws_core_types_schueler_HerkunftSonstige(__param0);
+			const h : HerkunftSonstige = cast_de_nrw_schule_svws_core_types_schueler_HerkunftSonstige(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 1000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schueler.HerkunftBildungsgang'))))) {
-			let h : HerkunftBildungsgang = cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgang(__param0);
+			const h : HerkunftBildungsgang = cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgang(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 2000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schueler.HerkunftBildungsgangsTyp'))))) {
-			let h : HerkunftBildungsgangsTyp = cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgangsTyp(__param0);
+			const h : HerkunftBildungsgangsTyp = cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgangsTyp(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 3000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schueler.HerkunftSchulform'))))) {
-			let h : HerkunftSchulform = cast_de_nrw_schule_svws_core_types_schueler_HerkunftSchulform(__param0);
+			const h : HerkunftSchulform = cast_de_nrw_schule_svws_core_types_schueler_HerkunftSchulform(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 4000000000, h.historie[i].kuerzelStatistik, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
@@ -471,7 +471,7 @@ export class Herkunft extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Herkunft | null> {
 		if (Herkunft._kuerzel.size() === 0) {
-			for (let h of Herkunft.values()) {
+			for (const h of Herkunft.values()) {
 				if (h.daten !== null)
 					Herkunft._kuerzel.put(h.daten.kuerzel, h);
 			}

@@ -25,9 +25,9 @@ public class AbschlussManagerBerufsbildend {
      * 
      * @return das Ergebnis der Abschlussberechnung 
      */
-    public static @NotNull AbschlussErgebnisBerufsbildend getErgebnis(boolean hatBSA, double note, Boolean hatBA, SchulabschlussAllgemeinbildend abschlussAllgemeinbildend) {
+    public static @NotNull AbschlussErgebnisBerufsbildend getErgebnis(final boolean hatBSA, final double note, final Boolean hatBA, final SchulabschlussAllgemeinbildend abschlussAllgemeinbildend) {
     	// Nachprüfungsmöglichkeiten ???
-    	@NotNull AbschlussErgebnisBerufsbildend ergebnis = new AbschlussErgebnisBerufsbildend();
+    	final @NotNull AbschlussErgebnisBerufsbildend ergebnis = new AbschlussErgebnisBerufsbildend();
     	ergebnis.hatBSA = hatBSA;
     	ergebnis.note = note;
     	ergebnis.hatBA = hatBA;
@@ -46,11 +46,11 @@ public class AbschlussManagerBerufsbildend {
 	 * 
 	 * @return der Notendurchschnitt oder NaN im Fehlerfall
 	 */
-	public static double getDurchschnitt(@NotNull BKAnlageAFaecher abschluss_faecher) {
+	public static double getDurchschnitt(final @NotNull BKAnlageAFaecher abschluss_faecher) {
 		if ((abschluss_faecher.faecher == null) || (abschluss_faecher.faecher.size() == 0))
 			return Double.NaN;
 		int sum = 0; 
-		for (BKAnlageAFach fach : abschluss_faecher.faecher) {
+		for (final BKAnlageAFach fach : abschluss_faecher.faecher) {
 			sum += fach.note;
 		}
 		return ((double)sum) / abschluss_faecher.faecher.size(); 
@@ -64,11 +64,11 @@ public class AbschlussManagerBerufsbildend {
 	 * 
 	 * @return die Anzahl der Defizite oder -1 im Fehlerfall
 	 */
-	public static int getAnzahlDefizite(@NotNull BKAnlageAFaecher abschluss_faecher) {
+	public static int getAnzahlDefizite(final @NotNull BKAnlageAFaecher abschluss_faecher) {
 		if ((abschluss_faecher.faecher == null) || (abschluss_faecher.faecher.size() == 0))
 			return -1;
 		int sum = 0;
-		for (BKAnlageAFach fach : abschluss_faecher.faecher) {
+		for (final BKAnlageAFach fach : abschluss_faecher.faecher) {
 			if (fach.note >= 5)
 				sum++;
 		}
@@ -83,11 +83,11 @@ public class AbschlussManagerBerufsbildend {
 	 * 
 	 * @return die Anzahl der Note Ungenügend oder -1 im Fehlerfall
 	 */
-	public static int getAnzahlUngenuegend(@NotNull BKAnlageAFaecher abschluss_faecher) {
+	public static int getAnzahlUngenuegend(final @NotNull BKAnlageAFaecher abschluss_faecher) {
 		if ((abschluss_faecher.faecher == null) || (abschluss_faecher.faecher.size() == 0))
 			return -1;
 		int sum = 0;
-		for (BKAnlageAFach fach : abschluss_faecher.faecher) {
+		for (final BKAnlageAFach fach : abschluss_faecher.faecher) {
 			if (fach.note >= 6)
 				sum++;
 		}

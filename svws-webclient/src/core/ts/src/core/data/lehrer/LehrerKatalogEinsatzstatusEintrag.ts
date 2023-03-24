@@ -52,11 +52,11 @@ export class LehrerKatalogEinsatzstatusEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let text : string = __param2;
-			let gueltigVon : number | null = __param3;
-			let gueltigBis : number | null = __param4;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const text : string = __param2;
+			const gueltigVon : number | null = __param3;
+			const gueltigBis : number | null = __param4;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.text = text;

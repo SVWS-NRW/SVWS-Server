@@ -34,7 +34,7 @@ public class Heap {
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	Heap(@NotNull Random pRandom) {
+	Heap(final @NotNull Random pRandom) {
 		_random = pRandom;
 		_data = new Variable[1];
 		_size = 0;
@@ -59,8 +59,7 @@ public class Heap {
 	 * 
 	 * @return Liefert das oberste (beste) Element des Heaps mit hoher Wahrscheinlichkeit.
 	 */
-	@NotNull
-	Variable top() {
+	@NotNull Variable top() {
 		int index = 0;
 		while ((_random.nextDouble() < 0.1) && (index + 1 < _size)) {
 			index++;
@@ -83,7 +82,7 @@ public class Heap {
 	 * 
 	 * @param pVar Die einzufügende Variable.
 	 */
-	void insert(@NotNull Variable pVar) {
+	void insert(final @NotNull Variable pVar) {
 		// Array voll? --> Arraygröße verdoppelt.
 		if (_size == _data.length) {
 			_data = Arrays.copyOf(_data, 2 * _size);
@@ -92,8 +91,8 @@ public class Heap {
 		// "var" im Baum nach oben traversieren, solange es besser ist als Elternteil.
 		int insertI = _size; // Einfügeposition (= letzte Ebene, ganz rechts).
 		while (insertI > 0) {
-			int parentI = (insertI - 1) / 2; // Elternteil-Index.
-			@NotNull
+			final int parentI = (insertI - 1) / 2; // Elternteil-Index.
+			final @NotNull
 			Variable parentV = _data[parentI]; // Elternteil-Referenz.
 			if (pVar.isBetterThan(parentV)) {
 				_data[insertI] = parentV;
@@ -118,11 +117,11 @@ public class Heap {
 	 * 
 	 * @param pVar Die zu entfernende Variable.
 	 */
-	void remove(@NotNull Variable pVar) {
+	void remove(final @NotNull Variable pVar) {
 		_size--;
 
 		// Spezialfall: "var" ist bereits auf dem letzten Index.
-		@NotNull
+		final @NotNull
 		Variable lastV = _data[_size];
 		if (lastV == pVar) {
 			return;
@@ -134,7 +133,7 @@ public class Heap {
 			System.out.println("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!");
 		}
 		while (currentI > 0) {
-			int parentI = (currentI - 1) / 2;
+			final int parentI = (currentI - 1) / 2;
 			_data[currentI] = _data[parentI];
 			_data[currentI].index = currentI;
 			currentI = parentI;
@@ -151,7 +150,7 @@ public class Heap {
 				}
 			}
 			// Wandert das Kind hoch?
-			@NotNull
+			final @NotNull
 			Variable child = _data[childI];
 			if (child.isBetterThan(lastV)) {
 				_data[parentI] = child;
@@ -175,7 +174,7 @@ public class Heap {
 	 * 
 	 * @param pVar Die Variable, deren Bewertung sich geändert hat.
 	 */
-	public void update(@NotNull Variable pVar) {
+	public void update(final @NotNull Variable pVar) {
 		if (pVar.index >= 0) {
 			remove(pVar);
 			if (pVar.negation != null)

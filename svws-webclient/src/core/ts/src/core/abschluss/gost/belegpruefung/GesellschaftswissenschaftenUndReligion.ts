@@ -163,7 +163,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 					this.addFehler(GostBelegungsfehler.ZK_12);
 				}
 			if (halbjahre.size() > 0) {
-				let prevHalbjahr : GostHalbjahr | null = halbjahre.get(0).previous();
+				const prevHalbjahr : GostHalbjahr | null = halbjahre.get(0).previous();
 				if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
 					this.addFehler(GostBelegungsfehler.ZK_10);
 			}
@@ -182,7 +182,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if (this.manager.pruefeBelegungExistiert(this.geschichte, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 			return;
 		if (this.zusatzkursFachbelegungen !== null)
-			for (let zkBelegung of this.zusatzkursFachbelegungen)
+			for (const zkBelegung of this.zusatzkursFachbelegungen)
 				if (this.geschichte.contains(zkBelegung))
 					return;
 		this.addFehler(GostBelegungsfehler.GE_10);
@@ -200,7 +200,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if (this.manager.pruefeBelegungExistiert(this.sozialwissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 			return;
 		if (this.zusatzkursFachbelegungen !== null)
-			for (let zkBelegung of this.zusatzkursFachbelegungen)
+			for (const zkBelegung of this.zusatzkursFachbelegungen)
 				if (this.sozialwissenschaften.contains(zkBelegung))
 					return;
 		this.addFehler(GostBelegungsfehler.SW_10);
@@ -259,10 +259,10 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		for (const belegung of this.philosophie.belegungen) {
 			if (belegung === null)
 				continue;
-			let halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
+			const halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
 			if (halbjahr === null)
 				continue;
-			let prevHalbjahr : GostHalbjahr | null = halbjahr.previous();
+			const prevHalbjahr : GostHalbjahr | null = halbjahr.previous();
 			if (prevHalbjahr === null)
 				continue;
 			if (this.manager.pruefeBelegung(this.philosophie, prevHalbjahr))

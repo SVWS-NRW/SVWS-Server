@@ -19,7 +19,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls es sich um ein Projektkursfach handelt
 	 */
-	public static boolean istProjektkurs(@NotNull GostFach fach) {
+	public static boolean istProjektkurs(final @NotNull GostFach fach) {
 		return "PX".equals(fach.kuerzel);
 	}
 	
@@ -31,7 +31,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls es sich um ein Vertiefungskursfach handelt
 	 */
-	public static boolean istVertiefungskurs(@NotNull GostFach fach) {
+	public static boolean istVertiefungskurs(final @NotNull GostFach fach) {
 		return "VX".equals(fach.kuerzel);
 	}
 	
@@ -43,7 +43,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls es so belegbar ist, sonst false
 	 */
-	public static boolean istDurchgehendBelegbarBisQ22(GostFach fach) {
+	public static boolean istDurchgehendBelegbarBisQ22(final GostFach fach) {
 		if (fach == null)
 			return false;
 		return fach.istMoeglichEF1 && fach.istMoeglichEF2 && 
@@ -59,7 +59,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls es so belegbar ist, sonst false
 	 */
-	public static boolean istBelegbarBisEF2(@NotNull GostFach fach) {
+	public static boolean istBelegbarBisEF2(final @NotNull GostFach fach) {
 		return fach.istMoeglichEF1 && fach.istMoeglichEF2;
 	}
 	
@@ -72,7 +72,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls das Fach zu der angegebenen Sprache passt, sonst false 
 	 */
-	public static boolean istFremdsprachenfach(GostFach fach, String sprache) {
+	public static boolean istFremdsprachenfach(final GostFach fach, final String sprache) {
 		if ((fach == null) || (fach.kuerzel == null) || ("".equals(fach.kuerzel)) || 
 			!GostFachbereich.FREMDSPRACHE.hat(fach) || (sprache == null))
 			return false;
@@ -87,7 +87,7 @@ public class GostFachManager {
 	 * 
 	 * @return das Kürzel der Sprache oder null
 	 */
-	public static String getFremdsprache(@NotNull GostFach fach) {
+	public static String getFremdsprache(final @NotNull GostFach fach) {
 		if ((fach.kuerzel == null) || ("".equals(fach.kuerzel)) || !GostFachbereich.FREMDSPRACHE.hat(fach))
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
@@ -101,7 +101,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls das Fach bilingual unterrichtet wird.
 	 */
-	public static boolean istBilingual(@NotNull GostFach fach) {
+	public static boolean istBilingual(final @NotNull GostFach fach) {
 		return ((fach.biliSprache != null) && (!"".equals(fach.biliSprache)) && (!"D".equals(fach.biliSprache)));
 	}
 
@@ -114,7 +114,7 @@ public class GostFachManager {
 	 * 
 	 * @return true, falls das Fach in dem Halbjahr wählbar ist, sonst false
 	 */
-	public static boolean istWaehlbar(GostFach fach, @NotNull GostHalbjahr halbjahr) {
+	public static boolean istWaehlbar(final GostFach fach, final @NotNull GostHalbjahr halbjahr) {
 		if (fach == null)
 			return false;
 		if (halbjahr == GostHalbjahr.EF1)

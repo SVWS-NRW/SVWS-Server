@@ -149,11 +149,11 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	gibKleinstenKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
 		for (let i : number = 0; i < this.kursArr.length; i++) {
-			let kurs : KursblockungDynKurs = this.kursArr[i];
+			const kurs : KursblockungDynKurs = this.kursArr[i];
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
-			for (let c of kurs.gibSchienenLage()) {
+			for (const c of kurs.gibSchienenLage()) {
 				if (c === pSchiene) {
 					return kurs;
 				}
@@ -168,7 +168,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
 	 */
 	gibHatMultikurs() : boolean {
-		for (let kurs of this.kursArr) {
+		for (const kurs of this.kursArr) {
 			if (kurs.gibSchienenAnzahl() > 1) {
 				return true;
 			}
@@ -184,7 +184,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
 	gibHatKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
-		for (let kurs of this.kursArr) {
+		for (const kurs of this.kursArr) {
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
@@ -203,7 +203,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return              TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
 	public gibHatKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
-		for (let kurs of this.kursArr) {
+		for (const kurs of this.kursArr) {
 			if (kursGesperrt[kurs.gibInternalID()]) {
 				continue;
 			}
@@ -258,10 +258,10 @@ export class KursblockungDynFachart extends JavaObject {
 	public aktionSchuelerWurdeHinzugefuegt() : void {
 		this.schuelerAnzNow++;
 		for (let i : number = 1; i < this.kursArr.length; i++) {
-			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
-			let kursR : KursblockungDynKurs = this.kursArr[i];
-			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			let b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			const kursL : KursblockungDynKurs = this.kursArr[i - 1];
+			const kursR : KursblockungDynKurs = this.kursArr[i];
+			const b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			const b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				this.kursArr[i - 1] = kursR;
 				this.kursArr[i] = kursL;
@@ -276,10 +276,10 @@ export class KursblockungDynFachart extends JavaObject {
 	public aktionSchuelerWurdeEntfernt() : void {
 		this.schuelerAnzNow--;
 		for (let i : number = this.kursArr.length - 1; i >= 1; i--) {
-			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
-			let kursR : KursblockungDynKurs = this.kursArr[i];
-			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			let b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			const kursL : KursblockungDynKurs = this.kursArr[i - 1];
+			const kursR : KursblockungDynKurs = this.kursArr[i];
+			const b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			const b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				this.kursArr[i - 1] = kursR;
 				this.kursArr[i] = kursL;
@@ -293,9 +293,9 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param pSchiene Die Schiene, in die einer Kurs der Fachart wandern soll.
 	 */
 	aktionZufaelligerKursWandertNachSchiene(pSchiene : number) : void {
-		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
+		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
 		for (let p : number = 0; p < perm.length; p++) {
-			let kurs : KursblockungDynKurs | null = this.kursArr[perm[p]];
+			const kurs : KursblockungDynKurs | null = this.kursArr[perm[p]];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
 				kurs.aktionSetzeInSchiene(pSchiene);
 				return;

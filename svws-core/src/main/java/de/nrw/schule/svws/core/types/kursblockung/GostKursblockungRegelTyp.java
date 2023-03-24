@@ -10,21 +10,21 @@ import java.util.Vector;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen 
  * der Kursblockung eingesetzt werden. 
  */
 public enum GostKursblockungRegelTyp {
 
-	/** 
+	/**
 	 * Eine Regel ist nicht definiert.
 	 */
 	UNDEFINIERT(0, "Undefiniert", Collections.emptyList()),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Sperren von Schienen für alle Kurse der Kursart (A). Dabei werden alle Schienen von B bis C
 	 * gesperrt. Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
 	 * - Parameter C: bis - Nummer der Schiene (int) 
@@ -35,10 +35,10 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.SCHIENEN_NR 
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Reservieren der Schienen von B bis C für Kurse einer bestimmten Kursart (A).
 	 * Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
 	 * - Parameter C: bis - Nummer der Schiene (int) 
@@ -49,10 +49,10 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.SCHIENEN_NR 
 	)),
 	
-	/** 
+	/**
 	 * Der Regel-Typ zum Fixieren eines Kurses (A) in Schiene (B). Die Schiene B ist 1-indiziert, es gilt
 	 * {@code 1 <= B <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des Kurses (long) <br>
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
@@ -61,10 +61,10 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Sperren einer Schiene (B) für einen Kurs (A). Die Schiene B ist 1-indiziert, es gilt
 	 * {@code 1 <= B <= Schienenanzahl.} <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des Kurses (long) <br>
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
@@ -73,9 +73,9 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.SCHIENEN_NR
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Fixieren eines Schülers (A) in einem Kurs (B). <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des Schülers (long) <br>
 	 * - Parameter B: Datenbank-ID des Kurses (long) 
 	 */
@@ -84,9 +84,9 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Verbieten eines Schülers (A) in einem Kurs (B). <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des Schülers (long) <br>
 	 * - Parameter A: Datenbank-ID des Kurses (long) 
 	 */
@@ -95,9 +95,9 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long) 
 	 */
@@ -106,9 +106,9 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum Forcieren, dass Kurs (A) mit einem Kurs (B) in der selben Schiene landet. <br>
-	 * 
+	 *
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long) 
 	 */
@@ -117,7 +117,7 @@ public enum GostKursblockungRegelTyp {
 		GostKursblockungRegelParameterTyp.KURS_ID
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
 	 * - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
 	 */
@@ -125,7 +125,7 @@ public enum GostKursblockungRegelTyp {
 			GostKursblockungRegelParameterTyp.BOOLEAN
 	)),
 
-	/** 
+	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
 	 */
 	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList(
@@ -147,52 +147,52 @@ public enum GostKursblockungRegelTyp {
 
 	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMap() {
 		if (_map_id_regel.isEmpty()) 
-			for (@NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
+			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
 				_map_id_regel.put(gostTyp.typ, gostTyp);
 		return _map_id_regel;
 	}
 	
 	/**
 	 * Liefert die Menge aller existierender Regeln.
-	 * 
+	 *
 	 * @return Die Menge aller existierender Regeln.
 	 */
 	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getCollection() {
 		return getMap().values();
 	}
 
-	/** 
+	/**
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
-	 * 
+	 *
 	 * @param id            die ID des Regel-Typs
 	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
 	 */
-	private GostKursblockungRegelTyp(int id, @NotNull String bezeichnung, @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
+	private GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
 		this.typ = id;
 		this.bezeichnung = bezeichnung;
 		this.paramTypes = paramTypes;
 	}
 
-	/** 
+	/**
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
 	 * @param id   die ID des Regel-Typs
-	 * 
+	 *
 	 * @return der Regel-Typ 
 	 */
-	public static @NotNull GostKursblockungRegelTyp fromTyp(Integer id) {
+	public static @NotNull GostKursblockungRegelTyp fromTyp(final Integer id) {
 		if (id == null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
-		GostKursblockungRegelTyp gostTyp = getMap().get(id);
+		final GostKursblockungRegelTyp gostTyp = getMap().get(id);
 		if (gostTyp == null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
 	}
 	
-	/** 
+	/**
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Parameter für diesen Regel-Type zurück. 
 	 */
 	public int getParamCount() {
@@ -202,14 +202,14 @@ public enum GostKursblockungRegelTyp {
 	
 	/**
 	 * Gibt den i-ten Parameter-Typ der Regel zurück.
-	 * 
+	 *
 	 * @param i   der Index des Parameters
-	 * 
+	 *
 	 * @return der Parameter-Typ
-	 * 
+	 *
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
 	 */
-	public @NotNull GostKursblockungRegelParameterTyp getParamType(int i) throws IllegalArgumentException {
+	public @NotNull GostKursblockungRegelParameterTyp getParamType(final int i) throws IllegalArgumentException {
 		if ((i < 0) || (i >= paramTypes.size()))
 			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name());
 		return paramTypes.get(i);
@@ -221,11 +221,11 @@ public enum GostKursblockungRegelTyp {
 	 * Parametertyp hat.
 	 *  
 	 * @param paramType   der Parametertyp
-	 * 
+	 *
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
 	 */
-	public boolean hasParamType(GostKursblockungRegelParameterTyp paramType) {
-	    for (GostKursblockungRegelParameterTyp cur : paramTypes)
+	public boolean hasParamType(final GostKursblockungRegelParameterTyp paramType) {
+	    for (final GostKursblockungRegelParameterTyp cur : paramTypes)
 	        if (paramType == cur)
 	            return true;
 	    return false;
@@ -240,9 +240,9 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
-	public static long[] getNeueParameterBeiSchienenLoeschung(@NotNull GostBlockungRegel pRegel, int pSchienenNr) {
-		@NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
-		@NotNull Vector<@NotNull Long> param = pRegel.parameter;
+	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel pRegel, final int pSchienenNr) {
+		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
+		final @NotNull Vector<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
 			// Keine Veränderung bei 0 Parametern. 
 			case LEHRKRAEFTE_BEACHTEN: { // 10
@@ -250,19 +250,19 @@ public enum GostKursblockungRegelTyp {
 			}
 			// Keine Veränderung bei 1 Parameter. 
 			case LEHRKRAFT_BEACHTEN: { // 9
-				long p0 = param.get(0);
+				final long p0 = param.get(0);
 				return new long[] {p0};
 			}
 			// Keine Veränderung bei 2 Parametern. 
             case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, 
                  KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS : { // 4, 5, 7, 8
-            	long p0 = param.get(0);
-            	long p1 = param.get(1);
+            	final long p0 = param.get(0);
+            	final long p1 = param.get(1);
             	return new long[] {p0, p1};
             }
             case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: { // 2, 3
-            	long p0 = param.get(0);
-            	long p1 = param.get(1);
+            	final long p0 = param.get(0);
+            	final long p1 = param.get(1);
             	if (p1 < pSchienenNr) 
                 	return new long[] {p0, p1};
             	if (p1 > pSchienenNr) 
@@ -270,7 +270,7 @@ public enum GostKursblockungRegelTyp {
         		return null;
             }
             case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: { // 1, 6
-            	long p0 = param.get(0);
+            	final long p0 = param.get(0);
             	long von = param.get(1);
             	long bis = param.get(2);
             	von = pSchienenNr < von  ? von - 1 : von; 

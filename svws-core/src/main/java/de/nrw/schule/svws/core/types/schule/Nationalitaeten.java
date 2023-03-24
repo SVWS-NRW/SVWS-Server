@@ -1082,7 +1082,7 @@ public enum Nationalitaeten {
 	 * 
 	 * @param historie   die Historie der Nationalitäten, welches ein Array von {@link NationalitaetenKatalogEintrag} ist  
 	 */
-	private Nationalitaeten(@NotNull NationalitaetenKatalogEintrag@NotNull[] historie) {
+	private Nationalitaeten(final @NotNull NationalitaetenKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -1097,7 +1097,7 @@ public enum Nationalitaeten {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO3() {
 		if (_mapISO3.size() == 0) {
-			for (Nationalitaeten s : Nationalitaeten.values()) {
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)
 					_mapISO3.put(s.daten.iso3, s);
 			}
@@ -1114,7 +1114,7 @@ public enum Nationalitaeten {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO2() {
 		if (_mapISO2.size() == 0) {
-			for (Nationalitaeten s : Nationalitaeten.values()) {
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)
 					_mapISO2.put(s.daten.iso2, s);
 			}
@@ -1131,7 +1131,7 @@ public enum Nationalitaeten {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapDESTATIS() {
 		if (_mapDESTATIS.size() == 0) {
-			for (Nationalitaeten s : Nationalitaeten.values()) {
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
 				if (s.daten != null)
 					_mapDESTATIS.put(s.daten.codeDEStatis, s);
 			}
@@ -1147,7 +1147,7 @@ public enum Nationalitaeten {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static Nationalitaeten getByISO3(String code) {
+	public static Nationalitaeten getByISO3(final String code) {
 		return getMapISO3().get(code);
 	}
 
@@ -1158,7 +1158,7 @@ public enum Nationalitaeten {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static Nationalitaeten getByISO2(String code) {
+	public static Nationalitaeten getByISO2(final String code) {
 		return getMapISO2().get(code);
 	}
 
@@ -1169,7 +1169,7 @@ public enum Nationalitaeten {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static Nationalitaeten getByDESTATIS(String code) {
+	public static Nationalitaeten getByDESTATIS(final String code) {
 		return getMapDESTATIS().get(code);
 	}
 

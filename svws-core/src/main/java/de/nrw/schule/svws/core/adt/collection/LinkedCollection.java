@@ -79,10 +79,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @param c   die LinkedCollection, die kopiert wird
 	 */
-	public LinkedCollection(LinkedCollection<? extends @NotNull E> c) {
+	public LinkedCollection(final LinkedCollection<? extends @NotNull E> c) {
 		_size = 0;
 		_modCount = 0;
-		@NotNull Iterator<? extends @NotNull E> iter = c.iterator();
+		final @NotNull Iterator<? extends @NotNull E> iter = c.iterator();
 		while (iter.hasNext())
 			this.add(iter.next());
 		_modCount = c._modCount;
@@ -99,10 +99,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean contains(Object obj) {
+	public boolean contains(final Object obj) {
 		if (this.isEmpty())
 			return false;
-		@NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<@NotNull E> iter = this.iterator();
 		while(iter.hasNext())
 			if (iter.next().equals(obj))
 				return true;
@@ -120,8 +120,8 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if (_size == 0)
 			return new Object[0];
 		@SuppressWarnings("unchecked")
-		@NotNull E@NotNull[] array = (@NotNull E@NotNull[]) Array.newInstance(_head.getValue().getClass(), _size);
-		@NotNull Iterator<? extends @NotNull E> iter = this.iterator();
+		final @NotNull E@NotNull[] array = (@NotNull E@NotNull[]) Array.newInstance(_head.getValue().getClass(), _size);
+		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
 		for (int i = 0; i < _size; i++ ) {
 			// Die Werte der LinkedCollection werden zurückgegeben. Nicht die Elemente mit der Zeigerstruktur und den Werten
 			array[i] = iter.next();  
@@ -131,12 +131,12 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull T> @NotNull T@NotNull[] toArray(@NotNull T@NotNull[] a) {
+	public <@NotNull T> @NotNull T@NotNull[] toArray(final @NotNull T@NotNull[] a) {
 		if (a.length < _size)
 			return (@NotNull T@NotNull[]) this.toArray();
-		@NotNull Iterator<? extends @NotNull E> iter = this.iterator();
+		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
 		for (int i = 0; i < _size; i++ ) {
-			@NotNull E e = iter.next();
+			final @NotNull E e = iter.next();
 			a[i] = (@NotNull T) e;
 		}
 		Arrays.fill(a, _size, a.length, null);
@@ -144,10 +144,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean add(E e) {
+	public boolean add(final E e) {
 		if (e == null)
 			return false;
-		@NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
+		final @NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
 		if ((_head == null) || (_tail == null)) {
 			_head = newElem;
 			_tail = newElem;
@@ -171,11 +171,11 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 *  
 	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde. 
 	 */
-	private boolean removeElement(LinkedCollectionElement<@NotNull E> elem) {
+	private boolean removeElement(final LinkedCollectionElement<@NotNull E> elem) {
 		if (elem == null)
 			return false;
-		LinkedCollectionElement<@NotNull E> prev = elem.getPrev();
-		LinkedCollectionElement<@NotNull E> next = elem.getNext();
+		final LinkedCollectionElement<@NotNull E> prev = elem.getPrev();
+		final LinkedCollectionElement<@NotNull E> next = elem.getNext();
 		if (this._size == 1) {
 			_head = null;
 			_tail = null;
@@ -202,32 +202,32 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	
 	
 	@Override
-	public boolean remove(Object obj) {
+	public boolean remove(final Object obj) {
 		if (this.isEmpty())
 			return false;
 		return this.removeElement(findFirst(obj));
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		if ((c == null) || (this == c))
 			return true;
-		for (Object o : c)
+		for (final Object o : c)
 			if (!this.contains(o))
 				return false;
 		return true;
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends @NotNull E> c) {
+	public boolean addAll(final Collection<? extends @NotNull E> c) {
 		if ((c == null) || (c.size() == 0))
 			return false;
 		if (c instanceof LinkedCollection) {  // handle the special case where c is this collection (and also other cases)
-			@NotNull LinkedCollection<? extends @NotNull E> coll = (LinkedCollection<? extends @NotNull E>)c;
+			final @NotNull LinkedCollection<? extends @NotNull E> coll = (LinkedCollection<? extends @NotNull E>)c;
 			// _tail and _head are never null since coll is not empty
 			if ((coll._tail == null) || (coll._head == null))
 				throw new NullPointerException();
-			@NotNull LinkedCollectionElement<? extends @NotNull E> last = coll._tail;
+			final @NotNull LinkedCollectionElement<? extends @NotNull E> last = coll._tail;
 			LinkedCollectionElement<? extends @NotNull E> current = coll._head;
 			this.add(current.getValue());
 			while (current != last) {
@@ -239,7 +239,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			return true;
 		}
 		boolean result = false;
-		for (E elem : c) {
+		for (final E elem : c) {
 			if (add(elem))
 				result = true;
 		}
@@ -247,7 +247,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(final Collection<?> c) {
 		if (c == null)
 			return false;
 		if (this == c) {
@@ -257,7 +257,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			return true;
 		}
 		boolean result = false;
-		for (Object o : c) {
+		for (final Object o : c) {
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
@@ -269,17 +269,17 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		if ((this == c) || (_head == null))
 			return false;
 		if (c == null) {
 			this.clear();
 			return true;
 		}
-		@NotNull Iterator<@NotNull E> iter = this.iterator();
-		@NotNull LinkedCollection<@NotNull E> tmp = new LinkedCollection<>();
+		final @NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull LinkedCollection<@NotNull E> tmp = new LinkedCollection<>();
 		while (iter.hasNext()) {
-			@NotNull E elem = iter.next();
+			final @NotNull E elem = iter.next();
 			if (!c.contains(elem))
 				tmp.add(elem);				
 		}
@@ -299,7 +299,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	@Override
 	public int hashCode() {
 		int hashCode = 1;
-        for (@NotNull E e : this)
+        for (final @NotNull E e : this)
             hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
         return hashCode;
         
@@ -317,14 +317,14 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if ((obj == null) || (!(obj instanceof Collection)))
 			return false;
-		@NotNull Collection<?> other = (@NotNull Collection<?>) obj;
+		final @NotNull Collection<?> other = (@NotNull Collection<?>) obj;
 		if (this._size != other.size())
 			return false;
-		@NotNull Iterator<@NotNull E> iter = this.iterator();
-		@NotNull Iterator<?> otherIter = other.iterator();
+		final @NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<?> otherIter = other.iterator();
         while (iter.hasNext()) {
         	if (!iter.next().equals(otherIter.next()))
         			return false;
@@ -339,9 +339,9 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	@Override
 	public @NotNull String toString() {
-		@NotNull StringBuilder sb = new StringBuilder();
+		final @NotNull StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		@NotNull Iterator<@NotNull E> iter = this.iterator();
+		final @NotNull Iterator<@NotNull E> iter = this.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
 			if (iter.hasNext() == true)
@@ -362,7 +362,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @return die kombinierte sortierte Liste 
 	 */
-	private @NotNull LinkedCollectionElement<@NotNull E> merge(@NotNull Comparator<@NotNull E> comparator, @NotNull LinkedCollectionElement<@NotNull E> left, @NotNull LinkedCollectionElement<@NotNull E> right) {
+	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator, final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
 		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element 
 		LinkedCollectionElement<@NotNull E> headTo;
 		LinkedCollectionElement<@NotNull E> headFrom;
@@ -377,7 +377,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		@NotNull LinkedCollectionElement<@NotNull E> target = headTo;
 		while (headFrom != null) {
 			// Entferne das erste Element aus der Quellliste
-			@NotNull LinkedCollectionElement<@NotNull E> current = headFrom;
+			final @NotNull LinkedCollectionElement<@NotNull E> current = headFrom;
 			headFrom = headFrom.getPrev();
 			// Finde das Element in der Zielliste, welches kleiner ist als das aktuelle Element
 			LinkedCollectionElement<@NotNull E> targetPrev = target.getPrev(); 
@@ -404,7 +404,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @return true, falls eine Sortierung erfolgreich war 
 	 */
-	public boolean sort(Comparator<@NotNull E> comparator) {
+	public boolean sort(final Comparator<@NotNull E> comparator) {
 		if (comparator == null)
 			return false;
 		// Spezialfall bei einem oder keinem Element -> die Liste ist automatisch sortiert.
@@ -418,15 +418,15 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		// Entferne aus der Liste der noch zu kombinierenden Teil-Listen die ersten beiden Element, führe eine Merge aus und hänge diese hinten an
 		while (this._head != null) {
 			// Entferne die ersten beiden Elemente (zwei sortierte Teil-Listen, die zu kombinieren sind)
-			@NotNull LinkedCollectionElement<@NotNull E> left = this._head;
-			LinkedCollectionElement<@NotNull E> right = left.getNext();
+			final @NotNull LinkedCollectionElement<@NotNull E> left = this._head;
+			final LinkedCollectionElement<@NotNull E> right = left.getNext();
 			if (right == null)
 				throw new NullPointerException();
 			this._head = right.getNext();
 			left.setNext(null);
 			right.setNext(null);
 			// Führe einen Merge der beiden Teillisten aus
-			@NotNull LinkedCollectionElement<@NotNull E> sorted = this.merge(comparator, left, right);
+			final @NotNull LinkedCollectionElement<@NotNull E> sorted = this.merge(comparator, left, right);
 			// Hänge die kombinierte Liste hinten an.
 			this._tail.setNext(sorted);
 			this._tail = sorted;
@@ -463,7 +463,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))  
 	 */
-	private @NotNull LinkedCollectionElement<@NotNull E> find(int index) throws IndexOutOfBoundsException {
+	private @NotNull LinkedCollectionElement<@NotNull E> find(final int index) throws IndexOutOfBoundsException {
 		if ((index < 0) || (index >= this._size))
 			throw new IndexOutOfBoundsException();
 		LinkedCollectionElement<@NotNull E> current = this._head;
@@ -483,7 +483,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
 	 * 			enthalten ist und das Element dessen , ansonsten null
 	 */
-	private LinkedCollectionElement<@NotNull E> findFirst(Object obj) {
+	private LinkedCollectionElement<@NotNull E> findFirst(final Object obj) {
 		if (obj == null)
 			return null;
 		LinkedCollectionElement<@NotNull E> current = _head;
@@ -504,7 +504,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
 	 * 			enthalten ist und das Element dessen, ansonsten null
 	 */
-	private LinkedCollectionElement<@NotNull E> findLast(Object obj) {
+	private LinkedCollectionElement<@NotNull E> findLast(final Object obj) {
 		if (obj == null)
 			return null;
 		LinkedCollectionElement<@NotNull E> current = _tail;
@@ -517,13 +517,13 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean offer(E e) {
+	public boolean offer(final E e) {
 		return this.add(e);
 	}
 
 	@Override
 	public @NotNull E remove() {
-		E value = this.poll();
+		final E value = this.poll();
 		if (value == null)
 			throw new NoSuchElementException();
 		return value;
@@ -533,7 +533,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	public E poll() {
 		if (this._head == null)
 			return null;
-		@NotNull E value = this._head.getValue();
+		final @NotNull E value = this._head.getValue();
 		this._head = this._head.getNext();
 		if (this._head == null)
 			this._tail = null;
@@ -557,10 +557,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public void addFirst(E e) {
+	public void addFirst(final E e) {
 		if (e == null)
 			throw new NullPointerException();
-		@NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
+		final @NotNull LinkedCollectionElement<@NotNull E> newElem = new LinkedCollectionElement<>(e, null, null);
 		if ((_head == null) || (_tail == null)) {
 			_head = newElem;
 			_tail = newElem;
@@ -574,27 +574,27 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public void addLast(E e) {
+	public void addLast(final E e) {
 		if (e == null)
 			throw new NullPointerException();
 		this.add(e);
 	}
 
 	@Override
-	public boolean offerFirst(E e) {
+	public boolean offerFirst(final E e) {
 		this.addFirst(e);
 		return true;
 	}
 
 	@Override
-	public boolean offerLast(E e) {
+	public boolean offerLast(final E e) {
 		this.addLast(e);
 		return true;
 	}
 
 	@Override
 	public @NotNull E removeFirst() {
-		E value = this.poll();
+		final E value = this.poll();
 		if (value == null)
 			throw new NoSuchElementException();
 		return value;
@@ -602,7 +602,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	@Override
 	public @NotNull E removeLast() {
-		E value = this.pollLast();
+		final E value = this.pollLast();
 		if (value == null)
 			throw new NoSuchElementException();
 		return value;
@@ -617,7 +617,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	public E pollLast() {
 		if (this._tail == null)
 			return null;
-		@NotNull E value = this._tail.getValue();
+		final @NotNull E value = this._tail.getValue();
 		this._tail = this._tail.getPrev();
 		if (this._tail == null)
 			this._head = null;
@@ -653,27 +653,27 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	}
 
 	@Override
-	public boolean removeFirstOccurrence(Object obj) {
+	public boolean removeFirstOccurrence(final Object obj) {
 		if (this.isEmpty())
 			return false;
 		return this.removeElement(findFirst(obj));
 	}
 
 	@Override
-	public boolean removeLastOccurrence(Object obj) {
+	public boolean removeLastOccurrence(final Object obj) {
 		if (this.isEmpty())
 			return false;
 		return this.removeElement(findLast(obj));
 	}
 
 	@Override
-	public void push(@NotNull E e) {
+	public void push(final @NotNull E e) {
 		this.addFirst(e);
 	}
 
 	@Override
 	public @NotNull E pop() {
-		E value = this.poll();
+		final E value = this.poll();
 		if (value == null)
 			throw new NoSuchElementException();
 		return value;
@@ -694,7 +694,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
 	 */
-	public @NotNull E get(int index) throws IndexOutOfBoundsException {
+	public @NotNull E get(final int index) throws IndexOutOfBoundsException {
 		return this.find(index).getValue();
 	}
 
@@ -708,7 +708,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	 * 
 	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
 	 */
-	public @NotNull E set(int index, @NotNull E element) throws IndexOutOfBoundsException {
+	public @NotNull E set(final int index, final @NotNull E element) throws IndexOutOfBoundsException {
 		return this.find(index).setValue(element);
 	}
 	

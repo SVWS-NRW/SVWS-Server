@@ -29,28 +29,28 @@ public class ENMDatenManager {
 
 	
 	/** Temporäre Map für das Befüllen der ENMLehrer-Vektors.*/
-	private @NotNull HashMap<@NotNull Long, @NotNull ENMLehrer> mapLehrer = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ENMLehrer> mapLehrer = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMSchueler-Vektors.*/
-	private @NotNull HashMap<@NotNull Long, @NotNull ENMSchueler> mapSchueler = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ENMSchueler> mapSchueler = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private @NotNull HashMap<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
 
     /** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-    private @NotNull HashMap<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
+    private final @NotNull HashMap<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMJahrgang-Vektors.*/
-	private @NotNull HashMap<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMKlasse-Vektors.*/
-	private @NotNull HashMap<@NotNull Long, @NotNull ENMKlasse> mapKlassen = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ENMKlasse> mapKlassen = new HashMap<>();
 
 	/** Zählt die Id der Lerngruppe hoch. */
 	private long lerngruppenIDZaehler = 1;
 	
 	/** Temporäre Map für die Lerngruppen. */
-	private @NotNull HashMap<@NotNull String, @NotNull ENMLerngruppe> mapLerngruppen = new HashMap<>();
+	private final @NotNull HashMap<@NotNull String, @NotNull ENMLerngruppe> mapLerngruppen = new HashMap<>();
 	
 
 	/**
@@ -93,9 +93,9 @@ public class ENMDatenManager {
 	 * @param schulform                   das Kürzel der Schulform der Schule
 	 * @param mailadresse                 gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de)
 	 */
-	public void setSchuldaten(int schulnummer, int schuljahr, int anzahlAbschnitte, int abschnitt, String publicKey,
-			boolean fehlstundenEingabe, boolean fehlstundenSIFachbezogen, boolean fehlstundenSIIFachbezogen,
-			@NotNull String schulform, String mailadresse) {
+	public void setSchuldaten(final int schulnummer, final int schuljahr, final int anzahlAbschnitte, final int abschnitt, final String publicKey,
+			final boolean fehlstundenEingabe, final boolean fehlstundenSIFachbezogen, final boolean fehlstundenSIIFachbezogen,
+			final @NotNull String schulform, final String mailadresse) {
 		daten.schulnummer = schulnummer;
 		daten.schuljahr = schuljahr;
 		daten.anzahlAbschnitte = anzahlAbschnitte;
@@ -135,7 +135,7 @@ public class ENMDatenManager {
 	 * @param schulform   die Schulform, für welche die zulässigen Förderschwerpunkte 
 	 *                    zurückgegeben werden
 	 */
-	public void addFoerderschwerpunkte(@NotNull Schulform schulform) {
+	public void addFoerderschwerpunkte(final @NotNull Schulform schulform) {
 		if (daten.foerderschwerpunkte.size() > 0)
 			return;
 		final @NotNull List<@NotNull Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
@@ -162,7 +162,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addLehrer(long id, String kuerzel, String nachname, String vorname, @NotNull Geschlecht geschlecht, String eMailDienstlich) {
+	public boolean addLehrer(final long id, final String kuerzel, final String nachname, final String vorname, final @NotNull Geschlecht geschlecht, final String eMailDienstlich) {
 		if (mapLehrer.get(id) != null) 
 			return false;		
 		final @NotNull ENMLehrer enmLehrer = new ENMLehrer();
@@ -195,8 +195,8 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls der Schueler hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addSchueler(long id, long jahrgangID, long klasseID, String nachname, String vorname, @NotNull Geschlecht geschlecht,  
-			                   String bilingualeSprache, boolean istZieldifferent, boolean istDaZFoerderung) {
+	public boolean addSchueler(final long id, final long jahrgangID, final long klasseID, final String nachname, final String vorname, final @NotNull Geschlecht geschlecht,  
+			                   final String bilingualeSprache, final boolean istZieldifferent, final boolean istDaZFoerderung) {
 		if (mapSchueler.get(id) != null) 
 			return false;	
 		final @NotNull ENMSchueler enmSchueler = new ENMSchueler();
@@ -226,7 +226,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addFach(long id, @NotNull String kuerzel, @NotNull String kuerzelAnzeige, int sortierung, boolean istFremdsprache) {
+	public boolean addFach(final long id, final @NotNull String kuerzel, final @NotNull String kuerzelAnzeige, final int sortierung, final boolean istFremdsprache) {
 		if (mapFaecher.get(id) != null) 
 			return false;		
 		final @NotNull ENMFach enmFach = new ENMFach();
@@ -254,7 +254,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addJahrgang(long id, String kuerzel, String kuerzelAnzeige, String beschreibung, String stufe, int sortierung) {
+	public boolean addJahrgang(final long id, final String kuerzel, final String kuerzelAnzeige, final String beschreibung, final String stufe, final int sortierung) {
 		if (mapJahrgaenge.get(id) != null) 
 			return false;		
 		final @NotNull ENMJahrgang enmJahrgang = new ENMJahrgang();
@@ -280,7 +280,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addKlasse(long id, String kuerzel, String kuerzelAnzeige, int sortierung) {
+	public boolean addKlasse(final long id, final String kuerzel, final String kuerzelAnzeige, final int sortierung) {
 		if (mapKlassen.get(id) != null) 
 			return false;		
 		final @NotNull ENMKlasse enmKlasse = new ENMKlasse();
@@ -303,7 +303,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return das ENM-Lehrer-Objekt
 	 */
-	public ENMLehrer getLehrer(long id) {
+	public ENMLehrer getLehrer(final long id) {
 		return mapLehrer.get(id);
 	}
 	
@@ -317,7 +317,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return das ENM-Schüler-Objekt
 	 */
-	public ENMSchueler getSchueler(long id) {
+	public ENMSchueler getSchueler(final long id) {
 		return mapSchueler.get(id);
 	}
 
@@ -331,7 +331,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return das ENM-Fächer-Objekt
 	 */
-	public ENMFach getFach(long id) {
+	public ENMFach getFach(final long id) {
 		return mapFaecher.get(id);
 	}
 
@@ -345,7 +345,7 @@ public class ENMDatenManager {
      * 
      * @return das ENM-Fächer-Objekt
      */
-    public ENMFach getFachByKuerzel(@NotNull String kuerzel) {
+    public ENMFach getFachByKuerzel(final @NotNull String kuerzel) {
         return mapFaecherByKuerzel.get(kuerzel);
     }
 
@@ -359,7 +359,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return das ENM-Jahrgänge-Objekt
 	 */
-	public ENMJahrgang getJahrgang(long id) {
+	public ENMJahrgang getJahrgang(final long id) {
 		return mapJahrgaenge.get(id);
 	}
 
@@ -373,7 +373,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return das ENM-Klassen-Objekt
 	 */
-	public ENMKlasse getKlasse(long id) {
+	public ENMKlasse getKlasse(final long id) {
 		return mapKlassen.get(id);
 	}
 
@@ -392,8 +392,8 @@ public class ENMDatenManager {
 	 *                            Lerngruppe handelt. (z.B. F)
 	 * @param wochenstunden       die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.
 	 */
-	public void addLerngruppe(@NotNull String strID, long kID, long fachID, Integer kursartID, String bezeichnung, 
-						String kursartKuerzel, String bilingualeSprache, int wochenstunden) {
+	public void addLerngruppe(final @NotNull String strID, final long kID, final long fachID, final Integer kursartID, final String bezeichnung, 
+						final String kursartKuerzel, final String bilingualeSprache, final int wochenstunden) {
 		if (mapLerngruppen.get(strID) != null)
 			return;
 		final @NotNull ENMLerngruppe lerngruppe = new ENMLerngruppe();
@@ -417,7 +417,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return die Lerngruppe
 	 */
-	public ENMLerngruppe getLerngruppe(@NotNull String strID) {
+	public ENMLerngruppe getLerngruppe(final @NotNull String strID) {
 		return mapLerngruppen.get(strID);
 	}
 
@@ -430,7 +430,7 @@ public class ENMDatenManager {
 	 * @param schueler           der Schüler
 	 * @param klassenlehrerIDs   die IDs der Klassenlehrer
 	 */
-	public void addSchuelerKlassenlehrer(@NotNull ENMSchueler schueler, long... klassenlehrerIDs) {
+	public void addSchuelerKlassenlehrer(final @NotNull ENMSchueler schueler, final long... klassenlehrerIDs) {
 		// TODO
 	}
 
@@ -449,9 +449,9 @@ public class ENMDatenManager {
 	 * @param referenzniveau         die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1)
 	 * @param belegungSekI           die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. 0, 2, 4, 6)
 	 */
-	public void addSchuelerSprachenfolge(@NotNull ENMSchueler schueler, String sprache, long fachID, String fachKuerzel, int reihenfolge,
-			int belegungVonJahrgang, int belegungVonAbschnitt, Integer belegungBisJahrgang, Integer belegungBisAbschnitt,
-			String referenzniveau, Integer belegungSekI) {
+	public void addSchuelerSprachenfolge(final @NotNull ENMSchueler schueler, final String sprache, final long fachID, final String fachKuerzel, final int reihenfolge,
+			final int belegungVonJahrgang, final int belegungVonAbschnitt, final Integer belegungBisJahrgang, final Integer belegungBisAbschnitt,
+			final String referenzniveau, final Integer belegungSekI) {
 		// TODO
 	}
 
@@ -480,10 +480,10 @@ public class ENMDatenManager {
 	 * @param tsIstGemahnt                    der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht 
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
 	 */
-	public void addSchuelerLeistungsdaten(@NotNull ENMSchueler schueler, long leistungID, long lerngruppenID, String note, 
-				String tsNote, boolean istSchriftlich, Integer abiturfach, Integer fehlstundenFach, String tsFehlstundenFach, 
-				Integer fehlstundenUnentschuldigtFach, String tsFehlstundenUnentschuldigtFach, String fachbezogeneBemerkungen,  
-				String tsFachbezogeneBemerkungen, String neueZuweisungKursart, boolean istGemahnt, String tsIstGemahnt, String mahndatum) {
+	public void addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID, final String note, 
+				final String tsNote, final boolean istSchriftlich, final Integer abiturfach, final Integer fehlstundenFach, final String tsFehlstundenFach, 
+				final Integer fehlstundenUnentschuldigtFach, final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen,  
+				final String tsFachbezogeneBemerkungen, final String neueZuweisungKursart, final boolean istGemahnt, final String tsIstGemahnt, final String mahndatum) {
 		final @NotNull ENMLeistung enmLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
@@ -517,7 +517,7 @@ public class ENMDatenManager {
 	 * @param bemerkung      ggf. eine Bemerkung zu der Teilleistung 
 	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
 	 */
-	public void addSchuelerTeilleistung(@NotNull ENMLeistung leistung, long id, long artID, String datum, String bemerkung, String notenKuerzel) {
+	public void addSchuelerTeilleistung(final @NotNull ENMLeistung leistung, final long id, final long artID, final String datum, final String bemerkung, final String notenKuerzel) {
 		// TODO Hinzufügen der Teilleistung - Implementierung ähnlich wie das Hinzufügen der Leistungen bei dem ENM-Schüler 
 	}
 

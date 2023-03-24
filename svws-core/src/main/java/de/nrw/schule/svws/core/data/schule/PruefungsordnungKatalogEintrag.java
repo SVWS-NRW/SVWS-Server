@@ -80,9 +80,9 @@ public class PruefungsordnungKatalogEintrag {
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public PruefungsordnungKatalogEintrag(long id, @NotNull String kuerzel, String kuerzelSchild, @NotNull String bezeichnung, 
-			Integer gvJahr, @NotNull String gvNr, @NotNull String gvSeiten, @NotNull String link,
-			Integer gueltigVon, Integer gueltigBis) {
+	public PruefungsordnungKatalogEintrag(final long id, final @NotNull String kuerzel, final String kuerzelSchild, final @NotNull String bezeichnung, 
+			final Integer gvJahr, final @NotNull String gvNr, final @NotNull String gvSeiten, final @NotNull String link,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.kuerzelSchild = kuerzelSchild;

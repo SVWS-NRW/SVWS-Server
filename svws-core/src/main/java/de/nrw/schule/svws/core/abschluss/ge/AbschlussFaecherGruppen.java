@@ -50,7 +50,7 @@ public class AbschlussFaecherGruppen {
 	 * 
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
-    public boolean contains(String kuerzel) {
+    public boolean contains(final String kuerzel) {
     	return fg1.contains(kuerzel) || fg2.contains(kuerzel);
     }
     
@@ -63,7 +63,7 @@ public class AbschlussFaecherGruppen {
      * 
      * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
      */
-    public @NotNull List<@NotNull GEAbschlussFach> getFaecher(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull List<@NotNull GEAbschlussFach> getFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull List<@NotNull GEAbschlussFach> faecher = fg1.getFaecher(filter);
     	faecher.addAll(fg2.getFaecher(filter));
     	return faecher; 
@@ -78,7 +78,7 @@ public class AbschlussFaecherGruppen {
      * 
      * @return die Anzahl der Fächer
      */
-    public long getFaecherAnzahl(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public long getFaecherAnzahl(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	return fg1.getFaecherAnzahl(filter) + fg2.getFaecherAnzahl(filter);
     }
     
@@ -91,7 +91,7 @@ public class AbschlussFaecherGruppen {
      * 
      * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
      */
-    public @NotNull List<@NotNull String> getKuerzel(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull List<@NotNull String> getKuerzel(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull List<@NotNull String> faecher = fg1.getKuerzel(filter);
     	faecher.addAll(fg2.getKuerzel(filter));
     	return faecher; 

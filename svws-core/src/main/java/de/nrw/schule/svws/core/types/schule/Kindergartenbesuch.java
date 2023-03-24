@@ -54,7 +54,7 @@ public enum Kindergartenbesuch {
 	 * @param historie   die Historie der Eintrags, welche ein Array von 
 	 *                   {@link KindergartenbesuchKatalogEintrag} ist  
 	 */
-	private Kindergartenbesuch(@NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie) {
+	private Kindergartenbesuch(final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -68,7 +68,7 @@ public enum Kindergartenbesuch {
 	 */
 	private static @NotNull HashMap<@NotNull Long, Kindergartenbesuch> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (Kindergartenbesuch s : Kindergartenbesuch.values()) {
+			for (final Kindergartenbesuch s : Kindergartenbesuch.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -84,7 +84,7 @@ public enum Kindergartenbesuch {
 	 * 
 	 * @return der Core-Type-Wert oder null, falls das Kürzel ungültig ist
 	 */
-	public static Kindergartenbesuch getByKuerzel(long kuerzel) {
+	public static Kindergartenbesuch getByKuerzel(final long kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

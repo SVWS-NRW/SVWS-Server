@@ -22,7 +22,7 @@ public class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
 	 */
-	public KlausurterminblockungAlgorithmusGreedy1b(@NotNull Random pRandom, @NotNull KlausurterminblockungDynDaten pDynDaten) {
+	public KlausurterminblockungAlgorithmusGreedy1b(final @NotNull Random pRandom, final @NotNull KlausurterminblockungDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
 	}
 
@@ -32,7 +32,7 @@ public class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	}
 
 	@Override
-	public void berechne(long pZeitEnde) {
+	public void berechne(final long pZeitEnde) {
 		_dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 		_dynDaten.aktionZustand1Speichern();
 

@@ -42,8 +42,8 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	public constructor(__param0? : GostBelegungsfehler, __param1? : GostBelegpruefungsArt) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.abschluss.gost.GostBelegungsfehler')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt'))))) {
-			let f : GostBelegungsfehler = cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler(__param0);
-			let pruef_art : GostBelegpruefungsArt = cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt(__param1);
+			const f : GostBelegungsfehler = cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler(__param0);
+			const pruef_art : GostBelegpruefungsArt = cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt(__param1);
 			this.code = f.toString();
 			this.art = f.getArt().kuerzel;
 			this.beschreibung = f.getText(pruef_art);

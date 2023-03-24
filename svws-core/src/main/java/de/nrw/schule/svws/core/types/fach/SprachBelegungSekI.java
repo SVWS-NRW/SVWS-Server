@@ -31,7 +31,7 @@ public class SprachBelegungSekI implements Comparable<SprachBelegungSekI> {
 	 * 
 	 * @param dauer   die Dauer der Sprachbelegung in der Sek I
 	 */
-	private SprachBelegungSekI(int dauer) {
+	private SprachBelegungSekI(final int dauer) {
 		this.dauer = dauer;
 	}
 	
@@ -45,7 +45,7 @@ public class SprachBelegungSekI implements Comparable<SprachBelegungSekI> {
 	 * 
 	 * @return die Sprachbelegung in der Sek I
 	 */
-	public static @NotNull SprachBelegungSekI getByASDJahrgang(String ASDJahrgang) {
+	public static @NotNull SprachBelegungSekI getByASDJahrgang(final String ASDJahrgang) {
 		if (ASDJahrgang == null)
 			return NICHT_BELEGT;
 		// Die Sprache ist länger als 4 Jahre belegt - es wird daher von 6 Jahren ausgegangen. Im Rahmen des G8 liegen aber nur 5 Jahre vor
@@ -72,7 +72,7 @@ public class SprachBelegungSekI implements Comparable<SprachBelegungSekI> {
 	 * 
 	 * @return die Sprachbelegung in der Sek I
 	 */
-	public static @NotNull SprachBelegungSekI getByDauer(int dauer) {
+	public static @NotNull SprachBelegungSekI getByDauer(final int dauer) {
 		if (dauer <= 0)
 			return NICHT_BELEGT;
 		if (dauer <= 3)
@@ -85,7 +85,7 @@ public class SprachBelegungSekI implements Comparable<SprachBelegungSekI> {
 
 
 	@Override
-	public int compareTo(SprachBelegungSekI other) {
+	public int compareTo(final SprachBelegungSekI other) {
 		if (other == null)
 			return 1;   // irgendetwas ist besser als keine Belegung
 		return Integer.compare(dauer, other.dauer);

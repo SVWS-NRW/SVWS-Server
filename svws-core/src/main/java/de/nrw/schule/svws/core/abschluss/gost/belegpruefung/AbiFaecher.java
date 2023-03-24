@@ -231,7 +231,7 @@ public class AbiFaecher extends GostBelegpruefung {
 	 * 
 	 * @return die Abitur-Fachbelegung oder null, falls es (noch) nicht festgelegt wurde
 	 */
-	public AbiturFachbelegung getAbiturfach(GostAbiturFach abifach) {
+	public AbiturFachbelegung getAbiturfach(final GostAbiturFach abifach) {
 		return mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(abifach);
 	}
 	

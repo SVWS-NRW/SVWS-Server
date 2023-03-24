@@ -27,8 +27,8 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKMatching(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKMatching(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 	
@@ -43,9 +43,9 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	 * rückgängig gemacht.
 	 */
 	@Override
-	public void berechne(long pEndzeit) {
-		long current = System.currentTimeMillis();
-		long halbzeit = current + (pEndzeit - current) / 2;
+	public void berechne(final long pEndzeit) {
+		final long current = System.currentTimeMillis();
+		final long halbzeit = current + (pEndzeit - current) / 2;
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
@@ -120,7 +120,7 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern.
-			int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
+			final int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
 			if (cmp > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;

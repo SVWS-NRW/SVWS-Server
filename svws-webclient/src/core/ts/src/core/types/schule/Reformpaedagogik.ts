@@ -96,8 +96,8 @@ export class Reformpaedagogik extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
-			for (let kuerzel of historie[i].schulformen) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+			for (const kuerzel of historie[i].schulformen) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
@@ -112,7 +112,7 @@ export class Reformpaedagogik extends JavaObject {
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenKuerzel.size() === 0)
-			for (let r of Reformpaedagogik.values())
+			for (const r of Reformpaedagogik.values())
 				Reformpaedagogik._schulgliederungenKuerzel.put(r.daten.kuerzel, r);
 		return Reformpaedagogik._schulgliederungenKuerzel;
 	}
@@ -125,8 +125,8 @@ export class Reformpaedagogik extends JavaObject {
 	 */
 	private static getMapSchulgliederungByID() : HashMap<number, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenID.size() === 0)
-			for (let r of Reformpaedagogik.values()) {
-				for (let k of r.historie)
+			for (const r of Reformpaedagogik.values()) {
+				for (const k of r.historie)
 					Reformpaedagogik._schulgliederungenID.put(k.id, r);
 			}
 		return Reformpaedagogik._schulgliederungenID;
@@ -173,12 +173,12 @@ export class Reformpaedagogik extends JavaObject {
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
 	public static get(schulform : Schulform | null) : List<Reformpaedagogik> {
-		let result : Vector<Reformpaedagogik> = new Vector();
+		const result : Vector<Reformpaedagogik> = new Vector();
 		if (schulform === null)
 			return result;
-		let gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();
+		const gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();
 		for (let i : number = 0; i < gliederungen.length; i++) {
-			let gliederung : Reformpaedagogik = gliederungen[i];
+			const gliederung : Reformpaedagogik = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -198,7 +198,7 @@ export class Reformpaedagogik extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -218,7 +218,7 @@ export class Reformpaedagogik extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}

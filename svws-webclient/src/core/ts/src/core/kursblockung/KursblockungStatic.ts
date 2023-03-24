@@ -17,7 +17,7 @@ export class KursblockungStatic extends JavaObject {
 	 * @return         Eine Array-Referenz.
 	 */
 	public static gibPermutation(pRandom : Random, n : number) : Array<number> {
-		let temp : Array<number> = Array(n).fill(0);
+		const temp : Array<number> = Array(n).fill(0);
 		for (let i : number = 0; i < n; i++) {
 			temp[i] = i;
 		}
@@ -32,11 +32,11 @@ export class KursblockungStatic extends JavaObject {
 	 * @param perm    Das zu permutierende Array.
 	 */
 	public static aktionPermutiere(pRandom : Random, perm : Array<number>) : void {
-		let n : number = perm.length;
+		const n : number = perm.length;
 		for (let i1 : number = 0; i1 < n; i1++) {
-			let i2 : number = pRandom.nextInt(n);
-			let s1 : number = perm[i1];
-			let s2 : number = perm[i2];
+			const i2 : number = pRandom.nextInt(n);
+			const s1 : number = perm[i1];
+			const s2 : number = perm[i2];
 			perm[i1] = s2;
 			perm[i2] = s1;
 		}

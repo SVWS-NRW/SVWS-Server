@@ -186,7 +186,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * 
 	 * @param fachbelegungen   die Fachbelegung für Geschichte oder Sozialwissenschaften
 	 */
-	private void pruefeZusatzkurs(List<@NotNull AbiturFachbelegung> fachbelegungen) {
+	private void pruefeZusatzkurs(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		// Prüfe zunächst, ob das Fach überhaupt belegt wurde
 		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
 			return;
@@ -222,7 +222,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			}
 			// Prüfe, ob bei den Halbjahren des Zusatzkurses im Halbjahr davor eine Belegung vorliegt - beim ersten Halbjahr darf dies nicht der Fall sein!
 			if (halbjahre.size() > 0) {
-				GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
+				final GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
 				if ((prevHalbjahr != null) && (manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
 					addFehler(GostBelegungsfehler.ZK_10);
 			}
@@ -247,7 +247,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		
 		// Prüfe, ob eine Zusatzkurs-Belegung mit Geschichte existiert. Wenn ja, dann ist die Belegungsverpflichtung erfüllt
 		if (zusatzkursFachbelegungen != null)
-			for (AbiturFachbelegung zkBelegung : zusatzkursFachbelegungen)
+			for (final AbiturFachbelegung zkBelegung : zusatzkursFachbelegungen)
 				if (geschichte.contains(zkBelegung))
 					return;
 		
@@ -273,7 +273,7 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		
 		// Prüfe, ob eine Zusatzkurs-Belegung mit Sozialwissenschaften existiert. Wenn ja, dann ist die Belegungsverpflichtung erfüllt
 		if (zusatzkursFachbelegungen != null)
-			for (AbiturFachbelegung zkBelegung : zusatzkursFachbelegungen)
+			for (final AbiturFachbelegung zkBelegung : zusatzkursFachbelegungen)
 				if (sozialwissenschaften.contains(zkBelegung))
 					return;
 		
@@ -375,11 +375,11 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		for (final AbiturFachbelegungHalbjahr belegung : philosophie.belegungen) {
 			if (belegung == null)
 				continue;
-			GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
+			final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
 			if (halbjahr == null)
 				continue;
 			// In EF.1 darf neu gewählt werden
-			GostHalbjahr prevHalbjahr = halbjahr.previous();
+			final GostHalbjahr prevHalbjahr = halbjahr.previous();
 			if (prevHalbjahr == null)
 				continue;
 			// Wurde Philosophie in dem Halbjahr weiterbelegt, so liegt kein Belegungsfehler vor

@@ -112,7 +112,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
 	 */
-	private _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new Vector();
+	private readonly _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new Vector();
 
 	/**
 	 * Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER)
@@ -122,7 +122,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER)
 	 */
-	private _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new Vector();
+	private readonly _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new Vector();
 
 	/**
 	 * Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART)

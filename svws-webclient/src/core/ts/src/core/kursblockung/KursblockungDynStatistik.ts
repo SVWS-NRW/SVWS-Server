@@ -6,7 +6,6 @@ import { System } from '../../java/lang/System';
 export class KursblockungDynStatistik extends JavaObject {
 
 	/**
-	 *
 	 *  In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
 	 *  Fachart in der selben Schiene landen. Je kleiner der Wert, desto besser. Erhöht man den Wert der Haupt-Diagonale
 	 *  in der Matrix, so werden Kurse der gleichen Fachart eher selten in eine Schiene getan.
@@ -102,7 +101,6 @@ export class KursblockungDynStatistik extends JavaObject {
 
 
 	/**
-	 *
 	 * Initialisiert alle Attribute mit Dummy-Werten.
 	 */
 	constructor() {
@@ -111,7 +109,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Initialisiert alle Attribute mit Dummy-Werten.
 	 * Setzt alle Werte auf 0 und initialisiert alle Arrays auf die Länge 0.
 	 */
@@ -137,7 +134,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Initialisiert dieses Objekt mit den Anfangswerten.
 	 *
 	 * @param pMatrixFachartPaar Das 2D-Array beinhaltet pro Fachart-Paar eine Bewertung.
@@ -167,7 +163,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Ausgabe von Debug-Informationen. Nur für Testzwecke.
 	 *
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe.
@@ -177,7 +172,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die aktuelle Fachart-Paar-Bewertung.
 	 *
 	 * @return Die aktuelle Fachart-Paar-Bewertung.
@@ -187,7 +181,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die aktuelle Anzahl an Nichtwahlen.
 	 * Das ist die Summe aller Kurs, die bei Schülern nicht zugeordnet wurden.
 	 *
@@ -198,7 +191,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die aktuell größte Kursdifferenz (über alle Facharten).
 	 *
 	 * @return Die aktuell größte Kursdifferenz (über alle Facharten).
@@ -208,7 +200,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
@@ -234,7 +225,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
@@ -264,7 +254,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
 	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
@@ -294,7 +283,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
@@ -324,7 +312,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
 	 *
 	 * @return das Array bzw. das Histogramm der Kursdifferenzen.
@@ -334,39 +321,36 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Informiert die Statistik, dass ein Kurs-Paar hinzuzufügen ist.
 	 *
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
 	aktionKurspaarInSchieneHinzufuegen(pKurs1 : KursblockungDynKurs, pKurs2 : KursblockungDynKurs) : void {
-		let faNr1 : number = pKurs1.gibFachart().gibNr();
-		let faNr2 : number = pKurs2.gibFachart().gibNr();
-		let kuNr1 : number = pKurs1.gibInternalID();
-		let kuNr2 : number = pKurs2.gibInternalID();
+		const faNr1 : number = pKurs1.gibFachart().gibNr();
+		const faNr2 : number = pKurs2.gibFachart().gibNr();
+		const kuNr1 : number = pKurs1.gibInternalID();
+		const kuNr2 : number = pKurs2.gibInternalID();
 		this.bewertungFachartPaar += this.matrixFachartPaar[faNr1][faNr2];
 		this.bewertungRegelverletzungen += this.regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/**
-	 *
 	 * Informiert die Statistik, dass ein Kurs-Paar zu entfernen ist.
 	 *
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
 	aktionKurspaarInSchieneEntfernen(pKurs1 : KursblockungDynKurs, pKurs2 : KursblockungDynKurs) : void {
-		let faNr1 : number = pKurs1.gibFachart().gibNr();
-		let faNr2 : number = pKurs2.gibFachart().gibNr();
-		let kuNr1 : number = pKurs1.gibInternalID();
-		let kuNr2 : number = pKurs2.gibInternalID();
+		const faNr1 : number = pKurs1.gibFachart().gibNr();
+		const faNr2 : number = pKurs2.gibFachart().gibNr();
+		const kuNr1 : number = pKurs1.gibInternalID();
+		const kuNr2 : number = pKurs2.gibInternalID();
 		this.bewertungFachartPaar -= this.matrixFachartPaar[faNr1][faNr2];
 		this.bewertungRegelverletzungen -= this.regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/**
-	 *
 	 * Informiert die Statistik über eine Veränderung der Nichtwahlen.
 	 *
 	 * @param pVeraenderung Die Veränderungen der Nichtwahlen (negative Werte sind möglich).
@@ -376,7 +360,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Fügt eine Kursdifferenz {@code pIndex} dem Histogramm {@link KursblockungDynStatistik#bewertungKursdifferenzen}
 	 * aller Kursdifferenzen hinzu. Der Index des größten Nicht-Null-Wertes
 	 * {@link KursblockungDynStatistik#bewertungKursdifferenzenMaxIndex} wird dabei möglicherweise größer. <br>
@@ -392,7 +375,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt eine Kursdifferenz {@code pIndex} aus dem Histogramm
 	 * {@link KursblockungDynStatistik#bewertungKursdifferenzen} aller Kursdifferenzen. Der Index des größten
 	 * Nicht-Null-Wertes {@link KursblockungDynStatistik#bewertungKursdifferenzenMaxIndex} wird dabei möglicherweise
@@ -410,7 +392,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Speichert die aktuellen Werte (im Zustand S).
 	 */
 	aktionBewertungSpeichernS() : void {
@@ -420,7 +401,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Speichert die aktuellen Werte (im Zustand K).
 	 */
 	aktionBewertungSpeichernK() : void {
@@ -431,7 +411,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Speichert den aktuellen Blockungsdaten (im Zustand G).
 	 */
 	aktionBewertungSpeichernG() : void {
@@ -448,8 +427,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */
 	regelHinzufuegenKursVerbieteMitKurs(kurs1 : KursblockungDynKurs, kurs2 : KursblockungDynKurs) : void {
-		let nr1 : number = kurs1.gibInternalID();
-		let nr2 : number = kurs2.gibInternalID();
+		const nr1 : number = kurs1.gibInternalID();
+		const nr2 : number = kurs2.gibInternalID();
 		this.regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] += 1;
 	}
@@ -464,8 +443,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */
 	regelHinzufuegenKursZusammenMitKurs(kurs1 : KursblockungDynKurs, kurs2 : KursblockungDynKurs) : void {
-		let nr1 : number = kurs1.gibInternalID();
-		let nr2 : number = kurs2.gibInternalID();
+		const nr1 : number = kurs1.gibInternalID();
+		const nr2 : number = kurs2.gibInternalID();
 		this.regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		this.bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());

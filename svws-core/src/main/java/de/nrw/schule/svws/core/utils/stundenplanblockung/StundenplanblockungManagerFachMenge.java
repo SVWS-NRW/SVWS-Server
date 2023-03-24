@@ -32,7 +32,7 @@ public class StundenplanblockungManagerFachMenge {
 	 * @param pKuerzel               Das Kürzel des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
-	public void addOrException(long pFachID, @NotNull String pKuerzel) throws NullPointerException {
+	public void addOrException(final long pFachID, final @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pFachID) == true)
 			throw new NullPointerException("Die Fach-ID " + pFachID + " existiert bereits!");
 		final @NotNull StundenplanblockungManagerFach fa = new StundenplanblockungManagerFach(pFachID, pKuerzel);
@@ -48,7 +48,7 @@ public class StundenplanblockungManagerFachMenge {
 	 * @return                       Das {@link StundenplanblockungFach}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
 	 */
-	public @NotNull StundenplanblockungManagerFach getOrException(long pFachID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerFach getOrException(final long pFachID) throws NullPointerException {
 		final StundenplanblockungManagerFach fa = _map.get(pFachID);
 		if (fa == null)
 			throw new NullPointerException("Fach-ID " + pFachID + " unbekannt!");
@@ -62,7 +62,7 @@ public class StundenplanblockungManagerFachMenge {
 	 * @param pFachID                Die Datenbank-ID des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
 	 */
-	public void removeOrException(long pFachID) throws NullPointerException {
+	public void removeOrException(final long pFachID) throws NullPointerException {
 		final @NotNull StundenplanblockungManagerFach fa = getOrException(pFachID);
 		_map.remove(pFachID);
 		_menge.remove(fa);
@@ -74,7 +74,7 @@ public class StundenplanblockungManagerFachMenge {
 	 * @param pFachID Die Datenbank-ID des Faches.
 	 * @return TRUE, falls die Fach-ID existiert.
 	 */
-	public boolean exists(long pFachID) {
+	public boolean exists(final long pFachID) {
 		return _map.containsKey(pFachID);
 	}
 

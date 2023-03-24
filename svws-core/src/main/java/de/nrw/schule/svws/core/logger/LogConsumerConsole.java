@@ -35,7 +35,7 @@ public class LogConsumerConsole implements Consumer<@NotNull LogData> {
 	 * @param printTime     gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht
 	 * @param printLevel    gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht
 	 */
-	public LogConsumerConsole(boolean printTime, boolean printLevel) {
+	public LogConsumerConsole(final boolean printTime, final boolean printLevel) {
 		this.printTime = printTime;
 		this.printLevel = printLevel;
 	}
@@ -48,10 +48,10 @@ public class LogConsumerConsole implements Consumer<@NotNull LogData> {
 	 * @param t   die auszugebenden Log-Informationen 
 	 */
 	@Override
-	public void accept(@NotNull LogData t) {
+	public void accept(final @NotNull LogData t) {
 		if (t == null)
 			return;
-		String s = (printTime ? t.getTime() + " " : "")
+		final String s = (printTime ? t.getTime() + " " : "")
 				 + (printLevel ? t.getLevel() + " " : "")
 				 + t.getText();
 		if (t.isNewLine())

@@ -81,8 +81,8 @@ export class Heap extends JavaObject {
 		}
 		let insertI : number = this._size;
 		while (insertI > 0) {
-			let parentI : number = Math.trunc((insertI - 1) / 2);
-			let parentV : Variable = this._data[parentI];
+			const parentI : number = Math.trunc((insertI - 1) / 2);
+			const parentV : Variable = this._data[parentI];
 			if (pVar.isBetterThan(parentV)) {
 				this._data[insertI] = parentV;
 				parentV.index = insertI;
@@ -104,7 +104,7 @@ export class Heap extends JavaObject {
 	 */
 	remove(pVar : Variable) : void {
 		this._size--;
-		let lastV : Variable = this._data[this._size];
+		const lastV : Variable = this._data[this._size];
 		if (lastV as unknown === pVar as unknown) {
 			return;
 		}
@@ -113,7 +113,7 @@ export class Heap extends JavaObject {
 			console.log(JSON.stringify("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!"));
 		}
 		while (currentI > 0) {
-			let parentI : number = Math.trunc((currentI - 1) / 2);
+			const parentI : number = Math.trunc((currentI - 1) / 2);
 			this._data[currentI] = this._data[parentI];
 			this._data[currentI].index = currentI;
 			currentI = parentI;
@@ -126,7 +126,7 @@ export class Heap extends JavaObject {
 					childI = childI + 1;
 				}
 			}
-			let child : Variable = this._data[childI];
+			const child : Variable = this._data[childI];
 			if (child.isBetterThan(lastV)) {
 				this._data[parentI] = child;
 				child.index = parentI;

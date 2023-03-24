@@ -291,7 +291,7 @@ public enum HerkunftSchulform {
 	 * @param historie   die Historie der Herkunftsschulform, welche ein Array von 
 	 *                   {@link HerkunftSchulformKatalogEintrag} ist  
 	 */
-	private HerkunftSchulform(@NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie) {
+	private HerkunftSchulform(final @NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -307,7 +307,7 @@ public enum HerkunftSchulform {
 	 */
 	private static @NotNull HashMap<@NotNull String, HerkunftSchulform> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (HerkunftSchulform s : HerkunftSchulform.values()) {
+			for (final HerkunftSchulform s : HerkunftSchulform.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -323,7 +323,7 @@ public enum HerkunftSchulform {
 	 * 
 	 * @return die Herkunftsschulform oder null, falls das Kürzel ungültig ist
 	 */
-	public static HerkunftSchulform getByKuerzel(String kuerzel) {
+	public static HerkunftSchulform getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

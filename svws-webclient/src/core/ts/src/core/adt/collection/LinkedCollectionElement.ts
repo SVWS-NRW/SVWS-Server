@@ -50,7 +50,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 	 * @return der alte Wert des Elements
 	 */
 	setValue(value : E) : E {
-		let oldValue : E = this._value;
+		const oldValue : E = this._value;
 		this._value = value;
 		return oldValue;
 	}

@@ -252,7 +252,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAAnschlussoptionen> {
 		if (KAOAAnschlussoptionen._statusByID.size() === 0)
-			for (let g of KAOAAnschlussoptionen.values())
+			for (const g of KAOAAnschlussoptionen.values())
 				KAOAAnschlussoptionen._statusByID.put(g.daten.id, g);
 		return KAOAAnschlussoptionen._statusByID;
 	}
@@ -265,7 +265,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAAnschlussoptionen> {
 		if (KAOAAnschlussoptionen._statusByKuerzel.size() === 0)
-			for (let g of KAOAAnschlussoptionen.values())
+			for (const g of KAOAAnschlussoptionen.values())
 				KAOAAnschlussoptionen._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOAAnschlussoptionen._statusByKuerzel;
 	}

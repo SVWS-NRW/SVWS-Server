@@ -55,9 +55,9 @@ public class HerkunftsartKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public HerkunftsartKatalogEintrag(long id, @NotNull String kuerzel, 
-			@NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public HerkunftsartKatalogEintrag(final long id, final @NotNull String kuerzel, 
+			final @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnungen = bezeichnungen;

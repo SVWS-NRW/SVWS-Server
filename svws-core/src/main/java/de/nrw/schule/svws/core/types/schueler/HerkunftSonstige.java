@@ -144,7 +144,7 @@ public enum HerkunftSonstige {
 	 * @param historie   die Historie der sonstigen Herkunft, welches ein Array von 
 	 *                   {@link HerkunftSonstigeKatalogEintrag} ist  
 	 */
-	private HerkunftSonstige(@NotNull HerkunftSonstigeKatalogEintrag@NotNull[] historie) {
+	private HerkunftSonstige(final @NotNull HerkunftSonstigeKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -160,7 +160,7 @@ public enum HerkunftSonstige {
 	 */
 	private static @NotNull HashMap<@NotNull String, HerkunftSonstige> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (HerkunftSonstige s : HerkunftSonstige.values()) {
+			for (final HerkunftSonstige s : HerkunftSonstige.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -176,7 +176,7 @@ public enum HerkunftSonstige {
 	 * 
 	 * @return die sonstige Herkunft oder null, falls das Kürzel ungültig ist
 	 */
-	public static HerkunftSonstige getByKuerzel(String kuerzel) {
+	public static HerkunftSonstige getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

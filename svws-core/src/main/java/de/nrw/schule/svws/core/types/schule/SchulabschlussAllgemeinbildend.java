@@ -122,7 +122,7 @@ public enum SchulabschlussAllgemeinbildend {
 	 * 
 	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussAllgemeinbildendKatalogEintrag} ist  
 	 */
-	private SchulabschlussAllgemeinbildend(@NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie) {
+	private SchulabschlussAllgemeinbildend(final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -137,7 +137,7 @@ public enum SchulabschlussAllgemeinbildend {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
-			for (SchulabschlussAllgemeinbildend s : SchulabschlussAllgemeinbildend.values()) {
+			for (final SchulabschlussAllgemeinbildend s : SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten != null)
 					_mapByKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -153,7 +153,7 @@ public enum SchulabschlussAllgemeinbildend {
 	 * 
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
-	public static SchulabschlussAllgemeinbildend getByKuerzel(String kuerzel) {
+	public static SchulabschlussAllgemeinbildend getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
@@ -166,7 +166,7 @@ public enum SchulabschlussAllgemeinbildend {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> getMapByKuerzelStatistik() {
 		if (_mapByKuerzelStatistik.size() == 0) {
-			for (SchulabschlussAllgemeinbildend s : SchulabschlussAllgemeinbildend.values()) {
+			for (final SchulabschlussAllgemeinbildend s : SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten != null)
 					_mapByKuerzelStatistik.put(s.daten.kuerzelStatistik, s);
 			}
@@ -182,7 +182,7 @@ public enum SchulabschlussAllgemeinbildend {
 	 * 
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
-	public static SchulabschlussAllgemeinbildend getByKuerzelStatistik(String kuerzel) {
+	public static SchulabschlussAllgemeinbildend getByKuerzelStatistik(final String kuerzel) {
 		return getMapByKuerzelStatistik().get(kuerzel);
 	}
 
@@ -195,13 +195,13 @@ public enum SchulabschlussAllgemeinbildend {
 	 * 
 	 * @return true, falls beide Abschlüsse übereinstimmen und ansonsten false
 	 */
-	public boolean is(String str) {
+	public boolean is(final String str) {
 		if (str == null)
 			return false;
 		try {
-			SchulabschlussAllgemeinbildend other = SchulabschlussAllgemeinbildend.valueOf(str);
+			final SchulabschlussAllgemeinbildend other = SchulabschlussAllgemeinbildend.valueOf(str);
 			return this.equals(other);
-		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) {
 			return false;
 		}
 	}

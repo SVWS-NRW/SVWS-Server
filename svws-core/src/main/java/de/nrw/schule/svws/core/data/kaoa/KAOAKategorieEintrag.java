@@ -60,12 +60,12 @@ public class KAOAKategorieEintrag {
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOAKategorieEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, 
-	        @NotNull List<@NotNull Jahrgaenge> jahrgaenge, Integer gueltigVon, Integer gueltigBis) {
+	public KAOAKategorieEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung, 
+	        final @NotNull List<@NotNull Jahrgaenge> jahrgaenge, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
-		for (Jahrgaenge j : jahrgaenge)
+		for (final Jahrgaenge j : jahrgaenge)
 		    this.jahrgaenge.add(j.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

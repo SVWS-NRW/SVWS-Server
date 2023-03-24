@@ -38,7 +38,7 @@ export class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
 		}
-		let timeStart : number = System.currentTimeMillis();
+		const timeStart : number = System.currentTimeMillis();
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();
@@ -60,8 +60,8 @@ export class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.verteileSuS();
-			let b1 : boolean = (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) && (this.dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >= 0);
-			let b2 : boolean = (this.dynDaten.gibCompareZustandK_NW_KD_FW() >= 0) && (this.dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() > 0);
+			const b1 : boolean = (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) && (this.dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >= 0);
+			const b2 : boolean = (this.dynDaten.gibCompareZustandK_NW_KD_FW() >= 0) && (this.dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() > 0);
 			if (b1 || b2) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;
@@ -76,10 +76,10 @@ export class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	 * Matching-Algorithmus verteilt.
 	 */
 	private verteileSuS() : void {
-		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.schuelerAlle.length);
+		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.schuelerAlle.length);
 		for (let p : number = 0; p < perm.length; p++) {
-			let i : number = perm[p];
-			let schueler : KursblockungDynSchueler | null = this.schuelerAlle[i];
+			const i : number = perm[p];
+			const schueler : KursblockungDynSchueler | null = this.schuelerAlle[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}

@@ -39,7 +39,7 @@ public enum GostAbiturFach {
 	 * @param kuerzel        das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird
 	 * @param beschreibung   die textuelle Beschreibung der Abiturfachart
 	 */
-	private GostAbiturFach(int id, @NotNull String kuerzel, @NotNull String beschreibung) {
+	private GostAbiturFach(final int id, final @NotNull String kuerzel, final @NotNull String beschreibung) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
@@ -53,7 +53,7 @@ public enum GostAbiturFach {
 	 * 
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
 	 * */
-	public static GostAbiturFach fromID(Integer id) {
+	public static GostAbiturFach fromID(final Integer id) {
 		if (id == null)
 			return null;
 		switch (id) {
@@ -73,7 +73,7 @@ public enum GostAbiturFach {
 	 * 
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
 	 * */
-	public static GostAbiturFach fromIDString(String strID) {
+	public static GostAbiturFach fromIDString(final String strID) {
 		if (strID == null)
 			return null;
 		switch (strID) {
@@ -93,7 +93,7 @@ public enum GostAbiturFach {
 	 * 
 	 * @return die Abiturfachart oder null, falls das Kürzel ungültig ist
 	 * */
-	public static GostAbiturFach fromKuerzel(String kuerzel) {
+	public static GostAbiturFach fromKuerzel(final String kuerzel) {
 		switch (kuerzel) {
 			case "LK1": return LK1;
 			case "LK2": return LK2;

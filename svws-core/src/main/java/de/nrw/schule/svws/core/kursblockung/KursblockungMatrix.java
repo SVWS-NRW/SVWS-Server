@@ -69,7 +69,7 @@ public class KursblockungMatrix {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param rows    Die Anzahl der Zeilen der Matrix.
 	 * @param cols    Die Anzahl der Spalten der Matrix. */
-	public KursblockungMatrix(@NotNull Random pRandom, int rows, int cols) {
+	public KursblockungMatrix(final @NotNull Random pRandom, final int rows, final int cols) {
 		this._random = pRandom;
 		this.rows = rows;
 		this.cols = cols;
@@ -97,7 +97,7 @@ public class KursblockungMatrix {
 	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
 	 *                              gibt.
 	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
-	public @NotNull int[] gibMaximalesBipartitesMatching(boolean nichtdeterministisch) {
+	public @NotNull int[] gibMaximalesBipartitesMatching(final boolean nichtdeterministisch) {
 		// Aktuelle Spalten-Zeilen-Zuordnungen löschen
 		Arrays.fill(r2c, -1);
 		Arrays.fill(c2r, -1);
@@ -109,7 +109,7 @@ public class KursblockungMatrix {
 		// einen Ringtausch.
 		// Ein Ringtausch kann theoretisch sogar alle derzeitigen Zuordnungen verändern.
 		for (int pseudoR = 0; pseudoR < rows; pseudoR++) {
-			int r = permR[pseudoR]; // ggf. zufällige r-Reihenfolge
+			final int r = permR[pseudoR]; // ggf. zufällige r-Reihenfolge
 			// Initialisierung des Durchgangs
 			// Knoten r wird als besucht definiert und der Queue hinzugefügt
 			Arrays.fill(besuchtR, false); // Abgearbeitete R-Knoten
@@ -122,18 +122,18 @@ public class KursblockungMatrix {
 
 			// Breitensuche vom Knoten der in der Queue ist.
 			while (queue_first < queue_last) {
-				int vonR = queueR[queue_first];
+				final int vonR = queueR[queue_first];
 				queue_first++;
 				for (int pseudoC = 0; pseudoC < cols; pseudoC++) {
-					int ueberC = permC[pseudoC]; // ggf. zufällige c-Reihenfolge
+					final int ueberC = permC[pseudoC]; // ggf. zufällige c-Reihenfolge
 					if ((matrix[vonR][ueberC] != 0) && (r2c[vonR] != ueberC)) { // Es existiert eine Vorwärts-Kante.
-						int zuR = c2r[ueberC];
+						final int zuR = c2r[ueberC];
 						if (zuR == -1) {
 							// Gefunden --> Ringtausch
 							vorgaengerCzuR[ueberC] = vonR;
 							for (int c2 = ueberC; c2 >= 0;) {
-								int r2 = vorgaengerCzuR[c2];
-								int saveC = r2c[r2];
+								final int r2 = vorgaengerCzuR[c2];
+								final int saveC = r2c[r2];
 								c2r[c2] = r2;
 								r2c[r2] = c2;
 								c2 = saveC;
@@ -172,7 +172,7 @@ public class KursblockungMatrix {
 	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
 	 *                              gibt.
 	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
-	public @NotNull int[] gibMinimalesBipartitesMatchingGewichtet(boolean nichtdeterministisch) {
+	public @NotNull int[] gibMinimalesBipartitesMatchingGewichtet(final boolean nichtdeterministisch) {
 		// Aktuelle Spalten-Zeilen-Zuordnungen löschen.
 		Arrays.fill(r2c, -1);
 		Arrays.fill(c2r, -1);
@@ -196,7 +196,7 @@ public class KursblockungMatrix {
 			for (int r = 0; r < rows; r++) {
 				long min = matrix[r][0] + potentialR[r] - potentialC[0];
 				for (int c = 0; c < cols; c++) {
-					long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
 					min = Math.min(min, kante);
 				}
 				potentialR[r] -= min;
@@ -209,7 +209,7 @@ public class KursblockungMatrix {
 			for (int c = 0; c < cols; c++) {
 				long min = matrix[0][c] + potentialR[0] - potentialC[c];
 				for (int r = 0; r < rows; r++) {
-					long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
 					min = Math.min(min, kante);
 				}
 				potentialC[c] += min;
@@ -225,11 +225,11 @@ public class KursblockungMatrix {
 		// und der c-Knoten nicht bereits zugeordnet wurde.
 		Arrays.fill(abgearbeitetC, false); // Speichert, ob der c-Knoten bereits zugeordnet wurde.
 		for (int ir = 0; ir < rows; ir++) {
-			int r = permR[ir]; // zufällige R-Reihenfolge
+			final int r = permR[ir]; // zufällige R-Reihenfolge
 			for (int ic = 0; ic < cols; ic++) {
-				int c = permC[ic]; // zufällige C-Reihenfolge
+				final int c = permC[ic]; // zufällige C-Reihenfolge
 				if (!abgearbeitetC[c]) {
-					long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
 					if (kante == 0) {
 						r2c[r] = c;
 						c2r[c] = r;
@@ -259,15 +259,15 @@ public class KursblockungMatrix {
 			// Alle c-Knoten werden initialisiert mit dem kürzestem Pfad zu einem (noch
 			// nicht zugeordneten) r-Knoten.
 			for (int ic = 0; ic < cols; ic++) {
-				int c = permC[ic]; // zufällige C-Reihenfolge
+				final int c = permC[ic]; // zufällige C-Reihenfolge
 				vorgaengerCzuR[c] = -1;
 				abgearbeitetC[c] = false;
 				distanzC[c] = Long.MAX_VALUE;
 
 				for (int ir = 0; ir < rows; ir++) {
-					int r = permR[ir]; // zufällige R-Reihenfolge
+					final int r = permR[ir]; // zufällige R-Reihenfolge
 					if (r2c[r] < 0) { // Nur freie r-Knoten beachten
-						long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+						final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
 						if (kante < distanzC[c]) {
 							distanzC[c] = kante;
 							vorgaengerCzuR[c] = r;
@@ -286,7 +286,7 @@ public class KursblockungMatrix {
 				// Knoten.
 				int fromC = 0;
 				for (int ic = 0; ic < cols; ic++) {
-					int c = permC[ic]; // zufällige C-Reihenfolge
+					final int c = permC[ic]; // zufällige C-Reihenfolge
 					if (!abgearbeitetC[c]) {
 						if ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC])) {
 							fromC = c;
@@ -296,16 +296,16 @@ public class KursblockungMatrix {
 				abgearbeitetC[fromC] = true;
 
 				// Geht es weiter (rückwärts) von "fromC"?
-				int overR = c2r[fromC];
+				final int overR = c2r[fromC];
 				if (overR >= 0) {
 					// "fromC" ist kein Endknoten --> relaxiere alle C-Nachbarn
 					for (int ic = 0; ic < cols; ic++) {
-						int toC = permC[ic]; // zufällige C-Reihenfolge
+						final int toC = permC[ic]; // zufällige C-Reihenfolge
 						// Man muss hier nicht auf Vorwärts-Kante testen, da nur "fromC" falsch herum
 						// ist und das Gewicht ist >= 0,
 						// so wird der Pfad nie kürzer.
-						long kante = matrix[overR][toC] + potentialR[overR] - potentialC[toC];
-						long distance = distanzC[fromC] + kante;
+						final long kante = matrix[overR][toC] + potentialR[overR] - potentialC[toC];
+						final long distance = distanzC[fromC] + kante;
 						if (distance < distanzC[toC]) {
 							distanzC[toC] = distance;
 							vorgaengerCzuR[toC] = overR;
@@ -323,8 +323,8 @@ public class KursblockungMatrix {
 			// Ringtausch - Anpassung der row-col-Zuordnungen nach einer Dijkstra-Runde
 			int currentC = endknotenC;
 			while (currentC >= 0) {
-				int prevR = vorgaengerCzuR[currentC];
-				int prevC = r2c[prevR];
+				final int prevR = vorgaengerCzuR[currentC];
+				final int prevC = r2c[prevR];
 				r2c[prevR] = currentC;
 				c2r[currentC] = prevR;
 				currentC = prevC;
@@ -336,9 +336,9 @@ public class KursblockungMatrix {
 			// dass der Dijkstra-Algorithmus diese Kante rückwärts passieren kann, ohne das
 			// dies zu einem negativen Kantenwert führt.
 			for (int r = 0; r < rows; r++) {
-				int c = r2c[r];
+				final int c = r2c[r];
 				if (c >= 0) {
-					long kante = matrix[r][c] + potentialR[r] - potentialC[c];
+					final long kante = matrix[r][c] + potentialR[r] - potentialC[c];
 					potentialR[r] += distanzC[c] - kante;
 					potentialC[c] += distanzC[c];
 				}
@@ -354,7 +354,7 @@ public class KursblockungMatrix {
 	 * 
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
 	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert. */
-	private void initialisierPermRundPermC(boolean nichtdeterministisch) {
+	private void initialisierPermRundPermC(final boolean nichtdeterministisch) {
 		if (nichtdeterministisch) {
 			permutiere(permR);
 			permutiere(permC);
@@ -367,8 +367,8 @@ public class KursblockungMatrix {
 	/** Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 * 
 	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird. */
-	private static void initialisiere(@NotNull int[] perm) {
-		int laenge = perm.length;
+	private static void initialisiere(final @NotNull int[] perm) {
+		final int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
 			perm[i] = i;
 		}
@@ -377,13 +377,13 @@ public class KursblockungMatrix {
 	/** Interne Methode zum zufälligen Permutieren eines Arrays.
 	 * 
 	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird. */
-	private void permutiere(@NotNull int[] perm) {
-		int laenge = perm.length;
+	private void permutiere(final @NotNull int[] perm) {
+		final int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
-			int j = _random.nextInt(laenge);
+			final int j = _random.nextInt(laenge);
 			// Tausche
-			int saveI = perm[i];
-			int saveJ = perm[j];
+			final int saveI = perm[i];
+			final int saveJ = perm[j];
 			perm[i] = saveJ;
 			perm[j] = saveI;
 		}
@@ -404,16 +404,16 @@ public class KursblockungMatrix {
 	 * @param  mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
 	 *                            Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
 	 * @return                    Eine String-Representation der Matrix. */
-	public @NotNull String convertToString(@NotNull String kommentar, int zellenbreite, boolean mitKnotenPotential) {
-		@NotNull StringBuilder sb = new StringBuilder();
+	public @NotNull String convertToString(final @NotNull String kommentar, final int zellenbreite, final boolean mitKnotenPotential) {
+		final @NotNull StringBuilder sb = new StringBuilder();
 		sb.append(kommentar + System.lineSeparator());
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				long wert = mitKnotenPotential ? matrix[r][c] + potentialR[r] - potentialC[c] : matrix[r][c];
+				final long wert = mitKnotenPotential ? matrix[r][c] + potentialR[r] - potentialC[c] : matrix[r][c];
 				String sWert = "" + wert;
 				while (sWert.length() < zellenbreite)
 					sWert = " " + sWert;
-				@NotNull String sZusatz = r2c[r] == c ? "*" : " ";
+				final @NotNull String sZusatz = r2c[r] == c ? "*" : " ";
 				sb.append(sWert + sZusatz);
 			}
 			sb.append("\n");
@@ -427,7 +427,7 @@ public class KursblockungMatrix {
 	 * 
 	 * @param von Der kleinstmögliche zufällige Wert (inklusive).
 	 * @param bis Der größtmögliche zufällige Wert (inklusive). */
-	public void fuelleMitZufallszahlenVonBis(int von, int bis) {
+	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 				matrix[r][c] = _random.nextInt(bis - von + 1) + von;

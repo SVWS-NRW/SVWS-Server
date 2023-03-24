@@ -48,7 +48,7 @@ public class AVLMapIntervall<@NotNull K> {
 	 * @param pTo      Das Ende des Intervalls.
 	 * @param pToInc   Gibt an, ob das Intervall-Ende inklusive ist.
 	 */
-	AVLMapIntervall(@NotNull K pFrom, boolean pFromInc, @NotNull K pTo, boolean pToInc) {
+	AVLMapIntervall(final @NotNull K pFrom, final boolean pFromInc, final @NotNull K pTo, final boolean pToInc) {
 		from = pFrom;
 		fromInc = pFromInc;
 		to = pTo;
@@ -57,9 +57,9 @@ public class AVLMapIntervall<@NotNull K> {
 
 	@Override
 	public @NotNull String toString() {
-		@NotNull
+		final @NotNull
 		String sFrom = (from == _INFINITY_MINUS) ? "-INF" : "" + from; // from.toString() Transpiler-Problem
-		@NotNull
+		final @NotNull
 		String sTo = (to == _INFINITY_PLUS) ? "+INF" : "" + to; // to.toString() Transpiler-Problem
 		return "[" + sFrom + ", " + fromInc + ", " + sTo + ", " + toInc + "]";
 	}

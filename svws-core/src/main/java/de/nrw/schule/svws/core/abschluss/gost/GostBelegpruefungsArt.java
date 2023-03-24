@@ -30,7 +30,7 @@ public enum GostBelegpruefungsArt {
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */
-	private GostBelegpruefungsArt(@NotNull String kuerzel, @NotNull String beschreibung) {
+	private GostBelegpruefungsArt(final @NotNull String kuerzel, final @NotNull String beschreibung) {
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
 	}
@@ -43,7 +43,7 @@ public enum GostBelegpruefungsArt {
      *
      * @return die Art der Belegprüfung
      */
-	public static GostBelegpruefungsArt fromKuerzel(String kuerzel) {
+	public static GostBelegpruefungsArt fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return null;
 		switch (kuerzel) {

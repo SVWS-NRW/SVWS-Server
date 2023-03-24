@@ -85,7 +85,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<number, Kindergartenbesuch | null> {
 		if (Kindergartenbesuch._mapKuerzel.size() === 0) {
-			for (let s of Kindergartenbesuch.values()) {
+			for (const s of Kindergartenbesuch.values()) {
 				if (s.daten !== null)
 					Kindergartenbesuch._mapKuerzel.put(s.daten.kuerzel, s);
 			}

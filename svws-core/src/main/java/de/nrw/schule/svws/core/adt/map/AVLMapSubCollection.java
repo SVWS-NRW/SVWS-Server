@@ -26,7 +26,7 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 	 * 
 	 * @param sub Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
-	AVLMapSubCollection(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubCollection(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 	}
 
@@ -34,7 +34,7 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 	@Override
 	public @NotNull String toString() {
 		String s = "";
-		for (V value : this)
+		for (final V value : this)
 			s += (s.length() == 0 ? "" : ", ") + value;
 		return "values = [" + s + "], size = " + size()+" --> "+_sub.toString();
 	}
@@ -50,7 +50,7 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) { // contains VALUE not KEY!!!
+	public boolean contains(final @NotNull Object o) { // contains VALUE not KEY!!!
 		return _sub.containsValue(o);
 	}
 
@@ -65,37 +65,37 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T[] toArray(@NotNull T[] a) {
+	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
 		return _sub.bcGetVectorOfValues().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull V e) {
+	public boolean add(final @NotNull V e) {
 		throw new UnsupportedOperationException(); // VALUE cannot be added without KEY
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(final @NotNull Object o) {
 		throw new UnsupportedOperationException(); // VALUE cannot be removed without KEY
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcContainsAllValues(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull V> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull V> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be added without KEY
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be removed without KEY
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
 		throw new UnsupportedOperationException(); // VALUES cannot be retained without KEY
 	}
 

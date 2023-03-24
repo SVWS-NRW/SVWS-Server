@@ -30,7 +30,7 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 	 * 
 	 * @param sub Die {@link AVLMap} auf der operiert wird.
 	 */
-	AVLMapSubKeySet(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubKeySet(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 	}
 
@@ -65,7 +65,7 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(final @NotNull Object o) {
 		return _sub.containsKey(o);
 	}
 
@@ -75,37 +75,37 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull T @NotNull [] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return _sub.bcGetVectorOfKeys().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull K e) {
+	public boolean add(final @NotNull K e) {
 		return _sub.bcAddKey(e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(final @NotNull Object o) {
 		return _sub.bcRemoveKeyReturnBool(o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcContainsAllKeys(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull K> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull K> c) {
 		return _sub.bcAddAllKeys(c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcRetainAllKeys(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcRemoveAllKeys(c);
 	}
 
@@ -115,22 +115,22 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 	}
 
 	@Override
-	public K lower(@NotNull K e) { // return NULL erlaubt.
+	public K lower(final @NotNull K e) { // return NULL erlaubt.
 		return _sub.bcGetLowerKeyOrNull(e);
 	}
 
 	@Override
-	public K floor(@NotNull K e) { // return NULL erlaubt.
+	public K floor(final @NotNull K e) { // return NULL erlaubt.
 		return _sub.bcGetFloorKeyOrNull(e);
 	}
 
 	@Override
-	public K ceiling(@NotNull K e) { // return NULL erlaubt.
+	public K ceiling(final @NotNull K e) { // return NULL erlaubt.
 		return _sub.bcGetCeilingKeyOrNull(e);
 	}
 
 	@Override
-	public K higher(@NotNull K e) { // return NULL erlaubt.
+	public K higher(final @NotNull K e) { // return NULL erlaubt.
 		return _sub.bcGetHigherKeyOrNull(e);
 	}
 
@@ -160,33 +160,33 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull K> subSet(@NotNull K fromElement, boolean fromInclusive, @NotNull K toElement,
-			boolean toInclusive) {
+	public @NotNull NavigableSet<@NotNull K> subSet(final @NotNull K fromElement, final boolean fromInclusive, final @NotNull K toElement,
+			final boolean toInclusive) {
 		return _sub.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull K> headSet(@NotNull K toElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull K> headSet(final @NotNull K toElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyHeadSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull K> tailSet(@NotNull K fromElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull K> tailSet(final @NotNull K fromElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyTailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull K> subSet(@NotNull K fromElement, @NotNull K toElement) {
+	public @NotNull SortedSet<@NotNull K> subSet(final @NotNull K fromElement, final @NotNull K toElement) {
 		return _sub.bcGetSubKeySet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull K> headSet(@NotNull K toElement) {
+	public @NotNull SortedSet<@NotNull K> headSet(final @NotNull K toElement) {
 		return _sub.bcGetSubKeyHeadSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull K> tailSet(@NotNull K fromElement) {
+	public @NotNull SortedSet<@NotNull K> tailSet(final @NotNull K fromElement) {
 		return _sub.bcGetSubKeyTailSet(fromElement);
 	}
 

@@ -91,10 +91,10 @@ public class KursartKatalogEintrag {
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public KursartKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String nummer, 
-			@NotNull String bezeichnung, String bemerkungen, String kuerzelAllg, String bezeichnungAllg, boolean erlaubtGOSt,
-			@NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public KursartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer, 
+			final @NotNull String bezeichnung, final String bemerkungen, final String kuerzelAllg, final String bezeichnungAllg, final boolean erlaubtGOSt,
+			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.nummer = nummer;
@@ -103,13 +103,13 @@ public class KursartKatalogEintrag {
 		this.kuerzelAllg = kuerzelAllg;
 		this.bezeichnungAllg = bezeichnungAllg;
 		this.erlaubtGOSt = erlaubtGOSt;
-		for (@NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
-			SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
-			@NotNull Schulform sf = zul.a;
+		for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+			final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
+			final @NotNull Schulform sf = zul.a;
 			if (sf.daten == null)
 				continue;
 			sfsgl.schulform = sf.daten.kuerzel;
-			Schulgliederung sgl = zul.b;
+			final Schulgliederung sgl = zul.b;
 			sfsgl.gliederung = ((sgl == null) || (sgl.daten == null)) ? null : sgl.daten.kuerzel;
 			this.zulaessig.add(sfsgl);
 		}

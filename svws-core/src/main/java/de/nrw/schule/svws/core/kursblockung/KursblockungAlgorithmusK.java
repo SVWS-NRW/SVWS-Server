@@ -27,8 +27,8 @@ public abstract class KursblockungAlgorithmusK {
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. */
-	public KursblockungAlgorithmusK(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDaten) {
+	public KursblockungAlgorithmusK(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDaten) {
 		_random = pRandom;
 		logger = pLogger;
 		dynDaten = pDynDaten;

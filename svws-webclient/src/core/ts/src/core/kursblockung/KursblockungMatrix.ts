@@ -133,7 +133,7 @@ export class KursblockungMatrix extends JavaObject {
 		Arrays.fill(this.c2r, -1);
 		this.initialisierPermRundPermC(nichtdeterministisch);
 		for (let pseudoR : number = 0; pseudoR < this.rows; pseudoR++) {
-			let r : number = this.permR[pseudoR];
+			const r : number = this.permR[pseudoR];
 			Arrays.fill(this.besuchtR, false);
 			Arrays.fill(this.vorgaengerCzuR, -1);
 			let queue_first : number = 0;
@@ -142,17 +142,17 @@ export class KursblockungMatrix extends JavaObject {
 			queue_last++;
 			this.besuchtR[r] = true;
 			while (queue_first < queue_last) {
-				let vonR : number = this.queueR[queue_first];
+				const vonR : number = this.queueR[queue_first];
 				queue_first++;
 				for (let pseudoC : number = 0; pseudoC < this.cols; pseudoC++) {
-					let ueberC : number = this.permC[pseudoC];
+					const ueberC : number = this.permC[pseudoC];
 					if ((this.matrix[vonR][ueberC] !== 0) && (this.r2c[vonR] !== ueberC)) {
-						let zuR : number = this.c2r[ueberC];
+						const zuR : number = this.c2r[ueberC];
 						if (zuR === -1) {
 							this.vorgaengerCzuR[ueberC] = vonR;
 							for (let c2 : number = ueberC; c2 >= 0; ) {
-								let r2 : number = this.vorgaengerCzuR[c2];
-								let saveC : number = this.r2c[r2];
+								const r2 : number = this.vorgaengerCzuR[c2];
+								const saveC : number = this.r2c[r2];
 								this.c2r[c2] = r2;
 								this.r2c[r2] = c2;
 								c2 = saveC;
@@ -200,7 +200,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let r : number = 0; r < this.rows; r++) {
 				let min : number = this.matrix[r][0] + this.potentialR[r] - this.potentialC[0];
 				for (let c : number = 0; c < this.cols; c++) {
-					let kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
 					min = Math.min(min, kante);
 				}
 				this.potentialR[r] -= min;
@@ -210,7 +210,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let c : number = 0; c < this.cols; c++) {
 				let min : number = this.matrix[0][c] + this.potentialR[0] - this.potentialC[c];
 				for (let r : number = 0; r < this.rows; r++) {
-					let kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
 					min = Math.min(min, kante);
 				}
 				this.potentialC[c] += min;
@@ -219,11 +219,11 @@ export class KursblockungMatrix extends JavaObject {
 		let dijkstraRunden : number = Math.min(this.rows, this.cols);
 		Arrays.fill(this.abgearbeitetC, false);
 		for (let ir : number = 0; ir < this.rows; ir++) {
-			let r : number = this.permR[ir];
+			const r : number = this.permR[ir];
 			for (let ic : number = 0; ic < this.cols; ic++) {
-				let c : number = this.permC[ic];
+				const c : number = this.permC[ic];
 				if (!this.abgearbeitetC[c]) {
-					let kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
 					if (kante === 0) {
 						this.r2c[r] = c;
 						this.c2r[c] = r;
@@ -236,14 +236,14 @@ export class KursblockungMatrix extends JavaObject {
 		}
 		for (let dijkstraRunde : number = 0; dijkstraRunde < dijkstraRunden; dijkstraRunde++) {
 			for (let ic : number = 0; ic < this.cols; ic++) {
-				let c : number = this.permC[ic];
+				const c : number = this.permC[ic];
 				this.vorgaengerCzuR[c] = -1;
 				this.abgearbeitetC[c] = false;
 				this.distanzC[c] = JavaLong.MAX_VALUE;
 				for (let ir : number = 0; ir < this.rows; ir++) {
-					let r : number = this.permR[ir];
+					const r : number = this.permR[ir];
 					if (this.r2c[r] < 0) {
-						let kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+						const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
 						if (kante < this.distanzC[c]) {
 							this.distanzC[c] = kante;
 							this.vorgaengerCzuR[c] = r;
@@ -255,7 +255,7 @@ export class KursblockungMatrix extends JavaObject {
 			for (let dijkstraZyklus : number = 0; dijkstraZyklus < this.cols; dijkstraZyklus++) {
 				let fromC : number = 0;
 				for (let ic : number = 0; ic < this.cols; ic++) {
-					let c : number = this.permC[ic];
+					const c : number = this.permC[ic];
 					if (!this.abgearbeitetC[c]) {
 						if ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC])) {
 							fromC = c;
@@ -263,12 +263,12 @@ export class KursblockungMatrix extends JavaObject {
 					}
 				}
 				this.abgearbeitetC[fromC] = true;
-				let overR : number = this.c2r[fromC];
+				const overR : number = this.c2r[fromC];
 				if (overR >= 0) {
 					for (let ic : number = 0; ic < this.cols; ic++) {
-						let toC : number = this.permC[ic];
-						let kante : number = this.matrix[overR][toC] + this.potentialR[overR] - this.potentialC[toC];
-						let distance : number = this.distanzC[fromC] + kante;
+						const toC : number = this.permC[ic];
+						const kante : number = this.matrix[overR][toC] + this.potentialR[overR] - this.potentialC[toC];
+						const distance : number = this.distanzC[fromC] + kante;
 						if (distance < this.distanzC[toC]) {
 							this.distanzC[toC] = distance;
 							this.vorgaengerCzuR[toC] = overR;
@@ -282,16 +282,16 @@ export class KursblockungMatrix extends JavaObject {
 			}
 			let currentC : number = endknotenC;
 			while (currentC >= 0) {
-				let prevR : number = this.vorgaengerCzuR[currentC];
-				let prevC : number = this.r2c[prevR];
+				const prevR : number = this.vorgaengerCzuR[currentC];
+				const prevC : number = this.r2c[prevR];
 				this.r2c[prevR] = currentC;
 				this.c2r[currentC] = prevR;
 				currentC = prevC;
 			}
 			for (let r : number = 0; r < this.rows; r++) {
-				let c : number = this.r2c[r];
+				const c : number = this.r2c[r];
 				if (c >= 0) {
-					let kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
+					const kante : number = this.matrix[r][c] + this.potentialR[r] - this.potentialC[c];
 					this.potentialR[r] += this.distanzC[c] - kante;
 					this.potentialC[c] += this.distanzC[c];
 				}
@@ -323,7 +323,7 @@ export class KursblockungMatrix extends JavaObject {
 	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 */
 	private static initialisiere(perm : Array<number>) : void {
-		let laenge : number = perm.length;
+		const laenge : number = perm.length;
 		for (let i : number = 0; i < laenge; i++) {
 			perm[i] = i;
 		}
@@ -335,11 +335,11 @@ export class KursblockungMatrix extends JavaObject {
 	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird.
 	 */
 	private permutiere(perm : Array<number>) : void {
-		let laenge : number = perm.length;
+		const laenge : number = perm.length;
 		for (let i : number = 0; i < laenge; i++) {
-			let j : number = this._random.nextInt(laenge);
-			let saveI : number = perm[i];
-			let saveJ : number = perm[j];
+			const j : number = this._random.nextInt(laenge);
+			const saveI : number = perm[i];
+			const saveJ : number = perm[j];
 			perm[i] = saveJ;
 			perm[j] = saveI;
 		}
@@ -365,15 +365,15 @@ export class KursblockungMatrix extends JavaObject {
 	 * @return                    Eine String-Representation der Matrix.
 	 */
 	public convertToString(kommentar : string, zellenbreite : number, mitKnotenPotential : boolean) : string {
-		let sb : StringBuilder = new StringBuilder();
+		const sb : StringBuilder = new StringBuilder();
 		sb.append(kommentar! + System.lineSeparator()!);
 		for (let r : number = 0; r < this.rows; r++) {
 			for (let c : number = 0; c < this.cols; c++) {
-				let wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
+				const wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
 				let sWert : string | null = "" + wert;
 				while (sWert.length < zellenbreite)
 					sWert = " " + sWert!;
-				let sZusatz : string = this.r2c[r] === c ? "*" : " ";
+				const sZusatz : string = this.r2c[r] === c ? "*" : " ";
 				sb.append(sWert! + sZusatz!);
 			}
 			sb.append("\n");

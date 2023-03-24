@@ -48,7 +48,7 @@ public class BenutzerKompetenzGruppenKatalogEintrag {
 	 * @param zeile          die Zeile bei der Darstellung der Benutzerverwaltung in Schild
 	 *  
 	 */
-	public BenutzerKompetenzGruppenKatalogEintrag(long id, @NotNull String bezeichnung, int spalte, int zeile) {
+	public BenutzerKompetenzGruppenKatalogEintrag(final long id, final @NotNull String bezeichnung, final int spalte, final int zeile) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.spalte = spalte;

@@ -143,7 +143,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @return TRUE, falls der Schüler mindestens einen Multikurs hat.
 	 */
 	gibHatMultikurs() : boolean {
-		for (let fachart of this.fachartArr) {
+		for (const fachart of this.fachartArr) {
 			if (fachart.gibHatMultikurs()) {
 				return true;
 			}
@@ -166,7 +166,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @param pFacharten Die Facharten des Schülers.
 	 */
 	aktionSetzeFachartenUndIDs(pFacharten : Array<KursblockungDynFachart>) : void {
-		let nFacharten : number = pFacharten.length;
+		const nFacharten : number = pFacharten.length;
 		this.fachartArr = pFacharten;
 		this.fachartZuKurs = Array(nFacharten).fill(null);
 		this.fachartZuKursSaveS = Array(nFacharten).fill(null);
@@ -176,11 +176,11 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.nichtwahlen = nFacharten;
 		for (let i : number = 1; i < nFacharten; i++)
 			for (let j : number = i; j >= 1; j--) {
-				let anzL : number = this.fachartArr[j - 1].gibKurseMax();
-				let anzR : number = this.fachartArr[j].gibKurseMax();
+				const anzL : number = this.fachartArr[j - 1].gibKurseMax();
+				const anzR : number = this.fachartArr[j].gibKurseMax();
 				if (anzL > anzR) {
-					let fL : KursblockungDynFachart = this.fachartArr[j - 1];
-					let fR : KursblockungDynFachart = this.fachartArr[j];
+					const fL : KursblockungDynFachart = this.fachartArr[j - 1];
+					const fR : KursblockungDynFachart = this.fachartArr[j];
 					this.fachartArr[j - 1] = fR;
 					this.fachartArr[j] = fL;
 				}
@@ -245,7 +245,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	private aktionWaehleKurse(wahl : Array<KursblockungDynKurs | null>) : void {
 		this.aktionKurseAlleEntfernen();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
-			let kurs : KursblockungDynKurs | null = wahl[i];
+			const kurs : KursblockungDynKurs | null = wahl[i];
 			if (kurs === null) {
 				continue;
 			}
@@ -261,7 +261,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 */
 	aktionKurseAlleEntfernen() : void {
 		for (let i : number = 0; i < this.fachartArr.length; i++) {
-			let kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
+			const kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
 			if (kurs !== null) {
 				this.aktionKursEntfernen(i, kurs);
 			}
@@ -272,25 +272,25 @@ export class KursblockungDynSchueler extends JavaObject {
 	 *Verteilt alle Kurse des S., die über mehr als eine Schiene gehen.
 	 */
 	aktionKurseVerteilenNurMultikurseZufaellig() : void {
-		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
+		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
 		for (let pFachart : number = 0; pFachart < this.fachartArr.length; pFachart++) {
-			let iFachart : number = perm[pFachart];
+			const iFachart : number = perm[pFachart];
 			if (this.fachartZuKurs[iFachart] !== null) {
 				continue;
 			}
-			let fachart : KursblockungDynFachart = this.fachartArr[iFachart];
+			const fachart : KursblockungDynFachart = this.fachartArr[iFachart];
 			if (!fachart.gibHatMultikurs()) {
 				continue;
 			}
-			let kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
-			let perm2 : Array<number> = KursblockungStatic.gibPermutation(this._random, kurse.length);
+			const kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
+			const perm2 : Array<number> = KursblockungStatic.gibPermutation(this._random, kurse.length);
 			for (let pKurs : number = 0; pKurs < perm2.length; pKurs++) {
-				let kurs : KursblockungDynKurs = kurse[perm2[pKurs]];
+				const kurs : KursblockungDynKurs = kurse[perm2[pKurs]];
 				if (this.kursGesperrt[kurs.gibInternalID()]) {
 					continue;
 				}
 				let waehlbar : boolean = true;
-				for (let nr of kurs.gibSchienenLage()) {
+				for (const nr of kurs.gibSchienenLage()) {
 					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -311,18 +311,18 @@ export class KursblockungDynSchueler extends JavaObject {
 			if (this.fachartZuKurs[iFachart] !== null) {
 				continue;
 			}
-			let fachart : KursblockungDynFachart = this.fachartArr[iFachart];
+			const fachart : KursblockungDynFachart = this.fachartArr[iFachart];
 			if (fachart.gibKurseMax() !== 1) {
 				continue;
 			}
-			let kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
+			const kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
 			for (let iKurse : number = 0; iKurse < kurse.length; iKurse++) {
-				let kurs : KursblockungDynKurs = kurse[iKurse];
+				const kurs : KursblockungDynKurs = kurse[iKurse];
 				if (this.kursGesperrt[kurs.gibInternalID()]) {
 					continue;
 				}
 				let waehlbar : boolean = true;
-				for (let nr of kurs.gibSchienenLage()) {
+				for (const nr of kurs.gibSchienenLage()) {
 					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -340,8 +340,8 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Kurse werden in der Wahl bevorzugt.
 	 */
 	aktionKurseVerteilenMitBipartiteMatchingGewichtetem() : void {
-		let INFINITY : number = 1000000;
-		let data : Array<Array<number>> = this.matrix.getMatrix();
+		const INFINITY : number = 1000000;
+		const data : Array<Array<number>> = this.matrix.getMatrix();
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
 			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
 				data[r][c] = INFINITY;
@@ -351,26 +351,26 @@ export class KursblockungDynSchueler extends JavaObject {
 			}
 			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
 				if (!this.schieneBelegt[c]) {
-					let kurs : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
+					const kurs : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
 					if (kurs !== null) {
 						data[r][c] = kurs.gibGewichtetesMatchingBewertung();
 					}
 				}
 			}
 		}
-		let r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		const r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
 			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
 				continue;
 			}
-			let c : number = r2c[r];
+			const c : number = r2c[r];
 			if (c < 0) {
 				continue;
 			}
 			if (data[r][c] === INFINITY) {
 				continue;
 			}
-			let kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
+			const kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
 			if (kursGefunden !== null) {
 				this.aktionKursHinzufuegen(r, kursGefunden);
 			} else {
@@ -383,7 +383,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 *Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines Bipartiten-Matching-Algorithmus.
 	 */
 	aktionKurseVerteilenMitBipartiteMatching() : void {
-		let data : Array<Array<number>> = this.matrix.getMatrix();
+		const data : Array<Array<number>> = this.matrix.getMatrix();
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
 			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
 				data[r][c] = 0;
@@ -393,23 +393,23 @@ export class KursblockungDynSchueler extends JavaObject {
 			}
 			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
 				if (!this.schieneBelegt[c]) {
-					let kurs : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
+					const kurs : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
 					if (kurs !== null) {
 						data[r][c] = 1;
 					}
 				}
 			}
 		}
-		let r2c : Array<number> = this.matrix.gibMaximalesBipartitesMatching(true);
+		const r2c : Array<number> = this.matrix.gibMaximalesBipartitesMatching(true);
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
 			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
 				continue;
 			}
-			let c : number = r2c[r];
+			const c : number = r2c[r];
 			if (c === -1) {
 				continue;
 			}
-			let kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
+			const kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
 			if (kursGefunden !== null) {
 				this.aktionKursHinzufuegen(r, kursGefunden);
 			} else {
@@ -426,12 +426,12 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
 	 */
 	aktionKurseVerteilenNachDeinemWunsch() : boolean {
-		let VAL_UNGUELTIG : number = 1000000;
-		let VAL_KURS_GEWAEHLT : number = 0;
-		let VAL_KURS_MUSS_WANDERN : number = 1;
-		let data : Array<Array<number>> = this.matrix.getMatrix();
+		const VAL_UNGUELTIG : number = 1000000;
+		const VAL_KURS_GEWAEHLT : number = 0;
+		const VAL_KURS_MUSS_WANDERN : number = 1;
+		const data : Array<Array<number>> = this.matrix.getMatrix();
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
-			let fachart : KursblockungDynFachart | null = this.fachartArr[r];
+			const fachart : KursblockungDynFachart | null = this.fachartArr[r];
 			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
 				data[r][c] = VAL_UNGUELTIG;
 			}
@@ -444,14 +444,14 @@ export class KursblockungDynSchueler extends JavaObject {
 				}
 			}
 		}
-		let r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		const r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		let kurslage_veraendert : boolean = false;
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
-			let fachart : KursblockungDynFachart | null = this.fachartArr[r];
+			const fachart : KursblockungDynFachart | null = this.fachartArr[r];
 			if ((this.fachartZuKurs[r] !== null) || fachart.gibHatMultikurs()) {
 				continue;
 			}
-			let c : number = r2c[r];
+			const c : number = r2c[r];
 			if (c < 0) {
 				continue;
 			}
@@ -474,21 +474,21 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Schienen in den der Kurs sind frei sind.<br>
 	 */
 	aktionKurseVerteilenZufaellig() : void {
-		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
+		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.fachartArr.length);
 		for (let pFachart : number = 0; pFachart < this.fachartArr.length; pFachart++) {
-			let iFachart : number = perm[pFachart];
+			const iFachart : number = perm[pFachart];
 			if (this.fachartZuKurs[iFachart] !== null) {
 				continue;
 			}
-			let fachart : KursblockungDynFachart = this.fachartArr[iFachart];
-			let kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
+			const fachart : KursblockungDynFachart = this.fachartArr[iFachart];
+			const kurse : Array<KursblockungDynKurs> = fachart.gibKurse();
 			for (let iKurs : number = 0; iKurs < kurse.length; iKurs++) {
-				let kurs : KursblockungDynKurs = kurse[iKurs];
+				const kurs : KursblockungDynKurs = kurse[iKurs];
 				if (this.kursGesperrt[kurs.gibInternalID()]) {
 					continue;
 				}
 				let waehlbar : boolean = true;
-				for (let nr of kurs.gibSchienenLage()) {
+				for (const nr of kurs.gibSchienenLage()) {
 					if (this.schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -505,7 +505,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		kurs.aktionSchuelerHinzufügen();
 		this.statistik.aktionNichtwahlenVeraendern(-1);
 		this.nichtwahlen--;
-		for (let nr of kurs.gibSchienenLage()) {
+		for (const nr of kurs.gibSchienenLage()) {
 			if (this.schieneBelegt[nr]) {
 				console.log(JSON.stringify("FEHLER: Schienen-Doppelbelegung! " + this.representation!));
 			}
@@ -518,7 +518,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		kurs.aktionSchuelerEntfernen();
 		this.statistik.aktionNichtwahlenVeraendern(+1);
 		this.nichtwahlen++;
-		for (let nr of kurs.gibSchienenLage()) {
+		for (const nr of kurs.gibSchienenLage()) {
 			if (!this.schieneBelegt[nr]) {
 				console.log(JSON.stringify("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation!));
 			}
@@ -535,7 +535,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
 	gibIstInKurs(kurs : KursblockungDynKurs | null) : boolean {
-		for (let zugeordneterKurs of this.fachartZuKurs)
+		for (const zugeordneterKurs of this.fachartZuKurs)
 			if (zugeordneterKurs as unknown === kurs as unknown)
 				return true;
 		return false;
@@ -547,13 +547,13 @@ export class KursblockungDynSchueler extends JavaObject {
 	public debugKurswahlen() : void {
 		console.log();
 		console.log(JSON.stringify(this.representation));
-		let setSchienenLage : HashSet<number | null> | null = new HashSet();
+		const setSchienenLage : HashSet<number | null> | null = new HashSet();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
-			let kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
+			const kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
 			if (kurs === null)
 				continue;
 			console.log(JSON.stringify("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!));
-			for (let schiene of kurs.gibSchienenLage()) {
+			for (const schiene of kurs.gibSchienenLage()) {
 				if (setSchienenLage.add(schiene) === false) {
 					console.log(JSON.stringify("Kollision"));
 					return;

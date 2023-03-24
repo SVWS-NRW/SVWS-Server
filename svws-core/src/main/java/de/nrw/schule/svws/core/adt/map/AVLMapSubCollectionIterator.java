@@ -38,7 +38,7 @@ class AVLMapSubCollectionIterator<@NotNull K, @NotNull V> implements Iterator<@N
 	 * 
 	 * @param sub Die {@link AVLMapSubMap} auf der dieser Iterator operiert.
 	 */
-	AVLMapSubCollectionIterator(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubCollectionIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.bcGetFirstEntryAsNode();

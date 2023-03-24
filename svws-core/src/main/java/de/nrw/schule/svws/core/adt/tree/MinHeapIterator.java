@@ -64,7 +64,7 @@ class MinHeapIterator<@NotNull T> implements Iterator<@NotNull T> {
 	 * @param elem   die Elemente des Minimum Heaps 
 	 * @param heap   eine Referenz zum Minimum Heap, um auf parallel erfolgende modifizierende Zugriffe reagieren zu können.
 	 */
-	MinHeapIterator(@NotNull T[] elem, @NotNull MinHeap<@NotNull T> heap) {
+	MinHeapIterator(final @NotNull T[] elem, final @NotNull MinHeap<@NotNull T> heap) {
 		_current = -1;
 		_elements = elem;
 		_heap = heap;
@@ -82,7 +82,7 @@ class MinHeapIterator<@NotNull T> implements Iterator<@NotNull T> {
 	public @NotNull T next() {
 		if (!hasNext())
 			throw new NoSuchElementException("Keine weiteren Elemente vorhanden. Eine Prüfung mit hasNext() vorab ist empfehlenswert.");
-		T elem = _elements[++_current];
+		final T elem = _elements[++_current];
 		if (elem == null)
 			throw new NoSuchElementException("Interner Fehler in der Datenstruktur.");
 		return elem;

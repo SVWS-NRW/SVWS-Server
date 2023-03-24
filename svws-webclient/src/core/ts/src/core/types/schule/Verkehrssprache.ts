@@ -2399,7 +2399,7 @@ export class Verkehrssprache extends JavaObject {
 	 */
 	private static getMapSpracheByKuerzel() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._sprachen.size() === 0) {
-			for (let s of Verkehrssprache.values()) {
+			for (const s of Verkehrssprache.values()) {
 				if (s.daten !== null)
 					Verkehrssprache._sprachen.put(s.daten.kuerzel, s);
 			}
@@ -2415,7 +2415,7 @@ export class Verkehrssprache extends JavaObject {
 	 */
 	private static getMapSpracheByKuerzel2() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._kuerzel2.size() === 0) {
-			for (let s of Verkehrssprache.values()) {
+			for (const s of Verkehrssprache.values()) {
 				if ((s.daten !== null) && (s.daten.iso2 !== null))
 					Verkehrssprache._kuerzel2.put(s.daten.iso2, s);
 			}

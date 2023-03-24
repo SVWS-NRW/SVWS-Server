@@ -25,13 +25,11 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	private static readonly all_values_by_name : Map<string, GostKursblockungRegelTyp> = new Map<string, GostKursblockungRegelTyp>();
 
 	/**
-	 *
 	 *  Eine Regel ist nicht definiert.
 	 */
 	public static readonly UNDEFINIERT : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("UNDEFINIERT", 0, 0, "Undefiniert", Collections.emptyList());
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Sperren von Schienen für alle Kurse der Kursart (A). Dabei werden alle Schienen von B bis C
 	 *  gesperrt. Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
 	 *
@@ -42,7 +40,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, "Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Reservieren der Schienen von B bis C für Kurse einer bestimmten Kursart (A).
 	 *  Die Schienen sind 1-indiziert, es gilt {@code 1 <= B, C <= Schienenanzahl.} <br>
 	 *
@@ -53,7 +50,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Fixieren eines Kurses (A) in Schiene (B). Die Schiene B ist 1-indiziert, es gilt
 	 *  {@code 1 <= B <= Schienenanzahl.} <br>
 	 *
@@ -63,7 +59,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURS_FIXIERE_IN_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_FIXIERE_IN_SCHIENE", 3, 2, "Kurs: Fixiere in Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Sperren einer Schiene (B) für einen Kurs (A). Die Schiene B ist 1-indiziert, es gilt
 	 *  {@code 1 <= B <= Schienenanzahl.} <br>
 	 *
@@ -73,7 +68,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURS_SPERRE_IN_SCHIENE : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_SPERRE_IN_SCHIENE", 4, 3, "Kurs: Sperre in Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Fixieren eines Schülers (A) in einem Kurs (B). <br>
 	 *
 	 *  - Parameter A: Datenbank-ID des Schülers (long) <br>
@@ -82,7 +76,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly SCHUELER_FIXIEREN_IN_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_FIXIEREN_IN_KURS", 5, 4, "Schüler: Fixiere in Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Verbieten eines Schülers (A) in einem Kurs (B). <br>
 	 *
 	 *  - Parameter A: Datenbank-ID des Schülers (long) <br>
@@ -91,7 +84,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly SCHUELER_VERBIETEN_IN_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_IN_KURS", 6, 5, "Schüler: Verbiete in Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
 	 *
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
@@ -100,7 +92,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURS_VERBIETEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_VERBIETEN_MIT_KURS", 7, 7, "Kurs verbiete mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum Forcieren, dass Kurs (A) mit einem Kurs (B) in der selben Schiene landet. <br>
 	 *
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
@@ -109,14 +100,12 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static readonly KURS_ZUSAMMEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_ZUSAMMEN_MIT_KURS", 8, 8, "Kurs zusammen mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
 	 *  - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
 	 */
 	public static readonly LEHRKRAFT_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAFT_BEACHTEN", 9, 9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(GostKursblockungRegelParameterTyp.BOOLEAN));
 
 	/**
-	 *
 	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
 	 */
 	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 10, 10, "Lehrkräfte beachten", Arrays.asList());
@@ -142,7 +131,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	private static readonly _map_id_regel : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
 
 	/**
-	 *
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
@@ -162,7 +150,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	private static getMap() : HashMap<number, GostKursblockungRegelTyp> {
 		if (GostKursblockungRegelTyp._map_id_regel.isEmpty())
-			for (let gostTyp of GostKursblockungRegelTyp.values())
+			for (const gostTyp of GostKursblockungRegelTyp.values())
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
 		return GostKursblockungRegelTyp._map_id_regel;
 	}
@@ -177,7 +165,6 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
 	 * @param id   die ID des Regel-Typs
@@ -187,14 +174,13 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static fromTyp(id : number | null) : GostKursblockungRegelTyp {
 		if (id === null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
-		let gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
+		const gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
 		if (gostTyp === null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
 	}
 
 	/**
-	 *
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
 	 *
 	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
@@ -227,7 +213,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType : GostKursblockungRegelParameterTyp | null) : boolean {
-		for (let cur of this.paramTypes)
+		for (const cur of this.paramTypes)
 			if (paramType as unknown === cur as unknown)
 				return true;
 		return false;
@@ -243,28 +229,28 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
 	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
-		let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
-		let param : Vector<number> = pRegel.parameter;
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
+		const param : Vector<number> = pRegel.parameter;
 		switch (typ) {
 			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN:{
 				return [];
 			}
 			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN:{
-				let p0 : number = param.get(0).valueOf();
+				const p0 : number = param.get(0).valueOf();
 				return [p0];
 			}
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:
 			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:
 			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:{
-				let p0 : number = param.get(0).valueOf();
-				let p1 : number = param.get(1).valueOf();
+				const p0 : number = param.get(0).valueOf();
+				const p1 : number = param.get(1).valueOf();
 				return [p0, p1];
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE:{
-				let p0 : number = param.get(0).valueOf();
-				let p1 : number = param.get(1).valueOf();
+				const p0 : number = param.get(0).valueOf();
+				const p1 : number = param.get(1).valueOf();
 				if (p1 < pSchienenNr)
 					return [p0, p1];
 				if (p1 > pSchienenNr)
@@ -273,7 +259,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:{
-				let p0 : number = param.get(0).valueOf();
+				const p0 : number = param.get(0).valueOf();
 				let von : number = param.get(1).valueOf();
 				let bis : number = param.get(2).valueOf();
 				von = pSchienenNr < von ? von - 1 : von;

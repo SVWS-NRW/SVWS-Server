@@ -74,7 +74,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * @param comparator      das Objekt zum Vergleich von zwei Objekten des Typ T
 	 * @param initialCapacity die initiale Kapazität des Baums
 	 */
-	public MinHeap(@NotNull Comparator<@NotNull T> comparator, int initialCapacity) {
+	public MinHeap(final @NotNull Comparator<@NotNull T> comparator, final int initialCapacity) {
 		if (initialCapacity <= 0)
 			throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.");
 		this._comparator = comparator;
@@ -88,7 +88,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @param comparator das Objekt zum Vergleich von zwei Objekten des Typ T
 	 */
-	public MinHeap(@NotNull Comparator<@NotNull T> comparator) {
+	public MinHeap(final @NotNull Comparator<@NotNull T> comparator) {
 		this._comparator = comparator;
 		this._initialCapacity = 63;
 		this._modCount = 0;
@@ -99,7 +99,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @param original    Das zu kopierende Original
 	 */
-	public MinHeap(@NotNull MinHeap<@NotNull T> original) {
+	public MinHeap(final @NotNull MinHeap<@NotNull T> original) {
 		this._comparator = original._comparator;
 		this._initialCapacity = original._initialCapacity;
 		this._nodes = Arrays.copyOf(original._nodes, original._nodes.length);
@@ -108,7 +108,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean add(@NotNull T e) throws IllegalStateException {
+	public boolean add(final @NotNull T e) throws IllegalStateException {
 		if (e == null)
 			return false;
 		if (_nodes.length == 0)
@@ -129,7 +129,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean offer(@NotNull T e) {
+	public boolean offer(final @NotNull T e) {
 		return this.add(e);
 	}
 
@@ -142,7 +142,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	public T poll() {
 		if (_size == 0)
 			return null;
-		T elem = _nodes[0];
+		final T elem = _nodes[0];
 		_nodes[0] = _nodes[--_size];
 		_nodes[_size] = null;
 		heapifyDown(0);
@@ -152,7 +152,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 
 	@Override
 	public @NotNull T remove() {
-		T result = poll();
+		final T result = poll();
 		if (result == null)
 			throw new NoSuchElementException();
 		return result;
@@ -169,7 +169,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		if (o == null)
 			return false;
 		for (int i = 0; i < _size; i++) {
@@ -180,32 +180,32 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		if (c == null)
 			return true;
 		if (this == c)
 			return true;
-		for (Object o : c)
+		for (final Object o : c)
 			if (!this.contains(o))
 				return false;
 		return true;
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends @NotNull T> c) throws IllegalStateException {
+	public boolean addAll(final Collection<? extends @NotNull T> c) throws IllegalStateException {
 		if (c == null)
 			return false;
 		if (this == c) {
 			if (_size == 0)
 				return false;
-			@NotNull T[] tmp = Arrays.copyOf(_nodes, _size);
-			for (@NotNull T t : tmp)
+			final @NotNull T[] tmp = Arrays.copyOf(_nodes, _size);
+			for (final @NotNull T t : tmp)
 				if (t != null)
 					this.add(t);
 			return true;
 		}
 		boolean result = false;
-		for (T t : c) {
+		for (final T t : c) {
 			if (this.add(t))
 				result = true;
 		}
@@ -213,10 +213,10 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		if (o == null)
 			return false;
-		int index = findIndex(o);
+		final int index = findIndex(o);
 		if (index == -1)
 			return false;
 		_size--;
@@ -231,7 +231,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(final Collection<?> c) {
 		if (c == null)
 			return false;
 		if (this == c) {
@@ -241,7 +241,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 			return true;
 		}
 		boolean result = false;
-		for (Object o : c) {
+		for (final Object o : c) {
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
@@ -253,7 +253,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		if (_size == 0)
 			return false;
 		if (c == null) {
@@ -262,7 +262,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 		}
 		if (this == c)
 			return false;
-		@NotNull T[] tmp = newArray(_nodes[0], _nodes.length);
+		final @NotNull T[] tmp = newArray(_nodes[0], _nodes.length);
 		if (tmp == null)
 			return false;
 		int i = 0;
@@ -295,7 +295,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <@NotNull U> @NotNull U@NotNull[] toArray(@NotNull U@NotNull[] a) {
+	public <@NotNull U> @NotNull U@NotNull[] toArray(final @NotNull U@NotNull[] a) {
 		if (a.length < _size)
 			return (@NotNull U[]) copyNodes();
 		System.arraycopy(_nodes, 0, a, 0, _size);
@@ -340,8 +340,8 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	public @NotNull T@NotNull[] toSortedArray() {
 		if (_size == 0)
 			return (@NotNull T@NotNull[])new Object[0];
-		@NotNull MinHeap<@NotNull T> copy = new MinHeap<>(this);
-		@NotNull T@NotNull[] tmp = newArray(_nodes[0], _size);
+		final @NotNull MinHeap<@NotNull T> copy = new MinHeap<>(this);
+		final @NotNull T@NotNull[] tmp = newArray(_nodes[0], _size);
 		T current;
 		int i = 0;
 		while ((current = copy.poll()) != null)
@@ -356,7 +356,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 */
 	@Override
 	public @NotNull String toString() {
-		@NotNull StringBuilder sb = new StringBuilder();
+		final @NotNull StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < _size; i++) {
 			sb.append(_nodes[i]);
 			if (i != _size-1)
@@ -383,13 +383,13 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * @param obj   das zu vergleichende Objekt
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (obj instanceof MinHeap) {
-			MinHeap<?> other = (MinHeap<?>)obj;
+			final MinHeap<?> other = (MinHeap<?>)obj;
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
 		}
 		return false;
@@ -402,7 +402,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @return den Index des Elternteils
 	 */
-	private static int getParentIndex(int i) {
+	private static int getParentIndex(final int i) {
 		return (i <= 0) ? -1 : (i - 1) / 2;
 	}
 
@@ -413,7 +413,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @return den Index des linken Kindes
 	 */
-	private static int getLeftChildIndex(int i) {
+	private static int getLeftChildIndex(final int i) {
 		return 2 * i + 1;
 	}
 
@@ -424,7 +424,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @return den Index des rechten Kindes
 	 */
-	private static int getRightChildIndex(int i) {
+	private static int getRightChildIndex(final int i) {
 		return 2 * i + 2;
 	}
 
@@ -434,8 +434,8 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * @param i
 	 * @param j
 	 */
-	private void swap(int i, int j) {
-		T elem = _nodes[i];
+	private void swap(final int i, final int j) {
+		final T elem = _nodes[i];
 		_nodes[i] = _nodes[j];
 		_nodes[j] = elem;
 	}
@@ -445,9 +445,9 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @param i   ab diesem Index wird im Baum abwärts geprüft.
 	 */
-	private void heapifyDown(int i) {
-		int left = getLeftChildIndex(i);
-		int right = getRightChildIndex(i);
+	private void heapifyDown(final int i) {
+		final int left = getLeftChildIndex(i);
+		final int right = getRightChildIndex(i);
 		// Prüfe, ob i ein Blatt ist, wenn ja: Abbruch der Rekursion
 		if (left >= _size)
 			return;
@@ -456,16 +456,16 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 		if (right == _size) { // prüfe nun ob kein rechtes Kind existiert, dann wähle das linke Kind  
 			child = left;
 		} else { // prüfe nun, ob das linke Kind nicht doch das 'kleinere' ist
-			T nodeLeft = _nodes[left];
-			T nodeRight = _nodes[right];
+			final T nodeLeft = _nodes[left];
+			final T nodeRight = _nodes[right];
 			if ((nodeLeft == null) || (nodeRight == null))  // tritt nicht auf 
 				return;
 			if (_comparator.compare(nodeLeft, nodeRight) < 0)
 				child = left;
 		}
 		// vergleiche und tausche, falls nötig
-		T nodeCurrent = _nodes[i];
-		T nodeChild = _nodes[child];
+		final T nodeCurrent = _nodes[i];
+		final T nodeChild = _nodes[child];
 		if ((nodeCurrent == null) || (nodeChild == null))  // tritt nicht auf
 			throw new NullPointerException();
 		if (_comparator.compare(nodeCurrent, nodeChild) <= 0)
@@ -479,12 +479,12 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @param i   ab diesem Index wird überprüft
 	 */
-	private void heapifyUp(int i) {
-		int parentIndex = getParentIndex(i);
+	private void heapifyUp(final int i) {
+		final int parentIndex = getParentIndex(i);
 		if (parentIndex < 0)
 			return;
-		T nodeCurrent = _nodes[i];
-		T nodeParent = _nodes[parentIndex];
+		final T nodeCurrent = _nodes[i];
+		final T nodeParent = _nodes[parentIndex];
 		if ((nodeCurrent == null) || (nodeParent == null) || (_comparator.compare(nodeCurrent, nodeParent) >= 0))
 			return;
 		swap(i, parentIndex);
@@ -500,7 +500,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * @return das neue Array
 	 */
 	@SuppressWarnings("unchecked")
-	private @NotNull T@NotNull[] newArray(T elem, int length) {
+	private @NotNull T@NotNull[] newArray(final T elem, final int length) {
 		if (elem == null)
 			return (@NotNull T@NotNull[]) Array.newInstance(Object.class, length);
 		return (@NotNull T@NotNull[]) Array.newInstance(elem.getClass(), length);
@@ -513,7 +513,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * @return die Kopie des _nodes-Array.
 	 */
 	private @NotNull T@NotNull[] copyNodes() {
-		@NotNull T@NotNull[] result = newArray(_size <= 0 ? null : _nodes[0], _size);
+		final @NotNull T@NotNull[] result = newArray(_size <= 0 ? null : _nodes[0], _size);
 		System.arraycopy(_nodes, 0, result, 0, _size);
 		return result;
 	}
@@ -533,7 +533,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 		int newLength = _nodes.length * 2 + 1;
 		if (newLength < 0)
 			newLength = Integer.MAX_VALUE;
-		@NotNull T@NotNull[] tmp = newArray(_nodes[0], newLength);
+		final @NotNull T@NotNull[] tmp = newArray(_nodes[0], newLength);
 		System.arraycopy(_nodes, 0, tmp, 0, _size);
 		this._nodes = tmp;
 	}
@@ -546,7 +546,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	 * 
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */
-	private int findIndex(Object obj) {
+	private int findIndex(final Object obj) {
 		if (obj == null)
 			return -1;
 		for (int i = 0; i < _size; i++) {

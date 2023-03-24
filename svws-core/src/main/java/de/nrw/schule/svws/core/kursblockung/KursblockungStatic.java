@@ -17,8 +17,8 @@ public class KursblockungStatic {
 	 * @param  pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param  n       Die Größe des Arrays.
 	 * @return         Eine Array-Referenz. */
-	public static @NotNull int[] gibPermutation(@NotNull Random pRandom, int n) {
-		@NotNull int[] temp = new int[n];
+	public static @NotNull int[] gibPermutation(final @NotNull Random pRandom, final int n) {
+		final @NotNull int[] temp = new int[n];
 		for (int i = 0; i < n; i++) {
 			temp[i] = i;
 		}
@@ -30,12 +30,12 @@ public class KursblockungStatic {
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param perm    Das zu permutierende Array. */
-	public static void aktionPermutiere(@NotNull Random pRandom, @NotNull int[] perm) {
-		int n = perm.length;
+	public static void aktionPermutiere(final @NotNull Random pRandom, final @NotNull int[] perm) {
+		final int n = perm.length;
 		for (int i1 = 0; i1 < n; i1++) {
-			int i2 = pRandom.nextInt(n);
-			int s1 = perm[i1];
-			int s2 = perm[i2];
+			final int i2 = pRandom.nextInt(n);
+			final int s1 = perm[i1];
+			final int s2 = perm[i2];
 			perm[i1] = s2;
 			perm[i2] = s1;
 		}

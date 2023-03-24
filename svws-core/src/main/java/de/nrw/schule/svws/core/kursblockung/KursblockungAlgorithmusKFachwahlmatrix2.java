@@ -30,8 +30,8 @@ public class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKFachwahlmatrix2(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKFachwahlmatrix2(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		schuelerAlle = dynDaten.gibSchuelerArray(false);
 	}
@@ -42,14 +42,14 @@ public class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	@Override
-	public void berechne(long pMaxTimeMillis) {
+	public void berechne(final long pMaxTimeMillis) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
 		}
 
 		// Startzeit speichern.
-		long timeStart = System.currentTimeMillis();
+		final long timeStart = System.currentTimeMillis();
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -102,12 +102,12 @@ public class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	 * Matching-Algorithmus verteilt.
 	 */
 	private void verteileSuS() {
-		@NotNull
+		final @NotNull
 		int[] perm = KursblockungStatic.gibPermutation(_random, schuelerAlle.length);
 
 		for (int p = 0; p < perm.length; p++) {
-			int i = perm[p];
-			KursblockungDynSchueler schueler = schuelerAlle[i];
+			final int i = perm[p];
+			final KursblockungDynSchueler schueler = schuelerAlle[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}

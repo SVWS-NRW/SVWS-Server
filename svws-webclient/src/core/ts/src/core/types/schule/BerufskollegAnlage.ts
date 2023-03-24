@@ -99,7 +99,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 */
 	private static getMapAnlageByKuerzel() : HashMap<string, BerufskollegAnlage> {
 		if (BerufskollegAnlage._anlagen.size() === 0) {
-			for (let s of BerufskollegAnlage.values()) {
+			for (const s of BerufskollegAnlage.values()) {
 				if (s.daten !== null)
 					BerufskollegAnlage._anlagen.put(s.daten.kuerzel, s);
 			}

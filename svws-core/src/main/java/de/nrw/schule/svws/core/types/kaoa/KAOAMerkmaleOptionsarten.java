@@ -20,7 +20,7 @@ public enum KAOAMerkmaleOptionsarten {
 	 * 
 	 * @param kuerzel   das Kürzel  
 	 */
-	private KAOAMerkmaleOptionsarten(String kuerzel) {
+	private KAOAMerkmaleOptionsarten(final String kuerzel) {
 		this.kuerzel = kuerzel;
 	}
 
@@ -32,8 +32,8 @@ public enum KAOAMerkmaleOptionsarten {
 	 * 
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAMerkmaleOptionsarten getByKuerzel(String kuerzel) {
-	    for (@NotNull KAOAMerkmaleOptionsarten art : KAOAMerkmaleOptionsarten.values())
+	public static KAOAMerkmaleOptionsarten getByKuerzel(final String kuerzel) {
+	    for (final @NotNull KAOAMerkmaleOptionsarten art : KAOAMerkmaleOptionsarten.values())
 	        if (art.kuerzel.equals(kuerzel))
 	            return art;
 		return null;

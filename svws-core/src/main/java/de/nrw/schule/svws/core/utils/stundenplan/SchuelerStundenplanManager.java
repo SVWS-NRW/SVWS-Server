@@ -125,7 +125,7 @@ public class SchuelerStundenplanManager {
 	 * 
 	 * @return das SchulerStundenplanUnterricht-Objekt
 	 */
-	public SchuelerStundenplanUnterricht getUnterrichtById(long idUnterricht) {
+	public SchuelerStundenplanUnterricht getUnterrichtById(final long idUnterricht) {
 		return _mapUnterricht.get(idUnterricht);
 	}
 
@@ -136,7 +136,7 @@ public class SchuelerStundenplanManager {
 	 * 
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
-	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByZeitrasterId(long idZeitraster) {
+	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByZeitrasterId(final long idZeitraster) {
 		return _mapZeitrasterUnterricht.get(idZeitraster);
 	}
 
@@ -200,7 +200,7 @@ public class SchuelerStundenplanManager {
 	 * 
 	 * @return das Zeitraster-Objekt
 	 */
-	public StundenplanZeitraster getZeitrasterById(long idZeitraster) {
+	public StundenplanZeitraster getZeitrasterById(final long idZeitraster) {
 		return _mapZeitraster.get(idZeitraster);
 	}
 
@@ -211,7 +211,7 @@ public class SchuelerStundenplanManager {
 	 * @param stunde die Stunde
 	 * @return das Zeitraster-Objekt
 	 */
-	public StundenplanZeitraster getZeitrasterByWochentagStunde(int wochentag, int stunde) {
+	public StundenplanZeitraster getZeitrasterByWochentagStunde(final int wochentag, final int stunde) {
 		final HashMap<@NotNull Integer, @NotNull StundenplanZeitraster> map = _mapWochentagStundeZeitraster.get(wochentag);
 		if (map == null) {
 			// TODO Exceptionhandling
@@ -227,7 +227,7 @@ public class SchuelerStundenplanManager {
 	 * 
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByWochentag(int wochentag) {
+	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByWochentag(final int wochentag) {
 		return _mapWochentagZeitraster.get(wochentag);
 	}
 
@@ -238,7 +238,7 @@ public class SchuelerStundenplanManager {
 	 * 
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByStunde(int stunde) {
+	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByStunde(final int stunde) {
 		return _mapStundeZeitraster.get(stunde);
 	}
 
@@ -312,8 +312,7 @@ public class SchuelerStundenplanManager {
 
 //		_mapWocheUnterricht = _daten.unterricht.stream().collect(Collectors.groupingBy(u -> u.wochentyp));
 		/*
-		 * _mapWochenTypUnterricht = new HashMap<>(); for (final @NotNull
-		 * SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
+		 * _mapWochenTypUnterricht = new HashMap<>(); for (final @NotNull * SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
 		 * 
 		 * @NotNull List<@NotNull SchuelerStundenplanUnterricht> ssul =
 		 * _mapWochenTypUnterricht.get(ssu.wochentyp); if (ssul == null) { ssul = new

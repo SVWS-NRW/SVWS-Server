@@ -134,7 +134,7 @@ public enum Note {
 	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private Note(int id, int sortierung, Integer notenpunkte, @NotNull String kuerzel, @NotNull String text, @NotNull String textZeugnis, Integer gueltigVon, Integer gueltigBis) {
+	private Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
     	this.id = id;
     	this.sortierung = sortierung;
 		this.notenpunkte = notenpunkte;
@@ -165,7 +165,7 @@ public enum Note {
 	 * 
 	 * @return die Note
 	 */
-	public static Note fromNoteSekI(Integer noteSekI) {
+	public static Note fromNoteSekI(final Integer noteSekI) {
 		if (noteSekI == null)
 			return null;
 		switch (noteSekI) {
@@ -187,7 +187,7 @@ public enum Note {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static @NotNull Note fromNotenpunkte(Integer notenpunkte) {
+	public static @NotNull Note fromNotenpunkte(final Integer notenpunkte) {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
@@ -220,10 +220,10 @@ public enum Note {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static @NotNull Note fromKuerzel(String kuerzel) {
+	public static @NotNull Note fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return KEINE;
-		String kuerzelUppercase = kuerzel.toUpperCase();
+		final String kuerzelUppercase = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
 			case "6": return UNGENUEGEND;
 			case "5-": return MANGELHAFT_MINUS;
@@ -263,7 +263,7 @@ public enum Note {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static @NotNull Note fromNotenpunkteString(String notenpunkte) {
+	public static @NotNull Note fromNotenpunkteString(final String notenpunkte) {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {

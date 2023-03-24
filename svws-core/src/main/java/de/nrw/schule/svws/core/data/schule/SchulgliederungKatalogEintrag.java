@@ -114,16 +114,16 @@ public class SchulgliederungKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulgliederungKatalogEintrag(long id, @NotNull String kuerzel, boolean istBK, 
-			@NotNull List<@NotNull Schulform> schulformen, boolean istAuslaufend, boolean istAusgelaufen,
-			@NotNull String beschreibung, BerufskollegAnlage bkAnlage, String bkTyp, Integer bkIndex, boolean istVZ,
-			List<@NotNull SchulabschlussBerufsbildend> bkAbschlussBerufsbildend, 
-			List<@NotNull SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public SchulgliederungKatalogEintrag(final long id, final @NotNull String kuerzel, final boolean istBK, 
+			final @NotNull List<@NotNull Schulform> schulformen, final boolean istAuslaufend, final boolean istAusgelaufen,
+			final @NotNull String beschreibung, final BerufskollegAnlage bkAnlage, final String bkTyp, final Integer bkIndex, final boolean istVZ,
+			final List<@NotNull SchulabschlussBerufsbildend> bkAbschlussBerufsbildend, 
+			final List<@NotNull SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.istBK = istBK;
-		for (@NotNull Schulform schulform : schulformen)
+		for (final @NotNull Schulform schulform : schulformen)
 			this.schulformen.add(schulform.daten.kuerzel);
 		this.istAuslaufend = istAuslaufend;
 		this.istAusgelaufen = istAusgelaufen;
@@ -133,10 +133,10 @@ public class SchulgliederungKatalogEintrag {
 		this.bkIndex = bkIndex;
 		this.istVZ = istVZ;
 		if (bkAbschlussBerufsbildend != null)
-			for (@NotNull SchulabschlussBerufsbildend sbb : bkAbschlussBerufsbildend)
+			for (final @NotNull SchulabschlussBerufsbildend sbb : bkAbschlussBerufsbildend)
 				this.bkAbschlussBerufsbildend.add(sbb.daten.kuerzel);
 		if (bkAbschlussAllgemeinbildend != null)
-			for (@NotNull SchulabschlussAllgemeinbildend sab : bkAbschlussAllgemeinbildend)
+			for (final @NotNull SchulabschlussAllgemeinbildend sab : bkAbschlussAllgemeinbildend)
 				this.bkAbschlussAllgemeinbildend.add(sab.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

@@ -94,7 +94,7 @@ export class Pruefungsordnung extends JavaObject {
 	 */
 	private static getMapPruefungsordnungByKuerzel() : HashMap<string, Pruefungsordnung> {
 		if (Pruefungsordnung._verordnungen.size() === 0) {
-			for (let s of Pruefungsordnung.values()) {
+			for (const s of Pruefungsordnung.values()) {
 				if (s.daten !== null)
 					Pruefungsordnung._verordnungen.put(s.daten.kuerzel, s);
 			}

@@ -21,22 +21,22 @@ import java.util.function.Predicate;
 public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 	
 	/** Filter für alle nicht ausgeglichenen Defizite */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (@NotNull GEAbschlussFach f) -> f.note > 4 && (!f.ausgeglichen);
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> f.note > 4 && (!f.ausgeglichen);
 	
 	/** Filter für alle mangelhaften Fächer */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (@NotNull GEAbschlussFach f) -> f.note == 5;
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
 	
 	/** Filter für alle mangelhaften Fächer, die keine ZP10-Fächer sind. */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaftOhneZP10Faecher = (@NotNull GEAbschlussFach f) -> (f.note == 5) && (!"D".equals(f.kuerzel)) && (!"E".equals(f.kuerzel)) && (!"M".equals(f.kuerzel));
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaftOhneZP10Faecher = (final @NotNull GEAbschlussFach f) -> (f.note == 5) && (!"D".equals(f.kuerzel)) && (!"E".equals(f.kuerzel)) && (!"M".equals(f.kuerzel));
 	
 	/** Filter für alle ungenügenden Fächer */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (@NotNull GEAbschlussFach f) -> f.note == 6;
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
 	
 	/** Filter für alle Fächer, welche als E-Kurs belegt wurden. */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (@NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 	
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (@NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache == true));
+	@NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache == true));
 
 
 	/**
@@ -48,7 +48,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
     @Override
-    public @NotNull AbschlussErgebnis handle(@NotNull GEAbschlussFaecher input) {
+    public @NotNull AbschlussErgebnis handle(final @NotNull GEAbschlussFaecher input) {
         logger.logLn(LogLevel.INFO, "Prüfe HA10:");
         logger.logLn(LogLevel.DEBUG, "==========");
 
@@ -139,7 +139,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
      * 
      * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
      */
-    private @NotNull AbschlussErgebnis pruefeDefizite(@NotNull AbschlussFaecherGruppen faecher, @NotNull String log_indent) {
+    private @NotNull AbschlussErgebnis pruefeDefizite(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String log_indent) {
         // Bestimme die Defizite in den beiden Fächergruppen
         final long fg1_defizite = faecher.fg1.getFaecherAnzahl(filterDefizit);        
         final long fg2_defizite = faecher.fg2.getFaecherAnzahl(filterDefizit);

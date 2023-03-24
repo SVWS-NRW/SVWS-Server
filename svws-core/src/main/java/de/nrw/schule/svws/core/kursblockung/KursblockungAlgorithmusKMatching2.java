@@ -28,8 +28,8 @@ public class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKMatching2(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKMatching2(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		schuelerAlle = dynDaten.gibSchuelerArray(false);
 	}
@@ -40,14 +40,14 @@ public class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	@Override
-	public void berechne(long pMaxTimeMillis) {
+	public void berechne(final long pMaxTimeMillis) {
 		// Keine Kurverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
 		}
 
 		// Startzeit speichern.
-		long timeStart = System.currentTimeMillis();
+		final long timeStart = System.currentTimeMillis();
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -87,9 +87,9 @@ public class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 			verteileSuS();
 
 			// Besser? --> Speichern.
-			boolean b1 = (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
+			final boolean b1 = (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
 					&& (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >= 0);
-			boolean b2 = (dynDaten.gibCompareZustandK_NW_KD_FW() >= 0)
+			final boolean b2 = (dynDaten.gibCompareZustandK_NW_KD_FW() >= 0)
 					&& (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() > 0);
 			if (b1 || b2) {
 				dynDaten.aktionZustandSpeichernK();
@@ -107,12 +107,12 @@ public class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	 * Matching-Algorithmus verteilt.
 	 */
 	private void verteileSuS() {
-		@NotNull
+		final @NotNull
 		int[] perm = KursblockungStatic.gibPermutation(_random, schuelerAlle.length);
 
 		for (int p = 0; p < perm.length; p++) {
-			int i = perm[p];
-			KursblockungDynSchueler schueler = schuelerAlle[i];
+			final int i = perm[p];
+			final KursblockungDynSchueler schueler = schuelerAlle[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}

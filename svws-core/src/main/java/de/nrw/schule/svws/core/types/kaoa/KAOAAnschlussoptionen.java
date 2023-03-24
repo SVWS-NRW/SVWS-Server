@@ -425,7 +425,7 @@ public enum KAOAAnschlussoptionen {
 	 * 
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist  
 	 */
-	private KAOAAnschlussoptionen(@NotNull KAOAAnschlussoptionEintrag@NotNull[] historie) {
+	private KAOAAnschlussoptionen(final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -439,7 +439,7 @@ public enum KAOAAnschlussoptionen {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoptionen> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
+			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -453,7 +453,7 @@ public enum KAOAAnschlussoptionen {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoptionen> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
+			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -466,7 +466,7 @@ public enum KAOAAnschlussoptionen {
 	 * 
 	 * @return die Anschlussoption oder null, falls die ID ungültig ist
 	 */
-	public static KAOAAnschlussoptionen getByID(long id) {
+	public static KAOAAnschlussoptionen getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -478,7 +478,7 @@ public enum KAOAAnschlussoptionen {
 	 * 
 	 * @return die Anschlussoption oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAAnschlussoptionen getByKuerzel(String kuerzel) {
+	public static KAOAAnschlussoptionen getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

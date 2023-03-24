@@ -186,7 +186,7 @@ public class Fremdsprachen extends GostBelegpruefung {
             }
             gefundenFremdsprachenbelegung = true;
 
-            GostFach gostFach = manager.getFach(abiFachbelegung);
+            final GostFach gostFach = manager.getFach(abiFachbelegung);
             if (gostFach != null && !gostFach.kuerzel.equals("")) {
                 // Prüfe, ob dieses Fach vorher nicht bereits als Sprache vom Schüler belegt wurde
                 if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
@@ -285,7 +285,7 @@ public class Fremdsprachen extends GostBelegpruefung {
             // Wenn keine neue Fremdsprache vorhanden ist, findet sich dann eine 2. Fremdsprache ab Klasse 8 (bzw. 9)?
             if(SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(manager.getSprachendaten())){
                 // Prüfe, ob die zweite Fremdsprache in EF.1 schriftlich belegt wurde
-                AbiturFachbelegung zweiteFremdsprache = manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(manager.getSprachendaten()));
+                final AbiturFachbelegung zweiteFremdsprache = manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(manager.getSprachendaten()));
                 // Die Sprache muss, um als zweite Fremdsprache gewertet werden zu können, bis Ende EF.2 belegt werden.
                 if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
                     addFehler(GostBelegungsfehler.FS_13);
@@ -338,7 +338,7 @@ public class Fremdsprachen extends GostBelegpruefung {
 			return;
 
 		// Bestimme die bilingualen Sachfächer, die durchgehend belegbar sind und in der EF.1 schriftlich gewählt wurden
-		List<AbiturFachbelegung> biliSachfaecherDurchgehendSchriftlich = manager.filterBelegungenMitSchriftlichkeit(
+		final List<AbiturFachbelegung> biliSachfaecherDurchgehendSchriftlich = manager.filterBelegungenMitSchriftlichkeit(
 				manager.filterDurchgehendBelegbar(biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1 );
 		// Prüfe bei diesen Fächern, ob eines davon für einen möglichen Sprachenschwerpunkt genutzt werden kann
 		for (final AbiturFachbelegung biliSachfach : biliSachfaecherDurchgehendSchriftlich) {
@@ -765,7 +765,7 @@ public class Fremdsprachen extends GostBelegpruefung {
 		// Prüfe, ob mindestens eines der Sachfächer von EF.1 bis Q2.2 belegt und von Q1.1 bis Q2.1 schriftlich belegt wurde
 		boolean hatBiliSachfaecherDurchgehendSchriftlich = false;
 		if (biliSachfaecher != null) {
-			for (AbiturFachbelegung fach : biliSachfaecher) {
+			for (final AbiturFachbelegung fach : biliSachfaecher) {
 				if (manager.pruefeDurchgaengigkeitSchriftlich(fach)) {
 					hatBiliSachfaecherDurchgehendSchriftlich = true;
 					break;

@@ -98,7 +98,7 @@ public enum AllgemeinbildendOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von 
 	 *                   {@link OrganisationsformKatalogEintrag} ist  
 	 */
-	private AllgemeinbildendOrganisationsformen(@NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	private AllgemeinbildendOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -113,7 +113,7 @@ public enum AllgemeinbildendOrganisationsformen {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull AllgemeinbildendOrganisationsformen> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (AllgemeinbildendOrganisationsformen s : AllgemeinbildendOrganisationsformen.values()) {
+			for (final AllgemeinbildendOrganisationsformen s : AllgemeinbildendOrganisationsformen.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -129,7 +129,7 @@ public enum AllgemeinbildendOrganisationsformen {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static AllgemeinbildendOrganisationsformen getByKuerzel(String kuerzel) {
+	public static AllgemeinbildendOrganisationsformen getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

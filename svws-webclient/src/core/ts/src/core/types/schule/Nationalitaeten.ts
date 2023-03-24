@@ -1104,7 +1104,7 @@ export class Nationalitaeten extends JavaObject {
 	 */
 	private static getMapISO3() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapISO3.size() === 0) {
-			for (let s of Nationalitaeten.values()) {
+			for (const s of Nationalitaeten.values()) {
 				if (s.daten !== null)
 					Nationalitaeten._mapISO3.put(s.daten.iso3, s);
 			}
@@ -1120,7 +1120,7 @@ export class Nationalitaeten extends JavaObject {
 	 */
 	private static getMapISO2() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapISO2.size() === 0) {
-			for (let s of Nationalitaeten.values()) {
+			for (const s of Nationalitaeten.values()) {
 				if (s.daten !== null)
 					Nationalitaeten._mapISO2.put(s.daten.iso2, s);
 			}
@@ -1136,7 +1136,7 @@ export class Nationalitaeten extends JavaObject {
 	 */
 	private static getMapDESTATIS() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapDESTATIS.size() === 0) {
-			for (let s of Nationalitaeten.values()) {
+			for (const s of Nationalitaeten.values()) {
 				if (s.daten !== null)
 					Nationalitaeten._mapDESTATIS.put(s.daten.codeDEStatis, s);
 			}

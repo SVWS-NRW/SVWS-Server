@@ -42,7 +42,7 @@ public enum LehrerLeitungsfunktion {
      * 
      * @param historie   die Historie der Leitungsfunktion, welches ein Array von {@link LehrerKatalogLeitungsfunktionenEintrag} ist  
      */
-    private LehrerLeitungsfunktion(@NotNull LehrerKatalogLeitungsfunktionenEintrag@NotNull[] historie) {
+    private LehrerLeitungsfunktion(final @NotNull LehrerKatalogLeitungsfunktionenEintrag@NotNull[] historie) {
         this.historie = historie;
         // TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
         this.daten = historie[historie.length - 1];
@@ -57,7 +57,7 @@ public enum LehrerLeitungsfunktion {
      */
     private static @NotNull HashMap<@NotNull String, LehrerLeitungsfunktion> getMapByKuerzel() {
         if (_mapByKuerzel.size() == 0) {
-            for (LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
+            for (final LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
                 if (s.daten != null)
                     _mapByKuerzel.put(s.daten.kuerzel, s);
             }
@@ -74,7 +74,7 @@ public enum LehrerLeitungsfunktion {
      */
     private static @NotNull HashMap<@NotNull Long, LehrerLeitungsfunktion> getMapByID() {
         if (_mapByID.size() == 0) {
-            for (LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
+            for (final LehrerLeitungsfunktion s : LehrerLeitungsfunktion.values()) {
                 if (s.daten != null)
                     _mapByID.put(s.daten.id, s);
             }
@@ -90,7 +90,7 @@ public enum LehrerLeitungsfunktion {
      * 
      * @return die Leitungsfunktion oder null, falls das Kürzel ungültig ist
      */
-    public static LehrerLeitungsfunktion getByKuerzel(String kuerzel) {
+    public static LehrerLeitungsfunktion getByKuerzel(final String kuerzel) {
         return getMapByKuerzel().get(kuerzel);
     }
 
@@ -102,7 +102,7 @@ public enum LehrerLeitungsfunktion {
      * 
      * @return die Leitungsfunktion oder null, falls die ID ungültig ist
      */
-    public static LehrerLeitungsfunktion getByID(long id) {
+    public static LehrerLeitungsfunktion getByID(final long id) {
         return getMapByID().get(id);
     }
     

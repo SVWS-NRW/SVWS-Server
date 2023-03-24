@@ -76,7 +76,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegBildungsgangTyp> {
 		if (WeiterbildungskollegBildungsgangTyp._ebenen.size() === 0) {
-			for (let s of WeiterbildungskollegBildungsgangTyp.values()) {
+			for (const s of WeiterbildungskollegBildungsgangTyp.values()) {
 				if (s.daten !== null)
 					WeiterbildungskollegBildungsgangTyp._ebenen.put(s.daten.kuerzel, s);
 			}

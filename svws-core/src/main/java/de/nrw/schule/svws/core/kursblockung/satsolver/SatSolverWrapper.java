@@ -23,7 +23,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @param solver Der Solver, der intern verwendet wird.
 	 */
-	public SatSolverWrapper(@NotNull SatSolverA solver) {
+	public SatSolverWrapper(final @NotNull SatSolverA solver) {
 		_solver = solver;
 		varTRUE = _solver.createNewVar();
 		varFALSE = -varTRUE;
@@ -40,17 +40,17 @@ public class SatSolverWrapper extends SatSolverA {
 	}
 
 	@Override
-	public void addClause(@NotNull int[] pVars) {
+	public void addClause(final @NotNull int[] pVars) {
 		_solver.addClause(pVars);
 	}
 
 	@Override
-	public boolean isVarTrue(int pVar) {
+	public boolean isVarTrue(final int pVar) {
 		return _solver.isVarTrue(pVar);
 	}
 
 	@Override
-	public int solve(long maxTimeMillis) {
+	public int solve(final long maxTimeMillis) {
 		return _solver.solve(maxTimeMillis);
 	}
 
@@ -75,8 +75,8 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @return Ein Array der Länge n mit neu erzeugten Variablennummern.
 	 */
-	public @NotNull int[] createNewVars(int n) {
-		int[] temp = new int[n];
+	public @NotNull int[] createNewVars(final int n) {
+		final int[] temp = new int[n];
 		for (int i = 0; i < temp.length; i++) {
 			temp[i] = _solver.createNewVar();
 		}
@@ -106,7 +106,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @param x Die Variable wird auf TRUE gesetzt.
 	 */
-	public void c_1(int x) {
+	public void c_1(final int x) {
 		_solver.addClause(new int[] { x });
 	}
 
@@ -117,7 +117,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param x Die Variable x der Klausel (x OR y).
 	 * @param y Die Variable y der Klausel (x OR y).
 	 */
-	public void c_2(int x, int y) {
+	public void c_2(final int x, final int y) {
 		_solver.addClause(new int[] { x, y });
 	}
 
@@ -129,7 +129,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param y Die Variable y der Klausel (x OR y OR z).
 	 * @param z Die Variable z der Klausel (x OR y OR z).
 	 */
-	public void c_3(int x, int y, int z) {
+	public void c_3(final int x, final int y, final int z) {
 		_solver.addClause(new int[] { x, y, z });
 	}
 
@@ -139,7 +139,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param x Die Variable x der Klausel (-x OR -y).
 	 * @param y Die Variable y der Klausel (-x OR -y).
 	 */
-	public void c_not_both(int x, int y) {
+	public void c_not_both(final int x, final int y) {
 		c_2(-x, -y);
 	}
 
@@ -151,8 +151,8 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @return Die Variable z für die {@code z = x AND y} gilt.
 	 */
-	public int c_new_var_AND(int x, int y) {
-		int c = _solver.createNewVar();
+	public int c_new_var_AND(final int x, final int y) {
+		final int c = _solver.createNewVar();
 		c_2(x, -c);
 		c_2(y, -c);
 		c_3(-x, -y, c);
@@ -165,7 +165,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param pArray Das Variablenarray.
 	 * @param amount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void c_exactly_GENERIC(@NotNull int[] pArray, int amount) {
+	public void c_exactly_GENERIC(final @NotNull int[] pArray, final int amount) {
 		c_exactly_GENERIC(toList(pArray), amount);
 	}
 
@@ -175,8 +175,8 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void c_exactly_GENERIC(@NotNull LinkedCollection<@NotNull Integer> pList, int pAmount) {
-		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
+	public void c_exactly_GENERIC(final @NotNull LinkedCollection<@NotNull Integer> pList, final int pAmount) {
+		final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 		// Error?
 		if (pAmount > list.size()) {
 			System.out.println("FEHLER: c_exactly_GENERIC --> amount > list.size()");
@@ -184,14 +184,14 @@ public class SatSolverWrapper extends SatSolverA {
 
 		// special case: 0
 		if (pAmount == 0) {
-			for (int x : list) {
+			for (final int x : list) {
 				c_1(-x);
 			}
 			return;
 		}
 		// special case: N
 		if (pAmount == list.size()) {
-			for (int x : list) {
+			for (final int x : list) {
 				c_1(+x);
 			}
 			return;
@@ -219,15 +219,15 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param pList    Die Variablenliste.
 	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void c_at_most_GENERIC(@NotNull LinkedCollection<@NotNull Integer> pList, int pMaximum) {
-		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
+	public void c_at_most_GENERIC(final @NotNull LinkedCollection<@NotNull Integer> pList, final int pMaximum) {
+		final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 		// special case: trivial
 		if (pMaximum >= list.size()) {
 			return;
 		}
 		// special case: all false
 		if (pMaximum == 0) {
-			for (int x : list) {
+			for (final int x : list) {
 				c_1(-x);
 			}
 			return;
@@ -251,7 +251,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @param list Genau eine der Variablen der Liste muss TRUE sein.
 	 */
-	private void c_exactly_one(@NotNull LinkedCollection<@NotNull Integer> list) {
+	private void c_exactly_one(final @NotNull LinkedCollection<@NotNull Integer> list) {
 		c_1(c_at_most_one_tree(list));
 	}
 
@@ -262,7 +262,7 @@ public class SatSolverWrapper extends SatSolverA {
 	 * @param y Variable der obigen Gleichung.
 	 * @param z Variable der obigen Gleichung.
 	 */
-	private void c_z_equals_x_or_y(int x, int y, int z) {
+	private void c_z_equals_x_or_y(final int x, final int y, final int z) {
 		c_2(-x, z);
 		c_2(-y, z);
 		c_3(x, y, -z);
@@ -276,8 +276,8 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @return Die Variable z für die {@code z = x OR y} gilt.
 	 */
-	private int c_new_var_OR(int x, int y) {
-		int z = _solver.createNewVar();
+	private int c_new_var_OR(final int x, final int y) {
+		final int z = _solver.createNewVar();
 		c_2(-x, z);
 		c_2(-y, z);
 		c_3(x, y, -z);
@@ -292,9 +292,9 @@ public class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
-	private int c_at_most_one_tree(@NotNull LinkedCollection<@NotNull Integer> pList) {
+	private int c_at_most_one_tree(final @NotNull LinkedCollection<@NotNull Integer> pList) {
 		// Liste kopieren
-		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
+		final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 
 		// Sonderfall --> Erzeuge FALSE
 		if (list.isEmpty()) {
@@ -303,9 +303,9 @@ public class SatSolverWrapper extends SatSolverA {
 
 		// Solange es zwei Variablen gibt
 		while (list.size() >= 2) {
-			int a = list.removeFirst();
-			int b = list.removeFirst();
-			int c = _solver.createNewVar();
+			final int a = list.removeFirst();
+			final int b = list.removeFirst();
+			final int c = _solver.createNewVar();
 			c_not_both(a, b);
 			c_z_equals_x_or_y(a, b, c);
 			list.add(c);
@@ -315,15 +315,15 @@ public class SatSolverWrapper extends SatSolverA {
 		return list.removeFirst();
 	}
 
-	private void c_exactly_NETWORK(@NotNull LinkedCollection<@NotNull Integer> list, int amount) {
+	private void c_exactly_NETWORK(final @NotNull LinkedCollection<@NotNull Integer> list, final int amount) {
 		// sort
 		c_bitonic_sort(list);
 		// force TRUE / FALSE
 		int i = 0;
-		@NotNull
+		final @NotNull
 		Iterator<@NotNull Integer> iter = list.iterator();
 		while (iter.hasNext()) {
-			@NotNull
+			final @NotNull
 			Integer value = iter.next();
 			if (i < amount) {
 				c_1(+value);
@@ -334,15 +334,15 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_at_most_NETWORK(@NotNull LinkedCollection<@NotNull Integer> list, int maximum) {
+	private void c_at_most_NETWORK(final @NotNull LinkedCollection<@NotNull Integer> list, final int maximum) {
 		// sort
 		c_bitonic_sort(list);
 		// force FALSE
 		int i = 0;
-		@NotNull
+		final @NotNull
 		Iterator<@NotNull Integer> iter = list.iterator();
 		while (iter.hasNext()) {
-			@NotNull
+			final @NotNull
 			Integer value = iter.next();
 			if (i < maximum)
 				i++;
@@ -351,12 +351,12 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_bitonic_sort(@NotNull LinkedCollection<@NotNull Integer> list) {
+	private void c_bitonic_sort(final @NotNull LinkedCollection<@NotNull Integer> list) {
 		c_fill_False_until_power_two(list);
 		c_bitonic_sort_power_two(list);
 	}
 
-	private void c_fill_False_until_power_two(@NotNull LinkedCollection<@NotNull Integer> list) {
+	private void c_fill_False_until_power_two(final @NotNull LinkedCollection<@NotNull Integer> list) {
 		int size = 1;
 		while (size < list.size()) {
 			size *= 2;
@@ -366,7 +366,7 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_bitonic_sort_power_two(@NotNull LinkedCollection<@NotNull Integer> list) {
+	private void c_bitonic_sort_power_two(final @NotNull LinkedCollection<@NotNull Integer> list) {
 		for (int window = 2; window <= list.size(); window *= 2) {
 			c_bitonic_sort_spiral(list, window);
 			for (int difference = window / 2; difference >= 2; difference /= 2) {
@@ -375,7 +375,7 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_bitonic_sort_spiral(@NotNull LinkedCollection<@NotNull Integer> list, int size) {
+	private void c_bitonic_sort_spiral(final @NotNull LinkedCollection<@NotNull Integer> list, final int size) {
 		for (int i = 0; i < list.size(); i += size) {
 			for (int i1 = i, i2 = i + size - 1; i1 < i2; i1++, i2--) {
 				c_bitonic_comparator(list, i1, i2);
@@ -383,8 +383,8 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_bitonic_sort_difference(@NotNull LinkedCollection<@NotNull Integer> list, int size) {
-		int half = size / 2;
+	private void c_bitonic_sort_difference(final @NotNull LinkedCollection<@NotNull Integer> list, final int size) {
+		final int half = size / 2;
 		for (int i = 0; i < list.size(); i += size) {
 			for (int j = 0; j < half; j++) {
 				c_bitonic_comparator(list, i + j, i + j + half);
@@ -392,30 +392,30 @@ public class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private void c_bitonic_comparator(@NotNull LinkedCollection<@NotNull Integer> result, int i1, int i2) {
+	private void c_bitonic_comparator(final @NotNull LinkedCollection<@NotNull Integer> result, final int i1, final int i2) {
 		if (i1 >= i2) {
 			System.out.println("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!");
 		}
-		int a = result.get(i1);
-		int b = result.get(i2);
+		final int a = result.get(i1);
+		final int b = result.get(i2);
 		result.set(i1, c_new_var_OR(a, b));
 		result.set(i2, c_new_var_AND(a, b));
 	}
 
-	private static @NotNull LinkedCollection<@NotNull Integer> toList(@NotNull int[] pArray) {
-		@NotNull
+	private static @NotNull LinkedCollection<@NotNull Integer> toList(final @NotNull int[] pArray) {
+		final @NotNull
 		LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
-		for (int x : pArray) {
+		for (final int x : pArray) {
 			list.addLast(x);
 		}
 		return list;
 	}
 
-	private void c_unequal(int x, int y) {
+	private void c_unequal(final int x, final int y) {
 		c_equal(x, -y);
 	}
 
-	private void c_equal(int x, int y) {
+	private void c_equal(final int x, final int y) {
 		c_2(-x, +y);
 		c_2(+x, -y);
 	}

@@ -110,7 +110,7 @@ export class PersonalTyp extends JavaObject {
 	 */
 	private static getMapID() : HashMap<number, PersonalTyp> {
 		if (PersonalTyp._mapID.size() === 0)
-			for (let p of PersonalTyp.values())
+			for (const p of PersonalTyp.values())
 				PersonalTyp._mapID.put(p.id, p);
 		return PersonalTyp._mapID;
 	}
@@ -123,7 +123,7 @@ export class PersonalTyp extends JavaObject {
 	 */
 	private static getMapBezeichnungen() : HashMap<string, PersonalTyp> {
 		if (PersonalTyp._mapBezeichnungen.size() === 0)
-			for (let p of PersonalTyp.values())
+			for (const p of PersonalTyp.values())
 				PersonalTyp._mapBezeichnungen.put(p.kuerzel, p);
 		return PersonalTyp._mapBezeichnungen;
 	}

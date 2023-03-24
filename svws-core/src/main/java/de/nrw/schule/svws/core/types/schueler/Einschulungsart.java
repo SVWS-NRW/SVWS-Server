@@ -60,7 +60,7 @@ public enum Einschulungsart {
 	 * @param historie   die Historie der Einschulungsart, welche ein Array von 
 	 *                   {@link EinschulungsartKatalogEintrag} ist  
 	 */
-	private Einschulungsart(@NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
+	private Einschulungsart(final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -75,7 +75,7 @@ public enum Einschulungsart {
 	 */
 	private static @NotNull HashMap<@NotNull String, Einschulungsart> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (Einschulungsart s : Einschulungsart.values()) {
+			for (final Einschulungsart s : Einschulungsart.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -91,7 +91,7 @@ public enum Einschulungsart {
 	 * 
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static Einschulungsart getByKuerzel(String kuerzel) {
+	public static Einschulungsart getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

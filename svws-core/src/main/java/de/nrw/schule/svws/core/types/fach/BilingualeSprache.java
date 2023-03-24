@@ -151,15 +151,15 @@ public enum BilingualeSprache {
      *                   {@link BilingualeSpracheKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-    private BilingualeSprache(@NotNull BilingualeSpracheKatalogEintrag@NotNull[] historie) {
+    private BilingualeSprache(final @NotNull BilingualeSpracheKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
         this.daten = historie[historie.length - 1];
         // Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
         this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
         for (int i = 0; i < historie.length; i++) {
             this.schulformen[i] = new Vector<>();
-            for (@NotNull String kuerzel : historie[i].schulformen) {
-                Schulform sf = Schulform.getByKuerzel(kuerzel);
+            for (final @NotNull String kuerzel : historie[i].schulformen) {
+                final Schulform sf = Schulform.getByKuerzel(kuerzel);
                 if (sf != null)
                     this.schulformen[i].add(sf);
             }
@@ -175,8 +175,8 @@ public enum BilingualeSprache {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull BilingualeSpracheKatalogEintrag> getMapEintragByID() {
 		if (_mapEintragByID.size() == 0)
-			for (BilingualeSprache s : BilingualeSprache.values())
-			    for (BilingualeSpracheKatalogEintrag k : s.historie)
+			for (final BilingualeSprache s : BilingualeSprache.values())
+			    for (final BilingualeSpracheKatalogEintrag k : s.historie)
 			        _mapEintragByID.put(k.id, k);
 		return _mapEintragByID;
 	}
@@ -190,7 +190,7 @@ public enum BilingualeSprache {
      */
     private static @NotNull HashMap<@NotNull Long, @NotNull BilingualeSprache> getMapByID() {
         if (_mapByID.size() == 0)
-            for (BilingualeSprache s : BilingualeSprache.values())
+            for (final BilingualeSprache s : BilingualeSprache.values())
                 _mapByID.put(s.daten.id, s);
         return _mapByID;
     }
@@ -204,7 +204,7 @@ public enum BilingualeSprache {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BilingualeSprache> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0)
-			for (BilingualeSprache s : BilingualeSprache.values())
+			for (final BilingualeSprache s : BilingualeSprache.values())
 				_mapByKuerzel.put(s.daten.kuerzel, s);				
 		return _mapByKuerzel;
 	}
@@ -227,12 +227,12 @@ public enum BilingualeSprache {
 	 * 
 	 * @return true, falls die bilingualen Sprache in der Schulform zulässig ist, ansonsten false.
 	 */
-	private boolean hasSchulform(Schulform schulform) {
+	private boolean hasSchulform(final Schulform schulform) {
         if ((schulform == null) || (schulform.daten == null))
             return false;
         if (daten.schulformen != null) {
             for (int i = 0; i < daten.schulformen.size(); i++) {
-                String sfKuerzel = daten.schulformen.get(i);
+                final String sfKuerzel = daten.schulformen.get(i);
                 if (sfKuerzel.equals(schulform.daten.kuerzel))
                     return true;
             }           
@@ -284,13 +284,13 @@ public enum BilingualeSprache {
 	 * 
 	 * @return die bilingualen Sprache in der angegebenen Schulform
 	 */
-	public static @NotNull List<@NotNull BilingualeSprache> get(Schulform schulform) {
-		@NotNull Vector<@NotNull BilingualeSprache> faecher = new Vector<>();
+	public static @NotNull List<@NotNull BilingualeSprache> get(final Schulform schulform) {
+		final @NotNull Vector<@NotNull BilingualeSprache> faecher = new Vector<>();
 		if (schulform == null)
 			return faecher;
-		@NotNull BilingualeSprache@NotNull[] fachgruppen = BilingualeSprache.values();
+		final @NotNull BilingualeSprache@NotNull[] fachgruppen = BilingualeSprache.values();
 		for (int i = 0; i < fachgruppen.length; i++) {
-			BilingualeSprache fg = fachgruppen[i];
+			final BilingualeSprache fg = fachgruppen[i];
 			if (fg.hasSchulform(schulform))
 				faecher.add(fg);
 		}

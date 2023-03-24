@@ -47,8 +47,8 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 			this.printTime = false;
 			this.printLevel = false;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let printTime : boolean = __param0 as boolean;
-			let printLevel : boolean = __param1 as boolean;
+			const printTime : boolean = __param0 as boolean;
+			const printLevel : boolean = __param1 as boolean;
 			this.printTime = printTime;
 			this.printLevel = printLevel;
 		} else throw new Error('invalid method overload');
@@ -108,10 +108,10 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 		if ((typeof __param0 === "undefined")) {
 			return this.getStrings("");
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
-			let indent : string = __param0;
-			let result : Vector<string> | null = new Vector();
+			const indent : string = __param0;
+			const result : Vector<string> | null = new Vector();
 			for (let i : number = 0; i < this.logData.size(); i++) {
-				let data : LogData = this.logData.get(i);
+				const data : LogData = this.logData.get(i);
 				if (data === null)
 					continue;
 				result.add(indent! + data.getText()!);
@@ -167,14 +167,14 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			return this.getText(LogLevel.INFO, "");
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && (typeof __param1 === "undefined")) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			return this.getText(level, "");
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let indent : string = __param1;
-			let sb : StringBuilder | null = new StringBuilder();
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const indent : string = __param1;
+			const sb : StringBuilder | null = new StringBuilder();
 			for (let i : number = 0; i < this.logData.size(); i++) {
-				let data : LogData | null = this.logData.get(i);
+				const data : LogData | null = this.logData.get(i);
 				if (data === null)
 					continue;
 				if (data.getLevel().toInteger() > level.toInteger())

@@ -32,7 +32,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 * @param pKuerzel               Das Kürzel der Klasse.
 	 * @throws NullPointerException  Falls die Klasse-ID bereits existiert.
 	 */
-	public void addOrException(long pKlasseID, @NotNull String pKuerzel) throws NullPointerException {
+	public void addOrException(final long pKlasseID, final @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pKlasseID) == true)
 			throw new NullPointerException("Die Klasse-ID " + pKlasseID + " existiert bereits!");
 		final StundenplanblockungManagerKlasse kl = new StundenplanblockungManagerKlasse(pKlasseID, pKuerzel);
@@ -48,7 +48,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 * @return                       Das {@link StundenplanblockungKlasse}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
-	public @NotNull StundenplanblockungManagerKlasse getOrException(long pKlasseID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerKlasse getOrException(final long pKlasseID) throws NullPointerException {
 		final StundenplanblockungManagerKlasse klasse = _map.get(pKlasseID);
 		if (klasse == null)
 			throw new NullPointerException("Klasse-ID " + pKlasseID + " unbekannt!");
@@ -61,7 +61,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
 	 * @return         Eine zufällige Lehrkraft oder null, falls es gar keine Lehrkräfte gibt.
 	 */
-	public @NotNull StundenplanblockungManagerKlasse getRandomOrException(@NotNull Random pRandom) {
+	public @NotNull StundenplanblockungManagerKlasse getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Klassen!");
@@ -75,7 +75,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 * @param pKlasseID              Die Datenbank-ID der Klasse.
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
-	public void removeOrException(long pKlasseID) throws NullPointerException {
+	public void removeOrException(final long pKlasseID) throws NullPointerException {
 		final @NotNull StundenplanblockungManagerKlasse klasse = getOrException(pKlasseID);
 		_map.remove(pKlasseID);
 		_menge.remove(klasse);
@@ -87,7 +87,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @return           TRUE, falls die Klasse-ID existiert.
 	 */
-	public boolean exists(long pKlasseID) {
+	public boolean exists(final long pKlasseID) {
 		return _map.containsKey(pKlasseID);
 	}
 

@@ -85,8 +85,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
-		for (@NotNull
-		Entry<@NotNull Integer, @NotNull Integer> e : entrySet())
+		for (@NotNull Entry<@NotNull Integer, @NotNull Integer> e : entrySet())
 			if (e.getValue().equals(mapO.get(e.getKey())) == false)
 				return false;
 
@@ -478,11 +477,9 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Eine {@link ArrayList} die alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	ArrayList<@NotNull Integer> bcGetArrayListOfKeys() {
+	@NotNull ArrayList<@NotNull Integer> bcGetArrayListOfKeys() {
 		ArrayList<Integer> list = new ArrayList<>();
-		@NotNull
-		Iterator<@NotNull Integer> iter = navigableKeySet().iterator();
+		@NotNull Iterator<@NotNull Integer> iter = navigableKeySet().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		return list;
@@ -494,12 +491,9 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Eine {@link ArrayList} die alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	ArrayList<@NotNull Integer> bcGetArrayListOfValues() {
-		@NotNull
-		ArrayList<@NotNull Integer> list = new ArrayList<>();
-		@NotNull
-		Iterator<@NotNull Integer> iter = values().iterator();
+	@NotNull ArrayList<@NotNull Integer> bcGetArrayListOfValues() {
+		@NotNull ArrayList<@NotNull Integer> list = new ArrayList<>();
+		@NotNull Iterator<@NotNull Integer> iter = values().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		return list;
@@ -511,12 +505,9 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Eine {@link ArrayList} die alle Entries dieser Sub-Map beinhaltet.
 	 */
-	@NotNull
-	ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> bcGetArrayListOfEntries() {
-		@NotNull
-		ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> list = new ArrayList<>();
-		@NotNull
-		Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> iter = entrySet().iterator();
+	@NotNull ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> bcGetArrayListOfEntries() {
+		@NotNull ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> list = new ArrayList<>();
+		@NotNull Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> iter = entrySet().iterator();
 		while (iter.hasNext())
 			list.add(iter.next());
 		// for (Entry<Integer, Integer> e : entrySet())
@@ -530,8 +521,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Einen {@link Iterator} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull Integer> bcGetSubKeySetIterator() {
+	@NotNull Iterator<@NotNull Integer> bcGetSubKeySetIterator() {
 		return new DummyMapSubKeySetIterator(this);
 	}
 
@@ -541,8 +531,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link Iterator} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull
-	Iterator<@NotNull Integer> bcGetSubKeySetDescendingIterator() {
+	@NotNull Iterator<@NotNull Integer> bcGetSubKeySetDescendingIterator() {
 		return new DummyMapSubKeySetIterator(new DummyMapSub(_par, _iv, !_asc));
 	}
 
@@ -552,8 +541,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser <strong>absteigenden</strong> Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeySetDescending() {
+	@NotNull NavigableSet<@NotNull Integer> bcGetSubKeySetDescending() {
 		return new DummyMapSubKeySet(new DummyMapSub(_par, _iv, !_asc));
 	}
 
@@ -568,8 +556,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeySet(@NotNull Integer fromElement, boolean fromInclusive,
+	@NotNull NavigableSet<@NotNull Integer> bcGetSubKeySet(@NotNull Integer fromElement, boolean fromInclusive,
 			@NotNull Integer toElement, boolean toInclusive) {
 		return _createSet(fromElement, fromInclusive, toElement, toInclusive, _asc);
 	}
@@ -583,8 +570,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull Integer toElement, boolean inclusive) {
+	@NotNull NavigableSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull Integer toElement, boolean inclusive) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, inclusive, _asc);
 	}
 
@@ -597,8 +583,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	NavigableSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull Integer fromElement, boolean inclusive) {
+	@NotNull NavigableSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull Integer fromElement, boolean inclusive) {
 		return _createSet(fromElement, inclusive, _iv.to, _iv.toInc, _asc);
 	}
 
@@ -614,8 +599,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeySet(@NotNull Integer fromElement, @NotNull Integer toElement) {
+	@NotNull SortedSet<@NotNull Integer> bcGetSubKeySet(@NotNull Integer fromElement, @NotNull Integer toElement) {
 		return _createSet(fromElement, true, toElement, false, _asc);
 	}
 
@@ -629,8 +613,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull Integer toElement) {
+	@NotNull SortedSet<@NotNull Integer> bcGetSubKeyHeadSet(@NotNull Integer toElement) {
 		return _createSet(_iv.from, _iv.fromInc, toElement, false, _asc);
 	}
 
@@ -644,8 +627,7 @@ public class DummyMapSub implements NavigableMap<Integer, Integer> {
 	 * 
 	 * @return Ein {@link NavigableSet} von Schlüsseln (Keys) relativ zu dieser Sub-Map.
 	 */
-	@NotNull
-	SortedSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull Integer fromElement) {
+	@NotNull SortedSet<@NotNull Integer> bcGetSubKeyTailSet(@NotNull Integer fromElement) {
 		return _createSet(fromElement, true, _iv.to, _iv.toInc, _asc);
 	}
 

@@ -59,7 +59,7 @@ class LinkedCollectionElement<@NotNull E> {
 	 * @param prev    der Vorgänger
 	 * @param next    der Nachfolger
 	 */
-	LinkedCollectionElement(@NotNull E value, LinkedCollectionElement<@NotNull E> prev, LinkedCollectionElement<@NotNull E> next) {
+	LinkedCollectionElement(final @NotNull E value, final LinkedCollectionElement<@NotNull E> prev, final LinkedCollectionElement<@NotNull E> next) {
 		this._value = value;
 		this._prev = prev;
 		this._next = next;
@@ -81,8 +81,8 @@ class LinkedCollectionElement<@NotNull E> {
 	 * 
 	 * @return der alte Wert des Elements
 	 */
-	@NotNull E setValue(@NotNull E value) {
-		@NotNull E oldValue = this._value;
+	@NotNull E setValue(final @NotNull E value) {
+		final @NotNull E oldValue = this._value;
 		this._value = value;
 		return oldValue;
 	}
@@ -101,7 +101,7 @@ class LinkedCollectionElement<@NotNull E> {
 	 * 
 	 * @param prev   der Vorgänger des Elements
 	 */
-	void setPrev(LinkedCollectionElement<@NotNull E> prev) {
+	void setPrev(final LinkedCollectionElement<@NotNull E> prev) {
 		this._prev = prev;
 	}
 	
@@ -119,7 +119,7 @@ class LinkedCollectionElement<@NotNull E> {
 	 * 
 	 * @param next   der Nachfolger des Elements
 	 */
-	void setNext(LinkedCollectionElement<@NotNull E> next) {
+	void setNext(final LinkedCollectionElement<@NotNull E> next) {
 		this._next = next;
 	}
 

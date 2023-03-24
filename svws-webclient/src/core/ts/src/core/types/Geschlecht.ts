@@ -116,7 +116,7 @@ export class Geschlecht extends JavaObject {
 	public static fromStringValue(text : string | null) : Geschlecht {
 		if ((text === null) || JavaObject.equalsTranspiler("", (text)))
 			return Geschlecht.X;
-		let upperValue : string | null = text.toUpperCase();
+		const upperValue : string | null = text.toUpperCase();
 		switch (upperValue) {
 			case "MÄNNLICH":
 			case "MAENNLICH":

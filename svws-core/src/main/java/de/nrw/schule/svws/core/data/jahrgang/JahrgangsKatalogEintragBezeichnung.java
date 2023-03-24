@@ -39,7 +39,7 @@ public class JahrgangsKatalogEintragBezeichnung {
 	 * @param schulform     die Schulform
 	 * @param bezeichnung   die Bezeichnung des Jahrgangs
 	 */
-	public JahrgangsKatalogEintragBezeichnung(@NotNull Schulform schulform, @NotNull String bezeichnung) {
+	public JahrgangsKatalogEintragBezeichnung(final @NotNull Schulform schulform, final @NotNull String bezeichnung) {
 		this.schulform = schulform.daten.kuerzel;
 		this.bezeichnung = bezeichnung;
 	}	

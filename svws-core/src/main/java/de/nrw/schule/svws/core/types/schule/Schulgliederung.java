@@ -1473,15 +1473,15 @@ public enum Schulgliederung {
 	 * @param historie   die Historie der Schulgliederung, welches ein Array von {@link SchulgliederungKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private Schulgliederung(@NotNull SchulgliederungKatalogEintrag@NotNull[] historie) {
+	private Schulgliederung(final @NotNull SchulgliederungKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
 		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
-			for (@NotNull String kuerzel : historie[i].schulformen) {
-				Schulform sf = Schulform.getByKuerzel(kuerzel);
+			for (final @NotNull String kuerzel : historie[i].schulformen) {
+				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
 					this.schulformen[i].add(sf);
 			}
@@ -1497,7 +1497,7 @@ public enum Schulgliederung {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Schulgliederung> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
-			for (Schulgliederung s : Schulgliederung.values())
+			for (final Schulgliederung s : Schulgliederung.values())
 				_schulgliederungenKuerzel.put(s.daten.kuerzel, s);				
 		return _schulgliederungenKuerzel;
 	}
@@ -1511,8 +1511,8 @@ public enum Schulgliederung {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> getMapSchulgliederungByID() {
 		if (_schulgliederungenID.size() == 0)
-			for (Schulgliederung s : Schulgliederung.values()) {
-				for (SchulgliederungKatalogEintrag k : s.historie)
+			for (final Schulgliederung s : Schulgliederung.values()) {
+				for (final SchulgliederungKatalogEintrag k : s.historie)
 					_schulgliederungenID.put(k.id, s);
 			}
 		return _schulgliederungenID;
@@ -1526,7 +1526,7 @@ public enum Schulgliederung {
 	 * 
 	 * @return die Schulgliederung oder null, falls das Kürzel ungültig ist
 	 */
-	public static Schulgliederung getByKuerzel(String kuerzel) {
+	public static Schulgliederung getByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return Schulgliederung.DEFAULT;
 		return getMapSchulgliederungByKuerzel().get(kuerzel);
@@ -1541,7 +1541,7 @@ public enum Schulgliederung {
 	 * 
 	 * @return die Schulgliederung oder null, falls die ID ungültig ist
 	 */
-	public static Schulgliederung getByID(Long id) {
+	public static Schulgliederung getByID(final Long id) {
 		return getMapSchulgliederungByID().get(id);
 	}
 
@@ -1554,11 +1554,11 @@ public enum Schulgliederung {
 	 * 
 	 * @return die zugehörigen Schulgliederungen
 	 */
-	public static @NotNull List<@NotNull Schulgliederung> getByBkIndex(int index) {
-		@NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
-		@NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
+	public static @NotNull List<@NotNull Schulgliederung> getByBkIndex(final int index) {
+		final @NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
+		final @NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
 		for (int i = 0; i < gliederungen.length; i++) {
-			@NotNull Schulgliederung gliederung = gliederungen[i];
+			final @NotNull Schulgliederung gliederung = gliederungen[i];
 			if ((gliederung.daten.bkIndex != null) && (gliederung.daten.bkIndex == index))
 				result.add(gliederung);
 		}
@@ -1585,13 +1585,13 @@ public enum Schulgliederung {
 	 * 
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
-	public static @NotNull List<@NotNull Schulgliederung> get(Schulform schulform) {
-		@NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
+	public static @NotNull List<@NotNull Schulgliederung> get(final Schulform schulform) {
+		final @NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
 		if (schulform == null)
 			return result;
-		@NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
+		final @NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
 		for (int i = 0; i < gliederungen.length; i++) {
-			@NotNull Schulgliederung gliederung = gliederungen[i];
+			final @NotNull Schulgliederung gliederung = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -1608,12 +1608,12 @@ public enum Schulgliederung {
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulformByKuerzel(String kuerzel) {
+	public boolean hasSchulformByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}			
@@ -1630,12 +1630,12 @@ public enum Schulgliederung {
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulform(Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}			
@@ -1663,7 +1663,7 @@ public enum Schulgliederung {
 	 * 
 	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null 
 	 */
-	public static Schulgliederung getDefault(Schulform sf) {
+	public static Schulgliederung getDefault(final Schulform sf) {
 		if (sf == null)
 			return null;
 		if ((sf == Schulform.GY) ||
@@ -1693,16 +1693,16 @@ public enum Schulgliederung {
 	 * 
 	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
-	public static Schulgliederung getBySchulformAndKuerzel(Schulform sf, String kuerzel) {
+	public static Schulgliederung getBySchulformAndKuerzel(final Schulform sf, final String kuerzel) {
 		if (sf == null)
 			return null;
 		// Ist das Kürzel null, so ist der Standard für die Schulform zurückzugeben
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return getDefault(sf);
 		// Prüfe, ob die Gliederung bei der Schulform existiert
-		@NotNull List<@NotNull Schulgliederung> gliederungen = get(sf); 
+		final @NotNull List<@NotNull Schulgliederung> gliederungen = get(sf); 
 		for (int i = 0; i < gliederungen.size(); i++) {
-			Schulgliederung sg = gliederungen.get(i);
+			final Schulgliederung sg = gliederungen.get(i);
 			if ((sg.daten.kuerzel).equalsIgnoreCase(kuerzel))
 				return sg;
 		}

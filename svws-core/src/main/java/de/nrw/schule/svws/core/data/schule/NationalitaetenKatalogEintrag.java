@@ -82,9 +82,9 @@ public class NationalitaetenKatalogEintrag {
 	 * @param gueltigVon             das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis             das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public NationalitaetenKatalogEintrag(long id, @NotNull String iso3, @NotNull String iso2, String isoNumerisch, 
-			@NotNull String codeDEStatis, @NotNull String bezeichnungSuche, @NotNull String bezeichnung, 
-			@NotNull String bezeichnungLang, @NotNull String staatsangehoerigkeit, Integer gueltigVon, Integer gueltigBis) {
+	public NationalitaetenKatalogEintrag(final long id, final @NotNull String iso3, final @NotNull String iso2, final String isoNumerisch, 
+			final @NotNull String codeDEStatis, final @NotNull String bezeichnungSuche, final @NotNull String bezeichnung, 
+			final @NotNull String bezeichnungLang, final @NotNull String staatsangehoerigkeit, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.iso3 = iso3;
 		this.iso2 = iso2;

@@ -26,7 +26,7 @@ public class StundenplanblockungManagerLerngruppeStunde {
 	 * @param pID     Die Datenbank-ID der Lerngruppe.
 	 * @param pParent Das Eltern-Objekt.
 	 */
-	public StundenplanblockungManagerLerngruppeStunde(long pID, @NotNull StundenplanblockungManagerLerngruppe pParent) {
+	public StundenplanblockungManagerLerngruppeStunde(final long pID, final @NotNull StundenplanblockungManagerLerngruppe pParent) {
 		_id = pID;
 		_gr = pParent;
 	}

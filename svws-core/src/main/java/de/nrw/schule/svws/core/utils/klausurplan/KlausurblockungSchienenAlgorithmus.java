@@ -25,7 +25,7 @@ public class KlausurblockungSchienenAlgorithmus {
 	 * @param pMaxTimeMillis  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
-	public @NotNull List<@NotNull List<@NotNull Long>> berechne(@NotNull List<@NotNull GostKursklausur> pInput, long pMaxTimeMillis) {
+	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> pInput, final long pMaxTimeMillis) {
 		
 		// End-Zeitpunkt berechnet.
 		final long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;

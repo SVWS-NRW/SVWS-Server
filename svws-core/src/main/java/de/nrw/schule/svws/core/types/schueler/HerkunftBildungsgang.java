@@ -278,7 +278,7 @@ public enum HerkunftBildungsgang {
 	 * @param historie   die Historie des Herkunftsbildungsganges, welche ein Array von 
 	 *                   {@link HerkunftBildungsgangKatalogEintrag} ist  
 	 */
-	private HerkunftBildungsgang(@NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie) {
+	private HerkunftBildungsgang(final @NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -294,7 +294,7 @@ public enum HerkunftBildungsgang {
 	 */
 	private static @NotNull HashMap<@NotNull String, HerkunftBildungsgang> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (HerkunftBildungsgang s : HerkunftBildungsgang.values()) {
+			for (final HerkunftBildungsgang s : HerkunftBildungsgang.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -310,7 +310,7 @@ public enum HerkunftBildungsgang {
 	 * 
 	 * @return der Herkunftsbildungsgang oder null, falls das Kürzel ungültig ist
 	 */
-	public static HerkunftBildungsgang getByKuerzel(String kuerzel) {
+	public static HerkunftBildungsgang getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

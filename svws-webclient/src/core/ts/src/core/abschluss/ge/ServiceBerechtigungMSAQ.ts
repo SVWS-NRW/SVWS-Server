@@ -17,23 +17,23 @@ import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFae
 
 export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
-	private filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) };
+	private readonly filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) };
 
-	private filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 3)) };
+	private readonly filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 3)) };
 
-	private filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) };
+	private readonly filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) };
 
-	private filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private filterFG1NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
+	private readonly filterFG1NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
 
-	private filterFG2NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
+	private readonly filterFG2NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
 
-	private filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3))) };
+	private readonly filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3))) };
 
-	private filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
+	private readonly filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
 
 
 	public constructor() {

@@ -112,7 +112,7 @@ public enum KAOABerufsfeld {
 	 * 
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOABerufsfeldEintrag} ist  
 	 */
-	private KAOABerufsfeld(@NotNull KAOABerufsfeldEintrag@NotNull[] historie) {
+	private KAOABerufsfeld(final @NotNull KAOABerufsfeldEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -126,7 +126,7 @@ public enum KAOABerufsfeld {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOABerufsfeld> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (KAOABerufsfeld g : KAOABerufsfeld.values())
+			for (final KAOABerufsfeld g : KAOABerufsfeld.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -140,7 +140,7 @@ public enum KAOABerufsfeld {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOABerufsfeld> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (KAOABerufsfeld g : KAOABerufsfeld.values())
+			for (final KAOABerufsfeld g : KAOABerufsfeld.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -153,7 +153,7 @@ public enum KAOABerufsfeld {
 	 * 
 	 * @return das Berufsfeld oder null, falls die ID ungültig ist
 	 */
-	public static KAOABerufsfeld getByID(long id) {
+	public static KAOABerufsfeld getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -165,7 +165,7 @@ public enum KAOABerufsfeld {
 	 * 
 	 * @return das Berufsfeld oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOABerufsfeld getByKuerzel(String kuerzel) {
+	public static KAOABerufsfeld getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

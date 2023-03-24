@@ -54,20 +54,20 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	public constructor(__param0 : Variable, __param1? : Variable, __param2? : Variable) {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
+			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
 			this.variables = [pX];
 			this.free = 1;
 			this.sat = 0;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && (typeof __param2 === "undefined")) {
-			let pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
-			let pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
+			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
+			const pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
 			this.variables = [pX, pY];
 			this.free = 2;
 			this.sat = 0;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable'))))) {
-			let pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
-			let pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
-			let pZ : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param2);
+			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
+			const pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
+			const pZ : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param2);
 			this.variables = [pX, pY, pZ];
 			this.free = 3;
 			this.sat = 0;
@@ -76,7 +76,7 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 
 	public toString() : string {
 		let s : string = "";
-		for (let v of this.variables) {
+		for (const v of this.variables) {
 			if (v.index === -1) {
 				return "[SAT]";
 			}
@@ -88,8 +88,8 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	}
 
 	private getSet() : AVLSet<number> {
-		let set : AVLSet<number> = new AVLSet();
-		for (let v of this.variables) {
+		const set : AVLSet<number> = new AVLSet();
+		for (const v of this.variables) {
 			if (v.index >= 0) {
 				set.add(v.nr);
 			}
@@ -98,18 +98,18 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	}
 
 	public compareTo(o : Clause) : number {
-		let set1 : AVLSet<number> = this.getSet();
-		let set2 : AVLSet<number> = o.getSet();
+		const set1 : AVLSet<number> = this.getSet();
+		const set2 : AVLSet<number> = o.getSet();
 		if (set1.size() < set2.size())
 			return -1;
 		if (set1.size() > set2.size())
 			return +1;
-		let i1 : JavaIterator<number> | null = set1.iterator();
-		let i2 : JavaIterator<number> | null = set2.iterator();
+		const i1 : JavaIterator<number> | null = set1.iterator();
+		const i2 : JavaIterator<number> | null = set2.iterator();
 		if ((i1 === null) || (i2 === null))
 			throw new NullPointerException()
 		while (i1.hasNext()) {
-			let cmp : number = JavaInteger.compare(i1.next()!, i2.next()!);
+			const cmp : number = JavaInteger.compare(i1.next()!, i2.next()!);
 			if (cmp !== 0)
 				return cmp;
 		}

@@ -45,7 +45,7 @@ public class AbgangsartenManager {
 	 * @param katalogAllgemein   der Katalog für die allgemeinbildenden Schulformen
 	 * @param katalogBeruf       der Katalog für die berufsbildenden Schulformen
 	 */
-	public AbgangsartenManager(@NotNull AbgangsartKatalog katalogAllgemein, @NotNull AbgangsartKatalog katalogBeruf) {
+	public AbgangsartenManager(final @NotNull AbgangsartKatalog katalogAllgemein, final @NotNull AbgangsartKatalog katalogBeruf) {
 		this._katalogAllgemein = katalogAllgemein;
 		this._katalogBeruf = katalogBeruf;
 		this._version = katalogAllgemein.version + katalogBeruf.version;
@@ -81,7 +81,7 @@ public class AbgangsartenManager {
 	 * 
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
 	 */
-	public AbgangsartKatalogEintrag get(@NotNull String kuerzel) {
+	public AbgangsartKatalogEintrag get(final @NotNull String kuerzel) {
 		return this._mapByKuerzel.get(kuerzel);
 	}
 
@@ -137,7 +137,7 @@ public class AbgangsartenManager {
 	 * 
 	 * @return das Kürzel der Abgangsart oder null, falls die ID ungültig ist 
 	 */
-	public String getKuerzel(long id) {
+	public String getKuerzel(final long id) {
 		final AbgangsartKatalogEintrag eintrag = this._mapByID.get(id);
 		return eintrag == null ? null : eintrag.kuerzel;
 	}
@@ -168,7 +168,7 @@ public class AbgangsartenManager {
 	 * 
 	 * @return der allgemeinbildende Abschluss oder null in einem unerwarteten Fehlerfall
 	 */
-	public static SchulabschlussAllgemeinbildend getAbschlussAllgemeinbildend(@NotNull AbgangsartKatalogEintrag abschlussart) {
+	public static SchulabschlussAllgemeinbildend getAbschlussAllgemeinbildend(final @NotNull AbgangsartKatalogEintrag abschlussart) {
 		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
 			throw new RuntimeException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		final @NotNull String kuerzelAbschluss = abschlussart.kuerzel.length() == 1 ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
@@ -182,7 +182,7 @@ public class AbgangsartenManager {
 	 * 
 	 * @return der berufsbildende Abschluss oder null, wenn nur ein allgemeinbildender Abschluss vorliegt.
 	 */
-	public static SchulabschlussBerufsbildend getAbschlussBerufsbildend(@NotNull AbgangsartKatalogEintrag abschlussart) {
+	public static SchulabschlussBerufsbildend getAbschlussBerufsbildend(final @NotNull AbgangsartKatalogEintrag abschlussart) {
 		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
 			throw new RuntimeException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		if (abschlussart.kuerzel.length() == 1)

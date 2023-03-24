@@ -69,19 +69,19 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let beschreibung : string = __param2;
-			let stufen : List<Schulstufe> = cast_java_util_List(__param3);
-			let anzeigeZusatzmerkmal : List<KAOAZusatzmerkmal> = cast_java_util_List(__param4);
-			let gueltigVon : number | null = __param5;
-			let gueltigBis : number | null = __param6;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const beschreibung : string = __param2;
+			const stufen : List<Schulstufe> = cast_java_util_List(__param3);
+			const anzeigeZusatzmerkmal : List<KAOAZusatzmerkmal> = cast_java_util_List(__param4);
+			const gueltigVon : number | null = __param5;
+			const gueltigBis : number | null = __param6;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
-			for (let stufe of stufen)
+			for (const stufe of stufen)
 				this.stufen.add(stufe.daten.kuerzel);
-			for (let m of anzeigeZusatzmerkmal)
+			for (const m of anzeigeZusatzmerkmal)
 				this.anzeigeZusatzmerkmal.add(m.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

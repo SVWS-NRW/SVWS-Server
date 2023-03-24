@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 public class IntegerComparator implements Comparator<Integer> {
 
 	@Override
-	public int compare(@NotNull Integer o1, @NotNull Integer o2) {
+	public int compare(final @NotNull Integer o1, final @NotNull Integer o2) {
 		return o1 - o2;
 	}
 

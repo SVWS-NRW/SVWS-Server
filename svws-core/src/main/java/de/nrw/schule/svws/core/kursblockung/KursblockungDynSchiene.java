@@ -30,7 +30,7 @@ public class KursblockungDynSchiene {
 	 * @param pLogger    Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pNr        Die Nummer der Schiene.
 	 * @param pStatistik Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert. */
-	public KursblockungDynSchiene(@NotNull Logger pLogger, int pNr, @NotNull KursblockungDynStatistik pStatistik) {
+	public KursblockungDynSchiene(final @NotNull Logger pLogger, final int pNr, final @NotNull KursblockungDynStatistik pStatistik) {
 		logger = pLogger;
 		nr = pNr;
 		kursMap = new HashMap<>();
@@ -47,16 +47,16 @@ public class KursblockungDynSchiene {
 	 * 
 	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. 
 	 */
-	public void aktionKursHinzufuegen(@NotNull KursblockungDynKurs kurs1) {
+	public void aktionKursHinzufuegen(final @NotNull KursblockungDynKurs kurs1) {
 		// Fehler?
-		long kursID = kurs1.gibDatenbankID();
+		final long kursID = kurs1.gibDatenbankID();
 		if (kursMap.containsKey(kursID)) {
-			String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
+			final String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler);
 		}
 		// Zuerst Kurs-Paarungen hinzufügen.
-		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
+		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 		// Dann der Datenstruktur hinzufügen.
 		kursMap.put(kursID, kurs1);
@@ -65,11 +65,11 @@ public class KursblockungDynSchiene {
 	/** Entfernt aus der Schiene einen Kurs. Das Statistik-Objekt wird über zu entfernende Kurs-Paarungen informiert.
 	 * 
 	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll. */
-	public void aktionKursEntfernen(@NotNull KursblockungDynKurs kurs1) {
+	public void aktionKursEntfernen(final @NotNull KursblockungDynKurs kurs1) {
 		// Fehler?
-		long kursID = kurs1.gibDatenbankID();
+		final long kursID = kurs1.gibDatenbankID();
 		if (!kursMap.containsKey(kursID)) {
-			String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
+			final String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
 					+ " entfernt werden, ist aber nicht drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler);
@@ -77,7 +77,7 @@ public class KursblockungDynSchiene {
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);
 		// Dann Kurs-Paarungen entfernen.
-		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
+		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 	}
 
@@ -98,8 +98,8 @@ public class KursblockungDynSchiene {
 	/** Debug-Ausgabe. Nur für Testzwecke.
 	 * 
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt. */
-	public void debug(boolean nurMultikurse) {
-		for (@NotNull KursblockungDynKurs k : kursMap.values()) {
+	public void debug(final boolean nurMultikurse) {
+		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			if (nurMultikurse) {
 				if (k.gibSchienenAnzahl() < 2) {
 					continue;
@@ -116,10 +116,10 @@ public class KursblockungDynSchiene {
 	 * @return die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium
 	 *         für die Blockung verwendet. */
 	int gibAnzahlGleicherFacharten() {
-		AVLSet<Integer> setFachart = new AVLSet<>(); // Gibt es bereits diese Fachart?
+		final AVLSet<Integer> setFachart = new AVLSet<>(); // Gibt es bereits diese Fachart?
 
 		int summe = 0;
-		for (@NotNull KursblockungDynKurs kurs : kursMap.values())
+		for (final @NotNull KursblockungDynKurs kurs : kursMap.values())
 			if (setFachart.add(kurs.gibFachart().gibNr()) == false) // Wenn es die Fachart bereits gibt, ...
 				summe++; // ... dann Malus erhöhen.
 

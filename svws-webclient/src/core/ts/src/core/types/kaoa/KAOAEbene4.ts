@@ -185,7 +185,7 @@ export class KAOAEbene4 extends JavaObject {
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOAEbene4> {
 		if (KAOAEbene4._statusByID.size() === 0)
-			for (let g of KAOAEbene4.values())
+			for (const g of KAOAEbene4.values())
 				KAOAEbene4._statusByID.put(g.daten.id, g);
 		return KAOAEbene4._statusByID;
 	}
@@ -198,7 +198,7 @@ export class KAOAEbene4 extends JavaObject {
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOAEbene4> {
 		if (KAOAEbene4._statusByKuerzel.size() === 0)
-			for (let g of KAOAEbene4.values())
+			for (const g of KAOAEbene4.values())
 				KAOAEbene4._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOAEbene4._statusByKuerzel;
 	}

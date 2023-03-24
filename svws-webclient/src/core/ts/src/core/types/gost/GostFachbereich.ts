@@ -144,14 +144,14 @@ export class GostFachbereich extends JavaObject {
 		GostFachbereich.all_values_by_ordinal.push(this);
 		GostFachbereich.all_values_by_name.set(name, this);
 		if (fachbereiche !== null) {
-			for (let fb of fachbereiche) {
-				for (let fach of fb.faecher) {
+			for (const fb of fachbereiche) {
+				for (const fach of fb.faecher) {
 					this.faecher.add(fach);
 					this.kuerzel.add(fach.daten.kuerzelASD);
 				}
 			}
 		}
-		for (let fach of faecher) {
+		for (const fach of faecher) {
 			this.faecher.add(fach);
 			this.kuerzel.add(fach.daten.kuerzelASD);
 		}
@@ -165,8 +165,8 @@ export class GostFachbereich extends JavaObject {
 	 */
 	private static getMapFachbereichByFach() : HashMap<ZulaessigesFach, List<GostFachbereich>> {
 		if (GostFachbereich._mapFachbereichByFach.size() === 0) {
-			for (let fb of GostFachbereich.values()) {
-				for (let fach of fb.faecher) {
+			for (const fb of GostFachbereich.values()) {
+				for (const fach of fb.faecher) {
 					let listFachbereichByFach : List<GostFachbereich> | null = GostFachbereich._mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach === null) {
 						listFachbereichByFach = new Vector();
@@ -211,10 +211,10 @@ export class GostFachbereich extends JavaObject {
 	 */
 	public hat(__param0 : GostFach | null | string) : boolean {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFach'))) || (__param0 === null))) {
-			let fach : GostFach | null = cast_de_nrw_schule_svws_core_data_gost_GostFach(__param0);
+			const fach : GostFach | null = cast_de_nrw_schule_svws_core_data_gost_GostFach(__param0);
 			return fach === null ? false : this.hat(fach.kuerzel);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
-			let kuerzel : string | null = __param0;
+			const kuerzel : string | null = __param0;
 			if (kuerzel === null)
 				return false;
 			return this.kuerzel.contains(kuerzel);
@@ -231,8 +231,8 @@ export class GostFachbereich extends JavaObject {
 	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {
 		if (fach === null)
 			return new Vector();
-		let zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		let bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
+		const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		const bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
 		if (bereiche !== null)
 			return bereiche;
 		return new Vector();

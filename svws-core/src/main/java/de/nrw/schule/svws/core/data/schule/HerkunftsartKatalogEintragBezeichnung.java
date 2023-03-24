@@ -44,7 +44,7 @@ public class HerkunftsartKatalogEintragBezeichnung {
 	 * @param kurzBezeichnung   die Kurz-Bezeichnung der Herkunftsart
 	 * @param bezeichnung       die Bezeichnung der Herkunftsart
 	 */
-	public HerkunftsartKatalogEintragBezeichnung(@NotNull Schulform schulform, @NotNull String kurzBezeichnung, @NotNull String bezeichnung) {
+	public HerkunftsartKatalogEintragBezeichnung(final @NotNull Schulform schulform, final @NotNull String kurzBezeichnung, final @NotNull String bezeichnung) {
 		this.schulform = schulform.daten.kuerzel;
 		this.kurzBezeichnung = kurzBezeichnung;
 		this.bezeichnung = bezeichnung;

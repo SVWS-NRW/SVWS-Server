@@ -44,7 +44,7 @@ import jakarta.validation.constraints.NotNull;
 class LinkedCollectionIterator<@NotNull E> implements Iterator<@NotNull E> {
 
 	/** Die dem Iterator zugehörige Collection */
-	private @NotNull LinkedCollection<@NotNull E> _collection;
+	private final @NotNull LinkedCollection<@NotNull E> _collection;
 	
 	/** Der Zeiger auf das aktuelle Element */
 	private LinkedCollectionElement<@NotNull E> _current;
@@ -61,7 +61,7 @@ class LinkedCollectionIterator<@NotNull E> implements Iterator<@NotNull E> {
 	 * 
 	 * @param collection   die zum Iterator zugehörige {@link LinkedCollection}
 	 */
-	LinkedCollectionIterator(@NotNull LinkedCollection<@NotNull E> collection) {
+	LinkedCollectionIterator(final @NotNull LinkedCollection<@NotNull E> collection) {
 		this._collection = collection;
 		this._expModCount = collection._modCount;
 		this._current = collection._head;
@@ -80,7 +80,7 @@ class LinkedCollectionIterator<@NotNull E> implements Iterator<@NotNull E> {
             throw new ConcurrentModificationException();		
 		if (_current == null)
 			throw new NoSuchElementException();
-		@NotNull E result = _current.getValue();
+		final @NotNull E result = _current.getValue();
 		_current = _current.getNext();
 		return result;
 	}

@@ -88,7 +88,7 @@ public enum GostKursart {
      * 
      * @return         Anzahl der Wochenstunden der Kursart korrekt, true oder false
      */
-	public boolean pruefeWochenstunden(int anzahl) {
+	public boolean pruefeWochenstunden(final int anzahl) {
 		switch (kuerzel) {
 			case "GK":  return (anzahl == 3) || (anzahl == 4);  // neu einsetzende Fremdsprachen können 4-stündig sein
 			case "LK":  return (anzahl == 5);
@@ -148,7 +148,7 @@ public enum GostKursart {
      * 
      * @throws DeveloperNotificationException falls die ID ungültig ist 
      */
-	public static @NotNull GostKursart fromID(int id) throws DeveloperNotificationException {
+	public static @NotNull GostKursart fromID(final int id) throws DeveloperNotificationException {
 		switch (id) {
 			case 1: return GostKursart.LK; 
 			case 2: return GostKursart.GK; 
@@ -166,7 +166,7 @@ public enum GostKursart {
      * @return die Kursart anhand der Kursart-ID der Fachwahl.
      * @throws DeveloperNotificationException falls die ID ungültig ist 
      */
-	public static @NotNull GostKursart fromFachwahlOrException(@NotNull GostFachwahl pFachwahl) throws DeveloperNotificationException {
+	public static @NotNull GostKursart fromFachwahlOrException(final @NotNull GostFachwahl pFachwahl) throws DeveloperNotificationException {
 		return fromID(pFachwahl.kursartID);
 	}
 
@@ -177,7 +177,7 @@ public enum GostKursart {
      * 
      * @return die Kursart oder null falls die ID ungültig ist 
      */
-	public static GostKursart fromIDorNull(int id) {
+	public static GostKursart fromIDorNull(final int id) {
 		switch (id) {
 			case 1: return GostKursart.LK; 
 			case 2: return GostKursart.GK; 
@@ -195,7 +195,7 @@ public enum GostKursart {
      * 
      * @return die Kursart oder null, falls das Kürzel ungültig ist 
      */
-	public static GostKursart fromKuerzel(String kuerzel) {
+	public static GostKursart fromKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
@@ -207,7 +207,7 @@ public enum GostKursart {
 	 * 
 	 * @return die Gost-Kursart
 	 */
-	public static GostKursart fromKursart(ZulaessigeKursart kursart) {
+	public static GostKursart fromKursart(final ZulaessigeKursart kursart) {
 		return getMapByZulKursart().get(kursart);
 	}
 
@@ -220,7 +220,7 @@ public enum GostKursart {
 	 * 
 	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
 	 */
-	public static long getFachartID(long pFachID, int pKursartID) {
+	public static long getFachartID(final long pFachID, final int pKursartID) {
 		return pFachID * FACHART_ID_FAKTOR + pKursartID;
 	}
 	
@@ -230,7 +230,7 @@ public enum GostKursart {
 	 * 
 	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
 	 */
-	public static long getFachartIDByFachwahl(@NotNull GostFachwahl pFachwahl) {
+	public static long getFachartIDByFachwahl(final @NotNull GostFachwahl pFachwahl) {
 		return getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
 	}
 	
@@ -241,7 +241,7 @@ public enum GostKursart {
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
-	public static long getFachartIDByKurs(@NotNull GostBlockungKurs pKurs) {
+	public static long getFachartIDByKurs(final @NotNull GostBlockungKurs pKurs) {
 		return getFachartID(pKurs.fach_id, pKurs.kursart);
 	}
 	
@@ -252,7 +252,7 @@ public enum GostKursart {
 	 * 
 	 * @return Ganzzahlige Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
 	 */
-	public static long getFachID(long pFachartID) {
+	public static long getFachID(final long pFachartID) {
 		return pFachartID / FACHART_ID_FAKTOR;
 	}
 
@@ -263,7 +263,7 @@ public enum GostKursart {
 	 * 
 	 * @return Rest der ganzzahligen Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
 	 */
-	public static int getKursartID(long pFachartID) {
+	public static int getKursartID(final long pFachartID) {
 		return (int) (pFachartID % FACHART_ID_FAKTOR);
 	}
 

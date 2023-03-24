@@ -48,14 +48,14 @@ export class RGBFarbe extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let color24Bit : number = __param0 as number;
+			const color24Bit : number = __param0 as number;
 			this.red = color24Bit & 255;
 			this.green = (color24Bit >> 8) & 255;
 			this.blue = color24Bit >> 16;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			let red : number = __param0 as number;
-			let green : number = __param1 as number;
-			let blue : number = __param2 as number;
+			const red : number = __param0 as number;
+			const green : number = __param1 as number;
+			const blue : number = __param2 as number;
 			this.red = red;
 			this.green = green;
 			this.blue = blue;

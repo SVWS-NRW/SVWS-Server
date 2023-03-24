@@ -23,12 +23,12 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
 	 */
-	private _faecher : LinkedCollection<GostFach> = new LinkedCollection();
+	private readonly _faecher : LinkedCollection<GostFach> = new LinkedCollection();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private _map : HashMap<number, GostFach> = new HashMap();
+	private readonly _map : HashMap<number, GostFach> = new HashMap();
 
 
 	/**

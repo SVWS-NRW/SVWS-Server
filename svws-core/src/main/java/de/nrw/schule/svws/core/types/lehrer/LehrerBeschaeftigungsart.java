@@ -107,7 +107,7 @@ public enum LehrerBeschaeftigungsart {
 	 * 
 	 * @param historie   die Historie der Beschäftigungsart, welches ein Array von {@link LehrerKatalogBeschaeftigungsartEintrag} ist  
 	 */
-	private LehrerBeschaeftigungsart(@NotNull LehrerKatalogBeschaeftigungsartEintrag@NotNull[] historie) {
+	private LehrerBeschaeftigungsart(final @NotNull LehrerKatalogBeschaeftigungsartEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -122,7 +122,7 @@ public enum LehrerBeschaeftigungsart {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerBeschaeftigungsart> getMapArtenByID() {
 		if (_artenByID.size() == 0)
-			for (LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
+			for (final LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
 				_artenByID.put(l.daten.id, l);				
 		return _artenByID;
 	}
@@ -136,7 +136,7 @@ public enum LehrerBeschaeftigungsart {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerBeschaeftigungsart> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
-			for (LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
+			for (final LehrerBeschaeftigungsart l : LehrerBeschaeftigungsart.values())
 				_artenByKuerzel.put(l.daten.kuerzel, l);				
 		return _artenByKuerzel;
 	}
@@ -149,7 +149,7 @@ public enum LehrerBeschaeftigungsart {
 	 * 
 	 * @return die Beschäftigungsart oder null, falls die ID ungültig ist
 	 */
-	public static LehrerBeschaeftigungsart getByID(long id) {
+	public static LehrerBeschaeftigungsart getByID(final long id) {
 		return getMapArtenByID().get(id);
 	}
 
@@ -161,7 +161,7 @@ public enum LehrerBeschaeftigungsart {
 	 * 
 	 * @return die Beschäftigungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerBeschaeftigungsart getByKuerzel(String kuerzel) {
+	public static LehrerBeschaeftigungsart getByKuerzel(final String kuerzel) {
 		return getMapArtenByKuerzel().get(kuerzel);
 	}
 

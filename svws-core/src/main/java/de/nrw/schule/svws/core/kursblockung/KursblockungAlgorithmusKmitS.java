@@ -30,8 +30,8 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	 * @param pDynDat       Die dynamischen Blockungsdaten.
 	 * @param pAlgorithmusS Der Algorithmus zum Verteilen der SuS.
 	 */
-	public KursblockungAlgorithmusKmitS(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat, @NotNull KursblockungAlgorithmusS pAlgorithmusS) {
+	public KursblockungAlgorithmusKmitS(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat, final @NotNull KursblockungAlgorithmusS pAlgorithmusS) {
 		super(pRandom, pLogger, pDynDat);
 		algorithmusS = pAlgorithmusS;
 	}
@@ -42,14 +42,14 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	@Override
-	public void berechne(long pMaxTimeMillis) {
+	public void berechne(final long pMaxTimeMillis) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
 		}
 
 		// Startzeit speichern.
-		long timeStart = System.currentTimeMillis();
+		final long timeStart = System.currentTimeMillis();
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -75,7 +75,7 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	 * @param pMaxTimeMillis Die maximale Blockungszeit für den S-Algorithmus.
 	 * @return TRUE, falls es zur Verbesserung kam.
 	 */
-	private boolean verteileKurse(long pMaxTimeMillis) {
+	private boolean verteileKurse(final long pMaxTimeMillis) {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.
 		do {
 			// Entferne SuS, sonst dürfen Kurse nicht die Schiene wechseln.
@@ -88,7 +88,7 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 			algorithmusS.berechne();
 
 			// Vergleiche mit vorheriger BewertungK.
-			int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
+			final int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
 
 			// Besser? --> Speichern.
 			if (cmp > 0) {

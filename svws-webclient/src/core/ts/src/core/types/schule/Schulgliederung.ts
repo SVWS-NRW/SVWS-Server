@@ -656,8 +656,8 @@ export class Schulgliederung extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
-			for (let kuerzel of historie[i].schulformen) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+			for (const kuerzel of historie[i].schulformen) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
@@ -672,7 +672,7 @@ export class Schulgliederung extends JavaObject {
 	 */
 	private static getMapSchulgliederungByKuerzel() : HashMap<string, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenKuerzel.size() === 0)
-			for (let s of Schulgliederung.values())
+			for (const s of Schulgliederung.values())
 				Schulgliederung._schulgliederungenKuerzel.put(s.daten.kuerzel, s);
 		return Schulgliederung._schulgliederungenKuerzel;
 	}
@@ -685,8 +685,8 @@ export class Schulgliederung extends JavaObject {
 	 */
 	private static getMapSchulgliederungByID() : HashMap<number, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenID.size() === 0)
-			for (let s of Schulgliederung.values()) {
-				for (let k of s.historie)
+			for (const s of Schulgliederung.values()) {
+				for (const k of s.historie)
 					Schulgliederung._schulgliederungenID.put(k.id, s);
 			}
 		return Schulgliederung._schulgliederungenID;
@@ -725,10 +725,10 @@ export class Schulgliederung extends JavaObject {
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static getByBkIndex(index : number) : List<Schulgliederung> {
-		let result : Vector<Schulgliederung> = new Vector();
-		let gliederungen : Array<Schulgliederung> = Schulgliederung.values();
+		const result : Vector<Schulgliederung> = new Vector();
+		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++) {
-			let gliederung : Schulgliederung = gliederungen[i];
+			const gliederung : Schulgliederung = gliederungen[i];
 			if ((gliederung.daten.bkIndex !== null) && (gliederung.daten.bkIndex === index))
 				result.add(gliederung);
 		}
@@ -752,12 +752,12 @@ export class Schulgliederung extends JavaObject {
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static get(schulform : Schulform | null) : List<Schulgliederung> {
-		let result : Vector<Schulgliederung> = new Vector();
+		const result : Vector<Schulgliederung> = new Vector();
 		if (schulform === null)
 			return result;
-		let gliederungen : Array<Schulgliederung> = Schulgliederung.values();
+		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++) {
-			let gliederung : Schulgliederung = gliederungen[i];
+			const gliederung : Schulgliederung = gliederungen[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -777,7 +777,7 @@ export class Schulgliederung extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -797,7 +797,7 @@ export class Schulgliederung extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -845,9 +845,9 @@ export class Schulgliederung extends JavaObject {
 			return null;
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Schulgliederung.getDefault(sf);
-		let gliederungen : List<Schulgliederung> = Schulgliederung.get(sf);
+		const gliederungen : List<Schulgliederung> = Schulgliederung.get(sf);
 		for (let i : number = 0; i < gliederungen.size(); i++) {
-			let sg : Schulgliederung | null = gliederungen.get(i);
+			const sg : Schulgliederung | null = gliederungen.get(i);
 			if (JavaString.equalsIgnoreCase((sg.daten.kuerzel), kuerzel))
 				return sg;
 		}

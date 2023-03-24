@@ -38,7 +38,7 @@ class AVLMapSubEntrySetIterator<@NotNull K, @NotNull V> implements Iterator<@Not
 	 * 
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
-	AVLMapSubEntrySetIterator(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubEntrySetIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.firstEntry();

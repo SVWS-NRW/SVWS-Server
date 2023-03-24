@@ -34,8 +34,8 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	 * rückgängig gemacht.
 	 */
 	public berechne(pEndzeit : number) : void {
-		let current : number = System.currentTimeMillis();
-		let halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
+		const current : number = System.currentTimeMillis();
+		const halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -78,7 +78,7 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			let cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+			const cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
 			if (cmp > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;

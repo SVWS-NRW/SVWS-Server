@@ -38,7 +38,7 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
 		}
-		let timeStart : number = System.currentTimeMillis();
+		const timeStart : number = System.currentTimeMillis();
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();
@@ -60,7 +60,7 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.algorithmusS.berechne();
-			let cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+			const cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
 			if (cmp > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;

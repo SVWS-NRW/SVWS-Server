@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 
 export class StundenplanblockungManagerSchule extends JavaObject {
 
-	private _tage_pro_woche : number = 5;
+	private readonly _tage_pro_woche : number = 5;
 
-	private _stunden_pro_tag : number = 9;
+	private readonly _stunden_pro_tag : number = 9;
 
 
 	/**

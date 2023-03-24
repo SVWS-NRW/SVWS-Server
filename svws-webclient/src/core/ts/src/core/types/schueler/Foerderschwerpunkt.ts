@@ -147,8 +147,8 @@ export class Foerderschwerpunkt extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector();
-			for (let kuerzel of historie[i].schulformen) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+			for (const kuerzel of historie[i].schulformen) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
 					this.schulformen[i].add(sf);
 			}
@@ -163,7 +163,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 */
 	private static getMapFoerderschwerpunktByKuerzel() : HashMap<string, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteKuerzel.size() === 0)
-			for (let s of Foerderschwerpunkt.values())
+			for (const s of Foerderschwerpunkt.values())
 				Foerderschwerpunkt._foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);
 		return Foerderschwerpunkt._foerderschwerpunkteKuerzel;
 	}
@@ -176,8 +176,8 @@ export class Foerderschwerpunkt extends JavaObject {
 	 */
 	private static getMapFoerderschwerpunktByID() : HashMap<number, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteID.size() === 0)
-			for (let s of Foerderschwerpunkt.values()) {
-				for (let k of s.historie)
+			for (const s of Foerderschwerpunkt.values()) {
+				for (const k of s.historie)
 					Foerderschwerpunkt._foerderschwerpunkteID.put(k.id, s);
 			}
 		return Foerderschwerpunkt._foerderschwerpunkteID;
@@ -222,12 +222,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static get(schulform : Schulform | null) : List<Foerderschwerpunkt> {
-		let result : Vector<Foerderschwerpunkt> = new Vector();
+		const result : Vector<Foerderschwerpunkt> = new Vector();
 		if (schulform === null)
 			return result;
-		let fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();
+		const fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();
 		for (let i : number = 0; i < fs.length; i++) {
-			let gliederung : Foerderschwerpunkt = fs[i];
+			const gliederung : Foerderschwerpunkt = fs[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -247,7 +247,7 @@ export class Foerderschwerpunkt extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel)))
 					return true;
 			}
@@ -267,7 +267,7 @@ export class Foerderschwerpunkt extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++) {
-				let sfKuerzel : string | null = this.daten.schulformen.get(i);
+				const sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
 					return true;
 			}
@@ -288,9 +288,9 @@ export class Foerderschwerpunkt extends JavaObject {
 			return null;
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel)))
 			return Foerderschwerpunkt.KEINER;
-		let schwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(sf);
+		const schwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(sf);
 		for (let i : number = 0; i < schwerpunkte.size(); i++) {
-			let fs : Foerderschwerpunkt | null = schwerpunkte.get(i);
+			const fs : Foerderschwerpunkt | null = schwerpunkte.get(i);
 			if (JavaString.equalsIgnoreCase((fs.daten.kuerzel), kuerzel))
 				return fs;
 		}

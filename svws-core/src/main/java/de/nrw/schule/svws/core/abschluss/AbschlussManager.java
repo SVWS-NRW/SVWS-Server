@@ -31,8 +31,8 @@ public class AbschlussManager {
      * 
      * @return das Ergebnis der Abschlussberechnung 
      */
-    public static @NotNull AbschlussErgebnis getErgebnis(SchulabschlussAllgemeinbildend abschluss, boolean erworben) {
-    	@NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
+    public static @NotNull AbschlussErgebnis getErgebnis(final SchulabschlussAllgemeinbildend abschluss, final boolean erworben) {
+    	final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
     	ergebnis.abschluss = abschluss == null ? null : abschluss.toString();
     	ergebnis.erworben = erworben;
     	ergebnis.npFaecher = null;
@@ -51,8 +51,8 @@ public class AbschlussManager {
      *
      * @return das Ergebnis der Abschlussberechnung 
      */
-    public static @NotNull AbschlussErgebnis getErgebnisNachpruefung(SchulabschlussAllgemeinbildend abschluss, List<@NotNull String> np_faecher) {
-    	@NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
+    public static @NotNull AbschlussErgebnis getErgebnisNachpruefung(final SchulabschlussAllgemeinbildend abschluss, final List<@NotNull String> np_faecher) {
+    	final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
     	ergebnis.abschluss = abschluss == null ? null : abschluss.toString();
     	ergebnis.erworben = false;
         if ((np_faecher == null) || (np_faecher.size() == 0))
@@ -72,7 +72,7 @@ public class AbschlussManager {
      * 
      * @return true, falls eine Nachprüfungsmöglichkeit besteht, sonst false
      */
-    public static boolean hatNachpruefungsmoeglichkeit(@NotNull AbschlussErgebnis ergebnis) {
+    public static boolean hatNachpruefungsmoeglichkeit(final @NotNull AbschlussErgebnis ergebnis) {
         return (ergebnis.npFaecher != null) && ergebnis.npFaecher.size() > 0;
     }
 
@@ -85,11 +85,11 @@ public class AbschlussManager {
      *                    
      * @return die Nachprüfungsfächer als Komma-separierten String
      */
-    public static @NotNull String getNPFaecherString(@NotNull AbschlussErgebnis ergebnis) {
+    public static @NotNull String getNPFaecherString(final @NotNull AbschlussErgebnis ergebnis) {
     	if (ergebnis.npFaecher == null)
     		return "";
-    	StringBuilder sb = new StringBuilder();
-    	for (String fach : ergebnis.npFaecher) {
+    	final StringBuilder sb = new StringBuilder();
+    	for (final String fach : ergebnis.npFaecher) {
     		if (sb.length() > 0)
     			sb.append(", ");
     		sb.append(fach);
@@ -108,7 +108,7 @@ public class AbschlussManager {
      * 
      * @return true, falls sie identisch sind und ansonsten false
      */
-    public static boolean equalsAbschluesse(String a, String b) {
+    public static boolean equalsAbschluesse(final String a, final String b) {
     	if ((a == null) || (SchulabschlussAllgemeinbildend.OA.is(a)))
     		return (b == null) || (SchulabschlussAllgemeinbildend.OA.is(b));
     	return a.equals(b);
@@ -123,7 +123,7 @@ public class AbschlussManager {
 	 * 
 	 * @return der Abschluss
 	 */
-	public static @NotNull String getAbschluss(@NotNull AbschlussErgebnis ergebnis) {
+	public static @NotNull String getAbschluss(final @NotNull AbschlussErgebnis ergebnis) {
 		return ergebnis.abschluss == null ? SchulabschlussAllgemeinbildend.OA.toString() : ergebnis.abschluss;
 	}
 
@@ -142,8 +142,8 @@ public class AbschlussManager {
      * 
      * @return das Abschlussfach 
      */
-    public static @NotNull GEAbschlussFach erstelleAbschlussFach(@NotNull String kuerzel, String bezeichnung, int note, @NotNull GELeistungsdifferenzierteKursart kursart, Boolean istFremdsprache) {
-    	@NotNull GEAbschlussFach fach = new GEAbschlussFach();
+    public static @NotNull GEAbschlussFach erstelleAbschlussFach(final @NotNull String kuerzel, final String bezeichnung, final int note, final @NotNull GELeistungsdifferenzierteKursart kursart, final Boolean istFremdsprache) {
+    	final @NotNull GEAbschlussFach fach = new GEAbschlussFach();
     	fach.kuerzel = kuerzel;
         fach.bezeichnung = (bezeichnung == null || "".equals(bezeichnung)) ? "---" : bezeichnung;
         fach.note = note;
@@ -163,10 +163,10 @@ public class AbschlussManager {
 	 * 
 	 * @return die Liste mit den Fachkürzeln
 	 */
-	public static @NotNull List<@NotNull String> getKuerzel(@NotNull List<@NotNull GEAbschlussFach> faecher) {
-		@NotNull Vector<@NotNull String> result = new Vector<>();
+	public static @NotNull List<@NotNull String> getKuerzel(final @NotNull List<@NotNull GEAbschlussFach> faecher) {
+		final @NotNull Vector<@NotNull String> result = new Vector<>();
 		for (int i = 0; i < faecher.size(); i++) {
-			@NotNull GEAbschlussFach fach = faecher.get(i);
+			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if ((fach == null) || fach.kuerzel == null)
 				continue;
 			if (result.contains(fach.kuerzel))
@@ -185,15 +185,15 @@ public class AbschlussManager {
 	 * 
 	 * @return true, falls vier leistungsdifferenzierte Fächer belegt wurden, sonst false
 	 */
-	public static boolean pruefeHat4LeistungsdifferenzierteFaecher(@NotNull GEAbschlussFaecher abschluss_faecher) {
+	public static boolean pruefeHat4LeistungsdifferenzierteFaecher(final @NotNull GEAbschlussFaecher abschluss_faecher) {
 		if (abschluss_faecher.faecher == null)
 			return false;
 		int count = 0;
-		@NotNull List<@NotNull GEAbschlussFach> faecher = abschluss_faecher.faecher;
-		for (GEAbschlussFach fach : faecher) {
+		final @NotNull List<@NotNull GEAbschlussFach> faecher = abschluss_faecher.faecher;
+		for (final GEAbschlussFach fach : faecher) {
 			if (fach == null)
 				continue;
-			@NotNull GELeistungsdifferenzierteKursart kursart = GELeistungsdifferenzierteKursart.from(fach.kursart); 
+			final @NotNull GELeistungsdifferenzierteKursart kursart = GELeistungsdifferenzierteKursart.from(fach.kursart); 
 			if ((kursart == GELeistungsdifferenzierteKursart.E) || (kursart == GELeistungsdifferenzierteKursart.G))
 				count++;
 		}
@@ -210,12 +210,12 @@ public class AbschlussManager {
 	 * 
 	 * @return true, falls keine Duplikate vorkommen, sonst false
 	 */
-	public static boolean pruefeKuerzelDuplikate(@NotNull GEAbschlussFaecher abschluss_faecher) {
+	public static boolean pruefeKuerzelDuplikate(final @NotNull GEAbschlussFaecher abschluss_faecher) {
 		if (abschluss_faecher.faecher == null)
 			return true;
-		@NotNull HashSet<@NotNull String> kuerzel = new HashSet<>(); 
-		@NotNull List<@NotNull GEAbschlussFach> faecher = abschluss_faecher.faecher;
-		for (GEAbschlussFach fach : faecher) {
+		final @NotNull HashSet<@NotNull String> kuerzel = new HashSet<>(); 
+		final @NotNull List<@NotNull GEAbschlussFach> faecher = abschluss_faecher.faecher;
+		for (final GEAbschlussFach fach : faecher) {
 			if ((fach == null) || (fach.kuerzel == null))
 				continue;
 			if (!kuerzel.add(fach.kuerzel))

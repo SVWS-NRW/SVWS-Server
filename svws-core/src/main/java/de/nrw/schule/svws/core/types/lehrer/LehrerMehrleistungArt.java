@@ -67,7 +67,7 @@ public enum LehrerMehrleistungArt {
 	 * 
 	 * @param historie   die Historie der Art von Mehrleistung, welches ein Array von {@link LehrerKatalogMehrleistungsartEintrag} ist  
 	 */
-	private LehrerMehrleistungArt(@NotNull LehrerKatalogMehrleistungsartEintrag@NotNull[] historie) {
+	private LehrerMehrleistungArt(final @NotNull LehrerKatalogMehrleistungsartEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -82,7 +82,7 @@ public enum LehrerMehrleistungArt {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerMehrleistungArt> getMapArtenByID() {
 		if (_artenByID.size() == 0)
-			for (LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
+			for (final LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
 				_artenByID.put(g.daten.id, g);				
 		return _artenByID;
 	}
@@ -96,7 +96,7 @@ public enum LehrerMehrleistungArt {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerMehrleistungArt> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
-			for (LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
+			for (final LehrerMehrleistungArt g : LehrerMehrleistungArt.values())
 				_artenByKuerzel.put(g.daten.kuerzel, g);				
 		return _artenByKuerzel;
 	}
@@ -109,7 +109,7 @@ public enum LehrerMehrleistungArt {
 	 * 
 	 * @return die Art der Mehrleistung oder null, falls die ID ungültig ist
 	 */
-	public static LehrerMehrleistungArt getByID(long id) {
+	public static LehrerMehrleistungArt getByID(final long id) {
 		return getMapArtenByID().get(id);
 	}
 
@@ -121,7 +121,7 @@ public enum LehrerMehrleistungArt {
 	 * 
 	 * @return die Art der Mehrleistung oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerMehrleistungArt getByKuerzel(String kuerzel) {
+	public static LehrerMehrleistungArt getByKuerzel(final String kuerzel) {
 		return getMapArtenByKuerzel().get(kuerzel);
 	}
 

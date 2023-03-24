@@ -58,12 +58,12 @@ export class BerufskollegBerufsebeneKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null))) {
-			let id : number = __param0 as number;
-			let ebene : number = __param1 as number;
-			let kuerzel : string = __param2;
-			let bezeichnung : string = __param3;
-			let gueltigVon : number | null = __param4;
-			let gueltigBis : number | null = __param5;
+			const id : number = __param0 as number;
+			const ebene : number = __param1 as number;
+			const kuerzel : string = __param2;
+			const bezeichnung : string = __param3;
+			const gueltigVon : number | null = __param4;
+			const gueltigBis : number | null = __param5;
 			this.id = id;
 			this.ebene = ebene;
 			this.kuerzel = kuerzel;

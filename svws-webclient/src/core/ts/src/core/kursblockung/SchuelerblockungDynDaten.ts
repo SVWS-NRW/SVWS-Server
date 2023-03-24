@@ -89,17 +89,17 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			throw new DeveloperNotificationException("pInput.fachwahlen == NULL")
 		if (pInput.kurse === null)
 			throw new DeveloperNotificationException("pInput.kurse == NULL")
-		let nFachwahlen : number = pInput.fachwahlen.size();
+		const nFachwahlen : number = pInput.fachwahlen.size();
 		if (nFachwahlen < 1)
 			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + nFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!")
-		let nSchienen : number = pInput.schienen;
+		const nSchienen : number = pInput.schienen;
 		if (nSchienen < 1)
 			throw new DeveloperNotificationException("Die Schienenanzahl (" + nSchienen + ") ist zu gering!")
-		let nKurse : number = pInput.kurse.size();
+		const nKurse : number = pInput.kurse.size();
 		if (nKurse < 1)
 			throw new DeveloperNotificationException("Die Kursanzahl (" + nKurse + ") ist zu gering!")
-		let setKursID : HashSet<number | null> | null = new HashSet();
-		for (let kurs of pInput.kurse) {
+		const setKursID : HashSet<number | null> | null = new HashSet();
+		for (const kurs of pInput.kurse) {
 			if (kurs.id < 0)
 				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") ist zu gering!")
 			if (setKursID.add(kurs.id) === false)
@@ -116,7 +116,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!")
 			if (kurs.schienen.length > nSchienen)
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!")
-			for (let schiene1 of kurs.schienen) {
+			for (const schiene1 of kurs.schienen) {
 				if (schiene1 < 1)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!")
 				if (schiene1 > nSchienen)
@@ -125,7 +125,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (kurs.istFixiert && kurs.istGesperrt)
 				throw new DeveloperNotificationException("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!")
 		}
-		for (let fachwahl of pInput.fachwahlen) {
+		for (const fachwahl of pInput.fachwahlen) {
 			if (fachwahl.schuelerID < 0)
 				throw new DeveloperNotificationException("fachwahl.schuelerID (" + fachwahl.schuelerID + ") ist zu gering!")
 			if (fachwahl.fachID < 0)
@@ -134,12 +134,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("fachwahl.kursartID (" + fachwahl.kursartID + ") ist zu gering!")
 		}
 		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++) {
-			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
+			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size())
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
-			let representation : string | null = pInput.fachwahlenText.get(iFachwahl);
+			const representation : string | null = pInput.fachwahlenText.get(iFachwahl);
 			let kursWurdeFixiert : boolean = false;
-			for (let kurs of pInput.kurse)
+			for (const kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
 					if (kurs.istGesperrt)
 						continue;
@@ -150,10 +150,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					}
 				}
 		}
-		for (let kurs of pInput.kurse) {
+		for (const kurs of pInput.kurse) {
 			let gefunden : number = 0;
 			for (let r : number = 0; r < nFachwahlen; r++) {
-				let fachwahl : GostFachwahl = pInput.fachwahlen.get(r);
+				const fachwahl : GostFachwahl = pInput.fachwahlen.get(r);
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart))
 					gefunden++;
 			}
@@ -169,12 +169,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 */
 	private aktionInitialisiereDatenstrukturen(pInput : SchuelerblockungInput) : void {
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
+			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
 			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
-			let kurse : Vector<SchuelerblockungInputKurs> | null = new Vector();
+			const kurse : Vector<SchuelerblockungInputKurs> | null = new Vector();
 			let hatFixiertenKurs : boolean = false;
-			for (let kurs of pInput.kurse)
+			for (const kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
 					if (kurs.istFixiert) {
 						hatFixiertenKurs = true;
@@ -184,7 +184,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 			this._fachwahlZuKurse.add(kurse);
 			let max : number = 1;
-			for (let kurs of kurse)
+			for (const kurs of kurse)
 				max = Math.max(max, kurs.schienen.length);
 			this._fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
 		}
@@ -207,9 +207,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		Arrays.fill(this._aktuellFachwahlZuKursBest, -1);
 		Arrays.fill(this._aktuellGesperrteSchiene, false);
 		this.aktionVerteileMultikurseRekursiv(0);
-		let out : SchuelerblockungOutput = new SchuelerblockungOutput();
+		const out : SchuelerblockungOutput = new SchuelerblockungOutput();
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			let wahl : SchuelerblockungOutputFachwahlZuKurs = new SchuelerblockungOutputFachwahlZuKurs();
+			const wahl : SchuelerblockungOutputFachwahlZuKurs = new SchuelerblockungOutputFachwahlZuKurs();
 			wahl.fachID = this._fachwahlZuFachID[iFachwahl];
 			wahl.kursartID = this._fachwahlZuKursartID[iFachwahl];
 			wahl.kursID = this._aktuellFachwahlZuKursBest[iFachwahl];
@@ -228,7 +228,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			return;
 		}
 		let schienenAnzahl : number = 2;
-		for (let kurs of this._fachwahlZuKurse.get(iFachwahl)) {
+		for (const kurs of this._fachwahlZuKurse.get(iFachwahl)) {
 			schienenAnzahl = Math.max(schienenAnzahl, kurs.schienen.length);
 			if (this.aktionBelegeKurs(iFachwahl, kurs) === true) {
 				this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
@@ -243,7 +243,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	private aktionVerteileMitMatching() : void {
-		let data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
+		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
 			for (let iSchiene : number = 0; iSchiene < this.nSchienen; iSchiene++)
 				data[iFachwahl][iSchiene] = SchuelerblockungDynDaten.UNENDLICH;
@@ -251,19 +251,19 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (this._fachwahlZuHatMultikurse[iFachwahl] === false)
 				for (let schiene : number = 0; schiene < this.nSchienen; schiene++)
 					if (!this._aktuellGesperrteSchiene[schiene]) {
-						let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+						const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs !== null)
 							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
 					}
-		let r2c : Array<number> = this._aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		const r2c : Array<number> = this._aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
 			if (this._fachwahlZuHatMultikurse[iFachwahl] === false) {
-				let schiene : number = r2c[iFachwahl];
+				const schiene : number = r2c[iFachwahl];
 				if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
 					this._aktuellNichtwahlen++;
 					continue;
 				}
-				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+				const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null)
 					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKurs(iFachwahl, kurs) === false)
@@ -277,12 +277,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
 			if (this._fachwahlZuHatMultikurse[iFachwahl] === false) {
-				let schiene : number = r2c[iFachwahl];
+				const schiene : number = r2c[iFachwahl];
 				if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
 					this._aktuellNichtwahlen--;
 					continue;
 				}
-				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+				const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null)
 					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false)
@@ -291,9 +291,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	private static gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
-		let maxSuS : number = JavaInteger.MAX_VALUE;
+		const maxSuS : number = JavaInteger.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
-		for (let kurs of pKurse)
+		for (const kurs of pKurse)
 			if (kurs.schienen[0] - 1 === pSchiene)
 				if (kurs.anzahlSuS < maxSuS)
 					best = kurs;
@@ -301,11 +301,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	private aktionBelegeKurs(iFachwahl : number, kurs : SchuelerblockungInputKurs) : boolean {
-		for (let schiene1 of kurs.schienen)
+		for (const schiene1 of kurs.schienen)
 			if (this._aktuellGesperrteSchiene[schiene1 - 1])
 				return false;
 		this._aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
-		for (let schiene1 of kurs.schienen)
+		for (const schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = true;
 		this._aktuellBewertung += kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;
@@ -314,11 +314,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	private aktionBelegeKursUndo(iFachwahl : number, kurs : SchuelerblockungInputKurs) : boolean {
 		if (this._aktuellFachwahlZuKurs[iFachwahl] < 0)
 			return false;
-		for (let schiene1 of kurs.schienen)
+		for (const schiene1 of kurs.schienen)
 			if (this._aktuellGesperrteSchiene[schiene1 - 1] === false)
 				return false;
 		this._aktuellFachwahlZuKurs[iFachwahl] = -1;
-		for (let schiene1 of kurs.schienen)
+		for (const schiene1 of kurs.schienen)
 			this._aktuellGesperrteSchiene[schiene1 - 1] = false;
 		this._aktuellBewertung -= kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;
@@ -333,7 +333,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		console.log(JSON.stringify("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest)!));
 		if (!pPrintMatrix)
 			return;
-		let data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
+		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
 			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
 			while (sData.length < 5)

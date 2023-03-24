@@ -65,20 +65,20 @@ public class HerkunftsschulnummerKatalogEintrag {
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public HerkunftsschulnummerKatalogEintrag(long id, int schulnummer, @NotNull String bezeichnung, 
-			List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public HerkunftsschulnummerKatalogEintrag(final long id, final int schulnummer, final @NotNull String bezeichnung, 
+			final List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.schulnummer = schulnummer;
 		this.bezeichnung = bezeichnung;
 		if (zulaessig != null) {
-			for (@NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
-				SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
-				@NotNull Schulform sf = zul.a;
+			for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+				final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
+				final @NotNull Schulform sf = zul.a;
 				if (sf.daten == null)
 					continue;
 				sfsgl.schulform = sf.daten.kuerzel;
-				Schulgliederung sgl = zul.b;
+				final Schulgliederung sgl = zul.b;
 				sfsgl.gliederung = ((sgl == null) || (sgl.daten == null)) ? null : sgl.daten.kuerzel;
 				this.zulaessig.add(sfsgl);
 			}

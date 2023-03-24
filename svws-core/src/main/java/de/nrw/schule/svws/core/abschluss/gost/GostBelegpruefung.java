@@ -58,7 +58,7 @@ public abstract class GostBelegpruefung {
 	 * 
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
-	protected void addFehler(@NotNull GostBelegungsfehler fehler) {
+	protected void addFehler(final @NotNull GostBelegungsfehler fehler) {
 		if (!belegungsfehler.contains(fehler))
 			belegungsfehler.add(fehler);
 	}
@@ -81,7 +81,7 @@ public abstract class GostBelegpruefung {
 	 */
 	public boolean hatBelegungsfehler() {
 		for (int i = 0; i < belegungsfehler.size(); i++) {
-			@NotNull GostBelegungsfehler fehler = belegungsfehler.get(i);
+			final @NotNull GostBelegungsfehler fehler = belegungsfehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -115,9 +115,9 @@ public abstract class GostBelegpruefung {
 	 * 
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
-	public static boolean istErfolgreich(@NotNull Vector<@NotNull GostBelegungsfehler> alle_fehler) {
+	public static boolean istErfolgreich(final @NotNull Vector<@NotNull GostBelegungsfehler> alle_fehler) {
 		for (int i = 0; i < alle_fehler.size(); i++) {
-			@NotNull GostBelegungsfehler fehler = alle_fehler.get(i);
+			final @NotNull GostBelegungsfehler fehler = alle_fehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -133,10 +133,10 @@ public abstract class GostBelegpruefung {
 	 * 
 	 * @return die Menge der Belegprüfungsfehler
 	 */
-	public static @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(@NotNull List<@NotNull GostBelegpruefung> pruefungen) {
-		@NotNull Vector<@NotNull GostBelegungsfehler> fehler = new Vector<>();
+	public static @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
+		final @NotNull Vector<@NotNull GostBelegungsfehler> fehler = new Vector<>();
 		for (int i = 0; i < pruefungen.size(); i++) {
-			@NotNull GostBelegpruefung pruefung = pruefungen.get(i);
+			final @NotNull GostBelegpruefung pruefung = pruefungen.get(i);
 			fehler.addAll(pruefung.getBelegungsfehler());
 		}
 		return fehler;

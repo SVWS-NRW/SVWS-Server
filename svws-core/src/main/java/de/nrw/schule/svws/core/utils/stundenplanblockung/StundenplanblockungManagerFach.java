@@ -24,7 +24,7 @@ public class StundenplanblockungManagerFach {
 	 * @param pFachID   Die Datenbank-ID des Faches.
 	 * @param pKuerzel  Das Kürzel des Faches.
 	 */
-	public StundenplanblockungManagerFach(long pFachID, @NotNull String pKuerzel) {
+	public StundenplanblockungManagerFach(final long pFachID, final @NotNull String pKuerzel) {
 		_id = pFachID;
 		_kuerzel = pKuerzel;
 	}

@@ -20,24 +20,24 @@ public class KursblockungAlgorithmus
 		extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
 
 	@Override
-	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(@NotNull GostBlockungsdatenManager pInput) {
+	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
 		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
-		long seed = new Random().nextLong();
-		@NotNull Random random = new Random(seed);
+		final long seed = new Random().nextLong();
+		final @NotNull Random random = new Random(seed);
 		logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 
 		// Konvertierung von 'KursblockungInput' zu 'KursblockungDynamischeDaten'.
-		@NotNull KursblockungDynDaten dynDaten = new KursblockungDynDaten(random, logger, pInput);
-		long zeitBedarf = dynDaten.gibBlockungszeitMillis();
-		long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
+		final @NotNull KursblockungDynDaten dynDaten = new KursblockungDynDaten(random, logger, pInput);
+		final long zeitBedarf = dynDaten.gibBlockungszeitMillis();
+		final long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
 
 		// Vorbereitung der Rückgabe an die GUI.
-		@NotNull Vector<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new Vector<>();
+		final @NotNull Vector<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new Vector<>();
 
-		@NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
+		final @NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
 				new KursblockungAlgorithmusKSchnellW(random, logger, dynDaten),
 				new KursblockungAlgorithmusKFachwahlmatrix(random, logger, dynDaten),
@@ -47,7 +47,7 @@ public class KursblockungAlgorithmus
 				// ... Ende der K-Algorithmen.
 		};
 
-		@NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
+		final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
 				// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
 				new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten),
 				new KursblockungAlgorithmusSZufaellig(random, logger, dynDaten),
@@ -63,7 +63,7 @@ public class KursblockungAlgorithmus
 			for (int iK = 0; iK < algorithmenK.length; iK++) {
 
 				// Ggf. läuft ein AlgorithmusK auch erneut, falls er schneller als seine Maximalzeit war.
-				long zeitEndeK = System.currentTimeMillis() + zeitProK;
+				final long zeitEndeK = System.currentTimeMillis() + zeitProK;
 				do {
 					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK);
 					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
@@ -85,9 +85,9 @@ public class KursblockungAlgorithmus
 		return kursblockungOutputs;
 	}
 
-	private static void verwendeAlgorithmusK(@NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, long zeitEndeK,
-			@NotNull KursblockungDynDaten dynDaten, @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
-			@NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, @NotNull GostBlockungsdatenManager pInput) {
+	private static void verwendeAlgorithmusK(final @NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, final long zeitEndeK,
+			final @NotNull KursblockungDynDaten dynDaten, final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
+			final @NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, final @NotNull GostBlockungsdatenManager pInput) {
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
@@ -116,7 +116,7 @@ public class KursblockungAlgorithmus
 		}
 
 		// Aktuellen Stand der Blockung speichern.
-		@NotNull GostBlockungsergebnisManager out = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1);
+		final @NotNull GostBlockungsergebnisManager out = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1);
 		outputs.add(out);
 	}
 

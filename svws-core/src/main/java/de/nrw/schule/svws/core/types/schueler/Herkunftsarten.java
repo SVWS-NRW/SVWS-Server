@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum Herkunftsarten {
 
-	/** 
+	/**
 	 * Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG) 
 	 */
 	NICHTVERSETZUNG(new HerkunftsartKatalogEintrag[] {
@@ -44,7 +44,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung 
 	 */
 	FREIWILLIGE_WIEDERHOLUNG(new HerkunftsartKatalogEintrag[] {
@@ -69,7 +69,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt 
 	 */
 	RUECKTRITT(new HerkunftsartKatalogEintrag[] {
@@ -94,7 +94,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung) 
 	 */
 	VERBLEIB_IN_SCHULSTUFE(new HerkunftsartKatalogEintrag[] {
@@ -119,7 +119,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Verbleib in der Schuleingangsphase 
 	 */
 	VERBLEIB_IN_SCHULEINGANGSPHASE(new HerkunftsartKatalogEintrag[] {
@@ -136,7 +136,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung 
 	 */
 	VERSETZUNG(new HerkunftsartKatalogEintrag[] {
@@ -161,7 +161,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform 
 	 */
 	UEBERGANG(new HerkunftsartKatalogEintrag[] {
@@ -186,7 +186,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg 
 	 */
 	SCHULFORMAUFSTIEG(new HerkunftsartKatalogEintrag[] {
@@ -211,7 +211,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Wechsel zur Gesamtschule 
 	 */
 	WECHSEL_ZUR_GESAMTSCHULE(new HerkunftsartKatalogEintrag[] {
@@ -227,7 +227,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung 
 	 */
 	VORVERSETZUNG(new HerkunftsartKatalogEintrag[] {
@@ -252,7 +252,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Höhere Jahrgangsstufe gegenüber dem Vorjahr in Verbindung mit einem Schulformabstieg (§ 12 Abs. 3 Satz 2 und 3, § 13 Abs.6 APO-SI) 
 	 */
 	SCHULFORMABSTIEG(new HerkunftsartKatalogEintrag[] {
@@ -267,7 +267,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Schüler, die aus dem Ausland zugezogen sind 
 	 */
 	ZUZUG_AUSLAND(new HerkunftsartKatalogEintrag[] {
@@ -292,7 +292,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Kein Abschluss
 	 */
 	KEIN_ABSCHLUSS(new HerkunftsartKatalogEintrag[]{
@@ -307,7 +307,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Hauptschulabschluss
 	 */
 	HA9A(new HerkunftsartKatalogEintrag[]{
@@ -322,7 +322,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)
 	 */
 	HA9(new HerkunftsartKatalogEintrag[]{
@@ -334,7 +334,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Hauptschulabschluss nach Klasse 10
 	 */
 	HA10(new HerkunftsartKatalogEintrag[]{
@@ -349,7 +349,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Mittlerer Schulabschluss
 	 */
 	MSA(new HerkunftsartKatalogEintrag[]{
@@ -364,7 +364,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Mittlerer Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)
 	 */
 	MSA_Q(new HerkunftsartKatalogEintrag[]{
@@ -379,7 +379,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Fachhochschulreife (schulischer Teil)
 	 */
 	FHR_S(new HerkunftsartKatalogEintrag[]{
@@ -394,7 +394,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Mittlerer Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (Qualifikationsphase 1)
 	 */
 	MSA_Q1(new HerkunftsartKatalogEintrag[]{
@@ -406,7 +406,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Fachhochschulreife
 	 */
 	FHR(new HerkunftsartKatalogEintrag[]{
@@ -421,7 +421,7 @@ public enum Herkunftsarten {
 	}),
 		
 		
-	/** 
+	/**
 	 * Allgemeine Hochschulreife
 	 */
 	AHR(new HerkunftsartKatalogEintrag[]{
@@ -433,7 +433,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Hochschulreife für das Land NRW
 	 */
 	HR_NRW(new HerkunftsartKatalogEintrag[]{
@@ -445,7 +445,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Abschlusszeugnis (Förderschule, Förderschwerpunkt geistige Entwicklung)
 	 */
 	ABSCHLUSS_FOEG(new HerkunftsartKatalogEintrag[]{
@@ -457,7 +457,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Abschlusszeugnis (Förderschule, Förderschwerpunkt Lernen)
 	 */
 	ABSCHLUSS_FOEL(new HerkunftsartKatalogEintrag[]{
@@ -469,7 +469,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe
 	 */
 	HA9_Q(new HerkunftsartKatalogEintrag[]{
@@ -481,7 +481,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Versetzung nach Klasse 11 FO
 	 */
 	VS_11(new HerkunftsartKatalogEintrag[]{
@@ -493,7 +493,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Fachgebundene Hochschulreife
 	 */
 	FGHR(new HerkunftsartKatalogEintrag[]{
@@ -505,7 +505,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)
 	 */
 	HA9_FOE(new HerkunftsartKatalogEintrag[]{
@@ -516,7 +516,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Herkunft noch unbekannt (nur Gliederung A12, A13)
 	 */
 	UNBEKANNT(new HerkunftsartKatalogEintrag[]{
@@ -527,7 +527,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Versetzte bzw. vorgerückte Schüler/-innen / Höheres Semester
 	 */
 	VERSETZT(new HerkunftsartKatalogEintrag[]{
@@ -542,7 +542,7 @@ public enum Herkunftsarten {
 	}),
 	
 	
-	/** 
+	/**
 	 * Wiederholer / Gleiches oder niedrigeres Semester
 	 */
 	WIEDERHOLER(new HerkunftsartKatalogEintrag[]{
@@ -557,7 +557,7 @@ public enum Herkunftsarten {
 	}),
 
 
-	/** 
+	/**
 	 * Sonstige Qualifikation (bei Schüler/-innen, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind)
 	 */
 	SONSTIGE_QUALIFIKATION(new HerkunftsartKatalogEintrag[]{
@@ -596,11 +596,11 @@ public enum Herkunftsarten {
 
 	/**
 	 * Erzeugt eine neue Herkunftsart in der Aufzählung.
-	 * 
+	 *
 	 * @param historie   die Historie der Herkunftsart, welches ein Array von {@link HerkunftsartKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private Herkunftsarten(@NotNull HerkunftsartKatalogEintrag@NotNull[] historie) {
+	private Herkunftsarten(final @NotNull HerkunftsartKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -610,8 +610,8 @@ public enum Herkunftsarten {
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			this.bezeichnungen[i] = new Vector<>();
-			for (@NotNull HerkunftsartKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
-				Schulform sf = Schulform.getByKuerzel(bez.schulform);
+			for (final @NotNull HerkunftsartKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
+				final Schulform sf = Schulform.getByKuerzel(bez.schulform);
 				if (sf != null)
 					this.schulformen[i].add(sf);
 				this.bezeichnungen[i].add(bez.bezeichnung);
@@ -628,7 +628,7 @@ public enum Herkunftsarten {
 	 */
 	private static @NotNull HashMap<@NotNull String, Herkunftsarten> getMapHerkunftsartByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (Herkunftsarten j : Herkunftsarten.values())
+			for (final Herkunftsarten j : Herkunftsarten.values())
 				if (!_mapKuerzel.containsKey(j.daten.kuerzel))
 					_mapKuerzel.put(j.daten.kuerzel, j);
 		return _mapKuerzel;
@@ -643,8 +643,8 @@ public enum Herkunftsarten {
 	 */
 	private static @NotNull HashMap<@NotNull Long, Herkunftsarten> getMapHerkunftsartByID() {
 		if (_mapID.size() == 0)
-			for (Herkunftsarten j : Herkunftsarten.values()) {
-				for (HerkunftsartKatalogEintrag k : j.historie)
+			for (final Herkunftsarten j : Herkunftsarten.values()) {
+				for (final HerkunftsartKatalogEintrag k : j.historie)
 					_mapID.put(k.id, j);
 			}
 		return _mapID;
@@ -653,42 +653,42 @@ public enum Herkunftsarten {
 
 	/**
 	 * Liefert die Herkunftsart anhand des übergebenen Kürzels zurück. 
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Herkunftsart
-	 * 
+	 *
 	 * @return die Herkunftsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static Herkunftsarten getByKuerzel(String kuerzel) {
+	public static Herkunftsarten getByKuerzel(final String kuerzel) {
 		return getMapHerkunftsartByKuerzel().get(kuerzel);
 	}
 
 
 	/**
 	 * Liefert die Herkunftsart anhand der übergebenen ID zurück. 
-	 * 
+	 *
 	 * @param id   die ID der Herkunftsart
-	 * 
+	 *
 	 * @return die Herkunftsart oder null, falls die ID ungültig ist
 	 */
-	public static Herkunftsarten getByID(Long id) {
+	public static Herkunftsarten getByID(final Long id) {
 		return getMapHerkunftsartByID().get(id);
 	}
 
 	
 	/**
 	 * Liefert die Bezeichnung der Herkunftsart für die angebenene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die Bezeichung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
-	public String getBezeichnung(Schulform schulform) {
+	public String getBezeichnung(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return null;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				HerkunftsartKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
-				String sfKuerzel = bez.schulform;
+				final HerkunftsartKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
+				final String sfKuerzel = bez.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return bez.bezeichnung;
 			}			
@@ -700,7 +700,7 @@ public enum Herkunftsarten {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Herkunftsart vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	public @NotNull List<Schulform> getSchulformen() {
@@ -710,18 +710,18 @@ public enum Herkunftsarten {
 
 	/**
 	 * Liefert alle zulässigen Herkunftsarten für die angegebene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
-	public static @NotNull List<Herkunftsarten> get(Schulform schulform) {
-		@NotNull Vector<Herkunftsarten> result = new Vector<>();
+	public static @NotNull List<Herkunftsarten> get(final Schulform schulform) {
+		final @NotNull Vector<Herkunftsarten> result = new Vector<>();
 		if (schulform == null)
 			return result;
-		@NotNull Herkunftsarten@NotNull[] herkunftsarten = Herkunftsarten.values();
+		final @NotNull Herkunftsarten@NotNull[] herkunftsarten = Herkunftsarten.values();
 		for (int i = 0; i < herkunftsarten.length; i++) {
-			@NotNull Herkunftsarten herkunftsart = herkunftsarten[i];
+			final @NotNull Herkunftsarten herkunftsart = herkunftsarten[i];
 			if (herkunftsart.hasSchulform(schulform))
 				result.add(herkunftsart);
 		}
@@ -732,17 +732,17 @@ public enum Herkunftsarten {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob die Schulform diese Herkunftsart
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
-	public boolean hasSchulformByKuerzel(String kuerzel) {
+	public boolean hasSchulformByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}			
@@ -753,17 +753,17 @@ public enum Herkunftsarten {
 
 	/**
 	 * Prüft, ob die Schulform diese Herkunftsart hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
-	public boolean hasSchulform(Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}			

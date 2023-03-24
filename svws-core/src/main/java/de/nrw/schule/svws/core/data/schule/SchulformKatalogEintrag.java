@@ -24,7 +24,7 @@ public class SchulformKatalogEintrag {
 	@Schema(required = true, description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="GE")
 	public @NotNull String kuerzel = "";
 	
-	/** 
+	/**
 	 * Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar 
 	 * in der SVWS-DB bei der Schule gespeichert, aber dort aus dem Schulverzeichnis genommen.
 	 * Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels 
@@ -71,7 +71,7 @@ public class SchulformKatalogEintrag {
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulformKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String nummer, @NotNull String bezeichnung, boolean hatGymOb, Integer gueltigVon, Integer gueltigBis) {
+	public SchulformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer, final @NotNull String bezeichnung, final boolean hatGymOb, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.nummer = nummer;

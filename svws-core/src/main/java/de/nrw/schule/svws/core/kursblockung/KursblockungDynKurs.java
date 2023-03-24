@@ -67,9 +67,9 @@ public class KursblockungDynKurs {
 	 * @param pFachart             Die zu diesem Kurs zugehörige Fachart.
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInternalID          Eine interne ID für schnellen Zugriff. */
-	public KursblockungDynKurs(@NotNull Random pRandom, @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
-			int pSchienenLageFixiert, @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei, long pKursID,
-			@NotNull KursblockungDynFachart pFachart, @NotNull Logger pLogger, int pInternalID) {
+	public KursblockungDynKurs(final @NotNull Random pRandom, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenLage,
+			final int pSchienenLageFixiert, final @NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei, final long pKursID,
+			final @NotNull KursblockungDynFachart pFachart, final @NotNull Logger pLogger, final int pInternalID) {
 		_random = pRandom;
 		schienenLage = pSchienenLage;
 		schienenLageFixiert = pSchienenLageFixiert;
@@ -147,8 +147,8 @@ public class KursblockungDynKurs {
 	 * 
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert. */
 	public @NotNull int[] gibSchienenLage() {
-		int length = schienenLage.length;
-		@NotNull int[] lage = new int[length];
+		final int length = schienenLage.length;
+		final @NotNull int[] lage = new int[length];
 		for (int i = 0; i < length; i++) {
 			lage[i] = schienenLage[i].gibNr();
 		}
@@ -182,13 +182,13 @@ public class KursblockungDynKurs {
 	 * 
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde. */
-	boolean gibIstSchieneGesperrt(int pSchiene) {
-		for (@NotNull KursblockungDynSchiene s : schienenLage) {
+	boolean gibIstSchieneGesperrt(final int pSchiene) {
+		for (final @NotNull KursblockungDynSchiene s : schienenLage) {
 			if (s.gibNr() == pSchiene) {
 				return false;
 			}
 		}
-		for (@NotNull KursblockungDynSchiene s : schienenFrei) {
+		for (final @NotNull KursblockungDynSchiene s : schienenFrei) {
 			if (s.gibNr() == pSchiene) {
 				return false;
 			}
@@ -200,7 +200,7 @@ public class KursblockungDynKurs {
 	 * 
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs fixiert wurde. */
-	boolean gibIstSchieneFixiert(int pSchiene) {
+	boolean gibIstSchieneFixiert(final int pSchiene) {
 		for (int iLage = 0; iLage < schienenLageFixiert; iLage++) {
 			if (schienenLage[iLage].gibNr() == pSchiene) {
 				return true;
@@ -213,7 +213,7 @@ public class KursblockungDynKurs {
 	 * 
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, falls der Kurs gerade in Schiene pSchiene ist. */
-	boolean gibIstInSchiene(int pSchiene) {
+	boolean gibIstInSchiene(final int pSchiene) {
 		for (int i = 0; i < schienenLage.length; i++)
 			if (schienenLage[i].gibNr() == pSchiene)
 				return true;
@@ -225,7 +225,7 @@ public class KursblockungDynKurs {
 	 * @param  schieneVon Der Anfang des Intervalls (inklusive).
 	 * @param  schieneBis Das Ende des Intervalls (inklusive).
 	 * @return            TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet. */
-	boolean gibIstImSchienenIntervall(int schieneVon, int schieneBis) {
+	boolean gibIstImSchienenIntervall(final int schieneVon, final int schieneBis) {
 		for (int i = 0; i < schienenLage.length; i++)
 			if ((schienenLage[i].gibNr() >= schieneVon) && (schienenLage[i].gibNr() <= schieneBis))
 				return true;
@@ -237,7 +237,7 @@ public class KursblockungDynKurs {
 	 * 
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf. */
-	public boolean gibIstSchieneFrei(int pSchiene) {
+	public boolean gibIstSchieneFrei(final int pSchiene) {
 		for (int i = 0; i < schienenFrei.length; i++) {
 			if (schienenFrei[i].gibNr() == pSchiene) {
 				return true;
@@ -318,9 +318,9 @@ public class KursblockungDynKurs {
 		// Es gilt: (schienenLageFixiert < schienenLage.length)
 		// ______&& (schienenFrei.length > 0)
 		for (int i1 = schienenLageFixiert; i1 < schienenLage.length; i1++) {
-			int i2 = _random.nextInt(schienenFrei.length);
-			@NotNull KursblockungDynSchiene schiene1 = schienenLage[i1];
-			@NotNull KursblockungDynSchiene schiene2 = schienenFrei[i2];
+			final int i2 = _random.nextInt(schienenFrei.length);
+			final @NotNull KursblockungDynSchiene schiene1 = schienenLage[i1];
+			final @NotNull KursblockungDynSchiene schiene2 = schienenFrei[i2];
 			schiene1.aktionKursEntfernen(this);
 			schiene2.aktionKursHinzufuegen(this);
 			schienenLage[i1] = schiene2;
@@ -331,16 +331,16 @@ public class KursblockungDynKurs {
 	/** Setzt die Lage des Kurses auf die in der Liste übergebenen Schienen.
 	 * 
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll. */
-	public void aktionVerteileAufSchienen(@NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
+	public void aktionVerteileAufSchienen(final @NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
 
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
-			@NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
+			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
 			if (pSchienenWahl.contains(schieneL.gibNr())) {
 				continue;
 			}
 			// SchieneL muss raus.
 			for (int iFrei = 0; iFrei < schienenFrei.length; iFrei++) {
-				@NotNull KursblockungDynSchiene schieneF = schienenFrei[iFrei];
+				final @NotNull KursblockungDynSchiene schieneF = schienenFrei[iFrei];
 				if (pSchienenWahl.contains(schieneF.gibNr())) {
 					// Tauschpartner schieneF gefunden.
 					schieneL.aktionKursEntfernen(this);
@@ -358,18 +358,18 @@ public class KursblockungDynKurs {
 	/** Setzt die Lage des Kurses auf die übergebene Schiene.
 	 * 
 	 * @param pSchiene Die Schiene (0-indiziert), in der der Kurs liegen soll. */
-	void aktionSetzeInSchiene(int pSchiene) {
+	void aktionSetzeInSchiene(final int pSchiene) {
 
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
 			// Bereits in Schiene? --> Abbruch
-			@NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
+			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
 			if (schieneL.gibNr() == pSchiene) {
 				return;
 			}
 
 			// Suche Tauschpartner-Schiene.
 			for (int iFrei = 0; iFrei < schienenFrei.length; iFrei++) {
-				@NotNull KursblockungDynSchiene schieneF = schienenFrei[iFrei];
+				final @NotNull KursblockungDynSchiene schieneF = schienenFrei[iFrei];
 				if (pSchiene == schieneF.gibNr()) {
 					// Tauschpartner schieneF gefunden.
 					schieneL.aktionKursEntfernen(this);
@@ -419,11 +419,11 @@ public class KursblockungDynKurs {
 	/** Debug Ausgabe. Nur für Testzwecke.
 	 * 
 	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen. */
-	void debug(@NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
+	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
 		System.out.println(toString() + " --> " + schuelerAnz + " SuS.");
-		for (KursblockungDynSchueler s : schuelerArr) {
-			@NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
-			for (KursblockungDynKurs kurs : kurse) {
+		for (final KursblockungDynSchueler s : schuelerArr) {
+			final @NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
+			for (final KursblockungDynKurs kurs : kurse) {
 				if (kurs == this) {
 					System.out.println("        " + s.gibDatenbankID());
 				}

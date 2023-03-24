@@ -51,7 +51,7 @@ public class KAOABerufsfeldEintrag {
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOABerufsfeldEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, Integer gueltigVon, Integer gueltigBis) {
+	public KAOABerufsfeldEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

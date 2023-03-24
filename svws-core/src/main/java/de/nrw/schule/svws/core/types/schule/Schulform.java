@@ -132,7 +132,7 @@ public enum Schulform {
 	 * 
 	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist  
 	 */
-	private Schulform(@NotNull SchulformKatalogEintrag@NotNull[] historie) {
+	private Schulform(final @NotNull SchulformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -147,7 +147,7 @@ public enum Schulform {
 	 */
 	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByKuerzel() {
 		if (_schulformen.size() == 0) {
-			for (Schulform s : Schulform.values()) {
+			for (final Schulform s : Schulform.values()) {
 				if (s.daten != null)
 					_schulformen.put(s.daten.kuerzel, s);
 			}
@@ -164,7 +164,7 @@ public enum Schulform {
 	 */
 	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByNummer() {
 		if (_schulformenNummer.size() == 0)
-			for (Schulform s : Schulform.values())
+			for (final Schulform s : Schulform.values())
 				if ((s.daten != null) && (s.daten.nummer != null))
 					_schulformenNummer.put(s.daten.nummer, s);				
 		return _schulformenNummer;
@@ -178,7 +178,7 @@ public enum Schulform {
 	 * 
 	 * @return die Schulform oder null, falls das Kürzel ungültig ist
 	 */
-	public static Schulform getByKuerzel(String kuerzel) {
+	public static Schulform getByKuerzel(final String kuerzel) {
 		return getMapSchulformenByKuerzel().get(kuerzel);
 	}
 	
@@ -190,7 +190,7 @@ public enum Schulform {
 	 * 
 	 * @return die Schulform oder null, falls keine Schulform mit dieser Nummer vorhanden ist
 	 */
-	public static Schulform getByNummer(String nummer) {
+	public static Schulform getByNummer(final String nummer) {
 		return getMapSchulformenByNummer().get(nummer);
 	}
 
@@ -203,8 +203,8 @@ public enum Schulform {
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static @NotNull List<@NotNull Schulform> get() {
-		@NotNull Vector<@NotNull Schulform> result = new Vector<>();
-		for (@NotNull Schulform sf : Schulform.values())
+		final @NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		for (final @NotNull Schulform sf : Schulform.values())
 			if ((sf.daten != null) && (sf.daten.nummer != null))
 				result.add(sf);
 		return result;
@@ -216,8 +216,8 @@ public enum Schulform {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben. 
 	 */
 	public static @NotNull List<@NotNull Schulform> getMitGymOb() {
-		@NotNull Vector<@NotNull Schulform> result = new Vector<>();
-		for (@NotNull Schulform sf : Schulform.values())
+		final @NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		for (final @NotNull Schulform sf : Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);
 		return result;		

@@ -129,11 +129,11 @@ public class FachKatalogEintrag {
 	 *                              "schon immer gültig war"
 	 * @param gueltigBis            das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public FachKatalogEintrag(long id, 	@NotNull String kuerzelASD, @NotNull String bezeichnung, @NotNull String kuerzel, 
-			Integer aufgabenfeld, Fachgruppe fachgruppe, Jahrgaenge abJahrgang, boolean istFremdsprache, boolean istHKFS, 
-			boolean istAusRegUFach, boolean istErsatzPflichtFS, boolean istKonfKoop, boolean nurSII, boolean exportASD,
-			@NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
-			Integer gueltigVon, Integer gueltigBis) {
+	public FachKatalogEintrag(final long id, 	final @NotNull String kuerzelASD, final @NotNull String bezeichnung, final @NotNull String kuerzel, 
+			final Integer aufgabenfeld, final Fachgruppe fachgruppe, final Jahrgaenge abJahrgang, final boolean istFremdsprache, final boolean istHKFS, 
+			final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istKonfKoop, final boolean nurSII, final boolean exportASD,
+			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzelASD = kuerzelASD;
 		this.bezeichnung = bezeichnung;
@@ -148,13 +148,13 @@ public class FachKatalogEintrag {
 		this.istKonfKoop = istKonfKoop;
 		this.nurSII = nurSII;
 		this.exportASD = exportASD;
-		for (@NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
-			SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
-			@NotNull Schulform sf = zul.a;
+		for (final @NotNull Pair<@NotNull Schulform, Schulgliederung> zul : zulaessig) {
+			final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
+			final @NotNull Schulform sf = zul.a;
 			if (sf.daten == null)
 				continue;
 			sfsgl.schulform = sf.daten.kuerzel;
-			Schulgliederung sgl = zul.b;
+			final Schulgliederung sgl = zul.b;
 			sfsgl.gliederung = ((sgl == null) || (sgl.daten == null)) ? null : sgl.daten.kuerzel;
 			this.zulaessig.add(sfsgl);
 		}

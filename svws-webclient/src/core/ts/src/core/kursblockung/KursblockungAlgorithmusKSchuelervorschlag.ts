@@ -34,8 +34,8 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	public berechne(pEndzeit : number) : void {
-		let current : number = System.currentTimeMillis();
-		let halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
+		const current : number = System.currentTimeMillis();
+		const halbzeit : number = current + Math.trunc((pEndzeit - current) / 2);
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -59,7 +59,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-		let compare : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+		const compare : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
 		if (compare >= 0) {
 			this.dynDaten.aktionZustandSpeichernK();
 			return compare > 0;
@@ -77,7 +77,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			let cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+			const cmp : number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
 			if (cmp > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;

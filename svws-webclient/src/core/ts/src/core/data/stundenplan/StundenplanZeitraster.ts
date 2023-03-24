@@ -52,11 +52,11 @@ export class StundenplanZeitraster extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string"))) {
-			let id : number = __param0 as number;
-			let wochentag : number = __param1 as number;
-			let unterrichtstunde : number = __param2 as number;
-			let stundenbeginn : string = __param3;
-			let stundenende : string = __param4;
+			const id : number = __param0 as number;
+			const wochentag : number = __param1 as number;
+			const unterrichtstunde : number = __param2 as number;
+			const stundenbeginn : string = __param3;
+			const stundenende : string = __param4;
 			this.id = id;
 			this.wochentag = wochentag;
 			this.unterrichtstunde = unterrichtstunde;

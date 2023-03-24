@@ -7,7 +7,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	/**
 	 * Die Datenbank-ID des Raumes.
 	 */
-	private _id : number = 0;
+	private readonly _id : number;
 
 	/**
 	 * Das Kürzel des Raumes. Beispielsweise 'E01'.

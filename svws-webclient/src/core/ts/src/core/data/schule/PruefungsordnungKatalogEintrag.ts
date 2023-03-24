@@ -82,16 +82,16 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && (typeof __param7 === "string")) && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let kuerzelSchild : string | null = __param2;
-			let bezeichnung : string = __param3;
-			let gvJahr : number | null = __param4;
-			let gvNr : string = __param5;
-			let gvSeiten : string = __param6;
-			let link : string = __param7;
-			let gueltigVon : number | null = __param8;
-			let gueltigBis : number | null = __param9;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const kuerzelSchild : string | null = __param2;
+			const bezeichnung : string = __param3;
+			const gvJahr : number | null = __param4;
+			const gvNr : string = __param5;
+			const gvSeiten : string = __param6;
+			const link : string = __param7;
+			const gueltigVon : number | null = __param8;
+			const gueltigBis : number | null = __param9;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.kuerzelSchild = kuerzelSchild;

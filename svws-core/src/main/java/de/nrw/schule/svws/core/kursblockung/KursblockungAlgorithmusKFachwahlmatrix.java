@@ -27,7 +27,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKFachwahlmatrix(@NotNull Random pRandom, @NotNull Logger pLogger, @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKFachwahlmatrix(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 	
@@ -40,7 +40,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	 * Der Algorithmus entfernt zunächst alle SuS aus ihren Kursen. Anschließend werden die Kurse zufällig verteilt.
 	 */
 	@Override
-	public void berechne(long pEndzeit) {
+	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) 
 			return;

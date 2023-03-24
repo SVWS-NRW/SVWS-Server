@@ -183,7 +183,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * 
      * @return ein Array mit den Halbjahren des Jahrgangs
      */
-	public static @NotNull GostHalbjahr@NotNull[] getHalbjahreFromJahrgang(@NotNull String jahrgang) {
+	public static @NotNull GostHalbjahr@NotNull[] getHalbjahreFromJahrgang(final @NotNull String jahrgang) {
 		switch (jahrgang) {
 			case "EF":
 				final @NotNull GostHalbjahr@NotNull[] ef = { GostHalbjahr.EF1, GostHalbjahr.EF2 };
@@ -207,7 +207,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * 
      * @return das Halbjahr oder null, falls die ID nicht gültig ist
      */
-	public static GostHalbjahr fromID(Integer id) {
+	public static GostHalbjahr fromID(final Integer id) {
 		if (id == null)
 			return null;
 		switch (id) {
@@ -231,7 +231,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return Das Halbjahr oder eine Exception, falls die ID nicht gültig ist
      * @throws NullPointerException Falls die ID keinem Halbjahr zugeordnet werden kann.
      */
-    public static @NotNull GostHalbjahr fromIDorException(int pGostHalbjahID) throws NullPointerException {
+    public static @NotNull GostHalbjahr fromIDorException(final int pGostHalbjahID) throws NullPointerException {
     	final GostHalbjahr halbjahr = GostHalbjahr.fromID(pGostHalbjahID);
 		if (halbjahr == null)
 			throw new NullPointerException("GostHalbjahr nicht gefunden!");    	
@@ -246,7 +246,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * 
      * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
      */
-	public static GostHalbjahr fromKuerzel(String kuerzel) {
+	public static GostHalbjahr fromKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
@@ -258,7 +258,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * 
      * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
      */
-	public static GostHalbjahr fromKuerzelAlt(String kuerzelAlt) {
+	public static GostHalbjahr fromKuerzelAlt(final String kuerzelAlt) {
 		return getMapByKuerzelAlt().get(kuerzelAlt);
 	}
 
@@ -271,7 +271,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * 
      * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
      */
-	public static GostHalbjahr fromJahrgangUndHalbjahr(String jahrgang, int halbjahr) {
+	public static GostHalbjahr fromJahrgangUndHalbjahr(final String jahrgang, final int halbjahr) {
 		if ((halbjahr != 1) && (halbjahr != 2))
 			return null;
 		switch (jahrgang) {
@@ -293,7 +293,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 * 
 	 * @return das Halbjahr der gymnasialen Oberstufe oder null
 	 */
-	public static GostHalbjahr fromAbiturjahrSchuljahrUndHalbjahr(int abiturjahr, int schuljahr, int halbjahr) {
+	public static GostHalbjahr fromAbiturjahrSchuljahrUndHalbjahr(final int abiturjahr, final int schuljahr, final int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
 		final int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr - 1;
 		return GostHalbjahr.fromID(id);
@@ -312,7 +312,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 * @return das nächste Halbjahr der gymnasialen Oberstufe zur Planung oder null, wenn der 
 	 *         Jahrgang in der Q2.2 ist oder das Abitur bereits abgeschlossen ist.
 	 */
-	public static GostHalbjahr getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(int abiturjahr, int schuljahr, int halbjahr) {
+	public static GostHalbjahr getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(final int abiturjahr, final int schuljahr, final int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
 		int id = ((schuljahr + 3 - abiturjahr) * 2) + halbjahr;
 		if (id < 0)
@@ -329,7 +329,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 * 
 	 * @return das Abiturjahr
 	 */
-	public int getAbiturjahrFromSchuljahr(int schuljahr) {
+	public int getAbiturjahrFromSchuljahr(final int schuljahr) {
 		return schuljahr + 3 - (id / 2);
 	}
 
@@ -342,7 +342,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	 * 
 	 * @return das Schuljahr
 	 */
-	public int getSchuljahrFromAbiturjahr(int abiturjahr) {
+	public int getSchuljahrFromAbiturjahr(final int abiturjahr) {
 		return abiturjahr - 3 + (id / 2);
 	}
 
@@ -378,7 +378,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return true, wenn es sich um die beiden Halbjahre der Einführungsphase handelt
      *         und ansonsten false
      */
-	public static boolean pruefeEinfuehrungsphase(GostHalbjahr... halbjahre) {
+	public static boolean pruefeEinfuehrungsphase(final GostHalbjahr... halbjahre) {
 		if ((halbjahre == null) || (halbjahre.length != 2))
 			return false;
 		return ((halbjahre[0] == GostHalbjahr.EF1) && (halbjahre[0] == GostHalbjahr.EF2)) || 
@@ -395,7 +395,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return true, wenn es sich um die vier Halbjahre der Qualifikationsphase 
      *         handelt und ansonsten false
      */
-	public static boolean pruefeQualifikationsphase(@NotNull GostHalbjahr... halbjahre) {
+	public static boolean pruefeQualifikationsphase(final @NotNull GostHalbjahr... halbjahre) {
 		if ((halbjahre == null) || (halbjahre.length != 4))
 			return false;
 		final @NotNull List<@NotNull GostHalbjahr> list = Arrays.asList(halbjahre);

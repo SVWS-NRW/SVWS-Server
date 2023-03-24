@@ -34,7 +34,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @param pKuerzel               Das Kürzel der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
-	public void addOrException(long pLehrkraftID, @NotNull String pKuerzel) throws NullPointerException {
+	public void addOrException(final long pLehrkraftID, final @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pLehrkraftID) == true)
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!");
 		final StundenplanblockungManagerLehrkraft le = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
@@ -50,7 +50,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @return                       Das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
-	public @NotNull StundenplanblockungManagerLehrkraft getOrException(long pLehrkraftID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerLehrkraft getOrException(final long pLehrkraftID) throws NullPointerException {
 		final StundenplanblockungManagerLehrkraft lehrkraft = _map.get(pLehrkraftID);
 		if (lehrkraft == null)
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!");
@@ -64,7 +64,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
 	 * @return         Liefert eine zufällige Lehrkraft.
 	 */
-	public @NotNull StundenplanblockungManagerLehrkraft getRandomOrException(@NotNull Random pRandom) {
+	public @NotNull StundenplanblockungManagerLehrkraft getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Lehrkräfte!");
@@ -78,7 +78,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
-	public void removeOrException(long pLehrkraftID) throws NullPointerException {
+	public void removeOrException(final long pLehrkraftID) throws NullPointerException {
 		final @NotNull StundenplanblockungManagerLehrkraft lehrkraft = getOrException(pLehrkraftID);
 		_map.remove(pLehrkraftID);
 		_menge.remove(lehrkraft);
@@ -90,7 +90,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @return              TRUE, falls die Lehrkraft-ID existiert.
 	 */
-	public boolean exists(long pLehrkraftID) {
+	public boolean exists(final long pLehrkraftID) {
 		return _map.containsKey(pLehrkraftID);
 	}
 

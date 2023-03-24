@@ -45,7 +45,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	 * @param historie   die Historie der Typen von Bildungsgängen, welches ein Array von 
 	 *                   {@link BildungsgangTypKatalogEintrag} ist  
 	 */
-	private WeiterbildungskollegBildungsgangTyp(@NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
+	private WeiterbildungskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -61,7 +61,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegBildungsgangTyp> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (WeiterbildungskollegBildungsgangTyp s : WeiterbildungskollegBildungsgangTyp.values()) {
+			for (final WeiterbildungskollegBildungsgangTyp s : WeiterbildungskollegBildungsgangTyp.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -77,7 +77,7 @@ public enum WeiterbildungskollegBildungsgangTyp {
 	 * 
 	 * @return der Typ von Bildungsgängen oder null, falls das Kürzel ungültig ist
 	 */
-	public static WeiterbildungskollegBildungsgangTyp getByKuerzel(String kuerzel) {
+	public static WeiterbildungskollegBildungsgangTyp getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

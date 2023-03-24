@@ -126,28 +126,28 @@ export class Logger extends JavaObject {
 	 */
 	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
+			const data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++) {
-				let c : Consumer<LogData> = this.consumer.get(i);
+				const c : Consumer<LogData> = this.consumer.get(i);
 				if (c === null)
 					continue;
 				c.accept(data);
 			}
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let indent : number = __param1 as number;
-			let text : string = __param2;
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const indent : number = __param1 as number;
+			const text : string = __param2;
 			this.log(new LogData(level, indent, false, text));
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let text : string = __param1;
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const text : string = __param1;
 			this.log(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			let indent : number = __param0 as number;
-			let text : string = __param1;
+			const indent : number = __param0 as number;
+			const text : string = __param1;
 			this.log(this.defaultLevel, indent, text);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let text : string = __param0;
+			const text : string = __param0;
 			this.log(this.defaultLevel, text);
 		} else throw new Error('invalid method overload');
 	}
@@ -194,20 +194,20 @@ export class Logger extends JavaObject {
 	 */
 	public logLn(__param0 : LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let indent : number = __param1 as number;
-			let text : string = __param2;
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const indent : number = __param1 as number;
+			const text : string = __param2;
 			this.log(new LogData(level, indent, true, text));
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let text : string = __param1;
+			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+			const text : string = __param1;
 			this.logLn(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			let indent : number = __param0 as number;
-			let text : string = __param1;
+			const indent : number = __param0 as number;
+			const text : string = __param1;
 			this.logLn(this.defaultLevel, indent, text);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let text : string = __param0;
+			const text : string = __param0;
 			this.logLn(this.defaultLevel, text);
 		} else throw new Error('invalid method overload');
 	}

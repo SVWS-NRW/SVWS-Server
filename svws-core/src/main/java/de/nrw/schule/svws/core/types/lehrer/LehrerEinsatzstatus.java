@@ -52,7 +52,7 @@ public enum LehrerEinsatzstatus {
 	 * 
 	 * @param historie   die Historie des Einsatzstatus, welches ein Array von {@link LehrerKatalogEinsatzstatusEintrag} ist  
 	 */
-	private LehrerEinsatzstatus(@NotNull LehrerKatalogEinsatzstatusEintrag@NotNull[] historie) {
+	private LehrerEinsatzstatus(final @NotNull LehrerKatalogEinsatzstatusEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -67,7 +67,7 @@ public enum LehrerEinsatzstatus {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerEinsatzstatus> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
+			for (final LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -81,7 +81,7 @@ public enum LehrerEinsatzstatus {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerEinsatzstatus> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
+			for (final LehrerEinsatzstatus g : LehrerEinsatzstatus.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -94,7 +94,7 @@ public enum LehrerEinsatzstatus {
 	 * 
 	 * @return der Einsatzstatus oder null, falls die ID ungültig ist
 	 */
-	public static LehrerEinsatzstatus getByID(long id) {
+	public static LehrerEinsatzstatus getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -106,7 +106,7 @@ public enum LehrerEinsatzstatus {
 	 * 
 	 * @return der Einsatzstatus oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerEinsatzstatus getByKuerzel(String kuerzel) {
+	public static LehrerEinsatzstatus getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

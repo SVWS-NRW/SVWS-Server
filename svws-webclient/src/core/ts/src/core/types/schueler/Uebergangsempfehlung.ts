@@ -91,7 +91,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Uebergangsempfehlung | null> {
 		if (Uebergangsempfehlung._mapKuerzel.size() === 0) {
-			for (let s of Uebergangsempfehlung.values()) {
+			for (const s of Uebergangsempfehlung.values()) {
 				if (s.daten !== null)
 					Uebergangsempfehlung._mapKuerzel.put(s.daten.kuerzel, s);
 			}

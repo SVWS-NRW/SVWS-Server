@@ -341,7 +341,7 @@ export class Note extends JavaObject {
 	public static fromKuerzel(kuerzel : string | null) : Note {
 		if (kuerzel === null)
 			return Note.KEINE;
-		let kuerzelUppercase : string | null = kuerzel.toUpperCase();
+		const kuerzelUppercase : string | null = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
 			case "6": {
 				return Note.UNGENUEGEND;

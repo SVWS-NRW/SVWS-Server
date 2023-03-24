@@ -84,7 +84,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByID.size() === 0)
-			for (let l of LehrerLehrbefaehigungAnerkennung.values())
+			for (const l of LehrerLehrbefaehigungAnerkennung.values())
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByID.put(l.daten.id, l);
 		return LehrerLehrbefaehigungAnerkennung._anerkennungenByID;
 	}
@@ -97,7 +97,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.size() === 0)
-			for (let l of LehrerLehrbefaehigungAnerkennung.values())
+			for (const l of LehrerLehrbefaehigungAnerkennung.values())
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
 		return LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel;
 	}

@@ -19,7 +19,7 @@ class AVLMapSubKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNu
 	/**
 	 * Die {@link AVLMap} auf der diese Sup-Map operiert.
 	 */
-	private @NotNull final AVLMapSubMap<@NotNull K, @NotNull V> _sub;
+	private final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> _sub;
 
 	/**
 	 * Der aktuelle Eintrag. Ein NULL-Wert bedeutet, dass das Element bereits entfernt wurde oder der Iterator auf
@@ -38,7 +38,7 @@ class AVLMapSubKeySetIterator<@NotNull K, @NotNull V> implements Iterator<@NotNu
 	 * 
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
-	AVLMapSubKeySetIterator(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubKeySetIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.bcGetFirstEntryAsNode();

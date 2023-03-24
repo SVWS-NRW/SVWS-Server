@@ -209,7 +209,7 @@ public enum KAOAMerkmal {
 	 * 
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist  
 	 */
-	private KAOAMerkmal(@NotNull KAOAMerkmalEintrag@NotNull[] historie) {
+	private KAOAMerkmal(final @NotNull KAOAMerkmalEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -223,7 +223,7 @@ public enum KAOAMerkmal {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAMerkmal> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (KAOAMerkmal g : KAOAMerkmal.values())
+			for (final KAOAMerkmal g : KAOAMerkmal.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -237,7 +237,7 @@ public enum KAOAMerkmal {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAMerkmal> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (KAOAMerkmal g : KAOAMerkmal.values())
+			for (final KAOAMerkmal g : KAOAMerkmal.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -250,7 +250,7 @@ public enum KAOAMerkmal {
 	 * 
 	 * @return das Merkmal oder null, falls die ID ungültig ist
 	 */
-	public static KAOAMerkmal getByID(long id) {
+	public static KAOAMerkmal getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -262,7 +262,7 @@ public enum KAOAMerkmal {
 	 * 
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAMerkmal getByKuerzel(String kuerzel) {
+	public static KAOAMerkmal getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

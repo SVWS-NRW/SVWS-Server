@@ -36,7 +36,7 @@ public class LogData implements Comparable<LogData> {
      * @param newLine   gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht
      * @param text      der Text der Log-Information
      */
-    public LogData(@NotNull final LogLevel level, final int indent, final boolean newLine, @NotNull final String text) {
+    public LogData(final @NotNull LogLevel level, final int indent, final boolean newLine, final @NotNull String text) {
         this.time = System.currentTimeMillis();
         this.level = level;
         this.indent = (indent < 0) ? 0 : indent;
@@ -55,7 +55,7 @@ public class LogData implements Comparable<LogData> {
      *         Log-Information später geloggt wurde 
      */
     @Override
-    public int compareTo(@NotNull final LogData other) {
+    public int compareTo(final @NotNull LogData other) {
         // TODO compare by time (Long.compare(this.time, other.time)), then by level, then by newLine an then by text
         if (this.time < other.time)
             return -1;
@@ -81,7 +81,7 @@ public class LogData implements Comparable<LogData> {
      * 
      * @param indent   der Wert, um den die Einrückung erhöht wird. 
      */
-    public void addIndent(int indent) {
+    public void addIndent(final int indent) {
     	this.indent += indent;
     }
     
@@ -125,7 +125,7 @@ public class LogData implements Comparable<LogData> {
 	public @NotNull String getText() {
 		if (indent <= 0)
 			return text;
-		char[] indentChars = new char[indent];
+		final char[] indentChars = new char[indent];
 		Arrays.fill(indentChars, ' ');
 		return new String(indentChars) + text;
 	}

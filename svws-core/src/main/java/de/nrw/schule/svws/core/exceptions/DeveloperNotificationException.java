@@ -18,7 +18,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 * 
 	 * @param pFehlermeldung Eine Beschreibung des Fehlers, die dem User hilft die Ursache des Fehlers zu beheben.
 	 */
-	public DeveloperNotificationException(@NotNull String pFehlermeldung) {
+	public DeveloperNotificationException(final @NotNull String pFehlermeldung) {
 		super(pFehlermeldung);
 	}
 

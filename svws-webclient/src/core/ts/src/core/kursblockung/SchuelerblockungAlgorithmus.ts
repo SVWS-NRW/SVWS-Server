@@ -14,10 +14,10 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 
 	public handle(pInput : SchuelerblockungInput) : SchuelerblockungOutput {
 		this.logger.modifyIndent(+4);
-		let seed : number = new Random().nextLong();
-		let random : Random = new Random(seed);
+		const seed : number = new Random().nextLong();
+		const random : Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "SchuelerblockungAlgorithmus.handle(): Seed (" + seed + ") verwendet.");
-		let dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, pInput);
+		const dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, pInput);
 		this.logger.modifyIndent(-4);
 		return dynDaten.gibBestesMatching();
 	}

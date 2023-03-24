@@ -267,7 +267,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, HerkunftBildungsgang | null> {
 		if (HerkunftBildungsgang._ebenen.size() === 0) {
-			for (let s of HerkunftBildungsgang.values()) {
+			for (const s of HerkunftBildungsgang.values()) {
 				if (s.daten !== null)
 					HerkunftBildungsgang._ebenen.put(s.daten.kuerzel, s);
 			}

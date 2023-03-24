@@ -28,7 +28,7 @@ public class SatSolver3 extends SatSolverA {
 	/**
 	 * Im Heap werden Variablen gespeichert. Die oberste Variable wird als nächstes gewählt.
 	 */
-	private @NotNull Heap heap;
+	private final @NotNull Heap heap;
 
 	/**
 	 * Die Anzahl an Variablen in den Arrays {@link #vArrayPos und #vArrayNeg}.
@@ -57,7 +57,7 @@ public class SatSolver3 extends SatSolverA {
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	public SatSolver3(@NotNull Random pRandom) {
+	public SatSolver3(final @NotNull Random pRandom) {
 		super();
 		_random = pRandom;
 		heap = new Heap(pRandom);
@@ -68,8 +68,8 @@ public class SatSolver3 extends SatSolverA {
 	}
 
 	@Override
-	public boolean isVarTrue(int pVar) {
-		@NotNull
+	public boolean isVarTrue(final int pVar) {
+		final @NotNull
 		Variable v = getVarOf(pVar);
 		return v.index == -1;
 	}
@@ -81,15 +81,15 @@ public class SatSolver3 extends SatSolverA {
 
 		// Verdopplung aller Arrays, falls kein Platz mehr vorhanden.
 		if (vSize >= vArrayPos.length) {
-			int newSize = vSize * 2;
+			final int newSize = vSize * 2;
 			vArrayPos = Arrays.copyOf(vArrayPos, newSize);
 			vArrayNeg = Arrays.copyOf(vArrayNeg, newSize);
 		}
 
 		// Variable und ihrer Negation erzeugen.
-		@NotNull
+		final @NotNull
 		Variable vPos = new Variable(_random, +vSize);
-		@NotNull
+		final @NotNull
 		Variable vNeg = new Variable(_random, -vSize);
 		vPos.negation = vNeg;
 		vNeg.negation = vPos;
@@ -104,7 +104,7 @@ public class SatSolver3 extends SatSolverA {
 	}
 
 	@Override
-	public void addClause(@NotNull int[] pVars) {
+	public void addClause(final @NotNull int[] pVars) {
 
 		// Eine leere Klausel sollte es bei der Eingabe nicht geben --> Fehler.
 		if (pVars.length == 0) {
@@ -114,9 +114,9 @@ public class SatSolver3 extends SatSolverA {
 		}
 
 		// Doppelte Variablen entfernen und Tautologien ignorieren.
-		@NotNull
+		final @NotNull
 		AVLSet<@NotNull Integer> set = new AVLSet<>();
-		for (int v : pVars) {
+		for (final int v : pVars) {
 			if (set.contains(-v)) {
 				return; // Tautologie gefunden.
 			}
@@ -124,7 +124,7 @@ public class SatSolver3 extends SatSolverA {
 		}
 
 		// Set in LinkedList umwandeln.
-		@NotNull
+		final @NotNull
 		LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
 		while (!set.isEmpty()) {
 			list.addLast(set.pollFirst());
@@ -132,9 +132,9 @@ public class SatSolver3 extends SatSolverA {
 
 		// N-CNF --> 3-CNF
 		while (list.size() > 3) {
-			int x = list.removeFirst();
-			int y = list.removeFirst();
-			int z = createNewVar();
+			final int x = list.removeFirst();
+			final int y = list.removeFirst();
+			final int z = createNewVar();
 			list.addLast(z);
 			// z = x OR y
 			addClause2(-x, z);
@@ -159,8 +159,8 @@ public class SatSolver3 extends SatSolverA {
 	 * 
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 */
-	private void addClause1(int x) {
-		@NotNull
+	private void addClause1(final int x) {
+		final @NotNull
 		Variable varX = getVarOf(x);
 		if (varX.negation == null)
 			throw new NullPointerException();
@@ -168,7 +168,7 @@ public class SatSolver3 extends SatSolverA {
 		heap.remove(varX);
 		heap.remove(varX.negation);
 
-		@NotNull
+		final @NotNull
 		Clause c = new Clause(varX);
 		cSize++;
 
@@ -185,10 +185,10 @@ public class SatSolver3 extends SatSolverA {
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 */
-	private void addClause2(int x, int y) {
-		@NotNull
+	private void addClause2(final int x, final int y) {
+		final @NotNull
 		Variable varX = getVarOf(x);
-		@NotNull
+		final @NotNull
 		Variable varY = getVarOf(y);
 		if ((varX.negation == null) || (varY.negation == null))
 			throw new NullPointerException();
@@ -198,7 +198,7 @@ public class SatSolver3 extends SatSolverA {
 		heap.remove(varX.negation);
 		heap.remove(varY.negation);
 
-		@NotNull
+		final @NotNull
 		Clause c = new Clause(varX, varY);
 		cSize++;
 
@@ -223,12 +223,12 @@ public class SatSolver3 extends SatSolverA {
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 * @param z Das 3. Literal (Variablennummer) der Klausel.
 	 */
-	private void addClause3(int x, int y, int z) {
-		@NotNull
+	private void addClause3(final int x, final int y, final int z) {
+		final @NotNull
 		Variable varX = getVarOf(x);
-		@NotNull
+		final @NotNull
 		Variable varY = getVarOf(y);
-		@NotNull
+		final @NotNull
 		Variable varZ = getVarOf(z);
 		if ((varX.negation == null) || (varY.negation == null) || (varZ.negation == null))
 			throw new NullPointerException();
@@ -240,7 +240,7 @@ public class SatSolver3 extends SatSolverA {
 		heap.remove(varY.negation);
 		heap.remove(varZ.negation);
 
-		@NotNull
+		final @NotNull
 		Clause c = new Clause(varX, varY, varZ);
 		cSize++;
 
@@ -278,15 +278,15 @@ public class SatSolver3 extends SatSolverA {
 	}
 
 	@Override
-	public int solve(long pMaxTimeMillis) {
-		long timeStart = System.currentTimeMillis();
+	public int solve(final long pMaxTimeMillis) {
+		final long timeStart = System.currentTimeMillis();
 
 		// Backtracking-Datenstruktur
-		@NotNull
+		final @NotNull
 		Variable[] backtrackV = new Variable[vSize];
-		@NotNull
+		final @NotNull
 		Variable @NotNull [] backtrackLearn = new Variable[MAX_LEARNED_CLAUSE_SIZE];
-		@NotNull
+		final @NotNull
 		boolean @NotNull [] backtrackB = new boolean[vSize];
 		int index = 0;
 
@@ -306,7 +306,7 @@ public class SatSolver3 extends SatSolverA {
 				for (int i = index; i >= 0; i--) {
 					if (backtrackV[i] != null) {
 						@SuppressWarnings("cast")
-						Variable bvi = (Variable) backtrackV[i];
+						final Variable bvi = (Variable) backtrackV[i];
 						unitpropagation_undo(bvi); // TODO BAR Transpiler Cast Meldung 
 					}
 					backtrackV[i] = null;
@@ -316,7 +316,7 @@ public class SatSolver3 extends SatSolverA {
 
 				// LEARNED SOMETHING?
 				if ((learnClauseMin >= 1) && (learnClauseMin <= MAX_LEARNED_CLAUSE_SIZE)) {
-					@NotNull
+					final @NotNull
 					int[] clause = new int[learnClauseMin];
 					for (int i = 0; i < clause.length; i++) {
 						clause[i] = -backtrackLearn[i].nr;
@@ -326,7 +326,7 @@ public class SatSolver3 extends SatSolverA {
 				}
 
 				// SIMPLIFY
-				int result = simplify();
+				final int result = simplify();
 				if (result != SatSolverA.RESULT_UNKNOWN) {
 					return result;
 				}
@@ -400,7 +400,7 @@ public class SatSolver3 extends SatSolverA {
 		return heap.isEmpty() ? SatSolverA.RESULT_SATISFIABLE : SatSolverA.RESULT_UNSATISFIABLE;
 	}
 
-	private void learnClause(@NotNull Variable[] backtrackV, @NotNull Variable[] backtrackLearn, int size) {
+	private void learnClause(final @NotNull Variable[] backtrackV, final @NotNull Variable[] backtrackLearn, final int size) {
 		if (size < 1) {
 			return;
 		}
@@ -424,7 +424,7 @@ public class SatSolver3 extends SatSolverA {
 			changed = false;
 
 			for (int nr = 1; nr <= vSize; nr++) {
-				Variable varP = vArrayPos[nr];
+				final Variable varP = vArrayPos[nr];
 				if (varP.index < 0) {
 					continue;
 				}
@@ -476,7 +476,7 @@ public class SatSolver3 extends SatSolverA {
 	}
 
 	@SuppressWarnings("unused")
-	private static String fill(int index) {
+	private static String fill(final int index) {
 		String s = "";
 		for (int i = 0; i < index; i++) {
 			s = s + "    ";
@@ -489,8 +489,8 @@ public class SatSolver3 extends SatSolverA {
 	 * 
 	 * @param varP Die Variable, die auf TRUE gesetzt wird.
 	 */
-	private void unitpropagation(@NotNull Variable varP) {
-		Variable varN = varP.negation;
+	private void unitpropagation(final @NotNull Variable varP) {
+		final Variable varN = varP.negation;
 		if (varN == null)
 			throw new NullPointerException();
 
@@ -512,8 +512,8 @@ public class SatSolver3 extends SatSolverA {
 	 * 
 	 * @param varP Die Variable, die von TRUE auf FREI gesetzt wird.
 	 */
-	private void unitpropagation_undo(@NotNull Variable varP) {
-		Variable varN = varP.negation;
+	private void unitpropagation_undo(final @NotNull Variable varP) {
+		final Variable varN = varP.negation;
 		if (varN == null)
 			throw new NullPointerException();
 
@@ -535,15 +535,15 @@ public class SatSolver3 extends SatSolverA {
 	 * @param pDeltaFree Die Veränderung der freien Variablen, relativ zum 2. Index im 2D-Array
 	 *                   {@link Variable#statSatFree}.
 	 */
-	private void unitpropagationHelper(@NotNull LinkedCollection<@NotNull Clause> clauses, int pDeltaSat,
-			int pDeltaFree) {
-		for (@NotNull
+	private void unitpropagationHelper(final @NotNull LinkedCollection<@NotNull Clause> clauses, final int pDeltaSat,
+			final int pDeltaFree) {
+		for (final @NotNull
 		Clause c : clauses) {
-			int sat1 = c.sat;
-			int free1 = c.free;
-			int sat2 = sat1 + pDeltaSat;
-			int free2 = free1 + pDeltaFree;
-			for (@NotNull
+			final int sat1 = c.sat;
+			final int free1 = c.free;
+			final int sat2 = sat1 + pDeltaSat;
+			final int free2 = free1 + pDeltaFree;
+			for (final @NotNull
 			Variable v : c.variables) {
 				v.statSatFree[sat1][free1]--;
 				v.statSatFree[sat2][free2]++;
@@ -561,7 +561,7 @@ public class SatSolver3 extends SatSolverA {
 	 * 
 	 * @return Das zugehörige Variablenobjekt.
 	 */
-	private @NotNull Variable getVarOf(int pNr) {
+	private @NotNull Variable getVarOf(final int pNr) {
 		return (pNr > 0) ? vArrayPos[pNr] : vArrayNeg[-pNr];
 	}
 

@@ -154,7 +154,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzel.size() === 0) {
-			for (let s of SchulabschlussAllgemeinbildend.values()) {
+			for (const s of SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten !== null)
 					SchulabschlussAllgemeinbildend._mapByKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -181,7 +181,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 */
 	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzelStatistik.size() === 0) {
-			for (let s of SchulabschlussAllgemeinbildend.values()) {
+			for (const s of SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten !== null)
 					SchulabschlussAllgemeinbildend._mapByKuerzelStatistik.put(s.daten.kuerzelStatistik, s);
 			}
@@ -212,7 +212,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 		if (str === null)
 			return false;
 		try {
-			let other : SchulabschlussAllgemeinbildend | null = SchulabschlussAllgemeinbildend.valueOf(str);
+			const other : SchulabschlussAllgemeinbildend | null = SchulabschlussAllgemeinbildend.valueOf(str);
 			return JavaObject.equalsTranspiler(this, (other));
 		} catch(e) {
 			return false;

@@ -60,10 +60,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			this._size = 0;
 			this._modCount = 0;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null))) {
-			let c : LinkedCollection<E> | null = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+			const c : LinkedCollection<E> | null = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
 			this._size = 0;
 			this._modCount = 0;
-			let iter : JavaIterator<E> = c.iterator();
+			const iter : JavaIterator<E> = c.iterator();
 			while (iter.hasNext())
 				this.add(iter.next());
 			this._modCount = c._modCount;
@@ -81,7 +81,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public contains(obj : unknown | null) : boolean {
 		if (this.isEmpty())
 			return false;
-		let iter : JavaIterator<E> = this.iterator();
+		const iter : JavaIterator<E> = this.iterator();
 		while (iter.hasNext())
 			if (JavaObject.equalsTranspiler(iter.next(), (obj)))
 				return true;
@@ -103,19 +103,19 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		if ((typeof __param0 === "undefined")) {
 			if (this._size === 0)
 				return Array(0).fill(null);
-			let array : Array<E> = Array(this._size).fill(null);
-			let iter : JavaIterator<E> = this.iterator();
+			const array : Array<E> = Array(this._size).fill(null);
+			const iter : JavaIterator<E> = this.iterator();
 			for (let i : number = 0; i < this._size; i++) {
 				array[i] = iter.next();
 			}
 			return array;
 		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
-			let a : Array<T> = __param0;
+			const a : Array<T> = __param0;
 			if (a.length < this._size)
 				return this.toArray();
-			let iter : JavaIterator<E> = this.iterator();
+			const iter : JavaIterator<E> = this.iterator();
 			for (let i : number = 0; i < this._size; i++) {
-				let e : E = iter.next();
+				const e : E = iter.next();
 				a[i] = e as unknown as T;
 			}
 			Arrays.fill(a, this._size, a.length, null);
@@ -126,7 +126,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public add(e : E | null) : boolean {
 		if (e === null)
 			return false;
-		let newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
+		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
 		if ((this._head === null) || (this._tail === null)) {
 			this._head = newElem;
 			this._tail = newElem;
@@ -152,8 +152,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	private removeElement(elem : LinkedCollectionElement<E> | null) : boolean {
 		if (elem === null)
 			return false;
-		let prev : LinkedCollectionElement<E> | null = elem.getPrev();
-		let next : LinkedCollectionElement<E> | null = elem.getNext();
+		const prev : LinkedCollectionElement<E> | null = elem.getPrev();
+		const next : LinkedCollectionElement<E> | null = elem.getNext();
 		if (this._size === 1) {
 			this._head = null;
 			this._tail = null;
@@ -189,12 +189,12 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	 */
 	public remove(__param0? : null | unknown) : E | boolean {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
-			let obj : unknown | null = (__param0 instanceof JavaObject) ? cast_java_lang_Object(__param0) : __param0;
+			const obj : unknown | null = (__param0 instanceof JavaObject) ? cast_java_lang_Object(__param0) : __param0;
 			if (this.isEmpty())
 				return false;
 			return this.removeElement(this.findFirst(obj));
 		} else if ((typeof __param0 === "undefined")) {
-			let value : E | null = this.poll();
+			const value : E | null = this.poll();
 			if (value === null)
 				throw new NoSuchElementException()
 			return value;
@@ -204,7 +204,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public containsAll(c : Collection<unknown> | null) : boolean {
 		if ((c === null) || (this as unknown === c as unknown))
 			return true;
-		for (let o of c)
+		for (const o of c)
 			if (!this.contains(o))
 				return false;
 		return true;
@@ -214,10 +214,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		if ((c === null) || (c.size() === 0))
 			return false;
 		if (((c instanceof JavaObject) && (c.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection')))) {
-			let coll : LinkedCollection<E> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(c);
+			const coll : LinkedCollection<E> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(c);
 			if ((coll._tail === null) || (coll._head === null))
 				throw new NullPointerException()
-			let last : LinkedCollectionElement<E> = coll._tail;
+			const last : LinkedCollectionElement<E> = coll._tail;
 			let current : LinkedCollectionElement<E> | null = coll._head;
 			this.add(current.getValue());
 			while (current as unknown !== last as unknown) {
@@ -229,7 +229,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			return true;
 		}
 		let result : boolean = false;
-		for (let elem of c) {
+		for (const elem of c) {
 			if (this.add(elem))
 				result = true;
 		}
@@ -246,7 +246,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			return true;
 		}
 		let result : boolean = false;
-		for (let o of c) {
+		for (const o of c) {
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
@@ -264,10 +264,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			this.clear();
 			return true;
 		}
-		let iter : JavaIterator<E> = this.iterator();
-		let tmp : LinkedCollection<E> = new LinkedCollection();
+		const iter : JavaIterator<E> = this.iterator();
+		const tmp : LinkedCollection<E> = new LinkedCollection();
 		while (iter.hasNext()) {
-			let elem : E = iter.next();
+			const elem : E = iter.next();
 			if (!c.contains(elem))
 				tmp.add(elem);
 		}
@@ -285,7 +285,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 	public hashCode() : number {
 		let hashCode : number = 1;
-		for (let e of this)
+		for (const e of this)
 			hashCode = 31 * hashCode + (e === null ? 0 : JavaObject.getTranspilerHashCode(e));
 		return hashCode;
 	}
@@ -293,11 +293,11 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public equals(obj : unknown | null) : boolean {
 		if ((obj === null) || (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('java.util.Collection'))))))
 			return false;
-		let other : Collection<unknown> = cast_java_util_Collection(obj);
+		const other : Collection<unknown> = cast_java_util_Collection(obj);
 		if (this._size !== other.size())
 			return false;
-		let iter : JavaIterator<E> = this.iterator();
-		let otherIter : JavaIterator<unknown> = other.iterator();
+		const iter : JavaIterator<E> = this.iterator();
+		const otherIter : JavaIterator<unknown> = other.iterator();
 		while (iter.hasNext()) {
 			if (!JavaObject.equalsTranspiler(iter.next(), (otherIter.next())))
 				return false;
@@ -310,9 +310,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public toString() : string {
-		let sb : StringBuilder = new StringBuilder();
+		const sb : StringBuilder = new StringBuilder();
 		sb.append("[");
-		let iter : JavaIterator<E> = this.iterator();
+		const iter : JavaIterator<E> = this.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
 			if (iter.hasNext() === true)
@@ -344,7 +344,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		}
 		let target : LinkedCollectionElement<E> = headTo;
 		while (headFrom !== null) {
-			let current : LinkedCollectionElement<E> = headFrom;
+			const current : LinkedCollectionElement<E> = headFrom;
 			headFrom = headFrom.getPrev();
 			let targetPrev : LinkedCollectionElement<E> | null = target.getPrev();
 			while ((targetPrev !== null) && (comparator.compare(targetPrev.getValue(), current.getValue()) < 0)) {
@@ -377,14 +377,14 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		for (let current : LinkedCollectionElement<E> | null = this._head; current !== null; current = current.getNext())
 			current.setPrev(null);
 		while (this._head !== null) {
-			let left : LinkedCollectionElement<E> = this._head;
-			let right : LinkedCollectionElement<E> | null = left.getNext();
+			const left : LinkedCollectionElement<E> = this._head;
+			const right : LinkedCollectionElement<E> | null = left.getNext();
 			if (right === null)
 				throw new NullPointerException()
 			this._head = right.getNext();
 			left.setNext(null);
 			right.setNext(null);
-			let sorted : LinkedCollectionElement<E> = this.merge(comparator, left, right);
+			const sorted : LinkedCollectionElement<E> = this.merge(comparator, left, right);
 			this._tail.setNext(sorted);
 			this._tail = sorted;
 		}
@@ -476,7 +476,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public poll() : E | null {
 		if (this._head === null)
 			return null;
-		let value : E = this._head.getValue();
+		const value : E = this._head.getValue();
 		this._head = this._head.getNext();
 		if (this._head === null)
 			this._tail = null;
@@ -500,7 +500,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public addFirst(e : E | null) : void {
 		if (e === null)
 			throw new NullPointerException()
-		let newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
+		const newElem : LinkedCollectionElement<E> = new LinkedCollectionElement(e, null, null);
 		if ((this._head === null) || (this._tail === null)) {
 			this._head = newElem;
 			this._tail = newElem;
@@ -530,14 +530,14 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public removeFirst() : E {
-		let value : E | null = this.poll();
+		const value : E | null = this.poll();
 		if (value === null)
 			throw new NoSuchElementException()
 		return value;
 	}
 
 	public removeLast() : E {
-		let value : E | null = this.pollLast();
+		const value : E | null = this.pollLast();
 		if (value === null)
 			throw new NoSuchElementException()
 		return value;
@@ -550,7 +550,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public pollLast() : E | null {
 		if (this._tail === null)
 			return null;
-		let value : E = this._tail.getValue();
+		const value : E = this._tail.getValue();
 		this._tail = this._tail.getPrev();
 		if (this._tail === null)
 			this._head = null;
@@ -598,7 +598,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public pop() : E {
-		let value : E | null = this.poll();
+		const value : E | null = this.poll();
 		if (value === null)
 			throw new NoSuchElementException()
 		return value;

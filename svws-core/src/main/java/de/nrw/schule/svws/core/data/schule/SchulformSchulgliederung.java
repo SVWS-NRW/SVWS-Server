@@ -39,7 +39,7 @@ public class SchulformSchulgliederung {
 	 * @param schulform      die Schulform
 	 * @param gliederung     die Schulgliederung oder null 
 	 */
-	public SchulformSchulgliederung(@NotNull Schulform schulform, Schulgliederung gliederung) {
+	public SchulformSchulgliederung(final @NotNull Schulform schulform, final Schulgliederung gliederung) {
 		this.schulform = schulform.daten.kuerzel;
 		this.gliederung = (gliederung == null) ? null : gliederung.daten.kuerzel;
 	}

@@ -56,7 +56,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 * 
 	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist  
 	 */
-	private LehrerFachrichtungAnerkennung(@NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie) {
+	private LehrerFachrichtungAnerkennung(final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -71,7 +71,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
-			for (LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
+			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
 				_anerkennungenByID.put(l.daten.id, l);				
 		return _anerkennungenByID;
 	}
@@ -85,7 +85,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerFachrichtungAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
-			for (LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
+			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
 				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);				
 		return _anerkennungenByKuerzel;
 	}
@@ -99,7 +99,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 * 
 	 * @return die Fachrichtungsanerkennung oder null, falls die ID ungültig ist 
 	 */
-	public static LehrerFachrichtungAnerkennung getByID(long id) {
+	public static LehrerFachrichtungAnerkennung getByID(final long id) {
 		return getMapAnerkennungenByID().get(id);
 	}
 
@@ -111,7 +111,7 @@ public enum LehrerFachrichtungAnerkennung {
 	 * 
 	 * @return die Fachrichtungsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerFachrichtungAnerkennung getByKuerzel(String kuerzel) {
+	public static LehrerFachrichtungAnerkennung getByKuerzel(final String kuerzel) {
 		return getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 

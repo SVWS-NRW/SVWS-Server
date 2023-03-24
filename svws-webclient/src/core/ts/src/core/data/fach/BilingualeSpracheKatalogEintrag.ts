@@ -57,14 +57,14 @@ export class BilingualeSpracheKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.fach.ZulaessigesFach')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
-			let id : number = __param0 as number;
-			let fach : ZulaessigesFach = cast_de_nrw_schule_svws_core_types_fach_ZulaessigesFach(__param1);
-			let schulformen : List<Schulform> = cast_java_util_List(__param2);
-			let gueltigVon : number | null = __param3;
-			let gueltigBis : number | null = __param4;
+			const id : number = __param0 as number;
+			const fach : ZulaessigesFach = cast_de_nrw_schule_svws_core_types_fach_ZulaessigesFach(__param1);
+			const schulformen : List<Schulform> = cast_java_util_List(__param2);
+			const gueltigVon : number | null = __param3;
+			const gueltigBis : number | null = __param4;
 			this.id = id;
 			this.kuerzel = fach.daten.kuerzel;
-			for (let schulform of schulformen)
+			for (const schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

@@ -36,7 +36,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	/**
 	 *  Falls TRUE wird die {@link AVLMap} aufsteigend, andernfalls absteigend interpretiert.
 	 */
-	private _asc : boolean = false;
+	private readonly _asc : boolean;
 
 
 	/**
@@ -55,7 +55,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	public toString() : string {
 		let s : string | null = "";
-		for (let e of this.entrySet())
+		for (const e of this.entrySet())
 			s += (s.length === 0 ? "" : ", ") + e;
 		return "Entries = [" + s! + "], iv = " + this._iv + ", asc = " + this._asc;
 	}
@@ -65,10 +65,10 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 			return true;
 		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map'))) === false)
 			return false;
-		let mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
+		const mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
 		if (mapO.size() !== this.size())
 			return false;
-		for (let e of this.entrySet())
+		for (const e of this.entrySet())
 			if (JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))) === false)
 				return false;
 		return true;
@@ -76,7 +76,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	public hashCode() : number {
 		let h : number = 0;
-		for (let entry of this.entrySet())
+		for (const entry of this.entrySet())
 			h += JavaObject.getTranspilerHashCode(entry);
 		return h;
 	}
@@ -138,7 +138,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	public clear() : void {
-		let iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
+		const iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
 		while (iter.hasNext()) {
 			iter.next();
 			iter.remove();
@@ -214,14 +214,14 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public subMap(__param0 : K, __param1 : K | boolean, __param2? : K, __param3? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean") && ((typeof __param2 !== "undefined") && (typeof __param2 !== "undefined")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean")) {
-			let fromKey : K = __param0 as unknown as K;
-			let fromInclusive : boolean = __param1 as boolean;
-			let toKey : K = __param2 as unknown as K;
-			let toInclusive : boolean = __param3 as boolean;
+			const fromKey : K = __param0 as unknown as K;
+			const fromInclusive : boolean = __param1 as boolean;
+			const toKey : K = __param2 as unknown as K;
+			const toInclusive : boolean = __param3 as boolean;
 			return this._createMap(fromKey, fromInclusive, toKey, toInclusive, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && (typeof __param1 !== "undefined")) && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
-			let fromKey : K = __param0 as unknown as K;
-			let toKey : K = __param1 as unknown as K;
+			const fromKey : K = __param0 as unknown as K;
+			const toKey : K = __param1 as unknown as K;
 			return this._createMap(fromKey, true, toKey, false, this._asc);
 		} else throw new Error('invalid method overload');
 	}
@@ -235,11 +235,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public headMap(__param0 : K, __param1? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let toKey : K = __param0 as unknown as K;
-			let inclusive : boolean = __param1 as boolean;
+			const toKey : K = __param0 as unknown as K;
+			const inclusive : boolean = __param1 as boolean;
 			return this._createMap(this._iv.from, this._iv.fromInc, toKey, inclusive, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
-			let toKey : K = __param0 as unknown as K;
+			const toKey : K = __param0 as unknown as K;
 			return this._createMap(this._iv.from, this._iv.fromInc, toKey, false, this._asc);
 		} else throw new Error('invalid method overload');
 	}
@@ -253,11 +253,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public tailMap(__param0 : K, __param1? : boolean) : NavigableMap<K, V> | SortedMap<K, V> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let fromKey : K = __param0 as unknown as K;
-			let inclusive : boolean = __param1 as boolean;
+			const fromKey : K = __param0 as unknown as K;
+			const inclusive : boolean = __param1 as boolean;
 			return this._createMap(fromKey, inclusive, this._iv.to, this._iv.toInc, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
-			let fromKey : K = __param0 as unknown as K;
+			const fromKey : K = __param0 as unknown as K;
 			return this._createMap(fromKey, true, this._iv.to, this._iv.toInc, this._asc);
 		} else throw new Error('invalid method overload');
 	}
@@ -434,15 +434,15 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
 	bcRetainAllKeys(c : Collection<unknown>) : boolean {
-		let mapRetain : AVLMap<K, K> = new AVLMap();
-		for (let obj of c) {
-			let key : K = obj as unknown as K;
+		const mapRetain : AVLMap<K, K> = new AVLMap();
+		for (const obj of c) {
+			const key : K = obj as unknown as K;
 			mapRetain.put(key, key);
 		}
 		let changed : boolean = false;
-		let iterOfKeys : JavaIterator<K | null> | null = this.bcGetSubKeySetIterator();
+		const iterOfKeys : JavaIterator<K | null> | null = this.bcGetSubKeySetIterator();
 		while (iterOfKeys.hasNext()) {
-			let key : K | null = iterOfKeys.next();
+			const key : K | null = iterOfKeys.next();
 			if (mapRetain.containsKey(key) === false) {
 				iterOfKeys.remove();
 				changed = true;
@@ -460,13 +460,13 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
 	bcRetainAllEntries(c : Collection<unknown>) : boolean {
-		let mapSave : AVLMap<K, V> = new AVLMap();
-		let setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
-		for (let o of c)
+		const mapSave : AVLMap<K, V> = new AVLMap();
+		const setSave : JavaSet<JavaMapEntry<K, V>> = mapSave.entrySet();
+		for (const o of c)
 			if (this._par.bcContainsEntry(o, this._iv))
 				setSave.add(cast_java_util_Map_Entry(o));
 		let changed : boolean = false;
-		let iterOfEntries : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
+		const iterOfEntries : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
 		while (iterOfEntries.hasNext())
 			if (setSave.contains(iterOfEntries.next()) === false) {
 				iterOfEntries.remove();
@@ -562,8 +562,8 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
 	bcGetVectorOfKeys() : Vector<K | null> {
-		let v : Vector<K | null> | null = new Vector();
-		let iter : JavaIterator<K | null> | null = this.navigableKeySet().iterator();
+		const v : Vector<K | null> | null = new Vector();
+		const iter : JavaIterator<K | null> | null = this.navigableKeySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -576,8 +576,8 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
 	bcGetVectorOfValues() : Vector<V | null> {
-		let v : Vector<V | null> | null = new Vector();
-		let iter : JavaIterator<V | null> | null = this.values().iterator();
+		const v : Vector<V | null> | null = new Vector();
+		const iter : JavaIterator<V | null> | null = this.values().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -590,8 +590,8 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @return Ein {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
 	 */
 	bcGetVectorOfEntries() : Vector<JavaMapEntry<K | null, V | null> | null> {
-		let v : Vector<JavaMapEntry<K | null, V | null> | null> | null = new Vector();
-		let iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.entrySet().iterator();
+		const v : Vector<JavaMapEntry<K | null, V | null> | null> | null = new Vector();
+		const iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.entrySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
 		return v;
@@ -679,14 +679,14 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public bcGetSubKeySet(__param0 : K, __param1 : K | boolean, __param2? : K, __param3? : boolean) : NavigableSet<K> | SortedSet<K> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean") && ((typeof __param2 !== "undefined") && (typeof __param2 !== "undefined")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean")) {
-			let fromElement : K = __param0 as unknown as K;
-			let fromInclusive : boolean = __param1 as boolean;
-			let toElement : K = __param2 as unknown as K;
-			let toInclusive : boolean = __param3 as boolean;
+			const fromElement : K = __param0 as unknown as K;
+			const fromInclusive : boolean = __param1 as boolean;
+			const toElement : K = __param2 as unknown as K;
+			const toInclusive : boolean = __param3 as boolean;
 			return this._createSet(fromElement, fromInclusive, toElement, toInclusive, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && (typeof __param1 !== "undefined")) && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
-			let fromElement : K = __param0 as unknown as K;
-			let toElement : K = __param1 as unknown as K;
+			const fromElement : K = __param0 as unknown as K;
+			const toElement : K = __param1 as unknown as K;
 			return this._createSet(fromElement, true, toElement, false, this._asc);
 		} else throw new Error('invalid method overload');
 	}
@@ -719,11 +719,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public bcGetSubKeyHeadSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let toElement : K = __param0 as unknown as K;
-			let inclusive : boolean = __param1 as boolean;
+			const toElement : K = __param0 as unknown as K;
+			const inclusive : boolean = __param1 as boolean;
 			return this._createSet(this._iv.from, this._iv.fromInc, toElement, inclusive, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
-			let toElement : K = __param0 as unknown as K;
+			const toElement : K = __param0 as unknown as K;
 			return this._createSet(this._iv.from, this._iv.fromInc, toElement, false, this._asc);
 		} else throw new Error('invalid method overload');
 	}
@@ -756,11 +756,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 */
 	public bcGetSubKeyTailSet(__param0 : K, __param1? : boolean) : NavigableSet<K> | SortedSet<K> {
 		if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let fromElement : K = __param0 as unknown as K;
-			let inclusive : boolean = __param1 as boolean;
+			const fromElement : K = __param0 as unknown as K;
+			const inclusive : boolean = __param1 as boolean;
 			return this._createSet(fromElement, inclusive, this._iv.to, this._iv.toInc, this._asc);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 !== "undefined")) && (typeof __param1 === "undefined")) {
-			let fromElement : K = __param0 as unknown as K;
+			const fromElement : K = __param0 as unknown as K;
 			return this._createSet(fromElement, true, this._iv.to, this._iv.toInc, this._asc);
 		} else throw new Error('invalid method overload');
 	}

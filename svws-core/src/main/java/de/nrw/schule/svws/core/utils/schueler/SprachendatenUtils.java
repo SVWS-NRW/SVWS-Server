@@ -25,7 +25,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls eine Belegung existiert und ansonsten false
      */
-    public static boolean hatSprachbelegung(Sprachendaten sprachendaten, String sprache) {
+    public static boolean hatSprachbelegung(final Sprachendaten sprachendaten, final String sprache) {
 
         if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
             return false;
@@ -43,7 +43,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls eine Belegung existiert und ansonsten false
      */
-    public static boolean hatSprachbelegungInSekI(Sprachendaten sprachendaten, String sprache) {
+    public static boolean hatSprachbelegungInSekI(final Sprachendaten sprachendaten, final String sprache) {
 
         if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
             return false;
@@ -68,7 +68,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls eine Belegung existiert und ansonsten false
      */
-    public static boolean hatSprachbelegungInSekIMitDauer(Sprachendaten sprachendaten, String sprache, Integer mindestBelegdauer) {
+    public static boolean hatSprachbelegungInSekIMitDauer(final Sprachendaten sprachendaten, final String sprache, final Integer mindestBelegdauer) {
 
         if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache) || mindestBelegdauer == null || mindestBelegdauer <= 0) {
             return false;
@@ -115,7 +115,7 @@ public class SprachendatenUtils {
      *
      * @return die Sprachbelegung oder null, falls keine existiert
      */
-    public static Sprachbelegung getSprachbelegung(Sprachendaten sprachendaten, String sprache) {
+    public static Sprachbelegung getSprachbelegung(final Sprachendaten sprachendaten, final String sprache) {
 
         if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
             return null;
@@ -145,7 +145,7 @@ public class SprachendatenUtils {
      *
      * @return Vector mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
      */
-    public static @NotNull Vector<@NotNull Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(Sprachendaten sprachendaten, String belegungbeginnStart, String belegungbeginnEnde, Integer mindestBelegdauer) {
+    public static @NotNull Vector<@NotNull Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(final Sprachendaten sprachendaten, final String belegungbeginnStart, final String belegungbeginnEnde, final Integer mindestBelegdauer) {
 
         final @NotNull Vector<@NotNull Sprachbelegung> belegungen = new Vector<>();
 
@@ -189,7 +189,7 @@ public class SprachendatenUtils {
         }
 
         if (belegungen.size() > 0) {
-        	final Comparator<@NotNull Sprachbelegung> comparator = (@NotNull Sprachbelegung a, @NotNull Sprachbelegung b) -> Integer.compare(ASDJahrgangNumerisch(a.belegungVonJahrgang), ASDJahrgangNumerisch(b.belegungVonJahrgang));
+        	final Comparator<@NotNull Sprachbelegung> comparator = (final @NotNull Sprachbelegung a, final @NotNull Sprachbelegung b) -> Integer.compare(ASDJahrgangNumerisch(a.belegungVonJahrgang), ASDJahrgangNumerisch(b.belegungVonJahrgang));
             belegungen.sort(comparator);
         }
 
@@ -207,7 +207,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls die Sprache als fortgeführte Fremdsprache als EF belegt werden kann, andernfalls false
      */
-    public static boolean istFortfuehrbareSpracheInGOSt(Sprachendaten sprachendaten, String sprache) {
+    public static boolean istFortfuehrbareSpracheInGOSt(final Sprachendaten sprachendaten, final String sprache) {
 
         if (sprachendaten == null || sprache == null || "".equals(sprache)) {
             return false;
@@ -255,7 +255,7 @@ public class SprachendatenUtils {
      *
      * @return Liste alle Sprachen, die in der GOSt fortgeführt werden können.
      */
-    public static @NotNull Vector<@NotNull String> getFortfuehrbareSprachenInGOSt(Sprachendaten sprachendaten) {
+    public static @NotNull Vector<@NotNull String> getFortfuehrbareSprachenInGOSt(final Sprachendaten sprachendaten) {
 
     	final @NotNull Vector<@NotNull String> sprachen = new Vector<>();
 
@@ -314,7 +314,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
      */
-    public static boolean hatEineSpracheMitMin4JahrenDauerEndeSekI(Sprachendaten sprachendaten) {
+    public static boolean hatEineSpracheMitMin4JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return false;
@@ -352,7 +352,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
      */
-    public static boolean hatZweiSprachenMitMin4JahrenDauerEndeSekI(Sprachendaten sprachendaten) {
+    public static boolean hatZweiSprachenMitMin4JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return false;
@@ -396,7 +396,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
      */
-    public static boolean hatSpracheMit2JahrenDauerEndeSekI(Sprachendaten sprachendaten) {
+    public static boolean hatSpracheMit2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return false;
@@ -423,7 +423,7 @@ public class SprachendatenUtils {
      *
      * @return true, falls entsprechende Sprachprüfungen vorhanden sind, andernfalls false.
      */
-    public static boolean hatSprachfeststellungspruefungAufEFNiveau(Sprachendaten sprachendaten) {
+    public static boolean hatSprachfeststellungspruefungAufEFNiveau(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return false;
@@ -458,7 +458,7 @@ public class SprachendatenUtils {
      *
      * @return Die erste belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
      */
-    public static String getErsteSpracheInSekI(Sprachendaten sprachendaten) {
+    public static String getErsteSpracheInSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return null;
@@ -496,7 +496,7 @@ public class SprachendatenUtils {
      *
      * @return Die zweite belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
      */
-    public static String getZweiteSpracheInSekI(Sprachendaten sprachendaten) {
+    public static String getZweiteSpracheInSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return null;
@@ -555,7 +555,7 @@ public class SprachendatenUtils {
      *
      * @return Sprache, falls eine Belegung vorhanden ist, sonst null
      */
-    public static String getSpracheMit2JahrenDauerEndeSekI(Sprachendaten sprachendaten) {
+    public static String getSpracheMit2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
 
         if (sprachendaten == null) {
             return null;
@@ -586,7 +586,7 @@ public class SprachendatenUtils {
      *
      * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
      */
-    private static int ASDJahrgangNumerisch(String ASDJahrgang){
+    private static int ASDJahrgangNumerisch(final String ASDJahrgang){
 
         if (ASDJahrgang == null || ASDJahrgang.equals("")) {
             return 0;
@@ -602,7 +602,7 @@ public class SprachendatenUtils {
             default:
                 try {
                     return Integer.parseInt(ASDJahrgang);
-                } catch (@SuppressWarnings("unused") NumberFormatException e) {
+                } catch (@SuppressWarnings("unused") final NumberFormatException e) {
                     return 0;
                 }
         }

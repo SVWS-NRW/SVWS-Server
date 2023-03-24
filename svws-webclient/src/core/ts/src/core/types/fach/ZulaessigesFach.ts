@@ -1491,11 +1491,11 @@ export class ZulaessigesFach extends JavaObject {
 		this.zulaessig = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new Vector();
-			for (let kuerzelSfSgl of historie[i].zulaessig) {
-				let sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
+			for (const kuerzelSfSgl of historie[i].zulaessig) {
+				const sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf === null)
 					continue;
-				let sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				const sgl : Schulgliederung | null = kuerzelSfSgl.gliederung === null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair(sf, sgl));
 			}
 		}
@@ -1509,7 +1509,7 @@ export class ZulaessigesFach extends JavaObject {
 	 */
 	private static getMapByASDKuerzel() : HashMap<string, ZulaessigesFach | null> {
 		if (ZulaessigesFach._mapKuerzelASD.size() === 0)
-			for (let s of ZulaessigesFach.values())
+			for (const s of ZulaessigesFach.values())
 				ZulaessigesFach._mapKuerzelASD.put(s.daten.kuerzelASD, s);
 		return ZulaessigesFach._mapKuerzelASD;
 	}
@@ -1525,7 +1525,7 @@ export class ZulaessigesFach extends JavaObject {
 	private hasSchulform(schulform : Schulform | null) : boolean {
 		if ((schulform === null) || (schulform.daten === null))
 			return false;
-		for (let sfsgl of this.zulaessig[0]) {
+		for (const sfsgl of this.zulaessig[0]) {
 			if (sfsgl.a === schulform)
 				return true;
 		}
@@ -1541,10 +1541,10 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigesFach | null> {
-		let faecher : Vector<ZulaessigesFach | null> = new Vector();
+		const faecher : Vector<ZulaessigesFach | null> = new Vector();
 		if (schulform === null)
 			return faecher;
-		for (let fach of ZulaessigesFach.values())
+		for (const fach of ZulaessigesFach.values())
 			if (fach.hasSchulform(schulform))
 				faecher.add(fach);
 		return faecher;
@@ -1582,7 +1582,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT}
 	 */
 	public static getByKuerzelASD(kuerzel : string | null) : ZulaessigesFach {
-		let result : ZulaessigesFach | null = ZulaessigesFach.getMapByASDKuerzel().get(kuerzel);
+		const result : ZulaessigesFach | null = ZulaessigesFach.getMapByASDKuerzel().get(kuerzel);
 		return (result === null) ? ZulaessigesFach.DEFAULT : result;
 	}
 
@@ -1592,7 +1592,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die Farbe des zulässigen Faches
 	 */
 	public getFarbe() : RGBFarbe {
-		let gruppe : Fachgruppe | null = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
+		const gruppe : Fachgruppe | null = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
 		return gruppe === null ? new RGBFarbe() : gruppe.daten.farbe;
 	}
 
@@ -1603,7 +1603,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die RGB-HTML-Farbdefinition als String
 	 */
 	public getHMTLFarbeRGB() : string {
-		let farbe : RGBFarbe = this.getFarbe();
+		const farbe : RGBFarbe = this.getFarbe();
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
 
@@ -1616,8 +1616,8 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public getHMTLFarbeRGBA(alpha : number) : string {
-		let farbe : RGBFarbe = this.getFarbe();
-		let a : number = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+		const farbe : RGBFarbe = this.getFarbe();
+		const a : number = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

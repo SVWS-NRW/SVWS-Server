@@ -77,16 +77,16 @@ public class AllgemeineMerkmaleKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public AllgemeineMerkmaleKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung,
-			boolean beiSchule, boolean beiSchueler, String kuerzelASD, 
-			@NotNull List<@NotNull Schulform> schulformen, Integer gueltigVon, Integer gueltigBis) {
+	public AllgemeineMerkmaleKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
+			final boolean beiSchule, final boolean beiSchueler, final String kuerzelASD, 
+			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;
 		this.beiSchule = beiSchule;
 		this.beiSchueler = beiSchueler;
 		this.kuerzelASD = kuerzelASD;
-		for (@NotNull Schulform sf : schulformen)
+		for (final @NotNull Schulform sf : schulformen)
 			this.schulformen.add(sf.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

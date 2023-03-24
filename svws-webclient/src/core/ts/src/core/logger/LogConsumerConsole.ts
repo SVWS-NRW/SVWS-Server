@@ -38,8 +38,8 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 			this.printTime = false;
 			this.printLevel = false;
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "boolean") && ((typeof __param1 !== "undefined") && typeof __param1 === "boolean")) {
-			let printTime : boolean = __param0 as boolean;
-			let printLevel : boolean = __param1 as boolean;
+			const printTime : boolean = __param0 as boolean;
+			const printLevel : boolean = __param1 as boolean;
 			this.printTime = printTime;
 			this.printLevel = printLevel;
 		} else throw new Error('invalid method overload');
@@ -54,7 +54,7 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	public accept(t : LogData) : void {
 		if (t === null)
 			return;
-		let s : string | null = (this.printTime ? t.getTime() + " " : "") + (this.printLevel ? t.getLevel() + " " : "") + t.getText()!;
+		const s : string | null = (this.printTime ? t.getTime() + " " : "") + (this.printLevel ? t.getLevel() + " " : "") + t.getText()!;
 		if (t.isNewLine())
 			console.log(JSON.stringify(s));
 		else

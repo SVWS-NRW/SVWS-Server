@@ -22,7 +22,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
 	public static getErgebnis(hatBSA : boolean, note : number, hatBA : boolean | null, abschlussAllgemeinbildend : SchulabschlussAllgemeinbildend | null) : AbschlussErgebnisBerufsbildend {
-		let ergebnis : AbschlussErgebnisBerufsbildend = new AbschlussErgebnisBerufsbildend();
+		const ergebnis : AbschlussErgebnisBerufsbildend = new AbschlussErgebnisBerufsbildend();
 		ergebnis.hatBSA = hatBSA;
 		ergebnis.note = note;
 		ergebnis.hatBA = hatBA;
@@ -42,7 +42,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return NaN;
 		let sum : number = 0;
-		for (let fach of abschluss_faecher.faecher) {
+		for (const fach of abschluss_faecher.faecher) {
 			sum += fach.note;
 		}
 		return (sum as number) / abschluss_faecher.faecher.size();
@@ -59,7 +59,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
-		for (let fach of abschluss_faecher.faecher) {
+		for (const fach of abschluss_faecher.faecher) {
 			if (fach.note >= 5)
 				sum++;
 		}
@@ -77,7 +77,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
-		for (let fach of abschluss_faecher.faecher) {
+		for (const fach of abschluss_faecher.faecher) {
 			if (fach.note >= 6)
 				sum++;
 		}

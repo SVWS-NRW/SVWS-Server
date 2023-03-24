@@ -21,7 +21,7 @@ export class SatSolver3 extends SatSolverA {
 	/**
 	 *  Im Heap werden Variablen gespeichert. Die oberste Variable wird als nächstes gewählt.
 	 */
-	private heap : Heap;
+	private readonly heap : Heap;
 
 	/**
 	 *  Die Anzahl an Variablen in den Arrays {@link #vArrayPos und #vArrayNeg}.
@@ -62,19 +62,19 @@ export class SatSolver3 extends SatSolverA {
 	}
 
 	public isVarTrue(pVar : number) : boolean {
-		let v : Variable = this.getVarOf(pVar);
+		const v : Variable = this.getVarOf(pVar);
 		return v.index === -1;
 	}
 
 	public createNewVar() : number {
 		this.vSize++;
 		if (this.vSize >= this.vArrayPos.length) {
-			let newSize : number = this.vSize * 2;
+			const newSize : number = this.vSize * 2;
 			this.vArrayPos = Arrays.copyOf(this.vArrayPos, newSize);
 			this.vArrayNeg = Arrays.copyOf(this.vArrayNeg, newSize);
 		}
-		let vPos : Variable = new Variable(this._random, +this.vSize);
-		let vNeg : Variable = new Variable(this._random, -this.vSize);
+		const vPos : Variable = new Variable(this._random, +this.vSize);
+		const vNeg : Variable = new Variable(this._random, -this.vSize);
 		vPos.negation = vNeg;
 		vNeg.negation = vPos;
 		this.vArrayPos[this.vSize] = vPos;
@@ -89,21 +89,21 @@ export class SatSolver3 extends SatSolverA {
 			console.log(JSON.stringify("WARNUNG: Leere Klausel bei SatSolver.addClause(int[] pVars)!"));
 			return;
 		}
-		let set : AVLSet<number> = new AVLSet();
-		for (let v of pVars) {
+		const set : AVLSet<number> = new AVLSet();
+		for (const v of pVars) {
 			if (set.contains(-v)) {
 				return;
 			}
 			set.add(v);
 		}
-		let list : LinkedCollection<number> = new LinkedCollection();
+		const list : LinkedCollection<number> = new LinkedCollection();
 		while (!set.isEmpty()) {
 			list.addLast(set.pollFirst());
 		}
 		while (list.size() > 3) {
-			let x : number = list.removeFirst().valueOf();
-			let y : number = list.removeFirst().valueOf();
-			let z : number = this.createNewVar();
+			const x : number = list.removeFirst().valueOf();
+			const y : number = list.removeFirst().valueOf();
+			const z : number = this.createNewVar();
 			list.addLast(z);
 			this.addClause2(-x, z);
 			this.addClause2(-y, z);
@@ -126,12 +126,12 @@ export class SatSolver3 extends SatSolverA {
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 */
 	private addClause1(x : number) : void {
-		let varX : Variable = this.getVarOf(x);
+		const varX : Variable = this.getVarOf(x);
 		if (varX.negation === null)
 			throw new NullPointerException()
 		this.heap.remove(varX);
 		this.heap.remove(varX.negation);
-		let c : Clause = new Clause(varX);
+		const c : Clause = new Clause(varX);
 		this.cSize++;
 		varX.clauses.addLast(c);
 		varX.statSatFree[c.sat][c.free]++;
@@ -146,15 +146,15 @@ export class SatSolver3 extends SatSolverA {
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 */
 	private addClause2(x : number, y : number) : void {
-		let varX : Variable = this.getVarOf(x);
-		let varY : Variable = this.getVarOf(y);
+		const varX : Variable = this.getVarOf(x);
+		const varY : Variable = this.getVarOf(y);
 		if ((varX.negation === null) || (varY.negation === null))
 			throw new NullPointerException()
 		this.heap.remove(varX);
 		this.heap.remove(varY);
 		this.heap.remove(varX.negation);
 		this.heap.remove(varY.negation);
-		let c : Clause = new Clause(varX, varY);
+		const c : Clause = new Clause(varX, varY);
 		this.cSize++;
 		varX.clauses.addLast(c);
 		varX.statSatFree[c.sat][c.free]++;
@@ -176,9 +176,9 @@ export class SatSolver3 extends SatSolverA {
 	 * @param z Das 3. Literal (Variablennummer) der Klausel.
 	 */
 	private addClause3(x : number, y : number, z : number) : void {
-		let varX : Variable = this.getVarOf(x);
-		let varY : Variable = this.getVarOf(y);
-		let varZ : Variable = this.getVarOf(z);
+		const varX : Variable = this.getVarOf(x);
+		const varY : Variable = this.getVarOf(y);
+		const varZ : Variable = this.getVarOf(z);
 		if ((varX.negation === null) || (varY.negation === null) || (varZ.negation === null))
 			throw new NullPointerException()
 		this.heap.remove(varX);
@@ -187,7 +187,7 @@ export class SatSolver3 extends SatSolverA {
 		this.heap.remove(varX.negation);
 		this.heap.remove(varY.negation);
 		this.heap.remove(varZ.negation);
-		let c : Clause = new Clause(varX, varY, varZ);
+		const c : Clause = new Clause(varX, varY, varZ);
 		this.cSize++;
 		varX.clauses.addLast(c);
 		varX.statSatFree[c.sat][c.free]++;
@@ -218,10 +218,10 @@ export class SatSolver3 extends SatSolverA {
 	}
 
 	public solve(pMaxTimeMillis : number) : number {
-		let timeStart : number = System.currentTimeMillis();
-		let backtrackV : Array<Variable | null> = Array(this.vSize).fill(null);
-		let backtrackLearn : Array<Variable> = Array(SatSolver3.MAX_LEARNED_CLAUSE_SIZE).fill(null);
-		let backtrackB : Array<boolean> = Array(this.vSize).fill(false);
+		const timeStart : number = System.currentTimeMillis();
+		const backtrackV : Array<Variable | null> = Array(this.vSize).fill(null);
+		const backtrackLearn : Array<Variable> = Array(SatSolver3.MAX_LEARNED_CLAUSE_SIZE).fill(null);
+		const backtrackB : Array<boolean> = Array(this.vSize).fill(false);
 		let index : number = 0;
 		let max : number = 1;
 		let countDown : number = 0;
@@ -234,7 +234,7 @@ export class SatSolver3 extends SatSolverA {
 			if (countDown === 0) {
 				for (let i : number = index; i >= 0; i--) {
 					if (backtrackV[i] !== null) {
-						let bvi : Variable | null = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]);
+						const bvi : Variable | null = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]);
 						this.unitpropagation_undo(bvi);
 					}
 					backtrackV[i] = null;
@@ -242,13 +242,13 @@ export class SatSolver3 extends SatSolverA {
 				}
 				index = 0;
 				if ((this.learnClauseMin >= 1) && (this.learnClauseMin <= SatSolver3.MAX_LEARNED_CLAUSE_SIZE)) {
-					let clause : Array<number> = Array(this.learnClauseMin).fill(0);
+					const clause : Array<number> = Array(this.learnClauseMin).fill(0);
 					for (let i : number = 0; i < clause.length; i++) {
 						clause[i] = -backtrackLearn[i].nr;
 					}
 					this.addClause(clause);
 				}
-				let result : number = this.simplify();
+				const result : number = this.simplify();
 				if (result !== SatSolverA.RESULT_UNKNOWN) {
 					return result;
 				}
@@ -318,7 +318,7 @@ export class SatSolver3 extends SatSolverA {
 		while (changed) {
 			changed = false;
 			for (let nr : number = 1; nr <= this.vSize; nr++) {
-				let varP : Variable | null = this.vArrayPos[nr];
+				const varP : Variable | null = this.vArrayPos[nr];
 				if (varP.index < 0) {
 					continue;
 				}
@@ -376,7 +376,7 @@ export class SatSolver3 extends SatSolverA {
 	 * @param varP Die Variable, die auf TRUE gesetzt wird.
 	 */
 	private unitpropagation(varP : Variable) : void {
-		let varN : Variable | null = varP.negation;
+		const varN : Variable | null = varP.negation;
 		if (varN === null)
 			throw new NullPointerException()
 		this.heap.remove(varP);
@@ -393,7 +393,7 @@ export class SatSolver3 extends SatSolverA {
 	 * @param varP Die Variable, die von TRUE auf FREI gesetzt wird.
 	 */
 	private unitpropagation_undo(varP : Variable) : void {
-		let varN : Variable | null = varP.negation;
+		const varN : Variable | null = varP.negation;
 		if (varN === null)
 			throw new NullPointerException()
 		this.unitpropagationHelper(varP.clauses, -1, +1);
@@ -412,12 +412,12 @@ export class SatSolver3 extends SatSolverA {
 	 *                   {@link Variable#statSatFree}.
 	 */
 	private unitpropagationHelper(clauses : LinkedCollection<Clause>, pDeltaSat : number, pDeltaFree : number) : void {
-		for (let c of clauses) {
-			let sat1 : number = c.sat;
-			let free1 : number = c.free;
-			let sat2 : number = sat1 + pDeltaSat;
-			let free2 : number = free1 + pDeltaFree;
-			for (let v of c.variables) {
+		for (const c of clauses) {
+			const sat1 : number = c.sat;
+			const free1 : number = c.free;
+			const sat2 : number = sat1 + pDeltaSat;
+			const free2 : number = free1 + pDeltaFree;
+			for (const v of c.variables) {
 				v.statSatFree[sat1][free1]--;
 				v.statSatFree[sat2][free2]++;
 				this.heap.update(v);

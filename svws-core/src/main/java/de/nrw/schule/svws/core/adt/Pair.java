@@ -23,7 +23,7 @@ public class Pair<@NotNull A, @NotNull B> {
 	 * @param a   der erste Wert des Paares
 	 * @param b   der zweite Wert des Paares
 	 */
-	public Pair(@NotNull A a, B b) {
+	public Pair(final @NotNull A a, final B b) {
 		this.a = a;
 		this.b = b;
 	}
@@ -34,14 +34,14 @@ public class Pair<@NotNull A, @NotNull B> {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (o == null)
 			return false;
 		if (o instanceof Pair<?, ?> == false)
 			return false;
-		Pair<?, ?> e = (Pair<?, ?>) o;
-		boolean a_equals = a.equals(e.a);
-		boolean b_equals = (b == null) ? (e.b == null) : b.equals(e.b);
+		final Pair<?, ?> e = (Pair<?, ?>) o;
+		final boolean a_equals = a.equals(e.a);
+		final boolean b_equals = (b == null) ? (e.b == null) : b.equals(e.b);
 		return a_equals && b_equals;
 	}
 

@@ -143,7 +143,7 @@ public enum Herkunftsschulnummern {
 	 * 
 	 * @param historie   die Historie der Herkunftsschulnummer, welches ein Array von {@link HerkunftsschulnummerKatalogEintrag} ist  
 	 */
-	private Herkunftsschulnummern(@NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie) {
+	private Herkunftsschulnummern(final @NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -157,7 +157,7 @@ public enum Herkunftsschulnummern {
 	 */
 	private static @NotNull HashMap<@NotNull Integer, Herkunftsschulnummern> getMapBySchulnummer() {
 		if (_mapBySchulnummer.size() == 0) {
-			for (Herkunftsschulnummern s : Herkunftsschulnummern.values()) {
+			for (final Herkunftsschulnummern s : Herkunftsschulnummern.values()) {
 				if (s.daten != null)
 					_mapBySchulnummer.put(s.daten.schulnummer, s);
 			}
@@ -173,7 +173,7 @@ public enum Herkunftsschulnummern {
 	 * 
 	 * @return die Herkunftsschulnummer oder null, falls die Schulnummer hier nicht vohanden ist
 	 */
-	public static Herkunftsschulnummern getByKuerzel(Integer nummer) {
+	public static Herkunftsschulnummern getByKuerzel(final Integer nummer) {
 		return getMapBySchulnummer().get(nummer);
 	}
 

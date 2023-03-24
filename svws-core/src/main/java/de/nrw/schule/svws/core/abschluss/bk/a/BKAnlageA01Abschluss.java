@@ -33,7 +33,7 @@ public class BKAnlageA01Abschluss extends Service<@NotNull BKAnlageAFaecher, @No
 	 * 
 	 * @return das Ergebnis der Abschlussprüfung
      */
-    public @NotNull AbschlussErgebnisBerufsbildend handle(@NotNull BKAnlageAFaecher input) {
+    public @NotNull AbschlussErgebnisBerufsbildend handle(final @NotNull BKAnlageAFaecher input) {
     	// Prüfe auf BSA
         logger.log(LogLevel.INFO, "Prüfe BSA:");
         if (AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) > 0) {

@@ -119,7 +119,7 @@ public enum BerufskollegBerufsebene1 {
 	 * 
 	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist  
 	 */
-	private BerufskollegBerufsebene1(@NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie) {
+	private BerufskollegBerufsebene1(final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -134,7 +134,7 @@ public enum BerufskollegBerufsebene1 {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene1> getMapBerufsebenenByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (BerufskollegBerufsebene1 s : BerufskollegBerufsebene1.values()) {
+			for (final BerufskollegBerufsebene1 s : BerufskollegBerufsebene1.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -150,7 +150,7 @@ public enum BerufskollegBerufsebene1 {
 	 * 
 	 * @return die Berufsebene oder null, falls das Kürzel ungültig ist
 	 */
-	public static BerufskollegBerufsebene1 getByKuerzel(String kuerzel) {
+	public static BerufskollegBerufsebene1 getByKuerzel(final String kuerzel) {
 		return getMapBerufsebenenByKuerzel().get(kuerzel);
 	}
 

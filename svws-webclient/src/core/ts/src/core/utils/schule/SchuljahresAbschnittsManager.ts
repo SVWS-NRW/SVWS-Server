@@ -6,12 +6,12 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	/**
 	 *  Der aktuelle Schuljahresabschnitt
 	 */
-	private abschnitt : Schuljahresabschnitt;
+	private readonly abschnitt : Schuljahresabschnitt;
 
 	/**
 	 *  Die Anzahl an Schuljahresabschnitten an dieser Schule
 	 */
-	private anzahlAbschnitte : number = 0;
+	private readonly anzahlAbschnitte : number;
 
 
 	/**

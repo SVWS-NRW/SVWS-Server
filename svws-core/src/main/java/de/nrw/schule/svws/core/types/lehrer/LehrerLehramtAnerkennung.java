@@ -62,7 +62,7 @@ public enum LehrerLehramtAnerkennung {
 	 * 
 	 * @param historie   die Historie der Lehramtsanerkennung, welches ein Array von {@link LehrerKatalogLehramtAnerkennungEintrag} ist  
 	 */
-	private LehrerLehramtAnerkennung(@NotNull LehrerKatalogLehramtAnerkennungEintrag@NotNull[] historie) {
+	private LehrerLehramtAnerkennung(final @NotNull LehrerKatalogLehramtAnerkennungEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -77,7 +77,7 @@ public enum LehrerLehramtAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehramtAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
-			for (LehrerLehramtAnerkennung l : LehrerLehramtAnerkennung.values())
+			for (final LehrerLehramtAnerkennung l : LehrerLehramtAnerkennung.values())
 				_anerkennungenByID.put(l.daten.id, l);				
 		return _anerkennungenByID;
 	}
@@ -91,7 +91,7 @@ public enum LehrerLehramtAnerkennung {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehramtAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
-			for (LehrerLehramtAnerkennung l : LehrerLehramtAnerkennung.values())
+			for (final LehrerLehramtAnerkennung l : LehrerLehramtAnerkennung.values())
 				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);				
 		return _anerkennungenByKuerzel;
 	}
@@ -104,7 +104,7 @@ public enum LehrerLehramtAnerkennung {
 	 * 
 	 * @return die Lehramtsanerkennung oder null, falls die ID ungültig ist.
 	 */
-	public static LehrerLehramtAnerkennung getByID(long id) {
+	public static LehrerLehramtAnerkennung getByID(final long id) {
 		return getMapAnerkennungenByID().get(id);
 	}
 
@@ -116,7 +116,7 @@ public enum LehrerLehramtAnerkennung {
 	 * 
 	 * @return die Lehramtsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerLehramtAnerkennung getByKuerzel(String kuerzel) {
+	public static LehrerLehramtAnerkennung getByKuerzel(final String kuerzel) {
 		return getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 

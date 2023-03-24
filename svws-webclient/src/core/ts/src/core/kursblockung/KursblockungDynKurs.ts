@@ -178,8 +178,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
 	 */
 	public gibSchienenLage() : Array<number> {
-		let length : number = this.schienenLage.length;
-		let lage : Array<number> = Array(length).fill(0);
+		const length : number = this.schienenLage.length;
+		const lage : Array<number> = Array(length).fill(0);
 		for (let i : number = 0; i < length; i++) {
 			lage[i] = this.schienenLage[i].gibNr();
 		}
@@ -211,12 +211,12 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde.
 	 */
 	gibIstSchieneGesperrt(pSchiene : number) : boolean {
-		for (let s of this.schienenLage) {
+		for (const s of this.schienenLage) {
 			if (s.gibNr() === pSchiene) {
 				return false;
 			}
 		}
-		for (let s of this.schienenFrei) {
+		for (const s of this.schienenFrei) {
 			if (s.gibNr() === pSchiene) {
 				return false;
 			}
@@ -359,9 +359,9 @@ export class KursblockungDynKurs extends JavaObject {
 			return;
 		}
 		for (let i1 : number = this.schienenLageFixiert; i1 < this.schienenLage.length; i1++) {
-			let i2 : number = this._random.nextInt(this.schienenFrei.length);
-			let schiene1 : KursblockungDynSchiene = this.schienenLage[i1];
-			let schiene2 : KursblockungDynSchiene = this.schienenFrei[i2];
+			const i2 : number = this._random.nextInt(this.schienenFrei.length);
+			const schiene1 : KursblockungDynSchiene = this.schienenLage[i1];
+			const schiene2 : KursblockungDynSchiene = this.schienenFrei[i2];
 			schiene1.aktionKursEntfernen(this);
 			schiene2.aktionKursHinzufuegen(this);
 			this.schienenLage[i1] = schiene2;
@@ -376,12 +376,12 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	public aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<number>) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++) {
-			let schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
+			const schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
 			if (pSchienenWahl.contains(schieneL.gibNr())) {
 				continue;
 			}
 			for (let iFrei : number = 0; iFrei < this.schienenFrei.length; iFrei++) {
-				let schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
+				const schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
 				if (pSchienenWahl.contains(schieneF.gibNr())) {
 					schieneL.aktionKursEntfernen(this);
 					schieneF.aktionKursHinzufuegen(this);
@@ -400,12 +400,12 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	aktionSetzeInSchiene(pSchiene : number) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++) {
-			let schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
+			const schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
 			if (schieneL.gibNr() === pSchiene) {
 				return;
 			}
 			for (let iFrei : number = 0; iFrei < this.schienenFrei.length; iFrei++) {
-				let schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
+				const schieneF : KursblockungDynSchiene = this.schienenFrei[iFrei];
 				if (pSchiene === schieneF.gibNr()) {
 					schieneL.aktionKursEntfernen(this);
 					schieneF.aktionKursHinzufuegen(this);
@@ -456,9 +456,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
 		console.log(JSON.stringify(this.toString()! + " --> " + this.schuelerAnz + " SuS."));
-		for (let s of schuelerArr) {
-			let kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
-			for (let kurs of kurse) {
+		for (const s of schuelerArr) {
+			const kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
+			for (const kurs of kurse) {
 				if (kurs as unknown === this as unknown) {
 					console.log(JSON.stringify("        " + s.gibDatenbankID()));
 				}

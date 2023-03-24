@@ -68,7 +68,7 @@ public enum Uebergangsempfehlung {
 	 * @param historie   die Historie der Eintrags, welche ein Array von 
 	 *                   {@link UebergangsempfehlungKatalogEintrag} ist  
 	 */
-	private Uebergangsempfehlung(@NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie) {
+	private Uebergangsempfehlung(final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -82,7 +82,7 @@ public enum Uebergangsempfehlung {
 	 */
 	private static @NotNull HashMap<@NotNull String, Uebergangsempfehlung> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (Uebergangsempfehlung s : Uebergangsempfehlung.values()) {
+			for (final Uebergangsempfehlung s : Uebergangsempfehlung.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -98,7 +98,7 @@ public enum Uebergangsempfehlung {
 	 * 
 	 * @return die Übergangsempfehlung oder null, falls das Kürzel ungültig ist
 	 */
-	public static Uebergangsempfehlung getByKuerzel(String kuerzel) {
+	public static Uebergangsempfehlung getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

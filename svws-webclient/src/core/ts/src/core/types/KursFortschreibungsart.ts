@@ -151,7 +151,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * @return true, falls das kürzel gültig ist.
 	 */
 	public static isValidKuerzel(kuerzel : string | null) : boolean {
-		for (let art of KursFortschreibungsart.values())
+		for (const art of KursFortschreibungsart.values())
 			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
 				return true;
 		return false;

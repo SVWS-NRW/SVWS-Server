@@ -75,7 +75,7 @@ public enum Pruefungsordnung {
 	 * 
 	 * @param historie   die Historie der Verordnung, welches ein Array von {@link PruefungsordnungKatalogEintrag} ist  
 	 */
-	private Pruefungsordnung(@NotNull PruefungsordnungKatalogEintrag@NotNull[] historie) {
+	private Pruefungsordnung(final @NotNull PruefungsordnungKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -90,7 +90,7 @@ public enum Pruefungsordnung {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Pruefungsordnung> getMapPruefungsordnungByKuerzel() {
 		if (_verordnungen.size() == 0) {
-			for (Pruefungsordnung s : Pruefungsordnung.values()) {
+			for (final Pruefungsordnung s : Pruefungsordnung.values()) {
 				if (s.daten != null)
 					_verordnungen.put(s.daten.kuerzel, s);
 			}
@@ -106,7 +106,7 @@ public enum Pruefungsordnung {
 	 * 
 	 * @return die Prüfungsordnung oder null, falls das Kürzel ungültig ist
 	 */
-	public static Pruefungsordnung getByKuerzel(String kuerzel) {
+	public static Pruefungsordnung getByKuerzel(final String kuerzel) {
 		return getMapPruefungsordnungByKuerzel().get(kuerzel);
 	}
 

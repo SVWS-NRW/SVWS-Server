@@ -144,7 +144,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 */
 	private static getMapStatusByID() : HashMap<number, KAOABerufsfeld> {
 		if (KAOABerufsfeld._statusByID.size() === 0)
-			for (let g of KAOABerufsfeld.values())
+			for (const g of KAOABerufsfeld.values())
 				KAOABerufsfeld._statusByID.put(g.daten.id, g);
 		return KAOABerufsfeld._statusByID;
 	}
@@ -157,7 +157,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 */
 	private static getMapStatusByKuerzel() : HashMap<string, KAOABerufsfeld> {
 		if (KAOABerufsfeld._statusByKuerzel.size() === 0)
-			for (let g of KAOABerufsfeld.values())
+			for (const g of KAOABerufsfeld.values())
 				KAOABerufsfeld._statusByKuerzel.put(g.daten.kuerzel, g);
 		return KAOABerufsfeld._statusByKuerzel;
 	}

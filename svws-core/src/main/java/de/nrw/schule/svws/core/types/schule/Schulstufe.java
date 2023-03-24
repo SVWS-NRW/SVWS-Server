@@ -94,7 +94,7 @@ public enum Schulstufe {
      * 
      * @param historie   die Historie der Schulstufe, welches ein Array von {@link SchulstufeKatalogEintrag} ist  
      */
-    private Schulstufe(@NotNull SchulstufeKatalogEintrag@NotNull[] historie) {
+    private Schulstufe(final @NotNull SchulstufeKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
         // TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
         this.daten = historie[historie.length - 1];
@@ -109,7 +109,7 @@ public enum Schulstufe {
      */
     private static @NotNull HashMap<@NotNull String, @NotNull Schulstufe> getMapByKuerzel() {
         if (_mapByKuerzel.size() == 0) {
-            for (Schulstufe s : Schulstufe.values()) {
+            for (final Schulstufe s : Schulstufe.values()) {
                 if (s.daten != null)
                     _mapByKuerzel.put(s.daten.kuerzel, s);
             }
@@ -125,7 +125,7 @@ public enum Schulstufe {
      * 
      * @return die Schulstufe oder null, falls das Kürzel ungültig ist
      */
-    public static Schulstufe getByKuerzel(String kuerzel) {
+    public static Schulstufe getByKuerzel(final String kuerzel) {
         return getMapByKuerzel().get(kuerzel);
     }
 

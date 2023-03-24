@@ -89,7 +89,7 @@ export class Variable extends JavaObject {
 	 * @return TRUE, wenn diese Instanz besser als "b" ist.
 	 */
 	public isBetterThan(b : Variable) : boolean {
-		let statB : Array<Array<number>> = b.statSatFree;
+		const statB : Array<Array<number>> = b.statSatFree;
 		if (this.statSatFree[0][0] > statB[0][0])
 			return true;
 		if (this.statSatFree[0][0] < statB[0][0])

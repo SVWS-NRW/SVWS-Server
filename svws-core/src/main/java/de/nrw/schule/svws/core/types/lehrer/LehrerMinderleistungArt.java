@@ -127,7 +127,7 @@ public enum LehrerMinderleistungArt {
 	 * 
 	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist  
 	 */
-	private LehrerMinderleistungArt(@NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie) {
+	private LehrerMinderleistungArt(final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -142,7 +142,7 @@ public enum LehrerMinderleistungArt {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> getMapArtenByID() {
 		if (_artenByID.size() == 0)
-			for (LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
+			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
 				_artenByID.put(g.daten.id, g);				
 		return _artenByID;
 	}
@@ -156,7 +156,7 @@ public enum LehrerMinderleistungArt {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerMinderleistungArt> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
-			for (LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
+			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
 				_artenByKuerzel.put(g.daten.kuerzel, g);				
 		return _artenByKuerzel;
 	}
@@ -169,7 +169,7 @@ public enum LehrerMinderleistungArt {
 	 * 
 	 * @return die Art der Minderleistung oder null, falls die ID ungültig ist
 	 */
-	public static LehrerMinderleistungArt getByID(long id) {
+	public static LehrerMinderleistungArt getByID(final long id) {
 		return getMapArtenByID().get(id);
 	}
 
@@ -181,7 +181,7 @@ public enum LehrerMinderleistungArt {
 	 * 
 	 * @return die Art der Minderleistung oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerMinderleistungArt getByKuerzel(String kuerzel) {
+	public static LehrerMinderleistungArt getByKuerzel(final String kuerzel) {
 		return getMapArtenByKuerzel().get(kuerzel);
 	}
 

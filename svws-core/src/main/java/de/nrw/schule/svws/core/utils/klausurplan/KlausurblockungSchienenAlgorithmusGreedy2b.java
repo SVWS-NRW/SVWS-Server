@@ -16,7 +16,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy2b extends KlausurblockungS
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
 	 */
-	public KlausurblockungSchienenAlgorithmusGreedy2b(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+	public KlausurblockungSchienenAlgorithmusGreedy2b(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
 	}
 
@@ -26,7 +26,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy2b extends KlausurblockungS
 	}
 
 	@Override
-	public void berechne(long pZeitEnde) {
+	public void berechne(final long pZeitEnde) {
 		_dynDaten.aktion_EntferneAlles_SchienenNacheinande_KlausurenHoherGradZuerst();
 		_dynDaten.aktionZustand1Speichern();
 

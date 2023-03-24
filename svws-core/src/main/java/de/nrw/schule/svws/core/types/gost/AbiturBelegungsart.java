@@ -33,7 +33,7 @@ public enum AbiturBelegungsart {
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */
-	private AbiturBelegungsart(@NotNull String kuerzel, @NotNull String beschreibung) {
+	private AbiturBelegungsart(final @NotNull String kuerzel, final @NotNull String beschreibung) {
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
 	}
@@ -46,7 +46,7 @@ public enum AbiturBelegungsart {
      *  
      * @return die Kurs-Belegungsart oder null, falls das kuerzel fehlerhaft ist
      */
-	public static AbiturBelegungsart fromKuerzel(String kuerzel) {
+	public static AbiturBelegungsart fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return NICHT_BELEGT;
 		switch (kuerzel) {

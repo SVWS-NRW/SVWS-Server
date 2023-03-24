@@ -31,7 +31,7 @@ public class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNu
 	 * 
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
-	AVLMapSubEntrySet(@NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
+	AVLMapSubEntrySet(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
 		_sub = sub;
 	}
 
@@ -51,7 +51,7 @@ public class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNu
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(final @NotNull Object o) {
 		return _sub.bcContainsEntry(o);
 	}
 
@@ -66,37 +66,37 @@ public class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNu
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T[] toArray(@NotNull T[] a) {
+	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
 		return _sub.bcGetVectorOfEntries().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull Entry<@NotNull K, @NotNull V> e) {
+	public boolean add(final @NotNull Entry<@NotNull K, @NotNull V> e) {
 		return _sub.bcAddEntryReturnBool(e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(final @NotNull Object o) {
 		return _sub.bcRemoveEntry(o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcContainsAllEntries(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull Entry<@NotNull K, @NotNull V>> c) {
 		return _sub.bcAddAllEntries(c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcRetainAllEntries(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
 		return _sub.bcRemoveAllEntries(c);
 	}
 

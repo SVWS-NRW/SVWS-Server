@@ -43,7 +43,7 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 */
-	public BenutzerKompetenzKatalogEintrag(long id, @NotNull BenutzerKompetenzGruppe gruppe, @NotNull String bezeichnung) {
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id; 

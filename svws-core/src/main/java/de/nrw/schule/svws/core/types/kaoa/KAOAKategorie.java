@@ -79,7 +79,7 @@ public enum KAOAKategorie {
 	 * 
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist  
 	 */
-	private KAOAKategorie(@NotNull KAOAKategorieEintrag@NotNull[] historie) {
+	private KAOAKategorie(final @NotNull KAOAKategorieEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -93,7 +93,7 @@ public enum KAOAKategorie {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAKategorie> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (KAOAKategorie g : KAOAKategorie.values())
+			for (final KAOAKategorie g : KAOAKategorie.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -107,7 +107,7 @@ public enum KAOAKategorie {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAKategorie> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (KAOAKategorie g : KAOAKategorie.values())
+			for (final KAOAKategorie g : KAOAKategorie.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -120,7 +120,7 @@ public enum KAOAKategorie {
 	 * 
 	 * @return die Kategorie oder null, falls die ID ungültig ist
 	 */
-	public static KAOAKategorie getByID(long id) {
+	public static KAOAKategorie getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -132,7 +132,7 @@ public enum KAOAKategorie {
 	 * 
 	 * @return die Kategorie oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAKategorie getByKuerzel(String kuerzel) {
+	public static KAOAKategorie getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

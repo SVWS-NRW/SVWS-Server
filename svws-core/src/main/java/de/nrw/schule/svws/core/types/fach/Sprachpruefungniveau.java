@@ -67,7 +67,7 @@ public enum Sprachpruefungniveau {
      * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
      *                   {@link SprachpruefungsniveauKatalogEintrag} ist  
 	 */
-	private Sprachpruefungniveau(@NotNull SprachpruefungsniveauKatalogEintrag@NotNull[] historie) {
+	private Sprachpruefungniveau(final @NotNull SprachpruefungsniveauKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
         this.daten = historie[historie.length - 1];
 	}
@@ -81,7 +81,7 @@ public enum Sprachpruefungniveau {
 	 */
 	private static @NotNull HashMap<@NotNull Integer, @NotNull Sprachpruefungniveau> getMapByID() {
 		if (_mapID.size() == 0)
-			for (Sprachpruefungniveau l : Sprachpruefungniveau.values())
+			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
 				_mapID.put(l.daten.id, l);				
 		return _mapID;
 	}
@@ -95,7 +95,7 @@ public enum Sprachpruefungniveau {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Sprachpruefungniveau> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (Sprachpruefungniveau l : Sprachpruefungniveau.values())
+			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
 			    _mapKuerzel.put(l.daten.kuerzel, l);				
 		return _mapKuerzel;
 	}
@@ -108,7 +108,7 @@ public enum Sprachpruefungniveau {
 	 *
 	 * @return das Prüfungsniveaus oder null, wenn die ID ungültig ist
 	 */
-	public static Sprachpruefungniveau getByID(Integer id) {
+	public static Sprachpruefungniveau getByID(final Integer id) {
 		return getMapByID().get(id);
 	}
 
@@ -120,7 +120,7 @@ public enum Sprachpruefungniveau {
 	 * 
 	 * @return das Prüfungsniveaus oder null, wenn das Kürzel ungültig ist
 	 */
-	public static Sprachpruefungniveau getByKuerzel(String kuerzel) {
+	public static Sprachpruefungniveau getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

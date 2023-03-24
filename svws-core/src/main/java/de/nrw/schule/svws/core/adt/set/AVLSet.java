@@ -27,7 +27,7 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	 * Interface nutzt.
 	 */
 	public AVLSet() {
-		@NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
+		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 	}
@@ -37,8 +37,8 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	 * 
 	 * @param comparator Die Ordnung für die Schlüssel.
 	 */
-	public AVLSet(@NotNull Comparator<@NotNull E> comparator) {
-		@NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>(comparator);
+	public AVLSet(final @NotNull Comparator<@NotNull E> comparator) {
+		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>(comparator);
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 	}
@@ -48,8 +48,8 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	 * 
 	 * @param set Die Map mit den Daten.
 	 */
-	public AVLSet(@NotNull SortedSet<@NotNull E> set) {
-		@NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
+	public AVLSet(final @NotNull SortedSet<@NotNull E> set) {
+		final @NotNull AVLMap<@NotNull E, @NotNull E> map = new AVLMap<>();
 		map.allowKeyAlone(true);
 		_set = map.navigableKeySet();
 		_set.addAll(set);
@@ -81,7 +81,7 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(final @NotNull Object o) {
 		return _set.contains(o);
 	}
 
@@ -91,37 +91,37 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull T @NotNull [] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
 		return _set.toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull E e) {
+	public boolean add(final @NotNull E e) {
 		return _set.add(e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(final @NotNull Object o) {
 		return _set.remove(o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean containsAll(final @NotNull Collection<@NotNull ?> c) {
 		return _set.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull E> c) {
+	public boolean addAll(final @NotNull Collection<? extends @NotNull E> c) {
 		return _set.addAll(c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(final @NotNull Collection<@NotNull ?> c) {
 		return _set.retainAll(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean removeAll(final @NotNull Collection<@NotNull ?> c) {
 		return _set.removeAll(c);
 	}
 
@@ -131,22 +131,22 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public E lower(@NotNull E e) { // return NULL erlaubt!
+	public E lower(final @NotNull E e) { // return NULL erlaubt!
 		return _set.lower(e);
 	}
 
 	@Override
-	public E floor(@NotNull E e) { // return NULL erlaubt!
+	public E floor(final @NotNull E e) { // return NULL erlaubt!
 		return _set.floor(e);
 	}
 
 	@Override
-	public E ceiling(@NotNull E e) { // return NULL erlaubt!
+	public E ceiling(final @NotNull E e) { // return NULL erlaubt!
 		return _set.ceiling(e);
 	}
 
 	@Override
-	public E higher(@NotNull E e) { // return NULL erlaubt!
+	public E higher(final @NotNull E e) { // return NULL erlaubt!
 		return _set.higher(e);
 	}
 
@@ -176,33 +176,33 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> subSet(@NotNull E fromElement, boolean fromInclusive, @NotNull E toElement,
-			boolean toInclusive) {
+	public @NotNull NavigableSet<@NotNull E> subSet(final @NotNull E fromElement, final boolean fromInclusive, final @NotNull E toElement,
+			final boolean toInclusive) {
 		return _set.subSet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> headSet(@NotNull E toElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull E> headSet(final @NotNull E toElement, final boolean inclusive) {
 		return _set.headSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull E> tailSet(@NotNull E fromElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull E> tailSet(final @NotNull E fromElement, final boolean inclusive) {
 		return _set.tailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> subSet(@NotNull E fromElement, @NotNull E toElement) {
+	public @NotNull SortedSet<@NotNull E> subSet(final @NotNull E fromElement, final @NotNull E toElement) {
 		return _set.subSet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> headSet(@NotNull E toElement) {
+	public @NotNull SortedSet<@NotNull E> headSet(final @NotNull E toElement) {
 		return _set.headSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull E> tailSet(@NotNull E fromElement) {
+	public @NotNull SortedSet<@NotNull E> tailSet(final @NotNull E fromElement) {
 		return _set.tailSet(fromElement);
 	}
 

@@ -87,7 +87,7 @@ public class KlausurblockungSchienenDynDaten {
 		aktionKlausurenAusSchienenEntfernen();
 	}
 	
-	private void initialisiereMapSchueler(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMapSchueler(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		final @NotNull HashSet<@NotNull Long> setSchueler = new HashSet<>();
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
@@ -100,7 +100,7 @@ public class KlausurblockungSchienenDynDaten {
 		}
 	}
 
-	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");				
@@ -111,7 +111,7 @@ public class KlausurblockungSchienenDynDaten {
 		}
 	}
 	
-	private void initialisiereMatrixVerboten(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		
 		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Long>> mapSchuelerKlausuren = new HashMap<>();
 
@@ -144,7 +144,7 @@ public class KlausurblockungSchienenDynDaten {
 
 	}
 	
-	private void initialisiereMatrixBevorzugt(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMatrixBevorzugt(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		for (final @NotNull GostKursklausur gostKursklausur1 : pInput) 
 			for (final @NotNull GostKursklausur gostKursklausur2 : pInput) 
 				if (hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
@@ -156,7 +156,7 @@ public class KlausurblockungSchienenDynDaten {
 				}
 	}
 	
-	private static boolean hatGemeinsameSchiene(@NotNull int[] kursSchiene1, @NotNull int[] kursSchiene2) {
+	private static boolean hatGemeinsameSchiene(final @NotNull int[] kursSchiene1, final @NotNull int[] kursSchiene2) {
 		for (final int schiene1 : kursSchiene1) 
 			for (final int schiene2 : kursSchiene2) 
 				if (schiene1 == schiene2)
@@ -364,7 +364,7 @@ public class KlausurblockungSchienenDynDaten {
 		return gibVergleicheMitAktuellemZustand(_schienenAnzahl2, _klausurZuSchiene2);
 	}
 
-	private boolean gibVergleicheMitAktuellemZustand(int schienenAnzahlX, @NotNull int @NotNull [] klausurZuSchieneX) {
+	private boolean gibVergleicheMitAktuellemZustand(final int schienenAnzahlX, final @NotNull int @NotNull [] klausurZuSchieneX) {
 		// Kriterium 1: Die Anzahl an Schienen/Terminen.
 		if (_schienenAnzahl < schienenAnzahlX)
 			return true;
@@ -397,7 +397,7 @@ public class KlausurblockungSchienenDynDaten {
 		return minHisto < minHistoX;
 	}
 
-	private int gibSchienenBevorzugt(@NotNull int @NotNull [] pKlausurZuSchiene) {
+	private int gibSchienenBevorzugt(final @NotNull int @NotNull [] pKlausurZuSchiene) {
 		int summeBevorzugt = 0;
 		for (int nr1 = 0; nr1 < _klausurenAnzahl; nr1++) 
 			for (int nr2 = nr1 + 1; nr2 < _klausurenAnzahl; nr2++) 
@@ -434,7 +434,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param  klausurNr die Klausurnummer, nach der gefragt wird.
 	 * @return           TRUE, falls die übergebene Klausurnummer noch nicht verteilt wurde. 
 	 */
-	boolean gibIstKlausurUnverteilt(int klausurNr) {
+	boolean gibIstKlausurUnverteilt(final int klausurNr) {
 		return _klausurZuSchiene[klausurNr] < 0;
 	}
 
@@ -482,7 +482,7 @@ public class KlausurblockungSchienenDynDaten {
 		return maxNr;
 	}
 
-	private int gibNachbarsfarbenDerKlausur(int klausurNr) {
+	private int gibNachbarsfarbenDerKlausur(final int klausurNr) {
 		int summe = 0;
 		final boolean[] benutzt = new boolean[_schienenAnzahl];
 
@@ -524,7 +524,7 @@ public class KlausurblockungSchienenDynDaten {
 		return maxNr;
 	}
 
-	private int gibAnzahlFreierNachbarn(int nr) {
+	private int gibAnzahlFreierNachbarn(final int nr) {
 		int summe = 0;
 
 		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
@@ -543,7 +543,7 @@ public class KlausurblockungSchienenDynDaten {
 	 *              die widerum mit "nr1" benachbart sind. 
 	 */
 	int gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(
-			@NotNull LinkedCollection<@NotNull Integer> setS) {
+			final @NotNull LinkedCollection<@NotNull Integer> setS) {
 		int maxNachbarn = -1;
 		int maxNr = -1;
 
@@ -566,7 +566,7 @@ public class KlausurblockungSchienenDynDaten {
 	}
 
 	private int gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(
-			@NotNull LinkedCollection<@NotNull Integer> setS, int nr2) {
+			final @NotNull LinkedCollection<@NotNull Integer> setS, final int nr2) {
 		int summe = 0;
 
 		for (int nr3 = 0; nr3 < _klausurenAnzahl; nr3++)
@@ -577,7 +577,7 @@ public class KlausurblockungSchienenDynDaten {
 		return summe;
 	}
 
-	private boolean gibIstBenachbart(int nr3, @NotNull LinkedCollection<@NotNull Integer> setS) {
+	private boolean gibIstBenachbart(final int nr3, final @NotNull LinkedCollection<@NotNull Integer> setS) {
 		for (final Integer nr4 : setS)
 			if (_verboten[nr3][nr4.intValue()])
 				return true;
@@ -645,7 +645,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param  s  die Schiene, in der die übergebene Klausur landen soll.
 	 * @return    TRUE, falls die übergebene Klausur in die übergebene Schiene gesetzt werden konnte. 
 	 */
-	boolean aktionSetzeKlausurInSchiene(int nr, int s) {
+	boolean aktionSetzeKlausurInSchiene(final int nr, final int s) {
 
 		if (s < 0)
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene("+nr+", "+s+") --> Schiene zu klein!");
@@ -669,7 +669,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * 
 	 * @param klausurNr die Nummer der Klausur, die entfernt werden soll. 
 	 */
-	void aktionEntferneKlausurAusSchiene(int klausurNr) {
+	void aktionEntferneKlausurAusSchiene(final int klausurNr) {
 		if (_klausurZuSchiene[klausurNr] < 0) 
 			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene("+klausurNr+") --> Die Klausur hatte gar keine Schiene!");
 		_klausurZuSchiene[klausurNr] = -1;
@@ -682,7 +682,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param  klausurNr die Klausur, die in eine neue Schiene gesetzt werden soll.
 	 * @return           die neue Schiene, in welche die Klausur gesetzt wurde. 
 	 */
-	int aktionSetzeKlausurInNeueSchiene(int klausurNr) {
+	int aktionSetzeKlausurInNeueSchiene(final int klausurNr) {
 		final int schiene = _schienenAnzahl;
 		if (_klausurZuSchiene[klausurNr] >= 0)
 			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene("+klausurNr+") --> Die Klausur ist bereits in einer Schiene!");
@@ -696,7 +696,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * 
 	 * @param pDifferenz Die Differenz der Veränderung. 
 	 */
-	void aktionSchienenAnzahlVeraendern(int pDifferenz) {
+	void aktionSchienenAnzahlVeraendern(final int pDifferenz) {
 		_schienenAnzahl += pDifferenz;
 	}
 
@@ -707,7 +707,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param klausurNr Setzt die übergebene Klausur in eine zufällige vorhandene Schiene. 
 	 *                  Falls dies nicht möglich ist, wird die Klausur in eine neue Schiene gesetzt. 
 	 */
-	void aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(int klausurNr) {
+	void aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(final int klausurNr) {
 		for (final int schienenNr : gibErzeugeSchienenInZufaelligerReihenfolge())
 			if (aktionSetzeKlausurInSchiene(klausurNr, schienenNr) == true)
 				return; // Die Klausur wurde erfolgreich in eine Schiene gesetzt.
@@ -755,7 +755,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * 
 	 * @param header Überschrift der Debug-Ausgabe. 
 	 */
-	void debug(String header) {
+	void debug(final String header) {
 		System.out.println();
 		System.out.println(header);
 

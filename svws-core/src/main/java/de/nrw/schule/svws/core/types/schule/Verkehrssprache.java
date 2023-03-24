@@ -2372,7 +2372,7 @@ public enum Verkehrssprache {
 	 * 
 	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist  
 	 */
-	private Verkehrssprache(@NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie) {
+	private Verkehrssprache(final @NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -2387,7 +2387,7 @@ public enum Verkehrssprache {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel() {
 		if (_sprachen.size() == 0) {
-			for (Verkehrssprache s : Verkehrssprache.values()) {
+			for (final Verkehrssprache s : Verkehrssprache.values()) {
 				if (s.daten != null)
 					_sprachen.put(s.daten.kuerzel, s);
 			}
@@ -2404,7 +2404,7 @@ public enum Verkehrssprache {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel2() {
 		if (_kuerzel2.size() == 0) {
-			for (Verkehrssprache s : Verkehrssprache.values()) {
+			for (final Verkehrssprache s : Verkehrssprache.values()) {
 				if ((s.daten != null) && (s.daten.iso2 != null))
 					_kuerzel2.put(s.daten.iso2, s);
 			}
@@ -2420,7 +2420,7 @@ public enum Verkehrssprache {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static Verkehrssprache getByKuerzel(String kuerzel) {
+	public static Verkehrssprache getByKuerzel(final String kuerzel) {
 		return getMapSpracheByKuerzel().get(kuerzel);
 	}
 
@@ -2432,7 +2432,7 @@ public enum Verkehrssprache {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static Verkehrssprache getByKuerzelISO2(String kuerzel) {
+	public static Verkehrssprache getByKuerzelISO2(final String kuerzel) {
 		return getMapSpracheByKuerzel2().get(kuerzel);
 	}
 
@@ -2446,7 +2446,7 @@ public enum Verkehrssprache {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static Verkehrssprache getByKuerzelAuto(String kuerzel) {
+	public static Verkehrssprache getByKuerzelAuto(final String kuerzel) {
 		if (kuerzel == null)
 			return null;
 		if (kuerzel.length() == 2)

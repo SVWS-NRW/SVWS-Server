@@ -58,7 +58,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return true, falls die angegebenen Fächer und nur diese in der Fächergruppe sind, ansonsten false.
      */
-	public boolean istVollstaendig(List<@NotNull String> faecherAbgleich) {
+	public boolean istVollstaendig(final List<@NotNull String> faecherAbgleich) {
 		if (faecherAbgleich == null)
 			return true;
 		if (isEmpty())
@@ -94,7 +94,7 @@ public class AbschlussFaecherGruppe {
 	 * 
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
-    public boolean contains(String kuerzel) {
+    public boolean contains(final String kuerzel) {
     	if (kuerzel == null)
     		return false;
         for (int i = 0; i < faecher.size(); i++) {
@@ -113,7 +113,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return die Liste der tatsächlich entfernten Fächer
      */
-    public @NotNull List<@NotNull GEAbschlussFach> entferneFaecher(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull List<@NotNull GEAbschlussFach> entferneFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull Vector<@NotNull GEAbschlussFach> selected = new Vector<>();
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);
@@ -134,7 +134,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return das Fach, sofern eines gefunden wurde, ansonsten false
      */
-    public GEAbschlussFach getFach(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public GEAbschlussFach getFach(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);
     		if (filter.test(fach))
@@ -151,7 +151,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
      */
-    public @NotNull List<@NotNull GEAbschlussFach> getFaecher(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull List<@NotNull GEAbschlussFach> getFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull Vector<@NotNull GEAbschlussFach> result = new Vector<>();
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);
@@ -169,7 +169,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return die Anzahl der Fächer
      */
-    public long getFaecherAnzahl(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public long getFaecherAnzahl(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	long count = 0;
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);
@@ -187,7 +187,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
      */
-    public @NotNull List<@NotNull String> getKuerzel(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull List<@NotNull String> getKuerzel(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull Vector<@NotNull String> result = new Vector<>();
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);
@@ -206,7 +206,7 @@ public class AbschlussFaecherGruppe {
      * 
      * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
      */
-    public @NotNull String getKuerzelListe(@NotNull Predicate<@NotNull GEAbschlussFach> filter) {
+    public @NotNull String getKuerzelListe(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
     	final @NotNull StringBuilder sb = new StringBuilder(); 
         for (int i = 0; i < faecher.size(); i++) {
         	final @NotNull GEAbschlussFach fach = faecher.get(i);

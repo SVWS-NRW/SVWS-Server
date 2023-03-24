@@ -4999,18 +4999,18 @@ public enum ZulaessigesFach {
 	 * @param historie   die Historie des Faches, welches ein Array von {@link FachKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private ZulaessigesFach(@NotNull FachKatalogEintrag@NotNull[] historie) {
+	private ZulaessigesFach(final @NotNull FachKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
 		this.zulaessig = (@NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>>@NotNull[])Array.newInstance(Vector.class, historie.length); 
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new Vector<>();
-			for (@NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
-				Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
+			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
+				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
 					continue;
-				Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				final Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair<>(sf, sgl));
 			}
 		}
@@ -5025,7 +5025,7 @@ public enum ZulaessigesFach {
 	 */
 	private static @NotNull HashMap<@NotNull String, ZulaessigesFach> getMapByASDKuerzel() {
 		if (_mapKuerzelASD.size() == 0)
-			for (ZulaessigesFach s : ZulaessigesFach.values())
+			for (final ZulaessigesFach s : ZulaessigesFach.values())
 				_mapKuerzelASD.put(s.daten.kuerzelASD, s);				
 		return _mapKuerzelASD;
 	}
@@ -5039,10 +5039,10 @@ public enum ZulaessigesFach {
 	 * 
 	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
 	 */
-	private boolean hasSchulform(Schulform schulform) {
+	private boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
-		for (@NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
+		for (final @NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
 			if (sfsgl.a == schulform)
 				return true;
 		}
@@ -5058,11 +5058,11 @@ public enum ZulaessigesFach {
 	 * 
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
-	public static @NotNull List<ZulaessigesFach> get(Schulform schulform) {
-		@NotNull Vector<ZulaessigesFach> faecher = new Vector<>();
+	public static @NotNull List<ZulaessigesFach> get(final Schulform schulform) {
+		final @NotNull Vector<ZulaessigesFach> faecher = new Vector<>();
 		if (schulform == null)
 			return faecher;
-		for (@NotNull ZulaessigesFach fach : ZulaessigesFach.values())
+		for (final @NotNull ZulaessigesFach fach : ZulaessigesFach.values())
 			if (fach.hasSchulform(schulform))
 				faecher.add(fach);
 		return faecher;
@@ -5102,8 +5102,8 @@ public enum ZulaessigesFach {
 	 * 
 	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT} 
 	 */
-	public static @NotNull ZulaessigesFach getByKuerzelASD(String kuerzel) {
-		ZulaessigesFach result = getMapByASDKuerzel().get(kuerzel);
+	public static @NotNull ZulaessigesFach getByKuerzelASD(final String kuerzel) {
+		final ZulaessigesFach result = getMapByASDKuerzel().get(kuerzel);
 		return (result == null) ? ZulaessigesFach.DEFAULT : result;
 	}
 
@@ -5114,7 +5114,7 @@ public enum ZulaessigesFach {
 	 * @return die Farbe des zulässigen Faches
 	 */
 	public @NotNull RGBFarbe getFarbe() {
-	    Fachgruppe gruppe = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
+	    final Fachgruppe gruppe = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
 	    return gruppe == null ? new RGBFarbe() : gruppe.daten.farbe;
 	}
 
@@ -5126,7 +5126,7 @@ public enum ZulaessigesFach {
      * @return die RGB-HTML-Farbdefinition als String
      */
     public @NotNull String getHMTLFarbeRGB() {
-        @NotNull RGBFarbe farbe = getFarbe();
+        final @NotNull RGBFarbe farbe = getFarbe();
         return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
     }
 
@@ -5139,9 +5139,9 @@ public enum ZulaessigesFach {
      * 
      * @return die RGBA-HTML-Farbdefinition als String
 	 */
-	public @NotNull String getHMTLFarbeRGBA(double alpha) {
-	    @NotNull RGBFarbe farbe = getFarbe();
-	    double a = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+	public @NotNull String getHMTLFarbeRGBA(final double alpha) {
+	    final @NotNull RGBFarbe farbe = getFarbe();
+	    final double a = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
 	    return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

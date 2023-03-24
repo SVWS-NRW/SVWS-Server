@@ -10,13 +10,13 @@ import jakarta.validation.constraints.NotNull;
 public class StundenplanblockungManagerKopplung {
 
 	/** Die Datenbank-ID der Kopplung. */
-	private long _id;
+	private final long _id;
 
 	/** Das Kürzel der Kopplung. Beispielsweise '7RE'. */
 	private @NotNull String _kuerzel = "";
 
 	/** Alle Lerngruppen der Kopplungen. */
-	private @NotNull Vector<StundenplanblockungManagerLerngruppe> _lerngruppen = new Vector<>();
+	private final @NotNull Vector<StundenplanblockungManagerLerngruppe> _lerngruppen = new Vector<>();
 
 	/**
 	 * Erzeugt eine neue Kopplung.
@@ -24,7 +24,7 @@ public class StundenplanblockungManagerKopplung {
 	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
 	 * @param pKuerzel     Das Kürzel der Kopplung.
 	 */
-	public StundenplanblockungManagerKopplung(long pKopplungID, @NotNull String pKuerzel) {
+	public StundenplanblockungManagerKopplung(final long pKopplungID, final @NotNull String pKuerzel) {
 		_id = pKopplungID;
 		_kuerzel = pKuerzel;
 	}
@@ -43,7 +43,7 @@ public class StundenplanblockungManagerKopplung {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Kopplung.
 	 */
-	public void setKuerzel(@NotNull String pKuerzel) {
+	public void setKuerzel(final @NotNull String pKuerzel) {
 		_kuerzel = pKuerzel;
 	}
 }

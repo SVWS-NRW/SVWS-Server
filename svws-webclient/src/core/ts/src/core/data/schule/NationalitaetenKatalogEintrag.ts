@@ -88,17 +88,17 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && (typeof __param7 === "string")) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string")) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
-			let id : number = __param0 as number;
-			let iso3 : string = __param1;
-			let iso2 : string = __param2;
-			let isoNumerisch : string | null = __param3;
-			let codeDEStatis : string = __param4;
-			let bezeichnungSuche : string = __param5;
-			let bezeichnung : string = __param6;
-			let bezeichnungLang : string = __param7;
-			let staatsangehoerigkeit : string = __param8;
-			let gueltigVon : number | null = __param9;
-			let gueltigBis : number | null = __param10;
+			const id : number = __param0 as number;
+			const iso3 : string = __param1;
+			const iso2 : string = __param2;
+			const isoNumerisch : string | null = __param3;
+			const codeDEStatis : string = __param4;
+			const bezeichnungSuche : string = __param5;
+			const bezeichnung : string = __param6;
+			const bezeichnungLang : string = __param7;
+			const staatsangehoerigkeit : string = __param8;
+			const gueltigVon : number | null = __param9;
+			const gueltigBis : number | null = __param10;
 			this.id = id;
 			this.iso3 = iso3;
 			this.iso2 = iso2;

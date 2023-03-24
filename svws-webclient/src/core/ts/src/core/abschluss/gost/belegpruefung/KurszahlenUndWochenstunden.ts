@@ -68,7 +68,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		this.wochenstunden = new HashMap();
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
-		let projektkurse : Projektkurse = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
+		const projektkurse : Projektkurse = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
 		const kursarten : Array<GostKursart> = GostKursart.values();
 		for (const halbjahr of GostHalbjahr.values()) {
 			const kurszahlenHalbjahr : HashMap<GostKursart, number> = new HashMap();

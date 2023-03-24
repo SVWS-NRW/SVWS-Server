@@ -971,7 +971,7 @@ public enum ZulaessigeKursart {
 	 * @param historie   die Historie der Kursarten, welches ein Array von {@link KursartKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private ZulaessigeKursart(@NotNull KursartKatalogEintrag@NotNull[] historie) {
+	private ZulaessigeKursart(final @NotNull KursartKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -979,11 +979,11 @@ public enum ZulaessigeKursart {
 		this.zulaessig = (@NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>>@NotNull[])Array.newInstance(Vector.class, historie.length); 
 		for (int i = 0; i < historie.length; i++) {
 			this.zulaessig[i] = new Vector<>();
-			for (@NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
-				Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
+			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
+				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
 					continue;
-				Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
+				final Schulgliederung sgl = kuerzelSfSgl.gliederung == null ? null : Schulgliederung.getByKuerzel(kuerzelSfSgl.gliederung);
 				this.zulaessig[i].add(new Pair<>(sf, sgl));
 			}
 		}
@@ -998,7 +998,7 @@ public enum ZulaessigeKursart {
 	 */
 	private static @NotNull HashMap<@NotNull Long, ZulaessigeKursart> getMapByID() {
 		if (_mapID.size() == 0)
-			for (ZulaessigeKursart s : ZulaessigeKursart.values())
+			for (final ZulaessigeKursart s : ZulaessigeKursart.values())
 				if (s.daten != null)
 					_mapID.put(s.daten.id, s);				
 		return _mapID;
@@ -1013,7 +1013,7 @@ public enum ZulaessigeKursart {
 	 */
 	private static @NotNull HashMap<@NotNull String, ZulaessigeKursart> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (ZulaessigeKursart s : ZulaessigeKursart.values())
+			for (final ZulaessigeKursart s : ZulaessigeKursart.values())
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);				
 		return _mapKuerzel;
@@ -1028,10 +1028,10 @@ public enum ZulaessigeKursart {
 	 * 
 	 * @return true, falls die Kursart in der Schulform zulässig ist, ansonsten false.
 	 */
-	private boolean hasSchulform(Schulform schulform) {
+	private boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
-		for (@NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
+		for (final @NotNull Pair<Schulform, Schulgliederung> sfsgl : zulaessig[0]) {
 			if (sfsgl.a == schulform)
 				return true;
 		}
@@ -1047,11 +1047,11 @@ public enum ZulaessigeKursart {
 	 * 
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
-	public static @NotNull List<ZulaessigeKursart> get(Schulform schulform) {
-		@NotNull Vector<ZulaessigeKursart> kursarten = new Vector<>();
+	public static @NotNull List<ZulaessigeKursart> get(final Schulform schulform) {
+		final @NotNull Vector<ZulaessigeKursart> kursarten = new Vector<>();
 		if (schulform == null)
 			return kursarten;
-		for (ZulaessigeKursart kursart : ZulaessigeKursart.values())
+		for (final ZulaessigeKursart kursart : ZulaessigeKursart.values())
 			if (kursart.hasSchulform(schulform))
 				kursarten.add(kursart);
 		return kursarten;
@@ -1076,7 +1076,7 @@ public enum ZulaessigeKursart {
 	 * 
 	 * @return die Kursart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
-	public static ZulaessigeKursart getByASDKursart(String kursart) {
+	public static ZulaessigeKursart getByASDKursart(final String kursart) {
 		return getMapByKuerzel().get(kursart);
 	}
 

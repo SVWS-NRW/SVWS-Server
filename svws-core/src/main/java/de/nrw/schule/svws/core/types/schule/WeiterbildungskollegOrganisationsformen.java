@@ -42,7 +42,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von 
 	 *                   {@link OrganisationsformKatalogEintrag} ist  
 	 */
-	private WeiterbildungskollegOrganisationsformen(@NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	private WeiterbildungskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -57,7 +57,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull WeiterbildungskollegOrganisationsformen> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (WeiterbildungskollegOrganisationsformen s : WeiterbildungskollegOrganisationsformen.values()) {
+			for (final WeiterbildungskollegOrganisationsformen s : WeiterbildungskollegOrganisationsformen.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -73,7 +73,7 @@ public enum WeiterbildungskollegOrganisationsformen {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static WeiterbildungskollegOrganisationsformen getByKuerzel(String kuerzel) {
+	public static WeiterbildungskollegOrganisationsformen getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

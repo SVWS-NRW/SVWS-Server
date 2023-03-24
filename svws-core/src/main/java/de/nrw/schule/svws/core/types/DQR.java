@@ -47,7 +47,7 @@ public enum DQR {
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus
 	 */
-	private DQR(@NotNull String bezeichnung, @NotNull String beschreibung) {
+	private DQR(final @NotNull String bezeichnung, final @NotNull String beschreibung) {
 		this.bezeichnung = bezeichnung;
 		this.beschreibung = beschreibung;
 	}

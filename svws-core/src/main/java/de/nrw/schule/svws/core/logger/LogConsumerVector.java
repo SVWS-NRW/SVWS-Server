@@ -40,7 +40,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * @param printTime     gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht
 	 * @param printLevel    gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht
 	 */
-	public LogConsumerVector(boolean printTime, boolean printLevel) {
+	public LogConsumerVector(final boolean printTime, final boolean printLevel) {
 		this.printTime = printTime;
 		this.printLevel = printLevel;
 	}
@@ -51,7 +51,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * 
 	 * @param log   der anzuhängende Log
 	 */
-    public void append(@NotNull LogConsumerVector log) {
+    public void append(final @NotNull LogConsumerVector log) {
     	logData.addAll(log.logData);
     }
 	
@@ -63,7 +63,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * @param t   die anzuhängenden Log-Informationen 
 	 */
 	@Override
-	public void accept(LogData t) {
+	public void accept(final LogData t) {
 		if (t == null)
 			return;
 		logData.add(t);
@@ -98,10 +98,10 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * 
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-    public List<@NotNull String> getStrings(@NotNull String indent) {
-    	Vector<@NotNull String> result = new Vector<>();
+    public List<@NotNull String> getStrings(final @NotNull String indent) {
+    	final Vector<@NotNull String> result = new Vector<>();
     	for (int i = 0; i < logData.size(); i++) {
-    		@NotNull LogData data = logData.get(i);
+    		final @NotNull LogData data = logData.get(i);
     		if (data == null)
     			continue;
     		result.add(indent + data.getText());
@@ -136,7 +136,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
      * 
      * @return der Text der Log-Informationen für das angegebene Log-Level
      */
-    public @NotNull String getText(@NotNull LogLevel level) {
+    public @NotNull String getText(final @NotNull LogLevel level) {
         return this.getText(level, "");
     }
 
@@ -154,10 +154,10 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
      * 
      * @return der Text der Log-Informationen für das angegebene Log-Level
      */
-    public @NotNull String getText(@NotNull LogLevel level, @NotNull String indent) {
-    	StringBuilder sb = new StringBuilder();
+    public @NotNull String getText(final @NotNull LogLevel level, final @NotNull String indent) {
+    	final StringBuilder sb = new StringBuilder();
     	for (int i = 0; i < logData.size(); i++) {
-    		LogData data = logData.get(i);
+    		final LogData data = logData.get(i);
     		if (data == null)
     			continue;
     		if (data.getLevel().toInteger() > level.toInteger())

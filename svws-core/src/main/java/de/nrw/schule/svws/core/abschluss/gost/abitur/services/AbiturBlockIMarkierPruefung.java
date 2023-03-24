@@ -26,7 +26,7 @@ public class AbiturBlockIMarkierPruefung extends Service<Abiturdaten, Boolean> {
 			return null;
 		}
 		
-		boolean ergebnis = false;
+		final boolean ergebnis = false;
 		
 		// TODO prüfe die Markierung der Kurse unter Berücksichtigung der Noten
 		logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName() + " ist noch nicht fertig programmiert...");

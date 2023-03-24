@@ -47,10 +47,10 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let gueltigVon : number | null = __param2;
-			let gueltigBis : number | null = __param3;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const gueltigVon : number | null = __param2;
+			const gueltigBis : number | null = __param3;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.gueltigVon = gueltigVon;

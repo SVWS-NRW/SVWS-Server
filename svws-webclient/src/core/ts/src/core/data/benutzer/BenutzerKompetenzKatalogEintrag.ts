@@ -41,9 +41,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			let id : number = __param0 as number;
-			let gruppe : BenutzerKompetenzGruppe = cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe(__param1);
-			let bezeichnung : string = __param2;
+			const id : number = __param0 as number;
+			const gruppe : BenutzerKompetenzGruppe = cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe(__param1);
+			const bezeichnung : string = __param2;
 			this.id = id;
 			this.bezeichnung = bezeichnung;
 			this.gruppe_id = gruppe.daten.id;

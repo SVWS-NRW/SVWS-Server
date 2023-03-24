@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch */
 public class KursblockungDynStatistik {
 
-	/** 
+	/**
 	 * In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
 	 * Fachart in der selben Schiene landen. Je kleiner der Wert, desto besser. Erhöht man den Wert der Haupt-Diagonale
 	 * in der Matrix, so werden Kurse der gleichen Fachart eher selten in eine Schiene getan. 
@@ -76,14 +76,14 @@ public class KursblockungDynStatistik {
 	 * Ausnahme: Falls das Array nur aus Nullen besteht, dann ist der Wert ebenfalls Null. */
 	private int bewertungKursdifferenzenMaxIndex;
 
-	/** 
+	/**
 	 * Initialisiert alle Attribute mit Dummy-Werten. 
 	 */
 	KursblockungDynStatistik() {
 		clear();
 	}
 
-	/** 
+	/**
 	 * Initialisiert alle Attribute mit Dummy-Werten. 
 	 * Setzt alle Werte auf 0 und initialisiert alle Arrays auf die Länge 0. 
 	 */
@@ -113,7 +113,7 @@ public class KursblockungDynStatistik {
 		bewertungKursdifferenzenMaxIndex = 0;
 	}
 
-	/** 
+	/**
 	 * Initialisiert dieses Objekt mit den Anfangswerten.
 	 * 
 	 * @param pMatrixFachartPaar Das 2D-Array beinhaltet pro Fachart-Paar eine Bewertung.
@@ -121,7 +121,7 @@ public class KursblockungDynStatistik {
 	 * @param pMaxFacharten      Die maximale Anzahl an Facharten. 
 	 * @param pMaxKurse          Die maximale Anzahl an Kursen. 
 	 */
-	void aktionInitialisiere(@NotNull int @NotNull [][] pMatrixFachartPaar, int pMaxSchueler, int pMaxFacharten, int pMaxKurse) {
+	void aktionInitialisiere(final @NotNull int @NotNull [][] pMatrixFachartPaar, final int pMaxSchueler, final int pMaxFacharten, final int pMaxKurse) {
 		matrixFachartPaar = pMatrixFachartPaar;
 		regelVerletzungKursMitKurs = new int[pMaxKurse][pMaxKurse];
 		
@@ -147,19 +147,19 @@ public class KursblockungDynStatistik {
 		aktionBewertungSpeichernG();
 	}
 
-	/** 
+	/**
 	 * Ausgabe von Debug-Informationen. Nur für Testzwecke.
 	 * 
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe. 
 	 */
-	void debug(@NotNull String pPrefix) {
+	void debug(final @NotNull String pPrefix) {
 		System.out.println(pPrefix + ", RV = " + bewertungRegelverletzungen 
 				                   + ", NW = " + bewertungNichtwahlen 
 				                   + ", FW = " + bewertungFachartPaar 
 				                   + ", KDs = "+ bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen));
 	}
 
-	/** 
+	/**
 	 * Liefert die aktuelle Fachart-Paar-Bewertung.
 	 * 
 	 * @return Die aktuelle Fachart-Paar-Bewertung. 
@@ -168,7 +168,7 @@ public class KursblockungDynStatistik {
 		return bewertungFachartPaar;
 	}
 
-	/** 
+	/**
 	 * Liefert die aktuelle Anzahl an Nichtwahlen. 
 	 * Das ist die Summe aller Kurs, die bei Schülern nicht zugeordnet wurden.
 	 * 
@@ -178,7 +178,7 @@ public class KursblockungDynStatistik {
 		return bewertungNichtwahlen;
 	}
 
-	/** 
+	/**
 	 * Liefert die aktuell größte Kursdifferenz (über alle Facharten).
 	 * 
 	 * @return Die aktuell größte Kursdifferenz (über alle Facharten). 
@@ -187,7 +187,7 @@ public class KursblockungDynStatistik {
 		return bewertungKursdifferenzenMaxIndex;
 	}
 
-	/** 
+	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 * 
@@ -213,7 +213,7 @@ public class KursblockungDynStatistik {
 		return 0;
 	}
 
-	/** 
+	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 * 
@@ -243,7 +243,7 @@ public class KursblockungDynStatistik {
 		return 0;
 	}
 
-	/** 
+	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
 	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 * 
@@ -273,7 +273,7 @@ public class KursblockungDynStatistik {
 		return 0;
 	}
 
-	/** 
+	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 * 
@@ -335,7 +335,7 @@ public class KursblockungDynStatistik {
 //		return false;
 //	}
 
-	/** 
+	/**
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
 	 * 
 	 * @return das Array bzw. das Histogramm der Kursdifferenzen. 
@@ -344,46 +344,46 @@ public class KursblockungDynStatistik {
 		return bewertungKursdifferenzen;
 	}
 
-	/** 
+	/**
 	 * Informiert die Statistik, dass ein Kurs-Paar hinzuzufügen ist.
 	 * 
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
-	void aktionKurspaarInSchieneHinzufuegen(@NotNull KursblockungDynKurs pKurs1, @NotNull KursblockungDynKurs pKurs2) {
-		int faNr1 = pKurs1.gibFachart().gibNr();
-		int faNr2 = pKurs2.gibFachart().gibNr();
-		int kuNr1 = pKurs1.gibInternalID();
-		int kuNr2 = pKurs2.gibInternalID();
+	void aktionKurspaarInSchieneHinzufuegen(final @NotNull KursblockungDynKurs pKurs1, final @NotNull KursblockungDynKurs pKurs2) {
+		final int faNr1 = pKurs1.gibFachart().gibNr();
+		final int faNr2 = pKurs2.gibFachart().gibNr();
+		final int kuNr1 = pKurs1.gibInternalID();
+		final int kuNr2 = pKurs2.gibInternalID();
 		bewertungFachartPaar += matrixFachartPaar[faNr1][faNr2];
 		bewertungRegelverletzungen += regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
-	/** 
+	/**
 	 * Informiert die Statistik, dass ein Kurs-Paar zu entfernen ist.
 	 * 
 	 * @param pKurs1 Der 1. Kurs des Kurs-Paares.
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares. 
 	 */
-	void aktionKurspaarInSchieneEntfernen(@NotNull KursblockungDynKurs pKurs1, @NotNull KursblockungDynKurs pKurs2) {
-		int faNr1 = pKurs1.gibFachart().gibNr();
-		int faNr2 = pKurs2.gibFachart().gibNr();
-		int kuNr1 = pKurs1.gibInternalID();
-		int kuNr2 = pKurs2.gibInternalID();
+	void aktionKurspaarInSchieneEntfernen(final @NotNull KursblockungDynKurs pKurs1, final @NotNull KursblockungDynKurs pKurs2) {
+		final int faNr1 = pKurs1.gibFachart().gibNr();
+		final int faNr2 = pKurs2.gibFachart().gibNr();
+		final int kuNr1 = pKurs1.gibInternalID();
+		final int kuNr2 = pKurs2.gibInternalID();
 		bewertungFachartPaar -= matrixFachartPaar[faNr1][faNr2];
 		bewertungRegelverletzungen -= regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
-	/** 
+	/**
 	 * Informiert die Statistik über eine Veränderung der Nichtwahlen.
 	 * 
 	 * @param pVeraenderung Die Veränderungen der Nichtwahlen (negative Werte sind möglich).
 	 */
-	void aktionNichtwahlenVeraendern(int pVeraenderung) {
+	void aktionNichtwahlenVeraendern(final int pVeraenderung) {
 		bewertungNichtwahlen += pVeraenderung;
 	}
 
-	/** 
+	/**
 	 * Fügt eine Kursdifferenz {@code pIndex} dem Histogramm {@link KursblockungDynStatistik#bewertungKursdifferenzen}
 	 * aller Kursdifferenzen hinzu. Der Index des größten Nicht-Null-Wertes
 	 * {@link KursblockungDynStatistik#bewertungKursdifferenzenMaxIndex} wird dabei möglicherweise größer. <br>
@@ -392,14 +392,14 @@ public class KursblockungDynStatistik {
 	 * 
 	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll. 
 	 */
-	void aktionKursdifferenzHinzufuegen(int pIndex) {
+	void aktionKursdifferenzHinzufuegen(final int pIndex) {
 		bewertungKursdifferenzen[pIndex]++;
 	
 		if (pIndex > bewertungKursdifferenzenMaxIndex)
 			bewertungKursdifferenzenMaxIndex = pIndex;
 	}
 
-	/** 
+	/**
 	 * Entfernt eine Kursdifferenz {@code pIndex} aus dem Histogramm
 	 * {@link KursblockungDynStatistik#bewertungKursdifferenzen} aller Kursdifferenzen. Der Index des größten
 	 * Nicht-Null-Wertes {@link KursblockungDynStatistik#bewertungKursdifferenzenMaxIndex} wird dabei möglicherweise
@@ -409,7 +409,7 @@ public class KursblockungDynStatistik {
 	 * 
 	 * @param pIndex Die Kursdifferenz von der es eine weniger geben soll. 
 	 */
-	void aktionKursdifferenzEntfernen(int pIndex) {
+	void aktionKursdifferenzEntfernen(final int pIndex) {
 		bewertungKursdifferenzen[pIndex]--;
 
 		if (pIndex == bewertungKursdifferenzenMaxIndex)
@@ -418,7 +418,7 @@ public class KursblockungDynStatistik {
 
 	}
 
-	/** 
+	/**
 	 * Speichert die aktuellen Werte (im Zustand S).
 	 */
 	void aktionBewertungSpeichernS() {
@@ -428,7 +428,7 @@ public class KursblockungDynStatistik {
 		System.arraycopy(bewertungKursdifferenzen, 0, bewertungKursdifferenzenSaveS, 0, bewertungKursdifferenzen.length);
 	}
 
-	/** 
+	/**
 	 * Speichert die aktuellen Werte (im Zustand K).
 	 */
 	void aktionBewertungSpeichernK() {
@@ -438,7 +438,7 @@ public class KursblockungDynStatistik {
 		System.arraycopy(bewertungKursdifferenzen, 0, bewertungKursdifferenzenSaveK, 0, bewertungKursdifferenzen.length);
 	}
 
-	/** 
+	/**
 	 * Speichert den aktuellen Blockungsdaten (im Zustand G).
 	 */
 	void aktionBewertungSpeichernG() {
@@ -454,9 +454,9 @@ public class KursblockungDynStatistik {
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */
-	void regelHinzufuegenKursVerbieteMitKurs(@NotNull KursblockungDynKurs kurs1, @NotNull KursblockungDynKurs kurs2) {
-		int nr1 = kurs1.gibInternalID();
-		int nr2 = kurs2.gibInternalID();
+	void regelHinzufuegenKursVerbieteMitKurs(final @NotNull KursblockungDynKurs kurs1, final @NotNull KursblockungDynKurs kurs2) {
+		final int nr1 = kurs1.gibInternalID();
+		final int nr2 = kurs2.gibInternalID();
 		regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		regelVerletzungKursMitKurs[nr2][nr1] += 1;
 		// System.out.println("DEBUG: regelHinzufuegenKursVerbieteMitKurs ["+nr1+"/"+kurs1.gibDatenbankID()+"]["+nr2+"/"+kurs2.gibDatenbankID()+"]");
@@ -471,9 +471,9 @@ public class KursblockungDynStatistik {
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
 	 */
-	void regelHinzufuegenKursZusammenMitKurs(@NotNull KursblockungDynKurs kurs1, @NotNull KursblockungDynKurs kurs2) {
-		int nr1 = kurs1.gibInternalID();
-		int nr2 = kurs2.gibInternalID();
+	void regelHinzufuegenKursZusammenMitKurs(final @NotNull KursblockungDynKurs kurs1, final @NotNull KursblockungDynKurs kurs2) {
+		final int nr1 = kurs1.gibInternalID();
+		final int nr2 = kurs2.gibInternalID();
 		regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());

@@ -66,7 +66,7 @@ public enum PersonalTyp {
 	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis   gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-    private PersonalTyp(int id, @NotNull String kuerzel, @NotNull String bezeichnung, Integer gueltigVon, Integer gueltigBis) {
+    private PersonalTyp(final int id, final @NotNull String kuerzel, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
     	this.id = id;
         this.kuerzel = kuerzel;
         this.bezeichnung = bezeichnung;
@@ -84,7 +84,7 @@ public enum PersonalTyp {
 	 */
 	private static @NotNull HashMap<@NotNull Integer, @NotNull PersonalTyp> getMapID() {
 		if (_mapID.size() == 0)
-			for (PersonalTyp p : PersonalTyp.values())
+			for (final PersonalTyp p : PersonalTyp.values())
 				_mapID.put(p.id, p);				
 		return _mapID;
 	}
@@ -98,7 +98,7 @@ public enum PersonalTyp {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull PersonalTyp> getMapBezeichnungen() {
 		if (_mapBezeichnungen.size() == 0)
-			for (PersonalTyp p : PersonalTyp.values())
+			for (final PersonalTyp p : PersonalTyp.values())
 				_mapBezeichnungen.put(p.kuerzel, p);				
 		return _mapBezeichnungen;
 	}
@@ -111,7 +111,7 @@ public enum PersonalTyp {
      * 
      * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
      * */
-    public static PersonalTyp fromBezeichnung(String bezeichnung) {
+    public static PersonalTyp fromBezeichnung(final String bezeichnung) {
     	return getMapBezeichnungen().get(bezeichnung);
     }
 
@@ -124,7 +124,7 @@ public enum PersonalTyp {
      * 
      * @return der Personal-Typ oder null, falls die ID ungültig ist
      * */
-    public static PersonalTyp fromID(Integer id) {
+    public static PersonalTyp fromID(final Integer id) {
     	return getMapID().get(id);
     }
     

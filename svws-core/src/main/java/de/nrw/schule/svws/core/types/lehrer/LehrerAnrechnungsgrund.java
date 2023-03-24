@@ -449,7 +449,7 @@ public enum LehrerAnrechnungsgrund {
 	 * 
 	 * @param historie   die Historie des Anrechnungsgrundes, welches ein Array von {@link LehrerKatalogAnrechnungsgrundEintrag} ist  
 	 */
-	private LehrerAnrechnungsgrund(@NotNull LehrerKatalogAnrechnungsgrundEintrag@NotNull[] historie) {
+	private LehrerAnrechnungsgrund(final @NotNull LehrerKatalogAnrechnungsgrundEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -464,7 +464,7 @@ public enum LehrerAnrechnungsgrund {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerAnrechnungsgrund> getMapGruendeByID() {
 		if (_gruendeByID.size() == 0)
-			for (LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
+			for (final LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
 				_gruendeByID.put(g.daten.id, g);				
 		return _gruendeByID;
 	}
@@ -478,7 +478,7 @@ public enum LehrerAnrechnungsgrund {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerAnrechnungsgrund> getMapGruendeByKuerzel() {
 		if (_gruendeByKuerzel.size() == 0)
-			for (LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
+			for (final LehrerAnrechnungsgrund g : LehrerAnrechnungsgrund.values())
 				_gruendeByKuerzel.put(g.daten.kuerzel, g);				
 		return _gruendeByKuerzel;
 	}
@@ -491,7 +491,7 @@ public enum LehrerAnrechnungsgrund {
 	 * 
 	 * @return der Anrechnungsgrund oder null, falls die ID ungültig ist. 
 	 */
-	public static LehrerAnrechnungsgrund getByID(long id) {
+	public static LehrerAnrechnungsgrund getByID(final long id) {
 		return getMapGruendeByID().get(id);
 	}
 
@@ -503,7 +503,7 @@ public enum LehrerAnrechnungsgrund {
 	 * 
 	 * @return der Anrechnungsgrund oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerAnrechnungsgrund getByKuerzel(String kuerzel) {
+	public static LehrerAnrechnungsgrund getByKuerzel(final String kuerzel) {
 		return getMapGruendeByKuerzel().get(kuerzel);
 	}
 

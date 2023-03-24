@@ -55,7 +55,7 @@ public enum BerufskollegBildungsgangTyp {
 	 * @param historie   die Historie der Berufsschultypen von Bildungsgängen, welches ein Array von 
 	 *                   {@link BildungsgangTypKatalogEintrag} ist  
 	 */
-	private BerufskollegBildungsgangTyp(@NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
+	private BerufskollegBildungsgangTyp(final @NotNull BildungsgangTypKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -71,7 +71,7 @@ public enum BerufskollegBildungsgangTyp {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegBildungsgangTyp> getMapByKuerzel() {
 		if (_ebenen.size() == 0) {
-			for (BerufskollegBildungsgangTyp s : BerufskollegBildungsgangTyp.values()) {
+			for (final BerufskollegBildungsgangTyp s : BerufskollegBildungsgangTyp.values()) {
 				if (s.daten != null)
 					_ebenen.put(s.daten.kuerzel, s);
 			}
@@ -87,7 +87,7 @@ public enum BerufskollegBildungsgangTyp {
 	 * 
 	 * @return der Berufsschultyp von Bildungsgängen oder null, falls das Kürzel ungültig ist
 	 */
-	public static BerufskollegBildungsgangTyp getByKuerzel(String kuerzel) {
+	public static BerufskollegBildungsgangTyp getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

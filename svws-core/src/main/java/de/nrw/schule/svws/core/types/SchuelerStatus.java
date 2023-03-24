@@ -68,7 +68,7 @@ public enum SchuelerStatus {
 	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis    gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private SchuelerStatus(int id, @NotNull String bezeichnung, Integer gueltigVon, Integer gueltigBis) {
+	private SchuelerStatus(final int id, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
         this.gueltigVon = gueltigVon;
@@ -85,7 +85,7 @@ public enum SchuelerStatus {
 	 */
 	private static @NotNull HashMap<@NotNull Integer, @NotNull SchuelerStatus> getMapID() {
 		if (_mapID.size() == 0)
-			for (SchuelerStatus p : SchuelerStatus.values())
+			for (final SchuelerStatus p : SchuelerStatus.values())
 				_mapID.put(p.id, p);				
 		return _mapID;
 	}
@@ -99,7 +99,7 @@ public enum SchuelerStatus {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchuelerStatus> getMapBezeichnungen() {
 		if (_mapBezeichnungen.size() == 0)
-			for (SchuelerStatus p : SchuelerStatus.values())
+			for (final SchuelerStatus p : SchuelerStatus.values())
 				_mapBezeichnungen.put(p.bezeichnung.toUpperCase(), p);				
 		return _mapBezeichnungen;
 	}
@@ -112,7 +112,7 @@ public enum SchuelerStatus {
 	 * 
 	 * @return der Schülerstatus oder null, falls die ID ungültig ist
 	 * */
-	public static SchuelerStatus fromID(int status) {
+	public static SchuelerStatus fromID(final int status) {
 		return getMapID().get(status);
 	}
 
@@ -124,7 +124,7 @@ public enum SchuelerStatus {
 	 * 
 	 * @return der Schülerstatus oder null, falls die Bezeichnung ungültig ist
 	 * */
-    public static SchuelerStatus fromBezeichnung(String value) {
+    public static SchuelerStatus fromBezeichnung(final String value) {
     	if (value == null)
     		return null;
     	return getMapBezeichnungen().get(value.toUpperCase());
@@ -139,10 +139,10 @@ public enum SchuelerStatus {
 	 * 
 	 * @return true, falls die ID gültig ist.
 	 */
-	public static boolean isValidID(Integer id) {
+	public static boolean isValidID(final Integer id) {
 		if (id == null)
 			return false;
-		for (SchuelerStatus status : SchuelerStatus.values())
+		for (final SchuelerStatus status : SchuelerStatus.values())
 			if (status.id == id)
 				return true;
 		return false;

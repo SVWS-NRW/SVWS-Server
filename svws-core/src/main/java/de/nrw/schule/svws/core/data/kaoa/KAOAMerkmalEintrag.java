@@ -71,15 +71,15 @@ public class KAOAMerkmalEintrag {
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOAMerkmalEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, 
-	        @NotNull KAOAKategorie kategorie, @NotNull KAOAMerkmaleOptionsarten optionsart,
-	        @NotNull List<@NotNull Schulgliederung> bkAnlagen, Integer gueltigVon, Integer gueltigBis) {
+	public KAOAMerkmalEintrag(final long id, final @NotNull String kuerzel, final @NotNull String beschreibung, 
+	        final @NotNull KAOAKategorie kategorie, final @NotNull KAOAMerkmaleOptionsarten optionsart,
+	        final @NotNull List<@NotNull Schulgliederung> bkAnlagen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
 		this.kategorie = kategorie.daten.kuerzel;
 		this.optionsart = optionsart.kuerzel;
-		for (Schulgliederung gl : bkAnlagen) {
+		for (final Schulgliederung gl : bkAnlagen) {
 		    if (gl.daten.bkAnlage == null)
 		        throw new NullPointerException("Es wurde keine Gliederung des Berufskollges als Anlage angegeben.");
 		    this.bkAnlagen.add(gl.daten.kuerzel);

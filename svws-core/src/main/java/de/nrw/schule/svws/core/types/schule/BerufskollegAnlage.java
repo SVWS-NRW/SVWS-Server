@@ -69,7 +69,7 @@ public enum BerufskollegAnlage {
 	 * 
 	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist  
 	 */
-	private BerufskollegAnlage(@NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie) {
+	private BerufskollegAnlage(final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -84,7 +84,7 @@ public enum BerufskollegAnlage {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> getMapAnlageByKuerzel() {
 		if (_anlagen.size() == 0) {
-			for (BerufskollegAnlage s : BerufskollegAnlage.values()) {
+			for (final BerufskollegAnlage s : BerufskollegAnlage.values()) {
 				if (s.daten != null)
 					_anlagen.put(s.daten.kuerzel, s);
 			}
@@ -100,7 +100,7 @@ public enum BerufskollegAnlage {
 	 * 
 	 * @return die Anlage oder null, falls das Kürzel ungültig ist
 	 */
-	public static BerufskollegAnlage getByKuerzel(String kuerzel) {
+	public static BerufskollegAnlage getByKuerzel(final String kuerzel) {
 		return getMapAnlageByKuerzel().get(kuerzel);
 	}
 

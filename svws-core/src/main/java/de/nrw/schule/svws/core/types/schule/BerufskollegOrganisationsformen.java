@@ -153,7 +153,7 @@ public enum BerufskollegOrganisationsformen {
 	 * @param historie   die Historie der Organisationsform, welche ein Array von 
 	 *                   {@link OrganisationsformKatalogEintrag} ist  
 	 */
-	private BerufskollegOrganisationsformen(@NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
+	private BerufskollegOrganisationsformen(final @NotNull OrganisationsformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -168,7 +168,7 @@ public enum BerufskollegOrganisationsformen {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegOrganisationsformen> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (BerufskollegOrganisationsformen s : BerufskollegOrganisationsformen.values()) {
+			for (final BerufskollegOrganisationsformen s : BerufskollegOrganisationsformen.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -184,7 +184,7 @@ public enum BerufskollegOrganisationsformen {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static BerufskollegOrganisationsformen getByKuerzel(String kuerzel) {
+	public static BerufskollegOrganisationsformen getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

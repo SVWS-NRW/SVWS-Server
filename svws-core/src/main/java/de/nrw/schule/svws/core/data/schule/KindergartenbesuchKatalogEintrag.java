@@ -51,8 +51,8 @@ public class KindergartenbesuchKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KindergartenbesuchKatalogEintrag(long id, long kuerzel, @NotNull String beschreibung,
-			Integer gueltigVon, Integer gueltigBis) {
+	public KindergartenbesuchKatalogEintrag(final long id, final long kuerzel, final @NotNull String beschreibung,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;

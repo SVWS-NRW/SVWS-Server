@@ -21,8 +21,8 @@ public class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchnellW(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 	
@@ -32,7 +32,7 @@ public class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 	}
 
 	@Override
-	public void berechne(long pEndzeit) {
+	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;

@@ -76,20 +76,20 @@ export class KAOAMerkmalEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.kaoa.KAOAKategorie')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.kaoa.KAOAMerkmaleOptionsarten')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let beschreibung : string = __param2;
-			let kategorie : KAOAKategorie = cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie(__param3);
-			let optionsart : KAOAMerkmaleOptionsarten = cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten(__param4);
-			let bkAnlagen : List<Schulgliederung> = cast_java_util_List(__param5);
-			let gueltigVon : number | null = __param6;
-			let gueltigBis : number | null = __param7;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const beschreibung : string = __param2;
+			const kategorie : KAOAKategorie = cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie(__param3);
+			const optionsart : KAOAMerkmaleOptionsarten = cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten(__param4);
+			const bkAnlagen : List<Schulgliederung> = cast_java_util_List(__param5);
+			const gueltigVon : number | null = __param6;
+			const gueltigBis : number | null = __param7;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
 			this.kategorie = kategorie.daten.kuerzel;
 			this.optionsart = optionsart.kuerzel;
-			for (let gl of bkAnlagen) {
+			for (const gl of bkAnlagen) {
 				if (gl.daten.bkAnlage === null)
 					throw new NullPointerException("Es wurde keine Gliederung des Berufskollges als Anlage angegeben.")
 				this.bkAnlagen.add(gl.daten.kuerzel);

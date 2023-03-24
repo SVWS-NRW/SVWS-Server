@@ -332,8 +332,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcAddAllEntries(@NotNull DummyMapIntervall iv,
 			@NotNull Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
 		boolean changed = false;
-		for (@NotNull
-		Entry<@NotNull Integer, @NotNull Integer> ent : c)
+		for (@NotNull Entry<@NotNull Integer, @NotNull Integer> ent : c)
 			changed |= bcAddEntry(iv, ent);
 		return changed;
 	}
@@ -362,8 +361,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllKeys(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
-		for (@NotNull
-		Object key : c)
+		for (@NotNull Object key : c)
 			if (!bcContainsKey(iv, key))
 				return false;
 		return true;
@@ -414,9 +412,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcContainsEntry(@NotNull DummyMapIntervall iv, Object o) {
 		if (o instanceof Entry<?, ?> == false)
 			return false;
-		@NotNull
-		Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
-		@SuppressWarnings("cast")
+		@NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		int key = (Integer) e.getKey();
 		if (iv.contains(key) == false)
 			return false;
@@ -471,8 +467,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	boolean bcRemoveAllKeyReturnBool(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (@NotNull
-		Object obj : c)
+		for (@NotNull Object obj : c)
 			changed |= removeKeyReturnBool(iv, obj);
 		return changed;
 	}
@@ -489,8 +484,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcRemoveEntryReturnBool(@NotNull DummyMapIntervall iv, @NotNull Object o) {
 		if (bcContainsEntry(iv, o) == false)
 			return false;
-		@NotNull
-		Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		@NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		return removeKeyReturnBool(iv, e.getKey());
 	}
 
@@ -505,8 +499,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	boolean bcRemoveAllEntriesReturnBool(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (@NotNull
-		Object obj : c)
+		for (@NotNull Object obj : c)
 			changed |= bcRemoveEntryReturnBool(iv, obj);
 		return changed;
 	}
@@ -843,8 +836,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull
-	Integer bcGetFirstKeyOrException(@NotNull DummyMapIntervall iv) {
+	@NotNull Integer bcGetFirstKeyOrException(@NotNull DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return i;
@@ -875,8 +867,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull
-	Integer bcGetLastKeyOrException(@NotNull DummyMapIntervall iv) {
+	@NotNull Integer bcGetLastKeyOrException(@NotNull DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return i;

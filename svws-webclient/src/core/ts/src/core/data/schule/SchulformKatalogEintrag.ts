@@ -13,7 +13,6 @@ export class SchulformKatalogEintrag extends JavaObject {
 	public kuerzel : string = "";
 
 	/**
-	 *
 	 *  Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar
 	 *  in der SVWS-DB bei der Schule gespeichert, aber dort aus dem Schulverzeichnis genommen.
 	 *  Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels
@@ -71,13 +70,13 @@ export class SchulformKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
 			// empty block
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let nummer : string = __param2;
-			let bezeichnung : string = __param3;
-			let hatGymOb : boolean = __param4 as boolean;
-			let gueltigVon : number | null = __param5;
-			let gueltigBis : number | null = __param6;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const nummer : string = __param2;
+			const bezeichnung : string = __param3;
+			const hatGymOb : boolean = __param4 as boolean;
+			const gueltigVon : number | null = __param5;
+			const gueltigBis : number | null = __param6;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.nummer = nummer;

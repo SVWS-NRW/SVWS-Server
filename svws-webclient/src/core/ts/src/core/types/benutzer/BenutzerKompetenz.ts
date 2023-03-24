@@ -488,7 +488,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 */
 	private static getMapID() : HashMap<number, BenutzerKompetenz> {
 		if (BenutzerKompetenz._mapID.size() === 0)
-			for (let p of BenutzerKompetenz.values())
+			for (const p of BenutzerKompetenz.values())
 				BenutzerKompetenz._mapID.put(p.daten.id, p);
 		return BenutzerKompetenz._mapID;
 	}
@@ -501,13 +501,13 @@ export class BenutzerKompetenz extends JavaObject {
 	 */
 	private static getMapGruppenZuordnung() : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
 		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
-			for (let g of BenutzerKompetenzGruppe.values())
+			for (const g of BenutzerKompetenzGruppe.values())
 				BenutzerKompetenz._mapGruppenZuordnung.put(g, new Vector());
-			for (let p of BenutzerKompetenz.values()) {
+			for (const p of BenutzerKompetenz.values()) {
 				let gruppe : BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
 				if (gruppe === null)
 					gruppe = BenutzerKompetenzGruppe.KEINE;
-				let liste : List<BenutzerKompetenz> | null = BenutzerKompetenz._mapGruppenZuordnung.get(gruppe);
+				const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz._mapGruppenZuordnung.get(gruppe);
 				if (liste !== null)
 					liste.add(p);
 			}
@@ -536,7 +536,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 * @return die Liste der Benutzerkompetenzen
 	 */
 	public static getKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
-		let liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
+		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
 		if (liste === null)
 			return new Vector();
 		return liste;

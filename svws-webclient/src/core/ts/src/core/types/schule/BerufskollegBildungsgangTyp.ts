@@ -86,7 +86,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, BerufskollegBildungsgangTyp> {
 		if (BerufskollegBildungsgangTyp._ebenen.size() === 0) {
-			for (let s of BerufskollegBildungsgangTyp.values()) {
+			for (const s of BerufskollegBildungsgangTyp.values()) {
 				if (s.daten !== null)
 					BerufskollegBildungsgangTyp._ebenen.put(s.daten.kuerzel, s);
 			}

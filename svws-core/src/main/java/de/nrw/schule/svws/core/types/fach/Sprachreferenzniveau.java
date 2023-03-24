@@ -98,7 +98,7 @@ public enum Sprachreferenzniveau  {
      * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
      *                   {@link SprachreferenzniveauKatalogEintrag} ist  
 	 */
-	private Sprachreferenzniveau(@NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie) {
+	private Sprachreferenzniveau(final @NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
         this.daten = historie[historie.length - 1];
 	}
@@ -112,7 +112,7 @@ public enum Sprachreferenzniveau  {
      */
     private static @NotNull HashMap<@NotNull Integer, @NotNull Sprachreferenzniveau> getMapByID() {
         if (_mapID.size() == 0)
-            for (Sprachreferenzniveau l : Sprachreferenzniveau.values())
+            for (final Sprachreferenzniveau l : Sprachreferenzniveau.values())
                 _mapID.put(l.daten.id, l);              
         return _mapID;
     }
@@ -126,7 +126,7 @@ public enum Sprachreferenzniveau  {
      */
     private static @NotNull HashMap<@NotNull String, @NotNull Sprachreferenzniveau> getMapByKuerzel() {
         if (_mapKuerzel.size() == 0)
-            for (Sprachreferenzniveau l : Sprachreferenzniveau.values())
+            for (final Sprachreferenzniveau l : Sprachreferenzniveau.values())
                 _mapKuerzel.put(l.daten.kuerzel, l);                
         return _mapKuerzel;
     }
@@ -139,7 +139,7 @@ public enum Sprachreferenzniveau  {
      *
      * @return das Sprachreferenzniveau oder null, wenn die ID ungültig ist
      */
-    public static Sprachreferenzniveau getByID(Integer id) {
+    public static Sprachreferenzniveau getByID(final Integer id) {
         return getMapByID().get(id);
     }
 
@@ -151,7 +151,7 @@ public enum Sprachreferenzniveau  {
      * 
      * @return das Sprachreferenzniveau oder null, wenn das Kürzel ungültig ist
      */
-    public static Sprachreferenzniveau getByKuerzel(String kuerzel) {
+    public static Sprachreferenzniveau getByKuerzel(final String kuerzel) {
         return getMapByKuerzel().get(kuerzel);
     }
 
@@ -163,8 +163,8 @@ public enum Sprachreferenzniveau  {
 	 * 
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
-	public int vergleiche(String kuerzel) {
-	    Sprachreferenzniveau other = getByKuerzel(kuerzel);
+	public int vergleiche(final String kuerzel) {
+	    final Sprachreferenzniveau other = getByKuerzel(kuerzel);
 	    if (other == null)
 	        return 1;
 	    return this.compareTo(other);

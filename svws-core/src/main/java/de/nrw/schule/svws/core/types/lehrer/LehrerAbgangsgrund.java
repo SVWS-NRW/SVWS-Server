@@ -64,7 +64,7 @@ public enum LehrerAbgangsgrund {
 	 * 
 	 * @param historie   die Historie des Abgangsgrundes, welches ein Array von {@link LehrerKatalogAbgangsgrundEintrag} ist  
 	 */
-	private LehrerAbgangsgrund(@NotNull LehrerKatalogAbgangsgrundEintrag@NotNull[] historie) {
+	private LehrerAbgangsgrund(final @NotNull LehrerKatalogAbgangsgrundEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -79,7 +79,7 @@ public enum LehrerAbgangsgrund {
 	 * @return der Grund für das Verlassen der Schule durch den Lehrer oder null, falls die ID ungültig ist
 	 */
 	public static LehrerAbgangsgrund getByID(final int id) {
-		for (@NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
+		for (final @NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
 			if (grund.daten.id == id)
 				return grund;
 		return null;
@@ -93,8 +93,8 @@ public enum LehrerAbgangsgrund {
 	 * 
 	 * @return der Grund für das Verlassen der Schule durch den Lehrer oder null, falls das kuerzel ungültig ist
 	 */
-	public static LehrerAbgangsgrund getByKuerzel(String kuerzel) {
-		for (@NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
+	public static LehrerAbgangsgrund getByKuerzel(final String kuerzel) {
+		for (final @NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
 			if (grund.daten.kuerzel.equals(kuerzel))
 				return grund;
 		return null;
@@ -110,8 +110,8 @@ public enum LehrerAbgangsgrund {
 	 * 
 	 * @return der Grund für das Verlassen der Schule durch den Lehrer oder null, falls der Schlüssel ungültig ist
 	 */
-	public static LehrerAbgangsgrund getByASDSchluessel(String schluessel) {
-		for (@NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
+	public static LehrerAbgangsgrund getByASDSchluessel(final String schluessel) {
+		for (final @NotNull LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
 			if (grund.daten.schluessel.equals(schluessel))
 				return grund;
 		return null;

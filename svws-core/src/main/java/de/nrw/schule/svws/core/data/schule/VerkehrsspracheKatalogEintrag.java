@@ -58,8 +58,8 @@ public class VerkehrsspracheKatalogEintrag {
 	 * @param gueltigBis            das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	
-	public VerkehrsspracheKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung, 
-			String iso2, Integer gueltigVon, Integer gueltigBis) {
+	public VerkehrsspracheKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung, 
+			final String iso2, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

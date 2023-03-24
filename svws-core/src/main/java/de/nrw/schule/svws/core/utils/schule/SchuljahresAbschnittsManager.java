@@ -13,13 +13,12 @@ public class SchuljahresAbschnittsManager {
 	/**
 	 * Der aktuelle Schuljahresabschnitt
 	 */
-	@NotNull
-	private Schuljahresabschnitt abschnitt;
+	@NotNull private final Schuljahresabschnitt abschnitt;
 
 	/**
 	 * Die Anzahl an Schuljahresabschnitten an dieser Schule
 	 */
-	private int anzahlAbschnitte;
+	private final int anzahlAbschnitte;
 
 	/**
 	 * Konstruktor für den SchuljahresManager mit Schuljahresabschnitt und der
@@ -30,7 +29,7 @@ public class SchuljahresAbschnittsManager {
 	 * @param anzahlAbschnitte     die Anzahl an Schuljahresabschnitten dieser
 	 *                             Schule
 	 */
-	public SchuljahresAbschnittsManager(@NotNull Schuljahresabschnitt schuljahresabschnitt, int anzahlAbschnitte) {
+	public SchuljahresAbschnittsManager(final @NotNull Schuljahresabschnitt schuljahresabschnitt, final int anzahlAbschnitte) {
 		this.abschnitt = schuljahresabschnitt;
 		this.anzahlAbschnitte = anzahlAbschnitte;
 	}
@@ -65,8 +64,8 @@ public class SchuljahresAbschnittsManager {
 	 *         {@code 4/6 2022}<br>
 	 * 
 	 */
-	public static @NotNull String createSchuljahresAbschnittString(@NotNull Schuljahresabschnitt abschnitt,
-			int anzahlAbschnitte) {
+	public static @NotNull String createSchuljahresAbschnittString(final @NotNull Schuljahresabschnitt abschnitt,
+			final int anzahlAbschnitte) {
 		if (anzahlAbschnitte <= 1) {
 			return "" + abschnitt.schuljahr;
 		} else if (anzahlAbschnitte > 1 && anzahlAbschnitte < 5) {
@@ -101,7 +100,7 @@ public class SchuljahresAbschnittsManager {
 	 *         Q (für Quartale), wenn es 4 Abschnitte gibt<br>
 	 *         leerer String, bei 1 oder mehr als 4 Abschnitten<br>
 	 */
-	public static @NotNull String createRepresentationForAnzahlAbschnitte(int anzahlAbschnitte) {
+	public static @NotNull String createRepresentationForAnzahlAbschnitte(final int anzahlAbschnitte) {
 		if (anzahlAbschnitte == 2)
 			return "S";
 		else if (anzahlAbschnitte == 3)

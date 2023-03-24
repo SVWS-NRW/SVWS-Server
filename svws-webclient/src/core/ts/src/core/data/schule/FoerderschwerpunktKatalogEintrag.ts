@@ -61,16 +61,16 @@ export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let beschreibung : string = __param2;
-			let schulformen : List<Schulform> = cast_java_util_List(__param3);
-			let gueltigVon : number | null = __param4;
-			let gueltigBis : number | null = __param5;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const beschreibung : string = __param2;
+			const schulformen : List<Schulform> = cast_java_util_List(__param3);
+			const gueltigVon : number | null = __param4;
+			const gueltigBis : number | null = __param5;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.beschreibung = beschreibung;
-			for (let schulform of schulformen)
+			for (const schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

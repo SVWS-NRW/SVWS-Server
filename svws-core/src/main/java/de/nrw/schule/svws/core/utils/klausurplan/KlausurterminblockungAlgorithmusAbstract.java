@@ -24,7 +24,7 @@ public abstract class KlausurterminblockungAlgorithmusAbstract {
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
-	public KlausurterminblockungAlgorithmusAbstract(@NotNull Random pRandom, @NotNull KlausurterminblockungDynDaten pDynDaten) {
+	public KlausurterminblockungAlgorithmusAbstract(final @NotNull Random pRandom, final @NotNull KlausurterminblockungDynDaten pDynDaten) {
 		_random = pRandom;
 		_dynDaten = pDynDaten;
 	}

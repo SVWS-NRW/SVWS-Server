@@ -19,7 +19,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. 
 	 */
-	public KlausurblockungSchienenAlgorithmusGreedy6(@NotNull Random pRandom, @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+	public KlausurblockungSchienenAlgorithmusGreedy6(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
 	}
 

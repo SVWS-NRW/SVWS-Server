@@ -73,7 +73,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegOrganisationsformen> {
 		if (WeiterbildungskollegOrganisationsformen._mapKuerzel.size() === 0) {
-			for (let s of WeiterbildungskollegOrganisationsformen.values()) {
+			for (const s of WeiterbildungskollegOrganisationsformen.values()) {
 				if (s.daten !== null)
 					WeiterbildungskollegOrganisationsformen._mapKuerzel.put(s.daten.kuerzel, s);
 			}

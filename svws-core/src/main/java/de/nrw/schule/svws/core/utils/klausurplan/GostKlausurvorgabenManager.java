@@ -46,7 +46,7 @@ public class GostKlausurvorgabenManager {
 
 	}
 
-	private void addVorgabeToInternalMaps(@NotNull GostKlausurvorgabe v) {
+	private void addVorgabeToInternalMaps(final @NotNull GostKlausurvorgabe v) {
 		// Füllen von _mapQuartalKlausurvorgaben
 		Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
 				.get(v.quartal);
@@ -84,7 +84,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
-	public void updateKlausurvorgabe(@NotNull GostKlausurvorgabe vorgabe) {
+	public void updateKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		if (!_vorgaben.contains(vorgabe)) {
 			// TODO Error Klausurvorgabe nicht da
 		}
@@ -99,14 +99,14 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
-	public void addKlausurvorgabe(@NotNull GostKlausurvorgabe vorgabe) {
+	public void addKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		_vorgaben.add(vorgabe);
 		_mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
 		removeUpdateKlausurvorgabeCommons(vorgabe);
 		addVorgabeToInternalMaps(vorgabe);
 	}
 
-	private void removeUpdateKlausurvorgabeCommons(@NotNull GostKlausurvorgabe vorgabe) {
+	private void removeUpdateKlausurvorgabeCommons(final @NotNull GostKlausurvorgabe vorgabe) {
 		// aus _mapQuartalKlausurvorgaben löschen
 		final Vector<@NotNull GostKlausurvorgabe> listKlausurvorgabenMapQuartalKlausurvorgaben = _mapQuartalKlausurvorgaben
 				.get(vorgabe.quartal);
@@ -140,7 +140,7 @@ public class GostKlausurvorgabenManager {
 	 * 
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
-	public void removeVorgabe(@NotNull GostKlausurvorgabe vorgabe) {
+	public void removeVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		_vorgaben.remove(vorgabe);
 		_mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
 		removeUpdateKlausurvorgabeCommons(vorgabe);

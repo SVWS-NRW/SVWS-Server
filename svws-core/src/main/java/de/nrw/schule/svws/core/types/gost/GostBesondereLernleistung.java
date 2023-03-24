@@ -36,7 +36,7 @@ public enum GostBesondereLernleistung {
 	 * @param kuerzel        das Kürzel für die Art der Besonderen Lernleistung
 	 * @param beschreibung   die textuelle Beschreibung der Art der Besonderen Lernleistung
 	 */
-	private GostBesondereLernleistung(@NotNull String kuerzel, @NotNull String beschreibung) {
+	private GostBesondereLernleistung(final @NotNull String kuerzel, final @NotNull String beschreibung) {
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
 	}
@@ -49,7 +49,7 @@ public enum GostBesondereLernleistung {
 	 * 
 	 * @return die Art der Besonderen Lernleistung
 	 */
-	public static @NotNull GostBesondereLernleistung fromKuerzel(String kuerzel) {
+	public static @NotNull GostBesondereLernleistung fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return KEINE;
 		switch (kuerzel) {
@@ -77,7 +77,7 @@ public enum GostBesondereLernleistung {
 	 * @return true, falls die Arten übereinstimmen und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean is(String kuerzel) {
+	public boolean is(final String kuerzel) {
 		return this.kuerzel.equals(kuerzel);
 	}
 

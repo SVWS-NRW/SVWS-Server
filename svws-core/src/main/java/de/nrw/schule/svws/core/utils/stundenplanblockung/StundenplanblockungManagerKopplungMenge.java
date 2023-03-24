@@ -31,7 +31,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @param pKuerzel               Das Kürzel der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
-	public void addOrException(long pKopplungID, @NotNull String pKuerzel) throws NullPointerException {
+	public void addOrException(final long pKopplungID, final @NotNull String pKuerzel) throws NullPointerException {
 		if (_map.containsKey(pKopplungID) == true)
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!");
 		final StundenplanblockungManagerKopplung ko = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
@@ -47,7 +47,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungManagerKopplung}-Objekt zur übergebenen ID.
 	 */
-	public @NotNull StundenplanblockungManagerKopplung getOrException(long pKopplungID) throws NullPointerException {
+	public @NotNull StundenplanblockungManagerKopplung getOrException(final long pKopplungID) throws NullPointerException {
 		final StundenplanblockungManagerKopplung ko = _map.get(pKopplungID);
 		if (ko == null)
 			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!");
@@ -61,7 +61,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
 	 * @return         Liefert eine zufällige Kopplung.
 	 */
-	public @NotNull StundenplanblockungManagerKopplung getRandomOrException(@NotNull Random pRandom) {
+	public @NotNull StundenplanblockungManagerKopplung getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
 		if (size <= 0)
 			throw new NullPointerException("Es gibt keine Kopplungen!");
@@ -75,7 +75,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
 	 */
-	public void removeOrException(long pKopplungID) throws NullPointerException {
+	public void removeOrException(final long pKopplungID) throws NullPointerException {
 		final @NotNull StundenplanblockungManagerKopplung ko = getOrException(pKopplungID);
 		_map.remove(pKopplungID);
 		_menge.remove(ko);
@@ -87,7 +87,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
 	 * @return TRUE, falls die Kopplung-ID existiert.
 	 */
-	public boolean exists(long pKopplungID) {
+	public boolean exists(final long pKopplungID) {
 		return _map.containsKey(pKopplungID);
 	}
 

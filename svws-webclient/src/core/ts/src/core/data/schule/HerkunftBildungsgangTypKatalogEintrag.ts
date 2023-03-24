@@ -64,11 +64,11 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegBildungsgangTyp'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
-			let id : number = __param0 as number;
-			let wbkTyp : WeiterbildungskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp(__param1);
-			let bkTyp : BerufskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp(__param2);
-			let gueltigVon : number | null = __param3;
-			let gueltigBis : number | null = __param4;
+			const id : number = __param0 as number;
+			const wbkTyp : WeiterbildungskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp(__param1);
+			const bkTyp : BerufskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp(__param2);
+			const gueltigVon : number | null = __param3;
+			const gueltigBis : number | null = __param4;
 			this.id = id;
 			if ((wbkTyp !== null) && (bkTyp !== null))
 				throw new IllegalArgumentException("Fehler im Core-Type: wbkTyp und bkTyp dürfen nicht gleichzeitig gesetzt sein.")

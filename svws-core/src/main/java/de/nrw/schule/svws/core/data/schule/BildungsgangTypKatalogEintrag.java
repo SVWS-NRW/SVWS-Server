@@ -52,7 +52,7 @@ public class BildungsgangTypKatalogEintrag {
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public BildungsgangTypKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung, Integer gueltigVon, Integer gueltigBis) {
+	public BildungsgangTypKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

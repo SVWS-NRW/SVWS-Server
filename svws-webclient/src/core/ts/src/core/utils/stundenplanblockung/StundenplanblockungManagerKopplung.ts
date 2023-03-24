@@ -7,7 +7,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	/**
 	 * Die Datenbank-ID der Kopplung.
 	 */
-	private _id : number = 0;
+	private readonly _id : number;
 
 	/**
 	 * Das Kürzel der Kopplung. Beispielsweise '7RE'.
@@ -17,7 +17,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Kopplungen.
 	 */
-	private _lerngruppen : Vector<StundenplanblockungManagerLerngruppe | null> = new Vector();
+	private readonly _lerngruppen : Vector<StundenplanblockungManagerLerngruppe | null> = new Vector();
 
 
 	/**

@@ -288,7 +288,7 @@ public enum Foerderschwerpunkt {
 	 * @param historie   die Historie des Förderschwerpunktes, welches ein Array von {@link FoerderschwerpunktKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private Foerderschwerpunkt(@NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie) {
+	private Foerderschwerpunkt(final @NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -296,8 +296,8 @@ public enum Foerderschwerpunkt {
 		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
-			for (@NotNull String kuerzel : historie[i].schulformen) {
-				Schulform sf = Schulform.getByKuerzel(kuerzel);
+			for (final @NotNull String kuerzel : historie[i].schulformen) {
+				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
 					this.schulformen[i].add(sf);
 			}
@@ -314,7 +314,7 @@ public enum Foerderschwerpunkt {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Foerderschwerpunkt> getMapFoerderschwerpunktByKuerzel() {
 		if (_foerderschwerpunkteKuerzel.size() == 0)
-			for (Foerderschwerpunkt s : Foerderschwerpunkt.values())
+			for (final Foerderschwerpunkt s : Foerderschwerpunkt.values())
 				_foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);				
 		return _foerderschwerpunkteKuerzel;
 	}
@@ -328,8 +328,8 @@ public enum Foerderschwerpunkt {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Foerderschwerpunkt> getMapFoerderschwerpunktByID() {
 		if (_foerderschwerpunkteID.size() == 0)
-			for (Foerderschwerpunkt s : Foerderschwerpunkt.values()) {
-				for (FoerderschwerpunktKatalogEintrag k : s.historie)
+			for (final Foerderschwerpunkt s : Foerderschwerpunkt.values()) {
+				for (final FoerderschwerpunktKatalogEintrag k : s.historie)
 					_foerderschwerpunkteID.put(k.id, s);
 			}
 		return _foerderschwerpunkteID;
@@ -343,7 +343,7 @@ public enum Foerderschwerpunkt {
 	 * 
 	 * @return der Förderschwerpunkt oder null, falls das Kürzel ungültig ist
 	 */
-	public static Foerderschwerpunkt getByKuerzel(String kuerzel) {
+	public static Foerderschwerpunkt getByKuerzel(final String kuerzel) {
 		return getMapFoerderschwerpunktByKuerzel().get(kuerzel);
 	}
 
@@ -356,7 +356,7 @@ public enum Foerderschwerpunkt {
 	 * 
 	 * @return der Förderschwerpunkt oder null, falls die ID ungültig ist
 	 */
-	public static Foerderschwerpunkt getByID(Long id) {
+	public static Foerderschwerpunkt getByID(final Long id) {
 		return getMapFoerderschwerpunktByID().get(id);
 	}
 
@@ -381,13 +381,13 @@ public enum Foerderschwerpunkt {
 	 * 
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
-	public static @NotNull List<@NotNull Foerderschwerpunkt> get(Schulform schulform) {
-		@NotNull Vector<@NotNull Foerderschwerpunkt> result = new Vector<>();
+	public static @NotNull List<@NotNull Foerderschwerpunkt> get(final Schulform schulform) {
+		final @NotNull Vector<@NotNull Foerderschwerpunkt> result = new Vector<>();
 		if (schulform == null)
 			return result;
-		@NotNull Foerderschwerpunkt@NotNull[] fs = Foerderschwerpunkt.values();
+		final @NotNull Foerderschwerpunkt@NotNull[] fs = Foerderschwerpunkt.values();
 		for (int i = 0; i < fs.length; i++) {
-			@NotNull Foerderschwerpunkt gliederung = fs[i];
+			final @NotNull Foerderschwerpunkt gliederung = fs[i];
 			if (gliederung.hasSchulform(schulform))
 				result.add(gliederung);
 		}
@@ -404,12 +404,12 @@ public enum Foerderschwerpunkt {
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulformByKuerzel(String kuerzel) {
+	public boolean hasSchulformByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}			
@@ -426,12 +426,12 @@ public enum Foerderschwerpunkt {
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulform(Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.schulformen != null) {
 			for (int i = 0; i < daten.schulformen.size(); i++) {
-				String sfKuerzel = daten.schulformen.get(i);
+				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}			
@@ -448,16 +448,16 @@ public enum Foerderschwerpunkt {
 	 * 
 	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
-	public static Foerderschwerpunkt getBySchulformAndKuerzel(Schulform sf, String kuerzel) {
+	public static Foerderschwerpunkt getBySchulformAndKuerzel(final Schulform sf, final String kuerzel) {
 		if (sf == null)
 			return null;
 		// Ist das Kürzel null, so ist der Standard für die Schulform zurückzugeben
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return Foerderschwerpunkt.KEINER;
 		// Prüfe, ob der Förderschwerpunkt bei der Schulform existiert
-		@NotNull List<@NotNull Foerderschwerpunkt> schwerpunkte = get(sf); 
+		final @NotNull List<@NotNull Foerderschwerpunkt> schwerpunkte = get(sf); 
 		for (int i = 0; i < schwerpunkte.size(); i++) {
-			Foerderschwerpunkt fs = schwerpunkte.get(i);
+			final Foerderschwerpunkt fs = schwerpunkte.get(i);
 			if ((fs.daten.kuerzel).equalsIgnoreCase(kuerzel))
 				return fs;
 		}

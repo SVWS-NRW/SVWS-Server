@@ -61,8 +61,8 @@ public class KursblockungDynSchueler {
 	 * @param pKursAnzahl     Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden
 	 *                        kann.
 	 */
-	KursblockungDynSchueler(@NotNull Random pRandom, long pSchuelerID, @NotNull KursblockungDynStatistik pStatistik,
-			int pSchienenAnzahl, int pKursAnzahl) {
+	KursblockungDynSchueler(final @NotNull Random pRandom, final long pSchuelerID, final @NotNull KursblockungDynStatistik pStatistik,
+			final int pSchienenAnzahl, final int pKursAnzahl) {
 		_random = pRandom;
 		guiID = pSchuelerID;
 		representation = "Schüler " + pSchuelerID;
@@ -92,8 +92,7 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @return Die ID (von der GUI) dieses Schülers.
 	 */
-	@NotNull
-	long gibDatenbankID() {
+	@NotNull long gibDatenbankID() {
 		return guiID;
 	}
 
@@ -103,8 +102,7 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @return Eine String-Darstellung des Schülers.
 	 */
-	@NotNull
-	String gibRepresentation() {
+	@NotNull String gibRepresentation() {
 		return representation;
 	}
 
@@ -122,8 +120,7 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @return Ein Array aller Facharten (= Fachwahlen) des Schülers.
 	 */
-	@NotNull
-	KursblockungDynFachart @NotNull [] gibFacharten() {
+	@NotNull KursblockungDynFachart @NotNull [] gibFacharten() {
 		return fachartArr;
 	}
 
@@ -134,7 +131,7 @@ public class KursblockungDynSchueler {
 	 * @return TRUE, falls der Schüler mindestens einen Multikurs hat.
 	 */
 	boolean gibHatMultikurs() {
-		for (@NotNull KursblockungDynFachart fachart : fachartArr) {
+		for (final @NotNull KursblockungDynFachart fachart : fachartArr) {
 			if (fachart.gibHatMultikurs()) {
 				return true;
 			}
@@ -147,8 +144,7 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @return Ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
 	 */
-	@NotNull
-	KursblockungDynKurs[] gibKurswahlen() {
+	@NotNull KursblockungDynKurs[] gibKurswahlen() {
 		return fachartZuKurs;
 	}
 
@@ -161,8 +157,8 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @param pFacharten Die Facharten des Schülers.
 	 */
-	void aktionSetzeFachartenUndIDs(@NotNull KursblockungDynFachart @NotNull [] pFacharten) {
-		int nFacharten = pFacharten.length;
+	void aktionSetzeFachartenUndIDs(final @NotNull KursblockungDynFachart @NotNull [] pFacharten) {
+		final int nFacharten = pFacharten.length;
 		fachartArr = pFacharten;
 		fachartZuKurs = new KursblockungDynKurs[nFacharten];
 		fachartZuKursSaveS = new KursblockungDynKurs[nFacharten];
@@ -174,11 +170,11 @@ public class KursblockungDynSchueler {
 		// FachartArr sortieren --> geringe Kursanzahl zuerst.
 		for (int i = 1; i < nFacharten; i++)
 			for (int j = i; j >= 1; j--) {
-				int anzL = fachartArr[j - 1].gibKurseMax();
-				int anzR = fachartArr[j].gibKurseMax();
+				final int anzL = fachartArr[j - 1].gibKurseMax();
+				final int anzR = fachartArr[j].gibKurseMax();
 				if (anzL > anzR) {
-					@NotNull KursblockungDynFachart fL = fachartArr[j - 1];
-					@NotNull KursblockungDynFachart fR = fachartArr[j];
+					final @NotNull KursblockungDynFachart fL = fachartArr[j - 1];
+					final @NotNull KursblockungDynFachart fR = fachartArr[j];
 					fachartArr[j - 1] = fR;
 					fachartArr[j] = fL;
 				}
@@ -192,7 +188,7 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @param pInterneKursID Die ID des Kurses, der gesperrt wird.
 	 */
-	void aktionSetzeKursSperrung(int pInterneKursID) {
+	void aktionSetzeKursSperrung(final int pInterneKursID) {
 		kursGesperrt[pInterneKursID] = true;
 	}
 
@@ -235,10 +231,10 @@ public class KursblockungDynSchueler {
 		aktionWaehleKurse(fachartZuKursSaveG);
 	}
 
-	private void aktionWaehleKurse(@NotNull KursblockungDynKurs[] wahl) {
+	private void aktionWaehleKurse(final @NotNull KursblockungDynKurs[] wahl) {
 		aktionKurseAlleEntfernen();
 		for (int i = 0; i < fachartZuKurs.length; i++) {
-			KursblockungDynKurs kurs = wahl[i];
+			final KursblockungDynKurs kurs = wahl[i];
 
 			if (kurs == null) {
 				continue;
@@ -256,7 +252,7 @@ public class KursblockungDynSchueler {
 	/** Entfernt den Schüler aus seinen aktuell zugeordneten Kursen. */
 	void aktionKurseAlleEntfernen() {
 		for (int i = 0; i < fachartArr.length; i++) {
-			KursblockungDynKurs kurs = fachartZuKurs[i];
+			final KursblockungDynKurs kurs = fachartZuKurs[i];
 			// Kurs vorhanden? --> Entferne S. aus dem Kurs.
 			if (kurs != null) {
 				aktionKursEntfernen(i, kurs);
@@ -270,10 +266,10 @@ public class KursblockungDynSchueler {
 
 	/** Verteilt alle Kurse des S., die über mehr als eine Schiene gehen. */
 	void aktionKurseVerteilenNurMultikurseZufaellig() {
-		@NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
 
 		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
-			int iFachart = perm[pFachart];
+			final int iFachart = perm[pFachart];
 
 			// Bereits belegte Facharten überspringen.
 			if (fachartZuKurs[iFachart] != null) {
@@ -281,16 +277,16 @@ public class KursblockungDynSchueler {
 			}
 
 			// Nicht-Multikurse überspringen.
-			@NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
+			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
 			if (!fachart.gibHatMultikurs()) {
 				continue;
 			}
 
 			// Alle Kurse der Fachart durchgehen und probieren, ob wählbar.
-			@NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-			@NotNull int[] perm2 = KursblockungStatic.gibPermutation(_random, kurse.length);
+			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
+			final @NotNull int[] perm2 = KursblockungStatic.gibPermutation(_random, kurse.length);
 			for (int pKurs = 0; pKurs < perm2.length; pKurs++) {
-				@NotNull KursblockungDynKurs kurs = kurse[perm2[pKurs]];
+				final @NotNull KursblockungDynKurs kurs = kurse[perm2[pKurs]];
 
 				// Überspringt gesperrte Kurse des Schülers.
 				if (kursGesperrt[kurs.gibInternalID()]) {
@@ -298,7 +294,7 @@ public class KursblockungDynSchueler {
 				}
 
 				boolean waehlbar = true;
-				for (int nr : kurs.gibSchienenLage()) {
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -322,15 +318,15 @@ public class KursblockungDynSchueler {
 			}
 
 			// Facharten mit mehr als einen Kurs ignorieren.
-			@NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
+			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
 			if (fachart.gibKurseMax() != 1) {
 				continue;
 			}
 
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
-			@NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
+			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
 			for (int iKurse = 0; iKurse < kurse.length; iKurse++) {
-				@NotNull KursblockungDynKurs kurs = kurse[iKurse];
+				final @NotNull KursblockungDynKurs kurs = kurse[iKurse];
 
 				// Überspringt gesperrte Kurse des Schülers.
 				if (kursGesperrt[kurs.gibInternalID()]) {
@@ -339,7 +335,7 @@ public class KursblockungDynSchueler {
 
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
-				for (int nr : kurs.gibSchienenLage()) {
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -359,10 +355,10 @@ public class KursblockungDynSchueler {
 	 * Kurse werden in der Wahl bevorzugt.
 	 */
 	void aktionKurseVerteilenMitBipartiteMatchingGewichtetem() {
-		long INFINITY = 1000000;
+		final long INFINITY = 1000000;
 
 		// Matrix füllen.
-		@NotNull long @NotNull [][] data = matrix.getMatrix();
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Zeile löschen.
@@ -378,7 +374,7 @@ public class KursblockungDynSchueler {
 			// Bewertung der Zeile
 			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
-					KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
+					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
 					if (kurs != null) {
 						data[r][c] = kurs.gibGewichtetesMatchingBewertung();
 					}
@@ -387,7 +383,7 @@ public class KursblockungDynSchueler {
 		}
 
 		// Berechnen
-		@NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 
 		// Zuordnen
 		for (int r = 0; r < fachartArr.length; r++) {
@@ -398,7 +394,7 @@ public class KursblockungDynSchueler {
 			}
 
 			// Kein Matching-Partner gefunden?
-			int c = r2c[r];
+			final int c = r2c[r];
 			if (c < 0) {
 				continue;
 			}
@@ -409,7 +405,7 @@ public class KursblockungDynSchueler {
 			}
 
 			// Zuordnen
-			KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
+			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
 			if (kursGefunden != null) {
 				aktionKursHinzufuegen(r, kursGefunden);
 			} else {
@@ -424,7 +420,7 @@ public class KursblockungDynSchueler {
 	void aktionKurseVerteilenMitBipartiteMatching() {
 
 		// Matrix füllen.
-		@NotNull long @NotNull [][] data = matrix.getMatrix();
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Zeile löschen.
@@ -440,7 +436,7 @@ public class KursblockungDynSchueler {
 			// Bewertung der Zeile
 			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
-					KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
+					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
 					if (kurs != null) {
 						data[r][c] = 1;
 					}
@@ -450,7 +446,7 @@ public class KursblockungDynSchueler {
 		}
 
 		// Berechnen
-		@NotNull int[] r2c = matrix.gibMaximalesBipartitesMatching(true);
+		final @NotNull int[] r2c = matrix.gibMaximalesBipartitesMatching(true);
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
@@ -459,13 +455,13 @@ public class KursblockungDynSchueler {
 			}
 
 			// Keinen Matching-Partner gefunden?
-			int c = r2c[r];
+			final int c = r2c[r];
 			if (c == -1) {
 				continue;
 			}
 
 			// Zuordnen
-			KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
+			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
 			if (kursGefunden != null) {
 				aktionKursHinzufuegen(r, kursGefunden);
 			} else {
@@ -484,15 +480,15 @@ public class KursblockungDynSchueler {
 	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
 	 */
 	boolean aktionKurseVerteilenNachDeinemWunsch() {
-		long VAL_UNGUELTIG = 1000000;
-		long VAL_KURS_GEWAEHLT = 0;
-		long VAL_KURS_MUSS_WANDERN = 1;
+		final long VAL_UNGUELTIG = 1000000;
+		final long VAL_KURS_GEWAEHLT = 0;
+		final long VAL_KURS_MUSS_WANDERN = 1;
 
 		// 1) Matrix füllen.
 
-		@NotNull long @NotNull [][] data = matrix.getMatrix();
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
 		for (int r = 0; r < fachartArr.length; r++) {
-			KursblockungDynFachart fachart = fachartArr[r];
+			final KursblockungDynFachart fachart = fachartArr[r];
 
 			// Zeile löschen.
 			for (int c = 0; c < schieneBelegt.length; c++) {
@@ -515,12 +511,12 @@ public class KursblockungDynSchueler {
 		}
 
 		// Matching Berechnen
-		@NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 
 		// Zuordnen
 		boolean kurslage_veraendert = false;
 		for (int r = 0; r < fachartArr.length; r++) {
-			KursblockungDynFachart fachart = fachartArr[r];
+			final KursblockungDynFachart fachart = fachartArr[r];
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
 			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs()) {
@@ -528,7 +524,7 @@ public class KursblockungDynSchueler {
 			}
 
 			// Keinen Matching-Partner gefunden?
-			int c = r2c[r];
+			final int c = r2c[r];
 			if (c < 0) {
 				continue;
 			}
@@ -558,10 +554,10 @@ public class KursblockungDynSchueler {
 	 * Schienen in den der Kurs sind frei sind.<br>
 	 */
 	void aktionKurseVerteilenZufaellig() {
-		@NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
 
 		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
-			int iFachart = perm[pFachart];
+			final int iFachart = perm[pFachart];
 
 			// Bereits belegte Facharten ignorieren.
 			if (fachartZuKurs[iFachart] != null) {
@@ -569,10 +565,10 @@ public class KursblockungDynSchueler {
 			}
 
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
-			@NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
-			@NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
+			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
+			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
 			for (int iKurs = 0; iKurs < kurse.length; iKurs++) {
-				@NotNull KursblockungDynKurs kurs = kurse[iKurs];
+				final @NotNull KursblockungDynKurs kurs = kurse[iKurs];
 
 				// Überspringt gesperrte Kurse des Schülers.
 				if (kursGesperrt[kurs.gibInternalID()]) {
@@ -581,7 +577,7 @@ public class KursblockungDynSchueler {
 
 				// Herausfinden, ob wählbar.
 				boolean waehlbar = true;
-				for (int nr : kurs.gibSchienenLage()) {
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 					}
@@ -602,11 +598,11 @@ public class KursblockungDynSchueler {
 	// ########## PRIVATE METHODEN ############
 	// ########################################
 
-	private void aktionKursHinzufuegen(int fachartIndex, @NotNull KursblockungDynKurs kurs) {
+	private void aktionKursHinzufuegen(final int fachartIndex, final @NotNull KursblockungDynKurs kurs) {
 		kurs.aktionSchuelerHinzufügen();
 		statistik.aktionNichtwahlenVeraendern(-1);
 		nichtwahlen--;
-		for (int nr : kurs.gibSchienenLage()) {
+		for (final int nr : kurs.gibSchienenLage()) {
 			if (schieneBelegt[nr]) {
 				System.out.println("FEHLER: Schienen-Doppelbelegung! " + representation);
 			}
@@ -615,11 +611,11 @@ public class KursblockungDynSchueler {
 		fachartZuKurs[fachartIndex] = kurs;
 	}
 
-	private void aktionKursEntfernen(int fachartIndex, @NotNull KursblockungDynKurs kurs) {
+	private void aktionKursEntfernen(final int fachartIndex, final @NotNull KursblockungDynKurs kurs) {
 		kurs.aktionSchuelerEntfernen();
 		statistik.aktionNichtwahlenVeraendern(+1);
 		nichtwahlen++;
-		for (int nr : kurs.gibSchienenLage()) {
+		for (final int nr : kurs.gibSchienenLage()) {
 			if (!schieneBelegt[nr]) {
 				System.out.println("FEHLER: Kurs ist gar nicht in Schiene ! " + representation);
 			}
@@ -635,8 +631,8 @@ public class KursblockungDynSchueler {
 	 * 
 	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
-	boolean gibIstInKurs(KursblockungDynKurs kurs) {
-		for (KursblockungDynKurs zugeordneterKurs : fachartZuKurs)
+	boolean gibIstInKurs(final KursblockungDynKurs kurs) {
+		for (final KursblockungDynKurs zugeordneterKurs : fachartZuKurs)
 			if (zugeordneterKurs == kurs)
 				return true;
 		return false;
@@ -648,13 +644,13 @@ public class KursblockungDynSchueler {
 	public void debugKurswahlen() {
 		System.out.println();
 		System.out.println(representation);
-		HashSet<Integer> setSchienenLage = new HashSet<>();
+		final HashSet<Integer> setSchienenLage = new HashSet<>();
 		for (int i = 0; i < fachartZuKurs.length; i++) {
-			KursblockungDynKurs kurs = fachartZuKurs[i];
+			final KursblockungDynKurs kurs = fachartZuKurs[i];
 			if (kurs == null)
 				continue;
 			System.out.println("    " + kurs.toString() +"    "+Arrays.toString(kurs.gibSchienenLage()));
-			for (int schiene : kurs.gibSchienenLage()) {
+			for (final int schiene : kurs.gibSchienenLage()) {
 				if (setSchienenLage.add(schiene) == false) {
 					System.out.println("Kollision");
 					return;

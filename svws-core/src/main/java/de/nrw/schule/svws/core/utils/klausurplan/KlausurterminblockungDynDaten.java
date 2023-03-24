@@ -12,9 +12,9 @@ import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import de.nrw.schule.svws.core.exceptions.UserNotificationException;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Eine dynamische Datenstruktur zum Speichern der aktuellen Klausur-Termin-Lage.
- * 
+ *
  * @author Benjamin A. Bartsch 
  */
 public class KlausurterminblockungDynDaten {
@@ -30,7 +30,7 @@ public class KlausurterminblockungDynDaten {
 	private int _terminAnzahl1 = MAX_TERMINE; // Speicherzustand 1
 	private int _terminAnzahl2 = MAX_TERMINE; // Speicherzustand 2
 
-	/** 
+	/**
 	 * Jeder KlausurNr wird eine TerminNr zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung. 
 	 * Am Ende des Algorithmus hat jede Klausur eine zugeordnete TerminNr >= 0. 
 	 */
@@ -56,15 +56,15 @@ public class KlausurterminblockungDynDaten {
 	/** Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). */
 	private final @NotNull Vector<@NotNull Vector<@NotNull Integer> > _klausurGruppenGrad = new Vector<>();
 	
-	/** 
+	/**
 	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur, 
 	 * welche als Basis für alle Algorithmen zur schnellen Manipulation dient.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
-	public KlausurterminblockungDynDaten(@NotNull Random pRandom, @NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	public KlausurterminblockungDynDaten(final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
 		_random = pRandom;
 		
 		initialisiereMapKlausuren(pInput);
@@ -94,7 +94,7 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereKlausurgruppen(@NotNull List<@NotNull GostKursklausur> pInput, @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
 		// pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 		
 		switch (pConfig.get_algorithmus()) {
@@ -188,7 +188,7 @@ public class KlausurterminblockungDynDaten {
 			}
 	}
 
-	private int gibKnotengrad(@NotNull Vector<@NotNull Integer> pGruppe) {
+	private int gibKnotengrad(final @NotNull Vector<@NotNull Integer> pGruppe) {
 		int grad = 0;
 		for (final @NotNull Vector<@NotNull Integer> gruppe : _klausurGruppen) 
 			if (gibIstVerboten(pGruppe, gruppe))
@@ -196,7 +196,7 @@ public class KlausurterminblockungDynDaten {
 		return grad;
 	}
 
-	private boolean gibIstVerboten(@NotNull Vector<@NotNull Integer> pGruppe1, @NotNull Vector<@NotNull Integer> pGruppe2) {
+	private boolean gibIstVerboten(final @NotNull Vector<@NotNull Integer> pGruppe1, final @NotNull Vector<@NotNull Integer> pGruppe2) {
 		for (final int klausurNr1 : pGruppe1) 
 			for (final int klausurNr2 : pGruppe2) 
 				if (_verboten[klausurNr1][klausurNr2])
@@ -204,7 +204,7 @@ public class KlausurterminblockungDynDaten {
 		return false;
 	}
 
-	private void initialisiereMapKlausuren(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMapKlausuren(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			if (gostKursklausur.id < 0) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");				
@@ -215,7 +215,7 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	private void initialisiereMatrixVerboten(@NotNull List<@NotNull GostKursklausur> pInput) {
+	private void initialisiereMatrixVerboten(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		
 		// Erzeuge eine Map: SchülerID --> Liste seiner KlausurNummern
 		final @NotNull HashMap<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> mapSchuelerKlausuren = new HashMap<>();
@@ -248,7 +248,7 @@ public class KlausurterminblockungDynDaten {
 	
 	/**
 	 * Liefert die aktuelle Anzahl an Terminen.
-	 * 
+	 *
 	 * @return die aktuelle Anzahl an Terminen.
 	 */
 	int gibTerminAnzahl() {
@@ -258,16 +258,16 @@ public class KlausurterminblockungDynDaten {
 	/**
 	 * Liefert die Anzahl an Klausurgruppen. Dies ist ein theoretisches Maximum
 	 * für die größte Anzahl an Terminen. 
-	 * 
+	 *
 	 * @return die Anzahl an Klausurgruppen.
 	 */
 	int gibKlausurgruppenAnzahl() {
 		return _klausurGruppen.size();
 	}
 
-	/** 
+	/**
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
-	 * 
+	 *
 	 * @return die Anzahl noch nicht verteilter Klausuren. 
 	 */
 	boolean gibExistierenNichtverteilteKlausuren() {
@@ -277,9 +277,9 @@ public class KlausurterminblockungDynDaten {
 		return false;
 	}
 
-	/** 
+	/**
 	 * Liefert die Nummer eines neu erzeugten Termins.
-	 * 
+	 *
 	 * @return die Nummer eines neu erzeugten Termins. 
 	 */
 	int gibErzeugeNeuenTermin() {
@@ -287,16 +287,16 @@ public class KlausurterminblockungDynDaten {
 		return _terminAnzahl - 1;
 	}
 
-	/** 
+	/**
 	 * Löscht den letzten Termin.
 	 */
 	void entferneLetztenTermin() {
 		_terminAnzahl--;
 	}
 	
-	/** 
+	/**
 	 * Liefert ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge.
-	 * 
+	 *
 	 * @return ein Array aller derzeit verwendeten Termine in zufälliger Reihenfolge. 
 	 */
 	private @NotNull int[] gibTermineInZufaelligerReihenfolge() {
@@ -316,9 +316,9 @@ public class KlausurterminblockungDynDaten {
 		return temp;
 	}
 	
-	/** 
+	/**
 	 * Liefert die Klausur-Gruppen in zufälliger Reihenfolge.
-	 * 
+	 *
 	 * @return die Klausur-Gruppen in zufälliger Reihenfolge. 
 	 */
 	private @NotNull Vector<@NotNull Vector<@NotNull Integer>> gibKlausurgruppenInZufaelligerReihenfolge() {
@@ -338,9 +338,9 @@ public class KlausurterminblockungDynDaten {
 		return temp;
 	}
 	
-	/** 
+	/**
 	 * Liefert ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
-	 * 
+	 *
 	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst. 
 	 */
 	@NotNull @NotNull Vector<@NotNull Vector<@NotNull Integer>> gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() {
@@ -366,7 +366,7 @@ public class KlausurterminblockungDynDaten {
 
 	/**
 	 * Liefert die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
-	 * 
+	 *
 	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
 	 */
 	@NotNull Vector<@NotNull Integer> gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() {
@@ -386,7 +386,7 @@ public class KlausurterminblockungDynDaten {
 		return gruppeMin;
 	}
 
-	private int gibTerminmoeglichkeiten(@NotNull Vector<@NotNull Integer> gruppe) {
+	private int gibTerminmoeglichkeiten(final @NotNull Vector<@NotNull Integer> gruppe) {
 		int summe = 0;
 		for (int terminNr = 0; terminNr < _terminAnzahl; terminNr++) 
 			if (aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
@@ -396,7 +396,7 @@ public class KlausurterminblockungDynDaten {
 		return summe;
 	}
 
-	private boolean gibVergleicheMitAktuellemZustand(int terminAnzahlX, @NotNull int @NotNull [] klausurZuTerminX) {
+	private boolean gibVergleicheMitAktuellemZustand(final int terminAnzahlX, final @NotNull int @NotNull [] klausurZuTerminX) {
 		// Kriterium 1: Die Anzahl an Terminen.
 		if (_terminAnzahl < terminAnzahlX) return true;
 		if (_terminAnzahl > terminAnzahlX) return false;
@@ -426,27 +426,27 @@ public class KlausurterminblockungDynDaten {
 		return minHisto < minHistoX;
 	}
 
-	/** 
+	/**
 	 * Liefert TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
-	 * 
+	 *
 	 * @param pGruppe die Gruppe aller Klausuren.
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden. 
 	 */
-	private boolean gibIstKlausurgruppeUnverteilt(@NotNull Vector<@NotNull Integer> pGruppe) {
+	private boolean gibIstKlausurgruppeUnverteilt(final @NotNull Vector<@NotNull Integer> pGruppe) {
 		for (final int klausurNr : pGruppe) 
 			if (_klausurZuTermin[klausurNr] >= 0)
 				return false;
 		return true;
 	}
 
-	/** 
+	/**
 	 * Liefert TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
-	 * 
+	 *
 	 * @param  pGruppe die Gruppe aller Klausuren.
 	 * @param  pTermin der Termin 
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten. 
 	 */
-	boolean aktionSetzeKlausurgruppeInTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
+	boolean aktionSetzeKlausurgruppeInTermin(final @NotNull Vector<@NotNull Integer> pGruppe, final int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin("+pGruppe+", "+pTermin+") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin("+pGruppe+", "+pTermin+") --> Termin zu groß!");
 	
@@ -464,12 +464,12 @@ public class KlausurterminblockungDynDaten {
 		return true;
 	}
 	
-	/** 
+	/**
 	 * Entfernt die Klausuren der Gruppe aus ihrem Termin.
 	 * @param  pGruppe die Gruppe aller Klausuren.
 	 * @param  pTermin der Termin 
 	 */
-	void aktionEntferneKlausurgruppeAusTermin(@NotNull Vector<@NotNull Integer> pGruppe, int pTermin) {
+	void aktionEntferneKlausurgruppeAusTermin(final @NotNull Vector<@NotNull Integer> pGruppe, final int pTermin) {
 		if (pTermin <              0) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu klein!");
 		if (pTermin >= _terminAnzahl) throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin("+pGruppe+", "+pTermin+") --> Termin zu groß!");
 		for (final int nr : pGruppe) {
@@ -478,12 +478,12 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	/** 
+	/**
 	 * Erhöht die Termin-Anzahl um 1, setzt alle Klausuren der übergebenen Gruppe in den neuen Termin.
-	 * 
+	 *
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
-	void aktionSetzeKlausurgruppeInNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
+	void aktionSetzeKlausurgruppeInNeuenTermin(final @NotNull Vector<@NotNull Integer> pGruppe) {
 		for (final int klausurNr : pGruppe)
 			if (_klausurZuTermin[klausurNr] >= 0) throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin("+klausurNr+") --> Die Klausur ist bereits einem Termin zugeordnet!");
 		
@@ -493,13 +493,13 @@ public class KlausurterminblockungDynDaten {
 		_terminAnzahl++;
 	}
 
-	/** 
+	/**
 	 * Setzt alle Klausuren in einen zufälligen Termin. <br>
 	 * Falls dies nicht möglich ist, wird die Gruppe in einen neuen Termin gesetzt.
-	 * 
+	 *
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen. 
 	 */
-	private void aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(@NotNull Vector<@NotNull Integer> pGruppe) {
+	private void aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(final @NotNull Vector<@NotNull Integer> pGruppe) {
 		for (final int terminNr : gibTermineInZufaelligerReihenfolge()) 
 			if (aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
 				return; // Alle Klausuren wurden erfolgreich in den Termin gesetzt.
@@ -507,18 +507,18 @@ public class KlausurterminblockungDynDaten {
 		aktionSetzeKlausurgruppeInNeuenTermin(pGruppe);
 	}
 
-	/** 
+	/**
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist.
-	 * 
+	 *
 	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist. 
 	 */
 	boolean gibIstBesserAlsZustand1() {
 		return gibVergleicheMitAktuellemZustand(_terminAnzahl1, _klausurZuTermin1);
 	}
 
-	/** 
+	/**
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist.
-	 * 
+	 *
 	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist. 
 	 */
 	boolean gibIstBesserAlsZustand2() {
@@ -526,9 +526,9 @@ public class KlausurterminblockungDynDaten {
 	}
 	
 
-	/** 
+	/**
 	 * Liefert die berechnete Zuordnung als Liste (Termine) von Listen (KlausurIDs).
-	 * 
+	 *
 	 * @return die berechnete Zuordnung als Liste (Termine) von Listen (KlausurIDs).
 	 */
 	@NotNull List<@NotNull List<@NotNull Long>> gibErzeugeOutput() {
@@ -553,7 +553,7 @@ public class KlausurterminblockungDynDaten {
 		return out;
 	}
 
-	/** 
+	/**
 	 * Entfernt alle Klausur-Termin-Zuordnungen und passt die Datenstrukturen entsprechend an. 
 	 */
 	void aktionClear() {
@@ -562,7 +562,7 @@ public class KlausurterminblockungDynDaten {
 		_terminAnzahl = 0;
 	}
 
-	/** 
+	/**
 	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 1. 
 	 */
 	void aktionZustand1Speichern() {
@@ -572,7 +572,7 @@ public class KlausurterminblockungDynDaten {
 			_klausurZuTermin1[nr] = _klausurZuTermin[nr];
 	}
 
-	/** 
+	/**
 	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 1. 
 	 */
 	void aktionZustand1Laden() {
@@ -583,7 +583,7 @@ public class KlausurterminblockungDynDaten {
 			_klausurZuTermin[nr] = _klausurZuTermin1[nr];
 	}
 	
-	/** 
+	/**
 	 * Speichert die aktuelle Klausur-Termin-Lage in Zustand 2. 
 	 */
 	void aktionZustand2Speichern() {
@@ -595,7 +595,7 @@ public class KlausurterminblockungDynDaten {
 		//debug("BESSER");
 	}
 
-	/** 
+	/**
 	 * Lädt die aktuelle Klausur-Termin-Lage aus Zustand 2. 
 	 */
 	void aktionZustand2Laden() {
@@ -606,7 +606,7 @@ public class KlausurterminblockungDynDaten {
 			_klausurZuTermin[nr] = _klausurZuTermin2[nr];
 	}
 
-	/** 
+	/**
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Geht dann alle Klausuren in zufälliger Reihenfolge durch und setzt sie dann in einen zufälligen Termin. <br> 
 	 * Falls dies nicht klappt, wird ein neuer Termin erzeugt. 
@@ -618,7 +618,7 @@ public class KlausurterminblockungDynDaten {
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
-	/** 
+	/**
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen zufällig. 
 	 */
@@ -635,7 +635,7 @@ public class KlausurterminblockungDynDaten {
 	
 	}
 
-	/** 
+	/**
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Verteilt dann die Klausurgruppen mit höherem Knoten-Grad zuerst auf eine zufällige Schiene. 
 	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt. 
@@ -647,7 +647,7 @@ public class KlausurterminblockungDynDaten {
 			aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
 	}
 
-	/** 
+	/**
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen. <br>
 	 * Füllt dann die Termine nacheinander auf und wählt die Klausurgruppen nach ihrem Grad. 
 	 */
@@ -663,12 +663,12 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
-	/** 
+	/**
 	 * Ausgabe zum Debuggen der Tests.
-	 * 
+	 *
 	 * @param header Überschrift der Debug-Ausgabe. 
 	 */
-	void debug(String header) {
+	void debug(final String header) {
 		System.out.println();
 		System.out.println(header);
 	

@@ -46,8 +46,8 @@ public class SprachreferenzniveauKatalogEintrag {
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public SprachreferenzniveauKatalogEintrag(int id, @NotNull String kuerzel, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public SprachreferenzniveauKatalogEintrag(final int id, final @NotNull String kuerzel, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.gueltigVon = gueltigVon;

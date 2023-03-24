@@ -38,7 +38,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
 		}
-		let timeStart : number = System.currentTimeMillis();
+		const timeStart : number = System.currentTimeMillis();
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();
@@ -71,10 +71,10 @@ export class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	 * Matching-Algorithmus verteilt.
 	 */
 	private verteileSuS() : void {
-		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.schuelerAlle.length);
+		const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.schuelerAlle.length);
 		for (let p : number = 0; p < perm.length; p++) {
-			let i : number = perm[p];
-			let schueler : KursblockungDynSchueler | null = this.schuelerAlle[i];
+			const i : number = perm[p];
+			const schueler : KursblockungDynSchueler | null = this.schuelerAlle[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}

@@ -27,8 +27,8 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchuelervorschlag(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKSchuelervorschlag(final @NotNull Random pRandom, final @NotNull Logger pLogger,
+			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 
@@ -43,9 +43,9 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	@Override
-	public void berechne(long pEndzeit) {
-		long current = System.currentTimeMillis();
-		long halbzeit = current + (pEndzeit - current) / 2;
+	public void berechne(final long pEndzeit) {
+		final long current = System.currentTimeMillis();
+		final long halbzeit = current + (pEndzeit - current) / 2;
 
 		// Keine Kurverteilung, wenn es keine freien Kurse gibt.
 		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
@@ -92,7 +92,7 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 		// Besser oder gleich? --> Speichern.
-		int compare = dynDaten.gibCompareZustandK_NW_KD_FW();
+		final int compare = dynDaten.gibCompareZustandK_NW_KD_FW();
 		if (compare >= 0) {
 			dynDaten.aktionZustandSpeichernK();
 			return compare > 0; // besser?
@@ -120,7 +120,7 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern.
-			int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
+			final int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
 			if (cmp > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;

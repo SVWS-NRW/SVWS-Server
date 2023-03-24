@@ -79,22 +79,22 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && typeof __param3 === "boolean") && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && (typeof __param5 === "string") || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "number") || (__param8 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let bezeichnung : string = __param2;
-			let beiSchule : boolean = __param3 as boolean;
-			let beiSchueler : boolean = __param4 as boolean;
-			let kuerzelASD : string | null = __param5;
-			let schulformen : List<Schulform> = cast_java_util_List(__param6);
-			let gueltigVon : number | null = __param7;
-			let gueltigBis : number | null = __param8;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const bezeichnung : string = __param2;
+			const beiSchule : boolean = __param3 as boolean;
+			const beiSchueler : boolean = __param4 as boolean;
+			const kuerzelASD : string | null = __param5;
+			const schulformen : List<Schulform> = cast_java_util_List(__param6);
+			const gueltigVon : number | null = __param7;
+			const gueltigBis : number | null = __param8;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.bezeichnung = bezeichnung;
 			this.beiSchule = beiSchule;
 			this.beiSchueler = beiSchueler;
 			this.kuerzelASD = kuerzelASD;
-			for (let sf of schulformen)
+			for (const sf of schulformen)
 				this.schulformen.add(sf.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

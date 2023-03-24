@@ -95,17 +95,17 @@ export class KursartKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string") || (__param6 === null)) && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && ((__param8 instanceof JavaObject) && (__param8.isTranspiledInstanceOf('java.util.List'))) || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let nummer : string = __param2;
-			let bezeichnung : string = __param3;
-			let bemerkungen : string | null = __param4;
-			let kuerzelAllg : string | null = __param5;
-			let bezeichnungAllg : string | null = __param6;
-			let erlaubtGOSt : boolean = __param7 as boolean;
-			let zulaessig : List<Pair<Schulform, Schulgliederung | null>> = cast_java_util_List(__param8);
-			let gueltigVon : number | null = __param9;
-			let gueltigBis : number | null = __param10;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const nummer : string = __param2;
+			const bezeichnung : string = __param3;
+			const bemerkungen : string | null = __param4;
+			const kuerzelAllg : string | null = __param5;
+			const bezeichnungAllg : string | null = __param6;
+			const erlaubtGOSt : boolean = __param7 as boolean;
+			const zulaessig : List<Pair<Schulform, Schulgliederung | null>> = cast_java_util_List(__param8);
+			const gueltigVon : number | null = __param9;
+			const gueltigBis : number | null = __param10;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.nummer = nummer;
@@ -114,13 +114,13 @@ export class KursartKatalogEintrag extends JavaObject {
 			this.kuerzelAllg = kuerzelAllg;
 			this.bezeichnungAllg = bezeichnungAllg;
 			this.erlaubtGOSt = erlaubtGOSt;
-			for (let zul of zulaessig) {
-				let sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
-				let sf : Schulform = zul.a;
+			for (const zul of zulaessig) {
+				const sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
+				const sf : Schulform = zul.a;
 				if (sf.daten === null)
 					continue;
 				sfsgl.schulform = sf.daten.kuerzel;
-				let sgl : Schulgliederung | null = zul.b;
+				const sgl : Schulgliederung | null = zul.b;
 				sfsgl.gliederung = ((sgl === null) || (sgl.daten === null)) ? null : sgl.daten.kuerzel;
 				this.zulaessig.add(sfsgl);
 			}

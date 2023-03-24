@@ -18,7 +18,7 @@ public class GostStatistikFachwahlManager {
 	 * @param halbjahr   das Halbjahr, zu der die Fachwahl gehört
 	 * @param fachwahl   die Fachwahl
 	 */
-	public static void setFachwahlHalbjahr(@NotNull GostStatistikFachwahl statfw, @NotNull GostHalbjahr halbjahr, String fachwahl) {
+	public static void setFachwahlHalbjahr(final @NotNull GostStatistikFachwahl statfw, final @NotNull GostHalbjahr halbjahr, final String fachwahl) {
 		if (statfw.fachwahlen[halbjahr.id] == null)
 			statfw.fachwahlen[halbjahr.id] = new GostStatistikFachwahlHalbjahr();
 		if ((fachwahl == null) || !("M".equals(fachwahl) || "S".equals(fachwahl) || "ZK".equals(fachwahl) || "LK".equals(fachwahl)))

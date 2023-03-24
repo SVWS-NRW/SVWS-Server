@@ -24,7 +24,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 
 	public toString() : string {
 		let s : string | null = "";
-		for (let value of this)
+		for (const value of this)
 			s += (s.length === 0 ? "" : ", ") + value;
 		return "values = [" + s! + "], size = " + this.size() + " --> " + this._sub.toString()!;
 	}
@@ -56,7 +56,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		if ((typeof __param0 === "undefined")) {
 			return this._sub.bcGetVectorOfValues().toArray();
 		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
-			let a : Array<T | null> = __param0;
+			const a : Array<T | null> = __param0;
 			return this._sub.bcGetVectorOfValues().toArray(a);
 		} else throw new Error('invalid method overload');
 	}

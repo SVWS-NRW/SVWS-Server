@@ -81,7 +81,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public hatBelegungsfehler() : boolean {
 		for (let i : number = 0; i < this.belegungsfehler.size(); i++) {
-			let fehler : GostBelegungsfehler = this.belegungsfehler.get(i);
+			const fehler : GostBelegungsfehler = this.belegungsfehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -113,7 +113,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public static istErfolgreich(alle_fehler : Vector<GostBelegungsfehler>) : boolean {
 		for (let i : number = 0; i < alle_fehler.size(); i++) {
-			let fehler : GostBelegungsfehler = alle_fehler.get(i);
+			const fehler : GostBelegungsfehler = alle_fehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}
@@ -129,9 +129,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @return die Menge der Belegprüfungsfehler
 	 */
 	public static getBelegungsfehlerAlle(pruefungen : List<GostBelegpruefung>) : Vector<GostBelegungsfehler> {
-		let fehler : Vector<GostBelegungsfehler> = new Vector();
+		const fehler : Vector<GostBelegungsfehler> = new Vector();
 		for (let i : number = 0; i < pruefungen.size(); i++) {
-			let pruefung : GostBelegpruefung = pruefungen.get(i);
+			const pruefung : GostBelegpruefung = pruefungen.get(i);
 			fehler.addAll(pruefung.getBelegungsfehler());
 		}
 		return fehler;

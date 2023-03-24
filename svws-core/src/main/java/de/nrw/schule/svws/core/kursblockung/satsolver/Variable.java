@@ -57,7 +57,7 @@ public class Variable {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr     Die Nummer der Variablen (ungleich 0).
 	 */
-	public Variable(@NotNull Random pRandom, int pNr) {
+	public Variable(final @NotNull Random pRandom, final int pNr) {
 		_random = pRandom;
 		nr = pNr;
 		statSatFree = new int[4][4];
@@ -97,8 +97,8 @@ public class Variable {
 	 * 
 	 * @return TRUE, wenn diese Instanz besser als "b" ist.
 	 */
-	public boolean isBetterThan(@NotNull Variable b) {
-		@NotNull
+	public boolean isBetterThan(final @NotNull Variable b) {
+		final @NotNull
 		int @NotNull [][] statB = b.statSatFree;
 
 		// #### SAT=0 ###

@@ -53,7 +53,7 @@ public enum LehrerZugangsgrund {
 	 * 
 	 * @param historie   die Historie des Zugangsgrundes, welches ein Array von {@link LehrerKatalogZugangsgrundEintrag} ist  
 	 */
-	private LehrerZugangsgrund(@NotNull LehrerKatalogZugangsgrundEintrag@NotNull[] historie) {
+	private LehrerZugangsgrund(final @NotNull LehrerKatalogZugangsgrundEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -67,8 +67,8 @@ public enum LehrerZugangsgrund {
 	 * 
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls die ID ungültig ist
 	 */
-	public static LehrerZugangsgrund getByID(long id) {
-		for (@NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
+	public static LehrerZugangsgrund getByID(final long id) {
+		for (final @NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
 			if (grund.daten.id == id)
 				return grund;
 		return null;
@@ -82,8 +82,8 @@ public enum LehrerZugangsgrund {
 	 * 
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerZugangsgrund getByKuerzel(String kuerzel) {
-		for (@NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
+	public static LehrerZugangsgrund getByKuerzel(final String kuerzel) {
+		for (final @NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
 			if (grund.daten.kuerzel.equals(kuerzel))
 				return grund;
 		return null;
@@ -99,8 +99,8 @@ public enum LehrerZugangsgrund {
 	 * 
 	 * @return der Grund für das Kommen des Lehrers an die Schule oder null, falls der Schlüssel ungültig ist
 	 */
-	public static LehrerZugangsgrund getByASDSchluessel(String schluessel) {
-		for (@NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
+	public static LehrerZugangsgrund getByASDSchluessel(final String schluessel) {
+		for (final @NotNull LehrerZugangsgrund grund : LehrerZugangsgrund.values())
 			if (grund.daten.schluessel.equals(schluessel))
 				return grund;
 		return null;

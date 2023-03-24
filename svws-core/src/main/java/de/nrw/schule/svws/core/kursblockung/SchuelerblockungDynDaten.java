@@ -52,7 +52,7 @@ public class SchuelerblockungDynDaten {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	public SchuelerblockungDynDaten(@NotNull Random pRandom, @NotNull SchuelerblockungInput pInput) {
+	public SchuelerblockungDynDaten(final @NotNull Random pRandom, final @NotNull SchuelerblockungInput pInput) {
 		_random = pRandom;
 		aktionPruefeEingabedaten(pInput);
 
@@ -79,7 +79,7 @@ public class SchuelerblockungDynDaten {
 	 * 
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	void aktionPruefeEingabedaten(@NotNull SchuelerblockungInput pInput) {
+	void aktionPruefeEingabedaten(final @NotNull SchuelerblockungInput pInput) {
 		// NULL-Referenzen überprüfen.
 
 		if (pInput == null)
@@ -93,21 +93,21 @@ public class SchuelerblockungDynDaten {
 
 		// Anzahl an Elementen überprüfen.
 
-		int nFachwahlen = pInput.fachwahlen.size();
+		final int nFachwahlen = pInput.fachwahlen.size();
 		if (nFachwahlen < 1)
 			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen ("+nFachwahlen+"), ein Blocken sollte gar nicht angeboten werden!");
 
-		int nSchienen = pInput.schienen;
+		final int nSchienen = pInput.schienen;
 		if (nSchienen < 1)
 			throw new DeveloperNotificationException("Die Schienenanzahl ("+nSchienen+") ist zu gering!");
 
-		int nKurse = pInput.kurse.size();
+		final int nKurse = pInput.kurse.size();
 		if (nKurse < 1)
 			throw new DeveloperNotificationException("Die Kursanzahl ("+nKurse+") ist zu gering!");
 
 		// Attribute der Kurse überprüfen.
-		HashSet<Long> setKursID = new HashSet<>();
-		for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
+		final HashSet<Long> setKursID = new HashSet<>();
+		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			if (kurs.id < 0)
 				throw new DeveloperNotificationException("kurs.id ("+kurs.id+") ist zu gering!");
 			if (setKursID.add(kurs.id) == false)
@@ -124,7 +124,7 @@ public class SchuelerblockungDynDaten {
 				throw new DeveloperNotificationException("kurs.schienen.length ("+kurs.schienen.length+") ist zu gering!");
 			if (kurs.schienen.length > nSchienen)
 				throw new DeveloperNotificationException("kurs.schienen.length ("+kurs.schienen.length+") ist zu groß!");
-			for (int schiene1 : kurs.schienen) {
+			for (final int schiene1 : kurs.schienen) {
 				if (schiene1 < 1)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene ("+schiene1+")!");
 				if (schiene1 > nSchienen)
@@ -135,7 +135,7 @@ public class SchuelerblockungDynDaten {
 		}
 
 		// Attribute der Fachwahlen überprüfen.
-		for (@NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
+		for (final @NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
 			if (fachwahl.schuelerID < 0)
 				throw new DeveloperNotificationException("fachwahl.schuelerID ("+fachwahl.schuelerID+") ist zu gering!");
 			if (fachwahl.fachID < 0)
@@ -146,14 +146,14 @@ public class SchuelerblockungDynDaten {
 
 		// Pro Fachwahl auf Doppelfixierungen testen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
-			@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
+			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size())
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl ("+iFachwahl+")!");
-			String representation = pInput.fachwahlenText.get(iFachwahl); 
+			final String representation = pInput.fachwahlenText.get(iFachwahl); 
 
 			// Doppelfixierungen herausfinden.
 			boolean kursWurdeFixiert = false;
-			for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
+			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
 				if ( (fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) ) {
 					if (kurs.istGesperrt)
 						continue;
@@ -166,11 +166,11 @@ public class SchuelerblockungDynDaten {
 		}
 
 		// Kann jeder Kurs einer Fachwahl zugeordnet werden?
-		for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
+		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			int gefunden = 0;
 
 			for (int r = 0; r < nFachwahlen; r++) {
-				@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(r);
+				final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(r);
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart))
 					gefunden++;
 			}
@@ -186,17 +186,17 @@ public class SchuelerblockungDynDaten {
 	 * 
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	private void aktionInitialisiereDatenstrukturen(@NotNull SchuelerblockungInput pInput) {
+	private void aktionInitialisiereDatenstrukturen(final @NotNull SchuelerblockungInput pInput) {
 		// Initialisiert '_fachwahlZuKurse' und '_fachwahlZuFachID' und '_fachwahlZuKursartID'.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
-			@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
+			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 			_fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
 			_fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 
 			// Kurse dieser Fachwahl sammeln...
-			Vector<@NotNull SchuelerblockungInputKurs> kurse = new Vector<>();
+			final Vector<@NotNull SchuelerblockungInputKurs> kurse = new Vector<>();
 			boolean hatFixiertenKurs = false;
-			for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
+			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
 					if (kurs.istFixiert) {
 						hatFixiertenKurs = true;
@@ -208,7 +208,7 @@ public class SchuelerblockungDynDaten {
 
 			// Initialisiert '_fachwahlZuHatMultikurse'.
 			int max = 1;
-			for (@NotNull SchuelerblockungInputKurs kurs : kurse)
+			for (final @NotNull SchuelerblockungInputKurs kurs : kurse)
 				max = Math.max(max, kurs.schienen.length);
 			_fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
 		}
@@ -238,9 +238,9 @@ public class SchuelerblockungDynDaten {
 		aktionVerteileMultikurseRekursiv(0);
 
 		// Das beste Ergebnis zurückgeben.
-		@NotNull SchuelerblockungOutput out = new SchuelerblockungOutput();
+		final @NotNull SchuelerblockungOutput out = new SchuelerblockungOutput();
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
-			@NotNull SchuelerblockungOutputFachwahlZuKurs wahl = new SchuelerblockungOutputFachwahlZuKurs();
+			final @NotNull SchuelerblockungOutputFachwahlZuKurs wahl = new SchuelerblockungOutputFachwahlZuKurs();
 			wahl.fachID = _fachwahlZuFachID[iFachwahl];
 			wahl.kursartID = _fachwahlZuKursartID[iFachwahl];
 			wahl.kursID = _aktuellFachwahlZuKursBest[iFachwahl];
@@ -250,7 +250,7 @@ public class SchuelerblockungDynDaten {
 		return out;
 	}
 
-	private void aktionVerteileMultikurseRekursiv(int iFachwahl) {
+	private void aktionVerteileMultikurseRekursiv(final int iFachwahl) {
 		if (iFachwahl >= nFachwahlen) {
 			aktionVerteileMitMatching();
 			return;
@@ -263,7 +263,7 @@ public class SchuelerblockungDynDaten {
 
 		// Kurswahl ist möglich
 		int schienenAnzahl = 2;
-		for (@NotNull SchuelerblockungInputKurs kurs : _fachwahlZuKurse.get(iFachwahl)) {
+		for (final @NotNull SchuelerblockungInputKurs kurs : _fachwahlZuKurse.get(iFachwahl)) {
 			schienenAnzahl = Math.max(schienenAnzahl, kurs.schienen.length);
 			if (aktionBelegeKurs(iFachwahl, kurs) == true) {
 				aktionVerteileMultikurseRekursiv(iFachwahl + 1);
@@ -284,7 +284,7 @@ public class SchuelerblockungDynDaten {
 	private void aktionVerteileMitMatching() {
 		
 		// Matrix Zellen auf UNENDLICH setzen.
-		@NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
+		final @NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++)
 			for (int iSchiene = 0; iSchiene < nSchienen; iSchiene++)
 				data[iFachwahl][iSchiene] = UNENDLICH;
@@ -294,23 +294,23 @@ public class SchuelerblockungDynDaten {
 			if (_fachwahlZuHatMultikurse[iFachwahl] == false)
 				for (int schiene = 0; schiene < nSchienen; schiene++)
 					if (!_aktuellGesperrteSchiene[schiene]) {
-						SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
+						final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs != null)
 							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
 					}
 		
 		// Matching berechnen lassen.
-		@NotNull int[] r2c = _aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
+		final @NotNull int[] r2c = _aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
 
 		// Die Kurse hinzufügen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++)
 			if (_fachwahlZuHatMultikurse[iFachwahl] == false) {
-				int schiene = r2c[iFachwahl];
+				final int schiene = r2c[iFachwahl];
 				if ( (schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH) ) {
 					_aktuellNichtwahlen++;
 					continue;
 				}
-				SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
+				final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
 					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
@@ -333,12 +333,12 @@ public class SchuelerblockungDynDaten {
 		// Die Kurse entfernen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++)
 			if (_fachwahlZuHatMultikurse[iFachwahl] == false) {
-				int schiene = r2c[iFachwahl];
+				final int schiene = r2c[iFachwahl];
 				if ((schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH)) {
 					_aktuellNichtwahlen--;
 					continue;
 				}
-				SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
+				final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
 					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
@@ -350,46 +350,46 @@ public class SchuelerblockungDynDaten {
 			}
 	}
 
-	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(@NotNull Vector<@NotNull SchuelerblockungInputKurs> pKurse, int pSchiene) {
-		long maxSuS = Integer.MAX_VALUE;
+	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull Vector<@NotNull SchuelerblockungInputKurs> pKurse, final int pSchiene) {
+		final long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
-		for (SchuelerblockungInputKurs kurs : pKurse)
+		for (final SchuelerblockungInputKurs kurs : pKurse)
 			if (kurs.schienen[0] - 1 == pSchiene) // Es handelt sich nicht um einen Multikurs!
 				if (kurs.anzahlSuS < maxSuS)
 					best = kurs;
 		return best;
 	}
 
-	private boolean aktionBelegeKurs(int iFachwahl, @NotNull SchuelerblockungInputKurs kurs) {
+	private boolean aktionBelegeKurs(final int iFachwahl, final @NotNull SchuelerblockungInputKurs kurs) {
 		// Ist eine Belegung möglich?
-		for (int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen)
 			if (_aktuellGesperrteSchiene[schiene1 - 1]) // 1-Indizierung --> 0-Indizierung
 				return false;
 		// Fügen den Schienen Schiene(n) hinzu.
 		_aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
-		for (int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen)
 			_aktuellGesperrteSchiene[schiene1 - 1] = true; // 1-Indizierung --> 0-Indizierung
 		_aktuellBewertung += kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;
 	}
 
-	private boolean aktionBelegeKursUndo(int iFachwahl, @NotNull SchuelerblockungInputKurs kurs) {
+	private boolean aktionBelegeKursUndo(final int iFachwahl, final @NotNull SchuelerblockungInputKurs kurs) {
 		// Kann der Kurs überhaupt entfernt werden?
 		if (_aktuellFachwahlZuKurs[iFachwahl] < 0)
 			return false;
-		for (int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen)
 			if (_aktuellGesperrteSchiene[schiene1 - 1] == false)
 				return false;
 		// Entfernen aus den Schiene(n).
 		_aktuellFachwahlZuKurs[iFachwahl] = -1;
-		for (int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen)
 			_aktuellGesperrteSchiene[schiene1 - 1] = false; // 1-Indizierung --> 0-Indizierung
 		_aktuellBewertung -= kurs.anzahlSuS * kurs.anzahlSuS;
 		return true;
 	}
 
 	@SuppressWarnings("unused")
-	private void debug(@NotNull String pHeader, boolean pPrintMatrix) {
+	private void debug(final @NotNull String pHeader, final boolean pPrintMatrix) {
 		System.out.println();
 		System.out.println("#################### " + pHeader + " ####################");
 		System.out.println("Bewertung      = " + _aktuellNichtwahlen + " / " + _aktuellBewertung);
@@ -400,7 +400,7 @@ public class SchuelerblockungDynDaten {
 		if (!pPrintMatrix)
 			return;
 
-		@NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
+		final @NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
 		for (int schiene = 0; schiene < nSchienen; schiene++) {
 			String sData = _aktuellGesperrteSchiene[schiene] ? "1" : "0";
 			while (sData.length() < 5)

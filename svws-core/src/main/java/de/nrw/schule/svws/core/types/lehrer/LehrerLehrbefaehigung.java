@@ -589,7 +589,7 @@ public enum LehrerLehrbefaehigung {
 	 * 
 	 * @param historie   die Historie der Lehrbefähigungen, welches ein Array von {@link LehrerKatalogLehrbefaehigungEintrag} ist  
 	 */
-	private LehrerLehrbefaehigung(@NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie) {
+	private LehrerLehrbefaehigung(final @NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -604,7 +604,7 @@ public enum LehrerLehrbefaehigung {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigung> getMapLehrbefaehigungByID() {
 		if (_lehrbefaehigungenByID.size() == 0)
-			for (LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
+			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
 				_lehrbefaehigungenByID.put(l.daten.id, l);				
 		return _lehrbefaehigungenByID;
 	}
@@ -618,7 +618,7 @@ public enum LehrerLehrbefaehigung {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehrbefaehigung> getMapLehrbefaehigungByKuerzel() {
 		if (_lehrbefaehigungenByKuerzel.size() == 0)
-			for (LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
+			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
 				_lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);				
 		return _lehrbefaehigungenByKuerzel;
 	}
@@ -631,7 +631,7 @@ public enum LehrerLehrbefaehigung {
 	 * 
 	 * @return die Lehrbefähigung oder null, falls die IF ungültig ist
 	 */
-	public static LehrerLehrbefaehigung getByID(long id) {
+	public static LehrerLehrbefaehigung getByID(final long id) {
 		return getMapLehrbefaehigungByID().get(id);
 	}
 
@@ -643,7 +643,7 @@ public enum LehrerLehrbefaehigung {
 	 * 
 	 * @return die Lehrbefähigung oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerLehrbefaehigung getByKuerzel(String kuerzel) {
+	public static LehrerLehrbefaehigung getByKuerzel(final String kuerzel) {
 		return getMapLehrbefaehigungByKuerzel().get(kuerzel);
 	}
 

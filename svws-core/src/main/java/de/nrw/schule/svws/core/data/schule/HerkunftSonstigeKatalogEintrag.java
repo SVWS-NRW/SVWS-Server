@@ -61,12 +61,12 @@ public class HerkunftSonstigeKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public HerkunftSonstigeKatalogEintrag(long id, @NotNull String kuerzel,  
-			@NotNull List<@NotNull Schulform> schulformen, @NotNull String beschreibung, 
-			Integer gueltigVon, Integer gueltigBis) {
+	public HerkunftSonstigeKatalogEintrag(final long id, final @NotNull String kuerzel,  
+			final @NotNull List<@NotNull Schulform> schulformen, final @NotNull String beschreibung, 
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
-		for (@NotNull Schulform schulform : schulformen)
+		for (final @NotNull Schulform schulform : schulformen)
 			this.schulformen.add(schulform.daten.kuerzel);
 		this.beschreibung = beschreibung;
 		this.gueltigVon = gueltigVon;

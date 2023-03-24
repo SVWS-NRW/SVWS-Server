@@ -87,9 +87,9 @@ public class FachgruppenKatalogEintrag {
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public FachgruppenKatalogEintrag(long id, Integer nummer, Integer idSchild, @NotNull String bezeichnung, @NotNull String kuerzel,
-	        @NotNull RGBFarbe farbe, @NotNull List<@NotNull Schulform> schulformen, @NotNull Integer sortierung,
-	        boolean fuerZeugnis, Integer gueltigVon, Integer gueltigBis) {
+	public FachgruppenKatalogEintrag(final long id, final Integer nummer, final Integer idSchild, final @NotNull String bezeichnung, final @NotNull String kuerzel,
+	        final @NotNull RGBFarbe farbe, final @NotNull List<@NotNull Schulform> schulformen, final @NotNull Integer sortierung,
+	        final boolean fuerZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.nummer = nummer;
         this.idSchild = idSchild;
@@ -97,7 +97,7 @@ public class FachgruppenKatalogEintrag {
 		this.kuerzel = kuerzel;
 		// TODO farbe
 		this.farbe = farbe;
-        for (@NotNull Schulform schulform : schulformen)
+        for (final @NotNull Schulform schulform : schulformen)
             this.schulformen.add(schulform.daten.kuerzel);
 		this.sortierung = sortierung;
 		this.fuerZeugnis = fuerZeugnis;

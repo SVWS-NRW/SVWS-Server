@@ -10,7 +10,7 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	/**
 	 *  Mit diesem Algorithmus werden die SuS verteilt.
 	 */
-	private algoS : KursblockungAlgorithmusSSchnellW;
+	private readonly algoS : KursblockungAlgorithmusSSchnellW;
 
 
 	/**

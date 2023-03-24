@@ -86,7 +86,7 @@ public enum LehrerRechtsverhaeltnis {
 	 * 
 	 * @param historie   die Historie des Rechtsverhältnisses, welches ein Array von {@link LehrerKatalogRechtsverhaeltnisEintrag} ist  
 	 */
-	private LehrerRechtsverhaeltnis(@NotNull LehrerKatalogRechtsverhaeltnisEintrag@NotNull[] historie) {
+	private LehrerRechtsverhaeltnis(final @NotNull LehrerKatalogRechtsverhaeltnisEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -101,7 +101,7 @@ public enum LehrerRechtsverhaeltnis {
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByID() {
 		if (_rechtsverhaeltnisByID.size() == 0)
-			for (LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
+			for (final LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
 				_rechtsverhaeltnisByID.put(l.daten.id, l);				
 		return _rechtsverhaeltnisByID;
 	}
@@ -115,7 +115,7 @@ public enum LehrerRechtsverhaeltnis {
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerRechtsverhaeltnis> getMapRechtsverhaeltnisByKuerzel() {
 		if (_rechtsverhaeltnisByKuerzel.size() == 0)
-			for (LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
+			for (final LehrerRechtsverhaeltnis l : LehrerRechtsverhaeltnis.values())
 				_rechtsverhaeltnisByKuerzel.put(l.daten.kuerzel, l);				
 		return _rechtsverhaeltnisByKuerzel;
 	}
@@ -128,7 +128,7 @@ public enum LehrerRechtsverhaeltnis {
 	 * 
 	 * @return die Art von Rechtsverhältnissen oder null, falls die ID ungültig ist
 	 */
-	public static LehrerRechtsverhaeltnis getByID(long id) {
+	public static LehrerRechtsverhaeltnis getByID(final long id) {
 		return getMapRechtsverhaeltnisByID().get(id);
 	}
 
@@ -140,7 +140,7 @@ public enum LehrerRechtsverhaeltnis {
 	 * 
 	 * @return die Art von Rechtsverhältnissen oder null, falls das Kürzel ungültig ist
 	 */
-	public static LehrerRechtsverhaeltnis getByKuerzel(String kuerzel) {
+	public static LehrerRechtsverhaeltnis getByKuerzel(final String kuerzel) {
 		return getMapRechtsverhaeltnisByKuerzel().get(kuerzel);
 	}
 

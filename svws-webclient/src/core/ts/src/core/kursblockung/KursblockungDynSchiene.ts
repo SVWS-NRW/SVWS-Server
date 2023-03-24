@@ -56,13 +56,13 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll.
 	 */
 	public aktionKursHinzufuegen(kurs1 : KursblockungDynKurs) : void {
-		let kursID : number = kurs1.gibDatenbankID();
+		const kursID : number = kurs1.gibDatenbankID();
 		if (this.kursMap.containsKey(kursID)) {
-			let fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll in Schiene " + this.nr + ", ist aber bereits drin.";
+			const fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll in Schiene " + this.nr + ", ist aber bereits drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
-		for (let kurs2 of this.kursMap.values())
+		for (const kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 		this.kursMap.put(kursID, kurs1);
 	}
@@ -73,14 +73,14 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll.
 	 */
 	public aktionKursEntfernen(kurs1 : KursblockungDynKurs) : void {
-		let kursID : number = kurs1.gibDatenbankID();
+		const kursID : number = kurs1.gibDatenbankID();
 		if (!this.kursMap.containsKey(kursID)) {
-			let fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
+			const fehler : string | null = "Kurs '" + kurs1.toString()! + "' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
-		for (let kurs2 of this.kursMap.values())
+		for (const kurs2 of this.kursMap.values())
 			this.statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 	}
 
@@ -108,7 +108,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public debug(nurMultikurse : boolean) : void {
-		for (let k of this.kursMap.values()) {
+		for (const k of this.kursMap.values()) {
 			if (nurMultikurse) {
 				if (k.gibSchienenAnzahl() < 2) {
 					continue;
@@ -126,9 +126,9 @@ export class KursblockungDynSchiene extends JavaObject {
 	 *         für die Blockung verwendet.
 	 */
 	gibAnzahlGleicherFacharten() : number {
-		let setFachart : AVLSet<number | null> | null = new AVLSet();
+		const setFachart : AVLSet<number | null> | null = new AVLSet();
 		let summe : number = 0;
-		for (let kurs of this.kursMap.values())
+		for (const kurs of this.kursMap.values())
 			if (setFachart.add(kurs.gibFachart().gibNr()) === false)
 				summe++;
 		return summe;

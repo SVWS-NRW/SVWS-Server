@@ -123,25 +123,25 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined") && (typeof __param11 === "undefined") && (typeof __param12 === "undefined") && (typeof __param13 === "undefined") && (typeof __param14 === "undefined")) {
 			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "boolean") && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegAnlage'))) || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && typeof __param10 === "boolean") && ((typeof __param11 !== "undefined") && ((__param11 instanceof JavaObject) && (__param11.isTranspiledInstanceOf('java.util.List'))) || (__param11 === null)) && ((typeof __param12 !== "undefined") && ((__param12 instanceof JavaObject) && (__param12.isTranspiledInstanceOf('java.util.List'))) || (__param12 === null)) && ((typeof __param13 !== "undefined") && (typeof __param13 === "number") || (__param13 === null)) && ((typeof __param14 !== "undefined") && (typeof __param14 === "number") || (__param14 === null))) {
-			let id : number = __param0 as number;
-			let kuerzel : string = __param1;
-			let istBK : boolean = __param2 as boolean;
-			let schulformen : List<Schulform> = cast_java_util_List(__param3);
-			let istAuslaufend : boolean = __param4 as boolean;
-			let istAusgelaufen : boolean = __param5 as boolean;
-			let beschreibung : string = __param6;
-			let bkAnlage : BerufskollegAnlage | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage(__param7);
-			let bkTyp : string | null = __param8;
-			let bkIndex : number | null = __param9;
-			let istVZ : boolean = __param10 as boolean;
-			let bkAbschlussBerufsbildend : List<SchulabschlussBerufsbildend> | null = cast_java_util_List(__param11);
-			let bkAbschlussAllgemeinbildend : List<SchulabschlussAllgemeinbildend> | null = cast_java_util_List(__param12);
-			let gueltigVon : number | null = __param13;
-			let gueltigBis : number | null = __param14;
+			const id : number = __param0 as number;
+			const kuerzel : string = __param1;
+			const istBK : boolean = __param2 as boolean;
+			const schulformen : List<Schulform> = cast_java_util_List(__param3);
+			const istAuslaufend : boolean = __param4 as boolean;
+			const istAusgelaufen : boolean = __param5 as boolean;
+			const beschreibung : string = __param6;
+			const bkAnlage : BerufskollegAnlage | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage(__param7);
+			const bkTyp : string | null = __param8;
+			const bkIndex : number | null = __param9;
+			const istVZ : boolean = __param10 as boolean;
+			const bkAbschlussBerufsbildend : List<SchulabschlussBerufsbildend> | null = cast_java_util_List(__param11);
+			const bkAbschlussAllgemeinbildend : List<SchulabschlussAllgemeinbildend> | null = cast_java_util_List(__param12);
+			const gueltigVon : number | null = __param13;
+			const gueltigBis : number | null = __param14;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.istBK = istBK;
-			for (let schulform of schulformen)
+			for (const schulform of schulformen)
 				this.schulformen.add(schulform.daten.kuerzel);
 			this.istAuslaufend = istAuslaufend;
 			this.istAusgelaufen = istAusgelaufen;
@@ -151,10 +151,10 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			this.bkIndex = bkIndex;
 			this.istVZ = istVZ;
 			if (bkAbschlussBerufsbildend !== null)
-				for (let sbb of bkAbschlussBerufsbildend)
+				for (const sbb of bkAbschlussBerufsbildend)
 					this.bkAbschlussBerufsbildend.add(sbb.daten.kuerzel);
 			if (bkAbschlussAllgemeinbildend !== null)
-				for (let sab of bkAbschlussAllgemeinbildend)
+				for (const sab of bkAbschlussAllgemeinbildend)
 					this.bkAbschlussAllgemeinbildend.add(sab.daten.kuerzel);
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;

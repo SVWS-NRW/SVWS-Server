@@ -24,7 +24,7 @@ public class StundenplanblockungManagerKlasse {
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @param pKuerzel   Das Kürzel der Klasse.
 	 */
-	public StundenplanblockungManagerKlasse(long pKlasseID, @NotNull String pKuerzel) {
+	public StundenplanblockungManagerKlasse(final long pKlasseID, final @NotNull String pKuerzel) {
 		_id = pKlasseID;
 		_kuerzel = pKuerzel;
 		_menge_gr = new Vector<>();
@@ -44,7 +44,7 @@ public class StundenplanblockungManagerKlasse {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Klasse.
 	 */
-	public void setKuerzel(@NotNull String pKuerzel) {
+	public void setKuerzel(final @NotNull String pKuerzel) {
 		_kuerzel = pKuerzel;
 	}
 

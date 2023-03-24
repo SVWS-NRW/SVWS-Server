@@ -18,7 +18,7 @@ public class UserNotificationException extends RuntimeException {
 	 * 
 	 * @param pFehlermeldung Eine Beschreibung des Fehlers, die dem User hilft die Ursache des Fehlers zu beheben.
 	 */
-	public UserNotificationException(@NotNull String pFehlermeldung) {
+	public UserNotificationException(final @NotNull String pFehlermeldung) {
 		super(pFehlermeldung);
 	}
 

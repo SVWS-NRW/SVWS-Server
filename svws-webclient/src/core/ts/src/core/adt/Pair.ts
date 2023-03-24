@@ -34,9 +34,9 @@ export class Pair<A, B> extends JavaObject {
 			return false;
 		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.Pair'))) === false)
 			return false;
-		let e : Pair<unknown, unknown> | null = cast_de_nrw_schule_svws_core_adt_Pair(o);
-		let a_equals : boolean = JavaObject.equalsTranspiler(this.a, (e.a));
-		let b_equals : boolean = (this.b === null) ? (e.b === null) : JavaObject.equalsTranspiler(this.b, (e.b));
+		const e : Pair<unknown, unknown> | null = cast_de_nrw_schule_svws_core_adt_Pair(o);
+		const a_equals : boolean = JavaObject.equalsTranspiler(this.a, (e.a));
+		const b_equals : boolean = (this.b === null) ? (e.b === null) : JavaObject.equalsTranspiler(this.b, (e.b));
 		return a_equals && b_equals;
 	}
 

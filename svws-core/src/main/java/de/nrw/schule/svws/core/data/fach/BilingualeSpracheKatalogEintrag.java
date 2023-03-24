@@ -58,11 +58,11 @@ public class BilingualeSpracheKatalogEintrag {
 	 *                              "schon immer gültig war"
 	 * @param gueltigBis            das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public BilingualeSpracheKatalogEintrag(long id, @NotNull ZulaessigesFach fach, 
-			@NotNull List<@NotNull Schulform> schulformen, Integer gueltigVon, Integer gueltigBis) {
+	public BilingualeSpracheKatalogEintrag(final long id, final @NotNull ZulaessigesFach fach, 
+			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = fach.daten.kuerzel;
-        for (@NotNull Schulform schulform : schulformen)
+        for (final @NotNull Schulform schulform : schulformen)
             this.schulformen.add(schulform.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

@@ -152,7 +152,7 @@ public enum KAOAEbene4 {
 	 * 
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAEbene4Eintrag} ist  
 	 */
-	private KAOAEbene4(@NotNull KAOAEbene4Eintrag@NotNull[] historie) {
+	private KAOAEbene4(final @NotNull KAOAEbene4Eintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
@@ -166,7 +166,7 @@ public enum KAOAEbene4 {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAEbene4> getMapStatusByID() {
 		if (_statusByID.size() == 0)
-			for (KAOAEbene4 g : KAOAEbene4.values())
+			for (final KAOAEbene4 g : KAOAEbene4.values())
 				_statusByID.put(g.daten.id, g);				
 		return _statusByID;
 	}
@@ -180,7 +180,7 @@ public enum KAOAEbene4 {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAEbene4> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
-			for (KAOAEbene4 g : KAOAEbene4.values())
+			for (final KAOAEbene4 g : KAOAEbene4.values())
 				_statusByKuerzel.put(g.daten.kuerzel, g);				
 		return _statusByKuerzel;
 	}
@@ -193,7 +193,7 @@ public enum KAOAEbene4 {
 	 * 
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls die ID ungültig ist
 	 */
-	public static KAOAEbene4 getByID(long id) {
+	public static KAOAEbene4 getByID(final long id) {
 		return getMapStatusByID().get(id);
 	}
 
@@ -205,7 +205,7 @@ public enum KAOAEbene4 {
 	 * 
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls das Kürzel ungültig ist
 	 */
-	public static KAOAEbene4 getByKuerzel(String kuerzel) {
+	public static KAOAEbene4 getByKuerzel(final String kuerzel) {
 		return getMapStatusByKuerzel().get(kuerzel);
 	}
 

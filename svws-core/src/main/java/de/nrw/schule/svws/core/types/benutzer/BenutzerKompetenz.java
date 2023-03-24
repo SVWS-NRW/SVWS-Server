@@ -453,7 +453,7 @@ public enum BenutzerKompetenz {
      * @param bezeichnungGruppe   die Bezeichnung der Gruppe von Kompetenzen zu dieser diese Benutzerkompetenz gehört
      * @param bezeichnung         die Bezeichnung der Benutzerkompetenz
      */
-    private BenutzerKompetenz(@NotNull BenutzerKompetenzKatalogEintrag daten) {
+    private BenutzerKompetenz(final @NotNull BenutzerKompetenzKatalogEintrag daten) {
         this.daten = daten;
     }
 
@@ -466,7 +466,7 @@ public enum BenutzerKompetenz {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> getMapID() {
 		if (_mapID.size() == 0)
-			for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
+			for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
 				_mapID.put(p.daten.id, p);
 		return _mapID;
 	}
@@ -480,13 +480,13 @@ public enum BenutzerKompetenz {
      */
     private static @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
         if (_mapGruppenZuordnung.size() == 0) {
-            for (@NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
+            for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
                 _mapGruppenZuordnung.put(g, new Vector<>());
-            for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
+            for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
                 BenutzerKompetenzGruppe gruppe = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
                 if (gruppe == null)
                     gruppe = BenutzerKompetenzGruppe.KEINE;
-                List<@NotNull BenutzerKompetenz> liste = _mapGruppenZuordnung.get(gruppe);
+                final List<@NotNull BenutzerKompetenz> liste = _mapGruppenZuordnung.get(gruppe);
                 if (liste != null)
                     liste.add(p);
             }
@@ -502,7 +502,7 @@ public enum BenutzerKompetenz {
      *  
      * @return die Benutzerkompetenz oder null, falls die ID fehlerhaft ist
      */
-    public static BenutzerKompetenz getByID(long id) {
+    public static BenutzerKompetenz getByID(final long id) {
     	return getMapID().get(id);
     }
 
@@ -515,8 +515,8 @@ public enum BenutzerKompetenz {
      * 
      * @return die Liste der Benutzerkompetenzen
      */
-    public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzen(@NotNull BenutzerKompetenzGruppe gruppe) {
-        List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
+    public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzen(final @NotNull BenutzerKompetenzGruppe gruppe) {
+        final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
         if (liste == null)
             return new Vector<>();
         return liste;

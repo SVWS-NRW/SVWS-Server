@@ -168,7 +168,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 */
 	private static getMapBySchulnummer() : HashMap<number, Herkunftsschulnummern | null> {
 		if (Herkunftsschulnummern._mapBySchulnummer.size() === 0) {
-			for (let s of Herkunftsschulnummern.values()) {
+			for (const s of Herkunftsschulnummern.values()) {
 				if (s.daten !== null)
 					Herkunftsschulnummern._mapBySchulnummer.put(s.daten.schulnummer, s);
 			}

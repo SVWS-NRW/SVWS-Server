@@ -35,7 +35,7 @@ public class AbiturKursMarkierung {
 	 * 
 	 * @param fuerBerechnung   gibt an, on der Kurs in die Berechnung eingehen soll oder nicht
 	 */
-	public AbiturKursMarkierung(boolean fuerBerechnung) {
+	public AbiturKursMarkierung(final boolean fuerBerechnung) {
 		this.fuerBerechnung = fuerBerechnung;
 		this.aufAbiturZeugnis = true;
 	}
@@ -47,7 +47,7 @@ public class AbiturKursMarkierung {
 	 * @param fuerBerechnung      gibt an, on der Kurs in die Berechnung eingehen soll oder nicht
 	 * @param aufAbiturZeugnis    gibt an, ob der Kurs auf dem Abiturzeugnis erscheinen soll
 	 */
-	public AbiturKursMarkierung(boolean fuerBerechnung, boolean aufAbiturZeugnis) {
+	public AbiturKursMarkierung(final boolean fuerBerechnung, final boolean aufAbiturZeugnis) {
 		this.fuerBerechnung = fuerBerechnung;
 		this.aufAbiturZeugnis = aufAbiturZeugnis;
 	}

@@ -76,7 +76,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * Setzt die maximale Blockungszeit.
 	 * @param pMax_time_millis die maximale Blockungszeit.
 	 */
-	public void set_max_time_millis(long pMax_time_millis) {
+	public void set_max_time_millis(final long pMax_time_millis) {
 		max_time_millis = pMax_time_millis;
 	}
 
@@ -116,7 +116,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * @param pAlgorithmus den zu verwendenden Algorithmus.
 	 */
 	@Deprecated
-	public void set_algorithmus(int pAlgorithmus) {
+	public void set_algorithmus(final int pAlgorithmus) {
 		algorithmus = pAlgorithmus;
 	}
 
@@ -161,7 +161,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
 	 */
 	@Deprecated
-	public void set_lk_gk_modus(int lk_gk_modus) {
+	public void set_lk_gk_modus(final int lk_gk_modus) {
 		this.lk_gk_modus = lk_gk_modus;
 	}
 
@@ -177,7 +177,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 * @param pAktivieren TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
-	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(boolean pAktivieren) {
+	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(final boolean pAktivieren) {
 		regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin = pAktivieren;
 	}
 
@@ -193,7 +193,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
 	 * @param pAktivieren TRUETRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
 	 */
-	public void set_regel_bevorzuge_gleiche_kursschienen_pro_termin(boolean pAktivieren) {
+	public void set_regel_bevorzuge_gleiche_kursschienen_pro_termin(final boolean pAktivieren) {
 		this.regel_bevorzuge_gleiche_kursschienen_pro_termin = pAktivieren;
 	}
 

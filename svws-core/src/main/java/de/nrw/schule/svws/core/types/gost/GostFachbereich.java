@@ -105,16 +105,16 @@ public enum GostFachbereich {
 	 * @param fachbereiche   die Fachbereiche
 	 * @param kuerzel        die zusätzlichen Kürzel des Fachbereichs
 	 */
-	private GostFachbereich(List<@NotNull GostFachbereich> fachbereiche, @NotNull ZulaessigesFach... faecher) {
+	private GostFachbereich(final List<@NotNull GostFachbereich> fachbereiche, final @NotNull ZulaessigesFach... faecher) {
 		if (fachbereiche != null) {
-			for (GostFachbereich fb : fachbereiche) {
-				for (ZulaessigesFach fach : fb.faecher) {
+			for (final GostFachbereich fb : fachbereiche) {
+				for (final ZulaessigesFach fach : fb.faecher) {
 					this.faecher.add(fach);
 					this.kuerzel.add(fach.daten.kuerzelASD);
 				}
 			}
 		}
-		for (ZulaessigesFach fach : faecher) {
+		for (final ZulaessigesFach fach : faecher) {
 			this.faecher.add(fach);
 			this.kuerzel.add(fach.daten.kuerzelASD);
 		}
@@ -129,8 +129,8 @@ public enum GostFachbereich {
 	 */
 	private static @NotNull HashMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> getMapFachbereichByFach() {
 		if (_mapFachbereichByFach.size() == 0) {
-			for (@NotNull GostFachbereich fb : GostFachbereich.values()) {
-				for (ZulaessigesFach fach : fb.faecher) {
+			for (final @NotNull GostFachbereich fb : GostFachbereich.values()) {
+				for (final ZulaessigesFach fach : fb.faecher) {
 					List<@NotNull GostFachbereich> listFachbereichByFach = _mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach == null) {
 						listFachbereichByFach = new Vector<>();
@@ -162,7 +162,7 @@ public enum GostFachbereich {
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	@JsonIgnore
-	public boolean hat(GostFach fach) {
+	public boolean hat(final GostFach fach) {
 		return fach == null ? false : hat(fach.kuerzel);
 	}
 	
@@ -175,7 +175,7 @@ public enum GostFachbereich {
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	@JsonIgnore
-	public boolean hat(String kuerzel) {
+	public boolean hat(final String kuerzel) {
 		if (kuerzel == null)
 			return false;
 		return this.kuerzel.contains(kuerzel);
@@ -189,11 +189,11 @@ public enum GostFachbereich {
 	 * 
 	 * @return die zugehörigen Fachbereiche
 	 */
-	public static @NotNull List<@NotNull GostFachbereich> getBereiche(GostFach fach) {
+	public static @NotNull List<@NotNull GostFachbereich> getBereiche(final GostFach fach) {
 		if (fach == null)
 			return new Vector<>();
-		@NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		List<@NotNull GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
+		final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		final List<@NotNull GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
 		if (bereiche != null)
 			return bereiche;
 		return new Vector<>();

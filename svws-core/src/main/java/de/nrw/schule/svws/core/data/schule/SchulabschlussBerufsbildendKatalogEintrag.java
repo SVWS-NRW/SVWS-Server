@@ -58,8 +58,8 @@ public class SchulabschlussBerufsbildendKatalogEintrag {
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulabschlussBerufsbildendKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung, 
-			@NotNull String kuerzelStatistik, Integer gueltigVon, Integer gueltigBis) {
+	public SchulabschlussBerufsbildendKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung, 
+			final @NotNull String kuerzelStatistik, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

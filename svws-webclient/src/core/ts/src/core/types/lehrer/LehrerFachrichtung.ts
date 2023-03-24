@@ -619,7 +619,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 */
 	private static getMapFachrichtungByID() : HashMap<number, LehrerFachrichtung | null> {
 		if (LehrerFachrichtung._fachrichtungenByID.size() === 0)
-			for (let g of LehrerFachrichtung.values())
+			for (const g of LehrerFachrichtung.values())
 				LehrerFachrichtung._fachrichtungenByID.put(g.daten.id, g);
 		return LehrerFachrichtung._fachrichtungenByID;
 	}
@@ -632,7 +632,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 */
 	private static getMapFachrichtungByKuerzel() : HashMap<string, LehrerFachrichtung | null> {
 		if (LehrerFachrichtung._fachrichtungenByKuerzel.size() === 0)
-			for (let g of LehrerFachrichtung.values())
+			for (const g of LehrerFachrichtung.values())
 				LehrerFachrichtung._fachrichtungenByKuerzel.put(g.daten.kuerzel, g);
 		return LehrerFachrichtung._fachrichtungenByKuerzel;
 	}

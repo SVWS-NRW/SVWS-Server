@@ -474,7 +474,7 @@ public enum Jahrgaenge {
 	 * @param historie   die Historie des Jahrgangs, welches ein Array von {@link JahrgangsKatalogEintrag} ist  
 	 */
 	@SuppressWarnings("unchecked")
-	private Jahrgaenge(@NotNull JahrgangsKatalogEintrag@NotNull[] historie) {
+	private Jahrgaenge(final @NotNull JahrgangsKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -484,8 +484,8 @@ public enum Jahrgaenge {
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			this.bezeichnungen[i] = new Vector<>();
-			for (@NotNull JahrgangsKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
-				Schulform sf = Schulform.getByKuerzel(bez.schulform);
+			for (final @NotNull JahrgangsKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
+				final Schulform sf = Schulform.getByKuerzel(bez.schulform);
 				if (sf != null)
 					this.schulformen[i].add(sf);
 				this.bezeichnungen[i].add(bez.bezeichnung);
@@ -502,7 +502,7 @@ public enum Jahrgaenge {
 	 */
 	private static @NotNull HashMap<@NotNull String, Jahrgaenge> getMapJahrgangByKuerzel() {
 		if (_mapKuerzel.size() == 0)
-			for (Jahrgaenge j : Jahrgaenge.values())
+			for (final Jahrgaenge j : Jahrgaenge.values())
 				_mapKuerzel.put(j.daten.kuerzel, j);				
 		return _mapKuerzel;
 	}
@@ -516,8 +516,8 @@ public enum Jahrgaenge {
 	 */
 	private static @NotNull HashMap<@NotNull Long, Jahrgaenge> getMapJahrgangByID() {
 		if (_mapID.size() == 0)
-			for (Jahrgaenge j : Jahrgaenge.values()) {
-				for (JahrgangsKatalogEintrag k : j.historie)
+			for (final Jahrgaenge j : Jahrgaenge.values()) {
+				for (final JahrgangsKatalogEintrag k : j.historie)
 					_mapID.put(k.id, j);
 			}
 		return _mapID;
@@ -531,7 +531,7 @@ public enum Jahrgaenge {
 	 * 
 	 * @return der Jahrgang oder null, falls das Kürzel ungültig ist
 	 */
-	public static Jahrgaenge getByKuerzel(String kuerzel) {
+	public static Jahrgaenge getByKuerzel(final String kuerzel) {
 		return getMapJahrgangByKuerzel().get(kuerzel);
 	}
 
@@ -543,7 +543,7 @@ public enum Jahrgaenge {
 	 * 
 	 * @return der Jahrgang oder null, falls die ID ungültig ist
 	 */
-	public static Jahrgaenge getByID(Long id) {
+	public static Jahrgaenge getByID(final Long id) {
 		return getMapJahrgangByID().get(id);
 	}
 
@@ -555,13 +555,13 @@ public enum Jahrgaenge {
 	 * 
 	 * @return die Bezeichung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
 	 */
-	public String getBezeichnung(Schulform schulform) {
+	public String getBezeichnung(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return null;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				JahrgangsKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
-				String sfKuerzel = bez.schulform;
+				final JahrgangsKatalogEintragBezeichnung bez = daten.bezeichnungen.get(i);
+				final String sfKuerzel = bez.schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return bez.bezeichnung;
 			}			
@@ -588,13 +588,13 @@ public enum Jahrgaenge {
 	 * 
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
-	public static @NotNull List<Jahrgaenge> get(Schulform schulform) {
-		@NotNull Vector<Jahrgaenge> result = new Vector<>();
+	public static @NotNull List<Jahrgaenge> get(final Schulform schulform) {
+		final @NotNull Vector<Jahrgaenge> result = new Vector<>();
 		if (schulform == null)
 			return result;
-		@NotNull Jahrgaenge@NotNull[] jahrgaenge = Jahrgaenge.values();
+		final @NotNull Jahrgaenge@NotNull[] jahrgaenge = Jahrgaenge.values();
 		for (int i = 0; i < jahrgaenge.length; i++) {
-			@NotNull Jahrgaenge jahrgang = jahrgaenge[i];
+			final @NotNull Jahrgaenge jahrgang = jahrgaenge[i];
 			if (jahrgang.hasSchulform(schulform))
 				result.add(jahrgang);
 		}
@@ -609,7 +609,7 @@ public enum Jahrgaenge {
 	 * 
 	 * @return true, falls das übergebene Kürzel das Kürzel dieses Jahrgangs ist.
 	 */
-	public boolean isKuerzel(String kuerzel) {
+	public boolean isKuerzel(final String kuerzel) {
 		if (this.daten == null)
 			return false;
 		return this.daten.kuerzel.equals(kuerzel);
@@ -624,12 +624,12 @@ public enum Jahrgaenge {
 	 * 
 	 * @return true, falls der Jahrgang bei der Schulform existiert und ansonsten false
 	 */
-	public boolean hasSchulformByKuerzel(String kuerzel) {
+	public boolean hasSchulformByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return false;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
 				if (sfKuerzel.equals(kuerzel))
 					return true;
 			}			
@@ -645,12 +645,12 @@ public enum Jahrgaenge {
 	 * 
 	 * @return true, falls der Jahrgang bei der Schulform existiert und ansonsten false
 	 */
-	public boolean hasSchulform(Schulform schulform) {
+	public boolean hasSchulform(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
 			return false;
 		if (daten.bezeichnungen != null) {
 			for (int i = 0; i < daten.bezeichnungen.size(); i++) {
-				String sfKuerzel = daten.bezeichnungen.get(i).schulform;
+				final String sfKuerzel = daten.bezeichnungen.get(i).schulform;
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
 			}			

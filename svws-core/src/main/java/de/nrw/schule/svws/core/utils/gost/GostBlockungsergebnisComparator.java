@@ -24,7 +24,7 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 	}
 
 	@Override
-	public int compare(@NotNull GostBlockungsergebnisListeneintrag o1, @NotNull GostBlockungsergebnisListeneintrag o2) {
+	public int compare(final @NotNull GostBlockungsergebnisListeneintrag o1, final @NotNull GostBlockungsergebnisListeneintrag o2) {
 		final @NotNull GostBlockungsergebnisBewertung b1 = o1.bewertung; 
 		final @NotNull GostBlockungsergebnisBewertung b2 = o2.bewertung;
 		

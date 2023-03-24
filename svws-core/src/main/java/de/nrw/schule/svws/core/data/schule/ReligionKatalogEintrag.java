@@ -53,8 +53,8 @@ public class ReligionKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public ReligionKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String bezeichnung,
-			Integer gueltigVon, Integer gueltigBis) {
+	public ReligionKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
+			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;

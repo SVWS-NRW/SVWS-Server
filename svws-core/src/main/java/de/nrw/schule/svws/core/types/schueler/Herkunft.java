@@ -257,7 +257,7 @@ public enum Herkunft {
 	 * 
 	 * @param h   die sonstige Herkunft
 	 */
-	private Herkunft(@NotNull HerkunftSonstige h) {
+	private Herkunft(final @NotNull HerkunftSonstige h) {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
@@ -279,7 +279,7 @@ public enum Herkunft {
 	 * 
 	 * @param h   die Herkunft aus einem Bildungsgang
 	 */
-	private Herkunft(@NotNull HerkunftBildungsgang h) {
+	private Herkunft(final @NotNull HerkunftBildungsgang h) {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
@@ -302,7 +302,7 @@ public enum Herkunft {
 	 * 
 	 * @param h   die Herkunft aus einem Bildungsgangtyp
 	 */
-	private Herkunft(@NotNull HerkunftBildungsgangsTyp h) {
+	private Herkunft(final @NotNull HerkunftBildungsgangsTyp h) {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
@@ -324,7 +324,7 @@ public enum Herkunft {
 	 * 
 	 * @param h   die Herkunft aus einer Schulform
 	 */
-	private Herkunft(@NotNull HerkunftSchulform h) {
+	private Herkunft(final @NotNull HerkunftSchulform h) {
 		this.historie = new HerkunftKatalogEintrag[h.historie.length];
 		for (int i = 0; i < h.historie.length; i++) {
 			this.historie[i] = new HerkunftKatalogEintrag(
@@ -349,7 +349,7 @@ public enum Herkunft {
 	 */
 	private static @NotNull HashMap<@NotNull String, Herkunft> getMapByKuerzel() {
 		if (_kuerzel.size() == 0) {
-			for (Herkunft h : Herkunft.values()) {
+			for (final Herkunft h : Herkunft.values()) {
 				if (h.daten != null)
 					_kuerzel.put(h.daten.kuerzel, h);
 			}
@@ -365,7 +365,7 @@ public enum Herkunft {
 	 * 
 	 * @return die Herkunft oder null, falls das Kürzel ungültig ist
 	 */
-	public static Herkunft getByKuerzel(String kuerzel) {
+	public static Herkunft getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 

@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 public class StundenplanblockungManagerRaum {
 
 	/** Die Datenbank-ID des Raumes. */
-	private long _id;
+	private final long _id;
 
 	/** Das Kürzel des Raumes. Beispielsweise 'E01'. */
 	private @NotNull String _kuerzel = "";
@@ -22,7 +22,7 @@ public class StundenplanblockungManagerRaum {
 	 * @param pRaumID   Die Datenbank-ID des Raumes.
 	 * @param pKuerzel  Das Kürzel des Raumes.
 	 */
-	public StundenplanblockungManagerRaum(long pRaumID, @NotNull String pKuerzel) {
+	public StundenplanblockungManagerRaum(final long pRaumID, final @NotNull String pKuerzel) {
 		_id = pRaumID;
 		_kuerzel = pKuerzel;
 		_lerngruppen = new Vector<>();
@@ -42,7 +42,7 @@ public class StundenplanblockungManagerRaum {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel des Raumes.
 	 */
-	public void setKuerzel(@NotNull String pKuerzel) {
+	public void setKuerzel(final @NotNull String pKuerzel) {
 		_kuerzel = pKuerzel;
 	}
 }

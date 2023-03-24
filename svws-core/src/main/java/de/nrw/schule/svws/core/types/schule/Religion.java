@@ -85,7 +85,7 @@ public enum Religion {
 	 * @param historie   die Historie der Religionen, welche ein Array von 
 	 *                   {@link ReligionKatalogEintrag} ist  
 	 */
-	private Religion(@NotNull ReligionKatalogEintrag@NotNull[] historie) {
+	private Religion(final @NotNull ReligionKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -101,7 +101,7 @@ public enum Religion {
 	 */
 	private static @NotNull HashMap<@NotNull String, Religion> getMapByKuerzel() {
 		if (_mapKuerzel.size() == 0) {
-			for (Religion s : Religion.values()) {
+			for (final Religion s : Religion.values()) {
 				if (s.daten != null)
 					_mapKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -117,7 +117,7 @@ public enum Religion {
 	 * 
 	 * @return die Religion oder null, falls das Kürzel ungültig ist
 	 */
-	public static Religion getByKuerzel(String kuerzel) {
+	public static Religion getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 	

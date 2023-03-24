@@ -134,7 +134,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, SchulabschlussBerufsbildend> {
 		if (SchulabschlussBerufsbildend._mapByKuerzel.size() === 0) {
-			for (let s of SchulabschlussBerufsbildend.values()) {
+			for (const s of SchulabschlussBerufsbildend.values()) {
 				if (s.daten !== null)
 					SchulabschlussBerufsbildend._mapByKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -161,7 +161,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 */
 	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussBerufsbildend> {
 		if (SchulabschlussBerufsbildend._mapByKuerzelStatistik.size() === 0) {
-			for (let s of SchulabschlussBerufsbildend.values()) {
+			for (const s of SchulabschlussBerufsbildend.values()) {
 				if (s.daten !== null)
 					SchulabschlussBerufsbildend._mapByKuerzelStatistik.put(s.daten.kuerzelStatistik, s);
 			}

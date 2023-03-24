@@ -102,7 +102,7 @@ public enum SchulabschlussBerufsbildend {
 	 * 
 	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussBerufsbildendKatalogEintrag} ist  
 	 */
-	private SchulabschlussBerufsbildend(@NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie) {
+	private SchulabschlussBerufsbildend(final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
@@ -117,7 +117,7 @@ public enum SchulabschlussBerufsbildend {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
-			for (SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
+			for (final SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
 				if (s.daten != null)
 					_mapByKuerzel.put(s.daten.kuerzel, s);
 			}
@@ -133,7 +133,7 @@ public enum SchulabschlussBerufsbildend {
 	 * 
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
-	public static SchulabschlussBerufsbildend getByKuerzel(String kuerzel) {
+	public static SchulabschlussBerufsbildend getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
@@ -146,7 +146,7 @@ public enum SchulabschlussBerufsbildend {
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzelStatistik() {
 		if (_mapByKuerzelStatistik.size() == 0) {
-			for (SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
+			for (final SchulabschlussBerufsbildend s : SchulabschlussBerufsbildend.values()) {
 				if (s.daten != null)
 					_mapByKuerzelStatistik.put(s.daten.kuerzelStatistik, s);
 			}
@@ -162,7 +162,7 @@ public enum SchulabschlussBerufsbildend {
 	 * 
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
-	public static SchulabschlussBerufsbildend getByKuerzelStatistik(String kuerzel) {
+	public static SchulabschlussBerufsbildend getByKuerzelStatistik(final String kuerzel) {
 		return getMapByKuerzelStatistik().get(kuerzel);
 	}
 

@@ -28,7 +28,7 @@ public class Logger {
 	 * 
 	 * @param c   der hinzuzufügende Consumer von Log-Informationen
 	 */
-	public void addConsumer(@NotNull Consumer<@NotNull LogData> c) {
+	public void addConsumer(final @NotNull Consumer<@NotNull LogData> c) {
 		consumer.add(c);
 	}
 	
@@ -38,7 +38,7 @@ public class Logger {
 	 * 
 	 * @param other   der andere Logger
 	 */
-	public void copyConsumer(@NotNull Logger other) {
+	public void copyConsumer(final @NotNull Logger other) {
 		consumer.addAll(other.consumer);
 	}
 	
@@ -48,7 +48,7 @@ public class Logger {
 	 * 
 	 * @param c   der zu entfernende Consumer von Log-Informationen
 	 */
-	public void removeConsumer(@NotNull Consumer<@NotNull LogData> c) {
+	public void removeConsumer(final @NotNull Consumer<@NotNull LogData> c) {
 		consumer.remove(c);
 	}
 	
@@ -68,7 +68,7 @@ public class Logger {
      * 
      * @param defaultLevel   das neue Default-Log-Level für neue Log-Informationen
      */
-	public void setDefaultLevel(@NotNull LogLevel defaultLevel) {
+	public void setDefaultLevel(final @NotNull LogLevel defaultLevel) {
 		this.defaultLevel = defaultLevel;
 	}
 	
@@ -79,7 +79,7 @@ public class Logger {
 	 * 
 	 * @param indent   die Anzahl der Leerzeichen
 	 */
-	public void setIndent(int indent) {
+	public void setIndent(final int indent) {
 		this.indent = (indent < 0) ? 0 : indent;
 	}
 	
@@ -90,7 +90,7 @@ public class Logger {
 	 * 
 	 * @param indent   die Veränderung bei der Anzahl der Leerzeichen
 	 */
-	public void modifyIndent(int indent) {
+	public void modifyIndent(final int indent) {
 		this.indent = (this.indent + indent < 0) ? 0 : this.indent + indent;
 	}
 	
@@ -101,9 +101,9 @@ public class Logger {
 	 * 
 	 * @param data   die Log-Informationen
 	 */
-    private void log(@NotNull LogData data) {
+    private void log(final @NotNull LogData data) {
     	for (int i = 0; i < consumer.size(); i++) {
-    		@NotNull Consumer<@NotNull LogData> c = consumer.get(i);
+    		final @NotNull Consumer<@NotNull LogData> c = consumer.get(i);
     		if (c == null)
     			continue;
     		c.accept(data);
@@ -119,7 +119,7 @@ public class Logger {
      * @param indent   die Einrückung, die bei dem Text verwendet werden soll
      * @param text     der Text
      */
-    public void log(@NotNull LogLevel level, int indent, @NotNull String text) {
+    public void log(final @NotNull LogLevel level, final int indent, final @NotNull String text) {
     	log(new LogData(level, indent, false, text));
     }
 
@@ -132,7 +132,7 @@ public class Logger {
      * @param indent   die Einrückung, die bei dem Text verwendet werden soll
      * @param text     der Text
      */
-    public void logLn(@NotNull LogLevel level, int indent, @NotNull String text) {
+    public void logLn(final @NotNull LogLevel level, final int indent, final @NotNull String text) {
     	log(new LogData(level, indent, true, text));
     }
 
@@ -143,7 +143,7 @@ public class Logger {
      * @param level    das Log-Level des zu loggenden Textes  
      * @param text     der Text
      */
-    public void log(@NotNull LogLevel level, @NotNull String text) {
+    public void log(final @NotNull LogLevel level, final @NotNull String text) {
     	log(level, this.indent, text);
     }
 
@@ -156,7 +156,7 @@ public class Logger {
      * @param level    das Log-Level des zu loggenden Textes  
      * @param text     der Text
      */
-    public void logLn(@NotNull LogLevel level, @NotNull String text) {
+    public void logLn(final @NotNull LogLevel level, final @NotNull String text) {
     	logLn(level, this.indent, text);
     }
 
@@ -167,7 +167,7 @@ public class Logger {
      * @param indent   die Einrückung, die bei dem Text verwendet werden soll
      * @param text     der Text
      */
-    public void log(int indent, @NotNull String text) {
+    public void log(final int indent, final @NotNull String text) {
     	log(defaultLevel, indent, text);
     }
 
@@ -179,7 +179,7 @@ public class Logger {
      * @param indent   die Einrückung, die bei dem Text verwendet werden soll
      * @param text     der Text
      */
-    public void logLn(int indent, @NotNull String text) {
+    public void logLn(final int indent, final @NotNull String text) {
     	logLn(defaultLevel, indent, text);
     }
 
@@ -189,7 +189,7 @@ public class Logger {
      * 
      * @param text     der Text
      */
-    public void log(@NotNull String text) {
+    public void log(final @NotNull String text) {
     	log(defaultLevel, text);
     }
 
@@ -200,7 +200,7 @@ public class Logger {
      * 
      * @param text     der Text
      */
-    public void logLn(@NotNull String text) {
+    public void logLn(final @NotNull String text) {
     	logLn(defaultLevel, text);
     }
     

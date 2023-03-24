@@ -17,31 +17,31 @@ import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFae
 
 export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
-	private filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3))) };
+	private readonly filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3))) };
 
-	private filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4))) };
+	private readonly filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4))) };
 
-	private filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5))) };
+	private readonly filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5))) };
 
-	private filterDefiziteMehrAls1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5))) };
+	private readonly filterDefiziteMehrAls1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5))) };
 
-	private filterDefiziteMehrAls2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) };
+	private readonly filterDefiziteMehrAls2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 6)) };
 
-	private filterDefiziteMitNPOption : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) };
+	private readonly filterDefiziteMitNPOption : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) };
 
-	private filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private filterBenoetigte3er : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart)) };
+	private readonly filterBenoetigte3er : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart)) };
 
-	private filterDefiziteBenoetigte3erMitNPOption : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note === 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart)) };
+	private readonly filterDefiziteBenoetigte3erMitNPOption : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note === 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart)) };
 
-	private filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4))) };
+	private readonly filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4))) };
 
-	private filterAusgleiche3er : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note < 3) };
+	private readonly filterAusgleiche3er : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && (f.note < 3) };
 
-	private filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
+	private readonly filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
 
 
 	public constructor() {

@@ -91,7 +91,7 @@ export class Schulstufe extends JavaObject {
 	 */
 	private static getMapByKuerzel() : HashMap<string, Schulstufe> {
 		if (Schulstufe._mapByKuerzel.size() === 0) {
-			for (let s of Schulstufe.values()) {
+			for (const s of Schulstufe.values()) {
 				if (s.daten !== null)
 					Schulstufe._mapByKuerzel.put(s.daten.kuerzel, s);
 			}

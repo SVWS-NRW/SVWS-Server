@@ -11,7 +11,7 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 	/**
 	 * Die dem Iterator zugehörige Collection
 	 */
-	private _collection : LinkedCollection<E>;
+	private readonly _collection : LinkedCollection<E>;
 
 	/**
 	 * Der Zeiger auf das aktuelle Element
@@ -50,7 +50,7 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 			throw new ConcurrentModificationException()
 		if (this._current === null)
 			throw new NoSuchElementException()
-		let result : E = this._current.getValue();
+		const result : E = this._current.getValue();
 		this._current = this._current.getNext();
 		return result;
 	}

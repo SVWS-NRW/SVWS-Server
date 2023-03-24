@@ -52,7 +52,7 @@ public class StundenplanZeitraster {
 	 * @param stundenbeginn      die Uhrzeit, wann die Unterrichtsstunde beginnt
 	 * @param stundenende        die Uhrzeit, wann die Unterrichtsstunde endet
 	 */
-	public StundenplanZeitraster(long id, int wochentag, int unterrichtstunde, @NotNull String stundenbeginn, @NotNull String stundenende) {
+	public StundenplanZeitraster(final long id, final int wochentag, final int unterrichtstunde, final @NotNull String stundenbeginn, final @NotNull String stundenende) {
 		this.id = id;
 		this.wochentag = wochentag;
 		this.unterrichtstunde = unterrichtstunde;
