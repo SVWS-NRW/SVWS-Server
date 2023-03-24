@@ -298,8 +298,13 @@ export class RouteDataSchuleBenutzer {
 				}
 			}
 		}
+		// TODO Durch eine entpsrechende Gruppenmitgliedschaft wird ein Benutzer administrativ und das wird in BenutzerView festgehalt.
+		// Die Entfernung dieser Mitgliedschaft wird in BenutzerManager nicht richtig umgesetzt. Die Gruppe wird zwar entfernt, jedoch muss auch im
+		// verwalteten Obejkt istAdmin Attribut angepasst werden.
+		const daten = await this.ladeBenutzerDaten(this._state.value.daten);
+		const benutzerManager = daten=== undefined ? undefined : new BenutzerManager(daten);
 		this.setPatchedState({
-			benutzerManager: this.benutzerManager,
+			benutzerManager: benutzerManager,
 			listBenutzergruppen: this._state.value.listBenutzergruppen
 		})
 	}
