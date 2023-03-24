@@ -1,6 +1,6 @@
 import { Abiturdaten, AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
 	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten,
-	GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
+	GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, SimpleOperationResponse, Vector
 } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -124,13 +124,19 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.auswahl.id);
 	}
 
-	getLaufbahnplanung = async (): Promise<Blob> => {
+	exportLaufbahnplanung = async (): Promise<Blob> => {
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
+	}
+
+	importLaufbahnplanung = async (data: FormData): Promise<boolean> => {
+		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
+		return res.success;
 	}
 
 	patchBeratungsdaten = async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
 		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.auswahl.id);
 	}
+
 	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
 		if (auswahl === this._state.value.auswahl)
 			return;
@@ -201,7 +207,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,
-			getLaufbahnplanung: this.data.getLaufbahnplanung,
+			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
+			importLaufbahnplanung: this.data.importLaufbahnplanung,
 			schueler: this.data.auswahl,
 			gostJahrgangsdaten: this.data.gostJahrgangsdaten,
 			gostLaufbahnBeratungsdaten: () => this.data.gostLaufbahnBeratungsdaten,

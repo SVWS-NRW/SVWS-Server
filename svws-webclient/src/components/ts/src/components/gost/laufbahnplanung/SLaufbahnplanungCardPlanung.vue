@@ -3,7 +3,9 @@
 		<div class="router-tab-bar--subnav">
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
 			<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung">Exportieren <i-ri-upload-2-line /></svws-ui-button>
-			<svws-ui-button size="small" type="transparent" title="Planung importieren">Importieren <i-ri-download-2-line /></svws-ui-button>
+			<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
+				<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal">Importieren <i-ri-download-2-line /></svws-ui-button>
+			</s-laufbahnplanung-import-modal>
 			<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
 				Manueller Modus
 				<template v-if="istManuellerModus">
@@ -197,7 +199,8 @@
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
-		getLaufbahnplanung: () => Promise<Blob>;
+		exportLaufbahnplanung: () => Promise<Blob>;
+		importLaufbahnplanung: (data: FormData) => Promise<boolean>;
 		item?: SchuelerListeEintrag;
 	}>();
 
@@ -257,7 +260,7 @@
 	async function export_laufbahnplanung() {
 		if (props.item === undefined)
 			return;
-		const gzip = await props.getLaufbahnplanung();
+		const gzip = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(gzip);
 		link.download = "Laufbahnplanung_Schueler_" + props.item.id + "_" + props.item.nachname + "_" + props.item.vorname + ".lp";

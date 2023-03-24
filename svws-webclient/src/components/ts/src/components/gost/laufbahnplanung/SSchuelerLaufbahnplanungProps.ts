@@ -4,7 +4,8 @@ export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 	getPdfWahlbogen: () => Promise<Blob>;
-	getLaufbahnplanung: () => Promise<Blob>;
+	exportLaufbahnplanung: () => Promise<Blob>;
+	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
 	schueler: SchuelerListeEintrag | undefined,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
