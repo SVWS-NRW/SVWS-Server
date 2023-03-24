@@ -155,7 +155,7 @@
 	const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
 		const schiene =	props.getErgebnismanager().getSchieneG(ergebnis_schiene.id)
 		if (!schiene)
-			throw new Error("Schiene fehlt in der Definition");
+			throw new Error(`Schiene mit der ID: ${ergebnis_schiene.id} fehlt in der Definition`);
 		return schiene;
 	}
 

@@ -2,7 +2,7 @@
 	<slot :open-modal="openModal" />
 	<svws-ui-modal ref="modal" size="medium">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
-		<template #modalDescription/>
+		<template #modalDescription />
 		<template #modalContent>
 			<div class="input-wrapper mb-9">
 				<div class="col-span-2">

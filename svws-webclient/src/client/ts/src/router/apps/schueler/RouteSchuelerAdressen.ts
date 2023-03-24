@@ -81,14 +81,14 @@ export class RouteDataSchuelerAdressen {
 
 	createAnsprechpartner = async (data: BetriebAnsprechpartner) => {
 		if ((this._daten.value === undefined) || (this._daten.value.id !== data.betrieb_id))
-			throw new Exception("Für das Erstellen eines Ansprechpartners von einem Betrieb muss eine gültige ID des Betriebes angegeben sein.");
+			throw new Error("Für das Erstellen eines Ansprechpartners von einem Betrieb muss eine gültige ID des Betriebes angegeben sein.");
 		await api.server.createBetriebansprechpartner(data, api.schema, this._daten.value.id);
 		await this.ladeAnsprechpartner(data.betrieb_id);
 	}
 
 	createSchuelerBetriebsdaten = async (data: SchuelerBetriebsdaten) => {
 		if ((data.schueler_id === undefined) || (data.betrieb_id === undefined))
-			throw new Exception("Für das Zuweisen eines Betriebs zu einem Schüler müssen die Schüler- und die Betriebs-ID angegeben werden.");
+			throw new Error("Für das Zuweisen eines Betriebs zu einem Schüler müssen die Schüler- und die Betriebs-ID angegeben werden.");
 		await api.server.createSchuelerbetrieb(data, api.schema, data.schueler_id, data.betrieb_id);
 		// Lade die Liste der Schülerbetriebe neu
 		this.listSchuelerbetriebe.value = await api.server.getSchuelerBetriebe(api.schema, data.schueler_id);

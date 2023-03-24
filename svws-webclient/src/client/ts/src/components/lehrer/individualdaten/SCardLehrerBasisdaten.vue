@@ -25,7 +25,7 @@
 
 	import { computed, WritableComputedRef } from "vue";
 
-	import { Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@svws-nrw/svws-core";
+	import { DeveloperNotificationException, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@svws-nrw/svws-core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
 
 	const props = defineProps<{
@@ -87,7 +87,7 @@
 
 	const istSichtbar: WritableComputedRef<boolean> = computed({
 		get: () => true,
-		set: (value) => {throw new Error("Sichtbarkeit ist noch nicht implementiert")}//doPatch({ istSichtbar: value })
+		set: (value) => {throw new DeveloperNotificationException("Sichtbarkeit ist noch nicht implementiert")}//doPatch({ istSichtbar: value })
 	});
 
 

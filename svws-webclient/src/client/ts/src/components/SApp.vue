@@ -39,6 +39,12 @@
 						<svws-ui-notification type="error">
 							<template #header>
 								{{ error.name }}
+								<template v-if="error.name === 'DeveloperNotificationException'">
+									<br>Programmierfehler: Bitte melden Sie diesen Fehler.
+								</template>
+								<template v-if="error.name === 'UserNotificationException'">
+									<br>Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.
+								</template>
 							</template>
 							{{ error.message }}
 							<template #stack v-if="error.stack">
