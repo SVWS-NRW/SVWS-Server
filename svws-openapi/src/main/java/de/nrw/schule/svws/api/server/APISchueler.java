@@ -7,6 +7,7 @@ import de.nrw.schule.svws.core.data.betrieb.BetriebStammdaten;
 import de.nrw.schule.svws.core.data.erzieher.ErzieherStammdaten;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
 import de.nrw.schule.svws.core.data.schueler.SchuelerBetriebsdaten;
+import de.nrw.schule.svws.core.data.schueler.SchuelerKAoADaten;
 import de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
@@ -23,6 +24,7 @@ import de.nrw.schule.svws.data.schueler.DataKatalogHerkunftsarten;
 import de.nrw.schule.svws.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.nrw.schule.svws.data.schueler.DataKatalogUebergangsempfehlung;
 import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
+import de.nrw.schule.svws.data.schueler.DataSchuelerKAoADaten;
 import de.nrw.schule.svws.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.data.schueler.DataSchuelerLernabschnittsliste;
 import de.nrw.schule.svws.data.schueler.DataSchuelerSchulbesuchsdaten;
@@ -38,8 +40,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -512,5 +517,136 @@ public class APISchueler {
             return (new DataKatalogHerkunftsarten()).getList();
         }
     }
-    
+ 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der KAOADaten eines Schülers.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+	 *                soll
+	 * @param id      die Datenbank-ID zur Identifikation des Schülers
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die KAOADaten des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/kaoa")
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen KAOADaten.", description = "Liest die KAOADaten des Schülers zu der angegebenen ID aus der Datenbank "
+			+ "und liefert diese zurück. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerKAoADaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
+	public Response getKAOAdaten(@PathParam("schema") String schema, @PathParam("id") long id,
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+			return (new DataSchuelerKAoADaten(conn).getBySchuelerIDAsResponse(id));
+		}
+	}
+
+	/**
+	 *
+	 * Erzeugt einen SchuelerKAoADaten-Eintrag und gibt diesen zurück
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param schuelerid die Schueler-ID
+	 * @param daten      die neuen Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_200 und die angelegten SchuelerKAoADaten, wenn erfolgreich. <br>
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei
+	 *         fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 *
+	 */
+	@POST
+	@Path("/{id : \\d+}/kaoa")
+	@Operation(summary = "Erstellt einen neuen SchuelerKAoADaten Eintrag", description = "Erstellt einen neuen SchuelerKAoADaten Eintrag"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerKAoADaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
+	public Response createKAOAdaten(@PathParam("schema") String schema,
+			@PathParam("id") long schuelerid,
+			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) SchuelerKAoADaten daten,
+
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
+			return (new DataSchuelerKAoADaten(conn).createBySchuelerIDAsResponse(schuelerid, daten));
+		}
+	}
+
+	/**
+	 * Ändert einen SchuelerKAoADaten-Eintrag anhand seiner ID
+	 *
+	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                       werden soll
+	 * @param schuelerID     die Schueler-ID
+	 * @param schuelerKAoAID die Datenbank-ID der Schüler-KAoA-Daten
+	 * @param daten          die neuen Daten
+	 * @param request        die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_200, wenn erfolgreich. <br>
+	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei
+	 *         fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 *
+	 */
+	@PUT
+	@Path("/{id : \\d+}/kaoa/{skid : \\d+}")
+	@Operation(summary = "Ändert einen SchuelerKAoADaten Eintrag", description = "Ändert einen SchuelerKAoADaten Eintrag"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers")
+	@ApiResponse(responseCode = "400", description = "Fehler bei der Datenvalidierung")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
+	public Response putKAOAdaten(@PathParam("schema") String schema,
+			@PathParam("id") long schuelerID,
+			@PathParam("skid") long schuelerKAoAID,
+			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) SchuelerKAoADaten daten,
+
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
+			return (new DataSchuelerKAoADaten(conn).putBySchuelerIDAsResponse(schuelerID, daten, schuelerKAoAID));
+		}
+	}
+
+	/**
+	 * Löscht ein SchuelerKAoADaten-Eintrag anhand dessen Id
+	 *
+	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                       werden soll
+	 * @param schuelerID     die Schueler-ID
+	 * @param schuelerKAoAID die Datenbank-ID der Schüler-KAoA-Daten
+	 * @param request        die Informationen zur HTTP-Anfrage
+	 *
+	 * @return HTTP_204, wenn erfolgreich. <br>
+	 *         HTTP_403 bei fehlender Berechtigung,<br>
+	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
+	 */
+	@DELETE
+	@Path("/{id : \\d+}/kaoa/{skid : \\d+}")
+	@Operation(summary = "Löscht einen SchuelerKAoADaten Eintrag", description = "Löscht einen SchuelerKAoADaten Eintrag"
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "204", description = "Die KAOADaten des Schülers wurden gelöscht")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
+	public Response deleteKAOAdaten(@PathParam("schema") String schema,
+			@PathParam("id") long schuelerID,
+			@PathParam("skid") long schuelerKAoAID,
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
+			return (new DataSchuelerKAoADaten(conn).deleteBySchuelerKAoAIDAsResponse(schuelerKAoAID));
+		}
+	}
+
 }

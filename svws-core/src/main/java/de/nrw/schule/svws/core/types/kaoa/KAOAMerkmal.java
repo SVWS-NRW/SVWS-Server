@@ -189,13 +189,13 @@ public enum KAOAMerkmal {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static long VERSION = 1;
+
 	/** Die aktuellsten Daten des KAoA-Merkmals */
 	public final @NotNull KAOAMerkmalEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen des KAoA-Merkmals */
-	public final @NotNull KAOAMerkmalEintrag@NotNull[] historie;	
+	public final @NotNull KAOAMerkmalEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAMerkmal> _statusByID = new HashMap<>();
@@ -206,60 +206,60 @@ public enum KAOAMerkmal {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist
 	 */
 	private KAOAMerkmal(final @NotNull KAOAMerkmalEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von der ID auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAMerkmal> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAMerkmal g : KAOAMerkmal.values())
-				_statusByID.put(g.daten.id, g);				
+				_statusByID.put(g.daten.id, g);
 		return _statusByID;
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück. 
+	 * Gibt eine Map von dem Kürzel auf das zugehörige Merkmal zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAMerkmal> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAMerkmal g : KAOAMerkmal.values())
-				_statusByKuerzel.put(g.daten.kuerzel, g);				
+				_statusByKuerzel.put(g.daten.kuerzel, g);
 		return _statusByKuerzel;
 	}
-		
+
 
 	/**
 	 * Gibt das Merkmal anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls die ID ungültig ist
 	 */
-	public static KAOAMerkmal getByID(final long id) {
+	public static KAOAMerkmal getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 
 
 	/**
 	 * Gibt das Merkmal anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Merkmals
-	 * 
+	 *
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
 	public static KAOAMerkmal getByKuerzel(final String kuerzel) {

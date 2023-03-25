@@ -268,7 +268,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @return das Merkmal oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : number) : KAOAMerkmal | null {
+	public static getByID(id : number | null) : KAOAMerkmal | null {
 		return KAOAMerkmal.getMapStatusByID().get(id);
 	}
 

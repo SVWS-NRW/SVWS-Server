@@ -277,7 +277,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @return die Anschlussoption oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : number) : KAOAAnschlussoptionen | null {
+	public static getByID(id : number | null) : KAOAAnschlussoptionen | null {
 		return KAOAAnschlussoptionen.getMapStatusByID().get(id);
 	}
 

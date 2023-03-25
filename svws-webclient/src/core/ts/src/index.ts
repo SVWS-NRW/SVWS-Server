@@ -216,6 +216,7 @@ export { SchildReportingSchuelerleistungsdaten } from './core/data/schild3/Schil
 export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
+export { SchuelerKAoADaten } from './core/data/schueler/SchuelerKAoADaten';
 export { SchuelerLeistungsdaten } from './core/data/schueler/SchuelerLeistungsdaten';
 export { SchuelerLernabschnittBemerkungen } from './core/data/schueler/SchuelerLernabschnittBemerkungen';
 export { SchuelerLernabschnittListeEintrag } from './core/data/schueler/SchuelerLernabschnittListeEintrag';

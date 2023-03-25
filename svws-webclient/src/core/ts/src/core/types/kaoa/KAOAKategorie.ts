@@ -136,7 +136,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @return die Kategorie oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : number) : KAOAKategorie | null {
+	public static getByID(id : number | null) : KAOAKategorie | null {
 		return KAOAKategorie.getMapStatusByID().get(id);
 	}
 

@@ -35,7 +35,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(24, "AV", "Berufskolleg - Einjährige Ausbildungsvorbereitung in Vollzeit (AV) - Anlage A", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
                 KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5
             ), null, null)
     }),
@@ -54,7 +54,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(26, "BFSII", "Berufskolleg - Einjährige Berufsfachschule Typ II (BFS II) - Anlage B", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, 
+                KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8,
                 KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -64,7 +64,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(27, "HÖBFS", "Berufskolleg - Zweijährige [Höhere] Berufsfachschule - Anlage C", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -74,7 +74,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(28, "FOS", "Berufskolleg - Zweijährige Fachoberschule (FOS 11/12) - Anlage C", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -84,7 +84,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(29, "BERUFGY", "Berufskolleg - Berufliches Gymnasium - Anlage D", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10, 
+                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10,
                 KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12
             ), null, null)
     }),
@@ -94,10 +94,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(30, "DUAL", "Duale Berufsausbildung (inkl. Beamtenlaufbahn im mittleren Dienst)", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -107,8 +107,8 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(31, "SCHUAUS", "Berufskolleg - schulische Ausbildung zwei- oder dreijährig in der Berufsfachschule Anlage B oder C oder am Beruflichen Gymnasium", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7, 
-                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10, 
+                KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7,
+                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10,
                 KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -118,8 +118,8 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(32, "SCHUGA", "Schulische Ausbildung in Berufen des Gesundheitswesens und der Altenpflege", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7, 
-                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10, 
+                KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, KAOAZusatzmerkmal.SBO_10_7_7,
+                KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, KAOAZusatzmerkmal.SBO_10_7_10,
                 KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -147,9 +147,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(35, "BVB", "Berufsvorbereitende Bildungsmaßnahme der Agentur für Arbeit (BvB), auch rehaspezifisch", Arrays.asList(
             Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
         ), Arrays.asList(
-            KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-            KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-            KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+            KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+            KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+            KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
             KAOAZusatzmerkmal.SBO_10_7_10
         ), null, null)
     }),
@@ -159,9 +159,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(36, "EQ", "Einstiegsqualifizierung (EQ und EQ plus)", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11
             ), null, null)
     }),
@@ -171,9 +171,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(37, "WERK", "Werkstattjahr.NRW", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -183,9 +183,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(38, "JUWERK", "Jugendwerkstatt", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -195,9 +195,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(39, "MASS", "weitere Maßnahmen gemäß SGB II/III/VIII (z. B. Aktivierungshilfen, Projekte der Jugendberufshilfe) ", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10
             ), null, null)
     }),
@@ -207,7 +207,7 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(40, "VHS", "Abendrealschule oder VHS zum Nachholen des Schulabschlusses", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_4, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_4,
                 KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6
             ), null, null)
     }),
@@ -217,10 +217,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(41, "PRAKT", "betriebliche Langzeitpraktika (ohne EQ) (z.B. zum Erwerb der vollen FHR)", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -230,10 +230,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(42, "FREI", "Freiwilligendienste, Freiwilliger Wehrdienst/Laufbahn Bundeswehr und ähnliche Anschlussoptionen", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -243,10 +243,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(43, "SVP", "Sozialversicherungspflichtige Beschäftigung als ungelernte Kraft", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -328,9 +328,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(52, "MINI", "Minijob", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11
             ), null, null)
     }),
@@ -340,9 +340,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(53, "SCHWAN", "Schwangerschaft/Elternzeit", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11
             ), null, null)
     }),
@@ -352,9 +352,9 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(54, "ABSENZ", "Schulabsenz, daher Verbleib unbekannt", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
                 KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11
             ), null, null)
     }),
@@ -364,10 +364,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(55, "UNBE", "Verbleib unbekannt - andere Gründe", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -377,10 +377,10 @@ public enum KAOAAnschlussoptionen {
         new KAOAAnschlussoptionEintrag(56, "NOKEAN", "Noch kein Anschluss", Arrays.asList(
                 Schulstufe.SEKUNDARSTUFE_I, Schulstufe.SEKUNDARSTUFE_II
             ), Arrays.asList(
-                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3, 
-                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6, 
-                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9, 
-                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12, 
+                KAOAZusatzmerkmal.SBO_10_7_1, KAOAZusatzmerkmal.SBO_10_7_2, KAOAZusatzmerkmal.SBO_10_7_3,
+                KAOAZusatzmerkmal.SBO_10_7_4, KAOAZusatzmerkmal.SBO_10_7_5, KAOAZusatzmerkmal.SBO_10_7_6,
+                KAOAZusatzmerkmal.SBO_10_7_7, KAOAZusatzmerkmal.SBO_10_7_8, KAOAZusatzmerkmal.SBO_10_7_9,
+                KAOAZusatzmerkmal.SBO_10_7_10, KAOAZusatzmerkmal.SBO_10_7_11, KAOAZusatzmerkmal.SBO_10_7_12,
                 KAOAZusatzmerkmal.SBO_10_7_13
             ), null, null)
     }),
@@ -405,13 +405,13 @@ public enum KAOAAnschlussoptionen {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static long VERSION = 1;
+
 	/** Die aktuellsten Daten der KAoA-Anschlussoption */
 	public final @NotNull KAOAAnschlussoptionEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der KAoA-Anschlussoption */
-	public final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie;	
+	public final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoptionen> _statusByID = new HashMap<>();
@@ -422,60 +422,60 @@ public enum KAOAAnschlussoptionen {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist
 	 */
 	private KAOAAnschlussoptionen(final @NotNull KAOAAnschlussoptionEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von der ID auf die zugehörige Anschlussoption zurück. 
+	 * Gibt eine Map von der ID auf die zugehörige Anschlussoption zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf die zugehörige Anschlussoption
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAAnschlussoptionen> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
-				_statusByID.put(g.daten.id, g);				
+				_statusByID.put(g.daten.id, g);
 		return _statusByID;
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von dem Kürzel auf die zugehörige Anschlussoption zurück. 
+	 * Gibt eine Map von dem Kürzel auf die zugehörige Anschlussoption zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Anschlussoption
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAAnschlussoptionen> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAAnschlussoptionen g : KAOAAnschlussoptionen.values())
-				_statusByKuerzel.put(g.daten.kuerzel, g);				
+				_statusByKuerzel.put(g.daten.kuerzel, g);
 		return _statusByKuerzel;
 	}
-		
+
 
 	/**
 	 * Gibt die Anschlussoption anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Anschlussoption
-	 * 
+	 *
 	 * @return die Anschlussoption oder null, falls die ID ungültig ist
 	 */
-	public static KAOAAnschlussoptionen getByID(final long id) {
+	public static KAOAAnschlussoptionen getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 
 
 	/**
 	 * Gibt die Anschlussoption anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Anschlussoption
-	 * 
+	 *
 	 * @return die Anschlussoption oder null, falls das Kürzel ungültig ist
 	 */
 	public static KAOAAnschlussoptionen getByKuerzel(final String kuerzel) {

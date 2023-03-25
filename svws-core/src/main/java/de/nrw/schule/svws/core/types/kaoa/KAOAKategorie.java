@@ -59,13 +59,13 @@ public enum KAOAKategorie {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static long VERSION = 1;
+
 	/** Die aktuellsten Daten der KAoA-Kategorie*/
 	public final @NotNull KAOAKategorieEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der KAoA-Kategorie */
-	public final @NotNull KAOAKategorieEintrag@NotNull[] historie;	
+	public final @NotNull KAOAKategorieEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull KAOAKategorie> _statusByID = new HashMap<>();
@@ -76,60 +76,60 @@ public enum KAOAKategorie {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist
 	 */
 	private KAOAKategorie(final @NotNull KAOAKategorieEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von der ID auf die zugehörige Kategorie zurück. 
+	 * Gibt eine Map von der ID auf die zugehörige Kategorie zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von der ID auf die zugehörige Kategorie
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull KAOAKategorie> getMapStatusByID() {
 		if (_statusByID.size() == 0)
 			for (final KAOAKategorie g : KAOAKategorie.values())
-				_statusByID.put(g.daten.id, g);				
+				_statusByID.put(g.daten.id, g);
 		return _statusByID;
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von dem Kürzel auf die zugehörige Kategorie zurück. 
+	 * Gibt eine Map von dem Kürzel auf die zugehörige Kategorie zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von dem Kürzel auf die zugehörige Kategorie
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull KAOAKategorie> getMapStatusByKuerzel() {
 		if (_statusByKuerzel.size() == 0)
 			for (final KAOAKategorie g : KAOAKategorie.values())
-				_statusByKuerzel.put(g.daten.kuerzel, g);				
+				_statusByKuerzel.put(g.daten.kuerzel, g);
 		return _statusByKuerzel;
 	}
-		
+
 
 	/**
 	 * Gibt die Kategorie anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Kategorie
-	 * 
+	 *
 	 * @return die Kategorie oder null, falls die ID ungültig ist
 	 */
-	public static KAOAKategorie getByID(final long id) {
+	public static KAOAKategorie getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 
 
 	/**
 	 * Gibt die Kategorie anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Kategorie
-	 * 
+	 *
 	 * @return die Kategorie oder null, falls das Kürzel ungültig ist
 	 */
 	public static KAOAKategorie getByKuerzel(final String kuerzel) {
