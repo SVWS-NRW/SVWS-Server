@@ -210,11 +210,11 @@ export class HerkunftSonstige extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.HerkunftSonstige'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftSonstige'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_HerkunftSonstige(obj : unknown) : HerkunftSonstige {
+export function cast_de_svws_nrw_core_types_schueler_HerkunftSonstige(obj : unknown) : HerkunftSonstige {
 	return obj as HerkunftSonstige;
 }

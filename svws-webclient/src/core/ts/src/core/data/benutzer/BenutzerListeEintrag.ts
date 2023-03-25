@@ -43,7 +43,7 @@ export class BenutzerListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.benutzer.BenutzerListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerListeEintrag {
@@ -117,6 +117,6 @@ export class BenutzerListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_benutzer_BenutzerListeEintrag(obj : unknown) : BenutzerListeEintrag {
+export function cast_de_svws_nrw_core_data_benutzer_BenutzerListeEintrag(obj : unknown) : BenutzerListeEintrag {
 	return obj as BenutzerListeEintrag;
 }

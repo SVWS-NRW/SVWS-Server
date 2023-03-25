@@ -43,11 +43,11 @@ export abstract class KursblockungAlgorithmusS extends JavaObject {
 	public abstract berechne() : void;
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusS'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusS(obj : unknown) : KursblockungAlgorithmusS {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusS(obj : unknown) : KursblockungAlgorithmusS {
 	return obj as KursblockungAlgorithmusS;
 }

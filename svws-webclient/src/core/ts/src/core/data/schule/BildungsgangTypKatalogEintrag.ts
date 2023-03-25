@@ -66,7 +66,7 @@ export class BildungsgangTypKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.BildungsgangTypKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.BildungsgangTypKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BildungsgangTypKatalogEintrag {
@@ -122,6 +122,6 @@ export class BildungsgangTypKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_BildungsgangTypKatalogEintrag(obj : unknown) : BildungsgangTypKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_BildungsgangTypKatalogEintrag(obj : unknown) : BildungsgangTypKatalogEintrag {
 	return obj as BildungsgangTypKatalogEintrag;
 }

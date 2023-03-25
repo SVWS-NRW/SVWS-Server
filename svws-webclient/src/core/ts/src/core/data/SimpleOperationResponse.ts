@@ -20,7 +20,7 @@ export class SimpleOperationResponse extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.SimpleOperationResponse'].includes(name);
+		return ['de.svws_nrw.core.data.SimpleOperationResponse'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SimpleOperationResponse {
@@ -83,6 +83,6 @@ export class SimpleOperationResponse extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_SimpleOperationResponse(obj : unknown) : SimpleOperationResponse {
+export function cast_de_svws_nrw_core_data_SimpleOperationResponse(obj : unknown) : SimpleOperationResponse {
 	return obj as SimpleOperationResponse;
 }

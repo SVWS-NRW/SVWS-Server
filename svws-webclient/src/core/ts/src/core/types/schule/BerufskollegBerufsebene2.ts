@@ -646,11 +646,11 @@ export class BerufskollegBerufsebene2 extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene2'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegBerufsebene2'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_BerufskollegBerufsebene2(obj : unknown) : BerufskollegBerufsebene2 {
+export function cast_de_svws_nrw_core_types_schule_BerufskollegBerufsebene2(obj : unknown) : BerufskollegBerufsebene2 {
 	return obj as BerufskollegBerufsebene2;
 }

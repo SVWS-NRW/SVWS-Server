@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap } from '../../../java/util/HashMap';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { List } from '../../../java/util/List';
@@ -210,8 +210,8 @@ export class GostFachbereich extends JavaObject {
 	 * Implementation for method overloads of 'hat'
 	 */
 	public hat(__param0 : GostFach | null | string) : boolean {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFach'))) || (__param0 === null))) {
-			const fach : GostFach | null = cast_de_nrw_schule_svws_core_data_gost_GostFach(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostFach'))) || (__param0 === null))) {
+			const fach : GostFach | null = cast_de_svws_nrw_core_data_gost_GostFach(__param0);
 			return fach === null ? false : this.hat(fach.kuerzel);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
 			const kuerzel : string | null = __param0;
@@ -321,11 +321,11 @@ export class GostFachbereich extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.GostFachbereich'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostFachbereich'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostFachbereich(obj : unknown) : GostFachbereich {
+export function cast_de_svws_nrw_core_types_gost_GostFachbereich(obj : unknown) : GostFachbereich {
 	return obj as GostFachbereich;
 }

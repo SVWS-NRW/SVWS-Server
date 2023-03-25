@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
@@ -60,11 +60,11 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.collection.LinkedCollectionDescendingIterator', 'java.util.Iterator'].includes(name);
+		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionDescendingIterator<E>(obj : unknown) : LinkedCollectionDescendingIterator<E> {
+export function cast_de_svws_nrw_core_adt_collection_LinkedCollectionDescendingIterator<E>(obj : unknown) : LinkedCollectionDescendingIterator<E> {
 	return obj as LinkedCollectionDescendingIterator<E>;
 }

@@ -29,7 +29,7 @@ export class AbschlussErgebnis extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.abschluss.AbschlussErgebnis'].includes(name);
+		return ['de.svws_nrw.core.data.abschluss.AbschlussErgebnis'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AbschlussErgebnis {
@@ -128,6 +128,6 @@ export class AbschlussErgebnis extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis(obj : unknown) : AbschlussErgebnis {
+export function cast_de_svws_nrw_core_data_abschluss_AbschlussErgebnis(obj : unknown) : AbschlussErgebnis {
 	return obj as AbschlussErgebnis;
 }

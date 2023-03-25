@@ -169,11 +169,11 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.abschluss.ge.ServiceAbschlussHA10'].includes(name);
+		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_ServiceAbschlussHA10(obj : unknown) : ServiceAbschlussHA10 {
+export function cast_de_svws_nrw_core_abschluss_ge_ServiceAbschlussHA10(obj : unknown) : ServiceAbschlussHA10 {
 	return obj as ServiceAbschlussHA10;
 }

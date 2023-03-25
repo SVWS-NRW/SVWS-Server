@@ -18,7 +18,7 @@ export class Erzieherart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.erzieher.Erzieherart'].includes(name);
+		return ['de.svws_nrw.core.data.erzieher.Erzieherart'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Erzieherart {
@@ -55,6 +55,6 @@ export class Erzieherart extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_erzieher_Erzieherart(obj : unknown) : Erzieherart {
+export function cast_de_svws_nrw_core_data_erzieher_Erzieherart(obj : unknown) : Erzieherart {
 	return obj as Erzieherart;
 }

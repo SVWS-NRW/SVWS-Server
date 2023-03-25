@@ -237,11 +237,11 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerRechtsverhaeltnis'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerRechtsverhaeltnis'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerRechtsverhaeltnis(obj : unknown) : LehrerRechtsverhaeltnis {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerRechtsverhaeltnis(obj : unknown) : LehrerRechtsverhaeltnis {
 	return obj as LehrerRechtsverhaeltnis;
 }

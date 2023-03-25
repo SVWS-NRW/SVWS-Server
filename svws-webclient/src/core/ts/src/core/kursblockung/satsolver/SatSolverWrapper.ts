@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 
 export class SatSolverWrapper extends SatSolverA {
@@ -165,8 +165,8 @@ export class SatSolverWrapper extends SatSolverA {
 			const pArray : Array<number> = __param0;
 			const amount : number = __param1 as number;
 			this.c_exactly_GENERIC(SatSolverWrapper.toList(pArray), amount);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			const pList : LinkedCollection<number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			const pAmount : number = __param1 as number;
 			const list : LinkedCollection<number> = new LinkedCollection(pList);
 			if (pAmount > list.size()) {
@@ -384,11 +384,11 @@ export class SatSolverWrapper extends SatSolverA {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverA', 'de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverWrapper'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.satsolver.SatSolverA', 'de.svws_nrw.core.kursblockung.satsolver.SatSolverWrapper'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverWrapper(obj : unknown) : SatSolverWrapper {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_SatSolverWrapper(obj : unknown) : SatSolverWrapper {
 	return obj as SatSolverWrapper;
 }

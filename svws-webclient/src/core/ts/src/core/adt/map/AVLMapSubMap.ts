@@ -7,7 +7,7 @@ import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
 import { AVLMapSubEntrySetIterator } from '../../../core/adt/map/AVLMapSubEntrySetIterator';
 import { AVLMapSubKeySet } from '../../../core/adt/map/AVLMapSubKeySet';
 import { SortedSet } from '../../../java/util/SortedSet';
-import { AVLMap, cast_de_nrw_schule_svws_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
+import { AVLMap, cast_de_svws_nrw_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
 import { Comparator } from '../../../java/util/Comparator';
 import { AVLMapNode } from '../../../core/adt/map/AVLMapNode';
 import { SortedMap } from '../../../java/util/SortedMap';
@@ -778,11 +778,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Map', 'java.util.NavigableMap', 'de.nrw.schule.svws.core.adt.map.AVLMapSubMap', 'java.util.SortedMap'].includes(name);
+		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap<K, V>(obj : unknown) : AVLMapSubMap<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapSubMap<K, V>(obj : unknown) : AVLMapSubMap<K, V> {
 	return obj as AVLMapSubMap<K, V>;
 }

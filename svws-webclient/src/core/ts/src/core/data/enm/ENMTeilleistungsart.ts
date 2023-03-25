@@ -28,7 +28,7 @@ export class ENMTeilleistungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMTeilleistungsart'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMTeilleistungsart'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMTeilleistungsart {
@@ -75,6 +75,6 @@ export class ENMTeilleistungsart extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMTeilleistungsart(obj : unknown) : ENMTeilleistungsart {
+export function cast_de_svws_nrw_core_data_enm_ENMTeilleistungsart(obj : unknown) : ENMTeilleistungsart {
 	return obj as ENMTeilleistungsart;
 }

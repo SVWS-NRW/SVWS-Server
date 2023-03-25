@@ -29,7 +29,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDatenFachbelegung'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenFachbelegung {
@@ -126,6 +126,6 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDatenFachbelegung(obj : unknown) : GostLaufbahnplanungDatenFachbelegung {
+export function cast_de_svws_nrw_core_data_gost_GostLaufbahnplanungDatenFachbelegung(obj : unknown) : GostLaufbahnplanungDatenFachbelegung {
 	return obj as GostLaufbahnplanungDatenFachbelegung;
 }

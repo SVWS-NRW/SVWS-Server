@@ -33,7 +33,7 @@ export class Schueler extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.Schueler'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.Schueler'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schueler {
@@ -93,6 +93,6 @@ export class Schueler extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_Schueler(obj : unknown) : Schueler {
+export function cast_de_svws_nrw_core_data_schueler_Schueler(obj : unknown) : Schueler {
 	return obj as Schueler;
 }

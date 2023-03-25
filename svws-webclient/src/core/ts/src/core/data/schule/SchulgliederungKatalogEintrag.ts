@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { Schulform } from '../../../core/types/schule/Schulform';
-import { BerufskollegAnlage, cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
+import { BerufskollegAnlage, cast_de_svws_nrw_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { Vector } from '../../../java/util/Vector';
@@ -122,7 +122,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined") && (typeof __param11 === "undefined") && (typeof __param12 === "undefined") && (typeof __param13 === "undefined") && (typeof __param14 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "boolean") && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegAnlage'))) || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && typeof __param10 === "boolean") && ((typeof __param11 !== "undefined") && ((__param11 instanceof JavaObject) && (__param11.isTranspiledInstanceOf('java.util.List'))) || (__param11 === null)) && ((typeof __param12 !== "undefined") && ((__param12 instanceof JavaObject) && (__param12.isTranspiledInstanceOf('java.util.List'))) || (__param12 === null)) && ((typeof __param13 !== "undefined") && (typeof __param13 === "number") || (__param13 === null)) && ((typeof __param14 !== "undefined") && (typeof __param14 === "number") || (__param14 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "boolean") && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && typeof __param5 === "boolean") && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.BerufskollegAnlage'))) || (__param7 === null)) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string") || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && typeof __param10 === "boolean") && ((typeof __param11 !== "undefined") && ((__param11 instanceof JavaObject) && (__param11.isTranspiledInstanceOf('java.util.List'))) || (__param11 === null)) && ((typeof __param12 !== "undefined") && ((__param12 instanceof JavaObject) && (__param12.isTranspiledInstanceOf('java.util.List'))) || (__param12 === null)) && ((typeof __param13 !== "undefined") && (typeof __param13 === "number") || (__param13 === null)) && ((typeof __param14 !== "undefined") && (typeof __param14 === "number") || (__param14 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const istBK : boolean = __param2 as boolean;
@@ -130,7 +130,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			const istAuslaufend : boolean = __param4 as boolean;
 			const istAusgelaufen : boolean = __param5 as boolean;
 			const beschreibung : string = __param6;
-			const bkAnlage : BerufskollegAnlage | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage(__param7);
+			const bkAnlage : BerufskollegAnlage | null = cast_de_svws_nrw_core_types_schule_BerufskollegAnlage(__param7);
 			const bkTyp : string | null = __param8;
 			const bkIndex : number | null = __param9;
 			const istVZ : boolean = __param10 as boolean;
@@ -162,7 +162,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.SchulgliederungKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulgliederungKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
@@ -354,6 +354,6 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_SchulgliederungKatalogEintrag(obj : unknown) : SchulgliederungKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_SchulgliederungKatalogEintrag(obj : unknown) : SchulgliederungKatalogEintrag {
 	return obj as SchulgliederungKatalogEintrag;
 }

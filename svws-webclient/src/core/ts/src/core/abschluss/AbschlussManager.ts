@@ -206,11 +206,11 @@ export class AbschlussManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.AbschlussManager'].includes(name);
+		return ['de.svws_nrw.core.abschluss.AbschlussManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_AbschlussManager(obj : unknown) : AbschlussManager {
+export function cast_de_svws_nrw_core_abschluss_AbschlussManager(obj : unknown) : AbschlussManager {
 	return obj as AbschlussManager;
 }

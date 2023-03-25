@@ -111,11 +111,11 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.abschluss.ge.ServicePrognose'].includes(name);
+		return ['de.svws_nrw.core.abschluss.ge.ServicePrognose', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_ServicePrognose(obj : unknown) : ServicePrognose {
+export function cast_de_svws_nrw_core_abschluss_ge_ServicePrognose(obj : unknown) : ServicePrognose {
 	return obj as ServicePrognose;
 }

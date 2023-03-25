@@ -43,7 +43,7 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragUnicodeUmwandlung {
@@ -103,6 +103,6 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragUnicodeUmwandlung(obj : unknown) : Schild3KatalogEintragUnicodeUmwandlung {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragUnicodeUmwandlung(obj : unknown) : Schild3KatalogEintragUnicodeUmwandlung {
 	return obj as Schild3KatalogEintragUnicodeUmwandlung;
 }

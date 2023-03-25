@@ -83,7 +83,7 @@ export class LehrerPersonaldaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.lehrer.LehrerPersonaldaten'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerPersonaldaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): LehrerPersonaldaten {
@@ -185,6 +185,6 @@ export class LehrerPersonaldaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_lehrer_LehrerPersonaldaten(obj : unknown) : LehrerPersonaldaten {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerPersonaldaten(obj : unknown) : LehrerPersonaldaten {
 	return obj as LehrerPersonaldaten;
 }

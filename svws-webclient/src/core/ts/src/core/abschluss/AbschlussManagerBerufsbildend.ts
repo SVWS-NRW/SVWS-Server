@@ -85,11 +85,11 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.AbschlussManagerBerufsbildend'].includes(name);
+		return ['de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_AbschlussManagerBerufsbildend(obj : unknown) : AbschlussManagerBerufsbildend {
+export function cast_de_svws_nrw_core_abschluss_AbschlussManagerBerufsbildend(obj : unknown) : AbschlussManagerBerufsbildend {
 	return obj as AbschlussManagerBerufsbildend;
 }

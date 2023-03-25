@@ -13,11 +13,11 @@ export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungM
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.stundenplanblockung.StundenplanblockungAlgorithmus', 'de.nrw.schule.svws.core.Service'].includes(name);
+		return ['de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_stundenplanblockung_StundenplanblockungAlgorithmus(obj : unknown) : StundenplanblockungAlgorithmus {
+export function cast_de_svws_nrw_core_stundenplanblockung_StundenplanblockungAlgorithmus(obj : unknown) : StundenplanblockungAlgorithmus {
 	return obj as StundenplanblockungAlgorithmus;
 }

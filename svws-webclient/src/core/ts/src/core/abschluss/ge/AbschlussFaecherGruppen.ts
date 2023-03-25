@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { List } from '../../../java/util/List';
-import { AbschlussFaecherGruppe, cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
+import { AbschlussFaecherGruppe, cast_de_svws_nrw_core_abschluss_ge_AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
 import { Predicate, cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
 
 export class AbschlussFaecherGruppen extends JavaObject {
@@ -148,11 +148,11 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.ge.AbschlussFaecherGruppen'].includes(name);
+		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppen'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppen(obj : unknown) : AbschlussFaecherGruppen {
+export function cast_de_svws_nrw_core_abschluss_ge_AbschlussFaecherGruppen(obj : unknown) : AbschlussFaecherGruppen {
 	return obj as AbschlussFaecherGruppen;
 }

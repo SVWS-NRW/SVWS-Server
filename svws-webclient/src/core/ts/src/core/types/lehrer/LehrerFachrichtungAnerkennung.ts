@@ -207,11 +207,11 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerFachrichtungAnerkennung'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerFachrichtungAnerkennung(obj : unknown) : LehrerFachrichtungAnerkennung {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerFachrichtungAnerkennung(obj : unknown) : LehrerFachrichtungAnerkennung {
 	return obj as LehrerFachrichtungAnerkennung;
 }

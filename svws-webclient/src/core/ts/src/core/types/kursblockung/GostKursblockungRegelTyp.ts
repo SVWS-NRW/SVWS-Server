@@ -357,11 +357,11 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp'].includes(name);
+		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp(obj : unknown) : GostKursblockungRegelTyp {
+export function cast_de_svws_nrw_core_types_kursblockung_GostKursblockungRegelTyp(obj : unknown) : GostKursblockungRegelTyp {
 	return obj as GostKursblockungRegelTyp;
 }

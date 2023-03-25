@@ -23,11 +23,11 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.kursblockung.SchuelerblockungAlgorithmus'].includes(name);
+		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungAlgorithmus(obj : unknown) : SchuelerblockungAlgorithmus {
+export function cast_de_svws_nrw_core_kursblockung_SchuelerblockungAlgorithmus(obj : unknown) : SchuelerblockungAlgorithmus {
 	return obj as SchuelerblockungAlgorithmus;
 }

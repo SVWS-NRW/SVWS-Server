@@ -145,11 +145,11 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelParameterTyp(obj : unknown) : StundenplanblockungRegelParameterTyp {
+export function cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungRegelParameterTyp(obj : unknown) : StundenplanblockungRegelParameterTyp {
 	return obj as StundenplanblockungRegelParameterTyp;
 }

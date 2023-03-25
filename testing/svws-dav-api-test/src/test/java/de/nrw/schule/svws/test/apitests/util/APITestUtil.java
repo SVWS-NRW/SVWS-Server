@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.test.apitests.util;
+package de.svws_nrw.test.apitests.util;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

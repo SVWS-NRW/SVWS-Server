@@ -40,11 +40,11 @@ export class Sport extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung', 'de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Sport'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Sport'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Sport(obj : unknown) : Sport {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Sport(obj : unknown) : Sport {
 	return obj as Sport;
 }

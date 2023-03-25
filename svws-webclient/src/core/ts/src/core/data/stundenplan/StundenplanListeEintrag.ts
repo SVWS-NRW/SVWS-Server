@@ -43,7 +43,7 @@ export class StundenplanListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplan.StundenplanListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanListeEintrag {
@@ -117,6 +117,6 @@ export class StundenplanListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanListeEintrag(obj : unknown) : StundenplanListeEintrag {
+export function cast_de_svws_nrw_core_data_stundenplan_StundenplanListeEintrag(obj : unknown) : StundenplanListeEintrag {
 	return obj as StundenplanListeEintrag;
 }

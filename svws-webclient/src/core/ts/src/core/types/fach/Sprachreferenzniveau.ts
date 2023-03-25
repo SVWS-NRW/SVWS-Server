@@ -268,11 +268,11 @@ export class Sprachreferenzniveau extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau'].includes(name);
+		return ['de.svws_nrw.core.types.fach.Sprachreferenzniveau'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau(obj : unknown) : Sprachreferenzniveau {
+export function cast_de_svws_nrw_core_types_fach_Sprachreferenzniveau(obj : unknown) : Sprachreferenzniveau {
 	return obj as Sprachreferenzniveau;
 }

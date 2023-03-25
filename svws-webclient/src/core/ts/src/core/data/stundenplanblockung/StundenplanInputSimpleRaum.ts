@@ -18,7 +18,7 @@ export class StundenplanInputSimpleRaum extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanInputSimpleRaum'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleRaum'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanInputSimpleRaum {
@@ -57,6 +57,6 @@ export class StundenplanInputSimpleRaum extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanInputSimpleRaum(obj : unknown) : StundenplanInputSimpleRaum {
+export function cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanInputSimpleRaum(obj : unknown) : StundenplanInputSimpleRaum {
 	return obj as StundenplanInputSimpleRaum;
 }

@@ -6,7 +6,7 @@ import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBeleg
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
-import { Projektkurse, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse } from '../../../../core/abschluss/gost/belegpruefung/Projektkurse';
+import { Projektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse } from '../../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { NullPointerException } from '../../../../java/lang/NullPointerException';
 import { Note } from '../../../../core/types/Note';
@@ -68,7 +68,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		this.wochenstunden = new HashMap();
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
-		const projektkurse : Projektkurse = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
+		const projektkurse : Projektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
 		const kursarten : Array<GostKursart> = GostKursart.values();
 		for (const halbjahr of GostHalbjahr.values()) {
 			const kurszahlenHalbjahr : HashMap<GostKursart, number> = new HashMap();
@@ -486,11 +486,11 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung', 'de.nrw.schule.svws.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_KurszahlenUndWochenstunden(obj : unknown) : KurszahlenUndWochenstunden {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_KurszahlenUndWochenstunden(obj : unknown) : KurszahlenUndWochenstunden {
 	return obj as KurszahlenUndWochenstunden;
 }

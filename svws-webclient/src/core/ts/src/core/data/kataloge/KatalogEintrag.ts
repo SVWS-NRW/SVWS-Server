@@ -33,7 +33,7 @@ export class KatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kataloge.KatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kataloge.KatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KatalogEintrag {
@@ -89,6 +89,6 @@ export class KatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintrag(obj : unknown) : KatalogEintrag {
+export function cast_de_svws_nrw_core_data_kataloge_KatalogEintrag(obj : unknown) : KatalogEintrag {
 	return obj as KatalogEintrag;
 }

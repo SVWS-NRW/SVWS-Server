@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ENMFloskel, cast_de_nrw_schule_svws_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
+import { ENMFloskel, cast_de_svws_nrw_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
 import { Vector } from '../../../java/util/Vector';
 
 export class ENMFloskelgruppe extends JavaObject {
@@ -30,7 +30,7 @@ export class ENMFloskelgruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMFloskelgruppe'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMFloskelgruppe'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
@@ -101,6 +101,6 @@ export class ENMFloskelgruppe extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMFloskelgruppe(obj : unknown) : ENMFloskelgruppe {
+export function cast_de_svws_nrw_core_data_enm_ENMFloskelgruppe(obj : unknown) : ENMFloskelgruppe {
 	return obj as ENMFloskelgruppe;
 }

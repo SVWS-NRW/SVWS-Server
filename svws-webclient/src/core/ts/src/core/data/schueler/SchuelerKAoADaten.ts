@@ -58,7 +58,7 @@ export class SchuelerKAoADaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerKAoADaten'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerKAoADaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerKAoADaten {
@@ -141,6 +141,6 @@ export class SchuelerKAoADaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerKAoADaten(obj : unknown) : SchuelerKAoADaten {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerKAoADaten(obj : unknown) : SchuelerKAoADaten {
 	return obj as SchuelerKAoADaten;
 }

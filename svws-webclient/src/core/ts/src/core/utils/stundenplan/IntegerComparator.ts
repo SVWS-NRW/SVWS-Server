@@ -13,11 +13,11 @@ export class IntegerComparator extends JavaObject implements Comparator<number |
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplan.IntegerComparator', 'java.util.Comparator'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplan.IntegerComparator', 'java.util.Comparator'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplan_IntegerComparator(obj : unknown) : IntegerComparator {
+export function cast_de_svws_nrw_core_utils_stundenplan_IntegerComparator(obj : unknown) : IntegerComparator {
 	return obj as IntegerComparator;
 }

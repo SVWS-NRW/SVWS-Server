@@ -217,11 +217,11 @@ export class LehrerMehrleistungArt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerMehrleistungArt'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerMehrleistungArt(obj : unknown) : LehrerMehrleistungArt {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerMehrleistungArt(obj : unknown) : LehrerMehrleistungArt {
 	return obj as LehrerMehrleistungArt;
 }

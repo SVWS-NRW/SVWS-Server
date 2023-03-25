@@ -23,7 +23,7 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerSchulbesuchMerkmal'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerSchulbesuchMerkmal'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchMerkmal {
@@ -65,6 +65,6 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerSchulbesuchMerkmal(obj : unknown) : SchuelerSchulbesuchMerkmal {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerSchulbesuchMerkmal(obj : unknown) : SchuelerSchulbesuchMerkmal {
 	return obj as SchuelerSchulbesuchMerkmal;
 }

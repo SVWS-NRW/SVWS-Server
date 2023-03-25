@@ -89,7 +89,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Collection', 'java.util.Set', 'java.lang.Iterable', 'de.nrw.schule.svws.core.adt.map.AVLMapSubEntrySet'].includes(name);
+		return ['de.svws_nrw.core.adt.map.AVLMapSubEntrySet', 'java.util.Collection', 'java.util.Set', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
@@ -106,6 +106,6 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySet<K, V>(obj : unknown) : AVLMapSubEntrySet<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapSubEntrySet<K, V>(obj : unknown) : AVLMapSubEntrySet<K, V> {
 	return obj as AVLMapSubEntrySet<K, V>;
 }

@@ -193,11 +193,11 @@ export class Einschulungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.Einschulungsart'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Einschulungsart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_Einschulungsart(obj : unknown) : Einschulungsart {
+export function cast_de_svws_nrw_core_types_schueler_Einschulungsart(obj : unknown) : Einschulungsart {
 	return obj as Einschulungsart;
 }

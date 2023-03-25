@@ -18,7 +18,7 @@ export class BenutzerConfigElement extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.benutzer.BenutzerConfigElement'].includes(name);
+		return ['de.svws_nrw.core.data.benutzer.BenutzerConfigElement'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerConfigElement {
@@ -57,6 +57,6 @@ export class BenutzerConfigElement extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_benutzer_BenutzerConfigElement(obj : unknown) : BenutzerConfigElement {
+export function cast_de_svws_nrw_core_data_benutzer_BenutzerConfigElement(obj : unknown) : BenutzerConfigElement {
 	return obj as BenutzerConfigElement;
 }

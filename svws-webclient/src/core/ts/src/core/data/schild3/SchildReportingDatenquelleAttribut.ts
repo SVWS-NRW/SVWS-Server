@@ -23,7 +23,7 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelleAttribut'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.SchildReportingDatenquelleAttribut'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingDatenquelleAttribut {
@@ -69,6 +69,6 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_SchildReportingDatenquelleAttribut(obj : unknown) : SchildReportingDatenquelleAttribut {
+export function cast_de_svws_nrw_core_data_schild3_SchildReportingDatenquelleAttribut(obj : unknown) : SchildReportingDatenquelleAttribut {
 	return obj as SchildReportingDatenquelleAttribut;
 }

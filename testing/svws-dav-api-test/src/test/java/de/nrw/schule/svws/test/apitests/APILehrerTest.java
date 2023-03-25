@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.test.apitests;
+package de.svws_nrw.test.apitests;
 
 import static org.hamcrest.Matchers.lessThan;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import de.nrw.schule.svws.test.apitests.util.ServerProps;
+import de.svws_nrw.test.apitests.util.ServerProps;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 

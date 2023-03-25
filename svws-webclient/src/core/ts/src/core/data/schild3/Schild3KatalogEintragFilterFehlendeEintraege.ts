@@ -43,7 +43,7 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragFilterFehlendeEintraege {
@@ -103,6 +103,6 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege(obj : unknown) : Schild3KatalogEintragFilterFehlendeEintraege {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege(obj : unknown) : Schild3KatalogEintragFilterFehlendeEintraege {
 	return obj as Schild3KatalogEintragFilterFehlendeEintraege;
 }

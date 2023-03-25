@@ -625,11 +625,11 @@ export class BenutzerKompetenz extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenz(obj : unknown) : BenutzerKompetenz {
+export function cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenz(obj : unknown) : BenutzerKompetenz {
 	return obj as BenutzerKompetenz;
 }

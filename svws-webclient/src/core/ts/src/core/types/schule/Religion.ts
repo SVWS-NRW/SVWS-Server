@@ -218,11 +218,11 @@ export class Religion extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.Religion'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Religion'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_Religion(obj : unknown) : Religion {
+export function cast_de_svws_nrw_core_types_schule_Religion(obj : unknown) : Religion {
 	return obj as Religion;
 }

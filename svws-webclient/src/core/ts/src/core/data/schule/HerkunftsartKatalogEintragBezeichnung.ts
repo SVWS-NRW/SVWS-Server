@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform, cast_de_svws_nrw_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 
 export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
@@ -40,8 +40,8 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			// empty block
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			const schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const kurzBezeichnung : string = __param1;
 			const bezeichnung : string = __param2;
 			this.schulform = schulform.daten.kuerzel;
@@ -51,7 +51,7 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung'].includes(name);
+		return ['de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftsartKatalogEintragBezeichnung {
@@ -97,6 +97,6 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintragBezeichnung(obj : unknown) : HerkunftsartKatalogEintragBezeichnung {
+export function cast_de_svws_nrw_core_data_schule_HerkunftsartKatalogEintragBezeichnung(obj : unknown) : HerkunftsartKatalogEintragBezeichnung {
 	return obj as HerkunftsartKatalogEintragBezeichnung;
 }

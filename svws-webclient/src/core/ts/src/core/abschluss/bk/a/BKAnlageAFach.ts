@@ -18,11 +18,11 @@ export class BKAnlageAFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.bk.a.BKAnlageAFach'].includes(name);
+		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageAFach(obj : unknown) : BKAnlageAFach {
+export function cast_de_svws_nrw_core_abschluss_bk_a_BKAnlageAFach(obj : unknown) : BKAnlageAFach {
 	return obj as BKAnlageAFach;
 }

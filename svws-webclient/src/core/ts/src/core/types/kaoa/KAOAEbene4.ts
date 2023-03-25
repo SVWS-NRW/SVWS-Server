@@ -308,11 +308,11 @@ export class KAOAEbene4 extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAEbene4'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAEbene4'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAEbene4(obj : unknown) : KAOAEbene4 {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAEbene4(obj : unknown) : KAOAEbene4 {
 	return obj as KAOAEbene4;
 }

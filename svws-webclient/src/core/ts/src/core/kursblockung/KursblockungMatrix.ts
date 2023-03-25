@@ -416,11 +416,11 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungMatrix'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungMatrix'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungMatrix(obj : unknown) : KursblockungMatrix {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungMatrix(obj : unknown) : KursblockungMatrix {
 	return obj as KursblockungMatrix;
 }

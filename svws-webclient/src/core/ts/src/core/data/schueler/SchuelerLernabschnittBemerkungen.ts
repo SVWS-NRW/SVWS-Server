@@ -43,7 +43,7 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittBemerkungen'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittBemerkungen'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittBemerkungen {
@@ -117,6 +117,6 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittBemerkungen(obj : unknown) : SchuelerLernabschnittBemerkungen {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittBemerkungen(obj : unknown) : SchuelerLernabschnittBemerkungen {
 	return obj as SchuelerLernabschnittBemerkungen;
 }

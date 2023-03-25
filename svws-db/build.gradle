@@ -46,13 +46,13 @@ task createJavaDTOs(type: JavaExec) {
 	group = 'svws'
 	dependsOn compileJava
     doFirst {
-		delete "$rootDir/svws-db-dto/src/main/java/de/nrw/schule/svws/db/dto"
+		delete "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"
 	}
 	inputs.files sourceSets.main.java, configurations.dto.files
-    outputs.files fileTree(dir: "$rootDir/svws-db-dto/src/main/java/de/nrw/schule/svws/db/dto"), "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
+    outputs.files fileTree(dir: "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"), "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
     description "Erzeuge Java-DTOs"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'de.nrw.schule.svws.db.schema.app.DTOCreator'
+    mainClass = 'de.svws_nrw.db.schema.app.DTOCreator'
     args "--output", "$rootDir/svws-db-dto/src/main/java", "--persistence", "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
 }
 

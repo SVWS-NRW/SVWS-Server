@@ -24,7 +24,7 @@ export class SchuleAbschnitte extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.SchuleAbschnitte'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchuleAbschnitte'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuleAbschnitte {
@@ -94,6 +94,6 @@ export class SchuleAbschnitte extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_SchuleAbschnitte(obj : unknown) : SchuleAbschnitte {
+export function cast_de_svws_nrw_core_data_schule_SchuleAbschnitte(obj : unknown) : SchuleAbschnitte {
 	return obj as SchuleAbschnitte;
 }

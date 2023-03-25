@@ -1,4 +1,4 @@
-import { KursblockungAlgorithmusS, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusS } from '../../core/kursblockung/KursblockungAlgorithmusS';
+import { KursblockungAlgorithmusS, cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusS } from '../../core/kursblockung/KursblockungAlgorithmusS';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
@@ -78,11 +78,11 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusS', 'de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusSZufaellig'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusSZufaellig(obj : unknown) : KursblockungAlgorithmusSZufaellig {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusSZufaellig(obj : unknown) : KursblockungAlgorithmusSZufaellig {
 	return obj as KursblockungAlgorithmusSZufaellig;
 }

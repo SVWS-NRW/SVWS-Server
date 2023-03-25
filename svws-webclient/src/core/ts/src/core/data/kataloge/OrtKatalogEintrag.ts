@@ -48,7 +48,7 @@ export class OrtKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kataloge.OrtKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kataloge.OrtKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): OrtKatalogEintrag {
@@ -121,6 +121,6 @@ export class OrtKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kataloge_OrtKatalogEintrag(obj : unknown) : OrtKatalogEintrag {
+export function cast_de_svws_nrw_core_data_kataloge_OrtKatalogEintrag(obj : unknown) : OrtKatalogEintrag {
 	return obj as OrtKatalogEintrag;
 }

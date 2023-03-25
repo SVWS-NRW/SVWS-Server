@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchuelerLernabschnittNachpruefung, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefung } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefung';
+import { SchuelerLernabschnittNachpruefung, cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittNachpruefung } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefung';
 import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
@@ -20,7 +20,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefungsdaten {
@@ -107,6 +107,6 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefungsdaten(obj : unknown) : SchuelerLernabschnittNachpruefungsdaten {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittNachpruefungsdaten(obj : unknown) : SchuelerLernabschnittNachpruefungsdaten {
 	return obj as SchuelerLernabschnittNachpruefungsdaten;
 }

@@ -128,7 +128,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerLeistungsdaten'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLeistungsdaten {
@@ -301,6 +301,6 @@ export class SchuelerLeistungsdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerLeistungsdaten(obj : unknown) : SchuelerLeistungsdaten {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerLeistungsdaten(obj : unknown) : SchuelerLeistungsdaten {
 	return obj as SchuelerLeistungsdaten;
 }

@@ -1,5 +1,5 @@
-import { Naturwissenschaften, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften } from '../../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
-import { Fremdsprachen, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen } from '../../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
+import { Naturwissenschaften, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften } from '../../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
+import { Fremdsprachen, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen } from '../../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
@@ -25,8 +25,8 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		const pruefung_sprachen : Fremdsprachen = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
-		const pruefung_nawi : Naturwissenschaften = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
+		const pruefung_sprachen : Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
+		const pruefung_nawi : Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
 		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
 			return;
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
@@ -41,8 +41,8 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	protected pruefeGesamt() : void {
-		const pruefung_sprachen : Fremdsprachen = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
-		const pruefung_nawi : Naturwissenschaften = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
+		const pruefung_sprachen : Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
+		const pruefung_nawi : Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
 		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
 			return;
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
@@ -57,11 +57,11 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung', 'de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Schwerpunkt(obj : unknown) : Schwerpunkt {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Schwerpunkt(obj : unknown) : Schwerpunkt {
 	return obj as Schwerpunkt;
 }

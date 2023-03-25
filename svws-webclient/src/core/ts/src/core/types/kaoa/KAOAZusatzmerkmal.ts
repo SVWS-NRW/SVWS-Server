@@ -774,11 +774,11 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAZusatzmerkmal'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmal(obj : unknown) : KAOAZusatzmerkmal {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAZusatzmerkmal(obj : unknown) : KAOAZusatzmerkmal {
 	return obj as KAOAZusatzmerkmal;
 }

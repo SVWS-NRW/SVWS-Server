@@ -207,11 +207,11 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerLehrbefaehigungAnerkennung'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigungAnerkennung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerLehrbefaehigungAnerkennung(obj : unknown) : LehrerLehrbefaehigungAnerkennung {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerLehrbefaehigungAnerkennung(obj : unknown) : LehrerLehrbefaehigungAnerkennung {
 	return obj as LehrerLehrbefaehigungAnerkennung;
 }

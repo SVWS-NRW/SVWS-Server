@@ -103,7 +103,7 @@ Beispiel einer svwsconfig.json, bitte die Userdaten und Passwörter entspechend 
 ## Migration einer Schild2-DB
 
 Ausführen von MigrateDB unter svws-db-utils.
-Pfad de.nrw.schule.svws.db.utils.app!
+Pfad de.svws_nrw.db.utils.app!
 run as Java-Application mit folgenden run configurations:
 
 ```

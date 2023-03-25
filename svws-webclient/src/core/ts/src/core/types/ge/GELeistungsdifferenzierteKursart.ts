@@ -163,11 +163,11 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.ge.GELeistungsdifferenzierteKursart'].includes(name);
+		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_ge_GELeistungsdifferenzierteKursart(obj : unknown) : GELeistungsdifferenzierteKursart {
+export function cast_de_svws_nrw_core_types_ge_GELeistungsdifferenzierteKursart(obj : unknown) : GELeistungsdifferenzierteKursart {
 	return obj as GELeistungsdifferenzierteKursart;
 }

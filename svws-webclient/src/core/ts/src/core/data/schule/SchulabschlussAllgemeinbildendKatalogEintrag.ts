@@ -74,7 +74,7 @@ export class SchulabschlussAllgemeinbildendKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulabschlussAllgemeinbildendKatalogEintrag {
@@ -137,6 +137,6 @@ export class SchulabschlussAllgemeinbildendKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_SchulabschlussAllgemeinbildendKatalogEintrag(obj : unknown) : SchulabschlussAllgemeinbildendKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_SchulabschlussAllgemeinbildendKatalogEintrag(obj : unknown) : SchulabschlussAllgemeinbildendKatalogEintrag {
 	return obj as SchulabschlussAllgemeinbildendKatalogEintrag;
 }

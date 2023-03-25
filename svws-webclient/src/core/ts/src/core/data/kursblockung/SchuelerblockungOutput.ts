@@ -15,7 +15,7 @@ export class SchuelerblockungOutput extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput'].includes(name);
+		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungOutput {
@@ -71,6 +71,6 @@ export class SchuelerblockungOutput extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput(obj : unknown) : SchuelerblockungOutput {
+export function cast_de_svws_nrw_core_data_kursblockung_SchuelerblockungOutput(obj : unknown) : SchuelerblockungOutput {
 	return obj as SchuelerblockungOutput;
 }

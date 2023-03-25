@@ -57,7 +57,7 @@ export class AbiturKursMarkierung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.AbiturKursMarkierung'].includes(name);
+		return ['de.svws_nrw.core.data.gost.AbiturKursMarkierung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AbiturKursMarkierung {
@@ -96,6 +96,6 @@ export class AbiturKursMarkierung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_AbiturKursMarkierung(obj : unknown) : AbiturKursMarkierung {
+export function cast_de_svws_nrw_core_data_gost_AbiturKursMarkierung(obj : unknown) : AbiturKursMarkierung {
 	return obj as AbiturKursMarkierung;
 }

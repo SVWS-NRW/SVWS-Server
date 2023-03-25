@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { StundenplanblockungManagerKopplung, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
+import { StundenplanblockungManagerKopplung, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
 import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerKopplungMenge extends JavaObject {
@@ -108,11 +108,11 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplungMenge(obj : unknown) : StundenplanblockungManagerKopplungMenge {
+export function cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKopplungMenge(obj : unknown) : StundenplanblockungManagerKopplungMenge {
 	return obj as StundenplanblockungManagerKopplungMenge;
 }

@@ -94,7 +94,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostLaufbahnplanungDaten'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDaten {
@@ -319,6 +319,6 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostLaufbahnplanungDaten(obj : unknown) : GostLaufbahnplanungDaten {
+export function cast_de_svws_nrw_core_data_gost_GostLaufbahnplanungDaten(obj : unknown) : GostLaufbahnplanungDaten {
 	return obj as GostLaufbahnplanungDaten;
 }

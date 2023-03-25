@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { BerufskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp } from '../../../core/types/schule/BerufskollegBildungsgangTyp';
+import { BerufskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_BerufskollegBildungsgangTyp } from '../../../core/types/schule/BerufskollegBildungsgangTyp';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { List } from '../../../java/util/List';
-import { WeiterbildungskollegBildungsgangTyp, cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
+import { WeiterbildungskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
 import { Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -63,10 +63,10 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegBildungsgangTyp'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.WeiterbildungskollegBildungsgangTyp'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.BerufskollegBildungsgangTyp'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
 			const id : number = __param0 as number;
-			const wbkTyp : WeiterbildungskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp(__param1);
-			const bkTyp : BerufskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp(__param2);
+			const wbkTyp : WeiterbildungskollegBildungsgangTyp | null = cast_de_svws_nrw_core_types_schule_WeiterbildungskollegBildungsgangTyp(__param1);
+			const bkTyp : BerufskollegBildungsgangTyp | null = cast_de_svws_nrw_core_types_schule_BerufskollegBildungsgangTyp(__param2);
 			const gueltigVon : number | null = __param3;
 			const gueltigBis : number | null = __param4;
 			this.id = id;
@@ -90,7 +90,7 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.HerkunftBildungsgangTypKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.HerkunftBildungsgangTypKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftBildungsgangTypKatalogEintrag {
@@ -177,6 +177,6 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangTypKatalogEintrag(obj : unknown) : HerkunftBildungsgangTypKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_HerkunftBildungsgangTypKatalogEintrag(obj : unknown) : HerkunftBildungsgangTypKatalogEintrag {
 	return obj as HerkunftBildungsgangTypKatalogEintrag;
 }

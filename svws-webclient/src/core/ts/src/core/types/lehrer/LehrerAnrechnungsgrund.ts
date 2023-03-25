@@ -596,11 +596,11 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerAnrechnungsgrund'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerAnrechnungsgrund'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerAnrechnungsgrund(obj : unknown) : LehrerAnrechnungsgrund {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerAnrechnungsgrund(obj : unknown) : LehrerAnrechnungsgrund {
 	return obj as LehrerAnrechnungsgrund;
 }

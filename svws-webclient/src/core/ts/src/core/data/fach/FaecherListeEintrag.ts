@@ -48,7 +48,7 @@ export class FaecherListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.fach.FaecherListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.fach.FaecherListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): FaecherListeEintrag {
@@ -123,6 +123,6 @@ export class FaecherListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_fach_FaecherListeEintrag(obj : unknown) : FaecherListeEintrag {
+export function cast_de_svws_nrw_core_data_fach_FaecherListeEintrag(obj : unknown) : FaecherListeEintrag {
 	return obj as FaecherListeEintrag;
 }

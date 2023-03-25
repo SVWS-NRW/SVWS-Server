@@ -257,11 +257,11 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerBeschaeftigungsart'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerBeschaeftigungsart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerBeschaeftigungsart(obj : unknown) : LehrerBeschaeftigungsart {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerBeschaeftigungsart(obj : unknown) : LehrerBeschaeftigungsart {
 	return obj as LehrerBeschaeftigungsart;
 }

@@ -230,11 +230,11 @@ export class GostAbiturFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.GostAbiturFach'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostAbiturFach'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostAbiturFach(obj : unknown) : GostAbiturFach {
+export function cast_de_svws_nrw_core_types_gost_GostAbiturFach(obj : unknown) : GostAbiturFach {
 	return obj as GostAbiturFach;
 }

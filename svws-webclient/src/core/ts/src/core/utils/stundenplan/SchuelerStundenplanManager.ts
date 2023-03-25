@@ -351,11 +351,11 @@ export class SchuelerStundenplanManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplan.SchuelerStundenplanManager'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplan.SchuelerStundenplanManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplan_SchuelerStundenplanManager(obj : unknown) : SchuelerStundenplanManager {
+export function cast_de_svws_nrw_core_utils_stundenplan_SchuelerStundenplanManager(obj : unknown) : SchuelerStundenplanManager {
 	return obj as SchuelerStundenplanManager;
 }

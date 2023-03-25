@@ -21,7 +21,7 @@ export class AbgangsartKatalog extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.AbgangsartKatalog'].includes(name);
+		return ['de.svws_nrw.core.data.schule.AbgangsartKatalog'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AbgangsartKatalog {
@@ -84,6 +84,6 @@ export class AbgangsartKatalog extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_AbgangsartKatalog(obj : unknown) : AbgangsartKatalog {
+export function cast_de_svws_nrw_core_data_schule_AbgangsartKatalog(obj : unknown) : AbgangsartKatalog {
 	return obj as AbgangsartKatalog;
 }

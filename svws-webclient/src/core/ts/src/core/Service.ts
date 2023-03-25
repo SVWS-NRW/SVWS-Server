@@ -53,11 +53,11 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service'].includes(name);
+		return ['de.svws_nrw.core.Service'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_Service<T_IN, T_OUT>(obj : unknown) : Service<T_IN, T_OUT> {
+export function cast_de_svws_nrw_core_Service<T_IN, T_OUT>(obj : unknown) : Service<T_IN, T_OUT> {
 	return obj as Service<T_IN, T_OUT>;
 }

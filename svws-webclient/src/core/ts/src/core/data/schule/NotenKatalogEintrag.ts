@@ -90,7 +90,7 @@ export class NotenKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.NotenKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.NotenKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): NotenKatalogEintrag {
@@ -165,6 +165,6 @@ export class NotenKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_NotenKatalogEintrag(obj : unknown) : NotenKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_NotenKatalogEintrag(obj : unknown) : NotenKatalogEintrag {
 	return obj as NotenKatalogEintrag;
 }

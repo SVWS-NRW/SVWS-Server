@@ -345,11 +345,11 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.ge.ServiceAbschlussMSA', 'de.nrw.schule.svws.core.Service'].includes(name);
+		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussMSA'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_ServiceAbschlussMSA(obj : unknown) : ServiceAbschlussMSA {
+export function cast_de_svws_nrw_core_abschluss_ge_ServiceAbschlussMSA(obj : unknown) : ServiceAbschlussMSA {
 	return obj as ServiceAbschlussMSA;
 }

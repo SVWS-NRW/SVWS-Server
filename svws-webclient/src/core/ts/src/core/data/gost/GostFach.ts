@@ -113,7 +113,7 @@ export class GostFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostFach'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostFach'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostFach {
@@ -271,6 +271,6 @@ export class GostFach extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostFach(obj : unknown) : GostFach {
+export function cast_de_svws_nrw_core_data_gost_GostFach(obj : unknown) : GostFach {
 	return obj as GostFach;
 }

@@ -90,7 +90,7 @@ export class AbiturFachbelegung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.AbiturFachbelegung'].includes(name);
+		return ['de.svws_nrw.core.data.gost.AbiturFachbelegung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AbiturFachbelegung {
@@ -224,6 +224,6 @@ export class AbiturFachbelegung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung(obj : unknown) : AbiturFachbelegung {
+export function cast_de_svws_nrw_core_data_gost_AbiturFachbelegung(obj : unknown) : AbiturFachbelegung {
 	return obj as AbiturFachbelegung;
 }

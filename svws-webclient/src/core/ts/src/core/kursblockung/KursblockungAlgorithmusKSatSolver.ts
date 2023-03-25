@@ -10,7 +10,7 @@ import { Random } from '../../java/util/Random';
 import { SatSolverA } from '../../core/kursblockung/satsolver/SatSolverA';
 import { NullPointerException } from '../../java/lang/NullPointerException';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
-import { KursblockungAlgorithmusK, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
+import { KursblockungAlgorithmusK, cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 
 export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK {
@@ -180,11 +180,11 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusKSatSolver', 'de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKSatSolver'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusKSatSolver(obj : unknown) : KursblockungAlgorithmusKSatSolver {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusKSatSolver(obj : unknown) : KursblockungAlgorithmusKSatSolver {
 	return obj as KursblockungAlgorithmusKSatSolver;
 }

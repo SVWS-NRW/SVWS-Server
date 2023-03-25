@@ -253,11 +253,11 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.GostKlausurvorgabenManager'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.GostKlausurvorgabenManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_GostKlausurvorgabenManager(obj : unknown) : GostKlausurvorgabenManager {
+export function cast_de_svws_nrw_core_utils_klausurplan_GostKlausurvorgabenManager(obj : unknown) : GostKlausurvorgabenManager {
 	return obj as GostKlausurvorgabenManager;
 }

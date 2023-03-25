@@ -92,11 +92,11 @@ export class LinkedCollectionElement<E> extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.collection.LinkedCollectionElement'].includes(name);
+		return ['de.svws_nrw.core.adt.collection.LinkedCollectionElement'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionElement<E>(obj : unknown) : LinkedCollectionElement<E> {
+export function cast_de_svws_nrw_core_adt_collection_LinkedCollectionElement<E>(obj : unknown) : LinkedCollectionElement<E> {
 	return obj as LinkedCollectionElement<E>;
 }

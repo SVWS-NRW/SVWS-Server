@@ -451,11 +451,11 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungDynStatistik'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungDynStatistik'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynStatistik(obj : unknown) : KursblockungDynStatistik {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungDynStatistik(obj : unknown) : KursblockungDynStatistik {
 	return obj as KursblockungDynStatistik;
 }

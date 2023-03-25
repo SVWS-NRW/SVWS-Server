@@ -58,11 +58,11 @@ export class AdressenUtils extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.AdressenUtils'].includes(name);
+		return ['de.svws_nrw.core.utils.AdressenUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_AdressenUtils(obj : unknown) : AdressenUtils {
+export function cast_de_svws_nrw_core_utils_AdressenUtils(obj : unknown) : AdressenUtils {
 	return obj as AdressenUtils;
 }

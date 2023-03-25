@@ -30,11 +30,11 @@ export class GostStatistikFachwahlManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.gost.GostStatistikFachwahlManager'].includes(name);
+		return ['de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_gost_GostStatistikFachwahlManager(obj : unknown) : GostStatistikFachwahlManager {
+export function cast_de_svws_nrw_core_utils_gost_GostStatistikFachwahlManager(obj : unknown) : GostStatistikFachwahlManager {
 	return obj as GostStatistikFachwahlManager;
 }

@@ -232,11 +232,11 @@ export class PersonalTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.PersonalTyp'].includes(name);
+		return ['de.svws_nrw.core.types.PersonalTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_PersonalTyp(obj : unknown) : PersonalTyp {
+export function cast_de_svws_nrw_core_types_PersonalTyp(obj : unknown) : PersonalTyp {
 	return obj as PersonalTyp;
 }

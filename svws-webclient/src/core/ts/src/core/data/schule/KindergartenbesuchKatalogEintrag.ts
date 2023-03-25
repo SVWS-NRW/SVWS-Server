@@ -66,7 +66,7 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.KindergartenbesuchKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.KindergartenbesuchKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KindergartenbesuchKatalogEintrag {
@@ -122,6 +122,6 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_KindergartenbesuchKatalogEintrag(obj : unknown) : KindergartenbesuchKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_KindergartenbesuchKatalogEintrag(obj : unknown) : KindergartenbesuchKatalogEintrag {
 	return obj as KindergartenbesuchKatalogEintrag;
 }

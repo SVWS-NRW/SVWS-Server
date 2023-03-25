@@ -157,11 +157,11 @@ export class AbiturBelegungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.AbiturBelegungsart'].includes(name);
+		return ['de.svws_nrw.core.types.gost.AbiturBelegungsart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_AbiturBelegungsart(obj : unknown) : AbiturBelegungsart {
+export function cast_de_svws_nrw_core_types_gost_AbiturBelegungsart(obj : unknown) : AbiturBelegungsart {
 	return obj as AbiturBelegungsart;
 }

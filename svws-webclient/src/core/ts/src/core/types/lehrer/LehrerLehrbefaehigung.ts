@@ -737,11 +737,11 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerLehrbefaehigung'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerLehrbefaehigung(obj : unknown) : LehrerLehrbefaehigung {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerLehrbefaehigung(obj : unknown) : LehrerLehrbefaehigung {
 	return obj as LehrerLehrbefaehigung;
 }

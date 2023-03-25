@@ -56,11 +56,11 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Iterator', 'de.nrw.schule.svws.core.adt.map.AVLMapSubEntrySetIterator'].includes(name);
+		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapSubEntrySetIterator<K, V>(obj : unknown) : AVLMapSubEntrySetIterator<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapSubEntrySetIterator<K, V>(obj : unknown) : AVLMapSubEntrySetIterator<K, V> {
 	return obj as AVLMapSubEntrySetIterator<K, V>;
 }

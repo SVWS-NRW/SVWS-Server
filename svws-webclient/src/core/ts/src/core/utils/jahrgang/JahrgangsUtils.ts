@@ -126,11 +126,11 @@ export class JahrgangsUtils extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils'].includes(name);
+		return ['de.svws_nrw.core.utils.jahrgang.JahrgangsUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_jahrgang_JahrgangsUtils(obj : unknown) : JahrgangsUtils {
+export function cast_de_svws_nrw_core_utils_jahrgang_JahrgangsUtils(obj : unknown) : JahrgangsUtils {
 	return obj as JahrgangsUtils;
 }

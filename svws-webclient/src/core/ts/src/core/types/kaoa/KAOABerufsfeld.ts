@@ -267,11 +267,11 @@ export class KAOABerufsfeld extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOABerufsfeld'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOABerufsfeld'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOABerufsfeld(obj : unknown) : KAOABerufsfeld {
+export function cast_de_svws_nrw_core_types_kaoa_KAOABerufsfeld(obj : unknown) : KAOABerufsfeld {
 	return obj as KAOABerufsfeld;
 }

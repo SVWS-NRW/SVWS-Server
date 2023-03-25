@@ -75,7 +75,7 @@ export class ENMBKAbschluss extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMBKAbschluss'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMBKAbschluss'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMBKAbschluss {
@@ -207,6 +207,6 @@ export class ENMBKAbschluss extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMBKAbschluss(obj : unknown) : ENMBKAbschluss {
+export function cast_de_svws_nrw_core_data_enm_ENMBKAbschluss(obj : unknown) : ENMBKAbschluss {
 	return obj as ENMBKAbschluss;
 }

@@ -74,7 +74,7 @@ export class VerkehrsspracheKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.VerkehrsspracheKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): VerkehrsspracheKatalogEintrag {
@@ -135,6 +135,6 @@ export class VerkehrsspracheKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_VerkehrsspracheKatalogEintrag(obj : unknown) : VerkehrsspracheKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_VerkehrsspracheKatalogEintrag(obj : unknown) : VerkehrsspracheKatalogEintrag {
 	return obj as VerkehrsspracheKatalogEintrag;
 }

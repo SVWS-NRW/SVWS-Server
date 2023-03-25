@@ -1,8 +1,8 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from '../../core/logger/LogData';
+import { LogData, cast_de_svws_nrw_core_logger_LogData } from '../../core/logger/LogData';
 import { Consumer } from '../../java/util/function/Consumer';
 import { Vector } from '../../java/util/Vector';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
+import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class Logger extends JavaObject {
 
@@ -125,21 +125,21 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'log'
 	 */
 	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			const data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+			const data : LogData = cast_de_svws_nrw_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++) {
 				const c : Consumer<LogData> = this.consumer.get(i);
 				if (c === null)
 					continue;
 				c.accept(data);
 			}
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : number = __param1 as number;
 			const text : string = __param2;
 			this.log(new LogData(level, indent, false, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
+			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const text : string = __param1;
 			this.log(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
@@ -193,13 +193,13 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'logLn'
 	 */
 	public logLn(__param0 : LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
-			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : number = __param1 as number;
 			const text : string = __param2;
 			this.log(new LogData(level, indent, true, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
-			const level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
+			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const text : string = __param1;
 			this.logLn(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
@@ -213,11 +213,11 @@ export class Logger extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.logger.Logger'].includes(name);
+		return ['de.svws_nrw.core.logger.Logger'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_logger_Logger(obj : unknown) : Logger {
+export function cast_de_svws_nrw_core_logger_Logger(obj : unknown) : Logger {
 	return obj as Logger;
 }

@@ -59,7 +59,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerKompetenzGruppenKatalogEintrag {
@@ -112,6 +112,6 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_benutzer_BenutzerKompetenzGruppenKatalogEintrag(obj : unknown) : BenutzerKompetenzGruppenKatalogEintrag {
+export function cast_de_svws_nrw_core_data_benutzer_BenutzerKompetenzGruppenKatalogEintrag(obj : unknown) : BenutzerKompetenzGruppenKatalogEintrag {
 	return obj as BenutzerKompetenzGruppenKatalogEintrag;
 }

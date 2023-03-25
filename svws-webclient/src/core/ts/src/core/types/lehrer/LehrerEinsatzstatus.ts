@@ -202,11 +202,11 @@ export class LehrerEinsatzstatus extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerEinsatzstatus'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerEinsatzstatus'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerEinsatzstatus(obj : unknown) : LehrerEinsatzstatus {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerEinsatzstatus(obj : unknown) : LehrerEinsatzstatus {
 	return obj as LehrerEinsatzstatus;
 }

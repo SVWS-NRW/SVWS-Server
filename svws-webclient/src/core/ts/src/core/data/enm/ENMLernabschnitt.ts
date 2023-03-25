@@ -59,7 +59,7 @@ export class ENMLernabschnitt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMLernabschnitt'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMLernabschnitt'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMLernabschnitt {
@@ -136,6 +136,6 @@ export class ENMLernabschnitt extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMLernabschnitt(obj : unknown) : ENMLernabschnitt {
+export function cast_de_svws_nrw_core_data_enm_ENMLernabschnitt(obj : unknown) : ENMLernabschnitt {
 	return obj as ENMLernabschnitt;
 }

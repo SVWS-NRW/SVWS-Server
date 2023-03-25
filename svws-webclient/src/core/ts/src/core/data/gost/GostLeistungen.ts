@@ -61,7 +61,7 @@ export class GostLeistungen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostLeistungen'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostLeistungen'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostLeistungen {
@@ -189,6 +189,6 @@ export class GostLeistungen extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostLeistungen(obj : unknown) : GostLeistungen {
+export function cast_de_svws_nrw_core_data_gost_GostLeistungen(obj : unknown) : GostLeistungen {
 	return obj as GostLeistungen;
 }

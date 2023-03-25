@@ -205,11 +205,11 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.HerkunftBildungsgangsTyp'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgangsTyp(obj : unknown) : HerkunftBildungsgangsTyp {
+export function cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgangsTyp(obj : unknown) : HerkunftBildungsgangsTyp {
 	return obj as HerkunftBildungsgangsTyp;
 }

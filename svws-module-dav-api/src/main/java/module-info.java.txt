@@ -1,7 +1,7 @@
-open module de.nrw.schule.svws.davapi {
-    requires transitive de.nrw.schule.svws.core;
-    requires transitive de.nrw.schule.svws.db;
-    requires transitive de.nrw.schule.svws.dbutils;
+open module de.svws_nrw.davapi {
+    requires transitive de.svws_nrw.core;
+    requires transitive de.svws_nrw.db;
+    requires transitive de.svws_nrw.dbutils;
 	
 	requires java.base;
 	requires transitive jetty.servlet.api;
@@ -12,5 +12,5 @@ open module de.nrw.schule.svws.davapi {
 	requires org.jboss.resteasy.providers.jackson;
 	requires org.jboss.resteasy.providers.multipart;
 
-	exports de.nrw.schule.svws.davapi;
+	exports de.svws_nrw.davapi;
 }

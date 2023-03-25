@@ -240,11 +240,11 @@ export class KursFortschreibungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.KursFortschreibungsart'].includes(name);
+		return ['de.svws_nrw.core.types.KursFortschreibungsart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_KursFortschreibungsart(obj : unknown) : KursFortschreibungsart {
+export function cast_de_svws_nrw_core_types_KursFortschreibungsart(obj : unknown) : KursFortschreibungsart {
 	return obj as KursFortschreibungsart;
 }

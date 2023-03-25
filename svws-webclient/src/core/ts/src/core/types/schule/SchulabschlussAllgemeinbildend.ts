@@ -302,11 +302,11 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend'].includes(name);
+		return ['de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend(obj : unknown) : SchulabschlussAllgemeinbildend {
+export function cast_de_svws_nrw_core_types_schule_SchulabschlussAllgemeinbildend(obj : unknown) : SchulabschlussAllgemeinbildend {
 	return obj as SchulabschlussAllgemeinbildend;
 }

@@ -63,7 +63,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr'].includes(name);
+		return ['de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AbiturFachbelegungHalbjahr {
@@ -153,6 +153,6 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegungHalbjahr(obj : unknown) : AbiturFachbelegungHalbjahr {
+export function cast_de_svws_nrw_core_data_gost_AbiturFachbelegungHalbjahr(obj : unknown) : AbiturFachbelegungHalbjahr {
 	return obj as AbiturFachbelegungHalbjahr;
 }

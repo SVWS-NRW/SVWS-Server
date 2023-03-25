@@ -16,11 +16,11 @@ export class UserNotificationException extends RuntimeException {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'de.nrw.schule.svws.core.exceptions.UserNotificationException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
+		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'java.lang.Exception', 'de.svws_nrw.core.exceptions.UserNotificationException', 'java.io.Serializable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_exceptions_UserNotificationException(obj : unknown) : UserNotificationException {
+export function cast_de_svws_nrw_core_exceptions_UserNotificationException(obj : unknown) : UserNotificationException {
 	return obj as UserNotificationException;
 }

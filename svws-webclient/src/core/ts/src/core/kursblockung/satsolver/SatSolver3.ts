@@ -1,5 +1,5 @@
 import { AVLSet } from '../../../core/adt/set/AVLSet';
-import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
+import { Variable, cast_de_svws_nrw_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { Random } from '../../../java/util/Random';
 import { SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
@@ -234,7 +234,7 @@ export class SatSolver3 extends SatSolverA {
 			if (countDown === 0) {
 				for (let i : number = index; i >= 0; i--) {
 					if (backtrackV[i] !== null) {
-						const bvi : Variable | null = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(backtrackV[i]);
+						const bvi : Variable | null = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(backtrackV[i]);
 						this.unitpropagation_undo(bvi);
 					}
 					backtrackV[i] = null;
@@ -439,11 +439,11 @@ export class SatSolver3 extends SatSolverA {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverA', 'de.nrw.schule.svws.core.kursblockung.satsolver.SatSolver3'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.satsolver.SatSolverA', 'de.svws_nrw.core.kursblockung.satsolver.SatSolver3'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolver3(obj : unknown) : SatSolver3 {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_SatSolver3(obj : unknown) : SatSolver3 {
 	return obj as SatSolver3;
 }

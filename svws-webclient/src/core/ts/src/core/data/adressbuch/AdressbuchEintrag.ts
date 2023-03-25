@@ -28,7 +28,7 @@ export class AdressbuchEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AdressbuchEintrag {
@@ -81,6 +81,6 @@ export class AdressbuchEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_adressbuch_AdressbuchEintrag(obj : unknown) : AdressbuchEintrag {
+export function cast_de_svws_nrw_core_data_adressbuch_AdressbuchEintrag(obj : unknown) : AdressbuchEintrag {
 	return obj as AdressbuchEintrag;
 }

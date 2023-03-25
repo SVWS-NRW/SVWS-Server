@@ -1548,11 +1548,11 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.AbiturdatenManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_AbiturdatenManager(obj : unknown) : AbiturdatenManager {
+export function cast_de_svws_nrw_core_abschluss_gost_AbiturdatenManager(obj : unknown) : AbiturdatenManager {
 	return obj as AbiturdatenManager;
 }

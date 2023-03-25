@@ -90,7 +90,7 @@ export class ENMSchueler extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMSchueler'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMSchueler'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMSchueler {
@@ -254,6 +254,6 @@ export class ENMSchueler extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMSchueler(obj : unknown) : ENMSchueler {
+export function cast_de_svws_nrw_core_data_enm_ENMSchueler(obj : unknown) : ENMSchueler {
 	return obj as ENMSchueler;
 }

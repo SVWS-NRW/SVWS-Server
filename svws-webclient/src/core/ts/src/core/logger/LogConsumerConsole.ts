@@ -62,11 +62,11 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.function.Consumer', 'de.nrw.schule.svws.core.logger.LogConsumerConsole'].includes(name);
+		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerConsole'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_logger_LogConsumerConsole(obj : unknown) : LogConsumerConsole {
+export function cast_de_svws_nrw_core_logger_LogConsumerConsole(obj : unknown) : LogConsumerConsole {
 	return obj as LogConsumerConsole;
 }

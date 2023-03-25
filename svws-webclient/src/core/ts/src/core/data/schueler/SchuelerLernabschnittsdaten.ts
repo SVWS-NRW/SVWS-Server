@@ -242,7 +242,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittsdaten'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittsdaten {
@@ -557,6 +557,6 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittsdaten(obj : unknown) : SchuelerLernabschnittsdaten {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittsdaten(obj : unknown) : SchuelerLernabschnittsdaten {
 	return obj as SchuelerLernabschnittsdaten;
 }

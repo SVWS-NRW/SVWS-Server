@@ -24,7 +24,7 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs'].includes(name);
+		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungOutputFachwahlZuKurs {
@@ -70,6 +70,6 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs(obj : unknown) : SchuelerblockungOutputFachwahlZuKurs {
+export function cast_de_svws_nrw_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs(obj : unknown) : SchuelerblockungOutputFachwahlZuKurs {
 	return obj as SchuelerblockungOutputFachwahlZuKurs;
 }

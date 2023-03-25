@@ -63,7 +63,7 @@ export class KalenderEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kalender.KalenderEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kalender.KalenderEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KalenderEintrag {
@@ -161,6 +161,6 @@ export class KalenderEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kalender_KalenderEintrag(obj : unknown) : KalenderEintrag {
+export function cast_de_svws_nrw_core_data_kalender_KalenderEintrag(obj : unknown) : KalenderEintrag {
 	return obj as KalenderEintrag;
 }

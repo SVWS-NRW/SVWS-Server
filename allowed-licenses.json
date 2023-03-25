@@ -1248,12 +1248,12 @@
 	{
 		"moduleLicense": "MIT License",
 		"moduleVersion": ".*",
-		"moduleName": "de.nrw.schule.svws.client:svws-client"
+		"moduleName": "de.svws_nrw.client:svws-client"
 	},
 	{
 		"moduleLicense": "ISC license",
 		"moduleVersion": ".*",
-		"moduleName": "de.nrw.schule.svws.ext.jbcrypt:jbcrypt"
+		"moduleName": "de.svws_nrw.ext.jbcrypt:jbcrypt"
 	},
 	{
 		"moduleLicense": null,

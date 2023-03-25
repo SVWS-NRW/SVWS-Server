@@ -78,7 +78,7 @@ export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.FoerderschwerpunktKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): FoerderschwerpunktKatalogEintrag {
@@ -165,6 +165,6 @@ export class FoerderschwerpunktKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_FoerderschwerpunktKatalogEintrag(obj : unknown) : FoerderschwerpunktKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_FoerderschwerpunktKatalogEintrag(obj : unknown) : FoerderschwerpunktKatalogEintrag {
 	return obj as FoerderschwerpunktKatalogEintrag;
 }

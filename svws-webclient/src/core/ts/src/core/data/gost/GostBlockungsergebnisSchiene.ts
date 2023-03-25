@@ -20,7 +20,7 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchiene'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisSchiene {
@@ -83,6 +83,6 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene(obj : unknown) : GostBlockungsergebnisSchiene {
+export function cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisSchiene(obj : unknown) : GostBlockungsergebnisSchiene {
 	return obj as GostBlockungsergebnisSchiene;
 }

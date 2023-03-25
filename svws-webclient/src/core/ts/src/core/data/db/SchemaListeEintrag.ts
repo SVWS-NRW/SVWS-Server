@@ -23,7 +23,7 @@ export class SchemaListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.db.SchemaListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.db.SchemaListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchemaListeEintrag {
@@ -67,6 +67,6 @@ export class SchemaListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_db_SchemaListeEintrag(obj : unknown) : SchemaListeEintrag {
+export function cast_de_svws_nrw_core_data_db_SchemaListeEintrag(obj : unknown) : SchemaListeEintrag {
 	return obj as SchemaListeEintrag;
 }

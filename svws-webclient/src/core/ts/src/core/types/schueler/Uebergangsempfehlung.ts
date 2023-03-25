@@ -193,11 +193,11 @@ export class Uebergangsempfehlung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.Uebergangsempfehlung'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Uebergangsempfehlung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_Uebergangsempfehlung(obj : unknown) : Uebergangsempfehlung {
+export function cast_de_svws_nrw_core_types_schueler_Uebergangsempfehlung(obj : unknown) : Uebergangsempfehlung {
 	return obj as Uebergangsempfehlung;
 }

@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
-import { MinHeap, cast_de_nrw_schule_svws_core_adt_tree_MinHeap } from '../../../core/adt/tree/MinHeap';
+import { MinHeap, cast_de_svws_nrw_core_adt_tree_MinHeap } from '../../../core/adt/tree/MinHeap';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
@@ -64,11 +64,11 @@ export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Iterator', 'de.nrw.schule.svws.core.adt.tree.MinHeapIterator'].includes(name);
+		return ['java.util.Iterator', 'de.svws_nrw.core.adt.tree.MinHeapIterator'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_tree_MinHeapIterator<T>(obj : unknown) : MinHeapIterator<T> {
+export function cast_de_svws_nrw_core_adt_tree_MinHeapIterator<T>(obj : unknown) : MinHeapIterator<T> {
 	return obj as MinHeapIterator<T>;
 }

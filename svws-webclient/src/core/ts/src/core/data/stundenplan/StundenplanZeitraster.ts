@@ -66,7 +66,7 @@ export class StundenplanZeitraster extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplan.StundenplanZeitraster'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplan.StundenplanZeitraster'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanZeitraster {
@@ -126,6 +126,6 @@ export class StundenplanZeitraster extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster(obj : unknown) : StundenplanZeitraster {
+export function cast_de_svws_nrw_core_data_stundenplan_StundenplanZeitraster(obj : unknown) : StundenplanZeitraster {
 	return obj as StundenplanZeitraster;
 }

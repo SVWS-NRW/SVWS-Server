@@ -190,7 +190,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.SortedSet', 'java.util.Collection', 'de.nrw.schule.svws.core.adt.map.AVLMapSubKeySet', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable'].includes(name);
+		return ['de.svws_nrw.core.adt.map.AVLMapSubKeySet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<K> {
@@ -207,6 +207,6 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapSubKeySet<K, V>(obj : unknown) : AVLMapSubKeySet<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapSubKeySet<K, V>(obj : unknown) : AVLMapSubKeySet<K, V> {
 	return obj as AVLMapSubKeySet<K, V>;
 }

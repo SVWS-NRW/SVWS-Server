@@ -68,7 +68,7 @@ export class Sprachpruefung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.Sprachpruefung'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.Sprachpruefung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachpruefung {
@@ -165,6 +165,6 @@ export class Sprachpruefung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung(obj : unknown) : Sprachpruefung {
+export function cast_de_svws_nrw_core_data_schueler_Sprachpruefung(obj : unknown) : Sprachpruefung {
 	return obj as Sprachpruefung;
 }

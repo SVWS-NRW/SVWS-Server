@@ -152,11 +152,11 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.GostLaufbahnplanungFachkombinationTyp'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostLaufbahnplanungFachkombinationTyp(obj : unknown) : GostLaufbahnplanungFachkombinationTyp {
+export function cast_de_svws_nrw_core_types_gost_GostLaufbahnplanungFachkombinationTyp(obj : unknown) : GostLaufbahnplanungFachkombinationTyp {
 	return obj as GostLaufbahnplanungFachkombinationTyp;
 }

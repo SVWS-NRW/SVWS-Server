@@ -142,11 +142,11 @@ export class Variable extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.satsolver.Variable'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.satsolver.Variable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(obj : unknown) : Variable {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_Variable(obj : unknown) : Variable {
 	return obj as Variable;
 }

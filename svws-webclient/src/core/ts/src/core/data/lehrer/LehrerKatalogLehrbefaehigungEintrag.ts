@@ -66,7 +66,7 @@ export class LehrerKatalogLehrbefaehigungEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLehrbefaehigungEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerKatalogLehrbefaehigungEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): LehrerKatalogLehrbefaehigungEintrag {
@@ -122,6 +122,6 @@ export class LehrerKatalogLehrbefaehigungEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehrbefaehigungEintrag(obj : unknown) : LehrerKatalogLehrbefaehigungEintrag {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerKatalogLehrbefaehigungEintrag(obj : unknown) : LehrerKatalogLehrbefaehigungEintrag {
 	return obj as LehrerKatalogLehrbefaehigungEintrag;
 }

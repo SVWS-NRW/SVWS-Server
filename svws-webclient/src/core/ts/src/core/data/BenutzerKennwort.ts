@@ -18,7 +18,7 @@ export class BenutzerKennwort extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.BenutzerKennwort'].includes(name);
+		return ['de.svws_nrw.core.data.BenutzerKennwort'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerKennwort {
@@ -53,6 +53,6 @@ export class BenutzerKennwort extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_BenutzerKennwort(obj : unknown) : BenutzerKennwort {
+export function cast_de_svws_nrw_core_data_BenutzerKennwort(obj : unknown) : BenutzerKennwort {
 	return obj as BenutzerKennwort;
 }

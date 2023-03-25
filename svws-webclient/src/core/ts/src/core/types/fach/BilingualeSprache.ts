@@ -321,11 +321,11 @@ export class BilingualeSprache extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.fach.BilingualeSprache'].includes(name);
+		return ['de.svws_nrw.core.types.fach.BilingualeSprache'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_fach_BilingualeSprache(obj : unknown) : BilingualeSprache {
+export function cast_de_svws_nrw_core_types_fach_BilingualeSprache(obj : unknown) : BilingualeSprache {
 	return obj as BilingualeSprache;
 }

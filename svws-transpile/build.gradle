@@ -11,15 +11,15 @@ dependencies {
 
     implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
     
-    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws/core/**/*.java'], excludes: ['**/svws/core/transpiler/TranspilerDTO.java'])
+    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
     
-    javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws/api/*/*.java'], 
-                     excludes: [ '**/svws/api/schema/**/*.java',
-                                 '**/svws/api/client/**/*.java', 
-                                 '**/svws/api/debug/**/*.java',
-                                 '**/svws/api/webdav/**/*.java',
-                                 '**/svws/api/server/APIAdressbuch.java',
-                                 '**/svws/api/server/APIKalender.java']) 
+    javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/*/*.java'], 
+                     excludes: [ '**/svws_nrw/api/schema/**/*.java',
+                                 '**/svws_nrw/api/client/**/*.java', 
+                                 '**/svws_nrw/api/debug/**/*.java',
+                                 '**/svws_nrw/api/webdav/**/*.java',
+                                 '**/svws_nrw/api/server/APIAdressbuch.java',
+                                 '**/svws_nrw/api/server/APIKalender.java']) 
 }
 
 task removeTranspiledCode(type: Delete) {
@@ -50,9 +50,9 @@ task transpile(type: JavaExec) {
     outputs.dir "$rootDir/svws-webclient/src/core/ts/src"
     description = "Transpiliert den Java-Code nach Type-/Javascript"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = "de.nrw.schule.svws.transpiler.app.CoreTranspiler"
+    mainClass = "de.svws_nrw.transpiler.app.CoreTranspiler"
     args "--output", "$rootDir/svws-webclient/src/core/ts/src",
-         "--ignore", "de.nrw.schule.svws",
+         "--ignore", "de.svws_nrw",
          "--javafiles", "build/transpiler-java-files.txt",
          "--apifiles", "build/transpiler-api-files.txt"
 }

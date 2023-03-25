@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.test.apitests;
+package de.svws_nrw.test.apitests;
 
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import de.nrw.schule.svws.test.apitests.util.APITestUtil;
-import de.nrw.schule.svws.test.apitests.util.ServerProps;
+import de.svws_nrw.test.apitests.util.APITestUtil;
+import de.svws_nrw.test.apitests.util.ServerProps;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;

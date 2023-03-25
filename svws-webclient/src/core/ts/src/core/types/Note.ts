@@ -678,11 +678,11 @@ export class Note extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.Note'].includes(name);
+		return ['de.svws_nrw.core.types.Note'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_Note(obj : unknown) : Note {
+export function cast_de_svws_nrw_core_types_Note(obj : unknown) : Note {
 	return obj as Note;
 }

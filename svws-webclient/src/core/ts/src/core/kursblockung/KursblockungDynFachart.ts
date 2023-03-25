@@ -334,11 +334,11 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungDynFachart'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungDynFachart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynFachart(obj : unknown) : KursblockungDynFachart {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungDynFachart(obj : unknown) : KursblockungDynFachart {
 	return obj as KursblockungDynFachart;
 }

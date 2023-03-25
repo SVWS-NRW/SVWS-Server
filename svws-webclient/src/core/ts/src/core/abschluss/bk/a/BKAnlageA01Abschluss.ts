@@ -49,11 +49,11 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.abschluss.bk.a.BKAnlageA01Abschluss'].includes(name);
+		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageA01Abschluss(obj : unknown) : BKAnlageA01Abschluss {
+export function cast_de_svws_nrw_core_abschluss_bk_a_BKAnlageA01Abschluss(obj : unknown) : BKAnlageA01Abschluss {
 	return obj as BKAnlageA01Abschluss;
 }

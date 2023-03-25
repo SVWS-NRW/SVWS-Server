@@ -59,7 +59,7 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.fach.SprachreferenzniveauKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SprachreferenzniveauKatalogEintrag {
@@ -108,6 +108,6 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_fach_SprachreferenzniveauKatalogEintrag(obj : unknown) : SprachreferenzniveauKatalogEintrag {
+export function cast_de_svws_nrw_core_data_fach_SprachreferenzniveauKatalogEintrag(obj : unknown) : SprachreferenzniveauKatalogEintrag {
 	return obj as SprachreferenzniveauKatalogEintrag;
 }

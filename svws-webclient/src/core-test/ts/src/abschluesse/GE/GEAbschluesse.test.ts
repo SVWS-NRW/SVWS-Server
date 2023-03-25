@@ -8,7 +8,7 @@ import { GEAbschlussTestfall } from "./GEAbschlussTestfall";
 
 const test_dir = resolve(
     __dirname,
-    "../../../../../../../svws-core/src/test/resources/de/nrw/schule/svws/abschluesse/ge/test"
+    "../../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/ge/test"
 );
 const files = readdirSync(test_dir);
 

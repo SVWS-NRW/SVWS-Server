@@ -43,7 +43,7 @@ export class Sprachbelegung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.Sprachbelegung'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.Sprachbelegung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachbelegung {
@@ -105,6 +105,6 @@ export class Sprachbelegung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung(obj : unknown) : Sprachbelegung {
+export function cast_de_svws_nrw_core_data_schueler_Sprachbelegung(obj : unknown) : Sprachbelegung {
 	return obj as Sprachbelegung;
 }

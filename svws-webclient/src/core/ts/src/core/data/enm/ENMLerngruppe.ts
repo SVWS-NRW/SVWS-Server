@@ -54,7 +54,7 @@ export class ENMLerngruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMLerngruppe'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMLerngruppe'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMLerngruppe {
@@ -158,6 +158,6 @@ export class ENMLerngruppe extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMLerngruppe(obj : unknown) : ENMLerngruppe {
+export function cast_de_svws_nrw_core_data_enm_ENMLerngruppe(obj : unknown) : ENMLerngruppe {
 	return obj as ENMLerngruppe;
 }

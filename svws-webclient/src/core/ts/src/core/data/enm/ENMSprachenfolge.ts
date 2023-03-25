@@ -58,7 +58,7 @@ export class ENMSprachenfolge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMSprachenfolge'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMSprachenfolge'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMSprachenfolge {
@@ -141,6 +141,6 @@ export class ENMSprachenfolge extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMSprachenfolge(obj : unknown) : ENMSprachenfolge {
+export function cast_de_svws_nrw_core_data_enm_ENMSprachenfolge(obj : unknown) : ENMSprachenfolge {
 	return obj as ENMSprachenfolge;
 }

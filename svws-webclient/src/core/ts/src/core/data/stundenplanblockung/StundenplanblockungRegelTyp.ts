@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
+import { StundenplanblockungRegel, cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
 import { StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
@@ -273,11 +273,11 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungRegelTyp'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelTyp(obj : unknown) : StundenplanblockungRegelTyp {
+export function cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungRegelTyp(obj : unknown) : StundenplanblockungRegelTyp {
 	return obj as StundenplanblockungRegelTyp;
 }

@@ -169,11 +169,11 @@ export class BenutzerTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.benutzer.BenutzerTyp'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_benutzer_BenutzerTyp(obj : unknown) : BenutzerTyp {
+export function cast_de_svws_nrw_core_types_benutzer_BenutzerTyp(obj : unknown) : BenutzerTyp {
 	return obj as BenutzerTyp;
 }

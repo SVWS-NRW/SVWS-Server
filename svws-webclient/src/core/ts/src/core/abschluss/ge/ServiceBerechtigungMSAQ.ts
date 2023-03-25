@@ -277,11 +277,11 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.abschluss.ge.ServiceBerechtigungMSAQ'].includes(name);
+		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_ServiceBerechtigungMSAQ(obj : unknown) : ServiceBerechtigungMSAQ {
+export function cast_de_svws_nrw_core_abschluss_ge_ServiceBerechtigungMSAQ(obj : unknown) : ServiceBerechtigungMSAQ {
 	return obj as ServiceBerechtigungMSAQ;
 }

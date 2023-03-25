@@ -69,11 +69,11 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.Service', 'de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmus'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmus(obj : unknown) : KursblockungAlgorithmus {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmus(obj : unknown) : KursblockungAlgorithmus {
 	return obj as KursblockungAlgorithmus;
 }

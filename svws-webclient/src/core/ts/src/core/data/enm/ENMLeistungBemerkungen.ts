@@ -63,7 +63,7 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMLeistungBemerkungen'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMLeistungBemerkungen'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMLeistungBemerkungen {
@@ -143,6 +143,6 @@ export class ENMLeistungBemerkungen extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMLeistungBemerkungen(obj : unknown) : ENMLeistungBemerkungen {
+export function cast_de_svws_nrw_core_data_enm_ENMLeistungBemerkungen(obj : unknown) : ENMLeistungBemerkungen {
 	return obj as ENMLeistungBemerkungen;
 }

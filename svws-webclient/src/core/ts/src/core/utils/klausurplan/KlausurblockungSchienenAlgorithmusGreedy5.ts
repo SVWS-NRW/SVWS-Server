@@ -35,11 +35,11 @@ export class KlausurblockungSchienenAlgorithmusGreedy5 extends KlausurblockungSc
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusGreedy5', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusAbstract', 'de.svws_nrw.core.utils.klausurplan.KlausurblockungSchienenAlgorithmusGreedy5'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy5(obj : unknown) : KlausurblockungSchienenAlgorithmusGreedy5 {
+export function cast_de_svws_nrw_core_utils_klausurplan_KlausurblockungSchienenAlgorithmusGreedy5(obj : unknown) : KlausurblockungSchienenAlgorithmusGreedy5 {
 	return obj as KlausurblockungSchienenAlgorithmusGreedy5;
 }

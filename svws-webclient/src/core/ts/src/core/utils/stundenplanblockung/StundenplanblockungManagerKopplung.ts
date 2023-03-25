@@ -51,11 +51,11 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManagerKopplung'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung(obj : unknown) : StundenplanblockungManagerKopplung {
+export function cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung(obj : unknown) : StundenplanblockungManagerKopplung {
 	return obj as StundenplanblockungManagerKopplung;
 }

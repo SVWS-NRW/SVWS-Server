@@ -245,11 +245,11 @@ export class Geschlecht extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.Geschlecht'].includes(name);
+		return ['de.svws_nrw.core.types.Geschlecht'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_Geschlecht(obj : unknown) : Geschlecht {
+export function cast_de_svws_nrw_core_types_Geschlecht(obj : unknown) : Geschlecht {
 	return obj as Geschlecht;
 }

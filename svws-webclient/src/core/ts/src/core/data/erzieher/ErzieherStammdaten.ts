@@ -93,7 +93,7 @@ export class ErzieherStammdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.erzieher.ErzieherStammdaten'].includes(name);
+		return ['de.svws_nrw.core.data.erzieher.ErzieherStammdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ErzieherStammdaten {
@@ -207,6 +207,6 @@ export class ErzieherStammdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_erzieher_ErzieherStammdaten(obj : unknown) : ErzieherStammdaten {
+export function cast_de_svws_nrw_core_data_erzieher_ErzieherStammdaten(obj : unknown) : ErzieherStammdaten {
 	return obj as ErzieherStammdaten;
 }

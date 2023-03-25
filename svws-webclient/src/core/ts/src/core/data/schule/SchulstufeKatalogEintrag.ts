@@ -78,7 +78,7 @@ export class SchulstufeKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.SchulstufeKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulstufeKatalogEintrag {
@@ -165,6 +165,6 @@ export class SchulstufeKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_SchulstufeKatalogEintrag(obj : unknown) : SchulstufeKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_SchulstufeKatalogEintrag(obj : unknown) : SchulstufeKatalogEintrag {
 	return obj as SchulstufeKatalogEintrag;
 }

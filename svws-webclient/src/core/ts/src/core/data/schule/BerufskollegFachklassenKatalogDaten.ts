@@ -68,7 +68,7 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogDaten'].includes(name);
+		return ['de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogDaten {
@@ -163,6 +163,6 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogDaten(obj : unknown) : BerufskollegFachklassenKatalogDaten {
+export function cast_de_svws_nrw_core_data_schule_BerufskollegFachklassenKatalogDaten(obj : unknown) : BerufskollegFachklassenKatalogDaten {
 	return obj as BerufskollegFachklassenKatalogDaten;
 }

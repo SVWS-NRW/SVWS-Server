@@ -518,11 +518,11 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Comparable', 'de.nrw.schule.svws.core.types.gost.GostHalbjahr'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Comparable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr(obj : unknown) : GostHalbjahr {
+export function cast_de_svws_nrw_core_types_gost_GostHalbjahr(obj : unknown) : GostHalbjahr {
 	return obj as GostHalbjahr;
 }

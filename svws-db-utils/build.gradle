@@ -61,7 +61,7 @@ task generateLegacyMDBs(type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
     outputs.dir file(project.buildDir.toString() + '/mdb/')
     description "Erzeuge die vier Access-Datenbanken impexp.mdb, statkue.mdb, schildintern.mdb und schulver.mdb für die Verwendung mit Schild v2.x"
-    mainClass = 'de.nrw.schule.svws.db.utils.app.MDBGenerator'
+    mainClass = 'de.svws_nrw.db.utils.app.MDBGenerator'
     jvmArgs "-Dfile.encoding=UTF-8"
     args "-j"
 }
@@ -72,7 +72,7 @@ task generateSQLScripts(type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
     outputs.dir file(project.buildDir.toString() + '/sql/')
     description "Erzeuge SQL-Skripte für das Erstellen und Löschen eines Datenbankschemas sowie zum Befüllen eines Schemas mit Default-Daten"
-    mainClass = 'de.nrw.schule.svws.db.utils.app.SQLGenerator'
+    mainClass = 'de.svws_nrw.db.utils.app.SQLGenerator'
     jvmArgs "-Dfile.encoding=UTF-8"
     args "-a"
 }
@@ -85,19 +85,19 @@ task createScripts {
 		if (OperatingSystem.current().isLinux()) {
 			file("./migrate_db.sh").text = 
 			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.MigrateDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.MigrateDB "$@"\n'
 			file("./lupo_import.sh").text = 
 			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.lupo.app.ImportLupoMDB "$@"\n'
 			file("./kurs42_import.sh").text = 
 			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportKurs42Blockung "$@"\n'
 			file("./export.sh").text = 
 			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ExportDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ExportDB "$@"\n'
 			file("./import.sh").text = 
 			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportDB "$@"\n'
 			project.exec {
 				commandLine('chmod',  '+x', './migrate_db.sh')
 				commandLine('chmod',  '+x', './lupo_import.sh')
@@ -107,31 +107,31 @@ task createScripts {
 			}		
 		} else if (OperatingSystem.current().isWindows()) {
 			file("./migrate_db.cmd").text = 
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.MigrateDB %*\n'
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.MigrateDB %*\n'
 			file("./lupo_import.cmd").text = 
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB %*\n'
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.lupo.app.ImportLupoMDB %*\n'
 			file("./kurs42_import.cmd").text = 
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung %*\n'
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.ImportKurs42Blockung %*\n'
 			file("./export.cmd").text = 
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.ExportDB %*\n'
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.ExportDB %*\n'
 			file("./import.cmd").text = 
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.db.utils.app.ImportDB %*\n'
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.ImportDB %*\n'
 		} else if (OperatingSystem.current().isMacOsX()) {
 			file("./migrate_db.sh").text = 
 			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.MigrateDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.MigrateDB "$@"\n'
 			file("./lupo_import.sh").text = 
 			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.lupo.app.ImportLupoMDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.lupo.app.ImportLupoMDB "$@"\n'
 			file("./kurs42_import.sh").text = 
 			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportKurs42Blockung "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportKurs42Blockung "$@"\n'
 			file("./export.sh").text = 
 			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ExportDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ExportDB "$@"\n'
 			file("./import.sh").text = 
 			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.db.utils.app.ImportDB "$@"\n'
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportDB "$@"\n'
 			project.exec {
 				commandLine('chmod',  '+x', './migrate_db.sh')
 				commandLine('chmod',  '+x', './lupo_import.sh')

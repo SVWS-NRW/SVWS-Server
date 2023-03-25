@@ -72,7 +72,7 @@ export class SchuelerStundenplan extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplan.SchuelerStundenplan'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplan.SchuelerStundenplan'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerStundenplan {
@@ -229,6 +229,6 @@ export class SchuelerStundenplan extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplan(obj : unknown) : SchuelerStundenplan {
+export function cast_de_svws_nrw_core_data_stundenplan_SchuelerStundenplan(obj : unknown) : SchuelerStundenplan {
 	return obj as SchuelerStundenplan;
 }

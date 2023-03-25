@@ -53,7 +53,7 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragExportCSV'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragExportCSV'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragExportCSV {
@@ -123,6 +123,6 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragExportCSV(obj : unknown) : Schild3KatalogEintragExportCSV {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragExportCSV(obj : unknown) : Schild3KatalogEintragExportCSV {
 	return obj as Schild3KatalogEintragExportCSV;
 }

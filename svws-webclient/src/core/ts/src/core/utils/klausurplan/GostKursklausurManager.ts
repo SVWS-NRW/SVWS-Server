@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostKursklausur, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { GostKursklausur, cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector } from '../../../java/util/Vector';
-import { GostKlausurtermin, cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
+import { GostKlausurtermin, cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
 
 export class GostKursklausurManager extends JavaObject {
 
@@ -483,9 +483,9 @@ export class GostKursklausurManager extends JavaObject {
 	 * Implementation for method overloads of 'gibKonfliktTerminKursklausur'
 	 */
 	public gibKonfliktTerminKursklausur(__param0 : GostKlausurtermin | number, __param1 : GostKursklausur | number) : List<number> {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
-			const termin : GostKlausurtermin = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurtermin(__param0);
-			const klausur : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
+			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurtermin(__param0);
+			const klausur : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur.idTermin === termin.id) {
 				return new Vector();
 			}
@@ -567,9 +567,9 @@ export class GostKursklausurManager extends JavaObject {
 				return new Vector();
 			}
 			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'))))) {
-			const klausur1 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param0);
-			const klausur2 : GostKursklausur = cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(__param1);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
+			const klausur1 : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param0);
+			const klausur2 : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur1 as unknown === klausur2 as unknown) {
 				return new Vector();
 			}
@@ -580,11 +580,11 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.GostKursklausurManager'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.GostKursklausurManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_GostKursklausurManager(obj : unknown) : GostKursklausurManager {
+export function cast_de_svws_nrw_core_utils_klausurplan_GostKursklausurManager(obj : unknown) : GostKursklausurManager {
 	return obj as GostKursklausurManager;
 }

@@ -114,7 +114,7 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.NationalitaetenKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): NationalitaetenKatalogEintrag {
@@ -210,6 +210,6 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_NationalitaetenKatalogEintrag(obj : unknown) : NationalitaetenKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_NationalitaetenKatalogEintrag(obj : unknown) : NationalitaetenKatalogEintrag {
 	return obj as NationalitaetenKatalogEintrag;
 }

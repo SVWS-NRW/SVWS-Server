@@ -268,11 +268,11 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe(obj : unknown) : BenutzerKompetenzGruppe {
+export function cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenzGruppe(obj : unknown) : BenutzerKompetenzGruppe {
 	return obj as BenutzerKompetenzGruppe;
 }

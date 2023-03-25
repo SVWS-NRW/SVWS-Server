@@ -28,7 +28,7 @@ export class GostFachwahl extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostFachwahl'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostFachwahl'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostFachwahl {
@@ -81,6 +81,6 @@ export class GostFachwahl extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostFachwahl(obj : unknown) : GostFachwahl {
+export function cast_de_svws_nrw_core_data_gost_GostFachwahl(obj : unknown) : GostFachwahl {
 	return obj as GostFachwahl;
 }

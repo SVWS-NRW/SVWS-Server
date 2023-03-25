@@ -13,7 +13,7 @@ sourceSets {
 
 //exclude javadoc for generated model without comments
 javadoc {
-    exclude 'de/nrw/schule/svws/davapi/model/**'
+    exclude 'de/svws_nrw/davapi/model/**'
 }
 
 //add new source folder to eclipse

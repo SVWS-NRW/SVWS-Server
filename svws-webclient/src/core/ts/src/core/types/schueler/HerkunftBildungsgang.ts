@@ -369,11 +369,11 @@ export class HerkunftBildungsgang extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.HerkunftBildungsgang'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgang'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_HerkunftBildungsgang(obj : unknown) : HerkunftBildungsgang {
+export function cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgang(obj : unknown) : HerkunftBildungsgang {
 	return obj as HerkunftBildungsgang;
 }

@@ -4,7 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import { List } from '../../../java/util/List';
-import { BenutzerDaten, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten } from '../../../core/data/benutzer/BenutzerDaten';
+import { BenutzerDaten, cast_de_svws_nrw_core_data_benutzer_BenutzerDaten } from '../../../core/data/benutzer/BenutzerDaten';
 import { Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
@@ -71,8 +71,8 @@ export class BenutzerManager extends JavaObject {
 			this._daten = new BenutzerDaten();
 			this._daten.id = id;
 			this._daten.istAdmin = false;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.benutzer.BenutzerDaten'))))) {
-			const pDaten : BenutzerDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzerDaten(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzerDaten'))))) {
+			const pDaten : BenutzerDaten = cast_de_svws_nrw_core_data_benutzer_BenutzerDaten(__param0);
 			this.init();
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
@@ -398,11 +398,11 @@ export class BenutzerManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.benutzer.BenutzerManager'].includes(name);
+		return ['de.svws_nrw.core.utils.benutzer.BenutzerManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_benutzer_BenutzerManager(obj : unknown) : BenutzerManager {
+export function cast_de_svws_nrw_core_utils_benutzer_BenutzerManager(obj : unknown) : BenutzerManager {
 	return obj as BenutzerManager;
 }

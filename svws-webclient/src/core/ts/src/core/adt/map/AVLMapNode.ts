@@ -85,11 +85,11 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.map.AVLMapNode', 'java.util.Map.Entry'].includes(name);
+		return ['java.util.Map.Entry', 'de.svws_nrw.core.adt.map.AVLMapNode'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapNode<K, V>(obj : unknown) : AVLMapNode<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapNode<K, V>(obj : unknown) : AVLMapNode<K, V> {
 	return obj as AVLMapNode<K, V>;
 }

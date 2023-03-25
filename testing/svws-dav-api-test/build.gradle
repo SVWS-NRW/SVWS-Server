@@ -4,7 +4,7 @@ dependencies {
 }
 //exclude javadoc for generated model without comments
 testJavadoc {
-    exclude 'de/nrw/schule/svws/api/**'
+    exclude 'de/svws_nrw/api/**'
 }
 
 

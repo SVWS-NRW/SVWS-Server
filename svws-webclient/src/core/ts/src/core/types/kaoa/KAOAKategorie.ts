@@ -234,11 +234,11 @@ export class KAOAKategorie extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAKategorie'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAKategorie'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie(obj : unknown) : KAOAKategorie {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAKategorie(obj : unknown) : KAOAKategorie {
 	return obj as KAOAKategorie;
 }

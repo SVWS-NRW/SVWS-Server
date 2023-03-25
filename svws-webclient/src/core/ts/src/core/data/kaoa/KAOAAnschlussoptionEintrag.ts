@@ -89,7 +89,7 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kaoa.KAOAAnschlussoptionEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KAOAAnschlussoptionEintrag {
@@ -207,6 +207,6 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kaoa_KAOAAnschlussoptionEintrag(obj : unknown) : KAOAAnschlussoptionEintrag {
+export function cast_de_svws_nrw_core_data_kaoa_KAOAAnschlussoptionEintrag(obj : unknown) : KAOAAnschlussoptionEintrag {
 	return obj as KAOAAnschlussoptionEintrag;
 }

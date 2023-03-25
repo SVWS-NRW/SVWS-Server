@@ -33,11 +33,11 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManagerSchule'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerSchule(obj : unknown) : StundenplanblockungManagerSchule {
+export function cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerSchule(obj : unknown) : StundenplanblockungManagerSchule {
 	return obj as StundenplanblockungManagerSchule;
 }

@@ -66,7 +66,7 @@ export class LehrerKatalogRechtsverhaeltnisEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): LehrerKatalogRechtsverhaeltnisEintrag {
@@ -122,6 +122,6 @@ export class LehrerKatalogRechtsverhaeltnisEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogRechtsverhaeltnisEintrag(obj : unknown) : LehrerKatalogRechtsverhaeltnisEintrag {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerKatalogRechtsverhaeltnisEintrag(obj : unknown) : LehrerKatalogRechtsverhaeltnisEintrag {
 	return obj as LehrerKatalogRechtsverhaeltnisEintrag;
 }

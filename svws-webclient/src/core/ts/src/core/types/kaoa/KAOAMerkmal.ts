@@ -366,11 +366,11 @@ export class KAOAMerkmal extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAMerkmal'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmal'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmal(obj : unknown) : KAOAMerkmal {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAMerkmal(obj : unknown) : KAOAMerkmal {
 	return obj as KAOAMerkmal;
 }

@@ -35,7 +35,7 @@ export class ENMFloskel extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMFloskel'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMFloskel'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMFloskel {
@@ -85,6 +85,6 @@ export class ENMFloskel extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMFloskel(obj : unknown) : ENMFloskel {
+export function cast_de_svws_nrw_core_data_enm_ENMFloskel(obj : unknown) : ENMFloskel {
 	return obj as ENMFloskel;
 }

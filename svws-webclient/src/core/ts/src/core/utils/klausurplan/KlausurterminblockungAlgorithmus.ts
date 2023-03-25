@@ -89,11 +89,11 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmus'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmus'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmus(obj : unknown) : KlausurterminblockungAlgorithmus {
+export function cast_de_svws_nrw_core_utils_klausurplan_KlausurterminblockungAlgorithmus(obj : unknown) : KlausurterminblockungAlgorithmus {
 	return obj as KlausurterminblockungAlgorithmus;
 }

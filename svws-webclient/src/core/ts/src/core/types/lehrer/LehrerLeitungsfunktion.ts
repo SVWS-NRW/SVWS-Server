@@ -203,11 +203,11 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerLeitungsfunktion'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerLeitungsfunktion(obj : unknown) : LehrerLeitungsfunktion {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerLeitungsfunktion(obj : unknown) : LehrerLeitungsfunktion {
 	return obj as LehrerLeitungsfunktion;
 }

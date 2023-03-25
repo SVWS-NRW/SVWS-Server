@@ -178,11 +178,11 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp'].includes(name);
+		return ['de.svws_nrw.core.types.schule.WeiterbildungskollegBildungsgangTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp(obj : unknown) : WeiterbildungskollegBildungsgangTyp {
+export function cast_de_svws_nrw_core_types_schule_WeiterbildungskollegBildungsgangTyp(obj : unknown) : WeiterbildungskollegBildungsgangTyp {
 	return obj as WeiterbildungskollegBildungsgangTyp;
 }

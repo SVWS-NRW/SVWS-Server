@@ -48,7 +48,7 @@ export class BetriebListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.betrieb.BetriebListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.betrieb.BetriebListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BetriebListeEintrag {
@@ -115,6 +115,6 @@ export class BetriebListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag(obj : unknown) : BetriebListeEintrag {
+export function cast_de_svws_nrw_core_data_betrieb_BetriebListeEintrag(obj : unknown) : BetriebListeEintrag {
 	return obj as BetriebListeEintrag;
 }

@@ -66,7 +66,7 @@ export class KAOABerufsfeldEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kaoa.KAOABerufsfeldEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kaoa.KAOABerufsfeldEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KAOABerufsfeldEintrag {
@@ -122,6 +122,6 @@ export class KAOABerufsfeldEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kaoa_KAOABerufsfeldEintrag(obj : unknown) : KAOABerufsfeldEintrag {
+export function cast_de_svws_nrw_core_data_kaoa_KAOABerufsfeldEintrag(obj : unknown) : KAOABerufsfeldEintrag {
 	return obj as KAOABerufsfeldEintrag;
 }

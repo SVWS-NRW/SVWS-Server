@@ -47,11 +47,11 @@ export class Latinum extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Latinum', 'de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Latinum(obj : unknown) : Latinum {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Latinum(obj : unknown) : Latinum {
 	return obj as Latinum;
 }

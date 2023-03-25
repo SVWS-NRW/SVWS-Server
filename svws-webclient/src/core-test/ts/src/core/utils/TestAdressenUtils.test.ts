@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { AdressenUtils } from "~/index";
 import { TestdatenSplitStrasse } from "./TestdatenSplitStrasse";
 
-const test_dir : string = resolve(__dirname, "../../../../../../../svws-core/src/test/resources/de/nrw/schule/svws/core/utils/");
+const test_dir : string = resolve(__dirname, "../../../../../../../svws-core/src/test/resources/de/svws_nrw/core/utils/");
 
 describe('AdressenUtils', () => {
     it('splitStrasse', () => {

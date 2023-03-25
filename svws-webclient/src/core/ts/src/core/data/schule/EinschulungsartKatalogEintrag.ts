@@ -74,7 +74,7 @@ export class EinschulungsartKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.EinschulungsartKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): EinschulungsartKatalogEintrag {
@@ -137,6 +137,6 @@ export class EinschulungsartKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_EinschulungsartKatalogEintrag(obj : unknown) : EinschulungsartKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_EinschulungsartKatalogEintrag(obj : unknown) : EinschulungsartKatalogEintrag {
 	return obj as EinschulungsartKatalogEintrag;
 }

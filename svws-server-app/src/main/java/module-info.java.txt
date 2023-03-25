@@ -1,8 +1,8 @@
-open module de.nrw.schule.svws.server {
-    requires transitive de.nrw.schule.svws.core;
-    requires transitive de.nrw.schule.svws.db;
-    requires transitive de.nrw.schule.svws.dbutils;
-    requires transitive de.nrw.schule.svws.api;
+open module de.svws_nrw.server {
+    requires transitive de.svws_nrw.core;
+    requires transitive de.svws_nrw.db;
+    requires transitive de.svws_nrw.dbutils;
+    requires transitive de.svws_nrw.api;
 	
 	requires java.base;
 	requires transitive jetty.servlet.api;
@@ -24,6 +24,6 @@ open module de.nrw.schule.svws.server {
 	
 	requires org.jboss.resteasy.core;
 	
-	exports de.nrw.schule.svws.server;
-	exports de.nrw.schule.svws.server.jetty;
+	exports de.svws_nrw.server;
+	exports de.svws_nrw.server.jetty;
 }

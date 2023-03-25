@@ -88,7 +88,7 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnungOption {
@@ -193,6 +193,6 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption(obj : unknown) : Schild3KatalogEintragPruefungsordnungOption {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption(obj : unknown) : Schild3KatalogEintragPruefungsordnungOption {
 	return obj as Schild3KatalogEintragPruefungsordnungOption;
 }

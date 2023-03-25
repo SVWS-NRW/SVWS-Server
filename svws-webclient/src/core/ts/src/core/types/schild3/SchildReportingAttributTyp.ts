@@ -141,11 +141,11 @@ export class SchildReportingAttributTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp'].includes(name);
+		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schild3_SchildReportingAttributTyp(obj : unknown) : SchildReportingAttributTyp {
+export function cast_de_svws_nrw_core_types_schild3_SchildReportingAttributTyp(obj : unknown) : SchildReportingAttributTyp {
 	return obj as SchildReportingAttributTyp;
 }

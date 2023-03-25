@@ -59,11 +59,11 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Allgemeines', 'de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Allgemeines(obj : unknown) : Allgemeines {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Allgemeines(obj : unknown) : Allgemeines {
 	return obj as Allgemeines;
 }

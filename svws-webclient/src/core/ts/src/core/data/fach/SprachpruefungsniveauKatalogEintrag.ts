@@ -67,7 +67,7 @@ export class SprachpruefungsniveauKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.fach.SprachpruefungsniveauKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SprachpruefungsniveauKatalogEintrag {
@@ -123,6 +123,6 @@ export class SprachpruefungsniveauKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_fach_SprachpruefungsniveauKatalogEintrag(obj : unknown) : SprachpruefungsniveauKatalogEintrag {
+export function cast_de_svws_nrw_core_data_fach_SprachpruefungsniveauKatalogEintrag(obj : unknown) : SprachpruefungsniveauKatalogEintrag {
 	return obj as SprachpruefungsniveauKatalogEintrag;
 }

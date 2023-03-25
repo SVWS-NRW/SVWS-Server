@@ -111,11 +111,11 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.logger.LogData', 'java.lang.Comparable'].includes(name);
+		return ['java.lang.Comparable', 'de.svws_nrw.core.logger.LogData'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_logger_LogData(obj : unknown) : LogData {
+export function cast_de_svws_nrw_core_logger_LogData(obj : unknown) : LogData {
 	return obj as LogData;
 }

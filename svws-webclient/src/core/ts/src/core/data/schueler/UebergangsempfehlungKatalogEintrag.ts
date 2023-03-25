@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform, cast_de_svws_nrw_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 
 export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 
@@ -59,12 +59,12 @@ export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
 			// empty block
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform'))) || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform'))) || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const bezeichnung : string = __param2;
-			const empfehlung : Schulform | null = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param3);
-			const teilweise : Schulform | null = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param4);
+			const empfehlung : Schulform | null = cast_de_svws_nrw_core_types_schule_Schulform(__param3);
+			const teilweise : Schulform | null = cast_de_svws_nrw_core_types_schule_Schulform(__param4);
 			const gueltigVon : number | null = __param5;
 			const gueltigBis : number | null = __param6;
 			this.id = id;
@@ -86,7 +86,7 @@ export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.UebergangsempfehlungKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.UebergangsempfehlungKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): UebergangsempfehlungKatalogEintrag {
@@ -149,6 +149,6 @@ export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_UebergangsempfehlungKatalogEintrag(obj : unknown) : UebergangsempfehlungKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schueler_UebergangsempfehlungKatalogEintrag(obj : unknown) : UebergangsempfehlungKatalogEintrag {
 	return obj as UebergangsempfehlungKatalogEintrag;
 }

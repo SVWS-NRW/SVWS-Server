@@ -78,7 +78,7 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.HerkunftSonstigeKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.HerkunftSonstigeKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftSonstigeKatalogEintrag {
@@ -165,6 +165,6 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_HerkunftSonstigeKatalogEintrag(obj : unknown) : HerkunftSonstigeKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_HerkunftSonstigeKatalogEintrag(obj : unknown) : HerkunftSonstigeKatalogEintrag {
 	return obj as HerkunftSonstigeKatalogEintrag;
 }

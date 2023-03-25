@@ -270,11 +270,11 @@ export class AllgemeineMerkmale extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.AllgemeineMerkmale'].includes(name);
+		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_AllgemeineMerkmale(obj : unknown) : AllgemeineMerkmale {
+export function cast_de_svws_nrw_core_types_schule_AllgemeineMerkmale(obj : unknown) : AllgemeineMerkmale {
 	return obj as AllgemeineMerkmale;
 }

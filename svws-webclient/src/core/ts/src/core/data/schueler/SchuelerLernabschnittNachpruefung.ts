@@ -28,7 +28,7 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittNachpruefung'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefung {
@@ -77,6 +77,6 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittNachpruefung(obj : unknown) : SchuelerLernabschnittNachpruefung {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittNachpruefung(obj : unknown) : SchuelerLernabschnittNachpruefung {
 	return obj as SchuelerLernabschnittNachpruefung;
 }

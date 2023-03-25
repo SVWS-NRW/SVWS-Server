@@ -172,11 +172,11 @@ export class GostBesondereLernleistung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.GostBesondereLernleistung'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostBesondereLernleistung(obj : unknown) : GostBesondereLernleistung {
+export function cast_de_svws_nrw_core_types_gost_GostBesondereLernleistung(obj : unknown) : GostBesondereLernleistung {
 	return obj as GostBesondereLernleistung;
 }

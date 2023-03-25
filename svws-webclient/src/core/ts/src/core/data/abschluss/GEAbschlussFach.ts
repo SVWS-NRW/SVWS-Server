@@ -43,7 +43,7 @@ export class GEAbschlussFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.abschluss.GEAbschlussFach'].includes(name);
+		return ['de.svws_nrw.core.data.abschluss.GEAbschlussFach'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GEAbschlussFach {
@@ -107,6 +107,6 @@ export class GEAbschlussFach extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFach(obj : unknown) : GEAbschlussFach {
+export function cast_de_svws_nrw_core_data_abschluss_GEAbschlussFach(obj : unknown) : GEAbschlussFach {
 	return obj as GEAbschlussFach;
 }

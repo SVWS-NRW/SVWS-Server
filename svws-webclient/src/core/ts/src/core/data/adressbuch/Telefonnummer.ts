@@ -18,7 +18,7 @@ export class Telefonnummer extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.adressbuch.Telefonnummer'].includes(name);
+		return ['de.svws_nrw.core.data.adressbuch.Telefonnummer'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Telefonnummer {
@@ -57,6 +57,6 @@ export class Telefonnummer extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_adressbuch_Telefonnummer(obj : unknown) : Telefonnummer {
+export function cast_de_svws_nrw_core_data_adressbuch_Telefonnummer(obj : unknown) : Telefonnummer {
 	return obj as Telefonnummer;
 }

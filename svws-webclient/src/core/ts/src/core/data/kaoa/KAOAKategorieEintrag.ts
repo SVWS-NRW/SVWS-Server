@@ -78,7 +78,7 @@ export class KAOAKategorieEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kaoa.KAOAKategorieEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kaoa.KAOAKategorieEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KAOAKategorieEintrag {
@@ -165,6 +165,6 @@ export class KAOAKategorieEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kaoa_KAOAKategorieEintrag(obj : unknown) : KAOAKategorieEintrag {
+export function cast_de_svws_nrw_core_data_kaoa_KAOAKategorieEintrag(obj : unknown) : KAOAKategorieEintrag {
 	return obj as KAOAKategorieEintrag;
 }

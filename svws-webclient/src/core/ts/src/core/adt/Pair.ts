@@ -32,9 +32,9 @@ export class Pair<A, B> extends JavaObject {
 	public equals(o : unknown | null) : boolean {
 		if (o === null)
 			return false;
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.Pair'))) === false)
+		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.svws_nrw.core.adt.Pair'))) === false)
 			return false;
-		const e : Pair<unknown, unknown> | null = cast_de_nrw_schule_svws_core_adt_Pair(o);
+		const e : Pair<unknown, unknown> | null = cast_de_svws_nrw_core_adt_Pair(o);
 		const a_equals : boolean = JavaObject.equalsTranspiler(this.a, (e.a));
 		const b_equals : boolean = (this.b === null) ? (e.b === null) : JavaObject.equalsTranspiler(this.b, (e.b));
 		return a_equals && b_equals;
@@ -45,11 +45,11 @@ export class Pair<A, B> extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.Pair'].includes(name);
+		return ['de.svws_nrw.core.adt.Pair'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_Pair<A, B>(obj : unknown) : Pair<A, B> {
+export function cast_de_svws_nrw_core_adt_Pair<A, B>(obj : unknown) : Pair<A, B> {
 	return obj as Pair<A, B>;
 }

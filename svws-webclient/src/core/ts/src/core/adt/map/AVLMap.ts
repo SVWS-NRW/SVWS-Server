@@ -1211,11 +1211,11 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Map', 'de.nrw.schule.svws.core.adt.map.AVLMap', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
+		return ['de.svws_nrw.core.adt.map.AVLMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMap<K, V>(obj : unknown) : AVLMap<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMap<K, V>(obj : unknown) : AVLMap<K, V> {
 	return obj as AVLMap<K, V>;
 }

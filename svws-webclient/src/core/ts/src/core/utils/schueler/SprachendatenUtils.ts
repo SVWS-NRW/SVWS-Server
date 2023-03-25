@@ -475,11 +475,11 @@ export class SprachendatenUtils extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils'].includes(name);
+		return ['de.svws_nrw.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenUtils(obj : unknown) : SprachendatenUtils {
+export function cast_de_svws_nrw_core_utils_schueler_SprachendatenUtils(obj : unknown) : SprachendatenUtils {
 	return obj as SprachendatenUtils;
 }

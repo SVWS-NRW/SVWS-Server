@@ -28,7 +28,7 @@ export class GostJahrgang extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostJahrgang'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostJahrgang'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostJahrgang {
@@ -77,6 +77,6 @@ export class GostJahrgang extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostJahrgang(obj : unknown) : GostJahrgang {
+export function cast_de_svws_nrw_core_data_gost_GostJahrgang(obj : unknown) : GostJahrgang {
 	return obj as GostJahrgang;
 }

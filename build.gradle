@@ -32,7 +32,7 @@ allprojects {
 
 	version = config.project.version
 	project.ext.latestRelease = config.project.'latest-release'
-	group = 'de.nrw.schule.svws'
+	group = 'de.svws_nrw'
 
 	svwsmavenrepo {
 		//nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
@@ -172,7 +172,7 @@ licenseReport {
 
     // List the groups ids to exclude from dependency report. Supports regular expressions.
     // For finer granularity, see: excludes.
-    excludeGroups = ['de.nrw.schule.svws.server']
+    excludeGroups = ['de.svws_nrw.server']
 
     // List the ids (in module:name format) to exclude from dependency report. Supports regular expressions.
     // By default excludes is empty.

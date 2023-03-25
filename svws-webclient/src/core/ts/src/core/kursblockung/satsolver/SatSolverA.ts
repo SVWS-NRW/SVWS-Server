@@ -77,11 +77,11 @@ export abstract class SatSolverA extends JavaObject {
 	public abstract getClauseCount() : number;
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverA'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.satsolver.SatSolverA'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverA(obj : unknown) : SatSolverA {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_SatSolverA(obj : unknown) : SatSolverA {
 	return obj as SatSolverA;
 }

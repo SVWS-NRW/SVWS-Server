@@ -26,7 +26,7 @@ export class Sprachendaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.Sprachendaten'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.Sprachendaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachendaten {
@@ -120,6 +120,6 @@ export class Sprachendaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten(obj : unknown) : Sprachendaten {
+export function cast_de_svws_nrw_core_data_schueler_Sprachendaten(obj : unknown) : Sprachendaten {
 	return obj as Sprachendaten;
 }

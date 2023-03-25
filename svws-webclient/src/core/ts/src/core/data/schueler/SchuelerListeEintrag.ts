@@ -59,7 +59,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schueler.SchuelerListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerListeEintrag {
@@ -176,6 +176,6 @@ export class SchuelerListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schueler_SchuelerListeEintrag(obj : unknown) : SchuelerListeEintrag {
+export function cast_de_svws_nrw_core_data_schueler_SchuelerListeEintrag(obj : unknown) : SchuelerListeEintrag {
 	return obj as SchuelerListeEintrag;
 }

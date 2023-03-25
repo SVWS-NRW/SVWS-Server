@@ -201,11 +201,11 @@ export class BerufskollegAnlage extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.BerufskollegAnlage'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegAnlage'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_BerufskollegAnlage(obj : unknown) : BerufskollegAnlage {
+export function cast_de_svws_nrw_core_types_schule_BerufskollegAnlage(obj : unknown) : BerufskollegAnlage {
 	return obj as BerufskollegAnlage;
 }

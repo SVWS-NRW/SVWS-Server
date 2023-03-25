@@ -78,7 +78,7 @@ export class ReformpaedagogikKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.ReformpaedagogikKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ReformpaedagogikKatalogEintrag {
@@ -165,6 +165,6 @@ export class ReformpaedagogikKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_ReformpaedagogikKatalogEintrag(obj : unknown) : ReformpaedagogikKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_ReformpaedagogikKatalogEintrag(obj : unknown) : ReformpaedagogikKatalogEintrag {
 	return obj as ReformpaedagogikKatalogEintrag;
 }

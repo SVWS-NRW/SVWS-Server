@@ -1260,11 +1260,11 @@ export class Nationalitaeten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.Nationalitaeten'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Nationalitaeten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_Nationalitaeten(obj : unknown) : Nationalitaeten {
+export function cast_de_svws_nrw_core_types_schule_Nationalitaeten(obj : unknown) : Nationalitaeten {
 	return obj as Nationalitaeten;
 }

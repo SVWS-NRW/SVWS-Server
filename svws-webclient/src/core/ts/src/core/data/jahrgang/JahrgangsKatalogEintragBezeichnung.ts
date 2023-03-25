@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform, cast_de_svws_nrw_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 
 export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 
@@ -34,8 +34,8 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			// empty block
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
-			const schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
+			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const bezeichnung : string = __param1;
 			this.schulform = schulform.daten.kuerzel;
 			this.bezeichnung = bezeichnung;
@@ -43,7 +43,7 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintragBezeichnung'].includes(name);
+		return ['de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintragBezeichnung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): JahrgangsKatalogEintragBezeichnung {
@@ -82,6 +82,6 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintragBezeichnung(obj : unknown) : JahrgangsKatalogEintragBezeichnung {
+export function cast_de_svws_nrw_core_data_jahrgang_JahrgangsKatalogEintragBezeichnung(obj : unknown) : JahrgangsKatalogEintragBezeichnung {
 	return obj as JahrgangsKatalogEintragBezeichnung;
 }

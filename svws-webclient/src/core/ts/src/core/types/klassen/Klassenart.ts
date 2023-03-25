@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlassenartKatalogEintrag } from '../../../core/data/klassen/KlassenartKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { Vector } from '../../../java/util/Vector';
@@ -25,47 +25,47 @@ export class Klassenart extends JavaObject {
 	/**
 	 * Klassenart: Kein Eintrag
 	 */
-	public static readonly UNDEFINIERT : Klassenart = new Klassenart("UNDEFINIERT", 0, [new KlassenartKatalogEintrag(0, "**", "Kein Eintrag", Arrays.asList(new Pair(Schulform.WB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly UNDEFINIERT : Klassenart = new Klassenart("UNDEFINIERT", 0, [new KlassenartKatalogEintrag(0, "**", "Kein Eintrag", Arrays.asList(new Pair(Schulform.WB, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Hauptschulklasse 1A
 	 */
-	public static readonly HA_1A : Klassenart = new Klassenart("HA_1A", 1, [new KlassenartKatalogEintrag(1000, "1A", "Klasse 10 Typ A (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.R, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly HA_1A : Klassenart = new Klassenart("HA_1A", 1, [new KlassenartKatalogEintrag(1000, "1A", "Klasse 10 Typ A (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.R, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Hauptschulklasse 1B
 	 */
-	public static readonly HA_1B : Klassenart = new Klassenart("HA_1B", 2, [new KlassenartKatalogEintrag(2000, "1B", "Klasse 10 Typ B (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly HA_1B : Klassenart = new Klassenart("HA_1B", 2, [new KlassenartKatalogEintrag(2000, "1B", "Klasse 10 Typ B (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Hauptschuleklasse ohne Differenzierung nach A und B
 	 */
-	public static readonly HA_AB : Klassenart = new Klassenart("HA_AB", 3, [new KlassenartKatalogEintrag(3000, "AB", "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly HA_AB : Klassenart = new Klassenart("HA_AB", 3, [new KlassenartKatalogEintrag(3000, "AB", "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)", Arrays.asList(new Pair(Schulform.H, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, Schulgliederung.H), new Pair(Schulform.SK, Schulgliederung.H), new Pair(Schulform.V, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)
 	 */
-	public static readonly AM : Klassenart = new Klassenart("AM", 4, [new KlassenartKatalogEintrag(4000, "AM", "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)", Arrays.asList(new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly AM : Klassenart = new Klassenart("AM", 4, [new KlassenartKatalogEintrag(4000, "AM", "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)", Arrays.asList(new Pair(Schulform.KS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Frühförderung: SKG (Präsenzgruppe)
 	 */
-	public static readonly PG : Klassenart = new Klassenart("PG", 5, [new KlassenartKatalogEintrag(5000, "PG", "Frühförderung: SKG (Präsenzgruppe)", Arrays.asList(new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly PG : Klassenart = new Klassenart("PG", 5, [new KlassenartKatalogEintrag(5000, "PG", "Frühförderung: SKG (Präsenzgruppe)", Arrays.asList(new Pair(Schulform.KS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Profilklasse (gemäß § 21 Abs. 3 APO-S I)
 	 */
-	public static readonly PK : Klassenart = new Klassenart("PK", 6, [new KlassenartKatalogEintrag(6000, "PK", "Profilklasse (gemäß § 21 Abs. 3 APO-S I)", Arrays.asList(new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, Schulgliederung.GY9), new Pair(Schulform.SK, Schulgliederung.GY)), null, null)]);
+	public static readonly PK : Klassenart = new Klassenart("PK", 6, [new KlassenartKatalogEintrag(6000, "PK", "Profilklasse (gemäß § 21 Abs. 3 APO-S I)", Arrays.asList(new Pair(Schulform.GY, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, Schulgliederung.GY9), new Pair(Schulform.SK, Schulgliederung.GY)), null, null)]);
 
 	/**
 	 * Klassenart: Regelklasse
 	 */
-	public static readonly RK : Klassenart = new Klassenart("RK", 7, [new KlassenartKatalogEintrag(7000, "RK", "Regelklasse", Arrays.asList(new Pair(Schulform.FW, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.HI, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.WF, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.G, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly RK : Klassenart = new Klassenart("RK", 7, [new KlassenartKatalogEintrag(7000, "RK", "Regelklasse", Arrays.asList(new Pair(Schulform.FW, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.HI, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.WF, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.G, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Klassenart: Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)
 	 */
-	public static readonly SG : Klassenart = new Klassenart("SG", 8, [new KlassenartKatalogEintrag(8000, "SG", "Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)", Arrays.asList(new Pair(Schulform.G, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly SG : Klassenart = new Klassenart("SG", 8, [new KlassenartKatalogEintrag(8000, "SG", "Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)", Arrays.asList(new Pair(Schulform.G, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_svws_nrw_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_svws_nrw_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Prozess die Version des Core-Types feststellen zu können.
@@ -291,11 +291,11 @@ export class Klassenart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.klassen.Klassenart'].includes(name);
+		return ['de.svws_nrw.core.types.klassen.Klassenart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_klassen_Klassenart(obj : unknown) : Klassenart {
+export function cast_de_svws_nrw_core_types_klassen_Klassenart(obj : unknown) : Klassenart {
 	return obj as Klassenart;
 }

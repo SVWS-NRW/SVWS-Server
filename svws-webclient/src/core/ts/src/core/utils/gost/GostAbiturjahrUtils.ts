@@ -62,11 +62,11 @@ export class GostAbiturjahrUtils extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils'].includes(name);
+		return ['de.svws_nrw.core.utils.gost.GostAbiturjahrUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_gost_GostAbiturjahrUtils(obj : unknown) : GostAbiturjahrUtils {
+export function cast_de_svws_nrw_core_utils_gost_GostAbiturjahrUtils(obj : unknown) : GostAbiturjahrUtils {
 	return obj as GostAbiturjahrUtils;
 }

@@ -467,11 +467,11 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungDynKurs'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungDynKurs'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs(obj : unknown) : KursblockungDynKurs {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungDynKurs(obj : unknown) : KursblockungDynKurs {
 	return obj as KursblockungDynKurs;
 }

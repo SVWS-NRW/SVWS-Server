@@ -150,7 +150,7 @@ export class BetriebStammdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.betrieb.BetriebStammdaten'].includes(name);
+		return ['de.svws_nrw.core.data.betrieb.BetriebStammdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): BetriebStammdaten {
@@ -343,6 +343,6 @@ export class BetriebStammdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten(obj : unknown) : BetriebStammdaten {
+export function cast_de_svws_nrw_core_data_betrieb_BetriebStammdaten(obj : unknown) : BetriebStammdaten {
 	return obj as BetriebStammdaten;
 }

@@ -473,11 +473,11 @@ export class Herkunftsarten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schueler.Herkunftsarten'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Herkunftsarten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schueler_Herkunftsarten(obj : unknown) : Herkunftsarten {
+export function cast_de_svws_nrw_core_types_schueler_Herkunftsarten(obj : unknown) : Herkunftsarten {
 	return obj as Herkunftsarten;
 }

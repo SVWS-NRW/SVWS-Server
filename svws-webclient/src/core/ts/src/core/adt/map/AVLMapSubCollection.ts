@@ -90,7 +90,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.map.AVLMapSubCollection', 'java.util.Collection', 'java.lang.Iterable'].includes(name);
+		return ['java.util.Collection', 'java.lang.Iterable', 'de.svws_nrw.core.adt.map.AVLMapSubCollection'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<V> {
@@ -107,6 +107,6 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_AVLMapSubCollection<K, V>(obj : unknown) : AVLMapSubCollection<K, V> {
+export function cast_de_svws_nrw_core_adt_map_AVLMapSubCollection<K, V>(obj : unknown) : AVLMapSubCollection<K, V> {
 	return obj as AVLMapSubCollection<K, V>;
 }

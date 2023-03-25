@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List } from '../../../java/util/List';
 import { Vector } from '../../../java/util/Vector';
 
@@ -59,9 +59,9 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null))) {
 			const id : number = __param0 as number;
-			const gliederung : Schulgliederung = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param1);
+			const gliederung : Schulgliederung = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param1);
 			const gueltigVon : number | null = __param2;
 			const gueltigBis : number | null = __param3;
 			this.id = id;
@@ -75,7 +75,7 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.HerkunftBildungsgangKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.HerkunftBildungsgangKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftBildungsgangKatalogEintrag {
@@ -162,6 +162,6 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_HerkunftBildungsgangKatalogEintrag(obj : unknown) : HerkunftBildungsgangKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_HerkunftBildungsgangKatalogEintrag(obj : unknown) : HerkunftBildungsgangKatalogEintrag {
 	return obj as HerkunftBildungsgangKatalogEintrag;
 }

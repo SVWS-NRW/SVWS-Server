@@ -78,11 +78,11 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.adt.map.HashMap2D'].includes(name);
+		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_map_HashMap2D<K1, K2, V>(obj : unknown) : HashMap2D<K1, K2, V> {
+export function cast_de_svws_nrw_core_adt_map_HashMap2D<K1, K2, V>(obj : unknown) : HashMap2D<K1, K2, V> {
 	return obj as HashMap2D<K1, K2, V>;
 }

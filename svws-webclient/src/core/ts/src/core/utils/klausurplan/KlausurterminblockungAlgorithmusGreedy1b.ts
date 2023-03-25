@@ -35,11 +35,11 @@ export class KlausurterminblockungAlgorithmusGreedy1b extends Klausurterminblock
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy1b', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract', 'de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy1b'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1b(obj : unknown) : KlausurterminblockungAlgorithmusGreedy1b {
+export function cast_de_svws_nrw_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy1b(obj : unknown) : KlausurterminblockungAlgorithmusGreedy1b {
 	return obj as KlausurterminblockungAlgorithmusGreedy1b;
 }

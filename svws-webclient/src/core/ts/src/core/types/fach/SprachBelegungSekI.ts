@@ -88,11 +88,11 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.fach.SprachBelegungSekI', 'java.lang.Comparable'].includes(name);
+		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Comparable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_fach_SprachBelegungSekI(obj : unknown) : SprachBelegungSekI {
+export function cast_de_svws_nrw_core_types_fach_SprachBelegungSekI(obj : unknown) : SprachBelegungSekI {
 	return obj as SprachBelegungSekI;
 }

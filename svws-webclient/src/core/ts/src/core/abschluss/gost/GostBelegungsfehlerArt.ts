@@ -150,11 +150,11 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegungsfehlerArt'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehlerArt(obj : unknown) : GostBelegungsfehlerArt {
+export function cast_de_svws_nrw_core_abschluss_gost_GostBelegungsfehlerArt(obj : unknown) : GostBelegungsfehlerArt {
 	return obj as GostBelegungsfehlerArt;
 }

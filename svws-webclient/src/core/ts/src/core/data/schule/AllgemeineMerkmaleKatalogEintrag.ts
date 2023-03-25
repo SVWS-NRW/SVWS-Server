@@ -102,7 +102,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): AllgemeineMerkmaleKatalogEintrag {
@@ -208,6 +208,6 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_AllgemeineMerkmaleKatalogEintrag(obj : unknown) : AllgemeineMerkmaleKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_AllgemeineMerkmaleKatalogEintrag(obj : unknown) : AllgemeineMerkmaleKatalogEintrag {
 	return obj as AllgemeineMerkmaleKatalogEintrag;
 }

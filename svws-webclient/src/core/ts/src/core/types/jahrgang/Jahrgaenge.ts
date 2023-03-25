@@ -450,11 +450,11 @@ export class Jahrgaenge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge'].includes(name);
+		return ['de.svws_nrw.core.types.jahrgang.Jahrgaenge'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge(obj : unknown) : Jahrgaenge {
+export function cast_de_svws_nrw_core_types_jahrgang_Jahrgaenge(obj : unknown) : Jahrgaenge {
 	return obj as Jahrgaenge;
 }

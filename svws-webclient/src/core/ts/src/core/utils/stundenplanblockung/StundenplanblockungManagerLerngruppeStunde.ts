@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { StundenplanblockungManagerLerngruppe, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
+import { StundenplanblockungManagerLerngruppe, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 
 export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 
@@ -46,11 +46,11 @@ export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppeStunde(obj : unknown) : StundenplanblockungManagerLerngruppeStunde {
+export function cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppeStunde(obj : unknown) : StundenplanblockungManagerLerngruppeStunde {
 	return obj as StundenplanblockungManagerLerngruppeStunde;
 }

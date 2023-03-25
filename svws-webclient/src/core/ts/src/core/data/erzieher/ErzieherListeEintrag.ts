@@ -43,7 +43,7 @@ export class ErzieherListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.erzieher.ErzieherListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.erzieher.ErzieherListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ErzieherListeEintrag {
@@ -107,6 +107,6 @@ export class ErzieherListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_erzieher_ErzieherListeEintrag(obj : unknown) : ErzieherListeEintrag {
+export function cast_de_svws_nrw_core_data_erzieher_ErzieherListeEintrag(obj : unknown) : ErzieherListeEintrag {
 	return obj as ErzieherListeEintrag;
 }

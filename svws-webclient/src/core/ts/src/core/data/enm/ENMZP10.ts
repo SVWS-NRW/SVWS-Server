@@ -43,7 +43,7 @@ export class ENMZP10 extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMZP10'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMZP10'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMZP10 {
@@ -109,6 +109,6 @@ export class ENMZP10 extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMZP10(obj : unknown) : ENMZP10 {
+export function cast_de_svws_nrw_core_data_enm_ENMZP10(obj : unknown) : ENMZP10 {
 	return obj as ENMZP10;
 }

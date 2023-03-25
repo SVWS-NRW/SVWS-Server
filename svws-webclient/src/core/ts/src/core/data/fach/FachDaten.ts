@@ -28,7 +28,7 @@ export class FachDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.fach.FachDaten'].includes(name);
+		return ['de.svws_nrw.core.data.fach.FachDaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): FachDaten {
@@ -75,6 +75,6 @@ export class FachDaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_fach_FachDaten(obj : unknown) : FachDaten {
+export function cast_de_svws_nrw_core_data_fach_FachDaten(obj : unknown) : FachDaten {
 	return obj as FachDaten;
 }

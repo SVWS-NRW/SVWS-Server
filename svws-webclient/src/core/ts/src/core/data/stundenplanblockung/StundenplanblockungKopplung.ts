@@ -25,7 +25,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKopplung'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungKopplung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanblockungKopplung {
@@ -95,6 +95,6 @@ export class StundenplanblockungKopplung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKopplung(obj : unknown) : StundenplanblockungKopplung {
+export function cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungKopplung(obj : unknown) : StundenplanblockungKopplung {
 	return obj as StundenplanblockungKopplung;
 }

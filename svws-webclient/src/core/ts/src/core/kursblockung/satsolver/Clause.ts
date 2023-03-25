@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { Comparable } from '../../../java/lang/Comparable';
-import { Variable, cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
+import { Variable, cast_de_svws_nrw_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 
@@ -53,21 +53,21 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	 */
 	public constructor(__param0 : Variable, __param1? : Variable, __param2? : Variable) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+			const pX : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param0);
 			this.variables = [pX];
 			this.free = 1;
 			this.sat = 0;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && (typeof __param2 === "undefined")) {
-			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
-			const pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable')))) && (typeof __param2 === "undefined")) {
+			const pX : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param0);
+			const pY : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param1);
 			this.variables = [pX, pY];
 			this.free = 2;
 			this.sat = 0;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.kursblockung.satsolver.Variable'))))) {
-			const pX : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param0);
-			const pY : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param1);
-			const pZ : Variable = cast_de_nrw_schule_svws_core_kursblockung_satsolver_Variable(__param2);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Variable'))))) {
+			const pX : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param0);
+			const pY : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param1);
+			const pZ : Variable = cast_de_svws_nrw_core_kursblockung_satsolver_Variable(__param2);
 			this.variables = [pX, pY, pZ];
 			this.free = 3;
 			this.sat = 0;
@@ -117,11 +117,11 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Comparable', 'de.nrw.schule.svws.core.kursblockung.satsolver.Clause'].includes(name);
+		return ['java.lang.Comparable', 'de.svws_nrw.core.kursblockung.satsolver.Clause'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_Clause(obj : unknown) : Clause {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_Clause(obj : unknown) : Clause {
 	return obj as Clause;
 }

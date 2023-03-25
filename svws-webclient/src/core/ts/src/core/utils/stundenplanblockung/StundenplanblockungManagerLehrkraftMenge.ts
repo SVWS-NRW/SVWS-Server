@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
-import { StundenplanblockungManagerLehrkraft, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
+import { StundenplanblockungManagerLehrkraft, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { Vector } from '../../../java/util/Vector';
 
@@ -108,11 +108,11 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraftMenge'].includes(name);
+		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraftMenge'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraftMenge(obj : unknown) : StundenplanblockungManagerLehrkraftMenge {
+export function cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraftMenge(obj : unknown) : StundenplanblockungManagerLehrkraftMenge {
 	return obj as StundenplanblockungManagerLehrkraftMenge;
 }

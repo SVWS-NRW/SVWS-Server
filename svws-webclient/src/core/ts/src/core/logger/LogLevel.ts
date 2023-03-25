@@ -147,11 +147,11 @@ export class LogLevel extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.logger.LogLevel'].includes(name);
+		return ['de.svws_nrw.core.logger.LogLevel'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_logger_LogLevel(obj : unknown) : LogLevel {
+export function cast_de_svws_nrw_core_logger_LogLevel(obj : unknown) : LogLevel {
 	return obj as LogLevel;
 }

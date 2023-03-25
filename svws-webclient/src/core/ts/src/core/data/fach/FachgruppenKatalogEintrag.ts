@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector } from '../../../java/util/Vector';
-import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../core/data/RGBFarbe';
+import { RGBFarbe, cast_de_svws_nrw_core_data_RGBFarbe } from '../../../core/data/RGBFarbe';
 
 export class FachgruppenKatalogEintrag extends JavaObject {
 
@@ -92,13 +92,13 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "number") || (__param1 === null)) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.RGBFarbe')))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number")) && ((typeof __param8 !== "undefined") && typeof __param8 === "boolean") && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "number") || (__param1 === null)) && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.svws_nrw.core.data.RGBFarbe')))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number")) && ((typeof __param8 !== "undefined") && typeof __param8 === "boolean") && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
 			const id : number = __param0 as number;
 			const nummer : number | null = __param1;
 			const idSchild : number | null = __param2;
 			const bezeichnung : string = __param3;
 			const kuerzel : string = __param4;
-			const farbe : RGBFarbe = cast_de_nrw_schule_svws_core_data_RGBFarbe(__param5);
+			const farbe : RGBFarbe = cast_de_svws_nrw_core_data_RGBFarbe(__param5);
 			const schulformen : List<Schulform> = cast_java_util_List(__param6);
 			const sortierung : number = __param7;
 			const fuerZeugnis : boolean = __param8 as boolean;
@@ -120,7 +120,7 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.fach.FachgruppenKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): FachgruppenKatalogEintrag {
@@ -238,6 +238,6 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_fach_FachgruppenKatalogEintrag(obj : unknown) : FachgruppenKatalogEintrag {
+export function cast_de_svws_nrw_core_data_fach_FachgruppenKatalogEintrag(obj : unknown) : FachgruppenKatalogEintrag {
 	return obj as FachgruppenKatalogEintrag;
 }

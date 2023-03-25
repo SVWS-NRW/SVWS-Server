@@ -937,11 +937,11 @@ export class Schulgliederung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.schule.Schulgliederung'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Schulgliederung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(obj : unknown) : Schulgliederung {
+export function cast_de_svws_nrw_core_types_schule_Schulgliederung(obj : unknown) : Schulgliederung {
 	return obj as Schulgliederung;
 }

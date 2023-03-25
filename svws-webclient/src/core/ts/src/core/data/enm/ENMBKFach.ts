@@ -63,7 +63,7 @@ export class ENMBKFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMBKFach'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMBKFach'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMBKFach {
@@ -155,6 +155,6 @@ export class ENMBKFach extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMBKFach(obj : unknown) : ENMBKFach {
+export function cast_de_svws_nrw_core_data_enm_ENMBKFach(obj : unknown) : ENMBKFach {
 	return obj as ENMBKFach;
 }

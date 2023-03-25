@@ -375,11 +375,11 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAAnschlussoptionen'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAAnschlussoptionen(obj : unknown) : KAOAAnschlussoptionen {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAAnschlussoptionen(obj : unknown) : KAOAAnschlussoptionen {
 	return obj as KAOAAnschlussoptionen;
 }

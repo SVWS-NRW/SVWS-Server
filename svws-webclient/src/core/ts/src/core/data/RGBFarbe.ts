@@ -63,7 +63,7 @@ export class RGBFarbe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.RGBFarbe'].includes(name);
+		return ['de.svws_nrw.core.data.RGBFarbe'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): RGBFarbe {
@@ -109,6 +109,6 @@ export class RGBFarbe extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_RGBFarbe(obj : unknown) : RGBFarbe {
+export function cast_de_svws_nrw_core_data_RGBFarbe(obj : unknown) : RGBFarbe {
 	return obj as RGBFarbe;
 }

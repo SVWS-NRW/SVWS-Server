@@ -164,11 +164,11 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.kaoa.KAOAZusatzmerkmaleOptionsarten'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmaleOptionsarten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzmerkmaleOptionsarten(obj : unknown) : KAOAZusatzmerkmaleOptionsarten {
+export function cast_de_svws_nrw_core_types_kaoa_KAOAZusatzmerkmaleOptionsarten(obj : unknown) : KAOAZusatzmerkmaleOptionsarten {
 	return obj as KAOAZusatzmerkmaleOptionsarten;
 }

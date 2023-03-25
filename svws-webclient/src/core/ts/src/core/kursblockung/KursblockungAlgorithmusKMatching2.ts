@@ -1,7 +1,7 @@
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
-import { KursblockungAlgorithmusK, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
+import { KursblockungAlgorithmusK, cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
@@ -86,11 +86,11 @@ export class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusKMatching2', 'de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKMatching2', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusKMatching2(obj : unknown) : KursblockungAlgorithmusKMatching2 {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusKMatching2(obj : unknown) : KursblockungAlgorithmusKMatching2 {
 	return obj as KursblockungAlgorithmusKMatching2;
 }

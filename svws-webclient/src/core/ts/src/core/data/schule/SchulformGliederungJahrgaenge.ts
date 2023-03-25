@@ -25,7 +25,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.SchulformGliederungJahrgaenge'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulformGliederungJahrgaenge {
@@ -93,6 +93,6 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_SchulformGliederungJahrgaenge(obj : unknown) : SchulformGliederungJahrgaenge {
+export function cast_de_svws_nrw_core_data_schule_SchulformGliederungJahrgaenge(obj : unknown) : SchulformGliederungJahrgaenge {
 	return obj as SchulformGliederungJahrgaenge;
 }

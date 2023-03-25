@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
-import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
@@ -60,11 +60,11 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Iterator', 'de.nrw.schule.svws.core.adt.collection.LinkedCollectionIterator'].includes(name);
+		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionIterator'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_collection_LinkedCollectionIterator<E>(obj : unknown) : LinkedCollectionIterator<E> {
+export function cast_de_svws_nrw_core_adt_collection_LinkedCollectionIterator<E>(obj : unknown) : LinkedCollectionIterator<E> {
 	return obj as LinkedCollectionIterator<E>;
 }

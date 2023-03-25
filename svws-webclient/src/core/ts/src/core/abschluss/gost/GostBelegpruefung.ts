@@ -138,11 +138,11 @@ export abstract class GostBelegpruefung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefung(obj : unknown) : GostBelegpruefung {
+export function cast_de_svws_nrw_core_abschluss_gost_GostBelegpruefung(obj : unknown) : GostBelegpruefung {
 	return obj as GostBelegpruefung;
 }

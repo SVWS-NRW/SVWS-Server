@@ -68,7 +68,7 @@ export class GostKlausurvorgabe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurvorgabe'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurvorgabe {
@@ -175,6 +175,6 @@ export class GostKlausurvorgabe extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurvorgabe(obj : unknown) : GostKlausurvorgabe {
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurvorgabe(obj : unknown) : GostKlausurvorgabe {
 	return obj as GostKlausurvorgabe;
 }

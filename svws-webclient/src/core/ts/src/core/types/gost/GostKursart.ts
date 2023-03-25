@@ -391,11 +391,11 @@ export class GostKursart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.gost.GostKursart'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostKursart'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_gost_GostKursart(obj : unknown) : GostKursart {
+export function cast_de_svws_nrw_core_types_gost_GostKursart(obj : unknown) : GostKursart {
 	return obj as GostKursart;
 }

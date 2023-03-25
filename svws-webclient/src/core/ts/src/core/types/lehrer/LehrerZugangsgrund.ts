@@ -197,11 +197,11 @@ export class LehrerZugangsgrund extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.lehrer.LehrerZugangsgrund'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerZugangsgrund'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_lehrer_LehrerZugangsgrund(obj : unknown) : LehrerZugangsgrund {
+export function cast_de_svws_nrw_core_types_lehrer_LehrerZugangsgrund(obj : unknown) : LehrerZugangsgrund {
 	return obj as LehrerZugangsgrund;
 }

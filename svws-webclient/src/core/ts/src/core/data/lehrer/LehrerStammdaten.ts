@@ -113,7 +113,7 @@ export class LehrerStammdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.lehrer.LehrerStammdaten'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerStammdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): LehrerStammdaten {
@@ -255,6 +255,6 @@ export class LehrerStammdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_lehrer_LehrerStammdaten(obj : unknown) : LehrerStammdaten {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerStammdaten(obj : unknown) : LehrerStammdaten {
 	return obj as LehrerStammdaten;
 }

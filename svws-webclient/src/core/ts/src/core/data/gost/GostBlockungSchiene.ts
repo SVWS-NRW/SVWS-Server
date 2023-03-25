@@ -28,7 +28,7 @@ export class GostBlockungSchiene extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostBlockungSchiene'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostBlockungSchiene'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungSchiene {
@@ -81,6 +81,6 @@ export class GostBlockungSchiene extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene(obj : unknown) : GostBlockungSchiene {
+export function cast_de_svws_nrw_core_data_gost_GostBlockungSchiene(obj : unknown) : GostBlockungSchiene {
 	return obj as GostBlockungSchiene;
 }

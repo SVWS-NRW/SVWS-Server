@@ -66,7 +66,7 @@ export class ReligionKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.ReligionKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ReligionKatalogEintrag {
@@ -122,6 +122,6 @@ export class ReligionKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schule_ReligionKatalogEintrag(obj : unknown) : ReligionKatalogEintrag {
+export function cast_de_svws_nrw_core_data_schule_ReligionKatalogEintrag(obj : unknown) : ReligionKatalogEintrag {
 	return obj as ReligionKatalogEintrag;
 }

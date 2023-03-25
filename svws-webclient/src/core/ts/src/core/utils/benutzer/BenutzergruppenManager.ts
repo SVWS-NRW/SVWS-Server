@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { BenutzergruppeDaten, cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
+import { BenutzergruppeDaten, cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
@@ -48,8 +48,8 @@ export class BenutzergruppenManager extends JavaObject {
 			this._daten.id = id;
 			this._daten.bezeichnung = bezeichnung;
 			this._daten.istAdmin = false;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
-			const pDaten : BenutzergruppeDaten = cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
+			const pDaten : BenutzergruppeDaten = cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten(__param0);
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
 				if (kID === null)
@@ -194,11 +194,11 @@ export class BenutzergruppenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.benutzer.BenutzergruppenManager'].includes(name);
+		return ['de.svws_nrw.core.utils.benutzer.BenutzergruppenManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_benutzer_BenutzergruppenManager(obj : unknown) : BenutzergruppenManager {
+export function cast_de_svws_nrw_core_utils_benutzer_BenutzergruppenManager(obj : unknown) : BenutzergruppenManager {
 	return obj as BenutzergruppenManager;
 }

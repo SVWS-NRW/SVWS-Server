@@ -158,11 +158,11 @@ export class Heap extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.satsolver.Heap'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.satsolver.Heap'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_satsolver_Heap(obj : unknown) : Heap {
+export function cast_de_svws_nrw_core_kursblockung_satsolver_Heap(obj : unknown) : Heap {
 	return obj as Heap;
 }

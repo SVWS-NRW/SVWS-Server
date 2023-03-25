@@ -216,7 +216,7 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.SortedSet', 'java.util.Collection', 'de.nrw.schule.svws.core.adt.set.AVLSet', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable'].includes(name);
+		return ['de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<E> {
@@ -233,6 +233,6 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_set_AVLSet<E>(obj : unknown) : AVLSet<E> {
+export function cast_de_svws_nrw_core_adt_set_AVLSet<E>(obj : unknown) : AVLSet<E> {
 	return obj as AVLSet<E>;
 }

@@ -48,7 +48,7 @@ export class JahrgangsListeEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.jahrgang.JahrgangsListeEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): JahrgangsListeEintrag {
@@ -119,6 +119,6 @@ export class JahrgangsListeEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsListeEintrag(obj : unknown) : JahrgangsListeEintrag {
+export function cast_de_svws_nrw_core_data_jahrgang_JahrgangsListeEintrag(obj : unknown) : JahrgangsListeEintrag {
 	return obj as JahrgangsListeEintrag;
 }

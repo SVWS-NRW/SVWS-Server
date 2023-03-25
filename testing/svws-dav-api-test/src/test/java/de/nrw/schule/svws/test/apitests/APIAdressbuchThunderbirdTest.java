@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.test.apitests;
+package de.svws_nrw.test.apitests;
 
 public class APIAdressbuchThunderbirdTest {
 

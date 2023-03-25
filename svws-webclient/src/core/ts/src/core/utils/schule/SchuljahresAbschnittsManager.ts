@@ -108,11 +108,11 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.schule.SchuljahresAbschnittsManager'].includes(name);
+		return ['de.svws_nrw.core.utils.schule.SchuljahresAbschnittsManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_schule_SchuljahresAbschnittsManager(obj : unknown) : SchuljahresAbschnittsManager {
+export function cast_de_svws_nrw_core_utils_schule_SchuljahresAbschnittsManager(obj : unknown) : SchuljahresAbschnittsManager {
 	return obj as SchuljahresAbschnittsManager;
 }

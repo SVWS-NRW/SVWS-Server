@@ -275,11 +275,11 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion', 'de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_GesellschaftswissenschaftenUndReligion(obj : unknown) : GesellschaftswissenschaftenUndReligion {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_GesellschaftswissenschaftenUndReligion(obj : unknown) : GesellschaftswissenschaftenUndReligion {
 	return obj as GesellschaftswissenschaftenUndReligion;
 }

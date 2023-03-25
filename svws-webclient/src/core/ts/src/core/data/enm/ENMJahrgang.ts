@@ -38,7 +38,7 @@ export class ENMJahrgang extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMJahrgang'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMJahrgang'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMJahrgang {
@@ -97,6 +97,6 @@ export class ENMJahrgang extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMJahrgang(obj : unknown) : ENMJahrgang {
+export function cast_de_svws_nrw_core_data_enm_ENMJahrgang(obj : unknown) : ENMJahrgang {
 	return obj as ENMJahrgang;
 }

@@ -641,11 +641,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungDynDaten'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.KlausurterminblockungDynDaten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungDynDaten(obj : unknown) : KlausurterminblockungDynDaten {
+export function cast_de_svws_nrw_core_utils_klausurplan_KlausurterminblockungDynDaten(obj : unknown) : KlausurterminblockungDynDaten {
 	return obj as KlausurterminblockungDynDaten;
 }

@@ -130,7 +130,7 @@ export class KursartKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kurse.KursartKatalogEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KursartKatalogEintrag {
@@ -246,6 +246,6 @@ export class KursartKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kurse_KursartKatalogEintrag(obj : unknown) : KursartKatalogEintrag {
+export function cast_de_svws_nrw_core_data_kurse_KursartKatalogEintrag(obj : unknown) : KursartKatalogEintrag {
 	return obj as KursartKatalogEintrag;
 }

@@ -16,11 +16,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Throwable', 'de.nrw.schule.svws.core.exceptions.DeveloperNotificationException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
+		return ['java.lang.Throwable', 'de.svws_nrw.core.exceptions.DeveloperNotificationException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException(obj : unknown) : DeveloperNotificationException {
+export function cast_de_svws_nrw_core_exceptions_DeveloperNotificationException(obj : unknown) : DeveloperNotificationException {
 	return obj as DeveloperNotificationException;
 }

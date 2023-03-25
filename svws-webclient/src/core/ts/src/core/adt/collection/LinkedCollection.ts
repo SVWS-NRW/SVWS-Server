@@ -59,8 +59,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 			this._tail = null;
 			this._size = 0;
 			this._modCount = 0;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null))) {
-			const c : LinkedCollection<E> | null = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null))) {
+			const c : LinkedCollection<E> | null = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			this._size = 0;
 			this._modCount = 0;
 			const iter : JavaIterator<E> = c.iterator();
@@ -213,8 +213,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public addAll(c : Collection<E> | null) : boolean {
 		if ((c === null) || (c.size() === 0))
 			return false;
-		if (((c instanceof JavaObject) && (c.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection')))) {
-			const coll : LinkedCollection<E> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(c);
+		if (((c instanceof JavaObject) && (c.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection')))) {
+			const coll : LinkedCollection<E> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(c);
 			if ((coll._tail === null) || (coll._head === null))
 				throw new NullPointerException()
 			const last : LinkedCollectionElement<E> = coll._tail;
@@ -636,7 +636,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Cloneable', 'java.util.Collection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable', 'de.nrw.schule.svws.core.adt.collection.LinkedCollection'].includes(name);
+		return ['java.lang.Cloneable', 'java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<E> {
@@ -653,6 +653,6 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection<E>(obj : unknown) : LinkedCollection<E> {
+export function cast_de_svws_nrw_core_adt_collection_LinkedCollection<E>(obj : unknown) : LinkedCollection<E> {
 	return obj as LinkedCollection<E>;
 }

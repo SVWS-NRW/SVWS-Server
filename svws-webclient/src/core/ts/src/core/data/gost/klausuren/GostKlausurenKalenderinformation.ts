@@ -48,7 +48,7 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurenKalenderinformation'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurenKalenderinformation'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurenKalenderinformation {
@@ -117,6 +117,6 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKlausurenKalenderinformation(obj : unknown) : GostKlausurenKalenderinformation {
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurenKalenderinformation(obj : unknown) : GostKlausurenKalenderinformation {
 	return obj as GostKlausurenKalenderinformation;
 }

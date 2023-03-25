@@ -122,11 +122,11 @@ export class GostFachManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostFachManager'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostFachManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_GostFachManager(obj : unknown) : GostFachManager {
+export function cast_de_svws_nrw_core_abschluss_gost_GostFachManager(obj : unknown) : GostFachManager {
 	return obj as GostFachManager;
 }

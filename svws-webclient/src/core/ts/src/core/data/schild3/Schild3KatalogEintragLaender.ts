@@ -33,7 +33,7 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragLaender'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragLaender'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragLaender {
@@ -83,6 +83,6 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender(obj : unknown) : Schild3KatalogEintragLaender {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragLaender(obj : unknown) : Schild3KatalogEintragLaender {
 	return obj as Schild3KatalogEintragLaender;
 }

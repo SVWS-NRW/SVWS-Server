@@ -47,11 +47,11 @@ export class Deutsch extends GostBelegpruefung {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung', 'de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Deutsch'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Deutsch(obj : unknown) : Deutsch {
+export function cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Deutsch(obj : unknown) : Deutsch {
 	return obj as Deutsch;
 }

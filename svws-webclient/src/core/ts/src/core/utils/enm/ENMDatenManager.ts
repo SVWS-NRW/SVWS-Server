@@ -9,7 +9,7 @@ import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
-import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
+import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
 import { Note } from '../../../core/types/Note';
 import { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
@@ -87,8 +87,8 @@ export class ENMDatenManager extends JavaObject {
 			const lehrerID : number | null = __param0;
 			this.daten = new ENMDaten();
 			this.daten.lehrerID = lehrerID;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.enm.ENMDaten'))))) {
-			const daten : ENMDaten = cast_de_nrw_schule_svws_core_data_enm_ENMDaten(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.enm.ENMDaten'))))) {
+			const daten : ENMDaten = cast_de_svws_nrw_core_data_enm_ENMDaten(__param0);
 			this.daten = daten;
 		} else throw new Error('invalid method overload');
 	}
@@ -512,11 +512,11 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.enm.ENMDatenManager'].includes(name);
+		return ['de.svws_nrw.core.utils.enm.ENMDatenManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_enm_ENMDatenManager(obj : unknown) : ENMDatenManager {
+export function cast_de_svws_nrw_core_utils_enm_ENMDatenManager(obj : unknown) : ENMDatenManager {
 	return obj as ENMDatenManager;
 }

@@ -135,11 +135,11 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.KursblockungDynSchiene'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchiene'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchiene(obj : unknown) : KursblockungDynSchiene {
+export function cast_de_svws_nrw_core_kursblockung_KursblockungDynSchiene(obj : unknown) : KursblockungDynSchiene {
 	return obj as KursblockungDynSchiene;
 }

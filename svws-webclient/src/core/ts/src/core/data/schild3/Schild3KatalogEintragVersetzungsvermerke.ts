@@ -48,7 +48,7 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragVersetzungsvermerke {
@@ -113,6 +113,6 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragVersetzungsvermerke(obj : unknown) : Schild3KatalogEintragVersetzungsvermerke {
+export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragVersetzungsvermerke(obj : unknown) : Schild3KatalogEintragVersetzungsvermerke {
 	return obj as Schild3KatalogEintragVersetzungsvermerke;
 }

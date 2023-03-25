@@ -202,11 +202,11 @@ export class AbgangsartenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.schule.AbgangsartenManager'].includes(name);
+		return ['de.svws_nrw.core.utils.schule.AbgangsartenManager'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_schule_AbgangsartenManager(obj : unknown) : AbgangsartenManager {
+export function cast_de_svws_nrw_core_utils_schule_AbgangsartenManager(obj : unknown) : AbgangsartenManager {
 	return obj as AbgangsartenManager;
 }

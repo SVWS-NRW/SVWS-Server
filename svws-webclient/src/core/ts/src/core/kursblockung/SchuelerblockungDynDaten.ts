@@ -355,11 +355,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.kursblockung.SchuelerblockungDynDaten'].includes(name);
+		return ['de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungDynDaten(obj : unknown) : SchuelerblockungDynDaten {
+export function cast_de_svws_nrw_core_kursblockung_SchuelerblockungDynDaten(obj : unknown) : SchuelerblockungDynDaten {
 	return obj as SchuelerblockungDynDaten;
 }

@@ -219,11 +219,11 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
+		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_abschluss_ge_AbschlussFaecherGruppe(obj : unknown) : AbschlussFaecherGruppe {
+export function cast_de_svws_nrw_core_abschluss_ge_AbschlussFaecherGruppe(obj : unknown) : AbschlussFaecherGruppe {
 	return obj as AbschlussFaecherGruppe;
 }

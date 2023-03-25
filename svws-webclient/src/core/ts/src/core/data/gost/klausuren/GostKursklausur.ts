@@ -110,7 +110,7 @@ export class GostKursklausur extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausuren.GostKursklausur'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostKursklausur {
@@ -314,6 +314,6 @@ export class GostKursklausur extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_klausuren_GostKursklausur(obj : unknown) : GostKursklausur {
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(obj : unknown) : GostKursklausur {
 	return obj as GostKursklausur;
 }

@@ -28,7 +28,7 @@ export class ENMNote extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.enm.ENMNote'].includes(name);
+		return ['de.svws_nrw.core.data.enm.ENMNote'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): ENMNote {
@@ -75,6 +75,6 @@ export class ENMNote extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_enm_ENMNote(obj : unknown) : ENMNote {
+export function cast_de_svws_nrw_core_data_enm_ENMNote(obj : unknown) : ENMNote {
 	return obj as ENMNote;
 }

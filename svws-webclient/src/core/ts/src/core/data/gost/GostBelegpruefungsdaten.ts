@@ -21,7 +21,7 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostBelegpruefungsdaten'].includes(name);
+		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsdaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungsdaten {
@@ -82,6 +82,6 @@ export class GostBelegpruefungsdaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostBelegpruefungsdaten(obj : unknown) : GostBelegpruefungsdaten {
+export function cast_de_svws_nrw_core_data_gost_GostBelegpruefungsdaten(obj : unknown) : GostBelegpruefungsdaten {
 	return obj as GostBelegpruefungsdaten;
 }

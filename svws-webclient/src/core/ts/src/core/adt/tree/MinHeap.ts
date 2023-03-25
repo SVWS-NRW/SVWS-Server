@@ -84,8 +84,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 			this._comparator = comparator;
 			this._initialCapacity = 63;
 			this._modCount = 0;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.tree.MinHeap'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
-			const original : MinHeap<T> = cast_de_nrw_schule_svws_core_adt_tree_MinHeap(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+			const original : MinHeap<T> = cast_de_svws_nrw_core_adt_tree_MinHeap(__param0);
 			this._comparator = original._comparator;
 			this._initialCapacity = original._initialCapacity;
 			this._nodes = Arrays.copyOf(original._nodes, original._nodes.length);
@@ -366,8 +366,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 			return true;
 		if (obj === null)
 			return false;
-		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.tree.MinHeap')))) {
-			const other : MinHeap<unknown> | null = cast_de_nrw_schule_svws_core_adt_tree_MinHeap(obj);
+		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap')))) {
+			const other : MinHeap<unknown> | null = cast_de_svws_nrw_core_adt_tree_MinHeap(obj);
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
 		}
 		return false;
@@ -540,7 +540,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Cloneable', 'de.nrw.schule.svws.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
+		return ['java.lang.Cloneable', 'de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<T> {
@@ -557,6 +557,6 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
 }
 
-export function cast_de_nrw_schule_svws_core_adt_tree_MinHeap<T>(obj : unknown) : MinHeap<T> {
+export function cast_de_svws_nrw_core_adt_tree_MinHeap<T>(obj : unknown) : MinHeap<T> {
 	return obj as MinHeap<T>;
 }

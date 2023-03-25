@@ -1,4 +1,4 @@
-open module de.nrw.schule.svws.core {
+open module de.svws_nrw.core {
 	requires java.base;
 	requires java.xml.bind;
 	
@@ -9,15 +9,15 @@ open module de.nrw.schule.svws.core {
 	requires io.swagger.v3.jaxrs2;
 	requires io.swagger.v3.oas.annotations;
 	
-	exports de.nrw.schule.svws.core;
-	exports de.nrw.schule.svws.core.abschluss;
-	exports de.nrw.schule.svws.core.abschluss.bk.a;
-	exports de.nrw.schule.svws.core.abschluss.ge;
-	exports de.nrw.schule.svws.core.abschluss.gost;
-	exports de.nrw.schule.svws.core.abschluss.gost.abitur.services;
-	exports de.nrw.schule.svws.core.abschluss.gost.belegpruefung;
-	exports de.nrw.schule.svws.core.shell;
-	exports de.nrw.schule.svws.core.types;
-	exports de.nrw.schule.svws.core.types.gost;
-	exports de.nrw.schule.svws.core.logger;
+	exports de.svws_nrw.core;
+	exports de.svws_nrw.core.abschluss;
+	exports de.svws_nrw.core.abschluss.bk.a;
+	exports de.svws_nrw.core.abschluss.ge;
+	exports de.svws_nrw.core.abschluss.gost;
+	exports de.svws_nrw.core.abschluss.gost.abitur.services;
+	exports de.svws_nrw.core.abschluss.gost.belegpruefung;
+	exports de.svws_nrw.core.shell;
+	exports de.svws_nrw.core.types;
+	exports de.svws_nrw.core.types.gost;
+	exports de.svws_nrw.core.logger;
 }

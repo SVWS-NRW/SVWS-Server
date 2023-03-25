@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { KAOAKategorie, cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
+import { KAOAKategorie, cast_de_svws_nrw_core_types_kaoa_KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { KAOAMerkmaleOptionsarten, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
+import { KAOAMerkmaleOptionsarten, cast_de_svws_nrw_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
 import { Vector } from '../../../java/util/Vector';
 
 export class KAOAMerkmalEintrag extends JavaObject {
@@ -75,12 +75,12 @@ export class KAOAMerkmalEintrag extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.kaoa.KAOAKategorie')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.kaoa.KAOAMerkmaleOptionsarten')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.svws_nrw.core.types.kaoa.KAOAKategorie')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.kaoa.KAOAMerkmaleOptionsarten')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
 			const id : number = __param0 as number;
 			const kuerzel : string = __param1;
 			const beschreibung : string = __param2;
-			const kategorie : KAOAKategorie = cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie(__param3);
-			const optionsart : KAOAMerkmaleOptionsarten = cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten(__param4);
+			const kategorie : KAOAKategorie = cast_de_svws_nrw_core_types_kaoa_KAOAKategorie(__param3);
+			const optionsart : KAOAMerkmaleOptionsarten = cast_de_svws_nrw_core_types_kaoa_KAOAMerkmaleOptionsarten(__param4);
 			const bkAnlagen : List<Schulgliederung> = cast_java_util_List(__param5);
 			const gueltigVon : number | null = __param6;
 			const gueltigBis : number | null = __param7;
@@ -100,7 +100,7 @@ export class KAOAMerkmalEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.kaoa.KAOAMerkmalEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.kaoa.KAOAMerkmalEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): KAOAMerkmalEintrag {
@@ -199,6 +199,6 @@ export class KAOAMerkmalEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_kaoa_KAOAMerkmalEintrag(obj : unknown) : KAOAMerkmalEintrag {
+export function cast_de_svws_nrw_core_data_kaoa_KAOAMerkmalEintrag(obj : unknown) : KAOAMerkmalEintrag {
 	return obj as KAOAMerkmalEintrag;
 }

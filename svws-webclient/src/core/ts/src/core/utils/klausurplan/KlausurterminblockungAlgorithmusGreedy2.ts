@@ -36,11 +36,11 @@ export class KlausurterminblockungAlgorithmusGreedy2 extends Klausurterminblocku
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy2', 'de.nrw.schule.svws.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract'].includes(name);
+		return ['de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusAbstract', 'de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusGreedy2'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2(obj : unknown) : KlausurterminblockungAlgorithmusGreedy2 {
+export function cast_de_svws_nrw_core_utils_klausurplan_KlausurterminblockungAlgorithmusGreedy2(obj : unknown) : KlausurterminblockungAlgorithmusGreedy2 {
 	return obj as KlausurterminblockungAlgorithmusGreedy2;
 }

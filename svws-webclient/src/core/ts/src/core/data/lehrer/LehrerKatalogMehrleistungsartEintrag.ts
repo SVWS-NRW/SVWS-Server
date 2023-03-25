@@ -66,7 +66,7 @@ export class LehrerKatalogMehrleistungsartEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): LehrerKatalogMehrleistungsartEintrag {
@@ -122,6 +122,6 @@ export class LehrerKatalogMehrleistungsartEintrag extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogMehrleistungsartEintrag(obj : unknown) : LehrerKatalogMehrleistungsartEintrag {
+export function cast_de_svws_nrw_core_data_lehrer_LehrerKatalogMehrleistungsartEintrag(obj : unknown) : LehrerKatalogMehrleistungsartEintrag {
 	return obj as LehrerKatalogMehrleistungsartEintrag;
 }
