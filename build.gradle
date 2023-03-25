@@ -32,7 +32,7 @@ allprojects {
 
 	version = config.project.version
 	project.ext.latestRelease = config.project.'latest-release'
-	group = 'de.svws_nrw'
+	group = 'de.svws-nrw'
 
 	svwsmavenrepo {
 		//nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
