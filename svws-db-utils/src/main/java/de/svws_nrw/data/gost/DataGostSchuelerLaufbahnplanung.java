@@ -1,7 +1,5 @@
 package de.svws_nrw.data.gost;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -383,7 +382,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
-		return JSONMapper.gzipFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
+		return JSONMapper.gzipFileResponseFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
 	}
 
 	/**
@@ -661,9 +660,8 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		// Importiere die Daten...
 		GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
 		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(data);
-			laufbahnplanungsdaten = JSONMapper.toObjectGZip(bais, GostLaufbahnplanungDaten.class);
-		} catch(IOException e) {
+			laufbahnplanungsdaten = JSONMapper.toObjectGZip(data, GostLaufbahnplanungDaten.class);
+		} catch(CompressionException e) {
 			logger.log("Fehler beim Öffnen der Datei.");
 			logger.log("Fehlernachricht: " + e.getMessage());
 		}

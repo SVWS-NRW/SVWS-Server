@@ -8,17 +8,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.base.compression.GZip;
+import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.StreamingOutput;
 
 /**
  * Diese Klasse enthält Routinen für das Mapping von einfachen Datentypen in das JSON-Format 
@@ -407,7 +407,20 @@ public class JSONMapper {
 	public static Response fromInteger(Integer data) {
 		return Response.ok((data == null) ? null : data.toString(), MediaType.APPLICATION_JSON).build();
 	}
-	
+
+	/**
+	 * Konvertiert das Object in ein byte-Array mit dem GZIP-komprimierten JSON-String.
+	 *
+	 * @param obj        das nach JSON zu serialisierende Objekt
+	 *
+	 * @return die Response
+	 *
+	 * @throws CompressionException   falls ein Fehler beim Komprimieren auftritt 
+	 */
+	public static byte[] gzipByteArrayFromObject(Object obj) throws CompressionException {
+		return GZip.encodeData(gzipOut -> mapper.writeValue(gzipOut, obj));
+	}
+
 	/**
 	 * Konvertiert das Object in eine {@link Response} mit einer GZIP-komprimierten JSON-Datei.
 	 *
@@ -416,35 +429,35 @@ public class JSONMapper {
 	 *
 	 * @return die Response
 	 */
-	public static Response gzipFromObject(Object obj, String filename) {
-		return Response.ok((StreamingOutput) output -> {
-			try {
-				GZIPOutputStream gzipOut = new GZIPOutputStream(output);
-				mapper.writeValue(gzipOut, obj);
-				output.flush();
-			} catch (Exception e) { e.printStackTrace(); }
-        }).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
+	public static Response gzipFileResponseFromObject(Object obj, String filename) {
+		try {
+			return Response.ok(gzipByteArrayFromObject(obj)).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
+		} catch (CompressionException ce) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(ce);
+		}
 	}
 
 
 	/**
-	 * Wandelt die JSON-Daten aus dem {@link InputStream}, welche GZip-komprimiert sein müssen
+	 * Wandelt die JSON-Daten, welche GZip-komprimiert sein müssen,
 	 * in das Object vom Typ T um
 	 *  
 	 * @param <T>         der Typ des Objekts
-	 * @param in          der Input-Stream mit dem JSON-Input
+	 * @param encoded     die komprimierten JSON-Daten
 	 * @param valueType   die Klasse des Typs T
 	 * 
 	 * @return das Object vom Typ T
 	 *
-	 * @throws IOException falls beim deserialisieren aus dem Input-Stream ein Fehler auftritt. 
+	 * @throws CompressionException falls beim Dekomprimieren der Daten ein Fehler auftritt. 
 	 */
-	public static <T> T toObjectGZip(InputStream in, Class<T> valueType) throws IOException {
+	public static <T> T toObjectGZip(byte[] encoded, Class<T> valueType) throws CompressionException {
 		try {
-			GZIPInputStream gzipIn = new GZIPInputStream(in); 
-			return mapper.readValue(gzipIn, valueType);
-		} catch (IOException e) {
-			throw new IOException("Fehler beim Deserialisieren der JSON-Daten aus dem übergebenen InputStream.", e);
+			byte[] daten = GZip.decode(encoded);
+			return mapper.readValue(daten, valueType);
+		} catch (IOException | CompressionException e) {
+			if (e instanceof CompressionException ce)
+				throw ce;
+			throw new CompressionException("Fehler beim Deserialisieren der JSON-Daten.", e);
 		}
 	}
 

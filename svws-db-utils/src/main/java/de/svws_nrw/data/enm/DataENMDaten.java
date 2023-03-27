@@ -65,7 +65,7 @@ public class DataENMDaten extends DataManager<Long> {
 	 */
 	public Response getAllGZip() {
 		ENMDaten daten = getDaten(null);
-		return JSONMapper.gzipFromObject(daten, "enm.json.gz");
+		return JSONMapper.gzipFileResponseFromObject(daten, "enm.json.gz");
 	}
 
 	@Override
