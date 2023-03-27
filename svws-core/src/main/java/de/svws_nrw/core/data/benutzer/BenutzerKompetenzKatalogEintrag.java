@@ -30,7 +30,7 @@ public class BenutzerKompetenzKatalogEintrag {
 	
 	/** Die Schulformen. */
     @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example="Liste")
-	public @NotNull Schulform@NotNull[] nurSchulformen;
+	public @NotNull Schulform@NotNull[] nurSchulformen = null;
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
 	 */
@@ -53,6 +53,11 @@ public class BenutzerKompetenzKatalogEintrag {
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id; 
 		this.nurSchulformen = schulFormen;
+	}
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung) {
+		this.id = id;
+		this.bezeichnung = bezeichnung;
+		this.gruppe_id = gruppe.daten.id; 
 	}
 	
 	

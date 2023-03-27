@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.benutzer.BenutzergruppenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -211,7 +213,25 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      *
      * @return die Response 204 bei Erfolg.
      */
-    public Response addKompetenzen(final Long id, final List<Long> kids) {
+    public Response addKompetenzen(Long id, List<Long> kids) {
+    	
+    	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+    	//Nehme als Schulform GY als Beispiel
+    	Schulform schulform = Schulform.GY;
+    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
+    	for(Long kid:kids) {
+    		bks.add(BenutzerKompetenz.getByID(kid));
+    	}
+    	
+    	for(BenutzerKompetenz bk : bks) {
+    		if(!bk.daten.hatSchulform(schulform))
+    			throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
+    													+schulform.daten.bezeichnung+"nicht zulässig");
+    	}
+    	
+    	
+    	
+    	
         if (id == null || kids == null)
             throw OperationError.NOT_FOUND.exception(
                     "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
