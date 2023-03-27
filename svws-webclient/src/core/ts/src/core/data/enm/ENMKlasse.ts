@@ -4,7 +4,7 @@ import { Vector } from '../../../java/util/Vector';
 export class ENMKlasse extends JavaObject {
 
 	/**
-	 * Die ID der Klasse Jahrgangs aus der SVWS-DB (z.B. 16)
+	 * Die ID der Klasse aus der SVWS-DB (z.B. 16)
 	 */
 	public id : number = 0;
 
@@ -17,6 +17,11 @@ export class ENMKlasse extends JavaObject {
 	 * Das Kürzel ser Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF)
 	 */
 	public kuerzelAnzeige : string | null = null;
+
+	/**
+	 * Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört (z.B. 11) oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt
+	 */
+	public idJahrgang : number | null = null;
 
 	/**
 	 * Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8)
@@ -45,6 +50,7 @@ export class ENMKlasse extends JavaObject {
 		result.id = obj.id;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -61,6 +67,7 @@ export class ENMKlasse extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
+		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		if (!obj.klassenlehrer) {
 			result += '"klassenlehrer" : []';
@@ -89,6 +96,9 @@ export class ENMKlasse extends JavaObject {
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
 			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
+		}
+		if (typeof obj.idJahrgang !== "undefined") {
+			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

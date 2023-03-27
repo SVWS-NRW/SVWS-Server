@@ -276,17 +276,19 @@ public class ENMDatenManager {
 	 * @param id                die eindeutige ID der Klasse
 	 * @param kuerzel           das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF)
 	 * @param kuerzelAnzeige    das Kürzel der Klasse, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF)
+	 * @param idJahrgang        die ID des Jahrgangs oder null bei jahrgangsübergreifenden Klassen
 	 * @param sortierung        die Reihenfolge der Klasse bei der Sortierung der Klassen. (z.B. 8)
 	 * 
 	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addKlasse(final long id, final String kuerzel, final String kuerzelAnzeige, final int sortierung) {
+	public boolean addKlasse(final long id, final String kuerzel, final String kuerzelAnzeige, final Long idJahrgang, final int sortierung) {
 		if (mapKlassen.get(id) != null) 
 			return false;		
 		final @NotNull ENMKlasse enmKlasse = new ENMKlasse();
 		enmKlasse.id = id;
 		enmKlasse.kuerzel = kuerzel;
 		enmKlasse.kuerzelAnzeige = kuerzelAnzeige;
+		enmKlasse.idJahrgang = idJahrgang;
 		enmKlasse.sortierung = sortierung;
 		daten.klassen.add(enmKlasse);
 		mapKlassen.put(id, enmKlasse);
@@ -366,7 +368,7 @@ public class ENMDatenManager {
 		
 	/**
 	 * Liefert das ENM-Klassen-Objekt für die angegebene Klassen-ID zurück,
-	 * sofern die Klassen über die Methode {@link ENMDatenManager#addKlasse(long, String, String, int)}
+	 * sofern die Klassen über die Methode {@link ENMDatenManager#addKlasse(long, String, String, Long, int)}
 	 * hinzugefügt wurden.
 	 * 
 	 * @param id   die ID der Klasse

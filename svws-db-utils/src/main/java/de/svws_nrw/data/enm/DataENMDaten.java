@@ -131,8 +131,7 @@ public class DataENMDaten extends DataManager<Long> {
 			}
     		ENMKlasse enmKlasse = manager.getKlasse(dtoKlasse.ID);
 			if (enmKlasse == null) {
-				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse,
-						dtoKlasse.Sortierung);
+				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
 				enmKlasse = manager.getKlasse(dtoKlasse.ID);
 				List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(dtoKlasse.ID);
 				if (klassenleitungen != null) {
