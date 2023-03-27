@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.data.benutzer.Credentials;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
@@ -148,8 +149,20 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      * @throws WebApplicationException eine Exception mit dem entsprechenden
      *                                 HTTP-Fehlercode im Fehlerfall
      */
-    public Response addKompetenzen(final Long id, final List<Long> kids) throws WebApplicationException {
-        if ((id == null) || (kids == null))
+    public Response addKompetenzen(Long id, List<Long> kids) throws WebApplicationException {
+    	
+    	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+    	//Nehme als Schulform GY als Beispiel
+    	Schulform schulform = Schulform.GY;
+    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
+    	for(Long kid:kids) {
+    		bks.add(BenutzerKompetenz.getByID(kid));
+    	}
+    	
+    	
+    	
+    	
+    	if ((id == null) || (kids == null))
             return OperationError.NOT_FOUND.getResponse(
                     "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         // Prüfe, ob der Benutzer mit der ID existiert.
