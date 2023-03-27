@@ -10,6 +10,9 @@ import { routeSchuleDatenaustauschLaufbahnplanung } from "../datenaustausch/Rout
 import { AuswahlChildData } from "~/components/AuswahlChildData";
 import { shallowRef } from "vue";
 import { RouteManager } from "~/router/RouteManager";
+import { AES } from "~/utils/crypto/aes";
+import { AESAlgo } from "~/utils/crypto/aesAlgo";
+import { routeSchuleDatenaustauschENM } from "../datenaustausch/RouteDatenaustauschENM";
 
 const SSchuleDatenaustauschApp = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue")
 const SSchuleDatenaustauschAuswahl = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahl.vue")
@@ -59,18 +62,27 @@ export class RouteDataSchuleDatenaustausch {
 		}
 	}
 
+	setImportENM = async (file: File, password: string, salt: string) => {
+		const key = await AES.getKey256(password, salt);
+		const aes = new AES(AESAlgo.CBC, key);
+		const base64 = new TextDecoder().decode(await file.arrayBuffer());
+		const encoded = await aes.decryptBase64(base64);
+		console.log(new TextDecoder().decode(encoded));
+		return true;
+	}
 }
 
 export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaustausch, RouteSchule> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "schule/datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Datenaustausch";
 		super.setView("liste", SSchuleDatenaustauschAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschKurs42,
-			routeSchuleDatenaustauschLaufbahnplanung
+			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchuleDatenaustauschENM,
 		];
 		super.defaultChild = routeSchuleDatenaustauschLaufbahnplanung;
 	}
