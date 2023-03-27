@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
  */
 public class TestAES {
 
+	/**
+	 * Tests für die Verschlüsselung und Entschlüsselung von Strings mit dem AES-Verfahren
+	 */
 	@Test
 	void testStringEncrpytion() {
 		try {
