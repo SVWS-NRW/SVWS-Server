@@ -1,10 +1,11 @@
 package de.svws_nrw.core.data.benutzer;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
+import de.svws_nrw.core.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -26,8 +27,10 @@ public class BenutzerKompetenzKatalogEintrag {
 	/** Die Bezeichnung der Benutzerkompetenz. */
 	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example = "Ansehen")
 	public @NotNull String bezeichnung = "";
-
-
+	
+	/** Die Schulformen. */
+    @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example="Liste")
+	public @NotNull Schulform@NotNull[] nurSchulformen;
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
 	 */
@@ -35,17 +38,46 @@ public class BenutzerKompetenzKatalogEintrag {
 	}
 
 
+	
+	
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
 	 *
 	 * @param id             die ID
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
+	 * @param schulFormen    die Schulformen, bei denen die Kompetenz zulässig ist.
 	 */
-	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung) {
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung, @NotNull Schulform@NotNull[] schulFormen ) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
-		this.gruppe_id = gruppe.daten.id;
+		this.gruppe_id = gruppe.daten.id; 
+		this.nurSchulformen = schulFormen;
 	}
-
+	
+	
+	
+	/**
+	 * überprüft, ob für die übergebene Schulform die Kompetenz zulässig ist.
+	 * 
+	 * @param pSchulform             dieSchulform
+	 * 
+	 * @return  true, wenn die Kompetenz für die Schulform zulässig ist.
+	 */
+	public boolean hatSchulform(final @NotNull Schulform pSchulform) {
+	    
+		if(this.nurSchulformen == null)
+			return true;
+		for(final @NotNull Schulform sf : this.nurSchulformen) {
+	        if(sf.daten.id == pSchulform.daten.id)
+	            return true;
+	    }
+	    return false;
+	 }
+	
+	
+	
+	
+	
+	
 }
