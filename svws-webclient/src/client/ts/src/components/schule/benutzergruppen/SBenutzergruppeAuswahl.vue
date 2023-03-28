@@ -40,7 +40,7 @@
 	const selectedItems: Ref<BenutzergruppeListeEintrag[]> = ref([]);
 
 	const cols = [
-		{ key: "id", label: "ID", sortable: true },
+		{ key: "id", label: "ID", sortable: true, span: 0.5, align: "right" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	];
 

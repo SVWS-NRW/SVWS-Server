@@ -17,18 +17,16 @@
 <template>
 	<a class="sidebar--menu--initials"
 		href="#" @click.prevent="onClick">
-		<svws-ui-popover>
-			<template #trigger>
-				<div class="sidebar--menu-header--icon">
-					A
-				</div>
-			</template>
+		<svws-ui-tooltip position="right">
+			<div class="sidebar--menu-header--icon">
+				A
+			</div>
 			<template #content>
 				<div class="sidebar--menu-header--label">
 					Angemeldet als <slot />
 				</div>
 			</template>
-		</svws-ui-popover>
+		</svws-ui-tooltip>
 	</a>
 </template>
 

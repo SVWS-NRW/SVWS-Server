@@ -30,11 +30,6 @@
 		<main class="app-layout--main">
 			<div class="app-layout--main-container relative" :class="{'fullwidth-content' : fullwidthContent}">
 				<slot name="main" />
-				<!-- Experiment: Fullscreen Button, der den Content-Bereich auf die gesamte Breite des Browsers ausdehnt
-				<svws-ui-button type="transparent" @click="toggleFullscreen" class="cursor-pointer absolute top-4 right-10 text-sm">
-					<svws-ui-icon v-if="!contentIsFullscreen"><i-ri-fullscreen-line/></svws-ui-icon>
-					<svws-ui-icon class="flex" v-if="contentIsFullscreen">Fullscreen deaktivieren<i-ri-fullscreen-exit-line/></svws-ui-icon>
-				</svws-ui-button>-->
 			</div>
 		</main>
 	</div>
@@ -67,9 +62,9 @@
 
 	.app-layout--secondary {
 		@apply flex-shrink-0;
-		width: 18%;
-		min-width: 22rem;
-		max-width: 32rem;
+		width: 23.6%;
+		min-width: 24rem;
+		max-width: 30rem;
 	}
 
 	.app-layout--main {

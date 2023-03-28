@@ -21,8 +21,16 @@
 				</template>
 				<template #version>{{ version }}</template>
 				<template #metaNavigation>
-					<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
-					<a href="#">Datenschutz</a>
+					<a href="https://www.svws.nrw.de/faq/impressum">
+						<svws-ui-button type="transparent">
+							Impressum
+						</svws-ui-button>
+					</a>
+					<a href="#">
+						<svws-ui-button type="transparent">
+							Datenschutz
+						</svws-ui-button>
+					</a>
 				</template>
 			</svws-ui-menu>
 		</template>

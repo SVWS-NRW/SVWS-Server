@@ -67,12 +67,19 @@
 						</svws-ui-menu-item>
 					</template>
 					<template #version>
-						v0.0.1
+						0.0.1
 					</template>
 					<template #metaNavigation>
-						<a href="#">Hilfe</a>
-						<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
-						<a href="#">Datenschutz</a>
+						<a href="https://www.svws.nrw.de/faq/impressum">
+							<svws-ui-button type="transparent">
+								Impressum
+							</svws-ui-button>
+						</a>
+						<a href="#">
+							<svws-ui-button type="transparent">
+								Datenschutz
+							</svws-ui-button>
+						</a>
 					</template>
 				</svws-ui-menu>
 			</template>
@@ -105,15 +112,6 @@
 				<svws-ui-router-tab-bar :routes="routes" :hidden="hidden" v-model="selectedRoute">
 					<component :is="selectedRoute.component" />
 				</svws-ui-router-tab-bar>
-				<!--TODO bzw. WIP, das muss noch aufgeräumt werden-->
-				<svws-ui-notification>Test</svws-ui-notification>
-				<!--<Notification type="success">Success!</Notification>
-				<Notification type="highlight">Hinweis</Notification>
-				<Notification type="error">
-					<div class="py-1 mb-1">Error Notification</div>
-					<div class="font-normal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab at commodi cumque, esse eum fugit hic inventore magnam, minus nihil possimus praesentium ratione repellendus soluta temporibus vitae voluptatibus. Aspernatur, itaque!</div>
-					<svws-ui-button type="transparent" class="inline-flex items-center -ml-2 my-2"><i-ri-bug-line/>Fehler melden</svws-ui-button>
-				</Notification>-->
 			</template>
 		</svws-ui-app-layout>
 	</Story>

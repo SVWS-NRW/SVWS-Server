@@ -335,6 +335,10 @@
 		&__align-right {
 			@apply justify-end text-right;
 
+			.data-table__th-wrapper {
+				@apply justify-end;
+			}
+
 			.text-input--headless {
 				@apply text-right;
 			}
@@ -461,10 +465,6 @@
 		&__tr {
 			@apply min-h-[1.7rem];
 
-			&:hover {
-				@apply cursor-pointer;
-			}
-
 			&:focus {
 				@apply outline-none;
 			}
@@ -553,6 +553,14 @@
 			&:hover,
 			&:focus-within {
 				@apply opacity-100;
+			}
+		}
+
+		.data-table__tbody {
+			&__tr {
+				&:hover {
+					@apply cursor-pointer;
+				}
 			}
 		}
 
