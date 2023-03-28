@@ -1,5 +1,8 @@
 package de.svws_nrw.core.data.benutzer;
 
+import java.util.List;
+import java.util.Vector;
+
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -30,7 +33,7 @@ public class BenutzerKompetenzKatalogEintrag {
 	
 	/** Die Schulformen. */
     @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example="Liste")
-	public @NotNull Schulform@NotNull[] nurSchulformen = null;
+    public List<@NotNull Long> nurSchulformen = null;
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
 	 */
@@ -46,39 +49,23 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param id             die ID
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
-	 * @param schulFormen    die Schulformen, bei denen die Kompetenz zulässig ist.
+	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
 	 */
-	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung, @NotNull Schulform@NotNull[] schulFormen ) {
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen ) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id; 
-		this.nurSchulformen = schulFormen;
+		//this.nurSchulformen = schulformen;
+		if(schulformen != null) {
+		  this.nurSchulformen =new Vector<>();
+		  for (final @NotNull Schulform schulform : schulformen)
+	            this.nurSchulformen.add(schulform.daten.id);
+		}
 	}
-	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung) {
-		this.id = id;
-		this.bezeichnung = bezeichnung;
-		this.gruppe_id = gruppe.daten.id; 
-	}
 	
 	
 	
-	/**
-	 * überprüft, ob für die übergebene Schulform die Kompetenz zulässig ist.
-	 * 
-	 * @param pSchulform             dieSchulform
-	 * 
-	 * @return  true, wenn die Kompetenz für die Schulform zulässig ist.
-	 */
-	public boolean hatSchulform(final @NotNull Schulform pSchulform) {
-	    
-		if(this.nurSchulformen == null)
-			return true;
-		for(final @NotNull Schulform sf : this.nurSchulformen) {
-	        if(sf.daten.id == pSchulform.daten.id)
-	            return true;
-	    }
-	    return false;
-	 }
+	
 	
 	
 	

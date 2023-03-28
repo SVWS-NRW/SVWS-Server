@@ -217,17 +217,17 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
     	
     	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
     	//Nehme als Schulform GY als Beispiel
-    	Schulform schulform = Schulform.GY;
-    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
-    	for(Long kid:kids) {
-    		bks.add(BenutzerKompetenz.getByID(kid));
-    	}
-    	
-    	for(BenutzerKompetenz bk : bks) {
-    		if(!bk.daten.hatSchulform(schulform))
-    			throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
-    													+schulform.daten.bezeichnung+"nicht zulässig");
-    	}
+//    	Schulform schulform = Schulform.GY;
+//    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
+//    	for(Long kid:kids) {
+//    		bks.add(BenutzerKompetenz.getByID(kid));
+//    	}
+//    	
+//    	for(BenutzerKompetenz bk : bks) {
+//    		if(!bk.daten.hatSchulform(schulform))
+//    			throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
+//    													+schulform.daten.bezeichnung+"nicht zulässig");
+//    	}
     	
     	
     	
