@@ -113,6 +113,9 @@
 					<component :is="selectedRoute.component" />
 				</svws-ui-router-tab-bar>
 			</template>
+			<template #aside>
+				Aside content!
+			</template>
 		</svws-ui-app-layout>
 	</Story>
 </template>

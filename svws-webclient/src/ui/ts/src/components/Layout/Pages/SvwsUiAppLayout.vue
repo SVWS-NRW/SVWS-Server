@@ -18,7 +18,7 @@
 	}
 </script>
 <template>
-	<div class="app-layout--wrapper">
+	<div class="app-layout--wrapper" :class="{'app-layout--has-aside': $slots.aside}">
 		<div v-if="$slots.sidebar && !contentIsFullscreen" class="app-layout--sidebar-wrapper">
 			<slot name="sidebar" />
 		</div>
@@ -31,6 +31,11 @@
 			<div class="app-layout--main-container relative" :class="{'fullwidth-content' : fullwidthContent}">
 				<slot name="main" />
 			</div>
+			<aside class="app-layout--aside" v-if="$slots.aside">
+				<div class="app-layout--aside-container relative">
+					<slot name="aside" />
+				</div>
+			</aside>
 		</main>
 	</div>
 </template>
@@ -68,18 +73,33 @@
 	}
 
 	.app-layout--main {
-		@apply flex-1 overflow-hidden;
+		@apply flex-1 overflow-hidden relative;
+		@apply flex flex-row md:flex-row;
 	}
 
 	.app-layout--secondary-container,
-	.app-layout--main-container {
+	.app-layout--main-container,
+	.app-layout--aside-container {
 		@apply bg-white rounded-2xl;
 		@apply h-full w-full;
 		@apply flex flex-col;
 		@apply shadow-dark-20 shadow-sm;
 		@apply border border-dark-20 border-opacity-60;
 		@apply overflow-y-auto;
-		-webkit-overflow-scrolling: touch;
+	}
+
+	.app-layout--has-aside {
+		.app-layout--main-container {
+			padding-right: 50%;
+		}
+	}
+
+	.app-layout--aside {
+		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
+	}
+
+	.app-layout--aside-container {
+		@apply rounded-xl shadow-lg;
 	}
 
 	.app-layout--secondary-container {
