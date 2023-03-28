@@ -116,6 +116,7 @@ module.exports = {
 				"dark-80": withOpacity("--color-dark-80"),
 				dark: withOpacity("--color-dark"),
 				error: withOpacity("--color-error"),
+				"error-light": withOpacity("--color-error-light"),
 				success: withOpacity("--color-success"),
 				highlight: withOpacity("--color-highlight"),
 

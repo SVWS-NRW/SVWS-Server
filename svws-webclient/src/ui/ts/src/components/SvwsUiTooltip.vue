@@ -6,13 +6,14 @@
 		@blur="hideTooltip"
 		@click="toggleTooltip"
 		class="inline-flex flex-wrap items-center gap-0.5 tooltip-trigger"
-		:class="{'tooltip-trigger--underline': indicator && indicator === 'underline', 'tooltip-trigger--triggered': isOpen, 'cursor-help': !hover }"
+		:class="{'tooltip-trigger--underline': indicator, 'tooltip-trigger--triggered': isOpen, 'tooltip-trigger--danger': color === 'danger' || (indicator && indicator === 'danger'), 'cursor-help': !hover, 'cursor-default': hover }"
 		ref="reference"
 	>
 		<slot/>
 		<template v-if="(indicator && indicator !== 'underline') || $slots.icon">
 			<slot name="icon">
 				<i-ri-information-fill v-if="indicator === 'info'"/>
+				<i-ri-alert-fill v-else-if="indicator === 'danger'"/>
 				<i-ri-question-fill v-else/>
 			</slot>
 		</template>
@@ -58,11 +59,11 @@ const props = withDefaults(defineProps<{
 	hover?: boolean;
 	showArrow?: boolean;
 	color?: "primary" | "light" | "dark" | "danger";
-	indicator?: "help" | "info" | "underline" | false;
+	indicator?: "help" | "info" | "danger" | "underline" | false;
 }>(), {
 	position: "bottom",
 	showArrow: true,
-	color: "primary",
+	color: "light",
 	hover: true,
 	indicator: "underline",
 });
@@ -84,7 +85,7 @@ const {x, y, strategy, placement, middlewareData} = useFloating(
 	floating,
 	{
 		placement: props.position,
-		middleware: [flip(), shift(), offset(props.showArrow ? 8 : 2), arrow({element: floatingArrow})],
+		middleware: [flip(), shift(), offset(props.showArrow ? 6 : 2), arrow({element: floatingArrow})],
 		whileElementsMounted: autoUpdate,
 	}
 );
@@ -133,7 +134,19 @@ function toggleTooltip() {
 <style lang="postcss">
 .tooltip-trigger {
 	svg {
-		@apply w-4 h-4 text-primary;
+		@apply w-4 h-4 text-black;
+	}
+
+	&--triggered {
+		svg {
+			@apply text-primary;
+		}
+	}
+
+	&--danger {
+		svg {
+			@apply text-error;
+		}
 	}
 
 	&--underline {
@@ -146,16 +159,22 @@ function toggleTooltip() {
 }
 
 .tooltip {
-	@apply rounded-md bg-primary text-white;
-	@apply px-2 py-0.5 w-max max-w-[8rem];
-	@apply shadow-sm shadow-black/25;
+	@apply rounded-md;
+	@apply px-2 py-0.5 w-max max-w-[12rem];
+	@apply bg-white text-black border border-light;
+	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
 
-	&--light {
-		@apply bg-white text-black shadow-lg border border-light;
-		/*TODO: Shadow based on placement position*/
-		box-shadow: 0 -8px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	&--primary {
+		@apply bg-primary text-white border-none;
+		@apply shadow-sm shadow-black/25;
 	}
 
-	/*TODO: Themes für alle Farben*/
+	&--dark {
+		@apply bg-dark-20 text-black border border-black/5 shadow-md;
+	}
+
+	&--danger {
+		@apply bg-error-light border border-error/5 text-error shadow-error/10 shadow-md;
+	}
 }
 </style>
