@@ -15,7 +15,7 @@
 				<s-benutzer-checkbox :benutzer="benutzer"
 					v-model="aktiv" :spalte-links="spalteLinks"
 					:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-					:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+					:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 					:go-to-benutzer="goToBenutzer" />
 			</template>
 		</ul>
