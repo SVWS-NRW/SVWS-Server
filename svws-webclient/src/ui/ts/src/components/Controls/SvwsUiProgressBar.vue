@@ -1,6 +1,4 @@
 <script setup lang='ts'>
-	import { Size } from '../../types';
-
 	const props = withDefaults(defineProps<{
 		// size?: Extract<Size, 'normal' | 'small'>;
 		size?: 'normal' | 'small';
