@@ -34,7 +34,7 @@ const SSchuelerLeistungen = () => import("~/components/schueler/leistungsdaten/S
 export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistungen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [

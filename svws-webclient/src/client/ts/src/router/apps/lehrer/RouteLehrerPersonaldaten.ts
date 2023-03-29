@@ -9,7 +9,7 @@ const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLe
 export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer_personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
 	}

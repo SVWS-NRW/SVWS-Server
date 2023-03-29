@@ -34,9 +34,9 @@ const SSchuelerAbschnitt = () => import("~/components/schueler/abschnitt/SSchuel
 export class RouteSchuelerAbschnitt extends RouteNode<RouteDataSchuelerAbschnitt, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_abschnitt", "abschnitt", SSchuelerAbschnitt, new RouteDataSchuelerAbschnitt());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.abschnitt", "abschnitt", SSchuelerAbschnitt, new RouteDataSchuelerAbschnitt());
 		super.propHandler = (route) => routeSchueler.getProps(route);
-		super.text = "Aktueller Abschnitt";
+		super.text = "Lernabschnitte";
 		super.children = [
 			routeSchuelerAbschnittDaten
 		];

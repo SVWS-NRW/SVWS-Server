@@ -9,7 +9,7 @@ const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSc
 export class RouteSchuelerStundenplan extends RouteNode<unknown, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_stundenplan", "stundenplan", SSchuelerStundenplan);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan", "stundenplan", SSchuelerStundenplan);
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Stundenplan";
 		super.children = [

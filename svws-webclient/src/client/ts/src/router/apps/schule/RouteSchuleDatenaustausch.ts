@@ -75,7 +75,7 @@ export class RouteDataSchuleDatenaustausch {
 export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaustausch, RouteSchule> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "/schule/datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Datenaustausch";
 		super.setView("liste", SSchuleDatenaustauschAuswahl, (route) => this.getAuswahlProps(route));

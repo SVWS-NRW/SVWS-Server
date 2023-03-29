@@ -42,7 +42,7 @@ class RouteDataSchuelerSchulbesuch {
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
 	}

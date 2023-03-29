@@ -10,9 +10,9 @@ const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten
 export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer_daten", "daten", SLehrerIndividualdaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.daten", "daten", SLehrerIndividualdaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Individualdaten";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {

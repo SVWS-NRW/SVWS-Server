@@ -100,9 +100,9 @@ export class RouteDataSchuelerAdressen {
 export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SSchuelerAdressen, new RouteDataSchuelerAdressen());
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Adressen / Betriebe";
+		super.text = "Ausbildungsbetriebe";
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

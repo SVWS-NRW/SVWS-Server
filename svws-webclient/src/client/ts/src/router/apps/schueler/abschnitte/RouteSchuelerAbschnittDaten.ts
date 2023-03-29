@@ -61,7 +61,7 @@ const SSchuelerAbschnittAuswahl = () => import("~/components/schueler/abschnitt/
 export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbschnittDaten, RouteSchuelerAbschnitt> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler_abschnitt_daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerAbschnittDaten, new RouteDataSchuelerAbschnittDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.abschnitt.daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerAbschnittDaten, new RouteDataSchuelerAbschnittDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Abschnittsdaten";
 		super.setView("lernabschnittauswahl", SSchuelerAbschnittAuswahl, (route) => this.getAuswahlProps(route));
