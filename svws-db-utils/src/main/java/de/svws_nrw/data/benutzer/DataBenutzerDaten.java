@@ -22,6 +22,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -109,6 +110,36 @@ public final class DataBenutzerDaten extends DataManager<Long> {
     }
 
     /**
+     * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
+     * 
+     * @param kids die IDs der Kompetenzen
+     * 
+     * @return true, wenn alle Kompetenzen zulässig sind, sonst false
+     * 
+     */
+    private boolean istKompetenzZulaessig( List<Long> kids) throws WebApplicationException{
+      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+        //Nehme als Schulform GY als Beispiel
+        DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+        if (schule == null)
+            throw OperationError.NOT_FOUND.exception("Keine Schule angelegt.");
+        Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
+        
+        List<BenutzerKompetenz> bks = new Vector<>(); 
+        for(Long kid:kids) {
+            bks.add(BenutzerKompetenz.getByID(kid));
+        }
+        
+        for(BenutzerKompetenz bk : bks) {
+            if(!bk.hatSchulform(schulform))
+                throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
+                                                        +schulform.daten.bezeichnung+"nicht zulässig");
+        }
+        return true;
+    }
+    
+    
+    /**
      * Setzt für die angegebene Benutzer-ID den Benutzer administrativ.
      *
      * @param id die ID des Benutzers
@@ -151,17 +182,9 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      */
     public Response addKompetenzen(Long id, List<Long> kids) throws WebApplicationException {
     	
-    	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-    	//Nehme als Schulform GY als Beispiel
-    	Schulform schulform = Schulform.GY;
-    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
-    	for(Long kid:kids) {
-    		bks.add(BenutzerKompetenz.getByID(kid));
-    	}
-    	
-    	
-    	
-    	
+        //Prüft, die Zulässigkeit der Kompetenzen für die Schulform
+        this.istKompetenzZulaessig(kids);
+        
     	if ((id == null) || (kids == null))
             return OperationError.NOT_FOUND.getResponse(
                     "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
@@ -447,7 +470,11 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      *
      * @return bei Erfolg eine HTTP-Response 204
      */
-    public Response removeKompetenzen(final Long id, final List<Long> kids) {
+    public Response removeKompetenzen(Long id, List<Long> kids) {
+        
+      //Prüft, die Zulässigkeit der Kompetenzen für die Schulform
+        this.istKompetenzZulaessig(kids);
+        
         if (id == null || kids == null)
             return OperationError.NOT_FOUND.getResponse(
                     "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");

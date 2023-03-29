@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -87,7 +88,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception("Die Benutzergruppe mit der ID existiert nicht.");
         return bg;
     }
-
+    
     /**
      * Erstellt den Benutzergruppen-Manager für die übergebene ID mit den
      * zugehörigen Daten aus der Datenbank.
@@ -112,6 +113,38 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         return manager;
     }
 
+    /**
+     * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Objekt hinzugefügt bzw. entzogen werden.
+     * 
+     * @param kids die IDs der Kompetenzen
+     * 
+     * @return true, wenn alle Kompetenzen zulässig sind, sonst false
+     * 
+     */
+    private boolean istKompetenzZulaessig( List<Long> kids) throws WebApplicationException{
+      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+        //Nehme als Schulform GY als Beispiel
+        
+        DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+        if (schule == null)
+            throw OperationError.NOT_FOUND.exception("Keine Schule angelegt.");
+        Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
+        
+        List<BenutzerKompetenz> bks = new Vector<>(); 
+        for(Long kid:kids) {
+            bks.add(BenutzerKompetenz.getByID(kid));
+        }
+        
+        for(BenutzerKompetenz bk : bks) {
+            if(!bk.hatSchulform(schulform))
+                throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
+                                                        +schulform.daten.bezeichnung+"nicht zulässig");
+        }
+        return true;
+    }
+    
+    
+    
     @Override
     public Response get(final Long id) throws WebApplicationException {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getManager(id).daten()).build();
@@ -216,23 +249,9 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
     public Response addKompetenzen(Long id, List<Long> kids) {
     	
     	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-    	//Nehme als Schulform GY als Beispiel
-//    	Schulform schulform = Schulform.GY;
-//    	List<BenutzerKompetenz> bks = new Vector<BenutzerKompetenz>(); 
-//    	for(Long kid:kids) {
-//    		bks.add(BenutzerKompetenz.getByID(kid));
-//    	}
-//    	
-//    	for(BenutzerKompetenz bk : bks) {
-//    		if(!bk.daten.hatSchulform(schulform))
-//    			throw OperationError.FORBIDDEN.exception("Die Kompetenz"+bk.daten.bezeichnung+"ist für die Schulform"
-//    													+schulform.daten.bezeichnung+"nicht zulässig");
-//    	}
+    	this.istKompetenzZulaessig(kids);
     	
-    	
-    	
-    	
-        if (id == null || kids == null)
+    	if (id == null || kids == null)
             throw OperationError.NOT_FOUND.exception(
                     "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
@@ -275,7 +294,9 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      *
      * @return die Response 204 bei Erfolg.
      */
-    public Response removeKompetenzen(final Long id, final List<Long> kids) {
+    public Response removeKompetenzen(Long id, List<Long> kids) {
+      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+        this.istKompetenzZulaessig(kids);
         if (id == null || kids == null)
             throw OperationError.NOT_FOUND.exception(
                     "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
