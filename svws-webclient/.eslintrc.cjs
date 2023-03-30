@@ -52,6 +52,12 @@ module.exports = {
 	},
 	overrides: [
 		{
+			files: ['*.d.ts'],
+			rules: {
+				"indent": ["off", "tab", { "SwitchCase": 1 }],
+			}
+		},
+		{
 			files: [
 				"src/components/ts/src/**/*.{ts,js,cjs,mjs}",
 				"src/ui/ts/src/**/*.{ts,js,cjs,mjs}",
