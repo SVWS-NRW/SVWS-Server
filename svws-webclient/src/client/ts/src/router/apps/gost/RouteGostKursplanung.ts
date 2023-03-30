@@ -214,6 +214,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			removeKurs: this.data.removeKurs,
 			addKursLehrer: this.data.addKursLehrer,
 			removeKursLehrer: this.data.removeKursLehrer,
+			addSchieneKurs: this.data.addSchieneKurs,
+			removeSchieneKurs: this.data.removeSchieneKurs,
 			ergebnisHochschreiben: this.data.ergebnisHochschreiben,
 			ergebnisAktivieren: this.data.ergebnisAktivieren,
 			schuelerFilter: this.data.hatErgebnis ? this.data.schuelerFilter : undefined,

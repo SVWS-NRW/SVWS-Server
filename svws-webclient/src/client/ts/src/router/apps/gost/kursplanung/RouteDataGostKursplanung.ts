@@ -429,6 +429,28 @@ export class RouteDataGostKursplanung {
 		return kurs;
 	}
 
+	addSchieneKurs = async (kurs: GostBlockungKurs) => {
+		if ((!this.hatBlockung) || (!this.hatErgebnis))
+			return;
+		api.status.start();
+		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen + 1);
+		const k = this.ergebnismanager.getKursE(kurs.id);
+		await this.patchKurs(k, k.id);
+		this.commit();
+		api.status.stop();
+	}
+
+	removeSchieneKurs = async (kurs: GostBlockungKurs) => {
+		if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen <= 1))
+			return;
+		api.status.start();
+		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen - 1);
+		const k = this.ergebnismanager.getKursE(kurs.id);
+		await this.patchKurs(k, k.id);
+		this.commit();
+		api.status.stop();
+	}
+
 	addKursLehrer = async(kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;

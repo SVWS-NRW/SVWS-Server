@@ -17,6 +17,8 @@ export interface GostKursplanungProps {
 	removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 	addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+	addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	config: Config;

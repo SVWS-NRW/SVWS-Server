@@ -38,7 +38,7 @@
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		patchRegel: (data: Partial<GostBlockungRegel>, id: number) => Promise<void>;
+		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		faecherManager: GostFaecherManager;

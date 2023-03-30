@@ -17,7 +17,8 @@
 			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager"
 			:hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
+			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
 	</template>
 </template>
 
@@ -41,6 +42,8 @@
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		config: Config;
 		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;

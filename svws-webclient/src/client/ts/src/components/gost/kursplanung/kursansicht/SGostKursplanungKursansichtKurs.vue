@@ -54,7 +54,8 @@
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
 	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
-		:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+		:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
+		:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
 </template>
 
 <script setup lang="ts">
@@ -76,6 +77,8 @@
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
+		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		hatErgebnis: boolean;
 		kurs: GostBlockungKurs;
 		bgColor: string;

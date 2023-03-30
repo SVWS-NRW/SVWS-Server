@@ -7,12 +7,12 @@
 						:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
-						<button class="group">
+						<button class="group" @click="del_schiene">
 							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
 							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
 						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
-						<button class="group">
+						<button class="group" @click="add_schiene">
 							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
 							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
@@ -48,12 +48,14 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
@@ -83,6 +85,14 @@
 
 	async function del_kurs() {
 		await props.removeKurs(props.kurs.fach_id, props.kurs.kursart);
+	}
+
+	async function add_schiene() {
+		await props.addSchieneKurs(props.kurs);
+	}
+
+	async function del_schiene() {
+		await props.removeSchieneKurs(props.kurs);
 	}
 
 </script>
