@@ -17,11 +17,11 @@
 				:style="{ 'background-color': schiene_gesperrt(schiene) ? '' : bgColor}"
 				@drag-start="drag_started"
 				@drag-end="drag_ended">
-				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
+				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : istFixiert(schiene) ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
-					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle">
-						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block" />
-						<i-ri-pushpin-line v-if="!fixier_regeln.length && allowRegeln" class="inline-block" />
+					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle(schiene)">
+						<i-ri-pushpin-fill v-if="istFixiert(schiene)" class="inline-block" />
+						<i-ri-pushpin-line v-if="!istFixiert(schiene) && allowRegeln" class="inline-block" />
 					</svws-ui-icon>
 				</svws-ui-badge>
 			</svws-ui-drag-data>
@@ -43,7 +43,7 @@
 				size="tiny" :type="selected_kurs ? 'primary' : 'highlight'" class="cursor-pointer"
 				@click="toggle_active_kurs">
 				{{ kurs_blockungsergebnis?.schueler.size() }}
-				<svws-ui-icon v-if="fixier_regeln.length">
+				<svws-ui-icon v-if="istFixiert(schiene)">
 					<i-ri-pushpin-fill class="inline-block" />
 				</svws-ui-icon>
 				<svws-ui-icon class="px-4 py-2" v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
@@ -126,8 +126,10 @@
 			return;
 		}
 		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
-			if (fixier_regeln.value && props.allowRegeln)
-				await fixieren_regel_entfernen();
+			if (fixier_regeln.value && props.allowRegeln) {
+				const s = props.getErgebnismanager().getSchieneG(schiene.id);
+				await fixieren_regel_entfernen(s);
+			}
 			await props.updateKursSchienenZuordnung(drag_data.kurs.id, drag_data.schiene.id, schiene.id);
 		}
 	}
@@ -205,6 +207,11 @@
 
 	// Regeln zum Fixieren
 
+	function istFixiert(schiene: GostBlockungsergebnisSchiene) {
+		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		return fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer);
+	}
+
 	const fixier_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 		const arr = []
 		for (const regel of regeln.value)
@@ -213,35 +220,29 @@
 		return arr;
 	});
 
-	async function fixieren_regel_toggle() {
+	async function fixieren_regel_toggle(schiene: GostBlockungsergebnisSchiene) {
 		if (!props.allowRegeln)
 			return;
-		if (fixier_regeln.value.length)
-			await fixieren_regel_entfernen();
+		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		if (fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer))
+			await fixieren_regel_entfernen(s);
 		else
-			await fixieren_regel_hinzufuegen();
+			await fixieren_regel_hinzufuegen(s);
 	}
 
-	async function fixieren_regel_hinzufuegen() {
+	async function fixieren_regel_hinzufuegen(schiene: GostBlockungSchiene) {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 		const kurs = kurs_blockungsergebnis.value;
-		if (!kurs)
-			return;
-		const schienen = props.getErgebnismanager().getOfKursSchienenmenge(kurs.id);
-		if (!schienen)
-			return;
-		const schiene = props.getErgebnismanager().getSchieneG([...schienen][0].id);
-		if (!schiene)
-			return;
 		regel.parameter.add(kurs.id);
 		regel.parameter.add(schiene.nummer);
 		await props.addRegel(regel);
 	}
 
-	async function fixieren_regel_entfernen() {
+	async function fixieren_regel_entfernen(schiene: GostBlockungSchiene) {
 		for (const regel of fixier_regeln.value)
-			await props.removeRegel(regel.id);
+			if (regel.parameter.get(1) === schiene.nummer)
+				await props.removeRegel(regel.id);
 	}
 
 
