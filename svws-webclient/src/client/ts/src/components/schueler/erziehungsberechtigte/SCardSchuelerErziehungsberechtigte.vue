@@ -27,7 +27,7 @@
 						@update:model-value="doPatch({ eMail: String($event) }, erzieher.id)" type="email" verify-email />
 					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
 						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-						:item-filter="staatsangehoerigkeitKatalogEintragFilter" />
+						:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
 				</div>
 			</div>
 			<div class="entry-wrapper">

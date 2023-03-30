@@ -4,11 +4,11 @@
 			<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
 		</template>
 		<div class="input-wrapper">
-			<svws-ui-multi-select v-model="staatsangehoerigkeit" title="1. Staatsangehörigkeit"
+			<svws-ui-multi-select v-model="staatsangehoerigkeit" title="1. Staatsangehörigkeit" autocomplete
 				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
 				required />
-			<svws-ui-multi-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit"
+			<svws-ui-multi-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit" autocomplete
 				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<div class="col-span-2">

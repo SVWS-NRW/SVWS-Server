@@ -13,7 +13,7 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
 				<svws-ui-multi-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
+					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
 				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
 			</div>

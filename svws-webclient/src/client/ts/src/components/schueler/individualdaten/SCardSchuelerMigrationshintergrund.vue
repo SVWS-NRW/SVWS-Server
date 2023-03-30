@@ -7,7 +7,7 @@
 		<div class="input-wrapper">
 			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" />
 			<svws-ui-multi-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`"
-				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" />
+				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
 			<div class="col-span-2">
 				<svws-ui-multi-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
 					:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
@@ -18,7 +18,7 @@
 				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
 			<svws-ui-multi-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" />
+				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
 		</div>
 	</svws-ui-content-card>
 </template>
