@@ -26,7 +26,7 @@
 			<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_9 v-model="regel" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_10 v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 	</div>
 </template>
@@ -75,7 +75,7 @@
 
 	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.getDatenmanager().getMengeOfRegeln().toArray() as GostBlockungRegel[]);
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
-	for (let i = 1; i < 10; i++)
+	for (let i = 1; i < 11; i++)
 		regeln[i] = computed(() => alle_regeln.value.filter(r => r.typ === i));
 
 	async function regelEntfernen(r: GostBlockungRegel) {
