@@ -9,7 +9,7 @@ export class GostKursplanungSchuelerFilter {
 	private	kursfilter_negiert: Ref<boolean> = ref(false);
 	public name: Ref<string> = ref("");
 	public kurs: Ref<GostBlockungKurs | undefined> = ref(undefined);
-	public fach: Ref<GostFach | undefined> = ref(undefined);
+	public fach: Ref<number | undefined> = ref(undefined);
 	public kursart: Ref<GostKursart | undefined> = ref(undefined);
 	private mapSchueler: Map<number, SchuelerListeEintrag>;
 	private datenmanager: GostBlockungsdatenManager | undefined;
@@ -28,12 +28,12 @@ export class GostKursplanungSchuelerFilter {
 		return this.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>();
 	}
 
-	public filtered: () => ComputedRef<Map<number, SchuelerListeEintrag>> = () => computed(() => {
+	public filtered: ComputedRef<Map<number, SchuelerListeEintrag>> = computed(() => {
 		if (this.ergebnismanager === undefined)
 			return new Map<number, SchuelerListeEintrag>();
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
 		const res = this.ergebnismanager.getMengeDerSchuelerGefiltert(this.kurs.value?.id || 0,
-			this.fach.value?.id || 0,
+			this.fach.value || 0,
 			this.kursart.value?.id || 0,
 			pKonfliktTyp,
 			this.name.value);
@@ -60,7 +60,7 @@ export class GostKursplanungSchuelerFilter {
 	private setFachFilter(value: boolean) {
 		if (value && (this.faecher.size() > 0)) {
 			this.setKursFilter(false);
-			this.fach.value = this.faecher.get(0);
+			this.fach.value = this.faecher.get(0).id;
 			this.kursart.value = GostKursart.GK;
 		} else {
 			this.fach.value = undefined;
@@ -98,22 +98,22 @@ export class GostKursplanungSchuelerFilter {
 		},
 		set: (value) => {
 			switch (value) {
-			case 'alle':
-				this.kollisionen.value = false;
-				this.nichtwahlen.value = false;
-				break;
-			case 'kollisionen':
-				this.kollisionen.value = true;
-				this.nichtwahlen.value = false;
-				break;
-			case 'nichtwahlen':
-				this.kollisionen.value = false;
-				this.nichtwahlen.value = true;
-				break;
-			case 'kollisionen_nichtwahlen':
-				this.kollisionen.value = true;
-				this.nichtwahlen.value = true;
-				break;
+				case 'alle':
+					this.kollisionen.value = false;
+					this.nichtwahlen.value = false;
+					break;
+				case 'kollisionen':
+					this.kollisionen.value = true;
+					this.nichtwahlen.value = false;
+					break;
+				case 'nichtwahlen':
+					this.kollisionen.value = false;
+					this.nichtwahlen.value = true;
+					break;
+				case 'kollisionen_nichtwahlen':
+					this.kollisionen.value = true;
+					this.nichtwahlen.value = true;
+					break;
 			}
 		}
 	});

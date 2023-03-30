@@ -7,7 +7,7 @@
 		</div>
 		<div class="flex justify-between items-center mb-3">
 			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.fach.value" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" :model-value="fach" @update:model-value="fach" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
 			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
 		</div>
 		<div class="mb-3">
@@ -40,9 +40,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<s-kurs-schueler-schueler v-for="s in filtered.values()" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
+					<s-kurs-schueler-schueler v-for="s in schuelerFilter.filtered.value.values()" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
 						:get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
-					<tr v-if="!filtered.size">
+					<tr v-if="!schuelerFilter.filtered.value.size">
 						<td class="opacity-50 text-sm">Keine Schüler zu diesem Filter gefunden.</td>
 					</tr>
 				</tbody>
@@ -63,7 +63,17 @@
 	const fach_filter_toggle = props.schuelerFilter.fach_filter_toggle();
 	const radio_filter = props.schuelerFilter.radio_filter();
 
-	const filtered = props.schuelerFilter.filtered();
+	const fach: WritableComputedRef<GostFach|undefined> = computed({
+		get: () => {
+			for (const fach of props.faecherManager.toVector())
+				if (fach.id === props.schuelerFilter.fach.value)
+					return fach;
+			return undefined
+		},
+		set: (value) => props.schuelerFilter.fach.value = value?.id
+	})
+
+	// const filtered = props.schuelerFilter.filtered();
 
 	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = computed({
 		get: () => props.schueler,

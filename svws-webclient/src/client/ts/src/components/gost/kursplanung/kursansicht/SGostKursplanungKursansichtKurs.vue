@@ -29,10 +29,12 @@
 			</svws-ui-icon>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">
+			<td class="text-center blockung--kursdifferenz cursor-pointer hover:bg-yellow-200" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" @click="toggle_active_fachwahl">
 				{{ kursdifferenz[2] }}
 			</td>
-			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{ kursdifferenz[1] }}</td>
+			<td class="text-center blockung--kursdifferenz cursor-pointer hover:bg-yellow-200" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" @click="toggle_active_fachwahl">
+				{{ kursdifferenz[1] }}
+			</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
 			<td />
@@ -97,6 +99,17 @@
 	}
 
 	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id))
+
+	function toggle_active_fachwahl() {
+		if (props.schuelerFilter === undefined)
+			return;
+		if (props.schuelerFilter.fach.value !== props.kurs.fach_id) {
+			props.schuelerFilter.kursart.value = GostKursart.fromID(props.kurs.kursart);
+			props.schuelerFilter.fach.value = props.kurs.fach_id;
+		}
+		else
+			props.schuelerFilter.reset();
+	}
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag | undefined> = computed(() => {
 		const liste = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id);

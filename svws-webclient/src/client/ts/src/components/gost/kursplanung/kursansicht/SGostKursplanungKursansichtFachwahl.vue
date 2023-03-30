@@ -4,7 +4,7 @@
 			<td colspan="3">
 				{{ fach.kuerzel }}-{{ kursart.kuerzel }}
 			</td>
-			<td class="text-center" colspan="1">
+			<td class="text-center cursor-pointer hover:bg-yellow-200" colspan="1" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
 			</td>
 			<td :colspan="schienen.size()+2">
@@ -51,6 +51,22 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
 	}>();
+
+	// const selected_fachwahl: ComputedRef<boolean> = computed(() => {
+	// 	const filter_fach_id = props.schuelerFilter?.fach?.value;
+	// 	return (kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === filter_kurs_id)
+	// });
+
+	function toggle_active_fachwahl() {
+		if (props.schuelerFilter === undefined)
+			return;
+		if (props.schuelerFilter.fach.value !== props.fach.id) {
+			props.schuelerFilter.kursart.value = props.kursart;
+			props.schuelerFilter.fach.value = props.fach.id;
+		}
+		else
+			props.schuelerFilter.reset();
+	}
 
 	const kurszahlen: ComputedRef<Map<number, number>> = computed(() => {
 		const kurszahlen : Map<number, number> = new Map();
