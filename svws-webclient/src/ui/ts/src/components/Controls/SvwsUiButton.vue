@@ -251,7 +251,7 @@
 }
 
 .data-table__tbody .button--icon.button--small {
-	@apply w-4 h-4;
+	@apply w-5 h-5 -m-0.5;
 	@apply p-0 !important;
 }
 

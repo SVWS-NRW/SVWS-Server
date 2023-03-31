@@ -1,14 +1,23 @@
 <template>
-	<tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }">
-		<td colspan="2">
-			<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
-				{{ kompetenz.daten.id }}-{{ kompetenz.daten.bezeichnung }}
-			</svws-ui-checkbox>
-		</td>
-		<!-- <td> {{ kompetenz.daten.id }}-{{ kompetenz.daten.bezeichnung }} </td> -->
+	<div role="cell" class="data-table__td" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+		<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
+			{{ kompetenz.daten.bezeichnung }}
+		</svws-ui-checkbox>
+	</div>
+	<div role="cell" class="data-table__td font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+		{{ kompetenz.daten.id }}
+	</div>
+	<div role="cell" class="data-table__td" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
 		<!-- TODO Die Methode in Manager auslagern. -->
-		<td> {{ props.getGruppen4Kompetenz(kompetenz) }} </td>
-	</tr>
+		<div class="data-table__td-content">
+			<template v-if="getBenutzerManager().istAdmin()">
+				<i-ri-shield-star-line/>
+			</template>
+			<template v-else>
+				{{ props.getGruppen4Kompetenz(kompetenz) }}
+			</template>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -39,15 +48,20 @@
 	});
 </script>
 
-<style scoped>
-	.vorhanden{
-		background-color: aquamarine;
+<style scoped lang="postcss">
+	.vorhanden {
+		@apply bg-primary/5 text-primary;
 	}
 
-	.nichtvorhanden{
-		background-color: white;
+	.nichtvorhanden {
+		@apply bg-white;
 	}
-	.deaktiviert{
-		background-color: rgb(220, 220, 220);
+
+	.deaktiviert {
+		@apply text-black/50;
+	}
+
+	.data-table__td-content {
+		@apply inline-block;
 	}
 </style>

@@ -5,11 +5,6 @@
 			v-model="selected"
 			:disabled="istAlle" />
 	</div>
-	<div role="cell" class="data-table__td font-mono">
-		<span class="data-table__td-content">
-			{{ row.id }}
-		</span>
-	</div>
 	<div role="cell" class="data-table__td">
 		<div class="flex items-center gap-1">
 			{{ row.bezeichnung }}
@@ -17,6 +12,11 @@
 				<i-ri-link />
 			</svws-ui-button>
 		</div>
+	</div>
+	<div role="cell" class="data-table__td font-mono">
+		<span class="data-table__td-content">
+			{{ row.id }}
+		</span>
 	</div>
 	<div role="cell" class="data-table__row-actions data-table__td">
 		<span class="data-table__td-content">
@@ -52,3 +52,6 @@
 	});
 
 </script>
+
+<style scoped lang="postcss">
+</style>

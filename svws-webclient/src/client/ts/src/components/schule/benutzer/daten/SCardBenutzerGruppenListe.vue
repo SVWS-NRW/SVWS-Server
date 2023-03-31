@@ -11,16 +11,16 @@
 					<div role="columnheader"
 						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title font-mono">
-								ID
+							<span class="data-table__th-title">
+								Bezeichnung
 							</span>
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
+						 class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title">
-								Bezeichnung
+							<span class="data-table__th-title font-mono">
+								ID
 							</span>
 						</div>
 					</div>
@@ -75,6 +75,6 @@
 
 <style scoped lang="postcss">
 	.data-table__tr {
-		grid-template-columns: var(--checkbox-width) minmax(4rem, 1fr) minmax(4rem, 10fr) var(--checkbox-width) !important;
+		grid-template-columns: var(--checkbox-width) minmax(4rem, 10fr) minmax(4rem, 1fr) var(--checkbox-width) !important;
 	}
 </style>

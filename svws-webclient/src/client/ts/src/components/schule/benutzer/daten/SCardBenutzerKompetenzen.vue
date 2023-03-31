@@ -1,5 +1,12 @@
 <template>
 	<svws-ui-content-card title="Kompetenzen" class="col-span-full">
+		<template #actions>
+			<svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
+				<span class="inline-flex items-center">
+					Admin-User
+				</span>
+			</svws-ui-checkbox>
+		</template>
 		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
@@ -8,8 +15,27 @@
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
 								<span class="inline-flex items-center gap-1">
-									<i-ri-information-fill />
-									<span>Kompetenz/-gruppe durch Gruppe(n)</span>
+									<span>Kompetenz</span>
+								</span>
+							</span>
+						</div>
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title font-mono">
+								<span class="inline-flex items-center gap-1">
+									<span>ID</span>
+								</span>
+							</span>
+						</div>
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title">
+								<span class="inline-flex items-center gap-1">
+									<span>Benutzergruppe</span>
 								</span>
 							</span>
 						</div>
@@ -27,27 +53,6 @@
 				</template>
 			</template>
 		</svws-ui-data-table>
-<!--		<table class=" ">
-			<tr class="bg-green-100">
-				<td />
-				<td> <svws-ui-icon> <i-ri-information-fill /> </svws-ui-icon> </td>
-				<td> Kompetenz / Kompetenzgruppe </td>
-				<td>durch Gruppe(n)</td>
-			</tr>
-			&lt;!&ndash; <tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }"> &ndash;&gt;
-			<tr>
-				<td />
-				<td colspan="2"> <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()"> Admin ? </svws-ui-checkbox></td>
-				&lt;!&ndash; <td> Admin ?  </td>  &ndash;&gt;
-				<td> Kompetenz von </td>
-			</tr>
-			<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
-				<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
-											:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
-											:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
-											:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
-			</template>
-		</table>-->
 	</svws-ui-content-card>
 </template>
 
@@ -78,7 +83,11 @@
 	});
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
+	.data-table__tr {
+		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 0.5fr) minmax(4rem, 1fr);
+	}
+
 	.tooltip {
 	position: relative;
 	display: inline-block;

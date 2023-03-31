@@ -354,11 +354,21 @@ const computedTableAttributes = computed(() => ({
 			@apply font-mono;
 		}
 
+		&__align-left {
+			.data-table__th-wrapper__sortable {
+				@apply -ml-1;
+			}
+		}
+
 		&__align-right {
 			@apply justify-end text-right;
 
 			.data-table__th-wrapper {
 				@apply justify-end;
+			}
+
+			.data-table__th-wrapper__sortable {
+				@apply -mr-1;
 			}
 
 			.text-input--headless {
@@ -460,7 +470,6 @@ const computedTableAttributes = computed(() => ({
 		&__td {
 			@apply text-left;
 			@apply h-[2.75rem];
-			padding: 0.8rem 0.25rem;
 
 			> div:not(.data-table__th-wrapper__sortable),
 			> div > span {
