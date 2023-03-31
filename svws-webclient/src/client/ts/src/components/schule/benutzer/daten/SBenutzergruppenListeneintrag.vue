@@ -14,7 +14,7 @@
 		<div class="flex items-center gap-1">
 			{{ row.bezeichnung }}
 			<svws-ui-button type="icon" size="small" @click="goToBenutzergruppe(row.id)">
-				<i-ri-external-link-fill />
+				<i-ri-link />
 			</svws-ui-button>
 		</div>
 	</div>

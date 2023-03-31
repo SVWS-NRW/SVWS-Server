@@ -33,6 +33,11 @@
 			isActive: true,
 		}
 	]);
+	const dataCollapsible = ref([
+		{
+			id: 1,
+		}
+	]);
 	const set = new Set<DataTableItem>();
 	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
 	set.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
@@ -130,12 +135,14 @@
 	function onInput(event: Event) {
 		logEvent("input", event);
 	}
+
+	const collapsed = ref(false);
 </script>
 
 <template>
 	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
 		<Variant title="Basic">
-			<section style="max-height: 50vh" class="flex flex-col">
+			<section class="flex flex-col">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
 					:columns="columns"
@@ -187,8 +194,43 @@
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
+		<Variant title="Collapsible">
+			<section class="flex flex-col">
+				<svws-ui-data-table
+					:items="dataCollapsible"
+					collapsible
+					>
+					<template #header>
+						<span></span>
+					</template>
+					<template #body>
+						<div role="row"
+							 class="data-table__tr data-table__tbody__tr">
+							<div role="row" class="data-table__tr data-table__tbody__tr">
+								<div role="cell" class="data-table__td">
+									<div class="flex items-center gap-1">
+										<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed">
+											<i-ri-arrow-right-s-line v-if="collapsed"/>
+											<i-ri-arrow-down-s-line v-else />
+										</svws-ui-button>
+										Collapsed Cell Content
+									</div>
+								</div>
+							</div>
+							<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}">
+								<div role="cell" class="data-table__td">
+									<div class="flex items-center gap-1">
+										Collapsed Row
+									</div>
+								</div>
+							</div>
+						</div>
+					</template>
+				</svws-ui-data-table>
+			</section>
+		</Variant>
 		<Variant title="Drag-n-Drop">
-			<section style="max-height: 50vh" class="flex flex-col">
+			<section class="flex flex-col">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
 					:columns="columns"

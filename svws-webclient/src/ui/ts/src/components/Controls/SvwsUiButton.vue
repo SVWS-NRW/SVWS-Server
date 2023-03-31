@@ -250,6 +250,11 @@
 	padding: 0.1em 0.5em;
 }
 
+.data-table__tbody .button--icon.button--small {
+	@apply w-4 h-4;
+	@apply p-0 !important;
+}
+
 .button--big {
 	padding-top: 0.64em;
 	padding-bottom: 0.64em;

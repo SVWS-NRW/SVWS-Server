@@ -1,30 +1,24 @@
 <template>
-	<template v-if="collapsed">
-		<tr v-if="collapsed" style="background-color:lightblue; ">
-			<td> <svws-ui-icon><i-ri-arrow-right-s-line @click="setCollapse()" /></svws-ui-icon> </td>
-			<td colspan="3">
+	<div role="row"
+		 class="data-table__tr data-table__tbody__tr">
+		<div role="cell" class="data-table__td">
+			<div class="flex items-center gap-1">
+				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed">
+					<i-ri-arrow-right-s-line v-if="collapsed"/>
+					<i-ri-arrow-down-s-line v-else />
+				</svws-ui-button>
 				<svws-ui-checkbox v-model="selected" :disabled="getBenutzerManager().istAdmin()">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
-			</td>
-		</tr>
-	</template>
-	<template v-else>
-		<tr style="background-color:lightblue;  ">
-			<td style="vertical-align: top;" :rowspan="BenutzerKompetenz.getKompetenzen(kompetenzgruppe).size()+1">
-				<svws-ui-icon><i-ri-arrow-down-s-line @click="collapsed = !collapsed" /></svws-ui-icon>
-			</td>
-			<td colspan="3">
-				<svws-ui-checkbox v-model="selected" :disabled="getBenutzerManager().istAdmin()">
-					{{ kompetenzgruppe.daten.bezeichnung }}
-				</svws-ui-checkbox>
-			</td>
-		</tr>
-		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-			<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager"
-				:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
-		</template>
-	</template>
+			</div>
+		</div>
+		<div role="row" class="data-table__tr data-table__tbody__tr">
+			<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
+				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager"
+									  :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
+			</template>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
