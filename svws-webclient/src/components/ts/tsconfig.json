@@ -6,15 +6,14 @@
 		"baseUrl": ".",
 		"paths": {},
 		"types": [
-			"vite/client",
-			"vue/ref-macros"
-		],
+			"vite/client"
+		]
 	},
 	"include": [
 		"env.d.ts",
 		"vite.config.ts",
 		"src/**/*",
 		"src/**/*.vue",
-		"components.d.ts",
+		"components.d.ts"
 	]
 }
