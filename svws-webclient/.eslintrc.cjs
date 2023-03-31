@@ -52,6 +52,7 @@ module.exports = {
 	},
 	overrides: [
 		{
+			// *.d.ts-Dateien haben 4 Leerzeichen statt Tabs, kann man auch nicht anders einstellen...
 			files: ['*.d.ts'],
 			rules: {
 				"indent": ["off", "tab", { "SwitchCase": 1 }],
@@ -64,14 +65,14 @@ module.exports = {
 				"src/client/ts/src/**/*.{ts,js,cjs,mjs}",
 			],
 			env: {
-				// diese Packages haben keinen zugriff auf Node APIs da er im Browser läuft.
+				// diese Packages haben keinen Zugriff auf Node APIs da es im Browser läuft.
 				node: false
 			},
 		},
 		{
 			files: ["**/*.vue"],
 			rules: {
-				// für SFCs gibt es eigene regeln bzgl. Indentation
+				// für SFCs gibt es eigene Regeln bzgl. Indentation
 				"indent": "off",
 			}
 		}
