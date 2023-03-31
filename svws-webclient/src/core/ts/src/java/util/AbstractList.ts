@@ -1,5 +1,4 @@
 import { AbstractCollection } from './AbstractCollection';
-import { AbstractListIterator } from './AbstractListIterator';
 import { AbstractListListIterator } from './AbstractListListIterator';
 import { Collection } from './Collection';
 import { JavaIterator } from './JavaIterator';

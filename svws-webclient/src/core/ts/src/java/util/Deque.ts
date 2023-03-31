@@ -1,5 +1,3 @@
-import { JavaIterable } from '../../java/lang/JavaIterable';
-
 import { JavaIterator } from './JavaIterator';
 import { Collection } from './Collection';
 import { Queue } from './Queue';
@@ -17,7 +15,6 @@ export interface Deque<E> extends Queue<E> {
     iterator() : JavaIterator<E>;
 
     toArray() : Array<unknown>;
-
     toArray<U>(a: Array<U>) : Array<U>;
 
     add(e : E | null) : boolean;
@@ -39,13 +36,11 @@ export interface Deque<E> extends Queue<E> {
 
     hashCode() : number;
 
-
     element() : E;
 
     offer(e : E | null) : boolean;
 
     peek() : E | null;
-
     poll() : E | null;
 
 	addFirst(e : E | null) : void;

@@ -1,5 +1,3 @@
-import { NullPointerException } from "./NullPointerException";
-
 export abstract class JavaString {
 
 	public static contains(str: string, s: string | null) : boolean {

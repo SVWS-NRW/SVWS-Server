@@ -202,7 +202,9 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 
 
 	public reverse() : AbstractStringBuilder {
-		this.value = this.value.split("").reverse().join("");
+		let str = "";
+		for (let i = this.value.length - 1; i >= 0; i--)
+			str = str.concat(this.value.charAt(i));
 		return this;
 	}
 

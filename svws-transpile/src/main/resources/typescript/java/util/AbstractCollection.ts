@@ -157,7 +157,7 @@ export abstract class AbstractCollection<E> extends JavaObject implements Collec
     	if (!iter.hasNext())
     		return "[]";
     	let result : string = "[";
-    	while (true) {
+    	for (;;) {
     		result += JSON.stringify(iter.next());
     		if (!iter.hasNext())
     			return result + "]";

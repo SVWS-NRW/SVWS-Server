@@ -1,4 +1,3 @@
-import { JavaObject } from './JavaObject';
 import { TranspiledObject } from './TranspiledObject';
 
 

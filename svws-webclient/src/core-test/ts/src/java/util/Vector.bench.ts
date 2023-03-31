@@ -7,28 +7,28 @@ let v: Vector<unknown>;
 describe.each([s, n, l])(
 	"java.util.Vector, getestet mit $name",
 	({ a, b, c, d, e }) => {
-			v = new Vector();
-			v.add(a);
-			v.add(b);
-			v.add(c);
-			v.add(d);
-			v.add(e);
+		v = new Vector();
+		v.add(a);
+		v.add(b);
+		v.add(c);
+		v.add(d);
+		v.add(e);
 		bench( "Array from", () => {
-				Array.from(v);
-			});
+			Array.from(v);
+		});
 		bench( "toArray", () => {
-				v.toArray(new Array<typeof a>());
-			});
+			v.toArray(new Array<typeof a>());
+		});
 		bench( "[...v] destructure", () => {
-				[...v];
-			});
+			[...v];
+		});
 		bench( "for of loop", () => {
-				let arr = []
-				for (const e of v) arr.push(e)
-			});
+			const arr = []
+			for (const e of v) arr.push(e)
+		});
 		bench( "for loop", () => {
-				let arr = []
-				for (let i = 0; i < v.size(); i++) arr.push(v.get(i))
-			});
+			const arr = []
+			for (let i = 0; i < v.size(); i++) arr.push(v.get(i))
+		});
 	}
 );
