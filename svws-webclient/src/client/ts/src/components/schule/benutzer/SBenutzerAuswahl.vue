@@ -39,9 +39,9 @@
 	const props = defineProps<BenutzerAuswahlProps>();
 
 	const cols = [
-		{ key: "id", label: "ID", sortable: true, align: "right", span: 0.5 },
 		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
-		{ key: "name", label: "Name", sortable: true, span: 2}
+		{ key: "name", label: "Name", sortable: true },
+		{ key: "id", label: "ID", sortable: true, span: 0.5 }
 	];
 
 	const search: Ref<string> = ref("");
