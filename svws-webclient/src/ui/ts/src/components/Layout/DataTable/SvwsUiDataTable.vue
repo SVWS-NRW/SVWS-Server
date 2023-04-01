@@ -518,7 +518,7 @@ const computedTableAttributes = computed(() => ({
 				}
 
 				.data-table__td:first-child {
-					@apply pl-7;
+					@apply pl-12;
 				}
 			}
 		}

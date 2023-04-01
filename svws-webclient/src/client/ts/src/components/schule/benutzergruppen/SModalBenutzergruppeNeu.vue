@@ -5,11 +5,9 @@
 		</template>
 
 		<template #modalContent>
-			<div class="content-wrapper">
-				<div class="input-wrapper">
-					<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
-					<svws-ui-checkbox v-model="inputbgIstAdmin"> Admin ? </svws-ui-checkbox>
-				</div>
+			<div class="input-wrapper-1-col">
+				<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
+				<svws-ui-checkbox v-model="inputbgIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 			</div>
 		</template>
 

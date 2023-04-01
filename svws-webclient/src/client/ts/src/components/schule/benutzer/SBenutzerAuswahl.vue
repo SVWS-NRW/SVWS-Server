@@ -6,16 +6,12 @@
 				<span title="Benutzer">Benutzer</span>
 			</nav>
 		</template>
-		<template #header>
-			<div class="mb-2">
-				<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel">
-					<i-ri-search-line />
-				</svws-ui-text-input>
-			</div>
-		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl()?.id)">
+				:columns="cols" clickable selectable count filter :unique-key="String(auswahl()?.id)">
+				<template #search>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
+				</template>
 				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footerActions>
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"

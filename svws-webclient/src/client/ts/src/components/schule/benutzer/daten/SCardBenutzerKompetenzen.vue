@@ -3,7 +3,7 @@
 		<template #actions>
 			<svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
 				<span class="inline-flex items-center">
-					Admin-User
+					Admin-Rechte
 				</span>
 			</svws-ui-checkbox>
 		</template>

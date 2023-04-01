@@ -1,8 +1,10 @@
 <template>
 	<svws-ui-content-card title="Benutzergruppe">
-		<div class="flex flex-col">
+		<template #actions>
+			<svws-ui-checkbox v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
+		</template>
+		<div class="input-wrapper-1-col">
 			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
-			<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
 		</div>
 	</svws-ui-content-card>
 </template>

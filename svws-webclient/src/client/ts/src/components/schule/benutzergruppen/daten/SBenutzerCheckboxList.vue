@@ -1,16 +1,16 @@
 <template>
 	<!-- //TODO length klappt nicht.
 	<div v-show="benutzerListe.length" class="w-full "></div> -->
-	<div class="w-full ">
-		<div v-if="spalteLinks" class="font-bond mb-1  h-6 center bg-green-300 rounded-lg flex justify-end place-items-center">
-			<i-ri-arrow-right-circle-line class="center" />
+	<div class="w-full">
+		<div class="flex justify-between items-center font-bold text-button mb-2">
+			<template v-if="spalteLinks">
+				<span>Verfügbare Benutzer</span>
+			</template>
+			<template v-else>
+				<span>Aktiv in dieser Gruppe</span>
+			</template>
 		</div>
-
-		<div v-if="!spalteLinks" class="font-bond mb-1 h-6 center bg-red-300 rounded-lg flex justify-start place-items-center">
-			<svws-ui-icon v-if="!spalteLinks"> <i-ri-arrow-left-circle-line /> </svws-ui-icon>
-		</div>
-
-		<ul class=" divide-y divide-gray-100  ">
+		<ul class="flex flex-col gap-0.5">
 			<template v-for="benutzer in listBenutzer()" :key="benutzer.id">
 				<s-benutzer-checkbox :benutzer="benutzer"
 					v-model="aktiv" :spalte-links="spalteLinks"

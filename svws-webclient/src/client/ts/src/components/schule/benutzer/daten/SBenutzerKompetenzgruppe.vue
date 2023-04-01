@@ -16,7 +16,9 @@
 					</svws-ui-checkbox>
 				</div>
 			</div>
-			<div role="cell" class="data-table__td"/>
+			<div role="cell" class="data-table__td text-black/50">
+				–
+			</div>
 			<div role="cell" class="data-table__td" :title="getBenutzerManager().istAdmin() ? 'Administrator' : ''">
 				<template v-if="getBenutzerManager().istAdmin()">
 					<i-ri-shield-star-line class="opacity-50"/>

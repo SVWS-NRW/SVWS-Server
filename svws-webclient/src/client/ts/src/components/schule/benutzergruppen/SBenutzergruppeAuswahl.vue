@@ -6,16 +6,12 @@
 				<span title="Benutzergruppen">Benutzergruppen</span>
 			</nav>
 		</template>
-		<template #header>
-			<div class="mb-2">
-				<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel">
-					<i-ri-search-line />
-				</svws-ui-text-input>
-			</div>
-		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable :footer="true" :unique-key="String(auswahl()?.id)">
+				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" filter>
+				<template #search>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
+				</template>
 				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 				<template #footerActions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
@@ -40,8 +36,8 @@
 	const selectedItems: Ref<BenutzergruppeListeEintrag[]> = ref([]);
 
 	const cols = [
-		{ key: "id", label: "ID", sortable: true, span: 0.5, align: "right" },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
+		{ key: "id", label: "ID", sortable: true, span: 0.5 }
 	];
 
 	const search: Ref<string> = ref("");

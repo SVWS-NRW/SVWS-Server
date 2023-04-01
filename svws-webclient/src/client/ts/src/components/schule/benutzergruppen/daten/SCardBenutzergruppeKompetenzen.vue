@@ -1,14 +1,40 @@
 <template>
 	<svws-ui-content-card title="Kompetenzen">
-		<div class="overflow-y-scroll h-screen shadow-md sm:rounded-lg">
-			<table class="w-full ">
-				<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
+		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
+			<template #header>
+				<div role="row" class="data-table__tr data-table__thead__tr">
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title">
+								<span class="inline-flex items-center gap-1">
+									<span>Kompetenz</span>
+								</span>
+							</span>
+						</div>
+					</div>
+					<div role="columnheader"
+						 class="data-table__th data-table__thead__th">
+						<div class="data-table__th-wrapper">
+							<span class="data-table__th-title font-mono">
+								<span class="inline-flex items-center gap-1">
+									<span>ID</span>
+								</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</template>
+			<template #body>
+				<template
+					v-for="(kompetenzgruppe, index) in kompetenzgruppen"
+					:key="index">
 					<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin"
-						:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
-						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+													  :get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
+													  :add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
 				</template>
-			</table>
-		</div>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -29,3 +55,9 @@
 	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 
 </script>
+
+<style scoped lang="postcss">
+.data-table__tr {
+	grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 0.5fr);
+}
+</style>

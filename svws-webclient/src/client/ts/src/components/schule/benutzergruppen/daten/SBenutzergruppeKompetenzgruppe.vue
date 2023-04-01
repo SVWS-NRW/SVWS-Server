@@ -1,24 +1,32 @@
 <template>
-	<template v-if="collapsed">
-		<tr v-if="collapsed" style="background-color:lightblue; ">
-			<td> <svws-ui-icon><i-ri-arrow-right-s-line @click="setCollapse()" /></svws-ui-icon> </td>
-			<td> <svws-ui-checkbox v-model="selected" :disabled="istAdmin" /> </td>
-			<td> {{ kompetenzgruppe.daten.bezeichnung }} </td>
-		</tr>
-	</template>
-	<template v-else>
-		<tr style="background-color:lightblue;  ">
-			<td style="vertical-align: top;" :rowspan="BenutzerKompetenz.getKompetenzen(kompetenzgruppe).size()+1">
-				<svws-ui-icon><i-ri-arrow-down-s-line @click="collapsed = !collapsed" /></svws-ui-icon>
-			</td>
-			<td><svws-ui-checkbox v-model="selected" :disabled="istAdmin" /></td>
-			<td> {{ kompetenzgruppe.daten.bezeichnung }} </td>
-		</tr>
-		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
+	<div role="row"
+		 class="data-table__tr data-table__tbody__tr">
+		<div role="row" class="data-table__tr data-table__tbody__tr col-span-full">
+			<div role="cell" class="data-table__td">
+				<div class="flex items-center gap-1">
+					<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
+						<template v-if="hatSubKompetenzen">
+							<i-ri-arrow-right-s-line v-if="collapsed"/>
+							<i-ri-arrow-down-s-line v-else />
+						</template>
+					</svws-ui-button>
+					<!--TODO: Intermediate state wenn mindestens ein Unterpunkt true ist-->
+					<svws-ui-checkbox v-model="selected" :disabled="istAdmin">
+						{{ kompetenzgruppe.daten.bezeichnung }}
+					</svws-ui-checkbox>
+				</div>
+			</div>
+			<div role="cell" class="data-table__td text-black/50">
+				–
+			</div>
+		</div>
+		<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}"
+			 v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id"
+		>
 			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin"
-				:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
-		</template>
-	</template>
+										:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -38,6 +46,7 @@
 
 	const collapsed: Ref<boolean> = ref(true);
 
+	const hatSubKompetenzen: WritableComputedRef<number> = computed(() => BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe).size());
 
 	const selected: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
@@ -54,3 +63,13 @@
 	}
 
 </script>
+
+<style scoped lang="postcss">
+.data-table__tr {
+	grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 0.5fr);
+}
+
+.checkbox--checked:not(.checkbox--disabled) {
+	@apply text-primary;
+}
+</style>

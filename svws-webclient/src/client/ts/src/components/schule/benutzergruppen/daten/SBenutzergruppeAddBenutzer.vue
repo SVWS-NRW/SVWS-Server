@@ -1,15 +1,15 @@
 <template>
 	<svws-ui-content-card title="Benutzerzuordnung">
-		<div class="flex gap-5 divide-x-2 divide-gray-200 overflow-auto w-full">
-			<s-benutzer-checkbox-list :list-benutzer="listBenutzergruppenBenutzer"
-				title="Entfernen" :spalte-links="true"
+		<div class="flex w-full gap-6 lg:gap-8">
+			<s-benutzer-checkbox-list
+				:list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="true"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />
-			<s-benutzer-checkbox-list class="pl-4"
-				:list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="false"
+			<s-benutzer-checkbox-list :list-benutzer="listBenutzergruppenBenutzer"
+				title="Entfernen" :spalte-links="false"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe" 
+				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />
 		</div>
 	</svws-ui-content-card>

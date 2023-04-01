@@ -1,8 +1,12 @@
 <template>
-	<tr :class="{vorhanden : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }">
-		<td> <svws-ui-checkbox v-model="selected" :disabled="aktiviert" /> </td>
-		<td> {{ kompetenz.daten.id }}-{{ kompetenz.daten.bezeichnung }} </td>
-	</tr>
+	<div role="cell" class="data-table__td" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+		<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
+			{{ kompetenz.daten.bezeichnung }}
+		</svws-ui-checkbox>
+	</div>
+	<div role="cell" class="data-table__td font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+		{{ kompetenz.daten.id }}
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -35,15 +39,20 @@
 
 </script>
 
-<style scoped>
-	.vorhanden{
-		background-color: aquamarine;
-	}
+<style scoped lang="postcss">
+.vorhanden {
+	@apply bg-primary/5 text-primary;
+}
 
-	.nichtvorhanden{
-		background-color: white;
-	}
-	.deaktiviert{
-		background-color: rgb(220, 220, 220);
-	}
+.nichtvorhanden {
+	@apply bg-white;
+}
+
+.deaktiviert {
+	@apply text-black/50;
+}
+
+.data-table__td-content {
+	@apply inline-block;
+}
 </style>
