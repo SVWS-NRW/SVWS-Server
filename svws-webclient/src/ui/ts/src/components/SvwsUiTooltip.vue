@@ -152,7 +152,7 @@
 
 .tooltip {
 	@apply rounded-md z-50;
-	@apply px-2 py-0.5 w-max max-w-[12rem];
+	@apply px-2 py-0.5 w-max max-w-[24rem];
 	@apply bg-white text-black border border-light;
 	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
 

@@ -3,7 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
-					<svws-ui-menu-header> {{ username }} </svws-ui-menu-header>
+					<svws-ui-menu-header :user="username"/>
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">

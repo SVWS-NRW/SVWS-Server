@@ -122,6 +122,10 @@
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
 		@apply py-8;
 		@apply relative;
+
+		&.pt-0 {
+			padding-top: 0;
+		}
     }
 
 	.router-tab-bar--area {

@@ -1,8 +1,7 @@
 <template>
-	<svws-ui-content-card title="Laufbahnplanung">
+	<svws-ui-content-card title="Lupo-Datei für die Laufbahnplanung">
 		<div class="content-wrapper">
-			Eine Lupo Datei importieren
-			<br><input type="file" accept=".lup" @change="import_file" :disabled="loading">
+			<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			<br>{{
 				status === false

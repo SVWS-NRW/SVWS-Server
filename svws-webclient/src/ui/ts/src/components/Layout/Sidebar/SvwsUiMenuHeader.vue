@@ -1,8 +1,10 @@
 <script setup lang='ts'>
 	const props = withDefaults(defineProps<{
 		collapsed?: boolean;
+		user?: string;
 	}>(), {
 		collapsed: false,
+		user: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -17,13 +19,13 @@
 <template>
 	<a class="sidebar--menu--initials"
 		href="#" @click.prevent="onClick">
-		<svws-ui-tooltip position="right">
+		<svws-ui-tooltip position="right" v-if="user">
 			<div class="sidebar--menu-header--icon">
-				A
+				{{ user.charAt(0).toUpperCase() }}
 			</div>
 			<template #content>
 				<div class="sidebar--menu-header--label">
-					Angemeldet als <slot />
+					Angemeldet als {{ user }}
 				</div>
 			</template>
 		</svws-ui-tooltip>
