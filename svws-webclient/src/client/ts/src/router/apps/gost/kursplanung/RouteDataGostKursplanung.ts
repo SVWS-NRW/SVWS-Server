@@ -636,7 +636,7 @@ export class RouteDataGostKursplanung {
 		this.mapBlockungen.set(result.id, result);
 		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		api.status.stop();
-		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(result.abijahrgang, result.gostHalbjahr, result.id));
+		await this.gotoBlockung(result);
 	}
 
 	ergebnisHochschreiben = async () => {
