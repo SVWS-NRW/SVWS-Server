@@ -43,7 +43,7 @@
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
-		{ key: "idJahrgaenge", label: "Jahrgang", sortable: true, span: 0.5, align: "right" },
+		{ key: "idJahrgaenge", label: "Jahrgang", sortable: true, span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5, align: "right" },
 	];
 

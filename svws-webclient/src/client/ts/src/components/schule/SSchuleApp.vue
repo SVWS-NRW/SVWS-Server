@@ -1,6 +1,6 @@
 <template>
 	<div class="app-layout--main--placeholder flex flex-col items-center">
-		<i-ri-community-line />
+		<i-ri-school-line />
 		<span class="text-headline">{{schulname}}</span>
 	</div>
 </template>

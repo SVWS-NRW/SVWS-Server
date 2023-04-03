@@ -14,7 +14,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-community-line />
+		<i-ri-school-line />
 	</div>
 </template>
 

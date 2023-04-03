@@ -12,7 +12,7 @@
 		</div>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<icon-graduation-cap />
+		<i-ri-graduation-cap-line />
 	</div>
 </template>
 

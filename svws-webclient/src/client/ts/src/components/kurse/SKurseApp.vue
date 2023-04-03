@@ -17,7 +17,7 @@
 		</svws-ui-router-tab-bar>
 	</template>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-slideshow-line />
+		<i-ri-presentation-line />
 	</div>
 </template>
 
