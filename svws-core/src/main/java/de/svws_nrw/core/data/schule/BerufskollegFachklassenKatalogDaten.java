@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten für einen Eintrag im Katalog der Fachklassen beim Berufskolleg.  
+ * Sie liefert die Daten für einen Eintrag im Katalog der Fachklassen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "die Daten für einen Eintrag im Katalog der Fachklassen beim Berufskolleg.")
@@ -21,11 +21,11 @@ public class BerufskollegFachklassenKatalogDaten {
 	/** Gibt an, ob die Fachklassen ausgelaufen ist oder nicht */
 	@Schema(description = "gibt an, ob die Fachklassen ausgelaufen ist oder nicht", example = "false")
 	public boolean istAusgelaufen = false;
-	
+
 	/** Die Gruppe des Berufsfeldes. */
 	@Schema(description = "die Gruppe des Berufsfeldes", example = "T")
 	public String berufsfeldGruppe;
-	
+
 	/** Das Berufsfeld. */
 	@Schema(description = "das Berufsfeld", example = "MT")
 	public String berufsfeld;
@@ -45,15 +45,15 @@ public class BerufskollegFachklassenKatalogDaten {
 	/** Die Bezeichnung der Fachklasse */
 	@Schema(description = "die Bezeichnung der Fachklasse", example = "Metalltechnik")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Die Bezeichnung der Fachklasse (männlich) */
 	@Schema(description = "die Bezeichnung der Fachklasse (männlich)", example = "Metalltechnik")
 	public @NotNull String bezeichnungM = "";
-	
+
 	/** Die Bezeichnung der Fachklasse (weiblich) */
 	@Schema(description = "die Bezeichnung der Fachklasse (weiblich)", example = "Metalltechnik")
 	public @NotNull String bezeichnungW = "";
-	
+
 	/** Gibt an, in welchem Schuljahr die Fachklasse einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;

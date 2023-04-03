@@ -108,26 +108,26 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	 * Prüft in Bezug auf Defizite, ob der Abschluss erworben wurde.
 	 *
 	 * @param faecher      die Abschlussfächer nach Fächergruppen sortiert
-	 * @param log_indent   die Einrückung für das Logging
+	 * @param logIndent    die Einrückung für das Logging
 	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
-	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {
+	private pruefeDefizite(faecher : AbschlussFaecherGruppen, logIndent : string) : AbschlussErgebnis {
 		const fg1_defizite : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterDefizite);
 		const fg2_defizite : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite);
 		if (fg1_defizite.size() > 0)
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizite)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizite)!);
 		if (fg2_defizite.size() > 0)
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizite)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizite)!);
 		let nachpruefung_genutzt : boolean = false;
 		const npFaecher : List<GEAbschlussFach> = new Vector();
 		const fg1_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterFG1NichtAusgleichbar);
 		const fg2_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterFG2NichtAusgleichbar);
 		if ((fg1_nicht_ausgleichbar.size() > 0) || (fg2_nicht_ausgleichbar.size() > 0)) {
 			const str_faecher : string = faecher.getKuerzelListe(this.filterFG1NichtAusgleichbar, this.filterFG2NichtAusgleichbar);
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Defizit(e) in " + str_faecher! + " aufgrund zu hoher Abweichungen nicht ausgleichbar.");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Defizit(e) in " + str_faecher! + " aufgrund zu hoher Abweichungen nicht ausgleichbar.");
 			if ((fg1_nicht_ausgleichbar.size() === 0) && (fg2_nicht_ausgleichbar.size() === 1) && (GELeistungsdifferenzierteKursart.G.hat(fg2_nicht_ausgleichbar.get(0).kursart)) && (fg2_nicht_ausgleichbar.get(0).note === 4)) {
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + "   -> Nachprüfung muss falls möglich in " + fg2_nicht_ausgleichbar.get(0).kuerzel + " stattfinden!");
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + "   -> Nachprüfung muss falls möglich in " + fg2_nicht_ausgleichbar.get(0).kuerzel + " stattfinden!");
 				nachpruefung_genutzt = true;
 				npFaecher.add(fg2_nicht_ausgleichbar.get(0));
 			} else {
@@ -137,11 +137,11 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 		const fg1_ausgleichsfaecher : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterAusgleiche);
 		const wp_defizit : GEAbschlussFach | null = faecher.fg1.getFach(this.filterDefizitWP);
 		if ((fg1_defizite.size() > 2) || ((fg1_defizite.size() === 2) && (wp_defizit === null))) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite in FG1");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		} else
 			if ((fg1_defizite.size() === 2) && (wp_defizit !== null) && (fg1_ausgleichsfaecher.size() === 0)) {
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite in FG1 - kein Ausgleich möglich");
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG1 - kein Ausgleich möglich");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 			} else
 				if ((fg1_defizite.size() === 2) && (wp_defizit !== null) && (fg1_ausgleichsfaecher.size() > 0) && (!nachpruefung_genutzt)) {
@@ -151,17 +151,17 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 					const ausgleichsFach : GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 					defizitFach.ausgeglichen = true;
 					ausgleichsFach.ausgleich = true;
-					this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+					this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
 					nachpruefung_genutzt = true;
 					npFaecher.add(wp_defizit);
-					const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent, npFaecher, nachpruefung_genutzt);
+					const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent, npFaecher, nachpruefung_genutzt);
 					if (abschlussergebnis.erworben) {
 						return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 					}
 					return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 				}
 		if ((fg1_defizite.size() === 1) && (wp_defizit === null) && (fg1_ausgleichsfaecher.size() === 0)) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> kein Defizit-Ausgleich in FG1");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> kein Defizit-Ausgleich in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
 		if ((fg1_defizite.size() === 1) && (wp_defizit === null)) {
@@ -171,7 +171,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			const ausgleichsFach : GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;
 			ausgleichsFach.ausgleich = true;
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
 		}
 		if ((fg1_defizite.size() === 1) && (wp_defizit !== null)) {
 			if ((fg1_ausgleichsfaecher.size() > 0)) {
@@ -179,20 +179,20 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 				const ausgleichsFach : GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 				defizitFach.ausgeglichen = true;
 				ausgleichsFach.ausgleich = true;
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe FG2 mit der Option Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
-				const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, nachpruefung_genutzt);
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Prüfe FG2 mit der Option Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+				const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent! + "  ", npFaecher, nachpruefung_genutzt);
 				if (abschlussergebnis.erworben)
 					return abschlussergebnis;
 				defizitFach.ausgeglichen = false;
 				ausgleichsFach.ausgleich = false;
 			}
 			if (nachpruefung_genutzt) {
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Eine Nachprüfung im WP-Fach und in dem leistungsdifferenzierten Fach der FG2 ist nicht gleichzeitig möglich.");
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Eine Nachprüfung im WP-Fach und in dem leistungsdifferenzierten Fach der FG2 ist nicht gleichzeitig möglich.");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 			}
 			wp_defizit.ausgleich = true;
 			wp_defizit.note--;
-			const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent, npFaecher, true);
+			const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent, npFaecher, true);
 			wp_defizit.note++;
 			wp_defizit.ausgleich = false;
 			if (abschlussergebnis.erworben) {
@@ -201,9 +201,9 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			}
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
-		let log_fg2_indent : string = log_indent;
+		let log_fg2_indent : string = logIndent;
 		if (fg2_nicht_ausgleichbar.size() === 1) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe FG2 mit Nachprüfung in " + fg2_nicht_ausgleichbar.get(0).kuerzel);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Prüfe FG2 mit Nachprüfung in " + fg2_nicht_ausgleichbar.get(0).kuerzel);
 			log_fg2_indent += "  ";
 		}
 		const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_fg2_indent, npFaecher, nachpruefung_genutzt);
@@ -216,28 +216,28 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	/**
 	 * Führt eine Detailprüfung in der Fächergruppe 2 durch. Diese Methode wird ggf. mehrfach - auch rekursiv - aufgerufen.
 	 *
-	 * @param faecher                die Abschlussfächer nach Fächergruppen sortiert
-	 * @param log_indent             die Einrückung für das Logging
-	 * @param npFaecher              die Liste der Nachprüfungsfächer, die bisher schon feststehen
-	 * @param nachpruefung_genutzt   gibt an, ob die Nachprüfungsmöglichkeit bereits eingesetzt werden musste
+	 * @param faecher               die Abschlussfächer nach Fächergruppen sortiert
+	 * @param logIndent             die Einrückung für das Logging
+	 * @param npFaecher             die Liste der Nachprüfungsfächer, die bisher schon feststehen
+	 * @param nachpruefungGenutzt   gibt an, ob die Nachprüfungsmöglichkeit bereits eingesetzt werden musste
 	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
 	 */
-	private pruefeFG2(faecher : AbschlussFaecherGruppen, log_indent : string, npFaecher : List<GEAbschlussFach>, nachpruefung_genutzt : boolean) : AbschlussErgebnis {
+	private pruefeFG2(faecher : AbschlussFaecherGruppen, logIndent : string, npFaecher : List<GEAbschlussFach>, nachpruefungGenutzt : boolean) : AbschlussErgebnis {
 		const ges_ausgleichsfaecher : List<GEAbschlussFach> = faecher.getFaecher(this.filterAusgleiche);
 		const fg2_defizite_1NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite1NS);
 		const fg2_defizite_2NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite2NS);
 		const fg2_defizit_anzahl : number = fg2_defizite_1NS.size() + fg2_defizite_2NS.size();
 		if (fg2_defizit_anzahl === 0) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> keine Defizite in FG2");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> keine Defizite in FG2");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, true);
 		}
-		if ((fg2_defizite_2NS.size() > 2) || (fg2_defizit_anzahl > (nachpruefung_genutzt ? 3 : 4))) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite in FG2 - mit Ausgleich und Nachprüfung kein Abschluss möglich");
+		if ((fg2_defizite_2NS.size() > 2) || (fg2_defizit_anzahl > (nachpruefungGenutzt ? 3 : 4))) {
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG2 - mit Ausgleich und Nachprüfung kein Abschluss möglich");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
-		if (ges_ausgleichsfaecher.size() < fg2_defizit_anzahl - (nachpruefung_genutzt ? 0 : 1)) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite in FG2 - nicht genügend Ausgleichsfächer vorhanden");
+		if (ges_ausgleichsfaecher.size() < fg2_defizit_anzahl - (nachpruefungGenutzt ? 0 : 1)) {
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG2 - nicht genügend Ausgleichsfächer vorhanden");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
 		if (fg2_defizite_2NS.size() === 2) {
@@ -245,9 +245,9 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 				defizitFach.ausgeglichen = true;
 				defizitFach.ausgleich = true;
 				defizitFach.note--;
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
-				const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, true);
-				this.logger.logLn(LogLevel.DEBUG, log_indent! + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
+				const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent! + "  ", npFaecher, true);
+				this.logger.logLn(LogLevel.DEBUG, logIndent! + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
 				if (abschlussergebnis.erworben)
 					npFaecher.add(defizitFach);
 				defizitFach.ausgeglichen = true;
@@ -257,16 +257,16 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 		if (ges_ausgleichsfaecher.size() >= fg2_defizit_anzahl) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> genug Ausgleichsfächer vorhanden." + (nachpruefung_genutzt ? "" : " Nachprüfung nicht nötig."));
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> genug Ausgleichsfächer vorhanden." + (nachpruefungGenutzt ? "" : " Nachprüfung nicht nötig."));
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, true);
 		}
 		for (const defizitFach of fg2_defizite_1NS) {
 			defizitFach.ausgeglichen = true;
 			defizitFach.ausgleich = true;
 			defizitFach.note--;
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
-			const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, log_indent! + "  ", npFaecher, true);
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
+			const abschlussergebnis : AbschlussErgebnis = this.pruefeFG2(faecher, logIndent! + "  ", npFaecher, true);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
 			if (abschlussergebnis.erworben)
 				npFaecher.add(defizitFach);
 			defizitFach.ausgeglichen = true;

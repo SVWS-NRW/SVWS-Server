@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Core-DTO für den Katalog der Sprachprüfungsniveaus.  
+ * Core-DTO für den Katalog der Sprachprüfungsniveaus.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Sprachprüfungsniveaus.")
@@ -20,10 +20,10 @@ public class SprachpruefungsniveauKatalogEintrag {
 	/** Das Kürzel des Sprachprüfungsniveaus */
 	@Schema(description = "das Kürzel des Sprachprüfungsniveaus", example = "NIVEAU_HA9")
 	public @NotNull String kuerzel = "";
-	
-    /** Die Beschreibung des Sprachprüfungsniveaus */
-    @Schema(description = "die Beschreibung des Sprachprüfungsniveaus", example = "Hauptschulabschluss nach Klasse 9")
-    public @NotNull String beschreibung = "";
+
+	/** Die Beschreibung des Sprachprüfungsniveaus */
+	@Schema(description = "die Beschreibung des Sprachprüfungsniveaus", example = "Hauptschulabschluss nach Klasse 9")
+	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -43,19 +43,19 @@ public class SprachpruefungsniveauKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel des Sprachprüfungsniveaus 
-	 * @param beschreibung   die Beschreibung des Sprachprüfungsniveaus 
-	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param kuerzel        das Kürzel des Sprachprüfungsniveaus
+	 * @param beschreibung   die Beschreibung des Sprachprüfungsniveaus
+	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                       "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public SprachpruefungsniveauKatalogEintrag(final int id, final @NotNull String kuerzel, 
+	 */
+	public SprachpruefungsniveauKatalogEintrag(final int id, final @NotNull String kuerzel,
 			final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
-        this.beschreibung = beschreibung;
+		this.beschreibung = beschreibung;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

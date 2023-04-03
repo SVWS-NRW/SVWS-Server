@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotNull;
  * Ein Manager zur Manipulation der Stundenplandaten. Der Manager dient: <br>
  *     (1) Zur Berechnung eines Stundenplanes. <br>
  *     (2) Zur Manipulation von der GUI. <br>
- * 
- * @author Benjamin A. Bartsch 
+ *
+ * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManager {
 
 	// Sub-Manager
-	
+
 	private final @NotNull StundenplanblockungManagerSchule _manager_sc;
 	private final @NotNull StundenplanblockungManagerFachMenge _manager_fa;
 	private final @NotNull StundenplanblockungManagerKlasseMenge _manager_kl;
@@ -38,7 +38,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der globalen Schulkonfiguration.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der globalen Schulkonfiguration.
 	 */
 	public @NotNull StundenplanblockungManagerSchule getSchule() {
@@ -47,7 +47,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Lehrkräfte.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Lehrkräfte.
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraftMenge getLehrkraefte() {
@@ -56,7 +56,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Lerngruppen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Lerngruppen.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppeMenge getLerngruppen() {
@@ -65,7 +65,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Klassen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Klassen.
 	 */
 	public @NotNull StundenplanblockungManagerKlasseMenge getKlassen() {
@@ -74,7 +74,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Fächer.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Fächer.
 	 */
 	public @NotNull StundenplanblockungManagerFachMenge getFaecher() {
@@ -83,7 +83,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Räume.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Räume.
 	 */
 	public @NotNull StundenplanblockungManagerRaumMenge getRaeume() {
@@ -92,7 +92,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Liefert den Manager zur Verwaltung der Kopplungen.
-	 * 
+	 *
 	 * @return Den Manager zur Verwaltung der Kopplungen.
 	 */
 	public @NotNull StundenplanblockungManagerKopplungMenge getKopplungen() {
@@ -101,7 +101,7 @@ public class StundenplanblockungManager {
 
 	/**
 	 * Überprüft alle Daten auf ihre Konsistenz. <br>
-	 * Wirft eine Exception, falls die Daten nicht konsistent sind.  
+	 * Wirft eine Exception, falls die Daten nicht konsistent sind.
 	 */
 	public void miscCheckConsistencyOrException() {
 		// TODO BAR miscCheckConsistencyOrException

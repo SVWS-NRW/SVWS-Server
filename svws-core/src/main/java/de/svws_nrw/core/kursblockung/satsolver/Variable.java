@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Eine Variable führt Statistik über ihr Vorkommen in Klauseln. Zudem ist jede Variable, die noch nicht auf TRUE oder
  * FALSE gesetzt wurde, in einem Heap.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class Variable {
@@ -53,7 +53,7 @@ public class Variable {
 
 	/**
 	 * Konstruktor. Erzeugt eine neue Variable mit einer bestimmten Variablen-Nummer (ungleich 0).
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr     Die Nummer der Variablen (ungleich 0).
 	 */
@@ -67,6 +67,11 @@ public class Variable {
 		negation = null;
 	}
 
+	/**
+	 * Gibt die String-Repräsentation der Variable zurück.
+	 *
+	 * @return die String-Repräsentation der Veriable
+	 */
 	@Override
 	public @NotNull String toString() {
 		return "" + nr;
@@ -74,7 +79,7 @@ public class Variable {
 
 	/**
 	 * Überprüft, ob diese Variable noch auf TRUE gesetzt werden kann.
-	 * 
+	 *
 	 * @return TRUE, falls man diese Variable und einen logischen Widerspruch erfüllen kann.
 	 */
 	public boolean isUnsat() {
@@ -92,9 +97,9 @@ public class Variable {
 
 	/**
 	 * Vergleicht die Statistik zweier Variablen und bestimmt, für welche man sich entscheiden sollte.
-	 * 
+	 *
 	 * @param b Die Variable, mit der verglichen werden soll.
-	 * 
+	 *
 	 * @return TRUE, wenn diese Instanz besser als "b" ist.
 	 */
 	public boolean isBetterThan(final @NotNull Variable b) {
@@ -155,7 +160,7 @@ public class Variable {
 
 	/**
 	 * Liefert die Anzahl an noch nicht erfüllten Klauseln.
-	 * 
+	 *
 	 * @return Die Anzahl an noch nicht erfüllten Klauseln.
 	 */
 	int getClauseOccurences() {

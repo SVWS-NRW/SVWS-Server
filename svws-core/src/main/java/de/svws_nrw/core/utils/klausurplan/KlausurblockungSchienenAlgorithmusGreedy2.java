@@ -4,16 +4,18 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** Die Strategie 'Greedy2' verteilt die Klausuren <b>mit einem höheren Knotengrad</b> auf bereits existierende Schienen
+/**
+ * Die Strategie 'Greedy2' verteilt die Klausuren <b>mit einem höheren Knotengrad</b> auf bereits existierende Schienen
  * in zufälliger Reihenfolge. Ist dies nicht möglich, wird eine neue Schiene erzeugt.
- * 
- * @author Benjamin A. Bartsch */
-public class KlausurblockungSchienenAlgorithmusGreedy2 extends KlausurblockungSchienenAlgorithmusAbstract {
+ *
+ * @author Benjamin A. Bartsch
+ */
+public final class KlausurblockungSchienenAlgorithmusGreedy2 extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurblockungSchienenAlgorithmusGreedy2(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);

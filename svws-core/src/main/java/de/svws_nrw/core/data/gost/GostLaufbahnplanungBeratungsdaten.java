@@ -14,10 +14,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostLaufbahnplanungBeratungsdaten {
 
 	/** Die ID des Beratungslehrers, der die letze Beratung durchgeführt hat */
-	@Schema(description = "die ID des Beratungslehrers, der die letze Beratung durchgeführt hat", example = "42")	
+	@Schema(description = "die ID des Beratungslehrers, der die letze Beratung durchgeführt hat", example = "42")
 	public Long beratungslehrerID = null;
 
-	
+
 	/** Das Beratungsdatum der letzten Beratung im Rahmen der Laufbahnplanung */
 	@Schema(description = "das Beratungsdatum der letzten Beratung im Rahmen der Laufbahnplanung", example = "22.2.2022")
 	public String beratungsdatum = null;
@@ -29,5 +29,5 @@ public class GostLaufbahnplanungBeratungsdaten {
 	/** Das Rücklaufdatum des Wahlbogens der letzten Beratung im Rahmen der Laufbahnplanung */
 	@Schema(description = "das Rücklaufdatum des Wahlbogens der letzten Beratung im Rahmen der Laufbahnplanung", example = "22.2.2022")
 	public String ruecklaufdatum = null;
-	
+
 }

@@ -3,18 +3,18 @@ package de.svws_nrw.core.utils;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Die Klasse stellt Hilfsmethoden rund um die Handhabung von 
+ * Die Klasse stellt Hilfsmethoden rund um die Handhabung von
  * Addressen zur Verfügung
  */
 public class AdressenUtils {
 
 	/**
-	 * Teilt eine Strassenangabe bestehend aus dem 
+	 * Teilt eine Strassenangabe bestehend aus dem
 	 * Strassennamen, der Hausnummer und dem Hausnummerzusatz
 	 * in die Bestandteile auf.
-	 * 
+	 *
 	 * @param strasse   die Strassenangabe
-	 * 
+	 *
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
 	public static @NotNull String@NotNull[] splitStrasse(final String strasse) {
@@ -43,11 +43,11 @@ public class AdressenUtils {
 	/**
 	 * Kombiniert die übergebenen Werte für den Strassennamen, die Hausnummer und
 	 * den Zusatz zu einer Strassenangabe in einem String.
-	 * 
+	 *
 	 * @param name         der Strassenname
 	 * @param hausNummer   die Hausnummer
 	 * @param zusatz       der Hausnummerzusatz
-	 * 
+	 *
 	 * @return die kombinierte Strassenangabe
 	 */
 	public static String combineStrasse(final String name, final String hausNummer, final String zusatz) {
@@ -57,5 +57,5 @@ public class AdressenUtils {
 			return name;
 		return name + " " + hausNummer.trim() + zusatz.trim();
 	}
-	
+
 }

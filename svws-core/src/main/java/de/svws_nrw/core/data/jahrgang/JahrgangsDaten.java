@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die grundlegenden Daten eines Jahrgangs.  
+ * Sie beschreibt die grundlegenden Daten eines Jahrgangs.
  */
 @XmlRootElement
 @Schema(description = "Die Daten eines Jahrgangs.")
@@ -16,7 +16,7 @@ public class JahrgangsDaten {
 	/** Die ID des Jahrgangs. */
 	@Schema(description = "die ID des Jahrgangs", example = "4711")
 	public long id;
-	
+
 	/** Das Kürzel des Jahrgangs. */
 	@Schema(description = "das Kürzel des Jahrgangs", example = "EF")
 	public String kuerzel;
@@ -24,7 +24,7 @@ public class JahrgangsDaten {
 	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
 	public String kuerzelStatistik;
-	
+
 	/** Der Name / die Bezeichnung des Jahrgangs. */
 	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example = "Einführungsphase")
 	public String bezeichnung;
@@ -36,14 +36,14 @@ public class JahrgangsDaten {
 	/** Die ID der Schulgliederung, der der Eintrag zugeordnet ist. */
 	@Schema(description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
 	public String kuerzelSchulgliederung;
-	
+
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")
 	public Long idFolgejahrgang;
-	
+
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
-	// TODO Weitere Daten	
+	// TODO Weitere Daten
 }

@@ -36,34 +36,34 @@ public enum Kindergartenbesuch {
     });
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Dauer des Kindergartenbesuchs */
 	public final @NotNull KindergartenbesuchKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Dauer des Kindergartenbesuchs */
-	public final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie;	
+	public final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull Long, Kindergartenbesuch> _mapKuerzel = new HashMap<>();
 
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Eintrags, welche ein Array von 
-	 *                   {@link KindergartenbesuchKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Eintrags, welche ein Array von
+	 *                   {@link KindergartenbesuchKatalogEintrag} ist
 	 */
-	private Kindergartenbesuch(final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie) {
+	Kindergartenbesuch(final @NotNull KindergartenbesuchKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert. 
+	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
 	private static @NotNull HashMap<@NotNull Long, Kindergartenbesuch> getMapByKuerzel() {
@@ -79,9 +79,9 @@ public enum Kindergartenbesuch {
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebe Kürzel der Dauer des Kindergartenbesuchs zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Dauer
-	 * 
+	 *
 	 * @return der Core-Type-Wert oder null, falls das Kürzel ungültig ist
 	 */
 	public static Kindergartenbesuch getByKuerzel(final long kuerzel) {

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Jahrgangsbezeichung zu einer Schulform bei einem Katalog-Eintrag 
+ * Sie liefert die Jahrgangsbezeichung zu einer Schulform bei einem Katalog-Eintrag
  * der zulässigen Jahrgänge.
  */
 @XmlRootElement
@@ -19,7 +19,7 @@ public class JahrgangsKatalogEintragBezeichnung {
 	/** Das Kürzel der Schulform */
 	@Schema(description = "das Kürzel der Schulform", example = "GY")
 	public @NotNull String schulform = "";
-	
+
 	/** Die Bezeichnung des Jahrgangs */
 	@Schema(description = "die Bezeichnung des Jahrgangs", example = "Einführungsphase")
 	public @NotNull String bezeichnung = "";
@@ -41,6 +41,6 @@ public class JahrgangsKatalogEintragBezeichnung {
 	public JahrgangsKatalogEintragBezeichnung(final @NotNull Schulform schulform, final @NotNull String bezeichnung) {
 		this.schulform = schulform.daten.kuerzel;
 		this.bezeichnung = bezeichnung;
-	}	
+	}
 
 }

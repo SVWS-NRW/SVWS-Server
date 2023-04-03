@@ -21,8 +21,8 @@ public class GostBlockungsergebnisSchiene {
 
 	/** Die ID der Schiene */
 	public long id = -1;
-	
+
 	/** Eine Liste der Kurse, welche dieser Schiene zugeordnet sind. */
 	public final @NotNull Vector<@NotNull GostBlockungsergebnisKurs> kurse = new Vector<>();
-	
+
 }

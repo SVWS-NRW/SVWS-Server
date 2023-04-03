@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Teilleistungsdaten
- * eines Schüler in Bezug auf den Lernabschnitt für das Externe-Noten-Modul ENM. 
+ * eines Schüler in Bezug auf den Lernabschnitt für das Externe-Noten-Modul ENM.
  */
 @XmlRootElement
 @Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Teilleistungsdaten eines Schüler in Bezug auf den Lernabschnitt für das Externe-Noten-Modul ENM.")
@@ -24,13 +24,13 @@ public class ENMTeilleistung {
 	/** Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde. (z.B. "2020-10-10") */
 	@Schema(description = "Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde", example = "2020-10-10")
 	public String datum;
-	
+
 	/** Eine Bemerkung zu der Teilleistung (z.B. "Nachgeschrieben") */
 	@Schema(description = "Eine Bemerkung zu der Teilleistung", example = "Nachgeschrieben")
-	public String bemerkung; 
+	public String bemerkung;
 
 	/** Das Noten-Kürzel für die Teilleistung (z.B. "1+") */
 	@Schema(description = "Das Noten-Kürzel für die Teilleistung", example = "1+")
 	public String notenKuerzel;
-	
+
 }

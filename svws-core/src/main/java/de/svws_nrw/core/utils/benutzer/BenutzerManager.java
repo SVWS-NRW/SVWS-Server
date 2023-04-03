@@ -44,9 +44,9 @@ public class BenutzerManager {
 
     /**
      * Erstellt einen neuen Manager mit leeren Daten für einen Benutzer
-     * 
+     *
      * @param id die ID des Benutzers
-     * 
+     *
      */
     public BenutzerManager(final long id) {
         init();
@@ -57,7 +57,7 @@ public class BenutzerManager {
 
     /**
      * Erstellt einen neuen Manager mit den Daten eines Benutzers
-     * 
+     *
      * @param pDaten die BenutzerDaten
      */
     public BenutzerManager(final @NotNull BenutzerDaten pDaten) {
@@ -83,7 +83,7 @@ public class BenutzerManager {
 
     /**
      * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
-     * 
+     *
      * @param bgd die Benutzergruppendaten
      */
     private void addGruppe(final BenutzergruppeDaten bgd) {
@@ -98,17 +98,17 @@ public class BenutzerManager {
             // Aktualisiere die Menge der zugeordneten Kompetenzen
             _setKompetenzenAlle.add(komp);
             // Speichere über welche Gruppe die Kompetenz zugeordnet wurde.
-            final Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp) ;
+            final Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
             if (gruppen == null)
                 throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
             gruppen.add(bgd);
-         }        
+         }
     }
-    
-    
+
+
     /**
      * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
-     * 
+     *
      * @param bgd die Benutzergruppendaten
      */
     private void removeGruppe(final BenutzergruppeDaten bgd) {
@@ -118,8 +118,8 @@ public class BenutzerManager {
     	_setGruppenIDs.remove(bgd.id);
     	 for (final @NotNull Long kid : bgd.kompetenzen) {
             final BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
-    		if (komp != null){
-    		    final Vector< @NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
+    		if (komp != null) {
+    		    final Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
     		    if (gruppen == null)
                     throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
 		        for (int i = gruppen.size() - 1; i >= 0; i--)
@@ -128,38 +128,35 @@ public class BenutzerManager {
 		        if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
 		            this._setKompetenzenAlle.remove(komp);
     		}
-    	 }	
+    	 }
 	}
-    
+
     /**
      * Liefert true, wenn der Benutzer in einer adminstrativen Gruppe ist, sonst false.
-     * 
+     *
      * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
      */
 
     public boolean  istInAdminGruppe() {
-       for(final BenutzergruppeDaten bg : _mapGruppen.values()) {
-           if(bg.istAdmin)
+       for (final BenutzergruppeDaten bg : _mapGruppen.values())
+           if (bg.istAdmin)
                return true;
-       }
        return false;
     }
-    
+
 //    /**
 //     * Liefert true, wenn der Benutzer durch die übergebene Gruppe in einer adminstrativen Gruppe ist, sonst false.
-//     * 
 //     *
-//     * 
+//     *
+//     *
 //     * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
 //     */
 //    public @NotNull List<@NotNull BenutzergruppeDaten> getAdminGruppen() {
 //        Vector<@NotNull BenutzergruppeDaten> gruppen = new Vector<@NotNull BenutzergruppeDaten>();
-//        
 //        return null;
-//        
 //    }
-    
-    
+
+
     /**
      * Initialisiert die lokalen Datenstrukturen.
      */
@@ -173,9 +170,9 @@ public class BenutzerManager {
      * Gibt für die übergebene Benutzerkompetenz eine Liste der
      * Benutzergruppen-Daten
      * zurück, welche dem Benutzer die Kompetenz zu geordnet haben.
-     * 
+     *
      * @param kompetenz die Benutzerkompetenz
-     * 
+     *
      * @return die Liste der Benutzergruppen-Daten
      */
     public @NotNull List<@NotNull BenutzergruppeDaten> getGruppen(final @NotNull BenutzerKompetenz kompetenz) {
@@ -187,7 +184,7 @@ public class BenutzerManager {
 
     /**
      * Gibt die Benutzer-Daten zurück.
-     * 
+     *
      * @return die Benutzer-Daten (siehe {@link BenutzerDaten})
      */
     public @NotNull BenutzerDaten daten() {
@@ -196,7 +193,7 @@ public class BenutzerManager {
 
     /**
      * Gibt die ID des Benutzers zurück.
-     * 
+     *
      * @return die ID des Benutzers
      */
     public long getID() {
@@ -205,16 +202,16 @@ public class BenutzerManager {
 
     /**
      * Gibt die BenutzerGruppen des Benutzers zurück.
-     * 
+     *
      * @return Gibt die BenutzerGruppen des Benutzers zurück.
      */
     public @NotNull List<@NotNull BenutzergruppeDaten> getBenutzerGruppen() {
         return this._daten.gruppen;
     }
-    
+
     /**
      * Gibt den Anmeldenamen des Benutzers zurück.
-     * 
+     *
      * @return Gibt den Anmeldenamen des Benutzers zurück.
      */
     public @NotNull String getAnmeldename() {
@@ -223,7 +220,7 @@ public class BenutzerManager {
 
     /**
      * Setzt den Anmeldenamen des Benutzers.
-     * 
+     *
      * @param name der neue Anmeldename des Benutzers
      */
     public void setAnmeldename(final @NotNull String name) {
@@ -234,7 +231,7 @@ public class BenutzerManager {
 
     /**
      * Gibt denAnzeigenamen des Benutzers zurück.
-     * 
+     *
      * @return Gibt den Anzeigenamen des Benutzers zurück.
      */
     public @NotNull String getAnzeigename() {
@@ -243,7 +240,7 @@ public class BenutzerManager {
 
     /**
      * Setzt den Anzeigenamen des Benutzers.
-     * 
+     *
      * @param name der neue Anzeigenamen des Benutzers
      */
     public void setAnzeigename(final @NotNull String name) {
@@ -254,7 +251,7 @@ public class BenutzerManager {
 
     /**
      * Setzt, ob es sich um einen administrativen Benutzer handelt oder nicht
-     * 
+     *
      * @param istAdmin true, falls der Benutzer administrativ ist und ansonsten
      *                 false
      */
@@ -264,7 +261,7 @@ public class BenutzerManager {
 
     /**
      * Gibt zurück, ob es sich um einen administrativen Benutzer handelt oder nicht.
-     * 
+     *
      * @return true, falls es sich um einen administrativen Benutzer handelt und
      *         ansonsten false
      */
@@ -275,9 +272,9 @@ public class BenutzerManager {
     /**
      * Prüft, ob der Benutzer die angebene Kompetenz direkt oder über eine Gruppe
      * besitzt oder nicht.
-     * 
+     *
      * @param kompetenz die zu prüfende Kompetenz
-     * 
+     *
      * @return true, falls der Benutzer die Kompetenz besitzt.
      */
     public boolean hatKompetenz(final @NotNull BenutzerKompetenz kompetenz) {
@@ -290,9 +287,9 @@ public class BenutzerManager {
      * Prüft, ob der Benutzer alle angebenen Kompetenzen direkt oder über eine
      * Gruppe
      * besitzt oder nicht.
-     * 
+     *
      * @param kompetenzen die zu prüfenden Kompetenzen
-     * 
+     *
      * @return true, falls der Benutzer die Kompetenzen besitzt.
      */
     public boolean hatKompetenzen(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
@@ -308,9 +305,9 @@ public class BenutzerManager {
      * Prüft, ob der Benutzer mindestens eine der angebenen Kompetenzen direkt oder
      * über eine Gruppe
      * besitzt oder nicht.
-     * 
+     *
      * @param kompetenzen die zu prüfenden Kompetenzen
-     * 
+     *
      * @return true, falls der Benutzer mindestens eine der Kompetenzen besitzt.
      */
     public boolean hatKompetenzenMindestensEine(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
@@ -324,9 +321,9 @@ public class BenutzerManager {
 
     /**
      * Fügt die übergebene Kompetenz direkt bei dem Benutzer hinzu.
-     * 
+     *
      * @param kompetenz die Kompetenz, die hinzugefügt wird
-     * 
+     *
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
      */
     public void addKompetenz(final BenutzerKompetenz kompetenz) throws IllegalArgumentException {
@@ -346,9 +343,9 @@ public class BenutzerManager {
      * zugeordnet wure. Sollte die Kompetenz zusätzlich über eine Gruppe zugeordnet
      * sein,
      * so bleibt diese Zuordnung erhalten.
-     * 
+     *
      * @param kompetenz die zu entfernende Kompetenz
-     * 
+     *
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz nicht hat
      *                                  oder nur über eine Gruppe hat
      */
@@ -364,33 +361,33 @@ public class BenutzerManager {
 
     /**
      * Überprüft, ob der Benutzer in einer Grupper mit der id Mitglied ist.
-     * 
+     *
      * @param id  ID der Gruppe
-     * 
+     *
      * @return true, falls der Benutzer in der Gruppe ist.
      */
 
-    public boolean IstInGruppe(final @NotNull long id) {
+    public boolean istInGruppe(final @NotNull long id) {
         return this._setGruppenIDs.contains(id);
     }
 
     /**
      * Liefert die Anzahl der Gruppen des Benutzers
-     * 
-     * 
+     *
+     *
      * @return anzahl   der Gruppen
      */
 
     public long anzahlGruppen() {
         return this._setGruppenIDs.size();
-    }   
-    
-    
+    }
+
+
     /**
      * Fügt den Benutzer in eine Gruppe ein
-     * 
+     *
      * @param bgd die Benutzergruppe
-     * 
+     *
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
      */
 
@@ -403,16 +400,16 @@ public class BenutzerManager {
 
     /**
      * Entfernt den Benutzer aus der Gruppe
-     * 
+     *
      * @param bgd  dei Benutzergruppe
-     * 
+     *
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
      */
 
     public void removeFromGruppe(final @NotNull BenutzergruppeDaten bgd) {
     	this.removeGruppe(bgd);
     }
-    
-    
+
+
 
 }

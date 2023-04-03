@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Aufzählung stellt einen Core-Type für die Schulformen zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -112,37 +112,37 @@ public enum Schulform {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Schulform, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulformKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Schulformen */
-	public final @NotNull SchulformKatalogEintrag@NotNull[] historie;	
 
-	/** Ein Vector mit allen definierten Schulformen */ 
+	/** Die Historie mit den Einträgen der Schulformen */
+	public final @NotNull SchulformKatalogEintrag@NotNull[] historie;
+
+	/** Ein Vector mit allen definierten Schulformen */
 	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformen = new HashMap<>();
-	
+
 	/** Ein Vector mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. */
 	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformenNummer = new HashMap<>();
 
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist
 	 */
-	private Schulform(final @NotNull SchulformKatalogEintrag@NotNull[] historie) {
+	Schulform(final @NotNull SchulformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
 	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByKuerzel() {
@@ -154,40 +154,40 @@ public enum Schulform {
 		}
 		return _schulformen;
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
 	private static @NotNull HashMap<@NotNull String, Schulform> getMapSchulformenByNummer() {
 		if (_schulformenNummer.size() == 0)
 			for (final Schulform s : Schulform.values())
 				if ((s.daten != null) && (s.daten.nummer != null))
-					_schulformenNummer.put(s.daten.nummer, s);				
+					_schulformenNummer.put(s.daten.nummer, s);
 		return _schulformenNummer;
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Schulform für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return die Schulform oder null, falls das Kürzel ungültig ist
 	 */
 	public static Schulform getByKuerzel(final String kuerzel) {
 		return getMapSchulformenByKuerzel().get(kuerzel);
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Schulform für die angegebene Nummer zurück.
-	 * 
+	 *
 	 * @param nummer   die Nummer der Schulform
-	 * 
+	 *
 	 * @return die Schulform oder null, falls keine Schulform mit dieser Nummer vorhanden ist
 	 */
 	public static Schulform getByNummer(final String nummer) {
@@ -197,9 +197,9 @@ public enum Schulform {
 
 	/**
 	 * Gibt alle "echten" Schulformen dieser Aufzählung zurück.
-	 * Das bedeutet, dass Pseudoschulformen, die in NRW nicht 
+	 * Das bedeutet, dass Pseudoschulformen, die in NRW nicht
 	 * existieren, nicht zurückgegeben werden.
-	 * 
+	 *
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static @NotNull List<@NotNull Schulform> get() {
@@ -209,18 +209,18 @@ public enum Schulform {
 				result.add(sf);
 		return result;
 	}
-	
+
 	/**
 	 * Gibt alle Schulformen dieser Aufzählung mit gymnasialer Oberstufe zurück.
-	 * 
-	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben. 
+	 *
+	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static @NotNull List<@NotNull Schulform> getMitGymOb() {
 		final @NotNull Vector<@NotNull Schulform> result = new Vector<>();
 		for (final @NotNull Schulform sf : Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);
-		return result;		
+		return result;
 	}
-	
+
 }

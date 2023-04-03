@@ -54,6 +54,8 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
+	 *
+	 * @return true, falls der Zustand angepasst wurde
 	 */
 	private verteileKurseMitMatching() : boolean {
 		do {
@@ -72,6 +74,8 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	/**
 	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechtert, wird die
 	 * Veränderung rückgängig gemacht.
+	 *
+	 * @return true, falls der Zustand angepasst wurde
 	 */
 	private verteileKurseMitMatchingW() : boolean {
 		do {

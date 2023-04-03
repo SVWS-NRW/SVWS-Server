@@ -43,9 +43,9 @@ public class KindergartenbesuchKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param kuerzel         das Kürzel 
+	 * @param kuerzel         das Kürzel
 	 * @param beschreibung    die textuelle Beschreibung
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist

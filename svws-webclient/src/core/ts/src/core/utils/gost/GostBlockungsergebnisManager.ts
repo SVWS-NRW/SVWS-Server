@@ -1251,7 +1251,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
 	 *
@@ -1407,7 +1406,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *

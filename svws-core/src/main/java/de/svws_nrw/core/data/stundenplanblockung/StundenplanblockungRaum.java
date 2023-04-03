@@ -6,10 +6,10 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für einen Raum bei {@link StundenplanblockungInput}. <br>
- * Für jeden Raum wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet. 
- * 
+ * Für jeden Raum wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet.
+ *
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungRaum")

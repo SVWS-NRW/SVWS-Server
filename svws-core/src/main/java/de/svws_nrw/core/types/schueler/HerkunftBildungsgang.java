@@ -7,7 +7,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Core-Type für die für die amtliche Schulstatistik möglichen 
+ * Ein Core-Type für die für die amtliche Schulstatistik möglichen
  * Herkünfte bezüglich von Bildungsgängen beim Wechsel
  * von einem Berufskolleg an ein Berufskolleg.
  */
@@ -257,39 +257,39 @@ public enum HerkunftBildungsgang {
 	E13(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(86000, Schulgliederung.E13, null, null)
 	});
-	
+
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten des Herkunftsbildungsganges, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftBildungsgangKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des Herkunftsbildungsganges */
-	public final @NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie;	
+	public final @NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Herkunftsbildungsgängen, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Herkunftsbildungsgängen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, HerkunftBildungsgang> _ebenen = new HashMap<>();
 
 
 	/**
 	 * Erzeugt einen neuen Herkunftsbildungsgang in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Herkunftsbildungsganges, welche ein Array von 
-	 *                   {@link HerkunftBildungsgangKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Herkunftsbildungsganges, welche ein Array von
+	 *                   {@link HerkunftBildungsgangKatalogEintrag} ist
 	 */
-	private HerkunftBildungsgang(final @NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie) {
+	HerkunftBildungsgang(final @NotNull HerkunftBildungsgangKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von den Kürzeln der Herkunftsbildungsgänge auf die 
-	 * zugehörigen Herkunftsbildungsgänge zurück. 
+	 * Gibt eine Map von den Kürzeln der Herkunftsbildungsgänge auf die
+	 * zugehörigen Herkunftsbildungsgänge zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsbildungsgänge
 	 */
 	private static @NotNull HashMap<@NotNull String, HerkunftBildungsgang> getMapByKuerzel() {
@@ -305,9 +305,9 @@ public enum HerkunftBildungsgang {
 
 	/**
 	 * Gibt den Herkunftsbildungsgang für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Herkunftsbildungsganges
-	 * 
+	 *
 	 * @return der Herkunftsbildungsgang oder null, falls das Kürzel ungültig ist
 	 */
 	public static HerkunftBildungsgang getByKuerzel(final String kuerzel) {

@@ -6,10 +6,10 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lehrkraft bei {@link StundenplanblockungInput}. <br>
- * Für jede Lehrkraft wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet. 
- * 
+ * Für jede Lehrkraft wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet.
+ *
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungLehrkraft")

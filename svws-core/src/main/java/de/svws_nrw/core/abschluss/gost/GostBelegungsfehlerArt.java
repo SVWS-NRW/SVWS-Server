@@ -9,35 +9,35 @@ public enum GostBelegungsfehlerArt {
 
 	/** Belegungsfehler */
 	BELEGUNG("BELEGUNG"),
-	
+
 	/** Fehler bei der Schriftlichkeit */
 	SCHRIFTLICHKEIT("SCHRIFTLICHKEIT"),
-	
-	/** Information, aber kein Fehler */ 
+
+	/** Information, aber kein Fehler */
 	HINWEIS("HINWEIS");
-	
-	
+
+
 	/** Das Kürzel für die Belegungsfehlerart */
 	public final @NotNull String kuerzel;
 
-	
+
 	/**
 	 * Erzeugt ein neues Abitur-Belegungsfehler-Objekt
-	 * 
+	 *
 	 * @param kuerzel        das Kürzel der Fehler-Art
 	 */
-	private GostBelegungsfehlerArt(final @NotNull String kuerzel) {
+	GostBelegungsfehlerArt(final @NotNull String kuerzel) {
 		this.kuerzel = kuerzel;
 	}
 
-	
-    /**
-     * Gibt die Belegungsfehler-Art anhand des übergebenen Kürzels zurück.
-     *
-     * @param kuerzel    das Kürzel der Belegungsfehler-Art
-     *  
-     * @return die Belegungsfehler-Art
-     */
+
+	/**
+	 * Gibt die Belegungsfehler-Art anhand des übergebenen Kürzels zurück.
+	 *
+	 * @param kuerzel    das Kürzel der Belegungsfehler-Art
+	 *
+	 * @return die Belegungsfehler-Art
+	 */
 	public static GostBelegungsfehlerArt fromKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return null;
@@ -54,5 +54,5 @@ public enum GostBelegungsfehlerArt {
 	public @NotNull String toString() {
 		return kuerzel;
 	}
-	
+
 }

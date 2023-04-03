@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der möglichen Herkunftsschulformen.  
+ * Sie liefert die Werte für den Katalog der möglichen Herkunftsschulformen.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der möglichen Herkunftsschulformen.")
@@ -33,7 +33,7 @@ public class HerkunftSchulformKatalogEintrag {
 	/** Die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Die textuelle Beschreibung der Herkunftsschulform. */
 	@Schema(description = "die textuelle Beschreibung der Herkunftsschulform", example = "Sekundarschule")
 	public @NotNull String beschreibung = "";
@@ -56,17 +56,17 @@ public class HerkunftSchulformKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param kuerzel            das Kürzel, welches bei dem Core-Type Schulform verwendet wird
-	 * @param kuerzelStatistik   das Kürzel, welches bei der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird 
+	 * @param kuerzelStatistik   das Kürzel, welches bei der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird
 	 * @param schulformen        die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann
 	 * @param beschreibung       die textuelle Beschreibung der Herkunftsschulform
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public HerkunftSchulformKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String kuerzelStatistik,
-			final @NotNull List<@NotNull Schulform> schulformen, final @NotNull String beschreibung, 
+			final @NotNull List<@NotNull Schulform> schulformen, final @NotNull String beschreibung,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Thomas Bachran
  * @author Benjamin A. Bartsch
- * 
+ *
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
@@ -35,7 +35,7 @@ class AVLMapSubEntrySetIterator<@NotNull K, @NotNull V> implements Iterator<@Not
 
 	/**
 	 * Erstellt einen neuen ENTRY-Iterator für die angegebene {@link AVLMapSubMap} im gültigen {@link AVLMapIntervall}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	AVLMapSubEntrySetIterator(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {

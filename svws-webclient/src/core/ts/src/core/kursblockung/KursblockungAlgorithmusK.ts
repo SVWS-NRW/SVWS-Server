@@ -22,7 +22,7 @@ export abstract class KursblockungAlgorithmusK extends JavaObject {
 
 
 	/**
-	 *Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
+	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -37,7 +37,7 @@ export abstract class KursblockungAlgorithmusK extends JavaObject {
 	}
 
 	/**
-	 *Eine Unterklasse, die diese Methode implementiert, berechnet eine Verteilung der Kurse auf die Schienen und
+	 * Eine Unterklasse, die diese Methode implementiert, berechnet eine Verteilung der Kurse auf die Schienen und
 	 * überschreitet dabei nicht die Endzeit (in Millisekunden).
 	 *
 	 * @param pTimeEndMillis Die Endzeit (in Millisekunden).

@@ -20,7 +20,6 @@ export class AbiturKursMarkierung extends JavaObject {
 	public constructor();
 
 	/**
-	 *
 	 * Erzeugt eine neue Markierung. Diese gibt an, dass der Kurs auf dem Abiturzeugnis erscheinen soll.
 	 *
 	 * @param fuerBerechnung   gibt an, on der Kurs in die Berechnung eingehen soll oder nicht
@@ -28,7 +27,6 @@ export class AbiturKursMarkierung extends JavaObject {
 	public constructor(fuerBerechnung : boolean);
 
 	/**
-	 *
 	 * Erzeugt eine neue Markierung.
 	 *
 	 * @param fuerBerechnung      gibt an, on der Kurs in die Berechnung eingehen soll oder nicht

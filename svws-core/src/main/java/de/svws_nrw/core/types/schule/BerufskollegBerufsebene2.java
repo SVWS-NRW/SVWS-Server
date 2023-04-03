@@ -593,34 +593,34 @@ public enum BerufskollegBerufsebene2 {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Berufsebene, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull BerufskollegBerufsebeneKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Berufsebene */
-	public final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie;	
 
-	/** Eine Hashmap mit allen definierten Berufsebenen der Ebene 2, zugeordnet zu ihren Kürzeln */ 
+	/** Die Historie mit den Einträgen der Berufsebene */
+	public final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie;
+
+	/** Eine Hashmap mit allen definierten Berufsebenen der Ebene 2, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene2> _ebenen = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Berufsebene in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Berufsebene, welches ein Array von {@link BerufskollegBerufsebeneKatalogEintrag} ist
 	 */
-	private BerufskollegBerufsebene2(final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie) {
+	BerufskollegBerufsebene2(final @NotNull BerufskollegBerufsebeneKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzels der Berufsebenen auf die zugehörigen Berufsebenen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Berufsebene auf die zugehörigen Berufsebene
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegBerufsebene2> getMapBerufsebenenByKuerzel() {
@@ -636,9 +636,9 @@ public enum BerufskollegBerufsebene2 {
 
 	/**
 	 * Gibt die Berufsebene für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Berufsebene
-	 * 
+	 *
 	 * @return die Berufsebene oder null, falls das Kürzel ungültig ist
 	 */
 	public static BerufskollegBerufsebene2 getByKuerzel(final String kuerzel) {

@@ -21,11 +21,11 @@ public class ENMLerngruppe {
 	/** Die eindeutige ID der Lerngruppe - generiert, nicht (!) aus der SVWS-DB */
 	@Schema(description = "Die eindeutige ID der Lerngruppe - generiert, nicht (!) aus der SVWS-DB.", example = "12345")
 	public long id;
-	
+
 	/** Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der Versetzungstabelle, siehe kursartID). */
 	@Schema(description = "Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der "
 			+ "Versetzungstabelle, siehe kursartID).", example = "1234")
-	public long kID; 
+	public long kID;
 
 	/** Die ID des Faches der Lerngruppe. */
 	@Schema(description = "Die ID des Faches der Lerngruppe.", example = "123")
@@ -52,7 +52,7 @@ public class ENMLerngruppe {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen zu den "
 			+ "IDs der Lehrer, die der Lerngruppe zugeordnet sind."))
 	public @NotNull Vector<@NotNull Long> lehrerID = new Vector<>();
-	
+
 	/** Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. */
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")
 	public int wochenstunden;

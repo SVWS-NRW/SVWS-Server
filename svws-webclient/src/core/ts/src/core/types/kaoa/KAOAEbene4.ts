@@ -140,7 +140,7 @@ export class KAOAEbene4 extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Die aktuellsten Daten des KAoA-Eintrags der SBO Ebene 4

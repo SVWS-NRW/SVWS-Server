@@ -24,7 +24,7 @@ public enum SchulabschlussAllgemeinbildend {
 	HA9(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(2, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, null)
 	}),
-	
+
 	/** Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen) - siehe BK-Bildungsgang A12 */
 	HA9_FOE(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(3, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, null)
@@ -64,12 +64,12 @@ public enum SchulabschlussAllgemeinbildend {
 	VS_11(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(13, "VS_11", "Versetzung in die Klasse 11 der Fachoberschule (BK)", "P", null, null)
 	}),
-	
+
 	/** Fachhochschulreife (nur schulischer Teil) */
 	FHR_S(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(20, "FHR_S", "Fachhochschulreife (nur schulischer Teil)", "H", null, null)
 	}),
-	
+
 	/** Fachhochschulreife */
 	FHR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(21, "FHR", "Fachhochschulreife", "J", null, null)
@@ -79,17 +79,17 @@ public enum SchulabschlussAllgemeinbildend {
 	FGHR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(22, "FGHR", "fachgebundene Hochschulreife (BK)", "Q", null, null)
 	}),
-	
+
 	/** Abitur / Allgemeine Hochschulreife */
 	ABITUR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(30, "ABITUR", "Abitur / Allgemeine Hochschulreife", "K", null, null)
 	}),
-	
+
 	/** Förderschule (Förderschwerpunkt geistige Entwicklung) */
 	FOEG(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(40, "FOEG", "Förderschule (Förderschwerpunkt geistige Entwicklung)", "M", null, null)
 	}),
-	
+
 	/** Förderschule (Förderschwerpunkt Lernen) */
 	FOEL(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
 		new SchulabschlussAllgemeinbildendKatalogEintrag(41, "FOEL", "Förderschule (Förderschwerpunkt Lernen)", "V", null, null)
@@ -102,37 +102,37 @@ public enum SchulabschlussAllgemeinbildend {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Abschlussarten */
-	public final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie;	
 
-	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */ 
+	/** Die Historie mit den Einträgen der Abschlussarten */
+	public final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie;
+
+	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */
 	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> _mapByKuerzel = new HashMap<>();
 
-	/** Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden */ 
+	/** Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden */
 	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> _mapByKuerzelStatistik = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussAllgemeinbildendKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussAllgemeinbildendKatalogEintrag} ist
 	 */
-	private SchulabschlussAllgemeinbildend(final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie) {
+	SchulabschlussAllgemeinbildend(final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> getMapByKuerzel() {
@@ -148,20 +148,20 @@ public enum SchulabschlussAllgemeinbildend {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
 	public static SchulabschlussAllgemeinbildend getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussAllgemeinbildend> getMapByKuerzelStatistik() {
@@ -177,22 +177,22 @@ public enum SchulabschlussAllgemeinbildend {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Statistik-Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
 	public static SchulabschlussAllgemeinbildend getByKuerzelStatistik(final String kuerzel) {
 		return getMapByKuerzelStatistik().get(kuerzel);
 	}
 
-	
+
 	/**
-	 * Prüft, ob dieser Abschluss dem im String-Parameter str übergebenen 
+	 * Prüft, ob dieser Abschluss dem im String-Parameter str übergebenen
 	 * Abschluss entspricht.
-	 *  
+	 *
 	 * @param str   der Name des Abschlusses für den Vergleich als String
-	 * 
+	 *
 	 * @return true, falls beide Abschlüsse übereinstimmen und ansonsten false
 	 */
 	public boolean is(final String str) {
@@ -205,5 +205,5 @@ public enum SchulabschlussAllgemeinbildend {
 			return false;
 		}
 	}
-	
+
 }

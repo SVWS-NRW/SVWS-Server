@@ -6,9 +6,9 @@ import de.svws_nrw.core.data.lehrer.LehrerKatalogLehramtEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Aufzählung stellt einen Core-Type für die Lehrämter von Lehrkräften 
+ * Diese Aufzählung stellt einen Core-Type für die Lehrämter von Lehrkräften
  * an der Schule zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -247,14 +247,14 @@ public enum LehrerLehramt {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten des Lehramtes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull LehrerKatalogLehramtEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen des Lehramtes */
 	public final @NotNull LehrerKatalogLehramtEintrag@NotNull[] historie;
-		
+
 	/** Eine Hashmap mit allen Lehrämtern, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerLehramt> _aemterByID = new HashMap<>();
 
@@ -264,12 +264,12 @@ public enum LehrerLehramt {
 
 	/**
 	 * Erzeugt ein neues Lehramt in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Lehramtes, welches ein Array von {@link LehrerKatalogLehramtEintrag} ist  
+	 *
+	 * @param historie   die Historie des Lehramtes, welches ein Array von {@link LehrerKatalogLehramtEintrag} ist
 	 */
-	private LehrerLehramt(final @NotNull LehrerKatalogLehramtEintrag@NotNull[] historie) {
+	LehrerLehramt(final @NotNull LehrerKatalogLehramtEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -277,36 +277,36 @@ public enum LehrerLehramt {
 	/**
 	 * Gibt eine Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehramt> getMapLehraemterByID() {
 		if (_aemterByID.size() == 0)
 			for (final LehrerLehramt l : LehrerLehramt.values())
-				_aemterByID.put(l.daten.id, l);				
+				_aemterByID.put(l.daten.id, l);
 		return _aemterByID;
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehramt> getMapLehraemterByKuerzel() {
 		if (_aemterByKuerzel.size() == 0)
 			for (final LehrerLehramt l : LehrerLehramt.values())
-				_aemterByKuerzel.put(l.daten.kuerzel, l);				
+				_aemterByKuerzel.put(l.daten.kuerzel, l);
 		return _aemterByKuerzel;
 	}
-	
+
 
 	/**
 	 * Gibt das Lehramt anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID des Lehramts
-	 * 
+	 *
 	 * @return das Lehramt oder null, falls die ID ungültig ist
 	 */
 	public static LehrerLehramt getByID(final long id) {
@@ -316,9 +316,9 @@ public enum LehrerLehramt {
 
 	/**
 	 * Gibt das Lehramt anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Lehramts
-	 * 
+	 *
 	 * @return das Lehramt oder null, falls das Kürzel ungültig ist
 	 */
 	public static LehrerLehramt getByKuerzel(final String kuerzel) {

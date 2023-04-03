@@ -11,8 +11,8 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen 
- * der Kursblockung eingesetzt werden. 
+ * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen
+ * der Kursblockung eingesetzt werden.
  */
 public enum GostKursblockungRegelTyp {
 
@@ -27,13 +27,13 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
-	 * - Parameter C: bis - Nummer der Schiene (int) 
+	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
-	KURSART_SPERRE_SCHIENEN_VON_BIS(1, "Kursart: Sperre Schienen (von/bis)", Arrays.asList( 
-		GostKursblockungRegelParameterTyp.KURSART, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR 
-	)),
+	KURSART_SPERRE_SCHIENEN_VON_BIS(1, "Kursart: Sperre Schienen (von/bis)", Arrays.asList(
+			GostKursblockungRegelParameterTyp.KURSART,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			)),
 
 	/**
 	 * Der Regel-Typ zum Reservieren der Schienen von B bis C für Kurse einer bestimmten Kursart (A).
@@ -41,14 +41,14 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * - Parameter A: Datenbank-ID der Kursart (long) <br>
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
-	 * - Parameter C: bis - Nummer der Schiene (int) 
+	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
-	KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(6, "Kursart: Allein in Schienen (von/bis)", Arrays.asList( 
-		GostKursblockungRegelParameterTyp.KURSART, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR 
-	)),
-	
+	KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(6, "Kursart: Allein in Schienen (von/bis)", Arrays.asList(
+			GostKursblockungRegelParameterTyp.KURSART,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			)),
+
 	/**
 	 * Der Regel-Typ zum Fixieren eines Kurses (A) in Schiene (B). Die Schiene B ist 1-indiziert, es gilt
 	 * {@code 1 <= B <= Schienenanzahl.} <br>
@@ -57,9 +57,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_FIXIERE_IN_SCHIENE(2, "Kurs: Fixiere in Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
-	)),
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			)),
 
 	/**
 	 * Der Regel-Typ zum Sperren einer Schiene (B) für einen Kurs (A). Die Schiene B ist 1-indiziert, es gilt
@@ -69,53 +69,53 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_SPERRE_IN_SCHIENE(3, "Kurs: Sperre in Schiene", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID, 
-		GostKursblockungRegelParameterTyp.SCHIENEN_NR
-	)),
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.SCHIENEN_NR
+			)),
 
 	/**
 	 * Der Regel-Typ zum Fixieren eines Schülers (A) in einem Kurs (B). <br>
 	 *
 	 * - Parameter A: Datenbank-ID des Schülers (long) <br>
-	 * - Parameter B: Datenbank-ID des Kurses (long) 
+	 * - Parameter B: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_FIXIEREN_IN_KURS(4, "Schüler: Fixiere in Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID, 
-		GostKursblockungRegelParameterTyp.KURS_ID
-	)),
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
+			)),
 
 	/**
 	 * Der Regel-Typ zum Verbieten eines Schülers (A) in einem Kurs (B). <br>
 	 *
 	 * - Parameter A: Datenbank-ID des Schülers (long) <br>
-	 * - Parameter A: Datenbank-ID des Kurses (long) 
+	 * - Parameter A: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_VERBIETEN_IN_KURS(5, "Schüler: Verbiete in Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.SCHUELER_ID, 
-		GostKursblockungRegelParameterTyp.KURS_ID
-	)),
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
+			)),
 
 	/**
 	 * Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
 	 *
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
-	 * - Parameter B: Datenbank-ID des 2. Kurses (long) 
+	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	KURS_VERBIETEN_MIT_KURS(7, "Kurs verbiete mit Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID, 
-		GostKursblockungRegelParameterTyp.KURS_ID
-	)),
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
+			)),
 
 	/**
 	 * Der Regel-Typ zum Forcieren, dass Kurs (A) mit einem Kurs (B) in der selben Schiene landet. <br>
 	 *
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
-	 * - Parameter B: Datenbank-ID des 2. Kurses (long) 
+	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
 	KURS_ZUSAMMEN_MIT_KURS(8, "Kurs zusammen mit Kurs", Arrays.asList(
-		GostKursblockungRegelParameterTyp.KURS_ID, 
-		GostKursblockungRegelParameterTyp.KURS_ID
-	)),
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
+			)),
 
 	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
@@ -123,15 +123,13 @@ public enum GostKursblockungRegelTyp {
 	 */
 	LEHRKRAFT_BEACHTEN(9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(
 			GostKursblockungRegelParameterTyp.BOOLEAN
-	)),
+			)),
 
 	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
 	 */
-	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList(
-	)),
-	
-	; // Ende der Regeln
+	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList());
+
 
 	/** Die ID des Regel-Typs */
 	public final int typ;
@@ -141,17 +139,17 @@ public enum GostKursblockungRegelTyp {
 
 	/** Die Typen der Regel-Parameter */
 	private final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes;
-	
+
 	/** Mapping von "Typ --> GostKursblockungRegelTyp". */
 	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel = new HashMap<>();
 
 	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMap() {
-		if (_map_id_regel.isEmpty()) 
-			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
+		if (_map_id_regel.isEmpty())
+			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
 				_map_id_regel.put(gostTyp.typ, gostTyp);
 		return _map_id_regel;
 	}
-	
+
 	/**
 	 * Liefert die Menge aller existierender Regeln.
 	 *
@@ -165,10 +163,10 @@ public enum GostKursblockungRegelTyp {
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
-	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
-	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
+	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
+	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
-	private GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
+	GostKursblockungRegelTyp(final int id, final @NotNull String bezeichnung, final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
 		this.typ = id;
 		this.bezeichnung = bezeichnung;
 		this.paramTypes = paramTypes;
@@ -179,7 +177,7 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @param id   die ID des Regel-Typs
 	 *
-	 * @return der Regel-Typ 
+	 * @return der Regel-Typ
 	 */
 	public static @NotNull GostKursblockungRegelTyp fromTyp(final Integer id) {
 		if (id == null)
@@ -189,17 +187,17 @@ public enum GostKursblockungRegelTyp {
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
 	}
-	
+
 	/**
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
 	 *
-	 * @return die Anzahl der Parameter für diesen Regel-Type zurück. 
+	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
 	 */
 	public int getParamCount() {
 		return this.paramTypes.size();
 	}
-	
-	
+
+
 	/**
 	 * Gibt den i-ten Parameter-Typ der Regel zurück.
 	 *
@@ -207,7 +205,7 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @return der Parameter-Typ
 	 *
-	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
+	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public @NotNull GostKursblockungRegelParameterTyp getParamType(final int i) throws IllegalArgumentException {
 		if ((i < 0) || (i >= paramTypes.size()))
@@ -219,21 +217,21 @@ public enum GostKursblockungRegelTyp {
 	/**
 	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
 	 * Parametertyp hat.
-	 *  
+	 *
 	 * @param paramType   der Parametertyp
 	 *
-	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public boolean hasParamType(final GostKursblockungRegelParameterTyp paramType) {
-	    for (final GostKursblockungRegelParameterTyp cur : paramTypes)
-	        if (paramType == cur)
-	            return true;
-	    return false;
+		for (final GostKursblockungRegelParameterTyp cur : paramTypes)
+			if (paramType == cur)
+				return true;
+		return false;
 	}
 
 	/**
-	 * Simuliert ein Löschen der Schienen-Nummer und 
-	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.  
+	 * Simuliert ein Löschen der Schienen-Nummer und
+	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.
 	 *
 	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
 	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
@@ -244,45 +242,27 @@ public enum GostKursblockungRegelTyp {
 		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		final @NotNull Vector<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
-			// Keine Veränderung bei 0 Parametern. 
-			case LEHRKRAEFTE_BEACHTEN: { // 10
-				return new long[] {};
-			}
-			// Keine Veränderung bei 1 Parameter. 
-			case LEHRKRAFT_BEACHTEN: { // 9
-				final long p0 = param.get(0);
-				return new long[] {p0};
-			}
-			// Keine Veränderung bei 2 Parametern. 
-            case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, 
-                 KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS : { // 4, 5, 7, 8
-            	final long p0 = param.get(0);
-            	final long p1 = param.get(1);
-            	return new long[] {p0, p1};
-            }
-            case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: { // 2, 3
-            	final long p0 = param.get(0);
-            	final long p1 = param.get(1);
-            	if (p1 < pSchienenNr) 
-                	return new long[] {p0, p1};
-            	if (p1 > pSchienenNr) 
-            		return new long[] {p0, p1 - 1};
-        		return null;
-            }
-            case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: { // 1, 6
-            	final long p0 = param.get(0);
-            	long von = param.get(1);
-            	long bis = param.get(2);
-            	von = pSchienenNr < von  ? von - 1 : von; 
-            	bis = pSchienenNr <= bis  ? bis - 1 : bis;
-            	if (von <= bis)
-                	return new long[] {p0, von, bis};
-        		return null;
-            }
-			default: {
+			case LEHRKRAEFTE_BEACHTEN: // 10
+				return new long[] {};   // Keine Veränderung bei 0 Parametern.
+			case LEHRKRAFT_BEACHTEN: // 9
+				return new long[] { param.get(0) };   // Keine Veränderung bei 1 Parameter.
+				// Keine Veränderung bei 2 Parametern.
+			case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS: // 4, 5, 7, 8
+				return new long[] { param.get(0), param.get(1) };
+			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
+				return (param.get(1) < pSchienenNr) ? new long[] { param.get(0), param.get(1) }
+					: (param.get(1) > pSchienenNr) ? new long[] { param.get(0), param.get(1) - 1 } : null;
+			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 1, 6
+				long von = param.get(1);
+				long bis = param.get(2);
+				von = pSchienenNr < von  ? von - 1 : von;
+				bis = pSchienenNr <= bis  ? bis - 1 : bis;
+				if (von <= bis)
+					return new long[] { param.get(0), von, bis };
+				return null;
+			default:
 				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
-			}
-        }
+		}
 	}
-	
+
 }

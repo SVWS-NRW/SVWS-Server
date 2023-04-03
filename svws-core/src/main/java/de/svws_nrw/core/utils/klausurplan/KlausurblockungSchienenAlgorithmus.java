@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Algorithmus zur Blockung von Klausuren auf eine minimale Anzahl von Schienen
  * (ergo Klausurtage).
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class KlausurblockungSchienenAlgorithmus {
@@ -26,7 +26,7 @@ public class KlausurblockungSchienenAlgorithmus {
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
 	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> pInput, final long pMaxTimeMillis) {
-		
+
 		// End-Zeitpunkt berechnet.
 		final long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;
 
@@ -52,11 +52,11 @@ public class KlausurblockungSchienenAlgorithmus {
 				// ... Ende der Algorithmen.
 		};
 
-		
+
 		// Blockungsschleife
 		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
-		
+
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
 		do {
 			// System.out.println("zeitProAlgorithmus --> " + zeitProAlgorithmus);
@@ -69,7 +69,7 @@ public class KlausurblockungSchienenAlgorithmus {
 
 			zeitProAlgorithmus *= 2; // Nächste Runde hat mehr Zeit.
 		} while (System.currentTimeMillis() + algorithmen.length * zeitProAlgorithmus <= zeitEndeGesamt); // noch Zeit?
-		
+
 		// Lade besten globalen Zustand
 		dynDaten.aktionZustand2Laden();
 

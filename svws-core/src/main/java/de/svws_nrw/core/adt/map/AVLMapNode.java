@@ -5,18 +5,18 @@ import java.util.Map.Entry;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * Diese Klasse definiert ein Knotenelement im Baum der {@link AVLMap}. Der Baum ist eine balancierter AVL-Baum mit
  * weiteren Informationen wie Nachfolger (_next), Vorgänger (_prev) und die Anzahl der Elemente im Sub-Baum (_size)
  * zuzüglich des Elemente im Knoten.
- * 
+ *
  * @author Thomas Bachran
  * @author Benjamin A. Bartsch
  *
  * @param <K> Der Typ des Schlüssel-Eintrages.
  * @param <V> Der Typ des zugeordneten Wertes des Schlüssel-Eintrages.
  */
-public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @NotNull V> {
+public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @NotNull V> {
 
 	/**
 	 * Der Schlüsselwert des Baum-Eintrags.
@@ -60,7 +60,7 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 
 	/**
 	 * Erstellt ein neues Blatt des Baumes.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key). Der Wert darf nicht NULL sein.
 	 * @param val Der Wert (Value), welcher dem Schlüssel (Key) zugeordnet ist. Der Wert darf nicht NULL sein.
 	 */
@@ -76,7 +76,7 @@ public class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull K, @No
 
 	@Override
 	public boolean equals(final @NotNull Object o) {
-		if (o instanceof Entry<?, ?> == false)
+		if (!(o instanceof Entry<?, ?>))
 			return false;
 		final Entry<?, ?> e = (Entry<?, ?>) o;
 		return _key.equals(e.getKey()) && (_val.equals(e.getValue()));

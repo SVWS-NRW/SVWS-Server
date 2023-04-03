@@ -5,10 +5,12 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-/** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus einen Kurs
+/**
+ * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus einen Kurs
  * einer Fachwahl des Schülers definiert.
- * 
- * @author Benjamin A. Bartsch */
+ *
+ * @author Benjamin A. Bartsch
+ */
 @XmlRootElement(name = "SchuelerblockungInputKurs")
 @Schema(name = "SchuelerblockungInputKurs", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die beim Schüler-Blockungsalgorithmus einen Kurs einer Fachwahl des Schülers definiert.")
 @TranspilerDTO

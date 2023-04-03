@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Eine Klausel.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class Clause implements Comparable<@NotNull Clause> {
+public final class Clause implements Comparable<@NotNull Clause> {
 
 	/**
 	 * Alle Variablen, die zu dieser Klausel gehören.
@@ -29,7 +29,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 
 	/**
 	 * Konstruktor für eine 1-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 */
 	Clause(final @NotNull Variable pX) {
@@ -40,7 +40,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 
 	/**
 	 * Konstruktor für eine 2-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 */
@@ -52,7 +52,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 
 	/**
 	 * Konstruktor für eine 3-CNF-Klausel.
-	 * 
+	 *
 	 * @param pX Die 1. Variable in dieser Klausel.
 	 * @param pY Die 2. Variable in dieser Klausel.
 	 * @param pZ Die 3. Variable in dieser Klausel.
@@ -101,7 +101,7 @@ public class Clause implements Comparable<@NotNull Clause> {
 
 		final Iterator<@NotNull Integer> i1 = set1.iterator();
 		final Iterator<@NotNull Integer> i2 = set2.iterator();
-		
+
 		if ((i1 == null) || (i2 == null))
 			throw new NullPointerException();
 

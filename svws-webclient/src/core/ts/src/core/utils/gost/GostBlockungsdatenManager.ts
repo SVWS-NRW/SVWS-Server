@@ -141,7 +141,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 
 	/**
-	 *
 	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
 	 */
 	public constructor();
@@ -401,7 +400,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Blockungsdaten zurück.
 	 *
 	 * @return die Blockungsdaten (siehe {@link GostBlockungsdaten})
@@ -411,7 +409,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt das Halbjahr der gymnasialen Oberstufe zurück, für welches die Blockung angelegt wurde.
 	 *
 	 * @return das Halbjahr der gymnasialen Oberstufe
@@ -421,7 +418,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Setzt das Halbjahr der gymnasialen Oberstufe, für welches die Blockung angelegt wurde.
 	 *
 	 * @param pHalbjahr das Halbjahr der gymnasialen Oberstufe
@@ -431,7 +427,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die ID der Blockung zurück.
 	 *
 	 * @return die ID der Blockung
@@ -441,7 +436,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Setzt die ID der Blockung.
 	 *
 	 * @param pBlockungsID die ID, welche der Blockung zugewiesen wird.
@@ -454,7 +448,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den Namen der Blockung zurück.
 	 *
 	 * @return der Name der Blockung
@@ -464,7 +457,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Setzt den Namen der Blockung
 	 *
 	 * @param pName der Name, welcher der Blockung zugewiesen wird.
@@ -477,7 +469,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die maximale Blockungszeit in Millisekunden.
 	 *
 	 * @return Die maximale Blockungszeit in Millisekunden.
@@ -487,7 +478,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Setzt die maximale Blockungszeit in Millisekunden.
 	 *
 	 * @param pZeit die maximale Blockungszeit in Millisekunden.
@@ -510,7 +500,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
 	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
@@ -558,7 +547,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param pErgebnisID Die Datenbank-ID des zu entfernenden Ergebnisses.
@@ -623,7 +611,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Fügt den übergebenen Kurs zu der Blockung hinzu.
 	 *
 	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
@@ -649,7 +636,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den Kurs der Blockung anhand von dessen ID zurück.
 	 *
 	 * @param  pKursID die ID des Kurses
@@ -675,7 +661,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl an Kursen.
 	 *
 	 * @return Die Anzahl an Kursen.
@@ -742,7 +727,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
 	 * Kriterium: Der Kurs muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
 	 *
@@ -755,7 +739,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt den Kurs mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param pKursID Die Datenbank-ID des zu entfernenden Kurses.
@@ -763,7 +746,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls es sich derzeit nicht um die Blockungsvorlage handelt.
 	 */
 	public removeKursByID(pKursID : number) : void {
-		if (this.getIstBlockungsVorlage() === false)
+		if (!this.getIstBlockungsVorlage())
 			throw new UserNotificationException("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!")
 		const kurs : GostBlockungKurs = this.getKurs(pKursID);
 		this._kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
@@ -773,7 +756,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt den übergebenen Kurs aus der Blockung.
 	 *
 	 * @param pKurs  Der zu entfernende Kurs.
@@ -913,7 +895,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Fügt die übergebene Schiene zu der Blockung hinzu.
 	 *
 	 * @param pSchiene Die hinzuzufügende Schiene.
@@ -937,7 +918,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Schiene der Blockung anhand von deren ID zurück.
 	 *
 	 * @param  pSchienenID Die Datenbank-ID der Schiene.
@@ -962,7 +942,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl an Schienen.
 	 *
 	 * @return Die Anzahl an Schienen.
@@ -983,7 +962,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
 	 * Kriterium: Die Schiene muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
 	 *
@@ -996,7 +974,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt die Schiene mit der übergebenen ID aus der Blockung.
 	 * Konsequenz: <br>
 	 * (1) Das Löschen der Schiene muss erlaubt sein, sonst Exception.
@@ -1008,7 +985,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
 	 */
 	public removeSchieneByID(pSchienenID : number) : void {
-		if (this.getIstBlockungsVorlage() === false)
+		if (!this.getIstBlockungsVorlage())
 			throw new DeveloperNotificationException("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!")
 		const schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
 		this._mapSchienen.remove(pSchienenID);
@@ -1034,7 +1011,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt die übergebene Schiene aus der Blockung.
 	 *
 	 * @param pSchiene Die zu entfernende Schiene.
@@ -1045,7 +1021,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Default-Anzahl an Schienen zurück, die für eine neue Blockung verwendet wird.
 	 *
 	 * @param  pHalbjahr  Das Halbjahr, für welches die Blockung angelegt werden soll.
@@ -1067,7 +1042,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Fügt die übergebene Regel zu der Blockung hinzu.
 	 *
 	 * @param pRegel die hinzuzufügende Regel
@@ -1091,7 +1065,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Regel der Blockung anhand von deren ID zurück.
 	 *
 	 * @param  pRegelID Die Datenbank-ID der Regel.
@@ -1116,7 +1089,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl an Regeln.
 	 *
 	 * @return Die Anzahl an Regeln.
@@ -1137,7 +1109,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
 	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
 	 *
@@ -1150,7 +1121,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
 	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
 	 *
@@ -1159,7 +1129,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public removeRegelByID(pRegelID : number) : void {
-		if (this.getIstBlockungsVorlage() === false)
+		if (!this.getIstBlockungsVorlage())
 			throw new UserNotificationException("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!")
 		const regel : GostBlockungRegel = this.getRegel(pRegelID);
 		this._mapRegeln.remove(pRegelID);
@@ -1167,7 +1137,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt die übergebene Regel aus der Blockung.
 	 *
 	 * @param regel die zu entfernende Regel
@@ -1194,9 +1163,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new DeveloperNotificationException("Schueler.geschlecht =  " + pSchueler.geschlecht + " --> zu klein!")
 		this._daten.schueler.add(pSchueler);
 		this._map_id_schueler.put(pSchueler.id, pSchueler);
-		if (this._map_schuelerID_fachwahlen.containsKey(pSchueler.id) === false)
+		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
 			this._map_schuelerID_fachwahlen.put(pSchueler.id, new Vector());
-		if (this._map_schulerID_fachID_fachwahl.containsKey(pSchueler.id) === false)
+		if (!this._map_schulerID_fachID_fachwahl.containsKey(pSchueler.id))
 			this._map_schulerID_fachID_fachwahl.put(pSchueler.id, new HashMap());
 	}
 
@@ -1212,7 +1181,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Ermittelt den Schüler für die angegebene ID. <br>
 	 * Wirft eine DeveloperNotificationException, falls die Schüler-ID unbekannt ist.
 	 *
@@ -1364,7 +1332,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl an Fachwahlen.
 	 *
 	 * @return Die Anzahl an Fachwahlen.

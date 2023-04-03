@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse realisiert eine Adjazenzmatrix und implementiert einige Graph-Algorithmen (Maximum-cardinality
  * bipartite matching, maximum/minimum weighted bipartite matching, ...). Die Adjazenzmatrix wird im Folgenden Matrix
  * genannt.
- * 
+ *
  * @see <a href= "https://en.wikipedia.org/wiki/Matching_(graph_theory)">Wikipedia - Matching_(graph_theory)</a> */
 public class KursblockungMatrix {
 
@@ -65,7 +65,7 @@ public class KursblockungMatrix {
 	private final @NotNull long[] distanzC;
 
 	/** Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param rows    Die Anzahl der Zeilen der Matrix.
 	 * @param cols    Die Anzahl der Spalten der Matrix. */
@@ -89,14 +89,16 @@ public class KursblockungMatrix {
 		initialisiere(permC);
 	}
 
-	/** Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
+	/**
+	 * Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
 	 * ausschließlich die Werte 0 und 1 vorkommen. Werte ungleich 0 werden andernfalls als 1 (eine Kante im Graphen)
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
-	 * 
+	 *
 	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
 	 *                              gibt.
-	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
+	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 */
 	public @NotNull int[] gibMaximalesBipartitesMatching(final boolean nichtdeterministisch) {
 		// Aktuelle Spalten-Zeilen-Zuordnungen löschen
 		Arrays.fill(r2c, -1);
@@ -143,7 +145,7 @@ public class KursblockungMatrix {
 							break;
 						}
 						// Ist der Weg zurück noch unbesucht?
-						if (besuchtR[zuR] == false) {
+						if (!besuchtR[zuR]) {
 							besuchtR[zuR] = true;
 							queueR[queue_last] = zuR;
 							queue_last++;
@@ -164,7 +166,7 @@ public class KursblockungMatrix {
 	 * minimal ist. Der Algorithmus verwendet mehrere Runden eines SSSP-Algorithmus (Dijkstra). Damit dies bei negativen
 	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet. Der Algorithmus hat eine
 	 * Laufzeit von O(n³).
-	 * 
+	 *
 	 * @see                         <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia -
 	 *                              Shortest_path_problem</a>
 	 * @see                         <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons
@@ -351,7 +353,7 @@ public class KursblockungMatrix {
 
 	/** Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
 	 * {@link KursblockungMatrix#permC}.
-	 * 
+	 *
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
 	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert. */
 	private void initialisierPermRundPermC(final boolean nichtdeterministisch) {
@@ -365,7 +367,7 @@ public class KursblockungMatrix {
 	}
 
 	/** Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
-	 * 
+	 *
 	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird. */
 	private static void initialisiere(final @NotNull int[] perm) {
 		final int laenge = perm.length;
@@ -375,7 +377,7 @@ public class KursblockungMatrix {
 	}
 
 	/** Interne Methode zum zufälligen Permutieren eines Arrays.
-	 * 
+	 *
 	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird. */
 	private void permutiere(final @NotNull int[] perm) {
 		final int laenge = perm.length;
@@ -390,7 +392,7 @@ public class KursblockungMatrix {
 	}
 
 	/** Erlaubt Zugriff auf den Inhalt des Arrays.
-	 * 
+	 *
 	 * @return Die Array-Referenz. */
 	public @NotNull long @NotNull [][] getMatrix() {
 		return matrix;
@@ -398,7 +400,7 @@ public class KursblockungMatrix {
 
 	/** Erzeugt String-Ausgabe des Arrays sowie der Zeilen-zu-Spalten-Zuordnung {@link KursblockungMatrix#r2c}. Diese
 	 * Methode ist für Debug-Zwecke gedacht.
-	 * 
+	 *
 	 * @param  kommentar          Ein Kommentar der über der Matrix angezeigt wird.
 	 * @param  zellenbreite       Die Breite bei der Ausgabe der Zelle.
 	 * @param  mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
@@ -424,7 +426,7 @@ public class KursblockungMatrix {
 	}
 
 	/** Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
-	 * 
+	 *
 	 * @param von Der kleinstmögliche zufällige Wert (inklusive).
 	 * @param bis Der größtmögliche zufällige Wert (inklusive). */
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
@@ -436,14 +438,14 @@ public class KursblockungMatrix {
 	}
 
 	/** Liefert die Anzahl an Zeilen der Matrix.
-	 * 
+	 *
 	 * @return die Anzahl an Zeilen der Matrix. */
 	public int gibZeilen() {
 		return rows;
 	}
 
 	/** Liefert die Anzahl an Spalten der Matrix.
-	 * 
+	 *
 	 * @return die Anzahl an Spalten der Matrix. */
 	public int gibSpalten() {
 		return cols;

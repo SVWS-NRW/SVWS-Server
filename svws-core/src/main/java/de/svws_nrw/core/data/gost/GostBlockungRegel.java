@@ -19,13 +19,13 @@ import jakarta.validation.constraints.NotNull;
 @JsonPropertyOrder({ "id", "typ", "parameter" })
 @TranspilerDTO
 public class GostBlockungRegel {
-	
+
 	/** Die ID der Regel */
 	public long id = -1;
 
 	/** Der Type der Regel - siehe {@link GostKursblockungRegelTyp} */
 	public int typ = -1;
-	
+
 	/** Eine Liste der Regel-Parameter */
 	public @NotNull Vector<@NotNull Long> parameter = new Vector<>();
 

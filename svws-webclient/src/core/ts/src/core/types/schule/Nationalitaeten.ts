@@ -1054,7 +1054,7 @@ export class Nationalitaeten extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Der letzten gültigen Daten der Nationalität für den ISO-Code

@@ -5,8 +5,8 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Jahrgängen der 
- * Schüler für das Externe-Noten-Modul ENM. 
+ * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Jahrgängen der
+ * Schüler für das Externe-Noten-Modul ENM.
  */
 @XmlRootElement
 @Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Jahrgängen der Schüler für das Externe-Noten-Modul ENM.")

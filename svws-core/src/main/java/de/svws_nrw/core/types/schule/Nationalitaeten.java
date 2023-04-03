@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  * Siehe auch:<ul>
  *   <li><a href="https://www.destatis.de/DE/Methoden/Klassifikationen/Staat-Gebietsystematik/Staatsangehoerigkeitsgebietsschluessel_pdf.pdf?__blob=publicationFile">
  *   Stand vom 1.2.2022 </a> </li>
- *   <li> Eine Übersicht bei xrepository.de findet sich unter der Kennung 
+ *   <li> Eine Übersicht bei xrepository.de findet sich unter der Kennung
  *   "urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staat". </li>
  *   <li>Übersicht zum <a href="https://www.iso.org/obp/ui/#iso:pub:PUB500001:en"> ISO-Standard 3166</a></li>
  * </ul>
@@ -1058,33 +1058,33 @@ public enum Nationalitaeten {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der letzten gültigen Daten der Nationalität für den ISO-Code */
 	public final @NotNull NationalitaetenKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Nationalitäten für den ISO-Code */
-	public final @NotNull NationalitaetenKatalogEintrag@NotNull[] historie;	
 
-	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code */ 
+	/** Die Historie mit den Einträgen der Nationalitäten für den ISO-Code */
+	public final @NotNull NationalitaetenKatalogEintrag@NotNull[] historie;
+
+	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapISO3 = new HashMap<>();
 
-	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code */ 
+	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapISO2 = new HashMap<>();
 
-	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu DESTATIS-Code */ 
+	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu DESTATIS-Code */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> _mapDESTATIS = new HashMap<>();
 
-	
+
 
 	/**
 	 * Erzeugt eine neue Nationalität in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Nationalitäten, welches ein Array von {@link NationalitaetenKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Nationalitäten, welches ein Array von {@link NationalitaetenKatalogEintrag} ist
 	 */
-	private Nationalitaeten(final @NotNull NationalitaetenKatalogEintrag@NotNull[] historie) {
+	Nationalitaeten(final @NotNull NationalitaetenKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -1092,7 +1092,7 @@ public enum Nationalitaeten {
 	/**
 	 * Gibt eine Map von den dreistelligen ISO-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO3() {
@@ -1109,7 +1109,7 @@ public enum Nationalitaeten {
 	/**
 	 * Gibt eine Map von den zweistelligen ISO-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapISO2() {
@@ -1126,7 +1126,7 @@ public enum Nationalitaeten {
 	/**
 	 * Gibt eine Map von den DESTATIS-Codes der Nationalitäten auf die zugehörigen Nationalitäten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Nationalitaeten> getMapDESTATIS() {
@@ -1142,9 +1142,9 @@ public enum Nationalitaeten {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen dreistelligen ISO-Code nach ISO 3166-1 zurück.
-	 * 
+	 *
 	 * @param code   der ISO-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static Nationalitaeten getByISO3(final String code) {
@@ -1153,9 +1153,9 @@ public enum Nationalitaeten {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen zweistelligen ISO-Code nach ISO 3166-1 zurück.
-	 * 
+	 *
 	 * @param code   der ISO-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static Nationalitaeten getByISO2(final String code) {
@@ -1164,9 +1164,9 @@ public enum Nationalitaeten {
 
 	/**
 	 * Gibt die Nationalität für den angegebenen DESTATIS-Code zurück.
-	 * 
+	 *
 	 * @param code   der DESTATIS-Code
-	 * 
+	 *
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
 	public static Nationalitaeten getByDESTATIS(final String code) {

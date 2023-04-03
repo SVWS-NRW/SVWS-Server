@@ -42,19 +42,19 @@ export class AbschlussManager extends JavaObject {
 	 * noch durch Nachprüfungen erreicht werden kann. Ein log wird nicht zugeordnet.
 	 *
 	 * @param abschluss    der Abschluss für den das Ergebnis erzeugt wird
-	 * @param np_faecher   eine Liste von Nachprüfungsfächern, falls eine Nachprüfung möglich ist,
+	 * @param npFaecher    eine Liste von Nachprüfungsfächern, falls eine Nachprüfung möglich ist,
 	 *                     ansonsten null oder eine leere Liste
 	 *
 	 * @return das Ergebnis der Abschlussberechnung
 	 */
-	public static getErgebnisNachpruefung(abschluss : SchulabschlussAllgemeinbildend | null, np_faecher : List<string> | null) : AbschlussErgebnis {
+	public static getErgebnisNachpruefung(abschluss : SchulabschlussAllgemeinbildend | null, npFaecher : List<string> | null) : AbschlussErgebnis {
 		const ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
 		ergebnis.abschluss = abschluss === null ? null : abschluss.toString();
 		ergebnis.erworben = false;
-		if ((np_faecher === null) || (np_faecher.size() === 0))
+		if ((npFaecher === null) || (npFaecher.size() === 0))
 			ergebnis.npFaecher = null;
 		else
-			ergebnis.npFaecher = np_faecher;
+			ergebnis.npFaecher = npFaecher;
 		ergebnis.log = null;
 		return ergebnis;
 	}
@@ -164,15 +164,15 @@ export class AbschlussManager extends JavaObject {
 	 * Prüft, ob vier leistungsdifferenzierte Fächer belegt wurden. Dabei wird nicht geprüft, ob
 	 * es sich um G oder E-Kurse handelt.
 	 *
-	 * @param abschluss_faecher   die Abschlussfächer
+	 * @param abschlussFaecher   die Abschlussfächer
 	 *
 	 * @return true, falls vier leistungsdifferenzierte Fächer belegt wurden, sonst false
 	 */
-	public static pruefeHat4LeistungsdifferenzierteFaecher(abschluss_faecher : GEAbschlussFaecher) : boolean {
-		if (abschluss_faecher.faecher === null)
+	public static pruefeHat4LeistungsdifferenzierteFaecher(abschlussFaecher : GEAbschlussFaecher) : boolean {
+		if (abschlussFaecher.faecher === null)
 			return false;
 		let count : number = 0;
-		const faecher : List<GEAbschlussFach> = abschluss_faecher.faecher;
+		const faecher : List<GEAbschlussFach> = abschlussFaecher.faecher;
 		for (const fach of faecher) {
 			if (fach === null)
 				continue;
@@ -187,15 +187,15 @@ export class AbschlussManager extends JavaObject {
 	 * Prüft, ob Duplikate bei den Kürzeln der Fächer vorkommen. Dies darf zur korrekten
 	 * Ausführung des Abschlussalgorithmus nicht vorkommen.
 	 *
-	 * @param abschluss_faecher   die Abschlussfächer
+	 * @param abschlussFaecher   die Abschlussfächer
 	 *
 	 * @return true, falls keine Duplikate vorkommen, sonst false
 	 */
-	public static pruefeKuerzelDuplikate(abschluss_faecher : GEAbschlussFaecher) : boolean {
-		if (abschluss_faecher.faecher === null)
+	public static pruefeKuerzelDuplikate(abschlussFaecher : GEAbschlussFaecher) : boolean {
+		if (abschlussFaecher.faecher === null)
 			return true;
 		const kuerzel : HashSet<string> = new HashSet();
-		const faecher : List<GEAbschlussFach> = abschluss_faecher.faecher;
+		const faecher : List<GEAbschlussFach> = abschlussFaecher.faecher;
 		for (const fach of faecher) {
 			if ((fach === null) || (fach.kuerzel === null))
 				continue;

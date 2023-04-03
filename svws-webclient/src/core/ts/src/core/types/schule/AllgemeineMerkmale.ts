@@ -126,7 +126,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Der aktuellen Daten des allgemeinen Merkmals, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

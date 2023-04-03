@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Lehrern
- * für das Externe-Noten-Modul ENM. 
+ * für das Externe-Noten-Modul ENM.
  */
 @XmlRootElement
 @Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Lehrern für das Externe-Noten-Modul ENM. ")
@@ -32,7 +32,7 @@ public class ENMLehrer {
 	/** Das Geschlecht des Lehrers (m,w,d,x) */
 	@Schema(description = "Das Geschlecht des Lehrers (m - männlich, w - weiblich, d - divers, x - ohne Angabe im Geburtenregister)", example = "d")
 	public String geschlecht;
-	
+
 	/** Die Dienst-EMail-Adresse des Lehrers */
 	@Schema(description = "Die Dienst-EMail-Adresse des Lehrers.", example = "max.musterman@irgendeine.schule.nrw")
 	public String eMailDienstlich;

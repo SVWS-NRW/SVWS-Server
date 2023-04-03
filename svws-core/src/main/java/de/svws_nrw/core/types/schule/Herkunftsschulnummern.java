@@ -113,46 +113,46 @@ public enum Herkunftsschulnummern {
 		new HerkunftsschulnummerKatalogEintrag(980500000L, 980500, "Sonstige/keine Schule", null, null, null)
 	}),
 
-	
+
 	/** Herkunft Schulnummer : Herkunft noch unbekannt (nur A12, A13) */
 	UNBEKANNT(new HerkunftsschulnummerKatalogEintrag[] {
 		new HerkunftsschulnummerKatalogEintrag(999500000L, 999500, "Herkunft noch unbekannt (nur A12, A13)", Arrays.asList(
-			new Pair<>(Schulform.BK, Schulgliederung.A12), 
-			new Pair<>(Schulform.BK, Schulgliederung.A13), 
-			new Pair<>(Schulform.SB, Schulgliederung.A12), 
-			new Pair<>(Schulform.SB, Schulgliederung.A13) 
+			new Pair<>(Schulform.BK, Schulgliederung.A12),
+			new Pair<>(Schulform.BK, Schulgliederung.A13),
+			new Pair<>(Schulform.SB, Schulgliederung.A12),
+			new Pair<>(Schulform.SB, Schulgliederung.A13)
 		), null, null)
 	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Herkunftsschulnummer, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsschulnummerKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Herkunftsschulnummer */
-	public final @NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie;	
 
-	/** Eine Hashmap mit allen definierten Herkunftsschulnummern, zugeordnet zu ihren Schulnummern */ 
+	/** Die Historie mit den Einträgen der Herkunftsschulnummer */
+	public final @NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie;
+
+	/** Eine Hashmap mit allen definierten Herkunftsschulnummern, zugeordnet zu ihren Schulnummern */
 	private static final @NotNull HashMap<@NotNull Integer, Herkunftsschulnummern> _mapBySchulnummer = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulnummer in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Herkunftsschulnummer, welches ein Array von {@link HerkunftsschulnummerKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Herkunftsschulnummer, welches ein Array von {@link HerkunftsschulnummerKatalogEintrag} ist
 	 */
-	private Herkunftsschulnummern(final @NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie) {
+	Herkunftsschulnummern(final @NotNull HerkunftsschulnummerKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzels der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 */
 	private static @NotNull HashMap<@NotNull Integer, Herkunftsschulnummern> getMapBySchulnummer() {
@@ -168,9 +168,9 @@ public enum Herkunftsschulnummern {
 
 	/**
 	 * Gibt die Herkunftsschulnummer für die angegebene Schulnummer zurück.
-	 * 
+	 *
 	 * @param nummer   die Schulnummer
-	 * 
+	 *
 	 * @return die Herkunftsschulnummer oder null, falls die Schulnummer hier nicht vohanden ist
 	 */
 	public static Herkunftsschulnummern getByKuerzel(final Integer nummer) {

@@ -50,34 +50,34 @@ public enum Uebergangsempfehlung {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Übergangsempfehlung */
 	public final @NotNull UebergangsempfehlungKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Übergangsempfehlung */
-	public final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie;	
+	public final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Uebergangsempfehlung> _mapKuerzel = new HashMap<>();
 
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Eintrags, welche ein Array von 
-	 *                   {@link UebergangsempfehlungKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Eintrags, welche ein Array von
+	 *                   {@link UebergangsempfehlungKatalogEintrag} ist
 	 */
-	private Uebergangsempfehlung(final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie) {
+	Uebergangsempfehlung(final @NotNull UebergangsempfehlungKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
 
 	/**
-	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert. 
+	 * Gibt eine Map von den Kürzeln auf den zugehörigen Core-Type-Wert.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
 	private static @NotNull HashMap<@NotNull String, Uebergangsempfehlung> getMapByKuerzel() {
@@ -93,9 +93,9 @@ public enum Uebergangsempfehlung {
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebe Kürzel der Übergangsempfehlung zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel
-	 * 
+	 *
 	 * @return die Übergangsempfehlung oder null, falls das Kürzel ungültig ist
 	 */
 	public static Uebergangsempfehlung getByKuerzel(final String kuerzel) {

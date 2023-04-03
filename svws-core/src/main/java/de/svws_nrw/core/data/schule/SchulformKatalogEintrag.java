@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.  
+ * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
@@ -22,15 +22,15 @@ public class SchulformKatalogEintrag {
 	/** Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "GE")
 	public @NotNull String kuerzel = "";
-	
+
 	/**
-	 * Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar 
+	 * Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar
 	 * in der SVWS-DB bei der Schule gespeichert, aber dort aus dem Schulverzeichnis genommen.
-	 * Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels 
+	 * Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels
 	 * stattfindet.
 	 * Stand 4.1.2021: Bei der "Hibernia"-Schulform und der Schulform "Schule für Kranke" ist der
 	 *                 Wert der Nummer fehlerhaft, da dort eine Doppelung beim Kürzel vorliegt und
-	 *                 diese somit nicht korrekt erfasst werden. 
+	 *                 diese somit nicht korrekt erfasst werden.
 	 */
 	@Schema(description = "die Nummer der Schulform, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example = "17")
 	public @NotNull String nummer = "";
@@ -38,11 +38,11 @@ public class SchulformKatalogEintrag {
 	/** Die Bezeichnung der Schulform. */
 	@Schema(description = "die Bezeichnung der Schulform", example = "Gesamtschule")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. */
 	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example = "true")
 	public boolean hatGymOb;
-	
+
 	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
@@ -51,7 +51,7 @@ public class SchulformKatalogEintrag {
 	@Schema(description = "gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
-	
+
 	/**
 	 * Erstellt einen Schulform-Eintrag mit Standardwerten
 	 */
@@ -61,12 +61,12 @@ public class SchulformKatalogEintrag {
 
 	/**
 	 * Erstellt einen Schulform-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param nummer       die Nummer
 	 * @param bezeichnung  die Bezeichnung
-	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat 
+	 * @param hatGymOb     gibt an, ob die Schulform eien gymnasiale Oberstufe hat
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
@@ -78,6 +78,6 @@ public class SchulformKatalogEintrag {
 		this.hatGymOb = hatGymOb;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

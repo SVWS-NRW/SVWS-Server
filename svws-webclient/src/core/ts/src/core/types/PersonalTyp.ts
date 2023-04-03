@@ -43,7 +43,7 @@ export class PersonalTyp extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps
@@ -129,7 +129,6 @@ export class PersonalTyp extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den PersonalTyp anhand der Bezeichnung zurück.
 	 *
 	 * @param bezeichnung   die Bezeichnung des Personal-Typs
@@ -142,7 +141,6 @@ export class PersonalTyp extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den PersonalTyp anhand der ID zurück.
 	 *
 	 * @param id   die ID des Personal-Typs

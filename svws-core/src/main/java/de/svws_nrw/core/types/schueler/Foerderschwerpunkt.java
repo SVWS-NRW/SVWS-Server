@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Aufzählung stellt einen Core-Type für die Förderschwerpunkte zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -23,15 +23,15 @@ public enum Foerderschwerpunkt {
 	/** Förderschwerpunkt - kein Förderschwerpunkt */
 	KEINER(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(0, "**", "kein Förderschwerpunkt", Arrays.asList(
-			Schulform.BK, 
+			Schulform.BK,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.V, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.V,
 			Schulform.WB
 		), null, null)
 	}),
@@ -41,13 +41,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(1000, "BL", "Sehen (Blinde)", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -55,15 +55,15 @@ public enum Foerderschwerpunkt {
 	/** Förderschwerpunkt - Emotionale und soziale Entwicklung */
 	EZ(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(2000, "EZ", "Emotionale und soziale Entwicklung", Arrays.asList(
-			Schulform.BK, Schulform.SB, 
+			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -71,15 +71,15 @@ public enum Foerderschwerpunkt {
 	/** Förderschwerpunkt - Geistige Entwicklung */
 	GB(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(3000, "GB", "Geistige Entwicklung", Arrays.asList(
-			Schulform.BK, Schulform.SB, 
+			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -87,16 +87,16 @@ public enum Foerderschwerpunkt {
 	/** Förderschwerpunkt - Hören und Kommunikation (Gehörlose) */
 	GH(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(4000, "GH", "Hören und Kommunikation (Gehörlose)", Arrays.asList(
-			Schulform.BK, Schulform.SB, 
+			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
-			Schulform.SR, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
+			Schulform.SR,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -106,14 +106,14 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(5000, "KB", "Körperliche und motorische Entwicklung", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
-			Schulform.SG, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
+			Schulform.SG,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -131,13 +131,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(7000, "LB", "Lernen", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -147,13 +147,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(8000, "PE", "Präventive Förderung im Bereich Emotionale und soziale Entwicklung", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), null, 2010)
 	}),
@@ -163,13 +163,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(9000, "PF", "Präventive Förderung", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), null, 2010)
 	}),
@@ -179,13 +179,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(10000, "PL", "Präventive Förderung im Bereich Lernen", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), null, 2010)
 	}),
@@ -195,13 +195,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(11000, "PS", "Präventive Förderung im Bereich Sprache", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), null, 2010)
 	}),
@@ -210,13 +210,13 @@ public enum Foerderschwerpunkt {
 	SB(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(12000, "SB", "Sprache", Arrays.asList(
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -226,14 +226,14 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(13000, "SG", "Hören und Kommunikation (Schwerhörige)", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
-			Schulform.SR, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
+			Schulform.SR,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -243,13 +243,13 @@ public enum Foerderschwerpunkt {
 		new FoerderschwerpunktKatalogEintrag(14000, "SH", "Sehen (Sehbehinderte)", Arrays.asList(
 			Schulform.BK, Schulform.SB,
 			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G, 
-			Schulform.GE, 
-			Schulform.GM, 
-			Schulform.GY, 
-			Schulform.H, 
-			Schulform.R, 
-			Schulform.S, Schulform.KS, 
+			Schulform.G,
+			Schulform.GE,
+			Schulform.GM,
+			Schulform.GY,
+			Schulform.H,
+			Schulform.R,
+			Schulform.S, Schulform.KS,
 			Schulform.V
 		), 2011, null)
 	}),
@@ -257,43 +257,43 @@ public enum Foerderschwerpunkt {
 	/** Förderschwerpunkt - Kein Förderschwerpunkt */
 	XX(new FoerderschwerpunktKatalogEintrag[] {
 		new FoerderschwerpunktKatalogEintrag(15000, "XX", "Kein Förderschwerpunkt", Arrays.asList(
-			Schulform.SB, 
+			Schulform.SB,
 			Schulform.SG
 		), null, null)
 	});
 
-	
+
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten des Förderschwerpunktes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull FoerderschwerpunktKatalogEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen des Förderschwerpunktes */
-	public final @NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie;	
+	public final @NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie;
 
 	/** Eine Map mit der Zuordnung des Förderschwerpunktes zu dem Kürzel des Förderschwerpunktes */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Foerderschwerpunkt> _foerderschwerpunkteKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung des Förderschwerpunktes zu der ID des Förderschwerpunktes */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Foerderschwerpunkt> _foerderschwerpunkteID = new HashMap<>();
-	
+
 	/** Die Schulformen, bei welchen der Förderschwerpunkt vorkommt */
-	private @NotNull Vector<@NotNull Schulform>@NotNull[] schulformen;
+	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
 	 * Erzeugt einen neuen Förderschwerpunkt in der Aufzählung.
-	 * 
-	 * @param historie   die Historie des Förderschwerpunktes, welches ein Array von {@link FoerderschwerpunktKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie des Förderschwerpunktes, welches ein Array von {@link FoerderschwerpunktKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	private Foerderschwerpunkt(final @NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie) {
+	Foerderschwerpunkt(final @NotNull FoerderschwerpunktKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
+		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -304,26 +304,26 @@ public enum Foerderschwerpunkt {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Foerderschwerpunkt> getMapFoerderschwerpunktByKuerzel() {
 		if (_foerderschwerpunkteKuerzel.size() == 0)
 			for (final Foerderschwerpunkt s : Foerderschwerpunkt.values())
-				_foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);				
+				_foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);
 		return _foerderschwerpunkteKuerzel;
 	}
-	
+
 
 	/**
 	 * Gibt eine Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Foerderschwerpunkt> getMapFoerderschwerpunktByID() {
@@ -334,13 +334,13 @@ public enum Foerderschwerpunkt {
 			}
 		return _foerderschwerpunkteID;
 	}
-	
+
 
 	/**
-	 * Liefert den Förderschwerpunkt anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert den Förderschwerpunkt anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel des Förderschwerpunktes
-	 * 
+	 *
 	 * @return der Förderschwerpunkt oder null, falls das Kürzel ungültig ist
 	 */
 	public static Foerderschwerpunkt getByKuerzel(final String kuerzel) {
@@ -350,10 +350,10 @@ public enum Foerderschwerpunkt {
 
 
 	/**
-	 * Liefert den Förderschwerpunkt anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert den Förderschwerpunkt anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID des Förderschwerpunktes
-	 * 
+	 *
 	 * @return der Förderschwerpunkt oder null, falls die ID ungültig ist
 	 */
 	public static Foerderschwerpunkt getByID(final Long id) {
@@ -364,7 +364,7 @@ public enum Foerderschwerpunkt {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen der Förderschwerpunkt vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
@@ -376,9 +376,9 @@ public enum Foerderschwerpunkt {
 
 	/**
 	 * Liefert alle zulässigen Förderschwerpunkte für die angegebene Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static @NotNull List<@NotNull Foerderschwerpunkt> get(final Schulform schulform) {
@@ -393,14 +393,14 @@ public enum Foerderschwerpunkt {
 		}
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Prüft anhand des Förderschwerpunkts-Kürzels, ob die Schulform diesen Förderschwerpunkt
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
@@ -412,17 +412,17 @@ public enum Foerderschwerpunkt {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Prüft, ob die Schulform diesen Förderschwerpunkt hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
@@ -434,7 +434,7 @@ public enum Foerderschwerpunkt {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
@@ -442,11 +442,11 @@ public enum Foerderschwerpunkt {
 
 	/**
 	 * Gibt die Förderschwerpunkte der angegebenen Schulform mit dem übergegebenen Kürzel zurück.
-	 * 
+	 *
 	 * @param sf        die Schulform
 	 * @param kuerzel   das Kürzel des Förderschwerpunktes
-	 * 
-	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null 
+	 *
+	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null
 	 */
 	public static Foerderschwerpunkt getBySchulformAndKuerzel(final Schulform sf, final String kuerzel) {
 		if (sf == null)
@@ -455,7 +455,7 @@ public enum Foerderschwerpunkt {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return Foerderschwerpunkt.KEINER;
 		// Prüfe, ob der Förderschwerpunkt bei der Schulform existiert
-		final @NotNull List<@NotNull Foerderschwerpunkt> schwerpunkte = get(sf); 
+		final @NotNull List<@NotNull Foerderschwerpunkt> schwerpunkte = get(sf);
 		for (int i = 0; i < schwerpunkte.size(); i++) {
 			final Foerderschwerpunkt fs = schwerpunkte.get(i);
 			if ((fs.daten.kuerzel).equalsIgnoreCase(kuerzel))

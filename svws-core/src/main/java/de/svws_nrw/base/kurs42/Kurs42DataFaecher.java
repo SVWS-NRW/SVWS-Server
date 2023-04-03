@@ -2,10 +2,10 @@ package de.svws_nrw.base.kurs42;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** 
+/**
  * Diese Klasse dient als DTO für die CSV-Tabelle {@code Faecher.txt} eines Kurs42-Textdatei-Exportes.
- * 
- * @author Thomas Bachran 
+ *
+ * @author Thomas Bachran
  */
 @JsonPropertyOrder({ "IDNr", "Krz", "Bezeichnung", "StatistikKrz", "Sortierung", "Fachgr_ID", "IstSprache" })
 public class Kurs42DataFaecher {
@@ -27,7 +27,7 @@ public class Kurs42DataFaecher {
 
 	/** Die ID der Fachgruppe, der das Fach angehört */
 	public long Fachgr_ID;
-	
+
 	/** Gibt an, ob es sich bei dem Fach um eine Sprache handelt (1) oder nicht (0) */
 	public int IstSprache;
 }

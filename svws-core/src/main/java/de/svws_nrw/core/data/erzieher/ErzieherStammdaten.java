@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt eine Auswahl von Daten eines Erziehereintrags aus einer Liste.  
+ * Sie beschreibt eine Auswahl von Daten eines Erziehereintrags aus einer Liste.
  */
 @XmlRootElement
 @Schema(description = "Die Stammdaten eines Erziehers.")
@@ -20,7 +20,7 @@ public class ErzieherStammdaten {
 	/** Die ID des Schülers, welchem der Erzieher zugeordnet ist. */
 	@Schema(description = "die ID des Schülers, welchem der Erzieher zugeordnet ist", example = "4712")
 	public long idSchueler;
-		
+
 	/** Die ID der Art des Erziehereintrages */
 	@Schema(description = "Die ID der Art des Erziehereintrages", example = "56")
 	public Long idErzieherArt;
@@ -62,7 +62,7 @@ public class ErzieherStammdaten {
 	public Long wohnortID;
 
 	/** Die ID des Ortsteils des Erziehers. */
-	@Schema(description = "ggf. die ID des Ortsteils im Wohnort", example = "Muster")	
+	@Schema(description = "ggf. die ID des Ortsteils im Wohnort", example = "Muster")
 	public Long ortsteilID;
 
 	/** Gibt an, ob der Erzieher Anschreiben erhält oder nicht. */
@@ -80,5 +80,5 @@ public class ErzieherStammdaten {
 	/** Anmerkungen zum Erziehers. */
 	@Schema(description = "Anmerkungen zum Erzieher", example = "was auch immer")
 	public String bemerkungen;
-	
+
 }

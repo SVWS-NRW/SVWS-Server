@@ -382,7 +382,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
 	bcAddKey(e : K, iv : AVLMapIntervall<K>) : boolean {
-		if (this._allowKeyAlone === false)
+		if (!this._allowKeyAlone)
 			throw new UnsupportedOperationException()
 		if (this.bcContainsKey(e, iv))
 			return false;
@@ -487,7 +487,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das übergebene Entry in dieser Datenstruktur existiert.
 	 */
 	bcContainsEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false)
+		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		const e : JavaMapEntry<K, V> = cast_java_util_Map_Entry(o);
 		const node : AVLMapNode<K, V> | null = this._nodeGetOrNull(e.getKey(), iv);
@@ -572,7 +572,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
 	bcRemoveEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false)
+		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		if (!this.bcContainsEntry(o, iv))
 			return false;

@@ -8,10 +8,10 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Heap aller Variablen. Ganz oben ist die "beste" Variable. Es handelt sich um die Variable, die bei den
  * Berechnungen als nächstes ausgewählt wird.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class Heap {
+public final class Heap {
 
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -31,7 +31,7 @@ public class Heap {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	Heap(final @NotNull Random pRandom) {
@@ -47,7 +47,7 @@ public class Heap {
 
 	/**
 	 * Überprüft, ob der Heap leer ist.
-	 * 
+	 *
 	 * @return TRUE, wenn der Heap leer ist.
 	 */
 	boolean isEmpty() {
@@ -56,7 +56,7 @@ public class Heap {
 
 	/**
 	 * Liefert das oberste (beste) Element des Heaps mit hoher Wahrscheinlichkeit.
-	 * 
+	 *
 	 * @return Liefert das oberste (beste) Element des Heaps mit hoher Wahrscheinlichkeit.
 	 */
 	@NotNull Variable top() {
@@ -69,7 +69,7 @@ public class Heap {
 
 	/**
 	 * Liefert die Anzahl an Elementen im Heap.
-	 * 
+	 *
 	 * @return Die Anzahl an Elementen im Heap.
 	 */
 	int size() {
@@ -79,7 +79,7 @@ public class Heap {
 	/**
 	 * Fügt die Variable "var" dem Heap hinzu. Nach dem Einfügen kennt die Variable mit {@link Variable#index} ihre
 	 * eigene Position in diesem Heap.
-	 * 
+	 *
 	 * @param pVar Die einzufügende Variable.
 	 */
 	void insert(final @NotNull Variable pVar) {
@@ -114,7 +114,7 @@ public class Heap {
 	/**
 	 * Entfernt die Variable pVar vom Heap. Dabei wird zunächst mit Hilfe von {@link Variable#index} die Position
 	 * bestimmt. Anschließend wird der Heap so transformiert, dass die Variable entfernt werden kann.
-	 * 
+	 *
 	 * @param pVar Die zu entfernende Variable.
 	 */
 	void remove(final @NotNull Variable pVar) {
@@ -171,7 +171,7 @@ public class Heap {
 	/**
 	 * Falls sich die Variable pVar im Heap befindet, wird sie entfernt und direkt wieder hinzugefügt. Diese Methode
 	 * muss aufgerufen werden, sobald die Variable eine neue Bewertung erhalten hat.
-	 * 
+	 *
 	 * @param pVar Die Variable, deren Bewertung sich geändert hat.
 	 */
 	public void update(final @NotNull Variable pVar) {

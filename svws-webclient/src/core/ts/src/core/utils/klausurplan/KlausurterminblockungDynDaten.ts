@@ -141,8 +141,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:{
-				const mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
+				const mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap()
 				for (const gostKursklausur of pInput) {
 					const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 					if (klausurNr === null)
@@ -164,7 +164,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				}
 				break;
 			}
-			default:{
+			default: {
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
 		}

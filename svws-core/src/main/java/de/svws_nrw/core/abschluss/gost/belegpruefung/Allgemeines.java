@@ -14,28 +14,28 @@ import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse bündelt allgemeine Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw. 
+ * Diese Klasse bündelt allgemeine Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw.
  * für die Gesamtprüfungen.
  */
-public class Allgemeines extends GostBelegpruefung {
-	
+public final class Allgemeines extends GostBelegpruefung {
+
 	/**
 	 * Erstellt eine neue allgemeine Belegprüfung.
-	 * 
-	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 *
+	 * @param manager        der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
-	public Allgemeines(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungs_art) {
-		super(manager, pruefungs_art);
+	public Allgemeines(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt) {
+		super(manager, pruefungsArt);
 	}
 
-	
+
 	@Override
 	protected void init() {
 		// Keine Initialisierung notwendig
 	}
 
-	
+
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob mehrere Religionsfächer belegt wurden.
@@ -51,7 +51,7 @@ public class Allgemeines extends GostBelegpruefung {
 	@Override
 	protected void pruefeGesamt() {
 		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
-		
+
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);

@@ -11,14 +11,14 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse implementiert ein Sub-Key-Set für einen AVL-Baum der Klasse {@link AVLMap}. Alle Methodenaufrufe werden
  * an die {@link AVLMap} delegiert.
- * 
+ *
  * @author Benjamin A. Bartsch
  * @author Thomas Bachran
- * 
+ *
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@NotNull K> {
+public final class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@NotNull K> {
 
 	/**
 	 * Die {@link AVLMap} auf der dieses Sub-Set operiert.
@@ -27,7 +27,7 @@ public class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableSet<@No
 
 	/**
 	 * Erstellt eine neues Sub-Set auf die übergebene {@link AVLMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMap} auf der operiert wird.
 	 */
 	AVLMapSubKeySet(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {

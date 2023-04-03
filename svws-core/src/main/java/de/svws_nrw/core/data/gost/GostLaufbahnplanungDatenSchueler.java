@@ -18,7 +18,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @Schema(description = "Enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLaufbahnplanungDatenSchueler {
-	
+
 	/** Die eindeutige ID des Schülers */
 	@Schema(description = "Die eindeutige ID des Schülers.", example = "4711")
 	public long id;
@@ -35,7 +35,7 @@ public class GostLaufbahnplanungDatenSchueler {
 	@Schema(description = "Das Geschlecht des Schülers.", example = "w")
 	public @NotNull String geschlecht = "";
 
-    /** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
+	/** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
 	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example = "E")
 	public String bilingualeSprache = null;
 

@@ -34,32 +34,32 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	/**
 	 * Berechnet den Notendurchschnitt aller Fächer
 	 *
-	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
+	 * @param abschlussFaecher   die Fächer für die Abschlussberechnung
 	 *
 	 * @return der Notendurchschnitt oder NaN im Fehlerfall
 	 */
-	public static getDurchschnitt(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
+	public static getDurchschnitt(abschlussFaecher : BKAnlageAFaecher) : number {
+		if ((abschlussFaecher.faecher === null) || (abschlussFaecher.faecher.size() === 0))
 			return NaN;
 		let sum : number = 0;
-		for (const fach of abschluss_faecher.faecher) {
+		for (const fach of abschlussFaecher.faecher) {
 			sum += fach.note;
 		}
-		return (sum as number) / abschluss_faecher.faecher.size();
+		return (sum as number) / abschlussFaecher.faecher.size();
 	}
 
 	/**
 	 * Berechnet die Anzahl der Defizite
 	 *
-	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
+	 * @param abschlussFaecher   die Fächer für die Abschlussberechnung
 	 *
 	 * @return die Anzahl der Defizite oder -1 im Fehlerfall
 	 */
-	public static getAnzahlDefizite(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
+	public static getAnzahlDefizite(abschlussFaecher : BKAnlageAFaecher) : number {
+		if ((abschlussFaecher.faecher === null) || (abschlussFaecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
-		for (const fach of abschluss_faecher.faecher) {
+		for (const fach of abschlussFaecher.faecher) {
 			if (fach.note >= 5)
 				sum++;
 		}
@@ -69,15 +69,15 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	/**
 	 * Berechnet die Anzahl der Note Ungenügend
 	 *
-	 * @param abschluss_faecher   die Fächer für die Abschlussberechnung
+	 * @param abschlussFaecher   die Fächer für die Abschlussberechnung
 	 *
 	 * @return die Anzahl der Note Ungenügend oder -1 im Fehlerfall
 	 */
-	public static getAnzahlUngenuegend(abschluss_faecher : BKAnlageAFaecher) : number {
-		if ((abschluss_faecher.faecher === null) || (abschluss_faecher.faecher.size() === 0))
+	public static getAnzahlUngenuegend(abschlussFaecher : BKAnlageAFaecher) : number {
+		if ((abschlussFaecher.faecher === null) || (abschlussFaecher.faecher.size() === 0))
 			return -1;
 		let sum : number = 0;
-		for (const fach of abschluss_faecher.faecher) {
+		for (const fach of abschlussFaecher.faecher) {
 			if (fach.note >= 6)
 				sum++;
 		}

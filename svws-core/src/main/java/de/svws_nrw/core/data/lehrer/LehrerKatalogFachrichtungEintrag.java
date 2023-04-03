@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gültigen Statistikwerte für den Katalog der LehrerFachrichtung.  
+ * Sie liefert die gültigen Statistikwerte für den Katalog der LehrerFachrichtung.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Fachrichtungen von Lehrern.")
@@ -21,7 +21,7 @@ public class LehrerKatalogFachrichtungEintrag {
 	/** Das Kürzel für die Fachrichtung. */
 	@Schema(description = "das Kürzel für die Fachrichtung", example = "03")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext die Fachrichtung. */
 	@Schema(description = "die Fachrichtung", example = "Kraftfahrzeugtechnik")
 	public @NotNull String text = "";
@@ -33,8 +33,8 @@ public class LehrerKatalogFachrichtungEintrag {
 	/** Gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
-	
-	
+
+
 	/**
 	 * Erstellt einen Fachrichtungs-Eintrag mit Standardwerten
 	 */
@@ -44,9 +44,9 @@ public class LehrerKatalogFachrichtungEintrag {
 
 	/**
 	 * Erstellt einen Fachrichtungs-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -57,6 +57,6 @@ public class LehrerKatalogFachrichtungEintrag {
 		this.text = text;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

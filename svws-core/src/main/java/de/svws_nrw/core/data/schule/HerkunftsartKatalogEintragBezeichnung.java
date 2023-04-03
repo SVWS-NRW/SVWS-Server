@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Bezeichnungen zu einer Schulform bei einem Katalog-Eintrag 
+ * Sie liefert die Bezeichnungen zu einer Schulform bei einem Katalog-Eintrag
  * der Herkunftsarten.
  */
 @XmlRootElement
@@ -23,7 +23,7 @@ public class HerkunftsartKatalogEintragBezeichnung {
 	/** Die Kurz-Bezeichnung der Herkunftsart */
 	@Schema(description = "die Kurz-Bezeichnung der Herkunftsart", example = "Nichtversetzung")
 	public @NotNull String kurzBezeichnung = "";
-	
+
 	/** Die Bezeichnung der Herkunftsart */
 	@Schema(description = "die Bezeichnung der Herkunftsart", example = "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
 	public @NotNull String bezeichnung = "";
@@ -47,6 +47,6 @@ public class HerkunftsartKatalogEintragBezeichnung {
 		this.schulform = schulform.daten.kuerzel;
 		this.kurzBezeichnung = kurzBezeichnung;
 		this.bezeichnung = bezeichnung;
-	}	
+	}
 
 }

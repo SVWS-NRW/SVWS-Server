@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Schülerverteilungs-Algorithmus verteilt die SuS zufällig auf ihre Kurse in mehreren Runden. Sobald die
  * Verbesserung stagniert, bricht der Algorithmus ab. Da die Datenstruktur {@link KursblockungDynDaten} pro Fachart die
  * Kurse nach ihrer Kursgröße aufsteigend sortiert, findet der Algorithmus sogar sehr gute Kursdifferenzen.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS {
+public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -32,7 +32,7 @@ public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -67,7 +67,7 @@ public class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	/**
 	 * Der Algorithmus verteilt die SuS in zufälliger Reihenfolge ein weiteres Mal zufällig. Falls die Verteilung
 	 * schlechter ist, wird der vorherige Zustand wiederhergestellt.
-	 * 
+	 *
 	 * @return TRUE, falls der Zustand sich verbessert hat.
 	 */
 	private boolean verteileSchuelerAlle() {

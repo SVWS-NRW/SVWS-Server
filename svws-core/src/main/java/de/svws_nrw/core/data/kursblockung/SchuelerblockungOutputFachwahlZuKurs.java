@@ -4,9 +4,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** Diese Klasse ordnet der Fachwahl eines Schülers einen Kurs zu.
- * 
- * @author Benjamin A. Bartsch */
+/**
+ * Diese Klasse ordnet der Fachwahl eines Schülers einen Kurs zu.
+ *
+ * @author Benjamin A. Bartsch
+ */
 @XmlRootElement(name = "SchuelerblockungOutputFachwahlZuKurs")
 @Schema(name = "SchuelerblockungOutputFachwahlZuKurs", description = "Diese Klasse ordnet der Fachwahl eines Schülers einen Kurs zu.")
 @TranspilerDTO

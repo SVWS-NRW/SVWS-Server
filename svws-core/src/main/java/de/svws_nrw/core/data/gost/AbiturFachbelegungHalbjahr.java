@@ -16,31 +16,31 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description = "enthält die Informationen zu der Halbjahres-Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "halbjahrKuerzel", "kursartKuerzel", "schriftlich", "biliSprache", "lehrerKuerzel", "wochenstunden",
-                     "fehlstundenGesamt", "fehlstundenUnentschuldigt", "notenkuerzel", "block1gewertet", "block1kursAufZeugnis" })
+	"fehlstundenGesamt", "fehlstundenUnentschuldigt", "notenkuerzel", "block1gewertet", "block1kursAufZeugnis" })
 @TranspilerDTO
 public class AbiturFachbelegungHalbjahr {
-	
+
 	/** Das Kürzel des Halbjahres der Fachbelegung */
 	public @NotNull String halbjahrKuerzel = "";
-	
+
 	/** Das Kürzel der Kursart der Gymnasialen Oberstufe dieser Fachbelegung  */
 	public @NotNull String kursartKuerzel = "";
-	
+
 	/** Gibt an, ob das Fach schriftlich belegt wurde oder nicht. */
 	public Boolean schriftlich = null;
-	
+
 	/** Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde. */
 	public String biliSprache = null;
-	
+
 	/** Die ID des unterrichtenden Lehrers, welcher die Note erteilt. */
 	public Long lehrer;
-	
+
 	/** Die Wochenstundenzahl, mir der das Fach belegt wurde */
 	public int wochenstunden;
-	
+
 	/** Die Anzahl der Fehlstunden. */
 	public int fehlstundenGesamt;
-	
+
 	/** Die Anzahl der unentschuldigten Fehlstunden. */
 	public int fehlstundenUnentschuldigt;
 

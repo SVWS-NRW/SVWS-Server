@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Kursverteilungs-Algorithmus verteilt die Kurse auf ihre Schienen, indem es die Kurslage zufällig verändert,
  * dann die SuS verteilt und dabei versucht die Bewertung (Nichtwahlen; Kursdifferenz) zu minimieren. Dabei wird der
  * übergebene Schülerverteilungs-Algorithmus verwendet.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -24,7 +24,7 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom       Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger       Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat       Die dynamischen Blockungsdaten.
@@ -71,7 +71,7 @@ public class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
-	 * 
+	 *
 	 * @param pMaxTimeMillis Die maximale Blockungszeit für den S-Algorithmus.
 	 * @return TRUE, falls es zur Verbesserung kam.
 	 */

@@ -14,13 +14,13 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Ganztagschule */
 	GANZTAG(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(100000L, "GANZTAG", "Ganztagsschule", true, true, null, Arrays.asList(
-			Schulform.H, 
-			Schulform.V, 
-			Schulform.R, 
-			Schulform.GY, 
-			Schulform.GE, 
+			Schulform.H,
+			Schulform.V,
+			Schulform.R,
+			Schulform.GY,
+			Schulform.GE,
 			Schulform.KS, Schulform.S,
-			Schulform.FW, Schulform.HI, Schulform.WF, 
+			Schulform.FW, Schulform.HI, Schulform.WF,
 			Schulform.G
 		), null, null)
 	}),
@@ -29,10 +29,10 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Offene Ganztagschule */
 	GANZTAG_OFFEN(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(200000L, "OFFGANZ", "Offene Ganztagsschule", true, true, null, Arrays.asList(
-			Schulform.KS, Schulform.S, 
-			Schulform.G, 
-			Schulform.V, 
-			Schulform.FW, Schulform.HI, Schulform.WF 
+			Schulform.KS, Schulform.S,
+			Schulform.G,
+			Schulform.V,
+			Schulform.FW, Schulform.HI, Schulform.WF
 		), null, null)
 	}),
 
@@ -40,13 +40,13 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Übermittagsbetreuung */
 	UEBERMITTAGSBETREUUNG(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(250000L, "ÜMI", "Übermittagsbetreuung", true, true, null, Arrays.asList(
-			Schulform.G, 
+			Schulform.G,
 			Schulform.KS, Schulform.S
 		), 2012, 2017),
 		new AllgemeineMerkmaleKatalogEintrag(250001L, "ÜMI", "Übermittagsbetreuung", true, true, null, Arrays.asList(
-			Schulform.G, 
-			Schulform.KS, Schulform.S, 
-			Schulform.H, 
+			Schulform.G,
+			Schulform.KS, Schulform.S,
+			Schulform.H,
 			Schulform.R
 		), 2018, null)
 	}),
@@ -55,14 +55,14 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Selbständige Schule */
 	SELBSTAENDIGE_SCHULE(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(300000L, "SELBST", "Selbstständige Schule", true, false, null, Arrays.asList(
-			Schulform.H, 
-			Schulform.R, 
+			Schulform.H,
+			Schulform.R,
 			Schulform.KS, Schulform.S,
-			Schulform.GE, 
-			Schulform.GY, 
-			Schulform.WB, 
-			Schulform.BK, Schulform.SB, 
-			Schulform.G, 
+			Schulform.GE,
+			Schulform.GY,
+			Schulform.WB,
+			Schulform.BK, Schulform.SB,
+			Schulform.G,
 			Schulform.V
 		), null, null)
 	}),
@@ -71,10 +71,10 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Verbundschule */
 	VERBUNDSCHULE(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(350000L, "VERBUND", "Verbundschule", true, false, null, Arrays.asList(
-			Schulform.GY, 
-			Schulform.GE, 
-			Schulform.R, 
-			Schulform.H, 
+			Schulform.GY,
+			Schulform.GE,
+			Schulform.R,
+			Schulform.H,
 			Schulform.G
 		), null, null)
 	}),
@@ -83,9 +83,9 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: BUS-Projekt */
 	BUS(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(400000L, "BUS", "BUS-Projekt", true, true, null, Arrays.asList(
-			Schulform.GE, 
-			Schulform.KS, Schulform.S, 
-			Schulform.H, 
+			Schulform.GE,
+			Schulform.KS, Schulform.S,
+			Schulform.H,
 			Schulform.V
 		), null, null)
 	}),
@@ -104,7 +104,7 @@ public enum AllgemeineMerkmale {
 	VON_8_BIS_1_ANDERE(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(550000L, "8BIS1AS", "Schule von 8 bis 1 an anderer Schule", true, true, null, Arrays.asList(
 			Schulform.KS, Schulform.S,
-			Schulform.G, 
+			Schulform.G,
 			Schulform.V
 		), null, null)
 	}),
@@ -113,12 +113,12 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: 13+ */
 	DREIZEHN_PLUS(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(600000L, "13+", "13+", true, true, null, Arrays.asList(
-			Schulform.H, 
+			Schulform.H,
 			Schulform.KS, Schulform.S,
-			Schulform.GY, 
-			Schulform.R, 
-			Schulform.G, 
-			Schulform.GE, 
+			Schulform.GY,
+			Schulform.R,
+			Schulform.G,
+			Schulform.GE,
 			Schulform.V
 		), null, null)
 	}),
@@ -127,12 +127,12 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: 13+ an anderer Schule */
 	DREIZEHN_PLUS_ANDERE(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(650000L, "13+AS", "13+ an anderer Schule", true, true, null, Arrays.asList(
-			Schulform.H, 
+			Schulform.H,
 			Schulform.KS, Schulform.S,
-			Schulform.GY, 
-			Schulform.R, 
-			Schulform.G, 
-			Schulform.GE, 
+			Schulform.GY,
+			Schulform.R,
+			Schulform.G,
+			Schulform.GE,
 			Schulform.V
 		), null, null)
 	}),
@@ -152,9 +152,9 @@ public enum AllgemeineMerkmale {
 			Schulform.KS, Schulform.S,
 			Schulform.H,
 			Schulform.R,
-			Schulform.GE, 
-			Schulform.GY, 
-			Schulform.G, 
+			Schulform.GE,
+			Schulform.GY,
+			Schulform.G,
 			Schulform.V
 		), null, null)
 	}),
@@ -211,7 +211,7 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Arbeitssprache in der gym. Oberstufe -Englisch- */
 	ARBEITSSPRACHE_GOST_E(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(1700000L, "ArbSprE", "Arbeitssprache in der gym. Oberstufe -Englisch-", true, true, null, Arrays.asList(
-			Schulform.GE, 
+			Schulform.GE,
 			Schulform.GY
 		), null, null)
 	}),
@@ -220,7 +220,7 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Arbeitssprache in der gym. Oberstufe -Französisch- */
 	ARBEITSSPRACHE_GOST_F(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(1710000L, "ArbSprF", "Arbeitssprache in der gym. Oberstufe -Französisch-", true, true, null, Arrays.asList(
-			Schulform.GE, 
+			Schulform.GE,
 			Schulform.GY
 		), null, null)
 	}),
@@ -229,7 +229,7 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Arbeitssprache in der gym. Oberstufe -Sonstige Sprache- */
 	ARBEITSSPRACHE_GOST_SONSTIGE(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(1720000L, "ArbSprSon", "Arbeitssprache in der gym. Oberstufe -Sonstige Sprache-", true, true, null, Arrays.asList(
-			Schulform.GE, 
+			Schulform.GE,
 			Schulform.GY,
 			Schulform.V
 		), null, null)
@@ -239,52 +239,52 @@ public enum AllgemeineMerkmale {
 	/** Merkmal: Internat */
 	INTERNAT(new AllgemeineMerkmaleKatalogEintrag[] {
 		new AllgemeineMerkmaleKatalogEintrag(2000000L, "INTERNAT", "Internat", true, true, null, Arrays.asList(
-			Schulform.H, 
-			Schulform.V, 
-			Schulform.R, 
-			Schulform.GY, 
-			Schulform.GE, 
+			Schulform.H,
+			Schulform.V,
+			Schulform.R,
+			Schulform.GY,
+			Schulform.GE,
 			Schulform.KS, Schulform.S,
 			Schulform.FW, Schulform.HI, Schulform.WF,
 			Schulform.G,
-			Schulform.BK, Schulform.SB, 
-			Schulform.SR, 
+			Schulform.BK, Schulform.SB,
+			Schulform.SR,
 			Schulform.SG
 		), null, null)
 	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten des allgemeinen Merkmals, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull AllgemeineMerkmaleKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen des allgemeinen Merkmals */
-	public final @NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie;	
+	public final @NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, AllgemeineMerkmale> _mapByKuerzel = new HashMap<>();
 
 
 	/**
 	 * Erzeugt ein neues allgemeines Merkmal in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der allgemeinen Merkmale, welche ein Array von 
-	 *                   {@link AllgemeineMerkmaleKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der allgemeinen Merkmale, welche ein Array von
+	 *                   {@link AllgemeineMerkmaleKatalogEintrag} ist
 	 */
-	private AllgemeineMerkmale(final @NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie) {
+	AllgemeineMerkmale(final @NotNull AllgemeineMerkmaleKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von den Kürzeln der allgemeinen Merkmale auf die 
-	 * zugehörigen allgemeinen Merkmale zurück. 
+	 * Gibt eine Map von den Kürzeln der allgemeinen Merkmale auf die
+	 * zugehörigen allgemeinen Merkmale zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen allgemeinen Merkmale
 	 */
 	private static @NotNull HashMap<@NotNull String, AllgemeineMerkmale> getMapByKuerzel() {
@@ -300,13 +300,13 @@ public enum AllgemeineMerkmale {
 
 	/**
 	 * Gibt das allgemeine Merkmal für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des allgemeinen Merkmals
-	 * 
+	 *
 	 * @return das allgemeine Merkmal oder null, falls das Kürzel ungültig ist
 	 */
 	public static AllgemeineMerkmale getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
-	
+
 }

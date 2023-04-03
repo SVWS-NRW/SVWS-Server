@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public class DummyMap implements NavigableMap<Integer, Integer> {
+public final class DummyMap implements NavigableMap<Integer, Integer> {
 
 	/**
 	 * Die zugeordneten Key-Value-Daten. Existiert keine Zuordnung, so ist ein NULL-Wert im Array.
@@ -39,10 +39,10 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Erzeugt eineMap mit Hilfe eines Arrays der Größe {@code maxValueExclusive} zum Zuordnen von Werten von 0 bis
 	 * maxValueExclusive-1 auf einen Integer-Wert.
-	 * 
+	 *
 	 * @param maxValueExclusive Der größte erlaubte Integer-Wert (exklusiv) im Set. Der kleinste Wert ist 0.
 	 */
-	public DummyMap(int maxValueExclusive) {
+	public DummyMap(final int maxValueExclusive) {
 		_isMapped = new Integer[maxValueExclusive];
 		_sub = new DummyMapSub(this, new DummyMapIntervall(0, true, maxValueExclusive, false), true);
 	}
@@ -50,10 +50,10 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Bewirkt, dass das Hinzufügen von Keys ohne Value durch {@link DummyMapSubKeySet} erlaubt ist. Die Keys werden auf
 	 * einen Dummy-Wert gemapped.
-	 * 
+	 *
 	 * @param b Falls TRUE, dürfen KEYs ohne VALUE hinzugefügt werden.
 	 */
-	public void allowKeyAlone(boolean b) {
+	public void allowKeyAlone(final boolean b) {
 		_allowKeyAlone = b;
 	}
 
@@ -72,7 +72,7 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		return _sub.equals(obj);
 	}
 
@@ -117,32 +117,32 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public boolean containsKey(Object key) {
+	public boolean containsKey(final Object key) {
 		return _sub.containsKey(key);
 	}
 
 	@Override
-	public boolean containsValue(Object value) {
+	public boolean containsValue(final Object value) {
 		return _sub.containsValue(value);
 	}
 
 	@Override
-	public Integer get(Object key) {
+	public Integer get(final Object key) {
 		return _sub.get(key);
 	}
 
 	@Override
-	public Integer put(Integer key, Integer value) {
+	public Integer put(final Integer key, final Integer value) {
 		return _sub.put(key, value);
 	}
 
 	@Override
-	public Integer remove(Object key) {
+	public Integer remove(final Object key) {
 		return _sub.remove(key);
 	}
 
 	@Override
-	public void putAll(Map<? extends Integer, ? extends Integer> m) {
+	public void putAll(final Map<? extends Integer, ? extends Integer> m) {
 		_sub.putAll(m);
 	}
 
@@ -152,42 +152,42 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public Entry<Integer, Integer> lowerEntry(Integer key) {
+	public Entry<Integer, Integer> lowerEntry(final Integer key) {
 		return _sub.lowerEntry(key);
 	}
 
 	@Override
-	public Integer lowerKey(Integer key) {
+	public Integer lowerKey(final Integer key) {
 		return _sub.lowerKey(key);
 	}
 
 	@Override
-	public Entry<Integer, Integer> floorEntry(Integer key) {
+	public Entry<Integer, Integer> floorEntry(final Integer key) {
 		return _sub.floorEntry(key);
 	}
 
 	@Override
-	public Integer floorKey(Integer key) {
+	public Integer floorKey(final Integer key) {
 		return _sub.floorKey(key);
 	}
 
 	@Override
-	public Entry<Integer, Integer> ceilingEntry(Integer key) {
+	public Entry<Integer, Integer> ceilingEntry(final Integer key) {
 		return _sub.ceilingEntry(key);
 	}
 
 	@Override
-	public Integer ceilingKey(Integer key) {
+	public Integer ceilingKey(final Integer key) {
 		return _sub.ceilingKey(key);
 	}
 
 	@Override
-	public Entry<Integer, Integer> higherEntry(Integer key) {
+	public Entry<Integer, Integer> higherEntry(final Integer key) {
 		return _sub.higherEntry(key);
 	}
 
 	@Override
-	public Integer higherKey(Integer key) {
+	public Integer higherKey(final Integer key) {
 		return _sub.higherKey(key);
 	}
 
@@ -227,33 +227,33 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	}
 
 	@Override
-	public NavigableMap<Integer, Integer> subMap(Integer fromKey, boolean fromInclusive, Integer toKey,
-			boolean toInclusive) {
+	public NavigableMap<Integer, Integer> subMap(final Integer fromKey, final boolean fromInclusive, final Integer toKey,
+			final boolean toInclusive) {
 		return _sub.subMap(fromKey, fromInclusive, toKey, toInclusive);
 	}
 
 	@Override
-	public NavigableMap<Integer, Integer> headMap(Integer toKey, boolean inclusive) {
+	public NavigableMap<Integer, Integer> headMap(final Integer toKey, final boolean inclusive) {
 		return _sub.headMap(toKey, inclusive);
 	}
 
 	@Override
-	public NavigableMap<Integer, Integer> tailMap(Integer fromKey, boolean inclusive) {
+	public NavigableMap<Integer, Integer> tailMap(final Integer fromKey, final boolean inclusive) {
 		return _sub.tailMap(fromKey, inclusive);
 	}
 
 	@Override
-	public SortedMap<Integer, Integer> subMap(Integer fromKey, Integer toKey) {
+	public SortedMap<Integer, Integer> subMap(final Integer fromKey, final Integer toKey) {
 		return _sub.subMap(fromKey, toKey);
 	}
 
 	@Override
-	public SortedMap<Integer, Integer> headMap(Integer toKey) {
+	public SortedMap<Integer, Integer> headMap(final Integer toKey) {
 		return _sub.headMap(toKey);
 	}
 
 	@Override
-	public SortedMap<Integer, Integer> tailMap(Integer fromKey) {
+	public SortedMap<Integer, Integer> tailMap(final Integer fromKey) {
 		return _sub.tailMap(fromKey);
 	}
 
@@ -266,14 +266,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * (Value) hinzuzufügen, kann es zu einer {@link UnsupportedOperationException} kommen, wenn das Attribut
 	 * {@link #_allowKeyAlone} auf FALSE gesetzt ist. Andernfalls wird dem Schlüssel (Key) ein Dummy-Wert zugeordnet.
 	 * Der Schlüssel (Key) wird jedoch nur dann hinzugefügt, falls er noch nicht existierte.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
 	 * @param e  Der Schlüssel (Key) der hinzugefügt werden soll.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
-	boolean bcAddKey(@NotNull DummyMapIntervall iv, @NotNull Integer e) {
+	boolean bcAddKey(@NotNull final DummyMapIntervall iv, @NotNull final Integer e) {
 		if (_allowKeyAlone == false)
 			throw new UnsupportedOperationException(); // KEY kann nicht ohne VALUE hinzugefügt werden.
 		if (bcContainsKey(iv, e))
@@ -286,16 +286,16 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#bcAddAllKeys(Collection)}. Versucht alle Schlüssel (Keys) der Collection
 	 * hinzuzufügen. Ob das Hinzufügen eines Schlüssels (Key) ohne Wert (Value) erlaubt ist, hängt vom Attribut
 	 * {@link #_allowKeyAlone} ab.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die hinzugefügt werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
-	boolean bcAddAllKeys(@NotNull DummyMapIntervall iv, Collection<? extends @NotNull Integer> c) {
+	boolean bcAddAllKeys(@NotNull final DummyMapIntervall iv, final Collection<? extends @NotNull Integer> c) {
 		boolean changed = false;
-		for (Integer key : c)
+		for (final Integer key : c)
 			changed |= bcAddKey(iv, key);
 		return changed;
 	}
@@ -303,16 +303,16 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcAddEntryReturnBool(java.util.Map.Entry)}. Fügt ein Entry der
 	 * Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param e  Das einzufügende Entry.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das Entry (e.getKey(), e.getValue()) neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddEntry(@NotNull DummyMapIntervall iv, @NotNull Entry<@NotNull Integer, @NotNull Integer> e) {
+	boolean bcAddEntry(@NotNull final DummyMapIntervall iv, @NotNull final Entry<@NotNull Integer, @NotNull Integer> e) {
 		// KEY, VALUE schon vorhanden?
-		Integer key = e.getKey();
-		Integer val = e.getValue();
+		final Integer key = e.getKey();
+		final Integer val = e.getValue();
 		if (bcContainsKey(iv, key) && val.equals(bcGetValueOfKeyOrNull(iv, key)))
 			return false;
 		// Hinzufügen, da neu KEY oder VALUE neu.
@@ -323,16 +323,16 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcAddAllEntries(Collection)}. Fügt alle Entries der Collection der
 	 * Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param c  Die Collection mit den einzufügenden Entries.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Entry neu war und somit hinzugefügt wurde.
 	 */
-	boolean bcAddAllEntries(@NotNull DummyMapIntervall iv,
-			@NotNull Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
+	boolean bcAddAllEntries(@NotNull final DummyMapIntervall iv,
+			@NotNull final Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
 		boolean changed = false;
-		for (@NotNull Entry<@NotNull Integer, @NotNull Integer> ent : c)
+		for (@NotNull final Entry<@NotNull Integer, @NotNull Integer> ent : c)
 			changed |= bcAddEntry(iv, ent);
 		return changed;
 	}
@@ -340,28 +340,28 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#containsKey(Object)}. Überprüft, ob ein Schlüssel (Key) in dieser
 	 * Datenstruktur existiert.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) nach dem gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) in dieser Datenstruktur existiert.
 	 */
-	boolean bcContainsKey(@NotNull DummyMapIntervall iv, @NotNull Object key) {
-		int e = (Integer) key;
+	boolean bcContainsKey(@NotNull final DummyMapIntervall iv, @NotNull final Object key) {
+		final int e = (Integer) key;
 		return iv.contains(e) && (_isMapped[e] != null);
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcContainsAllKeys(Collection)}. Überprüft, ob alle Schlüssel (Keys) der
 	 * Collection in dieser Datenstruktur existieren.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) welche überprüft werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllKeys(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
-		for (@NotNull Object key : c)
+	boolean bcContainsAllKeys(@NotNull final DummyMapIntervall iv, @NotNull final Collection<?> c) {
+		for (@NotNull final Object key : c)
 			if (!bcContainsKey(iv, key))
 				return false;
 		return true;
@@ -370,13 +370,13 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#containsValue(Object)}. Überprüft, ob ein Wert (Value) in dieser
 	 * Datenstruktur existiert.
-	 * 
+	 *
 	 * @param value Der Wert (Value) nach dem gesucht wird.
 	 * @param iv    Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls der Wert (Value) in dieser Datenstruktur existiert.
 	 */
-	boolean bcContainsValue(@NotNull DummyMapIntervall iv, @NotNull Object value) {
+	boolean bcContainsValue(@NotNull final DummyMapIntervall iv, @NotNull final Object value) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (valEqual(_isMapped[i], value))
 				return true;
@@ -386,14 +386,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcContainsAllValues(Collection)}. Überprüft, ob alle Werte (Values) aus
 	 * der Collection in dieser Datenstruktur vorkommen.
-	 * 
+	 *
 	 * @param c  Die Collection deren Werte (Values) überprüft werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllValues(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
-		for (Object obj : c)
+	boolean bcContainsAllValues(@NotNull final DummyMapIntervall iv, @NotNull final Collection<?> c) {
+		for (final Object obj : c)
 			if (!bcContainsValue(iv, obj))
 				return false;
 		return true;
@@ -402,18 +402,19 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcContainsEntry(Object)}. Überprüft, ob das übergebene Entry in dieser
 	 * Datenstruktur existiert.
-	 * 
+	 *
 	 * @param o  Das Entry (Schlüssel-Wert-Paar) nach dem gesucht wird.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das übergebene Entry in dieser Datenstruktur existiert.
 	 */
 	@SuppressWarnings("unchecked")
-	boolean bcContainsEntry(@NotNull DummyMapIntervall iv, Object o) {
+	boolean bcContainsEntry(@NotNull final DummyMapIntervall iv, final Object o) {
 		if (o instanceof Entry<?, ?> == false)
 			return false;
-		@NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
-		int key = (Integer) e.getKey();
+		@NotNull
+		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		final int key = (Integer) e.getKey();
 		if (iv.contains(key) == false)
 			return false;
 		if (_isMapped[key] == null)
@@ -424,14 +425,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcContainsAllEntries(Collection)}. Überprüft, ob alle Entries der
 	 * Collection in dieser Datenstruktur existieren.
-	 * 
+	 *
 	 * @param c  Die Collection mit den Entries welche überprüft werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllEntries(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
-		for (Object obj : c)
+	boolean bcContainsAllEntries(@NotNull final DummyMapIntervall iv, @NotNull final Collection<?> c) {
+		for (final Object obj : c)
 			if (!bcContainsEntry(iv, obj))
 				return false;
 		return true;
@@ -441,17 +442,17 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#remove(Object)}. Versucht einen Schlüssel (Key) aus dieser Datenstruktur
 	 * zu entfernen. In dieser Implementierung kann ein Schlüssel (Key) keinem NULL-Wert zugeordnet sein. Ist das
 	 * Ergebnis NULL, bedeutet dies, dass der Schlüssel (Key) definitiv nicht existierte.
-	 * 
+	 *
 	 * @param objKey Der Schlüssel (Key), welcher entfernt werden soll.
 	 * @param iv     Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert den zum Schlüssel (Key) zugehörigen Wert (Value), falls es eine Zuordnung gab, andernfalls NULL.
 	 */
-	Integer bcRemoveKeyReturnOldValue(@NotNull DummyMapIntervall iv, @NotNull Object objKey) {
-		int key = (Integer) objKey;
+	Integer bcRemoveKeyReturnOldValue(@NotNull final DummyMapIntervall iv, @NotNull final Object objKey) {
+		final int key = (Integer) objKey;
 		if (iv.contains(key) == false)
 			return null; // keine Exception (analog zur JAVA-TreeMap-Implementation)
-		Integer oldValue = _isMapped[key];
+		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = null;
 		return oldValue;
 	}
@@ -459,47 +460,48 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcRemoveAllKeysReturnBool(Collection)}. Entfernt alle Schlüssel (Keys) aus
 	 * dieser Datenstruktur.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die entfernt werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	boolean bcRemoveAllKeyReturnBool(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
+	boolean bcRemoveAllKeyReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Collection<?> c) {
 		boolean changed = false;
-		for (@NotNull Object obj : c)
+		for (@NotNull final Object obj : c)
 			changed |= removeKeyReturnBool(iv, obj);
 		return changed;
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcRemoveEntry(Object)}. Entfernt das Entry aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param o  Das Entry, welches entfernt werden soll.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
 	@SuppressWarnings({ "unchecked" })
-	boolean bcRemoveEntryReturnBool(@NotNull DummyMapIntervall iv, @NotNull Object o) {
+	boolean bcRemoveEntryReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Object o) {
 		if (bcContainsEntry(iv, o) == false)
 			return false;
-		@NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
+		@NotNull
+		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		return removeKeyReturnBool(iv, e.getKey());
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcRemoveAllEntriesReturnBool(Collection)}. Entfernt alle Entries der
 	 * Collection aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param c  Die Collection mit den Entries, welche entfernt werden sollen.
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Entry entfernt wurde.
 	 */
-	boolean bcRemoveAllEntriesReturnBool(@NotNull DummyMapIntervall iv, @NotNull Collection<?> c) {
+	boolean bcRemoveAllEntriesReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Collection<?> c) {
 		boolean changed = false;
-		for (@NotNull Object obj : c)
+		for (@NotNull final Object obj : c)
 			changed |= bcRemoveEntryReturnBool(iv, obj);
 		return changed;
 	}
@@ -507,15 +509,15 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#pollFirstEntry()} bzw. {@link DummyMapSub#pollLastEntry()} falls
 	 * absteigend sortiert. Entfernt und liefert das erste Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcPollFirstEntryOrNull(@NotNull DummyMapIntervall iv) {
+	Entry<@NotNull Integer, @NotNull Integer> bcPollFirstEntryOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null) {
-				Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
+				final Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
 				_isMapped[i] = null;
 				return e;
 			}
@@ -525,12 +527,12 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcPollFirstKeyOrNull()} bzw. {@link DummyMapSub#bcPollLastKeyOrNull()}
 	 * falls absteigend sortiert. Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Integer bcPollFirstKeyOrNull(@NotNull DummyMapIntervall iv) {
+	Integer bcPollFirstKeyOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null) {
 				_isMapped[i] = null;
@@ -542,15 +544,15 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#pollLastEntry()} bzw. {@link DummyMapSub#pollFirstEntry()} falls
 	 * absteigend sortiert. Entfernt und liefert das letzte Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcPollLastEntryOrNull(@NotNull DummyMapIntervall iv) {
+	Entry<@NotNull Integer, @NotNull Integer> bcPollLastEntryOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null) {
-				Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
+				final Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
 				_isMapped[i] = null;
 				return e;
 			}
@@ -560,12 +562,12 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#bcPollLastKeyOrNull()} bzw. {@link DummyMapSub#bcPollFirstKeyOrNull()}
 	 * falls absteigend sortiert. Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Integer bcPollLastKeyOrNull(@NotNull DummyMapIntervall iv) {
+	Integer bcPollLastKeyOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null) {
 				_isMapped[i] = null;
@@ -577,18 +579,18 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#put(Integer, Integer)}. Fügt ein Entry bzw. ein Key-Value-Paar der
 	 * Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param key   Der Schlüssel (Key) des Entrys.
 	 * @param value Der zum Schlüssel (Key) zugehörige Wert (Value).
 	 * @param iv    Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den alten Wert (Value), falls ein zugehöriger Schlüssel (Key) existierte, sonst NULL.
 	 */
-	Integer bcAddEntryReturnOldValueOrNull(@NotNull DummyMapIntervall iv, @NotNull Integer key,
-			@NotNull Integer value) {
+	Integer bcAddEntryReturnOldValueOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key,
+			@NotNull final Integer value) {
 		if (iv.contains(key) == false)
 			throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
-		Integer oldValue = _isMapped[key];
+		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = value;
 		return oldValue;
 	}
@@ -596,25 +598,25 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#putAll(Map)}. Fügt alle Entrys der übergebenen Map dieser Datenstruktur
 	 * hinzu.
-	 * 
+	 *
 	 * @param map Die Map, deren Entries dieser Datenstruktur hinzugefügt werden soll.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
 	 */
-	void bcAddAllEntriesOfMap(@NotNull DummyMapIntervall iv,
-			@NotNull Map<? extends @NotNull Integer, ? extends @NotNull Integer> map) {
-		for (Entry<? extends @NotNull Integer, ? extends @NotNull Integer> e : map.entrySet())
+	void bcAddAllEntriesOfMap(@NotNull final DummyMapIntervall iv,
+			@NotNull final Map<? extends @NotNull Integer, ? extends @NotNull Integer> map) {
+		for (final Entry<? extends @NotNull Integer, ? extends @NotNull Integer> e : map.entrySet())
 			bcAddEntryReturnOldValueOrNull(iv, e.getKey(), e.getValue());
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#isEmpty()}. Überprüft, ob die Datenstruktur innerhalb der Intervallgrenzen
 	 * leer ist.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return TRUE, falls die Datenstruktur innerhalb der Intervallgrenzen leer ist.
 	 */
-	boolean bcIsEmpty(@NotNull DummyMapIntervall iv) {
+	boolean bcIsEmpty(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return false;
@@ -623,10 +625,10 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#clear()}. Entfernt alle Elemente innerhalb des übergebenen Intervalls.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
 	 */
-	void bcClear(@NotNull DummyMapIntervall iv) {
+	void bcClear(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			_isMapped[i] = null;
 	}
@@ -634,14 +636,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#get(Object)}. Liefert den Wert (Value) eines bestimmten Schlüssels (Key)
 	 * falls vorhanden, sonst NULL.
-	 * 
+	 *
 	 * @param objKey Der Schlüssel (Key) dessen Wert (Value) angefordert wird.
 	 * @param iv     Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den Wert (Value) eines bestimmten Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Integer bcGetValueOfKeyOrNull(@NotNull DummyMapIntervall iv, @NotNull Object objKey) {
-		int e = (Integer) objKey;
+	Integer bcGetValueOfKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Object objKey) {
+		final int e = (Integer) objKey;
 		if (iv.contains(e) == false)
 			return null;
 		// throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
@@ -651,12 +653,12 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#size()}. Liefert die Anzahl der Elemente innerhalb des übergebenen
 	 * Intervalls.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert die Anzahl der Elemente innerhalb des übergebenen Intervalls.
 	 */
-	int bcGetSize(@NotNull DummyMapIntervall iv) {
+	int bcGetSize(@NotNull final DummyMapIntervall iv) {
 		int size = 0;
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
@@ -668,14 +670,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#lowerEntry(Integer)} bzw. {@link DummyMapSub#higherEntry(Integer)} falls
 	 * absteigend sortiert. Liefert das größte Entry welches kleiner ist als der übergebene Schlüssel (Key), somit den
 	 * Vorgänger-Entry des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Vorgänger-Entry gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert den Vorgänger-Entry des Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetLowerEntryOrNull(@NotNull DummyMapIntervall iv,
-			@NotNull Integer key) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetLowerEntryOrNull(@NotNull final DummyMapIntervall iv,
+			@NotNull final Integer key) {
 		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -686,13 +688,13 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#lowerKey(Integer)} bzw. {@link DummyMapSub#higherKey(Integer)} falls
 	 * absteigend sortiert. Liefert den größten Schlüssel (Key) welcher kleiner ist als der übergebene Schlüssel (Key),
 	 * somit den Vorgänger-Schlüssel des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Vorgänger gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Integer bcGetLowerKeyOrNull(@NotNull DummyMapIntervall iv, @NotNull Integer key) {
+	Integer bcGetLowerKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key) {
 		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return i;
@@ -704,15 +706,15 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * absteigend sortiert. Liefert das größte Entry welches kleiner oder gleich dem übergebenen Schlüssel (Key) ist.
 	 * Somit das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Vorgänger-Entry falls vorhanden,
 	 * andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Entry bzw. Vorgänger-Entry gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Vorgänger-Entry falls
 	 *         vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetFloorEntryOrNull(@NotNull DummyMapIntervall iv,
-			@NotNull Integer key) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetFloorEntryOrNull(@NotNull final DummyMapIntervall iv,
+			@NotNull final Integer key) {
 		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -724,14 +726,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * absteigend sortiert. Liefert den größten Schlüssel (Key) welcher kleiner oder gleich dem übergebenen Schlüssel
 	 * (Key) ist. Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls den Vorgänger-Schlüssel (Key) falls
 	 * vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Vorgänger-Schlüssel.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Vorgänger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	Integer bcGetFloorKeyOrNull(@NotNull DummyMapIntervall iv, @NotNull Integer key) {
+	Integer bcGetFloorKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key) {
 		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return i;
@@ -743,15 +745,15 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * absteigend sortiert. Liefert das kleinste Entry welches größer oder gleich dem übergebenen Schlüssel (Key) ist.
 	 * Somit das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Nachfolger-Entry falls
 	 * vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Entry bzw. Nachfolger-Entry gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Das zugehörige Entry des Schlüssels (Key) falls vorhanden, andernfalls den Nachfolger-Entry falls
 	 *         vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetCeilingEntryOrNull(@NotNull DummyMapIntervall iv,
-			@NotNull Integer key) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetCeilingEntryOrNull(@NotNull final DummyMapIntervall iv,
+			@NotNull final Integer key) {
 		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -763,14 +765,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * absteigend sortiert. Liefert den kleinsten Schlüssel (Key) welcher größer oder gleich dem übergebenen Schlüssel
 	 * (Key) ist. Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel (Key) falls
 	 * vorhanden, andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Nachfolger-Schlüssel.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	Integer bcGetCeilingKeyOrNull(@NotNull DummyMapIntervall iv, @NotNull Integer key) {
+	Integer bcGetCeilingKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key) {
 		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return i;
@@ -781,14 +783,14 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#higherEntry(Integer)} bzw. {@link DummyMapSub#lowerEntry(Integer)} falls
 	 * absteigend sortiert. Liefert das kleinste Entry welches größer ist als der übergebene Schlüssel (Key), somit den
 	 * Nachfolger-Entry des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Nachfolger-Entry gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert den Nachfolger-Entry des Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetHigherEntryOrNull(@NotNull DummyMapIntervall iv,
-			@NotNull Integer key) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetHigherEntryOrNull(@NotNull final DummyMapIntervall iv,
+			@NotNull final Integer key) {
 		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -799,13 +801,13 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	 * Wird aufgerufen von {@link DummyMapSub#higherKey(Integer)} bzw. {@link DummyMapSub#lowerKey(Integer)} falls
 	 * absteigend sortiert. Liefert den kleinsten Schlüssel (Key) welcher größer ist als der übergebene Schlüssel (Key),
 	 * somit den Nachfolger-Schlüssel des übergebenen Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Nachfolger-Schlüssel gesucht wird.
 	 * @param iv  Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Integer bcGetHigherKeyOrNull(@NotNull DummyMapIntervall iv, @NotNull Integer key) {
+	Integer bcGetHigherKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key) {
 		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return i;
@@ -815,12 +817,12 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#firstEntry()} bzw. {@link DummyMapSub#lastEntry()} falls absteigend
 	 * sortiert. Liefert das erste Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetFirstEntryOrNull(@NotNull DummyMapIntervall iv) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetFirstEntryOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -830,13 +832,13 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#firstKey()} bzw. {@link DummyMapSub#lastKey()} falls absteigend sortiert.
 	 * Liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull Integer bcGetFirstKeyOrException(@NotNull DummyMapIntervall iv) {
+	@NotNull Integer bcGetFirstKeyOrException(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isMapped[i] != null)
 				return i;
@@ -846,12 +848,12 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#lastEntry()} bzw. {@link DummyMapSub#firstEntry()} falls absteigend
 	 * sortiert. Liefert das letzte Entry dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Entry<@NotNull Integer, @NotNull Integer> bcGetLastEntryOrNull(@NotNull DummyMapIntervall iv) {
+	Entry<@NotNull Integer, @NotNull Integer> bcGetLastEntryOrNull(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return new DummyMapEntry(i, _isMapped[i]);
@@ -861,13 +863,13 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummyMapSub#lastKey()} bzw. {@link DummyMapSub#firstKey()} falls absteigend sortiert.
 	 * Liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
-	 * 
+	 *
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull Integer bcGetLastKeyOrException(@NotNull DummyMapIntervall iv) {
+	@NotNull Integer bcGetLastKeyOrException(@NotNull final DummyMapIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isMapped[i] != null)
 				return i;
@@ -878,11 +880,11 @@ public class DummyMap implements NavigableMap<Integer, Integer> {
 	// ############################# PRIVATE ##################################
 	// ########################################################################
 
-	private boolean removeKeyReturnBool(@NotNull DummyMapIntervall iv, @NotNull Object objKey) {
+	private boolean removeKeyReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Object objKey) {
 		return bcRemoveKeyReturnOldValue(iv, objKey) != null;
 	}
 
-	private static boolean valEqual(Object a, Object b) {
+	private static boolean valEqual(final Object a, final Object b) {
 		return (a == null) ? (b == null) : a.equals(b);
 	}
 

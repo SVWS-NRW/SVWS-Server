@@ -54,6 +54,8 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	/**
 	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechter, wird die Veränderung
 	 * rückgängig gemacht.
+	 *
+	 * @return true, wenn der Zustand angepasst wurde
 	 */
 	private verteileKurseMitSchuelerwunsch() : boolean {
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -71,6 +73,8 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	/**
 	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
 	 * Veränderung rückgängig gemacht.
+	 *
+	 * @return true, wenn der Zustand angepasst wurde
 	 */
 	private verteileKurseZufaelligEinWenig() : boolean {
 		do {

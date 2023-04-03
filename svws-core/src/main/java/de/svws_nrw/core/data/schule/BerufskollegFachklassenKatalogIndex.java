@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten des Teilkatalogs eines Index von Fachklassen beim Berufskolleg.  
+ * Sie liefert die Daten des Teilkatalogs eines Index von Fachklassen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "der Teilkatalog für einen Index von Fachklassen beim Berufskolleg.")

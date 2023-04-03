@@ -7,7 +7,6 @@ export class KlausurterminblockungAlgorithmusGreedy1 extends Klausurterminblocku
 
 
 	/**
-	 *
 	 * Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.

@@ -6,11 +6,11 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Klasse bei {@link StundenplanblockungInput}. <br>
- * Beispielklassen wären '05c', '09a', aber auch 'EF', 'Q1' und 'Q2'. <br>   
- * Für jede Klasse wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet. 
- * 
+ * Beispielklassen wären '05c', '09a', aber auch 'EF', 'Q1' und 'Q2'. <br>
+ * Für jede Klasse wird vom {@link StundenplanblockungAlgorithmus} ein Stundenplan berechnet.
+ *
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungKlasse")

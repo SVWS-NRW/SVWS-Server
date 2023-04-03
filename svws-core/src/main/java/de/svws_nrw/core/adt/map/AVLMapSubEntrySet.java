@@ -12,14 +12,14 @@ import java.util.Map.Entry;
 /**
  * Diese Klasse implementiert ein SubEntrySet für die {@link AVLMapSubMap}. <br>
  * Alle Methodenaufrufe werden an die {@link AVLMapSubMap} delegiert.
- * 
+ *
  * @author Benjamin A. Bartsch
  * @author Thomas Bachran
- * 
+ *
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull Entry<@NotNull K, @NotNull V>> {
+public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNull Entry<@NotNull K, @NotNull V>> {
 
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sup-Map operiert.
@@ -28,7 +28,7 @@ public class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.@NotNu
 
 	/**
 	 * Erstellt ein neues SubEntrySet auf die übergebene {@link AVLMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	AVLMapSubEntrySet(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {

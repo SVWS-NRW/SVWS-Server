@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten für den Katalog der Anlagen beim Berufskolleg.  
+ * Sie liefert die Daten für den Katalog der Anlagen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Anlagen beim Berufskolleg.")
@@ -22,7 +22,7 @@ public class BerufskollegAnlageKatalogEintrag {
 	/** Das Kürzel der Anlage */
 	@Schema(description = "das Kürzel der Anlage", example = "A")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Bezeichnung der Anlage. */
 	@Schema(description = "die Bezeichnung der Anlage", example = "Fachklassen duales System und Ausbildungsvorbereitung")
 	public @NotNull String bezeichnung = "";
@@ -45,9 +45,9 @@ public class BerufskollegAnlageKatalogEintrag {
 
 	/**
 	 * Erstellt einen Anlage-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param bezeichnung        die Bezeichnung
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -58,6 +58,6 @@ public class BerufskollegAnlageKatalogEintrag {
 		this.bezeichnung = bezeichnung;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

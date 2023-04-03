@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt ein Element der Konfiguration eines Benutzers  
+ * Sie beschreibt ein Element der Konfiguration eines Benutzers
  */
 @XmlRootElement
 @Schema(description = "Ein Konfigurationselement.")
@@ -21,5 +21,5 @@ public class BenutzerConfigElement {
 	/** Der Wert des Konfigurationselements. */
 	@Schema(description = "der Wert des Konfigurationselements.")
 	public @NotNull String value = "";
-	
+
 }

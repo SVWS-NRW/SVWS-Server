@@ -19,7 +19,6 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 
 
 	/**
-	 *
 	 * Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -41,7 +40,7 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		this._dynDaten.aktionClear();
 		this.berechneRekursiv();
 		this._dynDaten.aktionZustand1Laden();
-		if (this._dynDaten.gibIstBesserAlsZustand2() === true)
+		if (this._dynDaten.gibIstBesserAlsZustand2())
 			this._dynDaten.aktionZustand2Speichern();
 	}
 

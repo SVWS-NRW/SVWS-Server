@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Zentralen
- * Prüfungen der Klasse 10 für das Externe-Noten-Modul ENM. 
+ * Prüfungen der Klasse 10 für das Externe-Noten-Modul ENM.
  */
 @XmlRootElement
 @Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Zentralen Prüfungen der Klasse 10 für das Externe-Noten-Modul ENM.")
@@ -37,7 +37,7 @@ public class ENMZP10 {
 	@Schema(description = "Das Kürzel der Note,die bei der mündlichen Prüfung erreicht wurde, "
 			+ "sofern eine stattfindet.", example = "3+")
 	public String noteMuendlichePruefung;
-	
+
 	/** Das Kürzel der Abschlussnote nach der ZP10-Prüfung  */
 	@Schema(description = "Das Kürzel der Abschlussnote nach der ZP10-Prüfung.", example = "2")
 	public String abschlussnote;

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die grundlegenden Daten eines Faches.  
+ * Sie beschreibt die grundlegenden Daten eines Faches.
  */
 @XmlRootElement
 @Schema(description = "Die Daten eines Faches.")
@@ -20,23 +20,23 @@ public class FachDaten {
 	/** Das eindeutige Kürzel des Faches */
 	@Schema(description = "das eindeutige Kürzel des Faches", example = "M")
 	public String kuerzel;
-	
+
 	/** Die Bezeichnung des Faches */
 	@Schema(description = "die Bezeichnung des Faches ", example = "Mathematik")
 	public String bezeichnung;
-	
+
 	/** Das Statistik-Kürzel des Faches */
 	@Schema(description = "das Statistik-Kürzel des Faches ", example = "M")
 	public String kuerzelStatistik;
-	
-	
-	
+
+
+
 	// istFremdsprache
 	// Fächergruppe
 	// Aufgabenfeld - nur BK
 	// Sortierung und Sortierung SII
 	// ggf. bilinguale Sachfachsprache
-	
+
 	// istSichtbar
 
 	// istNachprüfung erlaubt
@@ -44,13 +44,13 @@ public class FachDaten {
 	// Zeugnis-Bezeichnung
 	// Zeugnis-Bezeichnung für Überweisungszeugnisse
 	// maximale Zeichenanzahl in Fachbemerkungen
-	
+
 	// schriftliches Fach für ZK
 	// bei "abgeschlossenen Fächer holen" berücksichtigen
-	
+
 	// Fach der Oberstufe
 	// TODO GostFachdaten integrieren
-	
-	
+
+
 	// TODO Liste der Teilleistungsarten
 }

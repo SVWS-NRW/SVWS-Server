@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Algorithmus des <b>Typs K</b> verteilt die Kurse auf ihre Schienen. Die Strategie <b>Fachwahlmatrix</b>
  * optimiert Kurse auf Basis einer 2D-Matrix, die zu je zwei Fachwahlen angibt, wie oft diese Kombination gewählt wurde.
  * Der Algorithmus versucht nur solche Kurs-Paarungen in eine Schiene zu tun, deren paarweise Wahl gering ist.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorithmusK {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -22,7 +22,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -30,7 +30,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	public KursblockungAlgorithmusKFachwahlmatrix(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
-	
+
 	@Override
 	public @NotNull String toString() {
 		return "Fachwahlmatrix";
@@ -42,7 +42,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	@Override
 	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) 
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
@@ -58,13 +58,13 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 		int countKeineVerbesserung = 0;
 		do {
 			countKeineVerbesserung = verteileKurse() ? 0 : countKeineVerbesserung + 1;
-		} while ( (countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < pEndzeit) );
+		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < pEndzeit));
 	}
 
 	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, 
+	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter,
 	 * wird die Veränderung rückgängig gemacht.
-	 * 
+	 *
 	 * @return TRUE, falls sich die Bewertung verbessert hat.
 	 */
 	private boolean verteileKurse() {

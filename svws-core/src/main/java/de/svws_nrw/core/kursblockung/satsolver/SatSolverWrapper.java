@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse definiert alle Methoden für einen SAT-Solver.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class SatSolverWrapper extends SatSolverA {
+public final class SatSolverWrapper extends SatSolverA {
 
 	private final @NotNull SatSolverA _solver;
 
@@ -20,7 +20,7 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Erstellt eine Ebene über dem {@link SatSolverA}, um verschiedene Bedingungen/Constraints als Klauseln zu
 	 * codieren.
-	 * 
+	 *
 	 * @param solver Der Solver, der intern verwendet wird.
 	 */
 	public SatSolverWrapper(final @NotNull SatSolverA solver) {
@@ -70,9 +70,9 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Liefert ein Array der Länge n mit neu erzeugten Variablennummern.
-	 * 
+	 *
 	 * @param n Die Länge des Arrays.
-	 * 
+	 *
 	 * @return Ein Array der Länge n mit neu erzeugten Variablennummern.
 	 */
 	public @NotNull int[] createNewVars(final int n) {
@@ -85,7 +85,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Liefert eine Variable, die zuvor auf FALSE forciert wurde.
-	 * 
+	 *
 	 * @return Eine Variable, die zuvor auf FALSE forciert wurde.
 	 */
 	public int getVarFALSE() {
@@ -94,7 +94,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Liefert eine Variable, die zuvor auf TRUE forciert wurde.
-	 * 
+	 *
 	 * @return Eine Variable, die zuvor auf TRUE forciert wurde.
 	 */
 	public int getVarTRUE() {
@@ -103,7 +103,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Fügt eine Klausel der Größe 1 hinzu. Forciert damit die übergebene Variable auf TRUE.
-	 * 
+	 *
 	 * @param x Die Variable wird auf TRUE gesetzt.
 	 */
 	public void c_1(final int x) {
@@ -113,7 +113,7 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Fügt eine Klausel der Größe 2 hinzu. Forciert damit, dass mindestens eine der beiden Variablen TRUE ist,
 	 * letzlich @code{x + y >= 1}.
-	 * 
+	 *
 	 * @param x Die Variable x der Klausel (x OR y).
 	 * @param y Die Variable y der Klausel (x OR y).
 	 */
@@ -124,7 +124,7 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Fügt eine Klausel der Größe 3 hinzu. Forciert damit, dass mindestens eine der drei Variablen TRUE ist,
 	 * letzlich @code{x + y + z >= 1}.
-	 * 
+	 *
 	 * @param x Die Variable x der Klausel (x OR y OR z).
 	 * @param y Die Variable y der Klausel (x OR y OR z).
 	 * @param z Die Variable z der Klausel (x OR y OR z).
@@ -135,7 +135,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Forciert, dass nicht beide Variablen TRUE sind, letzlich @code{x + y ≤ 1}.
-	 * 
+	 *
 	 * @param x Die Variable x der Klausel (-x OR -y).
 	 * @param y Die Variable y der Klausel (-x OR -y).
 	 */
@@ -145,10 +145,10 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Liefert die Variable z für die {@code z = x AND y} gilt.
-	 * 
+	 *
 	 * @param x Variable der obigen Gleichung.
 	 * @param y Variable der obigen Gleichung.
-	 * 
+	 *
 	 * @return Die Variable z für die {@code z = x AND y} gilt.
 	 */
 	public int c_new_var_AND(final int x, final int y) {
@@ -161,7 +161,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Forciert, dass genau {@code amount} Variablen des Arrays den Wert TRUE haben.
-	 * 
+	 *
 	 * @param pArray Das Variablenarray.
 	 * @param amount Die Anzahl an TRUEs in der Variablenliste.
 	 */
@@ -171,7 +171,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Forciert, dass genau {@code amount} Variablen der Variablenliste den Wert TRUE haben.
-	 * 
+	 *
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
@@ -215,7 +215,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Forciert, dass höchstens {@code maximum} Variablen der Variablenliste den Wert TRUE haben.
-	 * 
+	 *
 	 * @param pList    Die Variablenliste.
 	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
@@ -248,7 +248,7 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Forciert, dass genau eine Variable der Liste TRUE ist. Falls die Liste leer ist, führt das zur direkten
 	 * Unlösbarkeit der Formel.
-	 * 
+	 *
 	 * @param list Genau eine der Variablen der Liste muss TRUE sein.
 	 */
 	private void c_exactly_one(final @NotNull LinkedCollection<@NotNull Integer> list) {
@@ -257,7 +257,7 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Forciert, dass {@code z = x OR y} gilt.
-	 * 
+	 *
 	 * @param x Variable der obigen Gleichung.
 	 * @param y Variable der obigen Gleichung.
 	 * @param z Variable der obigen Gleichung.
@@ -270,10 +270,10 @@ public class SatSolverWrapper extends SatSolverA {
 
 	/**
 	 * Liefert die Variable z für die {@code z = x OR y} gilt.
-	 * 
+	 *
 	 * @param x Variable der obigen Gleichung.
 	 * @param y Variable der obigen Gleichung.
-	 * 
+	 *
 	 * @return Die Variable z für die {@code z = x OR y} gilt.
 	 */
 	private int c_new_var_OR(final int x, final int y) {
@@ -287,9 +287,9 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Forciert, dass in der Liste maximal eine Variable TRUE ist. Die Ergebnisvariable ist eine OR-Verknüpfung aller
 	 * Variablen der Liste.
-	 * 
+	 *
 	 * @param pList Forciert, dass maximal eine Variable der Liste TRUE ist.
-	 * 
+	 *
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
 	private int c_at_most_one_tree(final @NotNull LinkedCollection<@NotNull Integer> pList) {

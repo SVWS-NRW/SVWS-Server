@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die grundlegenden Daten eines Kurses.  
+ * Sie beschreibt die grundlegenden Daten eines Kurses.
  */
 @XmlRootElement
 @Schema(description = "Die Daten eines Kurses.")
@@ -21,23 +21,23 @@ public class KursDaten {
 	/** Die ID des Kurses. */
 	@Schema(description = "die ID des Kurses", example = "4711")
 	public long id;
-	
+
 	/** Die ID des Schuljahresabschnittes des Kurses. */
 	@Schema(description = "die ID des Schuljahresabschnittes des Kurses", example = "14")
 	public long idSchuljahresabschnitt;
-	
+
 	/** Das Kürzel des Kurses. */
 	@Schema(description = "das Kürzel des Kurses", example = "IF-LK1")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die IDs der Jahrgänge, denen der Kurs zugeordnet ist */
 	@Schema(description = "die IDs der Jahrgänge, denen der Kurs zugeordnet ist")
 	public @NotNull Vector<@NotNull Long> idJahrgaenge = new Vector<>();
-	
+
 	/** Die ID des Faches, dem der Kurs zugeordnet ist */
 	@Schema(description = "die ID des Faches, dem der Kurs zugeordnet ist", example = "815")
 	public long idFach;
-	
+
 	/** Die ID des Kurslehrers. */
 	@Schema(description = "die ID des Kurslehrers", example = "42")
 	public Long lehrer;
@@ -54,5 +54,5 @@ public class KursDaten {
 	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
 
 
-	// TODO Weitere Daten	
+	// TODO Weitere Daten
 }

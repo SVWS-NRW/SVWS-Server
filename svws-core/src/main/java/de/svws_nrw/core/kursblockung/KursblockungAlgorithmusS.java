@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Ein Algorithmus des <b>Typs S</b> dient dazu SuS bei fixierter Kurslage auf ihre Kurse zu verteilen. Im Konstruktor
  * können die Unterklassen die jeweiligen Datenstrukturen aufbauen. SuS dürfen im Konstruktor noch nicht auf die Kurse
  * verteilt werden.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public abstract class KursblockungAlgorithmusS {
@@ -32,7 +32,7 @@ public abstract class KursblockungAlgorithmusS {
 	/**
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
-	 * 
+	 *
 	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param dynDaten Die aktuellen Blockungsdaten.

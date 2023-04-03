@@ -45,12 +45,16 @@ export class KursblockungDynSchiene extends JavaObject {
 		this.statistik = pStatistik;
 	}
 
+	/**
+	 * Gibt die String-Repräsentation der Schiene zurück.
+	 *
+	 * @return die String-Repräsentation der Schiene
+	 */
 	public toString() : string {
 		return "" + this.nr;
 	}
 
 	/**
-	 *
 	 * Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
 	 *
 	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll.
@@ -68,7 +72,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 *Entfernt aus der Schiene einen Kurs. Das Statistik-Objekt wird über zu entfernende Kurs-Paarungen informiert.
+	 * Entfernt aus der Schiene einen Kurs. Das Statistik-Objekt wird über zu entfernende Kurs-Paarungen informiert.
 	 *
 	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll.
 	 */
@@ -129,7 +133,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		const setFachart : AVLSet<number | null> | null = new AVLSet();
 		let summe : number = 0;
 		for (const kurs of this.kursMap.values())
-			if (setFachart.add(kurs.gibFachart().gibNr()) === false)
+			if (!setFachart.add(kurs.gibFachart().gibNr()))
 				summe++;
 		return summe;
 	}

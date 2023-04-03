@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Daten eines Benutzer eines Schülers mit der angegebenen ID.  
+ * Sie beschreibt die Daten eines Benutzer eines Schülers mit der angegebenen ID.
  */
 @XmlRootElement
 @Schema(description = "Die Stammdaten eines Schüler-Eintrags.")
@@ -23,7 +23,7 @@ public class BenutzergruppeDaten {
 	/** Die Bezeichnung der Benutzergruppe. */
 	@Schema(description = "die Bezeichnung der Benutzergruppe", example = "Administrator")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. */
 	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example = "true")
 	public @NotNull boolean istAdmin = false;

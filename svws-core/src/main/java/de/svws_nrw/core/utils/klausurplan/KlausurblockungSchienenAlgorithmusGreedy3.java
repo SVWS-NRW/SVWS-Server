@@ -4,14 +4,14 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
- * Die Klausuren werden rekursiv mit Backtracking auf die Schienen verteilt. 
+/**
+ * Die Klausuren werden rekursiv mit Backtracking auf die Schienen verteilt.
  * Pro Rekursionsschritt wird die freie Klausur gewählt, die die meisten Nachbarsfarben hat.
  * Anschließend wird die Klausur in aufsteigender Reihenfolge auf die Schienen verteilt.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSchienenAlgorithmusAbstract {
+public final class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Die kleinste Schienenanzahl, die bisher gefunden wurde. */
 	private int _minSchienen;
@@ -23,7 +23,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 	private boolean _saved;
 
 	/** Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten. */
 	public KlausurblockungSchienenAlgorithmusGreedy3(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
@@ -41,7 +41,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 		_zeitEnde = pZeitEnde;
 		_dynDaten.aktionKlausurenAusSchienenEntfernen();
 		_saved = false;
-		
+
 		berechneRekursiv();
 
 		_dynDaten.aktionZustand1Laden();
@@ -62,9 +62,9 @@ public class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 
 		// Erster Aufruf?
 		final int klausurNr = _dynDaten.gibAnzahlSchienen() == 0 ? //
-				_dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : // 1. 
+				_dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn() : // 1.
 				_dynDaten.gibKlausurDieFreiIstMitDenMeistenNachbarsfarben(); // 2+.
-		
+
 		// Alle Klausuren gesetzt?
 		if (klausurNr < 0) {
 			if (!_saved || _dynDaten.gibIstBesserAlsZustand1()) {

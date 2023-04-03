@@ -135,7 +135,7 @@ export class GostFachbereich extends JavaObject {
 	 * und der übergebenen Fächer
 	 *
 	 * @param fachbereiche   die Fachbereiche
-	 * @param kuerzel        die zusätzlichen Kürzel des Fachbereichs
+	 * @param faecher        die Fächer des Fachbereichs
 	 */
 	private constructor(name : string, ordinal : number, fachbereiche : List<GostFachbereich> | null, ...faecher : Array<ZulaessigesFach>) {
 		super();

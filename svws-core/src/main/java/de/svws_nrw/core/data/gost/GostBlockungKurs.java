@@ -16,10 +16,10 @@ import jakarta.validation.constraints.NotNull;
  */
 @XmlRootElement
 @Schema(description = "Informationen zu einem Kurs der gymnasialen Oberstufe.")
-@JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" }) // TODO Soll hier "suffix" stehen statt "bezeichnung" ? 
+@JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" }) // TODO Soll hier "suffix" stehen statt "bezeichnung" ?
 @TranspilerDTO
 public class GostBlockungKurs {
-	
+
 	/** Die ID des Kurses */
 	public long id = -1;
 
@@ -31,11 +31,11 @@ public class GostBlockungKurs {
 
 	/** Die Nummer des Kurses (gezählt ab 1) */
 	public int nummer = 0;
-	
+
 	/** Gibt an, ob es sich um einen Kooperationskurs an einer anderen Schule handelt */
 	public boolean istKoopKurs = false;
-	
-    /** Ein Suffix, welches einer Standard-Kursbezeichnung angehangen wird - z.B. um spezielle Kurse zu markieren. */
+
+	/** Ein Suffix, welches einer Standard-Kursbezeichnung angehangen wird - z.B. um spezielle Kurse zu markieren. */
 	public @NotNull String suffix = "";
 
 	/** Die Anzahl der Wochenstunden, welche dem Kurs zugeordnet */

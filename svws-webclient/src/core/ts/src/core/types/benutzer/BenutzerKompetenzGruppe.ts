@@ -134,7 +134,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Die Daten der Benutzerkompetenz-Gruppe
@@ -174,7 +174,6 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Benutzerkompetenz-Gruppen anhand der übergebenen ID zurück.
 	 *
 	 * @param id    die ID der Benutzerkompetenz-Gruppen

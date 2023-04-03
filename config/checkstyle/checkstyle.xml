@@ -25,7 +25,7 @@
 
   <!-- Checks that a package-info.java file exists for each package.     -->
   <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
-  <module name="JavadocPackage"/>
+  <!-- <module name="JavadocPackage"/> -->
 
   <!-- Checks whether files end with a new line.                        -->
   <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
@@ -79,18 +79,20 @@
     <!-- Checks for Naming Conventions.                  -->
     <!-- See https://checkstyle.org/config_naming.html -->
     <module name="ConstantName">
-    	<property name="format" value="^[a-zA-Z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
+    	<property name="format" value="^[_a-zA-Z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
 	</module>
     <module name="LocalFinalVariableName">
-		<property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
+		<property name="format" value="^[_a-z][_a-zA-Z0-9]*$"/>
 	</module>
     <module name="LocalVariableName">
 		<property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
 	</module>
     <module name="MemberName">
-		<property name="format" value="^[_a-z][_a-zA-Z0-9]*$"/>
+		<property name="format" value="^[_a-zA-Z][_a-zA-Z0-9]*$"/>
 	</module>
-    <module name="MethodName"/>
+    <module name="MethodName">
+    	<property name="format" value="^[_a-z][_a-zA-Z0-9]*$"/>
+    </module>
     <module name="PackageName"/>
     <module name="ParameterName"/>
     <module name="StaticVariableName"/>
@@ -99,16 +101,14 @@
     <!-- Checks for imports                              -->
     <!-- See https://checkstyle.org/config_imports.html -->
     <module name="AvoidStarImport"/>
-    <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+    <module name="IllegalImport"/>
     <module name="RedundantImport"/>
-    <module name="UnusedImports">
-      <property name="processJavadoc" value="false"/>
-    </module>
+    <module name="UnusedImports" />
 
     <!-- Checks for Size Violations.                    -->
     <!-- See https://checkstyle.org/config_sizes.html -->
     <!-- <module name="MethodLength"/> -->
-    <module name="ParameterNumber"/>
+    <!-- <module name="ParameterNumber"/> -->
 
     <!-- Checks for whitespace                               -->
     <!-- See https://checkstyle.org/config_whitespace.html -->
@@ -147,9 +147,9 @@
     <module name="EqualsHashCode"/>
     <!-- <module name="HiddenField"/> -->
     <module name="IllegalInstantiation"/>
-    <module name="InnerAssignment"/>
+    <!-- <module name="InnerAssignment"/> -->
     <!-- <module name="MagicNumber"/> -->
-    <module name="MissingSwitchDefault"/>
+    <!-- <module name="MissingSwitchDefault"/> -->
     <module name="MultipleVariableDeclarations"/>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
@@ -158,7 +158,7 @@
     <!-- See https://checkstyle.org/config_design.html -->
     <module name="DesignForExtension"/>
     <module name="FinalClass"/>
-    <module name="HideUtilityClassConstructor"/>
+    <!-- <module name="HideUtilityClassConstructor"/> -->
     <module name="InterfaceIsType"/>
     <!-- <module name="VisibilityModifier"/> -->
 

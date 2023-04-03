@@ -7,14 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Core-DTO für die Informationen zu einer an der Schule unzulässigen oder 
- * erforderlichen Fachkombination. Diese kann ggf. auch Kursart-spezifisch sein.   
+ * Core-DTO für die Informationen zu einer an der Schule unzulässigen oder
+ * erforderlichen Fachkombination. Diese kann ggf. auch Kursart-spezifisch sein.
  */
 @XmlRootElement
 @Schema(description = "Die Informationen zu einer an der Schule unzulässigen oder erforderlichen Fachkombination. Diese kann ggf. auch Kursart-spezifisch sein.")
 @TranspilerDTO
 public class GostJahrgangFachkombination {
-	
+
 	/** Die ID der Fachkombination */
 	@Schema(description = "die ID der Fachkombination", example = "42")
 	public long id;
@@ -45,7 +45,7 @@ public class GostJahrgangFachkombination {
 
 	/** Der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig) */
 	@Schema(description = "der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)", example = "1")
-	public int typ;	
+	public int typ;
 
 	/** Der erläuternde Hinweistext zu der Fachkombination */
 	@Schema(description = "der erläuternde Hinweistext zu der Fachkombination", example = "Der Sport-Leistungskurs ist an dieser Schule nur in Verbindung mit einem Mathematik-Leistungskurs wählbar.")

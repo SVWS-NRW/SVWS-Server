@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.  
+ * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
@@ -55,17 +55,17 @@ public class NotenKatalogEintrag {
 
 	/**
 	 * Erstellt einen Noten-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param sortierung      die Nummer für die Sortierung der Noten-Einträge
-	 * @param notenpunkte     die Notenpunkte 
-	 * @param kuerzel         das Kürzel 
-	 * @param text            der Text für die Notenbeschreibung 
+	 * @param notenpunkte     die Notenpunkte
+	 * @param kuerzel         das Kürzel
+	 * @param text            der Text für die Notenbeschreibung
 	 * @param textZeugnis     das Text, welcher auf dem Zeugnis erscheint
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public NotenKatalogEintrag(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, 
+	public NotenKatalogEintrag(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel,
 			final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.sortierung = sortierung;

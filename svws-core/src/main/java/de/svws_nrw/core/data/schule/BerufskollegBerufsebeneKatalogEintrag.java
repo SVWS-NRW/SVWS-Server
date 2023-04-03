@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten für den Katalog der Berufsebenen beim Berufskolleg.  
+ * Sie liefert die Daten für den Katalog der Berufsebenen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Berufsebenen beim Berufskolleg.")
@@ -21,11 +21,11 @@ public class BerufskollegBerufsebeneKatalogEintrag {
 	/** Die Berufsebene. */
 	@Schema(description = "die Berufsebene", example = "1")
 	public int ebene;
-	
+
 	/** Das Kürzel der Berufsebene */
 	@Schema(description = "das Kürzel der Berufsebene", example = "IF")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Bezeichnung der Berufsebene. */
 	@Schema(description = "die Bezeichnung der Berufsebene", example = "Informatik")
 	public @NotNull String bezeichnung = "";
@@ -48,10 +48,10 @@ public class BerufskollegBerufsebeneKatalogEintrag {
 
 	/**
 	 * Erstellt einen Berufsebene-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param ebene              die Berufsebene
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param bezeichnung        die Bezeichnung
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -63,6 +63,6 @@ public class BerufskollegBerufsebeneKatalogEintrag {
 		this.bezeichnung = bezeichnung;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

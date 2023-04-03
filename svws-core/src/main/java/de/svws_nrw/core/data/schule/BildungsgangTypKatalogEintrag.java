@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten für den Katalog der (Schul-)Typen von Bildungsgängen beim Berufskolleg oder Weiterbildungskolleg.  
+ * Sie liefert die Daten für den Katalog der (Schul-)Typen von Bildungsgängen beim Berufskolleg oder Weiterbildungskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Berufsschultypen von Bildungsgängen beim Berufskolleg oder Weiterbildungskolleg.")
@@ -21,7 +21,7 @@ public class BildungsgangTypKatalogEintrag {
 	/** Das Kürzel des (Schul-)Typs von Bildungsgängen */
 	@Schema(description = "das Kürzel des (Schul-)Typs von Bildungsgängen", example = "FO")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Bezeichnung des (Schul-)Typs von Bildungsgängen. */
 	@Schema(description = "die Bezeichnung des des (Schul-)Typs von Bildungsgängen", example = "Fachoberschule")
 	public @NotNull String bezeichnung = "";
@@ -44,9 +44,9 @@ public class BildungsgangTypKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param bezeichnung        die Bezeichnung
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -57,6 +57,6 @@ public class BildungsgangTypKatalogEintrag {
 		this.bezeichnung = bezeichnung;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

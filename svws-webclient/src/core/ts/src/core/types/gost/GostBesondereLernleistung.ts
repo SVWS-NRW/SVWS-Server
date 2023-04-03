@@ -57,7 +57,6 @@ export class GostBesondereLernleistung extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Art der Besonderen Lernleistung anhand des angegebenen Kürzels zurück.
 	 *
 	 * @param kuerzel   das Kürzel der Art der Besonderen Lernleistung

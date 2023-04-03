@@ -4,24 +4,24 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Dieser Algorithmus hat folgende Strategie - Pseudocode:
  * <pre>
  * Solange nicht alle Klausuren verteilt sind
- *     Erzeuge einen neuen Termin 
+ *     Erzeuge einen neuen Termin
  *     Gehe die Klausurgruppen nach ihrem Knotengrad durch (hoch zu niedrig).
  *         Versuche die Klausurgruppe hinzuzufügen.
  * </pre>
- * 
- * @author Benjamin A. Bartsch 
+ *
+ * @author Benjamin A. Bartsch
  */
-public class KlausurterminblockungAlgorithmusGreedy2b extends KlausurterminblockungAlgorithmusAbstract {
+public final class KlausurterminblockungAlgorithmusGreedy2b extends KlausurterminblockungAlgorithmusAbstract {
 
-	/** 
+	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurterminblockungAlgorithmusGreedy2b(final @NotNull Random pRandom, final @NotNull KlausurterminblockungDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);

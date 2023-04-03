@@ -6,12 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/** 
+/**
  * Diese Klasse dient als DTO für die INI-Datei {@code Blockung.txt} eines Kurs42-Textdatei-Exportes. In dieser
  * Datei lassen sich grundlegende Informationen zu der Blockung auslesen. Ein Großteil der Informationen wird
  * allerdings ignoriert, da sie für den Import nicht benötigt werden.
- * 
- * @author Thomas Bachran 
+ *
+ * @author Thomas Bachran
  */
 public class Kurs42DataBlockung {
 
@@ -29,26 +29,26 @@ public class Kurs42DataBlockung {
 
 	/** Die Schulnummer zu welcher die Blockung gehört. */
 	public String Schulnummer;
-	
-	
+
+
 	/**
 	 * Liest die INI-Datei unter dem angegebenen Pfad ein.
-	 * 
+	 *
 	 * @param path  der Pfad zu der INI-Datei.
 	 *
-	 * @throws IOException   für den Fall, dass der  
+	 * @throws IOException   für den Fall, dass der
 	 */
-	public Kurs42DataBlockung(Path path) throws IOException {
+	public Kurs42DataBlockung(final Path path) throws IOException {
 		List<String> data;
 		try {
 			data = Files.readAllLines(path);
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			data = Files.readAllLines(path, StandardCharsets.ISO_8859_1);
 		}
-		for (String line : data) {
+		for (final String line : data) {
 			if (line.startsWith("["))
 				continue;
-			String[] parts = line.split("=");
+			final String[] parts = line.split("=");
 			if (parts.length != 2)
 				continue;
 			switch (parts[0]) {
@@ -56,14 +56,14 @@ public class Kurs42DataBlockung {
 				case "Jahr" -> {
 					try {
 						this.Jahr = Integer.parseInt(parts[1]);
-					} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
+					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 						continue;
 					}
 				}
 				case "Abschnitt" -> {
 					try {
 						this.Abschnitt = Integer.parseInt(parts[1]);
-					} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
+					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 						continue;
 					}
 				}

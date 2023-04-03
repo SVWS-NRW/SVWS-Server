@@ -62,7 +62,7 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 	}
 
 	public equals(o : unknown) : boolean {
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry'))) === false)
+		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		const e : JavaMapEntry<unknown, unknown> | null = cast_java_util_Map_Entry(o);
 		return JavaObject.equalsTranspiler(this._key, (e.getKey())) && (JavaObject.equalsTranspiler(this._val, (e.getValue())));

@@ -65,7 +65,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die ID des Stundenplans
-	 * 
+	 *
 	 * @return die ID des Stundenplans
 	 */
 	public long getStundenplanID() {
@@ -74,7 +74,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die ID des Schülers
-	 * 
+	 *
 	 * @return die ID des Schülers
 	 */
 	public long getSchuelerID() {
@@ -83,7 +83,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert den minimalen Wochentag als int, z.B. 1 für Montag
-	 * 
+	 *
 	 * @return den minimalen Wochentag
 	 */
 	public int getMinWochentag() {
@@ -92,7 +92,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert den maximalen Wochentag als int, z.B. 5 für Freitag
-	 * 
+	 *
 	 * @return den maximalen Wochentag
 	 */
 	public int getMaxWochentag() {
@@ -101,7 +101,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die minimale Unterrichtsstunde als int, z.B. 1 für die 1. Stunde
-	 * 
+	 *
 	 * @return die minimale Unterrichtsstunde
 	 */
 	public int getMinStunde() {
@@ -110,7 +110,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die maximale Unterrichtsstunde als int, z.B. 9 für die 9. Stunde
-	 * 
+	 *
 	 * @return die maximale Unterrichtsstunde
 	 */
 	public int getMaxStunde() {
@@ -120,9 +120,9 @@ public class SchuelerStundenplanManager {
 	/**
 	 * Liefert das SchulerStundenplanUnterricht-Objekt zur übergebenen
 	 * Unterrichts-ID
-	 * 
+	 *
 	 * @param idUnterricht die ID des Unterrichts
-	 * 
+	 *
 	 * @return das SchulerStundenplanUnterricht-Objekt
 	 */
 	public SchuelerStundenplanUnterricht getUnterrichtById(final long idUnterricht) {
@@ -131,9 +131,9 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Zeitraster liegen.
-	 * 
+	 *
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByZeitrasterId(final long idZeitraster) {
@@ -142,10 +142,10 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
-	 * 
+	 *
 	 * @param wochentyp der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
@@ -156,11 +156,11 @@ public class SchuelerStundenplanManager {
 	/**
 	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
 	 * Je nach Parameter inklWoche0 wird die Liste um den Unterricht aus Woche 0 ergänzt.
-	 * 
+	 *
 	 * @param wochentyp der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
 	 * @param inklWoche0 Ergänzung des Unterrichts um Woche 0
-	 * 
+	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
 	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
@@ -195,9 +195,9 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert das Zeitraster-Objekt zur übergebenen ID.
-	 * 
+	 *
 	 * @param idZeitraster die ID des Zeitrasters
-	 * 
+	 *
 	 * @return das Zeitraster-Objekt
 	 */
 	public StundenplanZeitraster getZeitrasterById(final long idZeitraster) {
@@ -206,7 +206,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert das Zeitraster-Objekt an dem übergebenen Wochentag in der übergebenen Stunde.
-	 * 
+	 *
 	 * @param wochentag der Wochentag
 	 * @param stunde die Stunde
 	 * @return das Zeitraster-Objekt
@@ -222,9 +222,9 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die Liste von Zeitraster-Objekten am übergebenen Wochentag.
-	 * 
+	 *
 	 * @param wochentag der Wochentag
-	 * 
+	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
 	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByWochentag(final int wochentag) {
@@ -233,9 +233,9 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Liefert die Liste von Zeitraster-Objekten in der übergebenen Stunde.
-	 * 
+	 *
 	 * @param stunde die Unterrichtsstunde
-	 * 
+	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
 	public Vector<@NotNull StundenplanZeitraster> getZeitrasterByStunde(final int stunde) {
@@ -245,7 +245,7 @@ public class SchuelerStundenplanManager {
 	/**
 	 * Erstellt einen neuen Manager mit den angegebenen Stundenplandaten und erzeugt
 	 * die privaten Attribute.
-	 * 
+	 *
 	 * @param daten die Stundenplandaten
 	 */
 	public SchuelerStundenplanManager(final @NotNull SchuelerStundenplan daten) {
@@ -313,7 +313,7 @@ public class SchuelerStundenplanManager {
 //		_mapWocheUnterricht = _daten.unterricht.stream().collect(Collectors.groupingBy(u -> u.wochentyp));
 		/*
 		 * _mapWochenTypUnterricht = new HashMap<>(); for (final @NotNull * SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
-		 * 
+		 *
 		 * @NotNull List<@NotNull SchuelerStundenplanUnterricht> ssul =
 		 * _mapWochenTypUnterricht.get(ssu.wochentyp); if (ssul == null) { ssul = new
 		 * Vector<>(); _mapWochenTypUnterricht.put(ssu.wochentyp, ssul); }
@@ -328,7 +328,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Gibt zurück, ob es unterschiedliche Wochentypen gibt.
-	 * 
+	 *
 	 * @return {@code true}, falls es sich um unterschiedliche Wochentypen handelt,
 	 *         {@code false}, falls es nur einen Typen gibt
 	 */
@@ -338,7 +338,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Gibt die Anzahl der Wochentypen zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Wochentypen
 	 */
 	public int getAnzahlWochentypen() {
@@ -347,7 +347,7 @@ public class SchuelerStundenplanManager {
 
 	/**
 	 * Gibt die Wochentypen ohne Typ 0 zurück.
-	 * 
+	 *
 	 * @return die Wochentypen als Vector von Integern
 	 */
 	public @NotNull Vector<@NotNull Integer> getWochentypen() {

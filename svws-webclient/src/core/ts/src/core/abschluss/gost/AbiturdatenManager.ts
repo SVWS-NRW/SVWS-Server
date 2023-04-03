@@ -100,28 +100,28 @@ export class AbiturdatenManager extends JavaObject {
 	 * Führt die Belegprüfung der Art pruefungs_art für einen Schüler durch, dessen Abiturdaten mit dem angegebenen
 	 * Manager verwaltet werden.
 	 *
-	 * @param pruefungs_art    die Art der Prüfung, die durchgeführt wird
+	 * @param pruefungsArt    die Art der Prüfung, die durchgeführt wird
 	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
-	public getPruefungen(pruefungs_art : GostBelegpruefungsArt) : Vector<GostBelegpruefung> {
+	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : Vector<GostBelegpruefung> {
 		const pruefungen : Vector<GostBelegpruefung> = new Vector();
-		pruefungen.add(new Deutsch(this, pruefungs_art));
-		const pruefungFremdsprachen : Fremdsprachen = new Fremdsprachen(this, pruefungs_art);
+		pruefungen.add(new Deutsch(this, pruefungsArt));
+		const pruefungFremdsprachen : Fremdsprachen = new Fremdsprachen(this, pruefungsArt);
 		pruefungen.add(pruefungFremdsprachen);
-		pruefungen.add(new Latinum(this, pruefungs_art));
-		pruefungen.add(new LiterarischKuenstlerisch(this, pruefungs_art));
-		pruefungen.add(new GesellschaftswissenschaftenUndReligion(this, pruefungs_art));
-		pruefungen.add(new Mathematik(this, pruefungs_art));
-		const pruefungNaturwissenschaften : Naturwissenschaften = new Naturwissenschaften(this, pruefungs_art);
+		pruefungen.add(new Latinum(this, pruefungsArt));
+		pruefungen.add(new LiterarischKuenstlerisch(this, pruefungsArt));
+		pruefungen.add(new GesellschaftswissenschaftenUndReligion(this, pruefungsArt));
+		pruefungen.add(new Mathematik(this, pruefungsArt));
+		const pruefungNaturwissenschaften : Naturwissenschaften = new Naturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
-		pruefungen.add(new Sport(this, pruefungs_art));
-		const pruefungProjektkurse : Projektkurse = new Projektkurse(this, pruefungs_art);
+		pruefungen.add(new Sport(this, pruefungsArt));
+		const pruefungProjektkurse : Projektkurse = new Projektkurse(this, pruefungsArt);
 		pruefungen.add(pruefungProjektkurse);
-		pruefungen.add(new Schwerpunkt(this, pruefungs_art, pruefungFremdsprachen, pruefungNaturwissenschaften));
-		pruefungen.add(new AbiFaecher(this, pruefungs_art));
-		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungs_art, pruefungProjektkurse));
-		pruefungen.add(new Allgemeines(this, pruefungs_art));
+		pruefungen.add(new Schwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		pruefungen.add(new AbiFaecher(this, pruefungsArt));
+		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse));
+		pruefungen.add(new Allgemeines(this, pruefungsArt));
 		return pruefungen;
 	}
 
@@ -244,12 +244,12 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übegebenen ID
 	 *
-	 * @param fach_id   die ID des Faches
+	 * @param fachID   die ID des Faches
 	 *
 	 * @return die Schüler-Fachwahl
 	 */
-	public getSchuelerFachwahl(fach_id : number) : GostSchuelerFachwahl {
-		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(fach_id);
+	public getSchuelerFachwahl(fachID : number) : GostSchuelerFachwahl {
+		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(fachID);
 		if (belegung === null)
 			return new GostSchuelerFachwahl();
 		const wahl : GostSchuelerFachwahl = new GostSchuelerFachwahl();
@@ -1048,15 +1048,15 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Bestimmt die Fachbelegung des Faches mit der angegebenen ID
 	 *
-	 * @param fach_id   die ID des Faches
+	 * @param fachID   die ID des Faches
 	 *
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public getFachbelegungByID(fach_id : number) : AbiturFachbelegung | null {
+	public getFachbelegungByID(fachID : number) : AbiturFachbelegung | null {
 		const fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
-			if ((fach !== null) && (fach_id === fach.id))
+			if ((fach !== null) && (fachID === fach.id))
 				return fb;
 		}
 		return null;

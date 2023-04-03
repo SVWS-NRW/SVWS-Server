@@ -7,7 +7,6 @@ export class KlausurblockungSchienenAlgorithmusGreedy7 extends KlausurblockungSc
 
 
 	/**
-	 *
 	 * Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.

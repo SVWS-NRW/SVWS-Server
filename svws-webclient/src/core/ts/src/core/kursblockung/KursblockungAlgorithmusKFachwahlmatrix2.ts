@@ -51,6 +51,8 @@ export class KursblockungAlgorithmusKFachwahlmatrix2 extends KursblockungAlgorit
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
+	 *
+	 * @return true, wenn der Zustand angepasst wurde
 	 */
 	private verteileKurse() : boolean {
 		do {

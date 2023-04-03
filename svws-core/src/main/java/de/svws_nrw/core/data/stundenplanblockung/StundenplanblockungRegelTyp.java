@@ -9,8 +9,8 @@ import java.util.List;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen 
- * der Stundenplanblockung eingesetzt werden bei {@link StundenplanblockungRegel}. 
+ * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen
+ * der Stundenplanblockung eingesetzt werden bei {@link StundenplanblockungRegel}.
  */
 public enum StundenplanblockungRegelTyp {
 
@@ -21,59 +21,57 @@ public enum StundenplanblockungRegelTyp {
 	UNDEFINIERT(0, "Undefiniert", Collections.emptyList()),
 
 	/**
-	 * Definiert, wie viele Tage in der Woche Unterricht stattfindet.  
+	 * Definiert, wie viele Tage in der Woche Unterricht stattfindet.
 	 */
 	SCHULE_TAGE_PRO_WOCHE(1, "Schule: Unterrichtstage pro Woche:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
-	 * Definiert, wie viele Stunden es pro Tag maximal gibt.  
+	 * Definiert, wie viele Stunden es pro Tag maximal gibt.
 	 */
 	SCHULE_LETZTE_STUNDE(2, "Schule: Letzte mögliche Stunde:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
-	 * Definiert, wie viele Springstunden eine Lehrkraft pro Woche maximal haben darf. 
-	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.  
+	 * Definiert, wie viele Springstunden eine Lehrkraft pro Woche maximal haben darf.
+	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_SPRING_PRO_WOCHE(3, "Schule: Pro Lehrkraft pro Woche max. Springstunden:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
-	 * Definiert, wie viele Springstunden eine Lehrkraft pro Tag maximal haben darf. 
-	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.  
+	 * Definiert, wie viele Springstunden eine Lehrkraft pro Tag maximal haben darf.
+	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_SPRING_PRO_TAG(4, "Schule: Pro Lehrkraft pro Tag max. Springstunden:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
-	 * Definiert, wie viel Präsenz (Unterricht + Springstunden) eine Lehrkraft pro Tag maximal haben darf. 
-	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.  
+	 * Definiert, wie viel Präsenz (Unterricht + Springstunden) eine Lehrkraft pro Tag maximal haben darf.
+	 * Dieser Wert kann pro Lehrkraft mit einer Regel individuell überschrieben werden.
 	 */
 	SCHULE_LEHRKRAFT_MAX_PRAESENZ_PRO_TAG(5, "Schule: Pro Lehrkraft pro Tag max. Präsenz:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
 	 * Definiert, ob in bestimmten Stunden Einzelstunden verboten sind.
 	 */
 	SCHULE_LERNGRUPPEN_KEINE_EINZELSTUNDE_IN_STUNDE(6, "Schule: Lerngruppen haben keine Enzelstunde in Stunde:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			),
 
 	/**
-	 * Definiert, ob eine Doppelstunde (und mehr) diese und die nächste Stunde überschreiten darf.  
+	 * Definiert, ob eine Doppelstunde (und mehr) diese und die nächste Stunde überschreiten darf.
 	 */
 	SCHULE_LERNGRUPPEN_KEINE_STUNDENUEBERGAENGE_IN_STUNDE_UND_DARAUFFOLGEND(7, "Schule: Lerngruppen haben keinen Übergang von dieser zur darauffolgenden Stunde:",
 			Arrays.asList(StundenplanblockungRegelParameterTyp.WERT_INTEGER)
-	),
+			);
 
-	;
-	// ... Ende der Enums.
 
 	/**Der ID des Typs der Regel. */
 	public final int id;
@@ -113,10 +111,10 @@ public enum StundenplanblockungRegelTyp {
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
-	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
-	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
+	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
+	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
-	private StundenplanblockungRegelTyp(final int id, final @NotNull String bezeichnung,
+	StundenplanblockungRegelTyp(final int id, final @NotNull String bezeichnung,
 			final @NotNull List<@NotNull StundenplanblockungRegelParameterTyp> paramTypes) throws IllegalArgumentException {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
@@ -127,7 +125,7 @@ public enum StundenplanblockungRegelTyp {
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
 	 * @param id   die ID des Regel-Typs
-	 * @return der Regel-Typ 
+	 * @return der Regel-Typ
 	 */
 	public static @NotNull StundenplanblockungRegelTyp fromTyp(final Integer id) {
 		if (id == null)
@@ -142,7 +140,7 @@ public enum StundenplanblockungRegelTyp {
 	 * Ermittelt den Regel-Typ anhand des Regel-Objektes.
 	 *
 	 * @param pRegel Das Regel-Objekt.
-	 * @return der Regel-Typ 
+	 * @return der Regel-Typ
 	 */
 	public static @NotNull StundenplanblockungRegelTyp fromRegel(final @NotNull StundenplanblockungRegel pRegel) {
 		return fromTyp(pRegel.typ);
@@ -151,7 +149,7 @@ public enum StundenplanblockungRegelTyp {
 	/**
 	 * Gibt die Anzahl der Parameter für diesen Regel-Type zurück.
 	 *
-	 * @return die Anzahl der Parameter für diesen Regel-Type zurück. 
+	 * @return die Anzahl der Parameter für diesen Regel-Type zurück.
 	 */
 	public int getParamCount() {
 		return this.paramTypes.size();
@@ -164,7 +162,7 @@ public enum StundenplanblockungRegelTyp {
 	 *
 	 * @return der Parameter-Typ
 	 *
-	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist 
+	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public @NotNull StundenplanblockungRegelParameterTyp getParamType(final int i) throws IllegalArgumentException {
 		if ((i < 0) || (i >= paramTypes.size()))
@@ -176,10 +174,10 @@ public enum StundenplanblockungRegelTyp {
 	/**
 	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
 	 * Parametertyp hat.
-	 *  
+	 *
 	 * @param paramType   der Parametertyp
 	 *
-	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public boolean hasParamType(final StundenplanblockungRegelParameterTyp paramType) {
 		for (final StundenplanblockungRegelParameterTyp cur : paramTypes)

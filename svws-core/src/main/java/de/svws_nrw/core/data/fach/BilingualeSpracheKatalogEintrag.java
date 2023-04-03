@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert den Katalog der Bilingualen Sprachfächer und die Information für welche Schulformen
- * diese zulässig sind.  
+ * diese zulässig sind.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Bilingualen Sprachfächer.")
@@ -27,7 +27,7 @@ public class BilingualeSpracheKatalogEintrag {
 	/** Das einstellige Kürzel der Fremdsprache */
 	@Schema(description = "das einstellige Kürzel der Fremdsprache", example = "S")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist. */
 	@Schema(description = "die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist.")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
@@ -50,20 +50,20 @@ public class BilingualeSpracheKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                    die ID
-	 * @param fach                  das Fremdsprachenfach 
-	 * @param schulformen           die Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist 
-	 * @param gueltigVon            das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param fach                  das Fremdsprachenfach
+	 * @param schulformen           die Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist
+	 * @param gueltigVon            das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                              "schon immer gültig war"
 	 * @param gueltigBis            das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public BilingualeSpracheKatalogEintrag(final long id, final @NotNull ZulaessigesFach fach, 
+	 */
+	public BilingualeSpracheKatalogEintrag(final long id, final @NotNull ZulaessigesFach fach,
 			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = fach.daten.kuerzel;
-        for (final @NotNull Schulform schulform : schulformen)
-            this.schulformen.add(schulform.daten.kuerzel);
+		for (final @NotNull Schulform schulform : schulformen)
+			this.schulformen.add(schulform.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

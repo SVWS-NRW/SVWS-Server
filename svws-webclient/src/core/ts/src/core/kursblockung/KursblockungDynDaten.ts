@@ -176,7 +176,7 @@ export class KursblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer < 1")
 			if (gSchiene.nummer > schienenAnzahl)
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer > schienenAnzahl")
-			if (usedSchiene.add(gSchiene.nummer) === false)
+			if (!usedSchiene.add(gSchiene.nummer))
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer existiert doppelt!")
 		}
 		const setKursarten : HashSet<number> = new HashSet();
@@ -185,7 +185,7 @@ export class KursblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("GostKursart == null")
 			if (iKursart.id < 0)
 				throw new DeveloperNotificationException("GostKursart.id < 0 (" + iKursart.kuerzel + ")")
-			if (setKursarten.add(iKursart.id) === false)
+			if (!setKursarten.add(iKursart.id))
 				throw new DeveloperNotificationException("GostKursart.id (" + iKursart.id + ") gibt es doppelt!")
 		}
 		const setFaecher : HashSet<number> = new HashSet();
@@ -194,7 +194,7 @@ export class KursblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("GostFach == null")
 			if (iFach.id < 0)
 				throw new DeveloperNotificationException("GostFach.id < 0 (" + iFach.kuerzel + ")")
-			if (setFaecher.add(iFach.id) === false)
+			if (!setFaecher.add(iFach.id))
 				throw new DeveloperNotificationException("GostFach.id (" + iFach.id + ") gibt es doppelt!")
 		}
 		const setKurse : HashSet<number> = new HashSet();
@@ -355,7 +355,7 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const iRegel of pRegeln) {
 			if (iRegel.id < 0)
 				throw new DeveloperNotificationException("GostBlockungRegel.id < 0")
-			if (regelDatabaseIDs.add(iRegel.id) === false)
+			if (!regelDatabaseIDs.add(iRegel.id))
 				throw new DeveloperNotificationException("GostBlockungRegel.id (" + iRegel.id + ") gibt es doppelt!")
 			const regelTyp : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
 			let list : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(regelTyp);
@@ -668,7 +668,7 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp9 !== null) {
 			const vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
 			for (const gKurs of pInput.daten().kurse)
-				if (gKurs.lehrer.isEmpty() === false)
+				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
 			for (const regel9 of regelnTyp9) {
 				const externBeachten : boolean = regel9.parameter.get(0) === 1;
@@ -689,7 +689,7 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp10 !== null) {
 			const vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
 			for (const gKurs of pInput.daten().kurse)
-				if (gKurs.lehrer.isEmpty() === false)
+				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
 			for (const regel10 of regelnTyp10)
 				for (const gKurs1 of vKurseMitLehrkraft)
@@ -788,7 +788,7 @@ export class KursblockungDynDaten extends JavaObject {
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const schuelerID : number = gRegel.parameter.get(0).valueOf();
 				const kursID : number = gRegel.parameter.get(1).valueOf();
-				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) === false)
+				if (!out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
 					out.setSchuelerKurs(schuelerID, kursID, true);
 			}
 		return out;

@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der in der amtlichenn Schulstatistik 
- * berücksichtigten Religionen / Konfessionen.  
+ * Sie liefert die Werte für den Katalog der in der amtlichenn Schulstatistik
+ * berücksichtigten Religionen / Konfessionen.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der in der amtlichen Schulstatistik berücksichtigten Religionen / Konfessionen.")
@@ -45,7 +45,7 @@ public class ReligionKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel der Religion
 	 * @param bezeichnung     eine kurze Bezeichnung der Religion

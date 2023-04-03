@@ -8,7 +8,7 @@ import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Ein Kurs-Objekt (während des Blockungsvorganges).
- * 
+ *
  * @author Benjamin A. Bartsch */
 public class KursblockungDynKurs {
 
@@ -58,7 +58,7 @@ public class KursblockungDynKurs {
 	private final @NotNull Logger logger;
 
 	/** Der Kurs wählt eine zufällige Schienenlage und fügt sich selbst den entsprechenden Schienen hinzu.
-	 * 
+	 *
 	 * @param pRandom              Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pSchienenLage        Ein Array aller Schienen, in denen der Kurs gerade liegt.
 	 * @param pSchienenLageFixiert Anzahl an Schienen in {@code pSchienenLage}, die fixiert ist.
@@ -104,6 +104,11 @@ public class KursblockungDynKurs {
 		}
 	}
 
+	/**
+	 * Gibt die String-Repräsentation des Kurses zurück.
+	 *
+	 * @return die String-Repräsentation des Kurses
+	 */
 	@Override
 	public @NotNull String toString() {
 		return "Kurs (dbID=" + databaseID + ", intiD=" + internalID + ")";
@@ -114,21 +119,21 @@ public class KursblockungDynKurs {
 	// ########################################
 
 	/** Die Kurs-ID der GUI.
-	 * 
+	 *
 	 * @return Die Kurs-ID der GUI. */
 	public long gibDatenbankID() {
 		return databaseID;
 	}
 
 	/** Liefert die zum Kurs zugehörige Fachart.
-	 * 
+	 *
 	 * @return Die zum Kurs zugehörige Fachart. */
 	public @NotNull KursblockungDynFachart gibFachart() {
 		return fachart;
 	}
 
 	/** Liefert die aktuelle Anzahl an Schülern in diesem Kurs.
-	 * 
+	 *
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs. */
 	public int gibSchuelerAnzahl() {
 		return schuelerAnz;
@@ -137,14 +142,14 @@ public class KursblockungDynKurs {
 	/** Liefert {@code true} falls die Schienenlage des Kurses noch veränderbar ist. Wenn der Kurs komplett fixiert ist,
 	 * oder so viele Schienen gesperrt sind, dass der Kurs keine Wahlmöglichkeit bezüglich seiner Schienen hat, dann ist
 	 * das Resultat {@code false}
-	 * 
+	 *
 	 * @return Liefert {@code true}, falls die Schienenlage des Kurses noch veränderbar ist. */
 	public boolean gibHatFreiheitsgrade() {
 		return (schienenLageFixiert < schienenLage.length) && (schienenFrei.length > 0);
 	}
 
 	/** Liefert die aktuelle Schienenlage dieses Kurses.
-	 * 
+	 *
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert. */
 	public @NotNull int[] gibSchienenLage() {
 		final int length = schienenLage.length;
@@ -156,20 +161,20 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert die Anzahl an Schienen, die dieser Kurs belegt.
-	 * 
+	 *
 	 * @return Die Anzahl an Schienen, die dieser Kurs belegt. */
 	public int gibSchienenAnzahl() {
 		return schienenLage.length;
 	}
 
 	/** Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser.
-	 * 
+	 *
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser. */
 	public long gibGewichtetesMatchingBewertung() {
 		return schuelerAnz * schuelerAnz;
 		/*
 		 * // Alle Kurse in sortierter Reihenfolge (am Anfang kleinere Kurse)
-		 * 
+		 *
 		 * @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse(); // Falls dieser Kurs die gleiche
 		 * Schüleranzahl wie der kleinste Kurs hat, ist die Wahl optimal. if (schuelerAnz == kurse[0].schuelerAnz)
 		 * return -1; // Falls dieser Kurs nicht die gleiche Schüleranzahl wie der größte Kurs hat, ist die Wahl okay.
@@ -179,7 +184,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert TRUE, wenn die Schiene für den Kurs gesperrt wurde.
-	 * 
+	 *
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde. */
 	boolean gibIstSchieneGesperrt(final int pSchiene) {
@@ -197,7 +202,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert TRUE, wenn die Schiene für den Kurs fixiert wurde.
-	 * 
+	 *
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs fixiert wurde. */
 	boolean gibIstSchieneFixiert(final int pSchiene) {
@@ -210,7 +215,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert TRUE, falls der Kurs gerade in Schiene pSchiene ist.
-	 * 
+	 *
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, falls der Kurs gerade in Schiene pSchiene ist. */
 	boolean gibIstInSchiene(final int pSchiene) {
@@ -221,7 +226,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet.
-	 * 
+	 *
 	 * @param  schieneVon Der Anfang des Intervalls (inklusive).
 	 * @param  schieneBis Das Ende des Intervalls (inklusive).
 	 * @return            TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet. */
@@ -234,7 +239,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Liefert TRUE, falls dieser Kurs in Schiene c wandern darf.
-	 * 
+	 *
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf. */
 	public boolean gibIstSchieneFrei(final int pSchiene) {
@@ -251,7 +256,7 @@ public class KursblockungDynKurs {
 	// ########################################
 
 	/** Liefert die interne ID des Kurses.
-	 * 
+	 *
 	 * @return Die interne ID des Kurses. */
 	int gibInternalID() {
 		return internalID;
@@ -329,7 +334,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Setzt die Lage des Kurses auf die in der Liste übergebenen Schienen.
-	 * 
+	 *
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll. */
 	public void aktionVerteileAufSchienen(final @NotNull LinkedCollection<@NotNull Integer> pSchienenWahl) {
 
@@ -356,7 +361,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Setzt die Lage des Kurses auf die übergebene Schiene.
-	 * 
+	 *
 	 * @param pSchiene Die Schiene (0-indiziert), in der der Kurs liegen soll. */
 	void aktionSetzeInSchiene(final int pSchiene) {
 
@@ -393,7 +398,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Fügt einen Schüler diesem Kurs hinzu. */
-	public void aktionSchuelerHinzufügen() {
+	public void aktionSchuelerHinzufuegen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz++; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
@@ -417,7 +422,7 @@ public class KursblockungDynKurs {
 	}
 
 	/** Debug Ausgabe. Nur für Testzwecke.
-	 * 
+	 *
 	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen. */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
 		System.out.println(toString() + " --> " + schuelerAnz + " SuS.");

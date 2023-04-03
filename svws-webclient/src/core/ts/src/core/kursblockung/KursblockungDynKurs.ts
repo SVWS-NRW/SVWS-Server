@@ -130,6 +130,11 @@ export class KursblockungDynKurs extends JavaObject {
 		}
 	}
 
+	/**
+	 * Gibt die String-Repräsentation des Kurses zurück.
+	 *
+	 * @return die String-Repräsentation des Kurses
+	 */
 	public toString() : string {
 		return "Kurs (dbID=" + this.databaseID + ", intiD=" + this.internalID + ")";
 	}
@@ -430,7 +435,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 *Fügt einen Schüler diesem Kurs hinzu.
 	 */
-	public aktionSchuelerHinzufügen() : void {
+	public aktionSchuelerHinzufuegen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();

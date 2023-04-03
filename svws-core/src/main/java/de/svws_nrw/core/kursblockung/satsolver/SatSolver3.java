@@ -13,10 +13,10 @@ import jakarta.validation.constraints.NotNull;
  * Beispiel: <br>
  * {@code  Formel = (x1 OR x2) AND (-x1 OR -x2)} Klauseln die größer als 3 sind, wandelt dieser Solver intern auf die
  * Größe 3 um.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class SatSolver3 extends SatSolverA {
+public final class SatSolver3 extends SatSolverA {
 
 	private static final int MAX_LEARNED_CLAUSE_SIZE = 3;
 
@@ -24,7 +24,7 @@ public class SatSolver3 extends SatSolverA {
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	protected final @NotNull Random _random;
-	
+
 	/**
 	 * Im Heap werden Variablen gespeichert. Die oberste Variable wird als nächstes gewählt.
 	 */
@@ -54,7 +54,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	public SatSolver3(final @NotNull Random pRandom) {
@@ -156,7 +156,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 1-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 */
 	private void addClause1(final int x) {
@@ -181,7 +181,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 2-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 */
@@ -218,7 +218,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Fügt der Datenstruktur eine 3-CNF-Klausel hinzu.
-	 * 
+	 *
 	 * @param x Das 1. Literal (Variablennummer) der Klausel.
 	 * @param y Das 2. Literal (Variablennummer) der Klausel.
 	 * @param z Das 3. Literal (Variablennummer) der Klausel.
@@ -307,7 +307,7 @@ public class SatSolver3 extends SatSolverA {
 					if (backtrackV[i] != null) {
 						@SuppressWarnings("cast")
 						final Variable bvi = (Variable) backtrackV[i];
-						unitpropagation_undo(bvi); // TODO BAR Transpiler Cast Meldung 
+						unitpropagation_undo(bvi); // TODO BAR Transpiler Cast Meldung
 					}
 					backtrackV[i] = null;
 					backtrackB[i] = false;
@@ -486,7 +486,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Setzt die Variable {@code varP} auf TRUE und aktualisiert die gesamte Datenstruktur entsprechend.
-	 * 
+	 *
 	 * @param varP Die Variable, die auf TRUE gesetzt wird.
 	 */
 	private void unitpropagation(final @NotNull Variable varP) {
@@ -509,7 +509,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Setzt die Variable {@code varP} von TRUE auf FREI und aktualisiert die gesamte Datenstruktur entsprechend.
-	 * 
+	 *
 	 * @param varP Die Variable, die von TRUE auf FREI gesetzt wird.
 	 */
 	private void unitpropagation_undo(final @NotNull Variable varP) {
@@ -528,7 +528,7 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Eine Hilsmethode, die alle Klauseln der Liste aktualisiert.
-	 * 
+	 *
 	 * @param clauses    Alle zu informmierenden Klausel.
 	 * @param pDeltaSat  Die Veränderung der erfüllten Klauseln, relativ zum 1. Index im 2D-Array
 	 *                   {@link Variable#statSatFree}.
@@ -538,13 +538,13 @@ public class SatSolver3 extends SatSolverA {
 	private void unitpropagationHelper(final @NotNull LinkedCollection<@NotNull Clause> clauses, final int pDeltaSat,
 			final int pDeltaFree) {
 		for (final @NotNull
-		Clause c : clauses) {
+				Clause c : clauses) {
 			final int sat1 = c.sat;
 			final int free1 = c.free;
 			final int sat2 = sat1 + pDeltaSat;
 			final int free2 = free1 + pDeltaFree;
 			for (final @NotNull
-			Variable v : c.variables) {
+					Variable v : c.variables) {
 				v.statSatFree[sat1][free1]--;
 				v.statSatFree[sat2][free2]++;
 				heap.update(v);
@@ -556,9 +556,9 @@ public class SatSolver3 extends SatSolverA {
 
 	/**
 	 * Liefert das zugehörige Variablenobjekt.
-	 * 
+	 *
 	 * @param pNr Der Variablennummer.
-	 * 
+	 *
 	 * @return Das zugehörige Variablenobjekt.
 	 */
 	private @NotNull Variable getVarOf(final int pNr) {

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu dem Zeitraster eines Stundenplans.  
+ * Sie liefert die Informationen zu dem Zeitraster eines Stundenplans.
  */
 @XmlRootElement
 @Schema(description = "das Zeitraster eines Stundenplans.")
@@ -21,7 +21,7 @@ public class StundenplanZeitraster {
 	/** Der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
 	@Schema(description = "der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
 	public int wochentag = -1;
-	
+
 	/** Die Nummer der Unterrichtsstunde an dem Wochentag */
 	@Schema(description = "die Nummer der Unterrichtsstunde an dem Wochentag", example = "1")
 	public int unterrichtstunde = -1;
@@ -44,7 +44,7 @@ public class StundenplanZeitraster {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param wochentag          der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 * @param unterrichtstunde   die Nummer der Unterrichtsstunde an dem Wochentag
@@ -57,6 +57,6 @@ public class StundenplanZeitraster {
 		this.unterrichtstunde = unterrichtstunde;
 		this.stundenbeginn = stundenbeginn;
 		this.stundenende = stundenende;
-	}	
-	
+	}
+
 }

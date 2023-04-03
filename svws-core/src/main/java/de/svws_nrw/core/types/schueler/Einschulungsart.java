@@ -42,35 +42,35 @@ public enum Einschulungsart {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Einschulungsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull EinschulungsartKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Einschulungsart */
-	public final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie;	
+	public final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Einschulungsart> _ebenen = new HashMap<>();
 
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Einschulungsart, welche ein Array von 
-	 *                   {@link EinschulungsartKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Einschulungsart, welche ein Array von
+	 *                   {@link EinschulungsartKatalogEintrag} ist
 	 */
-	private Einschulungsart(final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
+	Einschulungsart(final @NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von den Kürzeln der Einschulungsarten auf die 
-	 * zugehörigen Einschulungsarten zurück. 
+	 * Gibt eine Map von den Kürzeln der Einschulungsarten auf die
+	 * zugehörigen Einschulungsarten zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
 	private static @NotNull HashMap<@NotNull String, Einschulungsart> getMapByKuerzel() {
@@ -86,13 +86,13 @@ public enum Einschulungsart {
 
 	/**
 	 * Gibt die Einschulungsart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Einschulungsart
-	 * 
+	 *
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static Einschulungsart getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
-	
+
 }

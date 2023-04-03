@@ -6,25 +6,25 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Diese Klasse ist eine DTO-Klasse für die Schema-Definition 
+ * Diese Klasse ist eine DTO-Klasse für die Schema-Definition
  * der JSON-Daten einer Datenquelle für das Schild-Reporting.
- * Sie enthält die Definition eines Attributs und dessen Typs. 
+ * Sie enthält die Definition eines Attributs und dessen Typs.
  */
 @XmlRootElement
 @Schema(description = "Das Attribut und dessen Typ für die Schema-Definition der Datenquelle für das Schild-Reporting")
 @TranspilerDTO
 public class SchildReportingDatenquelleAttribut {
 
-    /** Der Name des Attributs */
-    @Schema(description = "der Name des Attributs", example ="Vorname")
-    public @NotNull String name = "";
+	/** Der Name des Attributs */
+	@Schema(description = "der Name des Attributs", example = "Vorname")
+	public @NotNull String name = "";
 
-    /** Der Typ des Attributs */
-    @Schema(description = "der Typ des Attributs", example = "string")
-    public @NotNull String typ = "";
+	/** Der Typ des Attributs */
+	@Schema(description = "der Typ des Attributs", example = "string")
+	public @NotNull String typ = "";
 
-    /** Die Beschreibung des Attributs */
-    @Schema(description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
-    public @NotNull String beschreibung = "";
+	/** Die Beschreibung des Attributs */
+	@Schema(description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
+	public @NotNull String beschreibung = "";
 
 }

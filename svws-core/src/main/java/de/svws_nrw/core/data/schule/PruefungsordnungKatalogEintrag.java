@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert die Daten für den Katalog der Ausbildungs- und/oder Prüfungsordnungen.
  * Diese ist so gestaltet, dass er alte Verordnungen nur zum Teil unterstützt, sofern
- * die zur Kompatibilität mit Schild-NRW nötig ist..  
+ * die zur Kompatibilität mit Schild-NRW nötig ist..
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Ausbildungs- und/oder Prüfungsordnungen.")
@@ -24,11 +24,11 @@ public class PruefungsordnungKatalogEintrag {
 	/** Das Kürzel der Ausbildungs und/oder Prüfungsordnung */
 	@Schema(description = "das Kürzel der Verordnung", example = "APO-GOSt")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird */
 	@Schema(description = "das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird", example = "APO-GOSt(B)10")
 	public String kuerzelSchild = "";
-	
+
 	/** Die Bezeichnung der Verordnung. */
 	@Schema(description = "die Bezeichnung der Verordnung", example = "Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
 	public @NotNull String bezeichnung = "";
@@ -36,7 +36,7 @@ public class PruefungsordnungKatalogEintrag {
 	/** Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde */
 	@Schema(description = "Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde", example = "1998")
 	public Integer gvJahr = null;
-	
+
 	/** Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung */
 	@Schema(description = "Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung", example = "43")
 	public @NotNull String gvNr = "";
@@ -44,10 +44,10 @@ public class PruefungsordnungKatalogEintrag {
 	/** Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung */
 	@Schema(description = "Gesetz- und Verordnungsblatt: ggf. die Seitennummer im Jahr der Veröffentlichung", example = "593-608")
 	public @NotNull String gvSeiten = "";
-	
+
 	/** ggf. ein Link zu einer Version der Verordnung */
 	@Schema(description = "ggf. ein Link zu einer Version der Verordnung", example = "https://bass.schul-welt.de/9607.htm")
-	public @NotNull String link = "";	
+	public @NotNull String link = "";
 
 	/** Gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "1999")
@@ -67,9 +67,9 @@ public class PruefungsordnungKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
-	 * @param kuerzel            das Kürzel 
+	 * @param kuerzel            das Kürzel
 	 * @param kuerzelSchild      das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
 	 * @param bezeichnung        die Bezeichnung
 	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde
@@ -79,7 +79,7 @@ public class PruefungsordnungKatalogEintrag {
 	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public PruefungsordnungKatalogEintrag(final long id, final @NotNull String kuerzel, final String kuerzelSchild, final @NotNull String bezeichnung, 
+	public PruefungsordnungKatalogEintrag(final long id, final @NotNull String kuerzel, final String kuerzelSchild, final @NotNull String bezeichnung,
 			final Integer gvJahr, final @NotNull String gvNr, final @NotNull String gvSeiten, final @NotNull String link,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
@@ -92,6 +92,6 @@ public class PruefungsordnungKatalogEintrag {
 		this.link = link;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

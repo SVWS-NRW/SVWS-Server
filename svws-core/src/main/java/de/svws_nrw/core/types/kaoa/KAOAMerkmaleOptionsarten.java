@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum KAOAMerkmaleOptionsarten {
 
-    /** Keine Option für das KAoA-Merkmal */
-    KEINE(null);
+	/** Keine Option für das KAoA-Merkmal */
+	KEINE(null);
 
 
 	/** Das Kürzel für die Optionsart */
@@ -17,25 +17,25 @@ public enum KAOAMerkmaleOptionsarten {
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
-	 * 
-	 * @param kuerzel   das Kürzel  
+	 *
+	 * @param kuerzel   das Kürzel
 	 */
-	private KAOAMerkmaleOptionsarten(final String kuerzel) {
+	KAOAMerkmaleOptionsarten(final String kuerzel) {
 		this.kuerzel = kuerzel;
 	}
 
 
 	/**
 	 * Gibt die Optionsart anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel
-	 * 
+	 *
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
 	public static KAOAMerkmaleOptionsarten getByKuerzel(final String kuerzel) {
-	    for (final @NotNull KAOAMerkmaleOptionsarten art : KAOAMerkmaleOptionsarten.values())
-	        if (art.kuerzel.equals(kuerzel))
-	            return art;
+		for (final @NotNull KAOAMerkmaleOptionsarten art : KAOAMerkmaleOptionsarten.values())
+			if (art.kuerzel.equals(kuerzel))
+				return art;
 		return null;
 	}
 

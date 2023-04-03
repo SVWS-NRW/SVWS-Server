@@ -25,15 +25,15 @@ public class NationalitaetenKatalogEintrag {
 	/** Das 2-stellige Kürzel des ISO-Standards 3166-1 */
 	@Schema(description = "das 2-stellige Kürzel des ISO-Standards 3166-1", example = "de")
 	public @NotNull String iso2 = "";
-	
+
 	/** Die 3-stellige Nummer des ISO-Standards 3166-1 */
 	@Schema(description = "die 3-stellige Nummer des ISO-Standards 3166-1", example = "276")
 	public String isoNumerisch = null;
-	
+
 	/** Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de) */
 	@Schema(description = "die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de)", example = "000")
 	public @NotNull String codeDEStatis = "";
-	
+
 	/** Die Bezeichnung für eine Suche */
 	@Schema(description = "die Bezeichnung für eine Suche", example = "Deutschland")
 	public @NotNull String bezeichnungSuche = "";
@@ -49,7 +49,7 @@ public class NationalitaetenKatalogEintrag {
 	/** Die Bezeichnung der Staatsangehörigkeit */
 	@Schema(description = "die Bezeichnung der Staatsangehörigkeit", example = "deutsch")
 	public @NotNull String staatsangehoerigkeit = "";
-	
+
 	/** Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
@@ -81,8 +81,8 @@ public class NationalitaetenKatalogEintrag {
 	 * @param gueltigVon             das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis             das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public NationalitaetenKatalogEintrag(final long id, final @NotNull String iso3, final @NotNull String iso2, final String isoNumerisch, 
-			final @NotNull String codeDEStatis, final @NotNull String bezeichnungSuche, final @NotNull String bezeichnung, 
+	public NationalitaetenKatalogEintrag(final long id, final @NotNull String iso3, final @NotNull String iso2, final String isoNumerisch,
+			final @NotNull String codeDEStatis, final @NotNull String bezeichnungSuche, final @NotNull String bezeichnung,
 			final @NotNull String bezeichnungLang, final @NotNull String staatsangehoerigkeit, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.iso3 = iso3;
@@ -95,9 +95,9 @@ public class NationalitaetenKatalogEintrag {
 		this.staatsangehoerigkeit = staatsangehoerigkeit;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
+	}
 
-	
-	
-	
+
+
+
 }

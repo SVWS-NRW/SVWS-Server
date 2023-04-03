@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Schülerverteilungs-Algorithmus verteilt die SuS auf ihre Kurse. Die Parameter sind so eingestellt, dass der
  * Algorithmus relativ schnell ist und dennoch eine hohe Güte hat. Benchmarks zeigen, dass er ca. 10 - 30 Millisekunden
  * benötigt.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
+public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 
 	/**
 	 * Array der SuS, deren Kurse verteilt werden sollen.
@@ -27,7 +27,7 @@ public class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -56,7 +56,7 @@ public class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 	/**
 	 * Der Algorithmus verteilt die SuS in zufälliger Reihenfolge ein weiteres Mal zufällig. Falls die Verteilung
 	 * schlechter ist, wird der vorherige Zustand wiederhergestellt.
-	 * 
+	 *
 	 * @return TRUE, falls der Zustand sich verbessert hat.
 	 */
 	private boolean verteileSchuelerAlle() {

@@ -32,10 +32,10 @@ public class GostBlockungsergebnisListeneintrag {
 	public boolean istMarkiert = false;
 
 	/** Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
-	 * mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst, 
+	 * mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst,
 	 * obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat
 	 * genau eine Vorlage zugeordnet. */
-	public boolean istVorlage = false; 
+	public boolean istVorlage = false;
 
 	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
 	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();

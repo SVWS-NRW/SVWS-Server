@@ -20,7 +20,7 @@ public class GostBelegpruefungsdaten {
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
 	@Schema(description = "die Abiturdaten für die Belegprüfung", implementation = Abiturdaten.class)
 	public Abiturdaten abiturdaten;
-	
+
 	/** Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
 	public @NotNull Vector<@NotNull GostFach> gostFaecher = new Vector<>();

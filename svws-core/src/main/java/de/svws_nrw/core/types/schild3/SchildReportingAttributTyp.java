@@ -19,9 +19,10 @@ public enum SchildReportingAttributTyp {
 
     /** Zeichenkette */
     STRING("string"),
+
     /** Mehrzeilige Zeichenkette */
     MEMO("memo"),
-    
+
     /** Datumsangabe */
     DATE("date");
 
@@ -32,10 +33,10 @@ public enum SchildReportingAttributTyp {
 
     /**
      * Initialisiert den Datentype für die Aufzählung
-     * 
+     *
      * @param type   der JSON-Datentyp
      */
-    private SchildReportingAttributTyp(final @NotNull String type) {
+    SchildReportingAttributTyp(final @NotNull String type) {
         this.type = type;
     }
 

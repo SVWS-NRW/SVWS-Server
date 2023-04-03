@@ -22,7 +22,7 @@ public class SchuljahresAbschnittsManager {
 	/**
 	 * Konstruktor für den SchuljahresManager mit Schuljahresabschnitt und der
 	 * Anzahl an Abschnitten für diese Schule
-	 * 
+	 *
 	 * @param schuljahresabschnitt der Schuljahresabschnitt für den dieser Manager
 	 *                             die Stringrepräsentation bestimmen soll
 	 * @param anzahlAbschnitte     die Anzahl an Schuljahresabschnitten dieser
@@ -37,12 +37,12 @@ public class SchuljahresAbschnittsManager {
 	 * Gibt den Schuljahresabschnitt dieses Managers als Stringrepräsentation
 	 * wieder. Arbeitet mit den Konstruktorparametern für Schuljahresabschnitt und
 	 * die Anzahl der Abschnitte
-	 * 
+	 *
 	 * @return einen String, der den Schuljahresabschnitt wiedergibt, bspw:<br>
 	 *         {@code S2 2022}<br>
 	 *         {@code Q4 2022}<br>
 	 *         {@code 4/6 2022}<br>
-	 * 
+	 *
 	 */
 	public @NotNull String getSchuljahresAbschnittAsString() {
 		return createSchuljahresAbschnittString(abschnitt, anzahlAbschnitte);
@@ -52,16 +52,16 @@ public class SchuljahresAbschnittsManager {
 	 * Gibt den Schuljahresabschnitt dieses Managers als Stringrepräsentation
 	 * wieder. Diese Methode dient dazu, abweichende Parameter als im Konstruktor
 	 * angeben zu können
-	 * 
+	 *
 	 * @param abschnitt        der Schuljahresabschnitt für den die
 	 *                         Stringrepräsentation bestimmt werden soll
 	 * @param anzahlAbschnitte die Anzahl an Schuljahresabschnitten dieser Schule
-	 * 
+	 *
 	 * @return einen String, der den Schuljahresabschnitt wiedergibt, bspw:<br>
 	 *         {@code S2 2022}<br>
 	 *         {@code Q4 2022}<br>
 	 *         {@code 4/6 2022}<br>
-	 * 
+	 *
 	 */
 	public static @NotNull String createSchuljahresAbschnittString(final @NotNull Schuljahresabschnitt abschnitt,
 			final int anzahlAbschnitte) {
@@ -77,7 +77,7 @@ public class SchuljahresAbschnittsManager {
 	/**
 	 * Gibt abhängig von der für diesen Manager konfigurierten Anzahl der
 	 * Schuljahresabschnitte im Jahr ein Abschnittskuerzel wieder:<br>
-	 * 
+	 *
 	 * @return S (für Semester), wenn es 2 Abschnitte gibt<br>
 	 *         T (Für Trimester), wenn es 3 Abschnitte gibt<br>
 	 *         Q (für Quartale), wenn es 4 Abschnitte gibt<br>
@@ -92,7 +92,7 @@ public class SchuljahresAbschnittsManager {
 	 * Gibt abhängig von der Anzahl der Schuljahresabschnitte im Jahr ein
 	 * Abschnittskuerzel wieder. Mit dieser Methode kann ein vom
 	 * Konstruktorparameter abweichender Wert bestimmt werden:<br>
-	 * 
+	 *
 	 * @param anzahlAbschnitte Anzahl der Abschnitte in einem Schuljahr
 	 * @return S (für Semester), wenn es 2 Abschnitte gibt<br>
 	 *         T (Für Trimester), wenn es 3 Abschnitte gibt<br>

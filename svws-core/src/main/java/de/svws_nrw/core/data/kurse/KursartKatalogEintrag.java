@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert den Katalog der Kursarten und die Information für welche Schulformen
- * diese zulässig sind.  
+ * diese zulässig sind.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Kursarten.")
@@ -29,7 +29,7 @@ public class KursartKatalogEintrag {
 	/** Das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik */
 	@Schema(description = "das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example = "AB3")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik */
 	@Schema(description = "die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example = "71")
 	public @NotNull String nummer = "";
@@ -37,23 +37,23 @@ public class KursartKatalogEintrag {
 	/** Die Bezeichnung der Kursart */
 	@Schema(description = "die Bezeichnung der Kursart", example = "3. Abiturfach")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Ergänzende Bemerkungen zu der Kursart */
 	@Schema(description = "ergänzende Bemerkungen zu der Kursart", example = "gemäß § 9 Abs. 2, 3  SchulG")
 	public String bemerkungen = null;
-	
+
 	/** Das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist */
 	@Schema(description = "das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist", example = "GK")
 	public String kuerzelAllg = null;
-	
+
 	/** Die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist */
 	@Schema(description = "die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist", example = "Grundkurs")
 	public String bezeichnungAllg = null;
-	
+
 	/** Gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist */
 	@Schema(description = "gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist", example = "true")
 	public boolean erlaubtGOSt = false;
-	
+
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
@@ -76,7 +76,7 @@ public class KursartKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param kuerzel            das Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik
 	 * @param nummer             die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik
@@ -85,14 +85,14 @@ public class KursartKatalogEintrag {
 	 * @param kuerzelAllg        das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist
 	 * @param bezeichnungAllg    die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist
 	 * @param erlaubtGOSt        gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist
-	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist 
-	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist
+	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public KursartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer, 
+	 */
+	public KursartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String nummer,
 			final @NotNull String bezeichnung, final String bemerkungen, final String kuerzelAllg, final String bezeichnungAllg, final boolean erlaubtGOSt,
-			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
+			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

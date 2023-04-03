@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert einen Eintrag für den Katalog der Fachklassen beim Berufskolleg.  
+ * Sie liefert einen Eintrag für den Katalog der Fachklassen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Fachklassen beim Berufskolleg.")

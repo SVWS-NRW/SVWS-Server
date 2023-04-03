@@ -24,7 +24,7 @@ public enum BerufskollegAnlage {
 	C(new BerufskollegAnlageKatalogEintrag[] {
 		new BerufskollegAnlageKatalogEintrag(3000, "C", "Berufsfachschule und Fachoberschule", null, null)
 	}),
-	
+
 	/** Anlage D: Berufliches Gymnasium und Fachoberschule */
 	D(new BerufskollegAnlageKatalogEintrag[] {
 		new BerufskollegAnlageKatalogEintrag(4000, "D", "Berufliches Gymnasium und Fachoberschule", null, null)
@@ -52,34 +52,34 @@ public enum BerufskollegAnlage {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Anlage, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull BerufskollegAnlageKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Anlage*/
-	public final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie;	
 
-	/** Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln*/ 
+	/** Die Historie mit den Einträgen der Anlage*/
+	public final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie;
+
+	/** Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln*/
 	private static final @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> _anlagen = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Anlage in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Anlage, welches ein Array von {@link BerufskollegAnlageKatalogEintrag} ist
 	 */
-	private BerufskollegAnlage(final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie) {
+	BerufskollegAnlage(final @NotNull BerufskollegAnlageKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzels der Anlagen auf die zugehörigen Anlagenarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Anlagen auf die zugehörigen Anlagen
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull BerufskollegAnlage> getMapAnlageByKuerzel() {
@@ -95,9 +95,9 @@ public enum BerufskollegAnlage {
 
 	/**
 	 * Gibt die Anlage für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Anlage
-	 * 
+	 *
 	 * @return die Anlage oder null, falls das Kürzel ungültig ist
 	 */
 	public static BerufskollegAnlage getByKuerzel(final String kuerzel) {
