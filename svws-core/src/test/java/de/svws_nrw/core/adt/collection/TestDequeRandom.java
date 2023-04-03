@@ -21,7 +21,7 @@ public class TestDequeRandom {
 
 	private final int _MAX_VALUE = 100;
 	private final int _ROUNDS = 100000;
-	private final Random random = new Random(1L);
+	private final Random _random = new Random(1L);
 	private final Deque<Integer> d1 = new LinkedCollection<>();
 	private final Deque<Integer> d2 = new LinkedList<>();
 
@@ -79,9 +79,9 @@ public class TestDequeRandom {
 	@DisplayName("Testet grundlegende Funktionen der {@link LinkedCollection}.")
 	void testeAlles() {
 		for (int i = 0; i < _ROUNDS; i++) {
-			final int type = random.nextInt(3);
+			final int type = _random.nextInt(3);
 			if (type == 0) { // Adding
-				switch (random.nextInt(9)) {
+				switch (_random.nextInt(9)) {
 					case 0 -> testAddFirst();
 					case 1 -> testAddFirst();
 					case 2 -> testAddLast();
@@ -95,7 +95,7 @@ public class TestDequeRandom {
 				}
 			}
 			if (type == 1) { // Removing
-				switch (random.nextInt(15)) {
+				switch (_random.nextInt(15)) {
 					case 0 -> testRemoveFirst();
 					case 1 -> testRemoveLast();
 					case 2 -> testPollFirst();
@@ -115,7 +115,7 @@ public class TestDequeRandom {
 				}
 			}
 			if (type == 2) { // Misc
-				switch (random.nextInt(19)) {
+				switch (_random.nextInt(19)) {
 					case 0 -> testSize();
 					case 1 -> testGetFirst();
 					case 2 -> testGetLast();
@@ -147,8 +147,8 @@ public class TestDequeRandom {
 	}
 
 	private void testToString() {
-		if (d1.toString().equals(d2.toString()))
-			fail("d1.toString().equals(d2.toString())");
+		if (!d1.toString().equals(d2.toString()))
+			fail("!d1.toString().equals(d2.toString())");
 	}
 
 	private void testRemoveToElement() {
@@ -200,8 +200,8 @@ public class TestDequeRandom {
 			return;
 
 		final LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
-		final int index = random.nextInt(d1.size());
-		final int value2 = random.nextInt(_MAX_VALUE);
+		final int index = _random.nextInt(d1.size());
+		final int value2 = _random.nextInt(_MAX_VALUE);
 		temp1.set(index, value2);
 		final Integer value3 = temp1.get(index);
 
@@ -210,12 +210,12 @@ public class TestDequeRandom {
 	}
 
 	private void testRetainAllSelfOrNull() {
-		if (random.nextBoolean()) {
+		if (_random.nextBoolean()) {
 			d1.clear();
 			d2.clear();
 		}
 
-		if (random.nextBoolean()) {
+		if (_random.nextBoolean()) {
 			final boolean b1 = d1.retainAll(d1);
 			final boolean b2 = d2.retainAll(d2);
 			if (b1 != b2)
@@ -231,7 +231,7 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveAllSelf() {
-		if (random.nextBoolean()) {
+		if (_random.nextBoolean()) {
 			d1.clear();
 			d2.clear();
 		}
@@ -246,17 +246,17 @@ public class TestDequeRandom {
 	}
 
 	private void testEquals() {
-		if (d1.equals(d2))
-			fail("d1.equals(d2)");
+		if (!d1.equals(d2))
+			fail("!d1.equals(d2)");
 		// Das klappt nicht, weil d2=LinkedList testet, ob d1 vom Typ List ist.
-		// if (d2.equals(d1))
-		// fail("d2.equals(d1)");
+		// if (d2.equals(d1) == false)
+		// fail("d2.equals(d1) == false");
 	}
 
 	private void testRetainAll() {
 		final LinkedList<Integer> temp = new LinkedList<>();
 		for (int i = 0; i < d1.size() / 4; i++)
-			temp.addLast(random.nextInt(_MAX_VALUE));
+			temp.addLast(_random.nextInt(_MAX_VALUE));
 
 		final boolean b1 = d1.retainAll(temp);
 		final boolean b2 = d2.retainAll(temp);
@@ -292,9 +292,9 @@ public class TestDequeRandom {
 	private LinkedList<Integer> getListWithSomeElementsInCommon() {
 		final LinkedList<Integer> temp = new LinkedList<>();
 		for (final Integer value : d1)
-			if (random.nextBoolean())
+			if (_random.nextBoolean())
 				temp.addLast(value);
-		final Integer value = random.nextInt(_MAX_VALUE);
+		final Integer value = _random.nextInt(_MAX_VALUE);
 		temp.addLast(value);
 		return temp;
 	}
@@ -307,21 +307,21 @@ public class TestDequeRandom {
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
 
 		for (int i = 0; i < o1.length; i++)
-			if (o1[i].equals(o2[i]))
-				fail("o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
+			if (!o1[i].equals(o2[i]))
+				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
 		final Iterator<Integer> i1 = d1.iterator();
 		for (int i = 0; i < o1.length; i++) {
 			final Integer value = i1.next();
-			if (o1[i].equals(value))
-				fail("o1[i].equals(value) --> " + o1[i] + " != " + value);
+			if (!o1[i].equals(value))
+				fail("!o1[i].equals(value) --> " + o1[i] + " != " + value);
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
 		for (int i = 0; i < o2.length; i++) {
 			final Integer value = i2.next();
-			if (o2[i].equals(value))
-				fail("o2[i].equals(value) --> " + o2[i] + " != " + value);
+			if (!o2[i].equals(value))
+				fail("!o2[i].equals(value) --> " + o2[i] + " != " + value);
 		}
 
 	}
@@ -334,21 +334,21 @@ public class TestDequeRandom {
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
 
 		for (int i = 0; i < o1.length; i++)
-			if (o1[i].equals(o2[i]))
-				fail("o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
+			if (!o1[i].equals(o2[i]))
+				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
 		final Iterator<Integer> i1 = d1.iterator();
 		for (int i = 0; i < o1.length; i++) {
 			final Integer value = i1.next();
-			if (o1[i].equals(value))
-				fail("o1[i].equals(value) --> " + o1[i] + " != " + value);
+			if (!o1[i].equals(value))
+				fail("!o1[i].equals(value) --> " + o1[i] + " != " + value);
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
 		for (int i = 0; i < o2.length; i++) {
 			final Integer value = i2.next();
-			if (o2[i].equals(value))
-				fail("o2[i].equals(value) --> " + o2[i] + " != " + value);
+			if (!o2[i].equals(value))
+				fail("!o2[i].equals(value) --> " + o2[i] + " != " + value);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class TestDequeRandom {
 	}
 
 	private void testContains() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.contains(obj);
 		final boolean b2 = d2.contains(obj);
 		if (b1 != b2)
@@ -390,7 +390,7 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveObject() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.remove(obj);
 		final boolean b2 = d2.remove(obj);
 		if (b1 != b2)
@@ -422,7 +422,7 @@ public class TestDequeRandom {
 	}
 
 	private void testPush() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		d1.push(obj);
 		d2.push(obj);
 		testEquality();
@@ -431,9 +431,9 @@ public class TestDequeRandom {
 	private void testAddAll() {
 		Deque<Integer> temp1 = new LinkedList<>();
 		Deque<Integer> temp2 = new LinkedList<>();
-		if (random.nextBoolean()) {
+		if (_random.nextBoolean()) {
 			for (int i = 0; i < 10; i++) {
-				final int value = random.nextInt(_MAX_VALUE);
+				final int value = _random.nextInt(_MAX_VALUE);
 				temp1.addLast(value);
 				temp2.addLast(value);
 			}
@@ -490,7 +490,7 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveToBoolean() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.remove(obj);
 		final boolean b2 = d2.remove(obj);
 		if (b1 != b2)
@@ -498,7 +498,7 @@ public class TestDequeRandom {
 	}
 
 	private void testOffer() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offer(obj);
 		final boolean b2 = d2.offer(obj);
 		if (b1 != b2)
@@ -507,7 +507,7 @@ public class TestDequeRandom {
 	}
 
 	private void testAdd() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.add(obj);
 		final boolean b2 = d2.add(obj);
 		if (b1 != b2)
@@ -516,7 +516,7 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveFirstOccurrence() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.removeFirstOccurrence(obj);
 		final boolean b2 = d2.removeFirstOccurrence(obj);
 		if (b1 != b2)
@@ -525,7 +525,7 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveLastOccurrence() {
-		final Integer obj = random.nextInt(_MAX_VALUE);
+		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.removeLastOccurrence(obj);
 		final boolean b2 = d2.removeLastOccurrence(obj);
 		if (b1 != b2)
@@ -664,7 +664,7 @@ public class TestDequeRandom {
 	}
 
 	private void testOfferFirst() {
-		final int num = random.nextInt(_MAX_VALUE);
+		final int num = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offerFirst(num);
 		final boolean b2 = d2.offerFirst(num);
 		if (b1 != b2)
@@ -673,7 +673,7 @@ public class TestDequeRandom {
 	}
 
 	private void testOfferLast() {
-		final int num = random.nextInt(_MAX_VALUE);
+		final int num = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offerLast(num);
 		final boolean b2 = d2.offerLast(num);
 		if (b1 != b2)
@@ -682,14 +682,14 @@ public class TestDequeRandom {
 	}
 
 	private void testAddFirst() {
-		final int num = random.nextInt(_MAX_VALUE);
+		final int num = _random.nextInt(_MAX_VALUE);
 		d1.addFirst(num);
 		d2.addFirst(num);
 		testEquality();
 	}
 
 	private void testAddLast() {
-		final int num = random.nextInt(_MAX_VALUE);
+		final int num = _random.nextInt(_MAX_VALUE);
 		d1.addLast(num);
 		d2.addLast(num);
 		testEquality();
