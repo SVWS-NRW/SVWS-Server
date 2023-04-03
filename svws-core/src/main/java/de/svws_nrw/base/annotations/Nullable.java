@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
  * Die Klasse wird genutzt, um Typen zu annotieren, die Nullable sind.
  */
 @Documented
-@Retention(value=CLASS)
-@Target(value=TYPE_USE)
+@Retention(value = CLASS)
+@Target(value = TYPE_USE)
 public @interface Nullable {
-	 //
+	//
 }

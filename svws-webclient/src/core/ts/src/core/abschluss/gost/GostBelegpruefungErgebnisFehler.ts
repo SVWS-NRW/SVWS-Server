@@ -24,10 +24,10 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	 * Erzeugt eine neue Instanz eines Fehlers beim Ergebnis der Belegprüfung.
 	 *
 	 * @param f           der Typ des Belegungsfehlers (siehe {@link GostBelegungsfehler})
-	 * @param pruef_art   die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um
+	 * @param pruefArt    die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um
 	 *                    die konkrete Ausprägung des Textinformationen bestimmen zu können.
 	 */
-	public constructor(f : GostBelegungsfehler, pruef_art : GostBelegpruefungsArt);
+	public constructor(f : GostBelegungsfehler, pruefArt : GostBelegpruefungsArt);
 
 	/**
 	 * Erzeugt eine neue Instanz eines Fehlers beim Ergebnis der Belegprüfung.
@@ -43,10 +43,10 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 		super();
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt'))))) {
 			const f : GostBelegungsfehler = cast_de_svws_nrw_core_abschluss_gost_GostBelegungsfehler(__param0);
-			const pruef_art : GostBelegpruefungsArt = cast_de_svws_nrw_core_abschluss_gost_GostBelegpruefungsArt(__param1);
+			const pruefArt : GostBelegpruefungsArt = cast_de_svws_nrw_core_abschluss_gost_GostBelegpruefungsArt(__param1);
 			this.code = f.toString();
 			this.art = f.getArt().kuerzel;
-			this.beschreibung = f.getText(pruef_art);
+			this.beschreibung = f.getText(pruefArt);
 		} else if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			// empty method body
 		} else throw new Error('invalid method overload');

@@ -32,14 +32,14 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * Erstellt eine neue Belegprüfung, welche den angegebenen Daten-Manager verwendet.
 	 *
 	 * @param manager           der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art     die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
-	 * @param pruefungen_vorher   eine vorher durchgeführte Abiturprüfung
+	 * @param pruefungsArt      die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungenVorher   eine vorher durchgeführte Abiturprüfung
 	 */
-	protected constructor(manager : AbiturdatenManager, pruefungs_art : GostBelegpruefungsArt, ...pruefungen_vorher : Array<GostBelegpruefung>) {
+	protected constructor(manager : AbiturdatenManager, pruefungsArt : GostBelegpruefungsArt, ...pruefungenVorher : Array<GostBelegpruefung>) {
 		super();
-		this.pruefungen_vorher = pruefungen_vorher;
+		this.pruefungen_vorher = pruefungenVorher;
 		this.manager = manager;
-		this.pruefungs_art = pruefungs_art;
+		this.pruefungs_art = pruefungsArt;
 	}
 
 	/**
@@ -107,13 +107,13 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * Gibt zurück, ob die angegebenen Belegprüfungsfehler einen "echten" Fehler beinhalten
 	 * und nicht nur einen Hinweise / eine Information.
 	 *
-	 * @param alle_fehler   die Belegprüfungsfehler und -informationen der durchgeführten Belegprüfungen
+	 * @param alleFehler   die Belegprüfungsfehler und -informationen der durchgeführten Belegprüfungen
 	 *
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
-	public static istErfolgreich(alle_fehler : Vector<GostBelegungsfehler>) : boolean {
-		for (let i : number = 0; i < alle_fehler.size(); i++) {
-			const fehler : GostBelegungsfehler = alle_fehler.get(i);
+	public static istErfolgreich(alleFehler : Vector<GostBelegungsfehler>) : boolean {
+		for (let i : number = 0; i < alleFehler.size(); i++) {
+			const fehler : GostBelegungsfehler = alleFehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}

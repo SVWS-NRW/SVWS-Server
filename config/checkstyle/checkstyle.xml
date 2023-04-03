@@ -40,10 +40,12 @@
   <!-- Checks for Size Violations.                    -->
   <!-- See https://checkstyle.org/config_sizes.html -->
   <module name="FileLength"/>
+  <!--
   <module name="LineLength">
     <property name="fileExtensions" value="java"/>
     <property name="max" value="240"/>
   </module>
+  -->
 
   <!-- Miscellaneous other checks.                   -->
   <!-- See https://checkstyle.org/config_misc.html -->
@@ -68,13 +70,19 @@
     <module name="InvalidJavadocPosition"/>
     <module name="JavadocMethod"/>
     <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
-    <module name="JavadocStyle"/>
+    <module name="JavadocVariable">
+  		<property name="excludeScope" value="private"/>
+  	</module>
+    <module name="JavadocStyle">
+		<property name="checkFirstSentence" value="false"/>
+	</module>
     <module name="MissingJavadocMethod"/>
 
     <!-- Checks for Naming Conventions.                  -->
     <!-- See https://checkstyle.org/config_naming.html -->
-    <module name="ConstantName"/>
+    <module name="ConstantName">
+    	<property name="format" value="^[a-zA-Z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
+	</module>
     <module name="LocalFinalVariableName">
 		<property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
 	</module>
@@ -101,7 +109,7 @@
 
     <!-- Checks for Size Violations.                    -->
     <!-- See https://checkstyle.org/config_sizes.html -->
-    <module name="MethodLength"/>
+    <!-- <module name="MethodLength"/> -->
     <module name="ParameterNumber"/>
 
     <!-- Checks for whitespace                               -->
@@ -134,10 +142,10 @@
     <!-- See https://checkstyle.org/config_coding.html -->
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
+    <!-- <module name="HiddenField"/> -->
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <!-- <module name="MagicNumber"/> -->
     <module name="MissingSwitchDefault"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="SimplifyBooleanExpression"/>
@@ -149,7 +157,7 @@
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
     <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
+    <!-- <module name="VisibilityModifier"/> -->
 
     <!-- Miscellaneous other checks.                   -->
     <!-- See https://checkstyle.org/config_misc.html -->

@@ -515,7 +515,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	 * Findet den Index an dem das Element t im dem dem Heap zu Grunde liegendem Array gespeichert ist.
 	 * Gibt -1 zurück, falls das Element nicht vorhanden ist.
 	 *
-	 * @param t   zu diesem Element soll der Index gefunden werden
+	 * @param obj   zu diesem Element soll der Index gefunden werden
 	 *
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */

@@ -1,29 +1,29 @@
 /*
  * Copyright 2022 Marina Bachran
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- * 
- * 1. Redistributions of source code must retain the above copyright 
+ *
+ * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holder nor the names of its 
- *    contributors may be used to endorse or promote products derived from 
- *    this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.svws_nrw.core.adt.collection;
@@ -39,11 +39,11 @@ import java.util.NoSuchElementException;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Die Klasse LinkedCollection implementiert das Interface {@link Collection}. 
- * Sie stellt eine einfache, unsortierte Collection dar und akzeptiert 
- * keine null-Werte, jedoch Duplikate. Intern ist sie als doppelt verkettete 
+ * Die Klasse LinkedCollection implementiert das Interface {@link Collection}.
+ * Sie stellt eine einfache, unsortierte Collection dar und akzeptiert
+ * keine null-Werte, jedoch Duplikate. Intern ist sie als doppelt verkettete
  * Liste realisiert.
- * 
+ *
  * @author Marina Bachran
  *
  * @param <E>   der Inhaltstyp der LinkedCollection
@@ -52,15 +52,15 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	/** Das erste Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _head;
-	
+
 	/** Das letze Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _tail;
-	
+
 	/** Die Anzahl der Elemente in der Collection. */
 	private int _size;
 
 	/** Die Anzahl der Modifikationen, die an dieser Datenstruktur vorgenommen wurden */
-    int _modCount;
+	int _modCount;
 
 
 	/**
@@ -72,11 +72,11 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		_size = 0;
 		_modCount = 0;
 	}
-	
+
 	/**
-	 * Erzeugt eine neue LinkedCollection als Kopie der übergebenen 
+	 * Erzeugt eine neue LinkedCollection als Kopie der übergebenen
 	 * LinkedCollection
-	 * 
+	 *
 	 * @param c   die LinkedCollection, die kopiert wird
 	 */
 	public LinkedCollection(final LinkedCollection<? extends @NotNull E> c) {
@@ -95,7 +95,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	@Override
 	public boolean isEmpty() {
-		return (_head == null) ? true : false;
+		return (_head == null);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if (this.isEmpty())
 			return false;
 		final @NotNull Iterator<@NotNull E> iter = this.iterator();
-		while(iter.hasNext())
+		while (iter.hasNext())
 			if (iter.next().equals(obj))
 				return true;
 		return false;
@@ -122,10 +122,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		@SuppressWarnings("unchecked")
 		final @NotNull E@NotNull[] array = (@NotNull E@NotNull[]) Array.newInstance(_head.getValue().getClass(), _size);
 		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
-		for (int i = 0; i < _size; i++ ) {
+		for (int i = 0; i < _size; i++) {
 			// Die Werte der LinkedCollection werden zurückgegeben. Nicht die Elemente mit der Zeigerstruktur und den Werten
-			array[i] = iter.next();  
-		}		
+			array[i] = iter.next();
+		}
 		return array;
 	}
 
@@ -135,7 +135,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if (a.length < _size)
 			return (@NotNull T@NotNull[]) this.toArray();
 		final @NotNull Iterator<? extends @NotNull E> iter = this.iterator();
-		for (int i = 0; i < _size; i++ ) {
+		for (int i = 0; i < _size; i++) {
 			final @NotNull E e = iter.next();
 			a[i] = (@NotNull T) e;
 		}
@@ -166,10 +166,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	/**
 	 * Entfernt das übergebene Element.
-	 * 
+	 *
 	 * @param elem   das zu entfernende Element
-	 *  
-	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde. 
+	 *
+	 * @return true, falls das Element erfolgreich entfernt wurde, und false, falls null übergeben wurde.
 	 */
 	private boolean removeElement(final LinkedCollectionElement<@NotNull E> elem) {
 		if (elem == null)
@@ -184,7 +184,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 				throw new NullPointerException();
 			_head = next;
 			next.setPrev(null);
-		} else if (elem.equals(_tail)){
+		} else if (elem.equals(_tail)) {
 			if (prev == null)
 				throw new NullPointerException();
 			_tail = prev;
@@ -197,10 +197,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		}
 		_size--;
 		_modCount++;
-		return true;		
+		return true;
 	}
-	
-	
+
+
 	@Override
 	public boolean remove(final Object obj) {
 		if (this.isEmpty())
@@ -281,9 +281,9 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		while (iter.hasNext()) {
 			final @NotNull E elem = iter.next();
 			if (!c.contains(elem))
-				tmp.add(elem);				
+				tmp.add(elem);
 		}
-		if (tmp.isEmpty()) 
+		if (tmp.isEmpty())
 			return false;
 		return this.removeAll(tmp);
 	}
@@ -295,25 +295,13 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		_size = 0;
 		_modCount++;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int hashCode = 1;
-        for (final @NotNull E e : this)
-            hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
-        return hashCode;
-        
-        /*
-        if (_head == null)
-            return 0;
-        int result = 1;
-        @NotNull Iterator<@NotNull E> iter = this.iterator();
-        while (iter.hasNext()) {
-        	@NotNull E elem = iter.next();
-        	result = 31 * result + (elem == null ? 0 : elem.hashCode());
-        }
-        return result;		
-        */
+		for (final @NotNull E e : this)
+			hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
+		return hashCode;
 	}
 
 	@Override
@@ -325,11 +313,11 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			return false;
 		final @NotNull Iterator<@NotNull E> iter = this.iterator();
 		final @NotNull Iterator<?> otherIter = other.iterator();
-        while (iter.hasNext()) {
-        	if (!iter.next().equals(otherIter.next()))
-        			return false;
-        }
-        return true;
+		while (iter.hasNext()) {
+			if (!iter.next().equals(otherIter.next()))
+				return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -344,26 +332,26 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		final @NotNull Iterator<@NotNull E> iter = this.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
-			if (iter.hasNext() == true)
+			if (iter.hasNext())
 				sb.append(", ");
 		}
 		sb.append("]");
-		return sb.toString();	
+		return sb.toString();
 	}
 
 
 	/**
 	 * Diese Methode ist eine Hilfsmethode für die Methode sort(). Sie mischt die beiden über die prev-Zeiger
-	 * verketteten Listen left und right zu einer kombinierten, über die prev-Zeiger verketteten Liste. 
-	 * 
+	 * verketteten Listen left und right zu einer kombinierten, über die prev-Zeiger verketteten Liste.
+	 *
 	 * @param comparator   ein {@link Comparator} zum Vergleichen zweier Elemente
 	 * @param left         die erste sortierte Liste
 	 * @param right        die zweite sortierte Liste
-	 * 
-	 * @return die kombinierte sortierte Liste 
+	 *
+	 * @return die kombinierte sortierte Liste
 	 */
 	private @NotNull LinkedCollectionElement<@NotNull E> merge(final @NotNull Comparator<@NotNull E> comparator, final @NotNull LinkedCollectionElement<@NotNull E> left, final @NotNull LinkedCollectionElement<@NotNull E> right) {
-		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element 
+		// Bestimme, was die Quell- und was die Zielliste ist. Die Zielliste enthält danach das kleinste Element
 		LinkedCollectionElement<@NotNull E> headTo;
 		LinkedCollectionElement<@NotNull E> headFrom;
 		if (comparator.compare(left.getValue(), right.getValue()) > 0) {
@@ -371,7 +359,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			headTo = right;
 		} else {
 			headFrom = right;
-			headTo = left;			
+			headTo = left;
 		}
 		// Iteriere durch die Zielliste (target-Zeiger)
 		@NotNull LinkedCollectionElement<@NotNull E> target = headTo;
@@ -380,7 +368,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			final @NotNull LinkedCollectionElement<@NotNull E> current = headFrom;
 			headFrom = headFrom.getPrev();
 			// Finde das Element in der Zielliste, welches kleiner ist als das aktuelle Element
-			LinkedCollectionElement<@NotNull E> targetPrev = target.getPrev(); 
+			LinkedCollectionElement<@NotNull E> targetPrev = target.getPrev();
 			while ((targetPrev != null) && (comparator.compare(targetPrev.getValue(), current.getValue()) < 0)) {
 				target = targetPrev;
 				targetPrev = target.getPrev();
@@ -396,13 +384,13 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		// Gebe die Zielliste zurück
 		return headTo;
 	}
-		
+
 	/**
-	 * Sortiert den Inhalte dieser Liste mithilfe des übergebenen {@link Comparator}-Objekts. 
-	 * 
+	 * Sortiert den Inhalte dieser Liste mithilfe des übergebenen {@link Comparator}-Objekts.
+	 *
 	 * @param comparator   ein {@link Comparator} zum Vergleichen zweier Elemente
-	 * 
-	 * @return true, falls eine Sortierung erfolgreich war 
+	 *
+	 * @return true, falls eine Sortierung erfolgreich war
 	 */
 	public boolean sort(final Comparator<@NotNull E> comparator) {
 		if (comparator == null)
@@ -411,7 +399,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if ((this._size <= 1) || (this._head == null) || (this._tail == null))
 			return true;
 		_modCount++;
-		// Alle prev-Zeiger auf null setzen (über diese wird die Sortierung aufgebaut, 
+		// Alle prev-Zeiger auf null setzen (über diese wird die Sortierung aufgebaut,
 		// während die next-Zeiger, die noch zu kombinierenden Teil-Listen miteinander verketten.
 		for (LinkedCollectionElement<@NotNull E> current = this._head; current != null; current = current.getNext())
 			current.setPrev(null);
@@ -453,15 +441,15 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		return true;
 	}
 
-	
+
 	/**
 	 * Sucht das Element an der Stelle Index.
-	 *   
+	 *
 	 * @param index   die Stelle des gesuchten Elements
-	 * 
-	 * @return das Element an der gesuchten Stelle 
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))  
+	 *
+	 * @return das Element an der gesuchten Stelle
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt (index >= 0) && (index < size()))
 	 */
 	private @NotNull LinkedCollectionElement<@NotNull E> find(final int index) throws IndexOutOfBoundsException {
 		if ((index < 0) || (index >= this._size))
@@ -477,10 +465,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	/**
 	 * Sucht ein LinkedCollectionElement in der Collection mit dem Wert obj
 	 * und gibt es zurück
-	 * 
+	 *
 	 * @param obj   der Wert der in der LinkedCollection gesucht werden soll
-	 * 
-	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
+	 *
+	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen , ansonsten null
 	 */
 	private LinkedCollectionElement<@NotNull E> findFirst(final Object obj) {
@@ -498,10 +486,10 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 	/**
 	 * Sucht ein LinkedCollectionElement in der Collection mit dem Wert obj
 	 * und gibt es zurück
-	 * 
+	 *
 	 * @param obj   der Wert der in der LinkedCollection gesucht werden soll
-	 * 
-	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection 
+	 *
+	 * @return  ein LinkedCollectionElement<E> falls der Wert in der Collection
 	 * 			enthalten ist und das Element dessen, ansonsten null
 	 */
 	private LinkedCollectionElement<@NotNull E> findLast(final Object obj) {
@@ -538,7 +526,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if (this._head == null)
 			this._tail = null;
 		else
-			this._head.setPrev(null);		
+			this._head.setPrev(null);
 		_size--;
 		_modCount++;
 		return value;
@@ -622,7 +610,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if (this._tail == null)
 			this._head = null;
 		else
-			this._tail.setNext(null);		
+			this._tail.setNext(null);
 		_size--;
 		_modCount++;
 		return value;
@@ -687,12 +675,12 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	/**
 	 * Gibt den Wert an der Stelle index zurück.
-	 * 
+	 *
 	 * @param index   der Index
-	 * 
+	 *
 	 * @return der Wert
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}
 	 */
 	public @NotNull E get(final int index) throws IndexOutOfBoundsException {
 		return this.find(index).getValue();
@@ -700,16 +688,16 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 
 	/**
 	 * Ersetzt den Wert an der Stelle index mit dem neuen übergebenen Wert.
-	 *  
+	 *
 	 * @param index     die Stelle, wo der Wert ersetzt werden soll
-	 * @param element   der neue Wert für die Stelle 
-	 * 
+	 * @param element   der neue Wert für die Stelle
+	 *
 	 * @return der alte Wert an der Stelle
-	 * 
-	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}  
+	 *
+	 * @throws IndexOutOfBoundsException   wenn der Index nicht im gültigen Bereich liegt {@code (index >= 0) && (index < size()))}
 	 */
 	public @NotNull E set(final int index, final @NotNull E element) throws IndexOutOfBoundsException {
 		return this.find(index).setValue(element);
 	}
-	
+
 }

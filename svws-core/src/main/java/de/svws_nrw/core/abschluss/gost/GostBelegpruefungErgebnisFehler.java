@@ -7,37 +7,37 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse dient der Fehlerrückmeldung bei einer Belegprüfung im Rahmen der Abiturberechnung.
- * Sie beinhaltet die Informationen eines einzelnen Fehlers.   
+ * Sie beinhaltet die Informationen eines einzelnen Fehlers.
  */
 @XmlRootElement(name = "GostBelegpruefungErgebnisFehler")
-@Schema(name="GostBelegpruefungErgebnisFehler", description="gibt die Informationen zu einem Fehler beim Ergebnis der Belegprüfung an.")
+@Schema(name = "GostBelegpruefungErgebnisFehler", description = "gibt die Informationen zu einem Fehler beim Ergebnis der Belegprüfung an.")
 @TranspilerDTO
 public class GostBelegpruefungErgebnisFehler {
-	
+
 	/** Ein eindeutiger Fehlercode für den Fehler */
-	@Schema(required = true, description = "Ein eindeutiger Fehlercode für den Fehler.", example="ABI_11")
+	@Schema(required = true, description = "Ein eindeutiger Fehlercode für den Fehler.", example = "ABI_11")
 	public @NotNull String code = "";
-	
+
 	/** Die Art des Belegungsfehlers (siehe {@link GostBelegungsfehlerArt}). */
-	@Schema(required = true, description = "Die Art des Belegungsfehlers.", example="BELEGUNG")
+	@Schema(required = true, description = "Die Art des Belegungsfehlers.", example = "BELEGUNG")
 	public @NotNull String art = "";
-	
+
 	/** Eine textuelle Beschreibung des Fehlers. */
-	@Schema(required = true, description = "Eine textuelle Beschreibung des Fehlers.", example="Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.")
+	@Schema(required = true, description = "Eine textuelle Beschreibung des Fehlers.", example = "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.")
 	public @NotNull String beschreibung = "";
-	
-	
+
+
 	/**
 	 * Erzeugt eine neue Instanz eines Fehlers beim Ergebnis der Belegprüfung.
-	 * 
+	 *
 	 * @param f           der Typ des Belegungsfehlers (siehe {@link GostBelegungsfehler})
-	 * @param pruef_art   die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um 
+	 * @param pruefArt    die Art der durchgeführten Belegungsprüfung (siehe {@link GostBelegpruefungsArt}), um
 	 *                    die konkrete Ausprägung des Textinformationen bestimmen zu können.
 	 */
-	public GostBelegpruefungErgebnisFehler(final @NotNull GostBelegungsfehler f, final @NotNull GostBelegpruefungsArt pruef_art) {
+	public GostBelegpruefungErgebnisFehler(final @NotNull GostBelegungsfehler f, final @NotNull GostBelegpruefungsArt pruefArt) {
 		this.code = f.toString();
 		this.art = f.getArt().kuerzel;
-		this.beschreibung = f.getText(pruef_art);
+		this.beschreibung = f.getText(pruefArt);
 	}
 
 	/**
@@ -48,5 +48,5 @@ public class GostBelegpruefungErgebnisFehler {
 	@SuppressWarnings("unused")
 	private GostBelegpruefungErgebnisFehler() {
 	}
-	
+
 }

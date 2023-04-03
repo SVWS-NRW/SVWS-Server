@@ -8,19 +8,19 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Eine abstrakte Basisklasse für Belegprüfungen auf Abiturdaten eines Schülers.
  * Eine Belegprüfung muss die abstrakten Methode gemäß ihrer Beschreibung implementieren.
- * Die Auswertung der Prüfungsergebnisse kann automatisiert über den zugehörigen 
- * AbiturdatenManager erfolgen.  
+ * Die Auswertung der Prüfungsergebnisse kann automatisiert über den zugehörigen
+ * AbiturdatenManager erfolgen.
  */
 public abstract class GostBelegpruefung {
-	
+
 	/** Eine ggf. zuvor durchgeführte Abitur-Belegprüfung, welche in dieser Belegprüfung als Voraussetzung vorhanden sein muss. */
 	protected final @NotNull GostBelegpruefung@NotNull[] pruefungen_vorher;
-	
+
 	/** Der Daten-Manager für die Abiturdaten */
 	protected final @NotNull AbiturdatenManager manager;
-	
+
 	/** Die Art der Belegprüfung (nur EF.1, Gesamte Oberstufe, evtl. weitere) */
-	protected final @NotNull GostBelegpruefungsArt pruefungs_art; 
+	protected final @NotNull GostBelegpruefungsArt pruefungs_art;
 
 	/** Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind. */
 	private final @NotNull Vector<@NotNull GostBelegungsfehler> belegungsfehler = new Vector<>();
@@ -28,55 +28,55 @@ public abstract class GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung, welche den angegebenen Daten-Manager verwendet.
-	 * 
+	 *
 	 * @param manager           der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art     die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
-	 * @param pruefungen_vorher   eine vorher durchgeführte Abiturprüfung
+	 * @param pruefungsArt      die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungenVorher   eine vorher durchgeführte Abiturprüfung
 	 */
-	protected GostBelegpruefung(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungs_art, final GostBelegpruefung... pruefungen_vorher) {
-		this.pruefungen_vorher = pruefungen_vorher;
+	protected GostBelegpruefung(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt, final GostBelegpruefung... pruefungenVorher) {
+		this.pruefungen_vorher = pruefungenVorher;
 		this.manager = manager;
-		this.pruefungs_art = pruefungs_art;
+		this.pruefungs_art = pruefungsArt;
 	}
-	
-	
+
+
 	/**
 	 * Führt eine Belegprüfung durch.
 	 */
 	public void pruefe() {
 		init();
-		if (pruefungs_art == GostBelegpruefungsArt.EF1) 
+		if (pruefungs_art == GostBelegpruefungsArt.EF1)
 			pruefeEF1();
 		else if (pruefungs_art == GostBelegpruefungsArt.GESAMT)
 			pruefeGesamt();
 	}
 
-	
+
 	/**
 	 * Fügt einen Belegungsfehler zu der Belegprüfung hinzu. Diese Methode wird von den Sub-Klassen
 	 * aufgerufen, wenn dort ein Belegungsfehler erkannt wird.
-	 * 
+	 *
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
 	protected void addFehler(final @NotNull GostBelegungsfehler fehler) {
 		if (!belegungsfehler.contains(fehler))
 			belegungsfehler.add(fehler);
 	}
-	
+
 
 	/**
 	 * Gibt die Belegungsfehler zurück, welche bei der Gesamtprüfung aufgetreten sind.
-	 * 
+	 *
 	 * @return die Belegungsfehler
 	 */
 	public @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehler() {
 		return belegungsfehler;
 	}
-	
-	
+
+
 	/**
 	 * Git zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
-	 * 
+	 *
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public boolean hatBelegungsfehler() {
@@ -92,45 +92,45 @@ public abstract class GostBelegpruefung {
 	/**
 	 * Initialisiert die Daten für die Belegprüfungen mithilfe des Abiturdaten-Managers
 	 */
-	abstract protected void init();
-	
-	
+	protected abstract void init();
+
+
 	/**
 	 * Führt alle Belegprüfungen für die EF.1 durch.
 	 */
-	abstract protected void pruefeEF1();
-	
-	
+	protected abstract void pruefeEF1();
+
+
 	/**
 	 * Führt alle Belegprüfungen für die gesamte Oberstufe durch.
 	 */
-	abstract protected void pruefeGesamt();
+	protected abstract void pruefeGesamt();
 
 
 	/**
-	 * Gibt zurück, ob die angegebenen Belegprüfungsfehler einen "echten" Fehler beinhalten 
+	 * Gibt zurück, ob die angegebenen Belegprüfungsfehler einen "echten" Fehler beinhalten
 	 * und nicht nur einen Hinweise / eine Information.
-	 * 
-	 * @param alle_fehler   die Belegprüfungsfehler und -informationen der durchgeführten Belegprüfungen
-	 * 
+	 *
+	 * @param alleFehler   die Belegprüfungsfehler und -informationen der durchgeführten Belegprüfungen
+	 *
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
-	public static boolean istErfolgreich(final @NotNull Vector<@NotNull GostBelegungsfehler> alle_fehler) {
-		for (int i = 0; i < alle_fehler.size(); i++) {
-			final @NotNull GostBelegungsfehler fehler = alle_fehler.get(i);
+	public static boolean istErfolgreich(final @NotNull Vector<@NotNull GostBelegungsfehler> alleFehler) {
+		for (int i = 0; i < alleFehler.size(); i++) {
+			final @NotNull GostBelegungsfehler fehler = alleFehler.get(i);
 			if (!fehler.istInfo())
 				return false;
 		}
-		return true;		
+		return true;
 	}
-	
-	
+
+
 	/**
 	 * Liefert alle Belegprüfungsfehler der übergebenen Teil-Belegprüfungen zurück.
 	 * Doppelte Fehler werden dabei nur einfach zurückgegeben (Set).
-	 *  
+	 *
 	 * @param pruefungen   die durchgeführten Belegprüfungen, deren Fehler zurückgegeben werden sollen.
-	 * 
+	 *
 	 * @return die Menge der Belegprüfungsfehler
 	 */
 	public static @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
@@ -141,5 +141,5 @@ public abstract class GostBelegpruefung {
 		}
 		return fehler;
 	}
-	
+
 }

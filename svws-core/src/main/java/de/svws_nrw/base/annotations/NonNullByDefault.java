@@ -9,8 +9,7 @@ import java.lang.annotation.Retention;
  * Die Klasse wird genutzt, um Typen zu annotieren, die nicht Null sein können.
  */
 @Documented
-@Retention(value=CLASS)
+@Retention(value = CLASS)
 public @interface NonNullByDefault {
-	 
 	//
 }

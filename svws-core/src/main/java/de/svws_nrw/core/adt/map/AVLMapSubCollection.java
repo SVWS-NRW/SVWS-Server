@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse implementiert eine Sub-Collection für die {@link AVLMapSubMap}. <br>
  * Alle Methodenaufrufe werden an die {@link AVLMapSubMap} delegiert. <br>
- * 
+ *
  * @author Benjamin A. Bartsch
- * 
+ *
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
@@ -23,7 +23,7 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 
 	/**
 	 * Erstellt eine neue Sub-Collection zur übergebenen {@link AVLMapSubMap}.
-	 * 
+	 *
 	 * @param sub Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
 	AVLMapSubCollection(final @NotNull AVLMapSubMap<@NotNull K, @NotNull V> sub) {
@@ -36,9 +36,9 @@ public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@
 		String s = "";
 		for (final V value : this)
 			s += (s.length() == 0 ? "" : ", ") + value;
-		return "values = [" + s + "], size = " + size()+" --> "+_sub.toString();
+		return "values = [" + s + "], size = " + size() + " --> " + _sub.toString();
 	}
-	
+
 	@Override
 	public int size() {
 		return _sub.size();

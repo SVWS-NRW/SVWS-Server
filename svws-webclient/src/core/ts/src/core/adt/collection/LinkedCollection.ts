@@ -75,7 +75,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public isEmpty() : boolean {
-		return (this._head === null) ? true : false;
+		return (this._head === null);
 	}
 
 	public contains(obj : unknown | null) : boolean {
@@ -315,7 +315,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		const iter : JavaIterator<E> = this.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
-			if (iter.hasNext() === true)
+			if (iter.hasNext())
 				sb.append(", ");
 		}
 		sb.append("]");

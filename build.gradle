@@ -27,6 +27,7 @@ allprojects {
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
 	apply plugin: 'svws.gradle.svwseclipse.plugin'
 	apply plugin: 'org.sonarqube'
+//	apply plugin: 'checkstyle'
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
@@ -78,7 +79,14 @@ allprojects {
 	}
 
 	javadoc.dependsOn testJavadoc
-
+/*
+	eclipse {
+		project {
+			natures 'net.sf.eclipsecs.core.CheckstyleNature'
+			buildCommand 'net.sf.eclipsecs.core.CheckstyleBuilder'
+		}
+	}
+*/
 /* TODO Support JPMS-Modules
 	plugins.withType(JavaPlugin).configureEach {
         java {
