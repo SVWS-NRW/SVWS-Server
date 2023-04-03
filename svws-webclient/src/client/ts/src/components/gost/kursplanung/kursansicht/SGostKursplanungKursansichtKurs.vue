@@ -32,7 +32,7 @@
 			<td class="text-center blockung--kursdifferenz cursor-pointer hover:bg-yellow-200" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" @click="toggle_active_fachwahl">
 				{{ kursdifferenz[2] }}
 			</td>
-			<td class="text-center blockung--kursdifferenz cursor-pointer hover:bg-yellow-200" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" @click="toggle_active_fachwahl">
+			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">
 				{{ kursdifferenz[1] }}
 			</td>
 		</template>

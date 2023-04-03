@@ -7,7 +7,7 @@
 		</div>
 		<div class="flex justify-between items-center mb-3">
 			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="fach_filter_toggle" :model-value="fach" @update:model-value="fach" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
 			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
 		</div>
 		<div class="mb-3">
