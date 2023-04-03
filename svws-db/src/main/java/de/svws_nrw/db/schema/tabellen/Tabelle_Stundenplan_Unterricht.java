@@ -42,25 +42,25 @@ public class Tabelle_Stundenplan_Unterricht extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Unterricht_EigeneSchule_Faecher_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Unterricht_EigeneSchule_Faecher_FK = addForeignKey(
-			"Stundenplan_Unterricht_EigeneSchule_Faecher_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Unterricht_EigeneSchule_Faecher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Unterricht_Kurse_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Unterricht_Kurse_FK = addForeignKey(
-			"Stundenplan_Unterricht_Kurse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Unterricht_Kurse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Unterricht_Stundenplan_Zeitraster_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Unterricht_Stundenplan_Zeitraster_FK = addForeignKey(
-			"Stundenplan_Unterricht_Stundenplan_Zeitraster_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Unterricht_Stundenplan_Zeitraster_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zeitraster_ID, Schema.tab_Stundenplan_Zeitraster.col_ID)
 		);
 

@@ -17,7 +17,7 @@ public class Tabelle_DavRessourceCollectionsACL extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
 		.setJavaComment("ID des ACL Eintrags");
-	
+
 	/** Die Definition der Tabellenspalte Benutzer_ID */
 	public SchemaTabelleSpalte col_Benutzer_ID = add("Benutzer_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
@@ -35,17 +35,17 @@ public class Tabelle_DavRessourceCollectionsACL extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels DavRessourceCollectionsACL_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessourceCollectionsACL_Benutzer_FK = addForeignKey(
-			"DavRessourceCollectionsACL_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavRessourceCollectionsACL_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels DavRessourceCollectionACL_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessourceCollectionsACL_RessourceCollection_FK = addForeignKey(
-			"DavRessourceCollectionsACL_RessourceCollection_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavRessourceCollectionsACL_RessourceCollection_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_RessourceCollection_ID, Schema.tab_DavRessourceCollections.col_ID)
 		);
 

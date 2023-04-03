@@ -41,7 +41,7 @@ public class Tabelle_Berufskolleg_Anlagen extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Berufskolleg_Anlagen_UC1 */
-	public SchemaTabelleUniqueIndex unique_Berufskolleg_Anlagen_UC1 = addUniqueIndex("Berufskolleg_Anlagen_UC1", 
+	public SchemaTabelleUniqueIndex unique_Berufskolleg_Anlagen_UC1 = addUniqueIndex("Berufskolleg_Anlagen_UC1",
 			col_Kuerzel
 		);
 

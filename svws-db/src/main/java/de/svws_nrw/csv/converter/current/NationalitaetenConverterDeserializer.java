@@ -14,7 +14,7 @@ import java.io.IOException;
  * Diese Klasse ist ein Deserialisierer für Nationalitäten. Sie deserialisiert
  * die Datenbankdarstellung als String in einen Wert der Aufzählung {@link Nationalitaeten}.
  */
-public class NationalitaetenConverterDeserializer extends StdDeserializer<Nationalitaeten> {
+public final class NationalitaetenConverterDeserializer extends StdDeserializer<Nationalitaeten> {
 
 	private static final long serialVersionUID = -5130396859369645143L;
 
@@ -30,13 +30,13 @@ public class NationalitaetenConverterDeserializer extends StdDeserializer<Nation
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected NationalitaetenConverterDeserializer(Class<Nationalitaeten> t) {
+	protected NationalitaetenConverterDeserializer(final Class<Nationalitaeten> t) {
 		super(t);
 	}
 
 	@Override
-	public Nationalitaeten deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Nationalitaeten deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return NationalitaetenConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

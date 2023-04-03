@@ -759,166 +759,166 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Schueler_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Schuljahreabschnitt_FK = addForeignKey(
-			"Schueler_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Schueler_Credentials_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Credentials_FK = addForeignKey(
-			"Schueler_Credentials_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Credentials_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_Credentials.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Schueler_Einschulungsart_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Einschulungsart_FK = addForeignKey(
-			"Schueler_Einschulungsart_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Einschulungsart_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Einschulungsart_ID, Schema.tab_K_EinschulungsArt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Entlassjahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Entlassjahrgang_FK = addForeignKey(
-			"Schueler_Entlassjahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Entlassjahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Entlassjahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Fachklasse_Naechstes_Schuljahr_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Fachklasse_Naechstes_Schuljahr_FK = addForeignKey(
-			"Schueler_Fachklasse_Naechstes_Schuljahr_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Fachklasse_Naechstes_Schuljahr_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_FachklasseNSJ_ID, Schema.tab_EigeneSchule_Fachklassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Fahrschueler_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Fahrschueler_FK = addForeignKey(
-			"Schueler_Fahrschueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Fahrschueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fahrschueler_ID, Schema.tab_K_FahrschuelerArt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Haltestelle_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Haltestelle_FK = addForeignKey(
-			"Schueler_Haltestelle_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Haltestelle_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Haltestelle_ID, Schema.tab_K_Haltestelle.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Kindergarten_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Kindergarten_ID_FK = addForeignKey(
-			"Schueler_Kindergarten_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Kindergarten_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Kindergarten_ID, Schema.tab_K_Kindergarten.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Ort_PLZ_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Ort_PLZ_FK = addForeignKey(
-			"Schueler_Ort_PLZ_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Ort_PLZ_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Ort_ID, Schema.tab_K_Ort.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Schueler_Ortsteil_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Ortsteil_FK = addForeignKey(
-			"Schueler_Ortsteil_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Ortsteil_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Ortsteil_ID, Schema.tab_K_Ortsteil.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Religion_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Religion_FK = addForeignKey(
-			"Schueler_Religion_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Religion_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Religion_ID, Schema.tab_K_Religion.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Sportbefreiung_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Sportbefreiung_FK = addForeignKey(
-			"Schueler_Sportbefreiung_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Sportbefreiung_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Sportbefreiung_ID, Schema.tab_K_Sportbefreiung.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Status_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Status_FK = addForeignKey(
-			"Schueler_Status_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Schueler_Status_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Status, Schema.tab_SchuelerStatus.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_1_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_1_FK = addForeignKey(
-			"Schueler_Statkue_Nationalitaeten_1_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Statkue_Nationalitaeten_1_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_StaatKrz, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_2_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_2_FK = addForeignKey(
-			"Schueler_Statkue_Nationalitaeten_2_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Statkue_Nationalitaeten_2_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_StaatKrz2, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_3_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_3_FK = addForeignKey(
-			"Schueler_Statkue_Nationalitaeten_3_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Statkue_Nationalitaeten_3_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_GeburtslandSchueler, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_4_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_4_FK = addForeignKey(
-			"Schueler_Statkue_Nationalitaeten_4_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Statkue_Nationalitaeten_4_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_GeburtslandVater, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_5_FK */
 	public SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_5_FK = addForeignKey(
-			"Schueler_Statkue_Nationalitaeten_5_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schueler_Statkue_Nationalitaeten_5_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_GeburtslandMutter, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Unique-Index Schueler_UC1 */
-	public SchemaTabelleUniqueIndex unique_Schueler_UC1 = addUniqueIndex("Schueler_UC1", 
+	public SchemaTabelleUniqueIndex unique_Schueler_UC1 = addUniqueIndex("Schueler_UC1",
 			col_GU_ID
 		);
 

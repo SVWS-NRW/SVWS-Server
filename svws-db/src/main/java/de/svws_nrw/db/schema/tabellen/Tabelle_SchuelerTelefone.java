@@ -57,24 +57,24 @@ public class Tabelle_SchuelerTelefone extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerTelefone_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerTelefone_Schueler_FK = addForeignKey(
-			"SchuelerTelefone_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerTelefone_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerTelefone_Telefonart_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerTelefone_Telefonart_FK = addForeignKey(
-			"SchuelerTelefone_Telefonart_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerTelefone_Telefonart_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_TelefonArt_ID, Schema.tab_K_TelefonArt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerTelefone_IDX1 */
-	public SchemaTabelleIndex index_SchuelerTelefone_IDX1 = addIndex("SchuelerTelefone_IDX1", 
+	public SchemaTabelleIndex index_SchuelerTelefone_IDX1 = addIndex("SchuelerTelefone_IDX1",
 			col_Schueler_ID
 		);
 

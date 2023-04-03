@@ -49,17 +49,17 @@ public class Tabelle_SchuelerDatenschutz extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerDatenschutz_K_Datenschutz_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerDatenschutz_K_Datenschutz_FK = addForeignKey(
-			"SchuelerDatenschutz_K_Datenschutz_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerDatenschutz_K_Datenschutz_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Datenschutz_ID, Schema.tab_K_Datenschutz.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerDatenschutz_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerDatenschutz_Schueler_FK = addForeignKey(
-			"SchuelerDatenschutz_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerDatenschutz_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

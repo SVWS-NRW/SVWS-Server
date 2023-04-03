@@ -79,24 +79,24 @@ public class Tabelle_Stundentafel_Faecher extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels StundentafelFaecher_Faecher_FK */
 	public SchemaTabelleFremdschluessel fk_StundentafelFaecher_Faecher_FK = addForeignKey(
-			"StundentafelFaecher_Faecher_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"StundentafelFaecher_Faecher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels StundentafelFaecher_Stdtafel_FK */
 	public SchemaTabelleFremdschluessel fk_StundentafelFaecher_Stdtafel_FK = addForeignKey(
-			"StundentafelFaecher_Stdtafel_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"StundentafelFaecher_Stdtafel_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Stundentafel_ID, Schema.tab_Stundentafel.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index Stundentafel_Faecher_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundentafel_Faecher_UC1 = addUniqueIndex("Stundentafel_Faecher_UC1", 
-			col_Fach_ID, 
+	public SchemaTabelleUniqueIndex unique_Stundentafel_Faecher_UC1 = addUniqueIndex("Stundentafel_Faecher_UC1",
+			col_Fach_ID,
 			col_Stundentafel_ID
 		);
 

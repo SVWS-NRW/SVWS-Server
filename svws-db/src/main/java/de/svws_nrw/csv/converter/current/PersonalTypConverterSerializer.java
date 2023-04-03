@@ -13,7 +13,7 @@ import de.svws_nrw.db.converter.current.PersonalTypConverter;
  * Diese Klasse ist ein Serialisierer für die unterschiedlichen Personal-Typen. Sie serialisiert
  * einen Wert der Aufzählung {@link PersonalTyp} in die Datenbankdarstellung als String.
  */
-public class PersonalTypConverterSerializer extends StdSerializer<PersonalTyp> {
+public final class PersonalTypConverterSerializer extends StdSerializer<PersonalTyp> {
 
 	private static final long serialVersionUID = 8347463080558723603L;
 
@@ -26,15 +26,15 @@ public class PersonalTypConverterSerializer extends StdSerializer<PersonalTyp> {
 
 	/**
 	 * Erzeugt ein neues Objekt zur Serialisierung
-	 * 
+	 *
 	 * @param t   ein Klassenobjekt für die Personaltyp-Klasse
 	 */
-	public PersonalTypConverterSerializer(Class<PersonalTyp> t) {
+	public PersonalTypConverterSerializer(final Class<PersonalTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(PersonalTyp value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final PersonalTyp value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(PersonalTypConverter.instance.convertToDatabaseColumn(value));
 	}
 

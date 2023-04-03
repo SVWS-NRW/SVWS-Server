@@ -64,15 +64,15 @@ public class Tabelle_K_Ortsteil extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels K_Ortsteil_Ort_FK */
 	public SchemaTabelleFremdschluessel fk_K_Ortsteil_Ort_FK = addForeignKey(
-			"K_Ortsteil_Ort_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"K_Ortsteil_Ort_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Ort_ID, Schema.tab_K_Ort.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index K_Ortsteil_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Ortsteil_UC1 = addUniqueIndex("K_Ortsteil_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Ortsteil_UC1 = addUniqueIndex("K_Ortsteil_UC1",
 			col_Bezeichnung
 		)
 		.setRevision(SchemaRevisionen.REV_1);

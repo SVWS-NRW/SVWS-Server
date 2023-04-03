@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 /**
- * Diese Klasse ist ein Serialisierer für Datumswerte. Sie serialisiert 
+ * Diese Klasse ist ein Serialisierer für Datumswerte. Sie serialisiert
  * ein Datum als ISO-8601-Zeichenkette in die Datenbankdarstellung als {@link Timestamp}.
  */
-public class DatumUhrzeitConverterSerializer extends StdSerializer<String> {
+public final class DatumUhrzeitConverterSerializer extends StdSerializer<String> {
 
 
 	private static final long serialVersionUID = 2066486893789871316L;
@@ -27,15 +27,15 @@ public class DatumUhrzeitConverterSerializer extends StdSerializer<String> {
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public DatumUhrzeitConverterSerializer(Class<String> t) {
+	public DatumUhrzeitConverterSerializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final String value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(DatumUhrzeitConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

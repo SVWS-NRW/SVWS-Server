@@ -69,9 +69,9 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels DavRessources_Collection_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessources_Collection_FK = addForeignKey(
-			"DavRessources_Collection_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavRessources_Collection_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_DavRessourceCollection_ID, Schema.tab_DavRessourceCollections.col_ID)
 		);
 

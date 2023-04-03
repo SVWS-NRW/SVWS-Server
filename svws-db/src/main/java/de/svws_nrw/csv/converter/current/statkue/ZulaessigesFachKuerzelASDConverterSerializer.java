@@ -10,9 +10,9 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
 
 /**
  * Diese Klasse ist ein Serialisierer und serialisiert das Kürzel eines ZulaessigesFach in Bezug
- * auf die amtliche Schulstatistik in den CoreType Schulform. 
+ * auf die amtliche Schulstatistik in den CoreType Schulform.
  */
-public class ZulaessigesFachKuerzelASDConverterSerializer extends StdSerializer<ZulaessigesFach> {
+public final class ZulaessigesFachKuerzelASDConverterSerializer extends StdSerializer<ZulaessigesFach> {
 
 	private static final long serialVersionUID = 2609387887776489624L;
 
@@ -22,18 +22,18 @@ public class ZulaessigesFachKuerzelASDConverterSerializer extends StdSerializer<
 	public ZulaessigesFachKuerzelASDConverterSerializer() {
 		super(ZulaessigesFach.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public ZulaessigesFachKuerzelASDConverterSerializer(Class<ZulaessigesFach> t) {
+	public ZulaessigesFachKuerzelASDConverterSerializer(final Class<ZulaessigesFach> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(ZulaessigesFach value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final ZulaessigesFach value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(value.daten.kuerzelASD);
 	}
 

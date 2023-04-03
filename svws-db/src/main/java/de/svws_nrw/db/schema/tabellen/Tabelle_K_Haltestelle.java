@@ -50,7 +50,7 @@ public class Tabelle_K_Haltestelle extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Haltestelle_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Haltestelle_UC1 = addUniqueIndex("K_Haltestelle_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Haltestelle_UC1 = addUniqueIndex("K_Haltestelle_UC1",
 			col_Bezeichnung
 		);
 

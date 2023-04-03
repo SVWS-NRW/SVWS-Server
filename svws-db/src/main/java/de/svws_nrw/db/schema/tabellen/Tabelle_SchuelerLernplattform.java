@@ -60,25 +60,25 @@ public class Tabelle_SchuelerLernplattform extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernplattform_Schueler_FK = addForeignKey(
-			"SchuelerLernplattform_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLernplattform_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_SchuelerID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Lernplattform_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernplattform_Lernplattform_FK = addForeignKey(
-			"SchuelerLernplattform_Lernplattform_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLernplattform_Lernplattform_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LernplattformID, Schema.tab_Lernplattformen.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernplattform_Credential_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernplattform_Credential_FK = addForeignKey(
-			"SchuelerLernplattform_Credential_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernplattform_Credential_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_CredentialsLernplattformen.col_ID)
 		);
 

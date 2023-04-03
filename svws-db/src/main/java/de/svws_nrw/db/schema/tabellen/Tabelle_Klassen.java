@@ -115,26 +115,26 @@ public class Tabelle_Klassen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Klassen_Fachklasse_FK */
 	public SchemaTabelleFremdschluessel fk_Klassen_Fachklasse_FK = addForeignKey(
-			"Klassen_Fachklasse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Klassen_Fachklasse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fachklasse_ID, Schema.tab_EigeneSchule_Fachklassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Klassen_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Klassen_Jahrgang_FK = addForeignKey(
-			"Klassen_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Klassen_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Jahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Unique-Index Klassen_UC1 */
-	public SchemaTabelleUniqueIndex unique_Klassen_UC1 = addUniqueIndex("Klassen_UC1", 
-			col_Schuljahresabschnitts_ID, 
+	public SchemaTabelleUniqueIndex unique_Klassen_UC1 = addUniqueIndex("Klassen_UC1",
+			col_Schuljahresabschnitts_ID,
 			col_Klasse
 		);
 

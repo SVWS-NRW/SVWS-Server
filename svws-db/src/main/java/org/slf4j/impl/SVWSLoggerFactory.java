@@ -7,14 +7,15 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * Die Logger-Factory für den SVWS-Server zur Unterstützung 
+ * Die Logger-Factory für den SVWS-Server zur Unterstützung
  * von SLF4J.
  */
-public class SVWSLoggerFactory implements ILoggerFactory {
-	private Map<String, SVWSLoggerAdapter> logger = new HashMap<>();
+public final class SVWSLoggerFactory implements ILoggerFactory {
+
+	private final Map<String, SVWSLoggerAdapter> logger = new HashMap<>();
 
 	@Override
-	public Logger getLogger(String name) {
+	public Logger getLogger(final String name) {
 		synchronized (logger) {
 			SVWSLoggerAdapter adapter = logger.get(name);
             if (adapter == null) {

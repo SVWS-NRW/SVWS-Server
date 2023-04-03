@@ -15,19 +15,19 @@ import jakarta.persistence.Converter;
  * {@link DBAttributeConverter#getByClass} registriert werden.
  */
 @Converter
-public class DatumUhrzeitConverter extends DBAttributeConverter<String, Timestamp> {
+public final class DatumUhrzeitConverter extends DBAttributeConverter<String, Timestamp> {
 
 	/** Die Instanz des Konverters */
 	public static final DatumUhrzeitConverter instance = new DatumUhrzeitConverter();
 
 	@Override
-	public Timestamp convertToDatabaseColumn(String attribute) {
+	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute))) ? null
 				: Timestamp.valueOf(LocalDateTime.parse(attribute));
 	}
 
 	@Override
-	public String convertToEntityAttribute(Timestamp dbData) {
+	public String convertToEntityAttribute(final Timestamp dbData) {
 		if (dbData == null)
 			return null;
 		return dbData.toLocalDateTime().toString();

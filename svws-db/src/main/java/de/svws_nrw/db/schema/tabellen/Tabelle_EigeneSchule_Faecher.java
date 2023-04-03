@@ -271,15 +271,15 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Faecher_Zeugnisdatenquellen_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Faecher_Zeugnisdatenquellen_FK = addForeignKey(
-			"EigeneSchule_Faecher_Zeugnisdatenquellen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"EigeneSchule_Faecher_Zeugnisdatenquellen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Zeugnisdatenquelle_ID, Schema.tab_Fachgruppen.col_SchildFgID)
 		);
 
 
 	/** Die Definition des Unique-Index EigeneSchule_Faecher_UC1 */
-	public SchemaTabelleUniqueIndex unique_EigeneSchule_Faecher_UC1 = addUniqueIndex("EigeneSchule_Faecher_UC1", 
+	public SchemaTabelleUniqueIndex unique_EigeneSchule_Faecher_UC1 = addUniqueIndex("EigeneSchule_Faecher_UC1",
 			col_FachKrz
 		);
 

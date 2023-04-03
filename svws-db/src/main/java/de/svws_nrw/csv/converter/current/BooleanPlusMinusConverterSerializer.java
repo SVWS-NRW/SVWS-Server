@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer und serialisiert einen Java-String-Wert in die 
+ * Diese Klasse ist ein Serialisierer und serialisiert einen Java-String-Wert in die
  * Datenbankdarstellung als String, der  - (false) oder + (true) sein kann.
  */
-public class BooleanPlusMinusConverterSerializer extends StdSerializer<Boolean> {
+public final class BooleanPlusMinusConverterSerializer extends StdSerializer<Boolean> {
 
 	private static final long serialVersionUID = -1327227762966985248L;
 
@@ -25,15 +25,15 @@ public class BooleanPlusMinusConverterSerializer extends StdSerializer<Boolean> 
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public BooleanPlusMinusConverterSerializer(Class<Boolean> t) {
+	public BooleanPlusMinusConverterSerializer(final Class<Boolean> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Boolean value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Boolean value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(BooleanPlusMinusConverter.instance.convertToDatabaseColumn(value));
 	}
 

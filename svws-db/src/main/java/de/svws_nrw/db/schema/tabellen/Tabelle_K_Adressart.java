@@ -46,7 +46,7 @@ public class Tabelle_K_Adressart extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Adressart_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Adressart_UC1 = addUniqueIndex("K_Adressart_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Adressart_UC1 = addUniqueIndex("K_Adressart_UC1",
 			col_Bezeichnung
 		);
 

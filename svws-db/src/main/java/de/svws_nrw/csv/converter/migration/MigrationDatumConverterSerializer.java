@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.svws_nrw.db.converter.current.DatumConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer für Datumswerte. Sie serialisiert 
+ * Diese Klasse ist ein Serialisierer für Datumswerte. Sie serialisiert
  * ein Datum als ISO-8601-Zeichenkette in die Datenbankdarstellung als {@link Timestamp}.
  */
-public class MigrationDatumConverterSerializer extends StdSerializer<String> {
+public final class MigrationDatumConverterSerializer extends StdSerializer<String> {
 
 	private static final long serialVersionUID = 1997235870466236373L;
 
@@ -26,15 +26,15 @@ public class MigrationDatumConverterSerializer extends StdSerializer<String> {
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public MigrationDatumConverterSerializer(Class<String> t) {
+	public MigrationDatumConverterSerializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final String value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(DatumConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

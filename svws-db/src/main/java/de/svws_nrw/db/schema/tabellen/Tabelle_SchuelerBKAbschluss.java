@@ -102,17 +102,17 @@ public class Tabelle_SchuelerBKAbschluss extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerBKAbschluss_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerBKAbschluss_Schuljahreabschnitt_FK = addForeignKey(
-			"SchuelerBKAbschluss_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerBKAbschluss_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerBKAbschluss_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerBKAbschluss_Schueler_FK = addForeignKey(
-			"SchuelerBKAbschluss_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerBKAbschluss_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

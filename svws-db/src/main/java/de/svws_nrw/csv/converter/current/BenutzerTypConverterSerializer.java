@@ -12,7 +12,7 @@ import de.svws_nrw.db.converter.current.BenutzerTypConverter;
 /**
  * Diese Klasse ist einen Serialisierer von Benutzer-Typ-Objekten.
  */
-public class BenutzerTypConverterSerializer extends StdSerializer<BenutzerTyp> {
+public final class BenutzerTypConverterSerializer extends StdSerializer<BenutzerTyp> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -22,18 +22,18 @@ public class BenutzerTypConverterSerializer extends StdSerializer<BenutzerTyp> {
 	public BenutzerTypConverterSerializer() {
 		super(BenutzerTyp.class);
 	}
-	
+
 	/**
 	 * Erzeugt ein neues Objekt zur Serialisierung
-	 * 
+	 *
 	 * @param t   ein Klassenobjekt für die Benutzer-Typ-Klasse
 	 */
-	public BenutzerTypConverterSerializer(Class<BenutzerTyp> t) {
+	public BenutzerTypConverterSerializer(final Class<BenutzerTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(BenutzerTyp value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final BenutzerTyp value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(BenutzerTypConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

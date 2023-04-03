@@ -27,18 +27,18 @@ public class Tabelle_BenutzergruppenMitglieder extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels BenutzergruppenMitglieder_Benutzergruppen_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzergruppenMitglieder_Benutzergruppen_FK = addForeignKey(
-			"BenutzergruppenMitglieder_Benutzergruppen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"BenutzergruppenMitglieder_Benutzergruppen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Gruppe_ID, Schema.tab_Benutzergruppen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels BenutzergruppenMitglieder_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzergruppenMitglieder_Benutzer_FK = addForeignKey(
-			"BenutzergruppenMitglieder_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"BenutzergruppenMitglieder_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

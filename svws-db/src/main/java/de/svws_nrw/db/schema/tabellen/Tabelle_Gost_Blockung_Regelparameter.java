@@ -32,9 +32,9 @@ public class Tabelle_Gost_Blockung_Regelparameter extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Regelparameter_Regel_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Regelparameter_Regel_FK = addForeignKey(
-			"Gost_Blockung_Regelparameter_Regel_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Regelparameter_Regel_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Regel_ID, Schema.tab_Gost_Blockung_Regeln.col_ID)
 		);
 

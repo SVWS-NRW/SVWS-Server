@@ -111,16 +111,16 @@ public class Tabelle_SchuelerAbgaenge extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerAbgaenge_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbgaenge_Schueler_FK = addForeignKey(
-			"SchuelerAbgaenge_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAbgaenge_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerAbgaenge_IDX1 */
-	public SchemaTabelleIndex index_SchuelerAbgaenge_IDX1 = addIndex("SchuelerAbgaenge_IDX1", 
-			col_Schueler_ID, 
+	public SchemaTabelleIndex index_SchuelerAbgaenge_IDX1 = addIndex("SchuelerAbgaenge_IDX1",
+			col_Schueler_ID,
 			col_LSSchulEntlassDatum
 		);
 

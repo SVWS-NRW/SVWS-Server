@@ -10,11 +10,11 @@ import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.db.converter.current.GeschlechtConverterFromString;
 
 /**
- * Diese Klasse ist ein Serialisierer für Geschlechter. Sie serialisiert ein Objekt der Klasse 
- * {@link Geschlecht} in die Datenbankdarstellung der als String verpackten Zahl 
- * (siehe {@link Geschlecht#id}). 
+ * Diese Klasse ist ein Serialisierer für Geschlechter. Sie serialisiert ein Objekt der Klasse
+ * {@link Geschlecht} in die Datenbankdarstellung der als String verpackten Zahl
+ * (siehe {@link Geschlecht#id}).
  */
-public class GeschlechtConverterFromStringSerializer extends StdSerializer<Geschlecht> {
+public final class GeschlechtConverterFromStringSerializer extends StdSerializer<Geschlecht> {
 
 	private static final long serialVersionUID = 670435792297312455L;
 
@@ -27,15 +27,15 @@ public class GeschlechtConverterFromStringSerializer extends StdSerializer<Gesch
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public GeschlechtConverterFromStringSerializer(Class<Geschlecht> t) {
+	public GeschlechtConverterFromStringSerializer(final Class<Geschlecht> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Geschlecht value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Geschlecht value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(GeschlechtConverterFromString.instance.convertToDatabaseColumn(value));
 	}
 

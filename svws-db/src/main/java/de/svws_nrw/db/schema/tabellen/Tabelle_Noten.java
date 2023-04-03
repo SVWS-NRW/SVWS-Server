@@ -70,7 +70,7 @@ public class Tabelle_Noten extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Noten_UC1 */
-	public SchemaTabelleUniqueIndex unique_Noten_UC1 = addUniqueIndex("Noten_UC1", 
+	public SchemaTabelleUniqueIndex unique_Noten_UC1 = addUniqueIndex("Noten_UC1",
 			col_Kuerzel
 		);
 

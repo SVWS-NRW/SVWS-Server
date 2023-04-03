@@ -93,23 +93,23 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Jahrgaenge_GueltigVon_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Jahrgaenge_GueltigVon_FK = addForeignKey(
-			"EigeneSchule_Jahrgaenge_GueltigVon_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"EigeneSchule_Jahrgaenge_GueltigVon_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_GueltigVon, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Jahrgaenge_GueltigBis_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Jahrgaenge_GueltigBis_FK = addForeignKey(
-			"EigeneSchule_Jahrgaenge_GueltigBis_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"EigeneSchule_Jahrgaenge_GueltigBis_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_GueltigBis, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index EigeneSchule_Jahrgaenge_UC1 */
-	public SchemaTabelleUniqueIndex unique_EigeneSchule_Jahrgaenge_UC1 = addUniqueIndex("EigeneSchule_Jahrgaenge_UC1", 
+	public SchemaTabelleUniqueIndex unique_EigeneSchule_Jahrgaenge_UC1 = addUniqueIndex("EigeneSchule_Jahrgaenge_UC1",
 			col_InternKrz
 		);
 

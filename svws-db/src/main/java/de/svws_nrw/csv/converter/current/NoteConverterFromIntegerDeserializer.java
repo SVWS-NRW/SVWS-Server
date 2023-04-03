@@ -12,10 +12,10 @@ import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
 
 /**
  * Diese Klasse ist ein Deserialisierer für Noten. Sie deserialisiert
- * die Datenbankdarstellung als Integer, welche eine Note ohne Tendenz 
+ * die Datenbankdarstellung als Integer, welche eine Note ohne Tendenz
  * repräsentiert (1-6), in einen Wert der Aufzählung {@link Note}.
  */
-public class NoteConverterFromIntegerDeserializer extends StdDeserializer<Note> {
+public final class NoteConverterFromIntegerDeserializer extends StdDeserializer<Note> {
 
 	private static final long serialVersionUID = 7505421606549933149L;
 
@@ -25,23 +25,23 @@ public class NoteConverterFromIntegerDeserializer extends StdDeserializer<Note> 
 	public NoteConverterFromIntegerDeserializer() {
 		super(Note.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected NoteConverterFromIntegerDeserializer(Class<Note> t) {
+	protected NoteConverterFromIntegerDeserializer(final Class<Note> t) {
 		super(t);
 	}
 
 	@Override
-	public Note deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Note deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return NoteConverterFromInteger.instance.convertToEntityAttribute(p.getIntValue());
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return null;
 		}
 	}
-	
+
 }

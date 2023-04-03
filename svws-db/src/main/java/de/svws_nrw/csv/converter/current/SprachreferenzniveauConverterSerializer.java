@@ -12,7 +12,7 @@ import java.io.IOException;
  * Diese Klasse ist ein Serialisierer für das Sprachreferenzniveau (z.B. A2/B1). Sie serialisiert
  * einen Wert der Aufzählung {@link Sprachreferenzniveau} in die Datenbankdarstellung als String.
  */
-public class SprachreferenzniveauConverterSerializer extends StdSerializer<Sprachreferenzniveau> {
+public final class SprachreferenzniveauConverterSerializer extends StdSerializer<Sprachreferenzniveau> {
 
     private static final long serialVersionUID = -9145780250154825918L;
 
@@ -28,12 +28,12 @@ public class SprachreferenzniveauConverterSerializer extends StdSerializer<Sprac
      *
      * @param t   das Klassen-Objekt
      */
-    public SprachreferenzniveauConverterSerializer(Class<Sprachreferenzniveau> t) {
+    public SprachreferenzniveauConverterSerializer(final Class<Sprachreferenzniveau> t) {
         super(t);
     }
 
     @Override
-    public void serialize(Sprachreferenzniveau value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(final Sprachreferenzniveau value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeString(value == null ? null : value.daten.kuerzel);
     }
 

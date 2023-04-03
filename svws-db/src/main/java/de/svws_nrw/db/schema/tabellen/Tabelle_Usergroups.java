@@ -34,7 +34,7 @@ public class Tabelle_Usergroups extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Usergroups_UC1 */
-	public SchemaTabelleUniqueIndex unique_Usergroups_UC1 = addUniqueIndex("Usergroups_UC1", 
+	public SchemaTabelleUniqueIndex unique_Usergroups_UC1 = addUniqueIndex("Usergroups_UC1",
 			col_UG_Bezeichnung
 		);
 

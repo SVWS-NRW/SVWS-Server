@@ -312,9 +312,9 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Schuljahreabschnitt_FK = addForeignKey(
-			"EigeneSchule_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"EigeneSchule_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 

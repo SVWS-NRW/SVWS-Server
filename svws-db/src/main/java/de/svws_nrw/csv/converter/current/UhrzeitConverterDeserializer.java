@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer für Uhrzeitwerte. Sie deserialisiert die 
+ * Diese Klasse ist ein Deserialisierer für Uhrzeitwerte. Sie deserialisiert die
  * Datenbankdarstellung als Timestamp in eine Uhrzeit als Zeichenkette nach ISO-8601.
  */
-public class UhrzeitConverterDeserializer extends StdDeserializer<String> {
+public final class UhrzeitConverterDeserializer extends StdDeserializer<String> {
 
 	private static final long serialVersionUID = 1997235870466231273L;
 
@@ -24,23 +24,23 @@ public class UhrzeitConverterDeserializer extends StdDeserializer<String> {
 	public UhrzeitConverterDeserializer() {
 		super(String.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected UhrzeitConverterDeserializer(Class<String> t) {
+	protected UhrzeitConverterDeserializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public String deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return UhrzeitConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
-		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) {
 			return null;
 		}
 	}
-	
+
 }

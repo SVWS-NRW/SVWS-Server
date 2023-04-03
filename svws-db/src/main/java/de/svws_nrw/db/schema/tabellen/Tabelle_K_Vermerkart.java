@@ -46,7 +46,7 @@ public class Tabelle_K_Vermerkart extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Vermerkart_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Vermerkart_UC1 = addUniqueIndex("K_Vermerkart_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Vermerkart_UC1 = addUniqueIndex("K_Vermerkart_UC1",
 			col_Bezeichnung
 		);
 

@@ -99,7 +99,7 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten)
 			.setVeraltet(SchemaRevisionen.REV_1);
-	
+
 	/** Trigger t_INSERT_SCHUELERABITUR_ABSCHNITTE */
 	public SchemaTabelleTrigger trigger_MariaDB_INSERT_SCHUELERABITUR_ABSCHNITTE = addTrigger(
 			"t_INSERT_SCHUELERABITUR_ABSCHNITTE",

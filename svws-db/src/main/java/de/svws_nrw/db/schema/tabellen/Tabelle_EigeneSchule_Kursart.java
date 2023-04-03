@@ -57,8 +57,8 @@ public class Tabelle_EigeneSchule_Kursart extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index EigeneSchule_Kursart_UC1 */
-	public SchemaTabelleUniqueIndex unique_EigeneSchule_Kursart_UC1 = addUniqueIndex("EigeneSchule_Kursart_UC1", 
-			col_KursartAllg, 
+	public SchemaTabelleUniqueIndex unique_EigeneSchule_Kursart_UC1 = addUniqueIndex("EigeneSchule_Kursart_UC1",
+			col_KursartAllg,
 			col_Kursart
 		);
 

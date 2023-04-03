@@ -36,9 +36,9 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Kompetenzen_Kompetenzgruppen_FK */
 	public SchemaTabelleFremdschluessel fk_Kompetenzen_Kompetenzgruppen_FK = addForeignKey(
-			"Kompetenzen_Kompetenzgruppen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Kompetenzen_Kompetenzgruppen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_KO_Gruppe, Schema.tab_Kompetenzgruppen.col_KG_ID)
 		);
 

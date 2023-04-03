@@ -32,25 +32,25 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler extends Sche
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_ErgID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_ErgID_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_ErgID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_ErgID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zwischenergebnis_ID, Schema.tab_Gost_Blockung_Zwischenergebnisse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_Kurs_ID, Schema.tab_Gost_Blockung_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schueler_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

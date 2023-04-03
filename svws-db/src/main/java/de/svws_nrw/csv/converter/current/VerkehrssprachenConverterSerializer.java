@@ -13,7 +13,7 @@ import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
  * Diese Klasse ist ein Serialisierer für Nationalitäten. Sie serialisiert
  * einen Wert der Aufzählung {@link Verkehrssprache} in die Datenbankdarstellung als String.
  */
-public class VerkehrssprachenConverterSerializer extends StdSerializer<Verkehrssprache> {
+public final class VerkehrssprachenConverterSerializer extends StdSerializer<Verkehrssprache> {
 
 	private static final long serialVersionUID = -4990083708155366131L;
 
@@ -29,12 +29,12 @@ public class VerkehrssprachenConverterSerializer extends StdSerializer<Verkehrss
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public VerkehrssprachenConverterSerializer(Class<Verkehrssprache> t) {
+	public VerkehrssprachenConverterSerializer(final Class<Verkehrssprache> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Verkehrssprache value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Verkehrssprache value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(VerkehrssprachenConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

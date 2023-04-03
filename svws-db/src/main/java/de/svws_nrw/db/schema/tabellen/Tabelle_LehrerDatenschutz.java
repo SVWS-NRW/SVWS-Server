@@ -42,17 +42,17 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerDatenschutz_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerDatenschutz_Lehrer_FK = addForeignKey(
-			"LehrerDatenschutz_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerDatenschutz_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LehrerID, Schema.tab_K_Lehrer.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerDatenschutz_Datenschutz_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerDatenschutz_Datenschutz_FK = addForeignKey(
-			"LehrerDatenschutz_Datenschutz_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerDatenschutz_Datenschutz_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_DatenschutzID, Schema.tab_K_Datenschutz.col_ID)
 		);
 

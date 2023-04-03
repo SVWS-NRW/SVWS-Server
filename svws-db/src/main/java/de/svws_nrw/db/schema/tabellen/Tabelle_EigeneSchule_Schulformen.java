@@ -62,7 +62,7 @@ public class Tabelle_EigeneSchule_Schulformen extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index EigeneSchule_Schulformen_UC1 */
-	public SchemaTabelleUniqueIndex unique_EigeneSchule_Schulformen_UC1 = addUniqueIndex("EigeneSchule_Schulformen_UC1", 
+	public SchemaTabelleUniqueIndex unique_EigeneSchule_Schulformen_UC1 = addUniqueIndex("EigeneSchule_Schulformen_UC1",
 			col_SGL
 		);
 

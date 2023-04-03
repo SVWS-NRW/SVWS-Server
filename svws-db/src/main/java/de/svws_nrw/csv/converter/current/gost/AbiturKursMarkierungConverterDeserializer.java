@@ -11,10 +11,10 @@ import de.svws_nrw.core.data.gost.AbiturKursMarkierung;
 import de.svws_nrw.db.converter.current.gost.AbiturKursMarkierungConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung
  * als AbiturkursMarkierung.
  */
-public class AbiturKursMarkierungConverterDeserializer extends StdDeserializer<AbiturKursMarkierung> {
+public final class AbiturKursMarkierungConverterDeserializer extends StdDeserializer<AbiturKursMarkierung> {
 
 	private static final long serialVersionUID = -4503947939673854979L;
 
@@ -24,19 +24,19 @@ public class AbiturKursMarkierungConverterDeserializer extends StdDeserializer<A
 	public AbiturKursMarkierungConverterDeserializer() {
 		super(AbiturKursMarkierung.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected AbiturKursMarkierungConverterDeserializer(Class<AbiturKursMarkierung> t) {
+	protected AbiturKursMarkierungConverterDeserializer(final Class<AbiturKursMarkierung> t) {
 		super(t);
 	}
 
 	@Override
-	public AbiturKursMarkierung deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public AbiturKursMarkierung deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return AbiturKursMarkierungConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

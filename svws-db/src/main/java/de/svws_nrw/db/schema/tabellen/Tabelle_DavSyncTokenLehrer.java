@@ -30,9 +30,9 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels DavSyncTokenLehrer_FK */
 	public SchemaTabelleFremdschluessel fk_DavSyncTokenLehrer_FK = addForeignKey(
-			"DavSyncTokenLehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavSyncTokenLehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 
@@ -46,7 +46,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 DECLARE changed BOOLEAN;
                 DECLARE token DATETIME;
                 SET changed := 0;
-                IF OLD.Nachname <> NEW.Nachname OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname 
+                IF OLD.Nachname <> NEW.Nachname OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname
                         OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
                         OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
                         OR OLD.Sichtbar <> NEW.Sichtbar
@@ -415,7 +415,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
             """,
             Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Klassen,
             Schema.tab_KlassenLehrer, Schema.tab_DavSyncTokenLehrer);
-    
+
     /** Trigger t_UPDATE_DavSyncTokenLehrer_Kurse */
     public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenLehrer_Kurse = addTrigger(
             "t_UPDATE_DavSyncTokenLehrer_Kurse",
@@ -432,7 +432,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                     ELSE
                         UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
                     END IF;
-                ELSE 
+                ELSE
             		IF NEW.Lehrer_ID IS NULL AND OLD.Lehrer_ID IS NOT NULL THEN
 	                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
 	                    IF token IS NULL THEN
@@ -441,7 +441,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 	                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
 	                    END IF;
             		ELSE
-		                IF OLD.Lehrer_ID <> NEW.Lehrer_ID THEN 
+		                IF OLD.Lehrer_ID <> NEW.Lehrer_ID THEN
 		                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
 		                    IF token IS NULL THEN
 		                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
@@ -449,8 +449,8 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 		                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
 		                    END IF;
 		                END IF;
-		                IF OLD.ID <> NEW.ID OR OLD.Lehrer_ID <> NEW.Lehrer_ID 
-		                        OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID 
+		                IF OLD.ID <> NEW.ID OR OLD.Lehrer_ID <> NEW.Lehrer_ID
+		                        OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID
 		                        OR OLD.ASDJahrgang <> NEW.ASDJahrgang THEN
 		                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.Lehrer_ID);
 		                    IF token IS NULL THEN

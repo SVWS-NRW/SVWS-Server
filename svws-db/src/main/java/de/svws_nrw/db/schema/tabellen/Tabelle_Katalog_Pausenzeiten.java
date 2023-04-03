@@ -36,9 +36,9 @@ public class Tabelle_Katalog_Pausenzeiten extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Katalog_Pausenzeiten_UC1 */
-	public SchemaTabelleUniqueIndex unique_Katalog_Pausenzeiten_UC1 = addUniqueIndex("Katalog_Pausenzeiten_UC1", 
-			col_Beginn, 
-			col_Ende, 
+	public SchemaTabelleUniqueIndex unique_Katalog_Pausenzeiten_UC1 = addUniqueIndex("Katalog_Pausenzeiten_UC1",
+			col_Beginn,
+			col_Ende,
 			col_Tag
 		);
 

@@ -33,24 +33,24 @@ public class Tabelle_Stundenplan_PausenaufsichtenBereich extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK = addForeignKey(
-			"Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_PausenaufsichtenBereich_Aufsichtsbereiche_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Aufsichtsbereich_ID, Schema.tab_Stundenplan_Aufsichtsbereiche.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_PausenaufsichtenBereich_Aufsicht_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_PausenaufsichtenBereich_Aufsicht_FK = addForeignKey(
-			"Stundenplan_PausenaufsichtenBereich_Aufsicht_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_PausenaufsichtenBereich_Aufsicht_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Pausenaufsicht_ID, Schema.tab_Stundenplan_Pausenaufsichten.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index Stundenplan_PausenaufsichtenBereich_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundenplan_PausenaufsichtenBereich_UC1 = addUniqueIndex("Stundenplan_PausenaufsichtenBereich_UC1", 
-			col_Pausenaufsicht_ID, 
+	public SchemaTabelleUniqueIndex unique_Stundenplan_PausenaufsichtenBereich_UC1 = addUniqueIndex("Stundenplan_PausenaufsichtenBereich_UC1",
+			col_Pausenaufsicht_ID,
 			col_Aufsichtsbereich_ID
 		);
 

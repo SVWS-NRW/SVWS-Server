@@ -86,24 +86,24 @@ public class Tabelle_LehrerAbschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerAbschnittsdaten_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerAbschnittsdaten_Schuljahreabschnitt_FK = addForeignKey(
-			"LehrerAbschnittsdaten_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerAbschnittsdaten_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerAbschnittsdaten_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerAbschnittsdaten_Lehrer_FK = addForeignKey(
-			"LehrerAbschnittsdaten_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerAbschnittsdaten_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index LehrerAbschnittsdaten_UC1 */
-	public SchemaTabelleUniqueIndex unique_LehrerAbschnittsdaten_UC1 = addUniqueIndex("LehrerAbschnittsdaten_UC1", 
-			col_Schuljahresabschnitts_ID, 
+	public SchemaTabelleUniqueIndex unique_LehrerAbschnittsdaten_UC1 = addUniqueIndex("LehrerAbschnittsdaten_UC1",
+			col_Schuljahresabschnitts_ID,
 			col_Lehrer_ID
 		)
 		.setRevision(SchemaRevisionen.REV_2);

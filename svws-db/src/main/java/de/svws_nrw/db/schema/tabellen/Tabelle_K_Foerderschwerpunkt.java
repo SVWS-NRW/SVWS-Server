@@ -50,7 +50,7 @@ public class Tabelle_K_Foerderschwerpunkt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Foerderschwerpunkt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Foerderschwerpunkt_UC1 = addUniqueIndex("K_Foerderschwerpunkt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Foerderschwerpunkt_UC1 = addUniqueIndex("K_Foerderschwerpunkt_UC1",
 			col_Bezeichnung
 		);
 

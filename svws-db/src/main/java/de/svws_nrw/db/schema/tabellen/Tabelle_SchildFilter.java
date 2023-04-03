@@ -52,7 +52,7 @@ public class Tabelle_SchildFilter extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index SchildFilter_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchildFilter_UC1 = addUniqueIndex("SchildFilter_UC1", 
+	public SchemaTabelleUniqueIndex unique_SchildFilter_UC1 = addUniqueIndex("SchildFilter_UC1",
 			col_Name
 		);
 

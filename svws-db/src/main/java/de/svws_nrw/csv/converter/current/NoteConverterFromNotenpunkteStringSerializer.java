@@ -11,10 +11,10 @@ import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString;
 
 /**
  * Diese Klasse ist ein Serialisierer für Noten. Sie serialisiert
- * einen Wert der Aufzählung {@link Note} in die Datenbankdarstellung 
+ * einen Wert der Aufzählung {@link Note} in die Datenbankdarstellung
  * als Notenpunkte, welche in einer Zeichenkette dargestellt werden.
  */
-public class NoteConverterFromNotenpunkteStringSerializer extends StdSerializer<Note> {
+public final class NoteConverterFromNotenpunkteStringSerializer extends StdSerializer<Note> {
 
 	private static final long serialVersionUID = 5891746067532824732L;
 
@@ -24,18 +24,18 @@ public class NoteConverterFromNotenpunkteStringSerializer extends StdSerializer<
 	public NoteConverterFromNotenpunkteStringSerializer() {
 		super(Note.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public NoteConverterFromNotenpunkteStringSerializer(Class<Note> t) {
+	public NoteConverterFromNotenpunkteStringSerializer(final Class<Note> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Note value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Note value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(NoteConverterFromNotenpunkteString.instance.convertToDatabaseColumn(value));
 	}
 

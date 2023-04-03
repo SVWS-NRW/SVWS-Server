@@ -82,41 +82,41 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerAllgAdr_Adresse_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAllgAdr_Adresse_FK = addForeignKey(
-			"SchuelerAllgAdr_Adresse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAllgAdr_Adresse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Adresse_ID, Schema.tab_K_AllgAdresse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAllgAdr_Ansprech_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAllgAdr_Ansprech_FK = addForeignKey(
-			"SchuelerAllgAdr_Ansprech_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerAllgAdr_Ansprech_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Ansprechpartner_ID, Schema.tab_AllgAdrAnsprechpartner.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerAllgAdr_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAllgAdr_Schueler_FK = addForeignKey(
-			"SchuelerAllgAdr_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAllgAdr_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAllgAdr_Vertragsart_Beschaeftigungsart_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAllgAdr_Vertragsart_Beschaeftigungsart_FK = addForeignKey(
-			"SchuelerAllgAdr_Vertragsart_Beschaeftigungsart_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerAllgAdr_Vertragsart_Beschaeftigungsart_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Vertragsart_ID, Schema.tab_K_BeschaeftigungsArt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Non-Unique-Index Schueler_AllgAdr_IDX1 */
-	public SchemaTabelleIndex index_Schueler_AllgAdr_IDX1 = addIndex("Schueler_AllgAdr_IDX1", 
+	public SchemaTabelleIndex index_Schueler_AllgAdr_IDX1 = addIndex("Schueler_AllgAdr_IDX1",
 			col_Schueler_ID
 		);
 

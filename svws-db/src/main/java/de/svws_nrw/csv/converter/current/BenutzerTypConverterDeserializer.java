@@ -14,7 +14,7 @@ import de.svws_nrw.db.converter.current.BenutzerTypConverter;
 /**
  * Diese Klasse ist einen Deserialisierer von Benutzer-Typ-Objekten.
  */
-public class BenutzerTypConverterDeserializer extends StdDeserializer<BenutzerTyp> {
+public final class BenutzerTypConverterDeserializer extends StdDeserializer<BenutzerTyp> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -24,24 +24,24 @@ public class BenutzerTypConverterDeserializer extends StdDeserializer<BenutzerTy
 	public BenutzerTypConverterDeserializer() {
 		super(BenutzerKompetenz.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected BenutzerTypConverterDeserializer(Class<BenutzerTyp> t) {
+	protected BenutzerTypConverterDeserializer(final Class<BenutzerTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public BenutzerTyp deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public BenutzerTyp deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return BenutzerTypConverter.instance.convertToEntityAttribute(Integer.parseInt(p.getText()));
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 }

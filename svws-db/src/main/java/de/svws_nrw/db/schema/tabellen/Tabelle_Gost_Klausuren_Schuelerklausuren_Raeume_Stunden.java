@@ -24,23 +24,23 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden extends Sch
 		.setNotNull()
 		.setJavaComment("ID der Klausurraumstunde");
 
-	
+
 	/** Die Definition des Fremdschlüssels Schuelerklausur_ID_Schuelerklausur_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_Schuelerklausur_ID_FK = addForeignKey(
 			"Gost_Klausuren_SKlausuren_Raeume_Stunden_SK_ID_FK", // Fremdschlüsselname Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_Schuelerklausur_ID_FK zu lang
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuelerklausur_ID, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_ID)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_KlausurRaumStunde_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_KlausurRaumStunde_ID_FK = addForeignKey(
-			"Gost_Klausuren_SKlausuren_Raeume_Stunden_KRS_ID_FK", // Fremdschlüsselname Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_KlausurRaumStunde_ID_FK zu lang 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_SKlausuren_Raeume_Stunden_KRS_ID_FK", // Fremdschlüsselname Gost_Klausuren_Schuelerklausuren_Raeume_Stunden_KlausurRaumStunde_ID_FK zu lang
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_KlausurRaumStunde_ID, Schema.tab_Gost_Klausuren_Raeume_Stunden.col_ID)
 		);
-	
+
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden.

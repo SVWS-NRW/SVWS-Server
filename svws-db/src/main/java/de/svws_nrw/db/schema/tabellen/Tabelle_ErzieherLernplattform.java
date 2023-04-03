@@ -60,25 +60,25 @@ public class Tabelle_ErzieherLernplattform extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels ErzieherLernplattform_Erzieher_FK */
 	public SchemaTabelleFremdschluessel fk_ErzieherLernplattform_Erzieher_FK = addForeignKey(
-			"ErzieherLernplattform_Erzieher_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"ErzieherLernplattform_Erzieher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ErzieherID, Schema.tab_SchuelerErzAdr.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels ErzieherLernplattform_Lernplattform_FK */
 	public SchemaTabelleFremdschluessel fk_ErzieherLernplattform_Lernplattform_FK = addForeignKey(
-			"ErzieherLernplattform_Lernplattform_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"ErzieherLernplattform_Lernplattform_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LernplattformID, Schema.tab_Lernplattformen.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels ErzieherLernplattform_Credential_FK */
 	public SchemaTabelleFremdschluessel fk_ErzieherLernplattform_Credential_FK = addForeignKey(
-			"ErzieherLernplattform_Credential_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"ErzieherLernplattform_Credential_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_CredentialsLernplattformen.col_ID)
 		);
 

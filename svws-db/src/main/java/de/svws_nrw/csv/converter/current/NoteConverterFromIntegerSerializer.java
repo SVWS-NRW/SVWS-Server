@@ -11,10 +11,10 @@ import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
 
 /**
  * Diese Klasse ist ein Serialisierer für Noten. Sie serialisiert
- * einen Wert der Aufzählung {@link Note} in die Datenbankdarstellung als 
+ * einen Wert der Aufzählung {@link Note} in die Datenbankdarstellung als
  * Integer, welche eine Note ohne Tendenz repräsentiert (1-6).
  */
-public class NoteConverterFromIntegerSerializer extends StdSerializer<Note> {
+public final class NoteConverterFromIntegerSerializer extends StdSerializer<Note> {
 
 	private static final long serialVersionUID = 7505421606549933149L;
 
@@ -27,16 +27,16 @@ public class NoteConverterFromIntegerSerializer extends StdSerializer<Note> {
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public NoteConverterFromIntegerSerializer(Class<Note> t) {
+	public NoteConverterFromIntegerSerializer(final Class<Note> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Note value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-		Integer note = NoteConverterFromInteger.instance.convertToDatabaseColumn(value);
+	public void serialize(final Note value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+		final Integer note = NoteConverterFromInteger.instance.convertToDatabaseColumn(value);
 		gen.writeString(note == null ? null : "" + note);
 	}
 

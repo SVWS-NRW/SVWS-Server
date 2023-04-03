@@ -71,17 +71,17 @@ public class Tabelle_SchuelerWiedervorlage extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerWiedervorlage_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerWiedervorlage_Schueler_FK = addForeignKey(
-			"SchuelerWiedervorlage_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerWiedervorlage_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerWiedervorlage_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerWiedervorlage_Benutzer_FK = addForeignKey(
-			"SchuelerWiedervorlage_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerWiedervorlage_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_User_ID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_1);

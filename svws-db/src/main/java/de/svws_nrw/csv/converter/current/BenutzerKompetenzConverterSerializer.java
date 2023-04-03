@@ -12,7 +12,7 @@ import de.svws_nrw.db.converter.current.BenutzerKompetenzConverter;
 /**
  * Diese Klasse ist einen Serialisierer von Benutzer-Kompetenz-Objekten.
  */
-public class BenutzerKompetenzConverterSerializer extends StdSerializer<BenutzerKompetenz> {
+public final class BenutzerKompetenzConverterSerializer extends StdSerializer<BenutzerKompetenz> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -22,18 +22,18 @@ public class BenutzerKompetenzConverterSerializer extends StdSerializer<Benutzer
 	public BenutzerKompetenzConverterSerializer() {
 		super(BenutzerKompetenz.class);
 	}
-	
+
 	/**
 	 * Erzeugt ein neues Objekt zur Serialisierung
-	 * 
+	 *
 	 * @param t   ein Klassenobjekt für die Benutzer-Kompetenz-Klasse
 	 */
-	public BenutzerKompetenzConverterSerializer(Class<BenutzerKompetenz> t) {
+	public BenutzerKompetenzConverterSerializer(final Class<BenutzerKompetenz> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(BenutzerKompetenz value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final BenutzerKompetenz value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(BenutzerKompetenzConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

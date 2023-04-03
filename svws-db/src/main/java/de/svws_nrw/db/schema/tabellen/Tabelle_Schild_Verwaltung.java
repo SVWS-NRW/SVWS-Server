@@ -75,9 +75,9 @@ public class Tabelle_Schild_Verwaltung extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Schild_Verwaltung_Loeschfrist_deaktiviert_durch_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_Schild_Verwaltung_Loeschfrist_deaktiviert_durch_Benutzer_FK = addForeignKey(
-			"Schild_Verwaltung_Loeschfrist_deaktiviert_durch_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Schild_Verwaltung_Loeschfrist_deaktiviert_durch_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_DatumLoeschfristHinweisDeaktiviertUserID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -30,9 +30,9 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels DavSyncTokenSchueler_FK */
 	public SchemaTabelleFremdschluessel fk_DavSyncTokenSchueler_FK = addForeignKey(
-			"DavSyncTokenSchueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavSyncTokenSchueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_Schueler.col_ID)
 		);
 
@@ -46,7 +46,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 DECLARE changed BOOLEAN;
                 DECLARE token DATETIME;
                 SET changed := 0;
-                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname 
+                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname
                         OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
                         OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
                         OR OLD.Telefon <> NEW.Telefon OR OLD.Fax <> NEW.Fax
@@ -149,7 +149,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                     END IF;
                 END IF;
                 IF OLD.ErzOrt_ID <> NEW.ErzOrt_ID OR OLD.ErzStrassenname <> NEW.ErzStrassenname
-                        OR OLD.ErzOrtsteil_ID <> NEW.ErzOrtsteil_ID 
+                        OR OLD.ErzOrtsteil_ID <> NEW.ErzOrtsteil_ID
                         OR OLD.ErzieherArt_ID <> NEW.ErzieherArt_ID
                         OR OLD.ErzHausNr <> NEW.ErzHausNr OR OLD.ErzHausNrZusatz <> NEW.ErzHausNrZusatz
                         OR OLD.ErzEmail <> NEW.ErzEmail OR OLD.ErzEmail2 <> NEW.ErzEmail2
@@ -357,7 +357,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 DECLARE changed BOOLEAN;
                 DECLARE token DATETIME;
                 SET changed := 0;
-                IF OLD.ID <> NEW.ID OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID 
+                IF OLD.ID <> NEW.ID OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID
                         OR OLD.ASDJahrgang <> NEW.ASDJahrgang THEN
                     SET changed := 1;
                 END IF;
@@ -630,8 +630,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
             Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
             Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler);
 
-    
-    // TODO weitere Trigger für MariaDB 
+
+    // TODO weitere Trigger für MariaDB
 
     // TODO Trigger für SQLite
 

@@ -30,57 +30,57 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Kurs_ID = add("Kurs_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
 		.setJavaComment("Kurs_ID der Klausur");
-	
+
 	/** Die Definition der Tabellenspalte Termin_ID */
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Klausurtermins");
-	
+
 //	/** Die Definition der Tabellenspalte Raum_ID */
 //	public SchemaTabelleSpalte col_Raum_ID = add("Raum_ID", SchemaDatentypen.BIGINT, false)
 //		.setJavaComment("ID des Klausurraums");
-	
+
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
 		.setConverter(UhrzeitConverter.class)
-		.setJavaComment("Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene");	
-	
-	
-	
+		.setJavaComment("Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene");
+
+
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Vorgabe_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Kursklausuren_Vorgabe_ID_FK = addForeignKey(
-			"Gost_Klausuren_Kursklausuren_Vorgabe_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT, 
+			"Gost_Klausuren_Kursklausuren_Vorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Vorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Kurs_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Kursklausuren_Kurs_ID_FK = addForeignKey(
-			"Gost_Klausuren_Kursklausuren_Kurs_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Kursklausuren_Kurs_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Termin_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Kursklausuren_Termin_ID_FK = addForeignKey(
-			"Gost_Klausuren_Kursklausuren_Termin_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Gost_Klausuren_Kursklausuren_Termin_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
 		);
 
 //	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Raum_ID_FK */
 //	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Kursklausuren_Raum_ID_FK = addForeignKey(
-//			"Gost_Klausuren_Kursklausuren_Raum_ID_FK", 
-//			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-//			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+//			"Gost_Klausuren_Kursklausuren_Raum_ID_FK",
+//			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+//			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 //			new Pair<>(col_Raum_ID, Schema.tab_Gost_Klausuren_Raeume.col_ID)
 //		);
-	
-	
+
+
 	/** Die Definition des Unique-Index Gost_Klausuren_Kursklausuren_UC1 */
-	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Kursklausuren_UC1 = addUniqueIndex("Gost_Klausuren_Kursklausuren_UC1", 
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Kursklausuren_UC1 = addUniqueIndex("Gost_Klausuren_Kursklausuren_UC1",
 			col_Vorgabe_ID, col_Kurs_ID
 		);
 

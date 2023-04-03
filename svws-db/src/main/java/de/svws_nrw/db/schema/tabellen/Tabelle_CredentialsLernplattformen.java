@@ -57,16 +57,16 @@ public class Tabelle_CredentialsLernplattformen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels CredentialsLernplattformen_Lernplattform_FK */
 	public SchemaTabelleFremdschluessel fk_CredentialsLernplattformen_Lernplattform_FK = addForeignKey(
-			"CredentialsLernplattformen_Lernplattform_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"CredentialsLernplattformen_Lernplattform_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LernplattformID, Schema.tab_Lernplattformen.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index CredentialsLernplattformen_UC1 */
-	public SchemaTabelleUniqueIndex unique_CredentialsLernplattformen_UC1 = addUniqueIndex("CredentialsLernplattformen_UC1", 
-			col_Benutzername, 
+	public SchemaTabelleUniqueIndex unique_CredentialsLernplattformen_UC1 = addUniqueIndex("CredentialsLernplattformen_UC1",
+			col_Benutzername,
 			col_LernplattformID
 		);
 

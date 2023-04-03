@@ -34,7 +34,7 @@ public class Tabelle_PersonalTypen extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index PersonalTypen_UC1 */
-	public SchemaTabelleUniqueIndex unique_PersonalTypen_UC1 = addUniqueIndex("PersonalTypen_UC1", 
+	public SchemaTabelleUniqueIndex unique_PersonalTypen_UC1 = addUniqueIndex("PersonalTypen_UC1",
 			col_Kuerzel
 		);
 

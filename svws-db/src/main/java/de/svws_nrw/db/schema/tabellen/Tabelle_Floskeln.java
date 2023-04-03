@@ -49,9 +49,9 @@ public class Tabelle_Floskeln extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Floskeln_Floskelgruppe_Floskelgruppen_FK */
 	public SchemaTabelleFremdschluessel fk_Floskeln_Floskelgruppe_Floskelgruppen_FK = addForeignKey(
-			"Floskeln_Floskelgruppe_Floskelgruppen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Floskeln_Floskelgruppe_Floskelgruppen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_FloskelGruppe, Schema.tab_Floskelgruppen.col_Kuerzel)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

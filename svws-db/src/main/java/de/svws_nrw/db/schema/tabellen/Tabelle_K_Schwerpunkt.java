@@ -46,7 +46,7 @@ public class Tabelle_K_Schwerpunkt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Schwerpunkt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Schwerpunkt_UC1 = addUniqueIndex("K_Schwerpunkt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Schwerpunkt_UC1 = addUniqueIndex("K_Schwerpunkt_UC1",
 			col_Bezeichnung
 		);
 

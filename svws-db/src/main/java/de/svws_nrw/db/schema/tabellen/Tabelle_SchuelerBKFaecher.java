@@ -117,25 +117,25 @@ public class Tabelle_SchuelerBKFaecher extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerBKFaecher_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerBKFaecher_Schuljahreabschnitt_FK = addForeignKey(
-			"SchuelerBKFaecher_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerBKFaecher_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerBKFaecher_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerBKFaecher_Fach_FK = addForeignKey(
-			"SchuelerBKFaecher_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerBKFaecher_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerBKFaecher_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerBKFaecher_Schueler_FK = addForeignKey(
-			"SchuelerBKFaecher_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerBKFaecher_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

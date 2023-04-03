@@ -35,9 +35,9 @@ public class Tabelle_LehrerLehramtLehrbef extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerLehramtLehrbef_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerLehramtLehrbef_Lehrer_FK = addForeignKey(
-			"LehrerLehramtLehrbef_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerLehramtLehrbef_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 

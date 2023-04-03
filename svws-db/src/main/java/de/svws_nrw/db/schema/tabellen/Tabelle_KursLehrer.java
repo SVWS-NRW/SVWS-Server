@@ -36,17 +36,17 @@ public class Tabelle_KursLehrer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels KursLehrer_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_KursLehrer_Kurs_FK = addForeignKey(
-			"KursLehrer_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"KursLehrer_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels KursLehrer_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_KursLehrer_Lehrer_FK = addForeignKey(
-			"KursLehrer_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"KursLehrer_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 

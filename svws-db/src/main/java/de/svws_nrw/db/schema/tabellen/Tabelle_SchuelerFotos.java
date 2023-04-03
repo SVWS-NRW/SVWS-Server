@@ -36,9 +36,9 @@ public class Tabelle_SchuelerFotos extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerFotos_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFotos_Schueler_FK = addForeignKey(
-			"SchuelerFotos_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerFotos_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

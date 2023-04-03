@@ -41,8 +41,8 @@ public class Tabelle_Katalog_Zeitraster extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Katalog_Zeitraster_UC1 */
-	public SchemaTabelleUniqueIndex unique_Katalog_Zeitraster_UC1 = addUniqueIndex("Katalog_Zeitraster_UC1", 
-			col_Stunde, 
+	public SchemaTabelleUniqueIndex unique_Katalog_Zeitraster_UC1 = addUniqueIndex("Katalog_Zeitraster_UC1",
+			col_Stunde,
 			col_Tag
 		);
 

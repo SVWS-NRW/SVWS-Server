@@ -24,11 +24,11 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten extends SchemaTabe
 	public SchemaTabelleSpalte col_KlausurRaumStunde_ID = add("KlausurRaumStunde_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
 		.setJavaComment("ID der Klausur-Raumstunde");
-	
+
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Lehrers");
-	
+
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
 		.setConverter(UhrzeitConverter.class)
@@ -36,7 +36,7 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten extends SchemaTabe
 
 	/** Die Definition der Tabellenspalte Endzeit */
 	public SchemaTabelleSpalte col_Endzeit = add("Endzeit", SchemaDatentypen.TIME, false)
-		.setConverter(UhrzeitConverter.class)			
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Endzeit der Aufsicht");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */
@@ -45,17 +45,17 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten extends SchemaTabe
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Stunden_Aufsichten_KlausurRaumStunde_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Stunden_Aufsichten_KlausurRaumStunde_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Stunden_Aufsichten_KlausurRaumStunde_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Raeume_Stunden_Aufsichten_KlausurRaumStunde_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_KlausurRaumStunde_ID, Schema.tab_Gost_Klausuren_Raeume_Stunden.col_ID)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Stunden_Aufsichten_Lehrer_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Stunden_Aufsichten_Lehrer_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Stunden_Aufsichten_Lehrer_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Gost_Klausuren_Raeume_Stunden_Aufsichten_Lehrer_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 

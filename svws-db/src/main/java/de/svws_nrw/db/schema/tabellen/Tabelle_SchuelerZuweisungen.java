@@ -36,17 +36,17 @@ public class Tabelle_SchuelerZuweisungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerZuweisungen_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerZuweisungen_Abschnitt_FK = addForeignKey(
-			"SchuelerZuweisungen_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerZuweisungen_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerZuweisungen_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerZuweisungen_Fach_FK = addForeignKey(
-			"SchuelerZuweisungen_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerZuweisungen_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

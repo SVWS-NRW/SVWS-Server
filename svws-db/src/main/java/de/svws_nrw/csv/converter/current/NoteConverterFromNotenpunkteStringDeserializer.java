@@ -12,10 +12,10 @@ import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString;
 
 /**
  * Diese Klasse ist ein Deserialisierer für Noten. Sie deserialisiert
- * die Datenbankdarstellung als Notenpunkte, welche in einer Zeichenkette dargestellt 
+ * die Datenbankdarstellung als Notenpunkte, welche in einer Zeichenkette dargestellt
  * werden, in einen Wert der Aufzählung {@link Note}.
  */
-public class NoteConverterFromNotenpunkteStringDeserializer extends StdDeserializer<Note> {
+public final class NoteConverterFromNotenpunkteStringDeserializer extends StdDeserializer<Note> {
 
 	private static final long serialVersionUID = 5891746067532824732L;
 
@@ -25,19 +25,19 @@ public class NoteConverterFromNotenpunkteStringDeserializer extends StdDeseriali
 	public NoteConverterFromNotenpunkteStringDeserializer() {
 		super(Note.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected NoteConverterFromNotenpunkteStringDeserializer(Class<Note> t) {
+	protected NoteConverterFromNotenpunkteStringDeserializer(final Class<Note> t) {
 		super(t);
 	}
 
 	@Override
-	public Note deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Note deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return NoteConverterFromNotenpunkteString.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

@@ -57,25 +57,25 @@ public class Tabelle_LehrerEntlastung extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerEntlastung_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerEntlastung_Abschnitt_FK = addForeignKey(
-			"LehrerEntlastung_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerEntlastung_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_LehrerAbschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerEntlastung_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerEntlastung_Lehrer_FK = addForeignKey(
-			"LehrerEntlastung_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerEntlastung_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 
 	/** Die Definition des Unique-Index LehrerEntlastung_UC1 */
-	public SchemaTabelleUniqueIndex unique_LehrerEntlastung_UC1 = addUniqueIndex("LehrerEntlastung_UC1", 
-			col_Abschnitt_ID, 
+	public SchemaTabelleUniqueIndex unique_LehrerEntlastung_UC1 = addUniqueIndex("LehrerEntlastung_UC1",
+			col_Abschnitt_ID,
 			col_EntlastungsgrundKrz
 		)
 		.setRevision(SchemaRevisionen.REV_2);

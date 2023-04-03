@@ -15,7 +15,7 @@ import de.svws_nrw.core.utils.schule.AbgangsartenManager;
  * auf Korrektheit geprüft.
  */
 public class TestAbgangsartenManager {
-	
+
 	/**
 	 * Prüft die Einträge der beiden Kataloge für die Abgangsarten
 	 * bei allgemeinbildenden bzw. berufsbildenden Schulformen.
@@ -24,10 +24,10 @@ public class TestAbgangsartenManager {
 	@DisplayName("Prüfe AbgangsartenAllgemeinbildend.json und AbgangsartenBerufsbildend.json")
 	void testAbgangsarten() {
 		System.out.println("Erstelle AbgangsartenManager...");
-		AbgangsartenManager manager = JsonDaten.abgangsartenManager;
+		final AbgangsartenManager manager = JsonDaten.abgangsartenManager;
 		System.out.println("  Die Daten liegen in Version " + manager.getVersion() + " vor.");
 		System.out.println("Prüfe die Einträge des Abgangsarten-Katalogs für allgemeinbildende Schulformen");
-		for (AbgangsartKatalogEintrag eintrag : manager.getKatalogAllgemeinbildend().eintraege) {
+		for (final AbgangsartKatalogEintrag eintrag : manager.getKatalogAllgemeinbildend().eintraege) {
 			if (eintrag.kuerzel.length() != 1)
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da bei allgemeinbildenden Katalog-Einträgen das Kürzel einstellig sein muss .");
 			if (AbgangsartenManager.getAbschlussAllgemeinbildend(eintrag) == null)
@@ -36,16 +36,16 @@ public class TestAbgangsartenManager {
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da ein Katalog-Eintrag für allgemeinbildende Schulformen keinen berufsbildenden Abschluss beinhalten kann.");
 		}
 		System.out.println("Prüfe die Einträge des Abgangsarten-Katalogs für berufsbildende Schulformen");
-		for (AbgangsartKatalogEintrag eintrag : manager.getKatalogBerufsbildend().eintraege) {
+		for (final AbgangsartKatalogEintrag eintrag : manager.getKatalogBerufsbildend().eintraege) {
 			if (eintrag.kuerzel.length() != 2)
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da bei berufsbildenden Katalog-Einträgen das Kürzel zweistellig sein muss .");
 			if (AbgangsartenManager.getAbschlussAllgemeinbildend(eintrag) == null)
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen allgmeinbildenden Abschluss.");
-			SchulabschlussBerufsbildend abschlussBeruf = AbgangsartenManager.getAbschlussBerufsbildend(eintrag);
+			final SchulabschlussBerufsbildend abschlussBeruf = AbgangsartenManager.getAbschlussBerufsbildend(eintrag);
 			if (abschlussBeruf == null)
 				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen berufsbildenden Abschluss.");
 		}
 		System.out.println("Prüfung des Katalogs der Abgangsarten erfolgreich abgeschlossen.");
 	}
-	
+
 }

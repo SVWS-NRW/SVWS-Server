@@ -13,11 +13,11 @@ import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.db.converter.current.GeschlechtConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer für Geschlechter. Sie deserialisiert die 
+ * Diese Klasse ist ein Deserialisierer für Geschlechter. Sie deserialisiert die
  * Datenbankdarstellung als Zahl (siehe {@link Geschlecht#id}) in ein
  * Objekt der Klasse {@link Geschlecht}.
  */
-public class GeschlechtConverterDeserializer extends StdDeserializer<Geschlecht> {
+public final class GeschlechtConverterDeserializer extends StdDeserializer<Geschlecht> {
 
 	private static final long serialVersionUID = 9138277744936801173L;
 
@@ -27,20 +27,20 @@ public class GeschlechtConverterDeserializer extends StdDeserializer<Geschlecht>
 	public GeschlechtConverterDeserializer() {
 		super(Geschlecht.class);
 	}
-	
-	
+
+
 	/**
 	 * Erzeugt einen neuen Deerialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param vc   das Klassen-Objekt
 	 */
-	protected GeschlechtConverterDeserializer(Class<Geschlecht> vc) {
+	protected GeschlechtConverterDeserializer(final Class<Geschlecht> vc) {
 		super(vc);
 	}
 
 	@Override
-	public Geschlecht deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Geschlecht deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return GeschlechtConverter.instance.convertToEntityAttribute(NumberUtils.toInt(p.getText(), Geschlecht.X.id));
 	}
-	
+
 }

@@ -18,7 +18,7 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
 		.setJavaComment("ID des Klausurraums (generiert)");
-	
+
 	/** Die Definition der Tabellenspalte Termin_ID */
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Termins");
@@ -26,24 +26,24 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Katalog_Raum_ID */
 	public SchemaTabelleSpalte col_Katalog_Raum_ID = add("Katalog_Raum_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Raums aus der Tabelle Katalog_Raeume");
-	
+
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 		.setJavaComment("Text für Bemerkungen zum Klausurraum");
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Katalog_Raum_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Katalog_Raum_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Katalog_Raum_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"Gost_Klausuren_Raeume_Katalog_Raum_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Katalog_Raum_ID, Schema.tab_Katalog_Raeume.col_ID)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Termin_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Termin_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Termin_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Raeume_Termin_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
 	);
 

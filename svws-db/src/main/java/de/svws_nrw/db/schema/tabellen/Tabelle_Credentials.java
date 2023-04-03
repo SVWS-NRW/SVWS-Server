@@ -47,7 +47,7 @@ public class Tabelle_Credentials extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Credentials_UC1 */
-	public SchemaTabelleUniqueIndex unique_Credentials_UC1 = addUniqueIndex("Credentials_UC1", 
+	public SchemaTabelleUniqueIndex unique_Credentials_UC1 = addUniqueIndex("Credentials_UC1",
 			col_Benutzername
 		);
 

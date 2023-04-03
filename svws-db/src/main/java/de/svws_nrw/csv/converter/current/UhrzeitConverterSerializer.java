@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer für Uhrzeiten. Sie serialisiert 
+ * Diese Klasse ist ein Serialisierer für Uhrzeiten. Sie serialisiert
  * eine Uhrzeit als ISO-8601-Zeichenkette in die Datenbankdarstellung als {@link Timestamp}.
  */
-public class UhrzeitConverterSerializer extends StdSerializer<String> {
+public final class UhrzeitConverterSerializer extends StdSerializer<String> {
 
 	private static final long serialVersionUID = 1997212110466236373L;
 
@@ -26,15 +26,15 @@ public class UhrzeitConverterSerializer extends StdSerializer<String> {
 
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public UhrzeitConverterSerializer(Class<String> t) {
+	public UhrzeitConverterSerializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final String value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(UhrzeitConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

@@ -97,9 +97,9 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachpruefungen_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerSprachpruefungen_Schueler_FK = addForeignKey(
-			"SchuelerSprachpruefungen_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerSprachpruefungen_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_1);

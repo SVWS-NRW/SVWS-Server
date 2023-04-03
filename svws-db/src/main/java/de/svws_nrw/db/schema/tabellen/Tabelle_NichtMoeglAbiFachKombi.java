@@ -58,17 +58,17 @@ public class Tabelle_NichtMoeglAbiFachKombi extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels NichtMoeglAbiFachKombi_Fach1_FK */
 	public SchemaTabelleFremdschluessel fk_NichtMoeglAbiFachKombi_Fach1_FK = addForeignKey(
-			"NichtMoeglAbiFachKombi_Fach1_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"NichtMoeglAbiFachKombi_Fach1_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach1_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels NichtMoeglAbiFachKombi_Fach2_FK */
 	public SchemaTabelleFremdschluessel fk_NichtMoeglAbiFachKombi_Fach2_FK = addForeignKey(
-			"NichtMoeglAbiFachKombi_Fach2_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"NichtMoeglAbiFachKombi_Fach2_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach2_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

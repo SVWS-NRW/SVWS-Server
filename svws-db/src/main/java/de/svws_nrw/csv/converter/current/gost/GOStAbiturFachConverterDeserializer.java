@@ -11,10 +11,10 @@ import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.db.converter.current.gost.GOStAbiturFachConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung
  * als GOStAbiturFach.
  */
-public class GOStAbiturFachConverterDeserializer extends StdDeserializer<GostAbiturFach> {
+public final class GOStAbiturFachConverterDeserializer extends StdDeserializer<GostAbiturFach> {
 
 	private static final long serialVersionUID = 3985680930817774032L;
 
@@ -24,19 +24,19 @@ public class GOStAbiturFachConverterDeserializer extends StdDeserializer<GostAbi
 	public GOStAbiturFachConverterDeserializer() {
 		super(GostAbiturFach.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected GOStAbiturFachConverterDeserializer(Class<GostAbiturFach> t) {
+	protected GOStAbiturFachConverterDeserializer(final Class<GostAbiturFach> t) {
 		super(t);
 	}
 
 	@Override
-	public GostAbiturFach deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public GostAbiturFach deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return GOStAbiturFachConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

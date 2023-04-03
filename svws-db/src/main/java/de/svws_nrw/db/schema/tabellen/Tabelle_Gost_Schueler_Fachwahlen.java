@@ -117,17 +117,17 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Fachwahlen_Schueler_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Schueler_Fachwahlen_Schueler_ID_FK = addForeignKey(
-			"Gost_Schueler_Fachwahlen_Schueler_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Schueler_Fachwahlen_Schueler_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Fachwahlen_Fach_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Schueler_Fachwahlen_Fach_ID_FK = addForeignKey(
-			"Gost_Schueler_Fachwahlen_Fach_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Schueler_Fachwahlen_Fach_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

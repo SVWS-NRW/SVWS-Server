@@ -70,18 +70,18 @@ public class Tabelle_EigeneSchule_Abteilungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Abteilungen_Leiter_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Abteilungen_Leiter_FK = addForeignKey(
-			"EigeneSchule_Abteilungen_Leiter_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"EigeneSchule_Abteilungen_Leiter_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_AbteilungsLeiter_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Abteilungen_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Abteilungen_Schuljahreabschnitt_FK = addForeignKey(
-			"EigeneSchule_Abteilungen_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EigeneSchule_Abteilungen_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

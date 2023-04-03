@@ -51,36 +51,36 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in EF.1 angewendet werden soll.");
-	
+
 	/** Die Definition der Tabellenspalte EF2 */
 	public SchemaTabelleSpalte col_EF2 = add("EF2", SchemaDatentypen.INT, false)
 			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in EF.2 angewendet werden soll.");
-	
+
 	/** Die Definition der Tabellenspalte Q11 */
 	public SchemaTabelleSpalte col_Q11 = add("Q11", SchemaDatentypen.INT, false)
 			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q1.1 angewendet werden soll.");
-	
-	
+
+
 	/** Die Definition der Tabellenspalte Q12 */
 	public SchemaTabelleSpalte col_Q12 = add("Q12", SchemaDatentypen.INT, false)
 			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q1.2 angewendet werden soll.");
-	
+
 	/** Die Definition der Tabellenspalte Q21 */
 	public SchemaTabelleSpalte col_Q21 = add("Q21", SchemaDatentypen.INT, false)
 			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q2.1 angewendet werden soll.");
-	
+
 	/** Die Definition der Tabellenspalte Q22 */
 	public SchemaTabelleSpalte col_Q22 = add("Q22", SchemaDatentypen.INT, false)
 			.setConverter(Boolean01Converter.class)
@@ -104,25 +104,25 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Fachkombinationen_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Fachkombinationen_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Jahrgang_Fachkombinationen_Abi_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Jahrgang_Fachkombinationen_Abi_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK = addForeignKey(
-			"Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Jahrgang_Fachkombinationen_Fach1_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach1_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK = addForeignKey(
-			"Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Jahrgang_Fachkombinationen_Fach2_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach2_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

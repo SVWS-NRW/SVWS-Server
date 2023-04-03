@@ -13,7 +13,7 @@ import de.svws_nrw.db.converter.current.BenutzerKompetenzConverter;
 /**
  * Diese Klasse ist einen Deserialisierer von Benutzer-Kompetenz-Objekten.
  */
-public class BenutzerKompetenzConverterDeserializer extends StdDeserializer<BenutzerKompetenz> {
+public final class BenutzerKompetenzConverterDeserializer extends StdDeserializer<BenutzerKompetenz> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -23,24 +23,24 @@ public class BenutzerKompetenzConverterDeserializer extends StdDeserializer<Benu
 	public BenutzerKompetenzConverterDeserializer() {
 		super(BenutzerKompetenz.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected BenutzerKompetenzConverterDeserializer(Class<BenutzerKompetenz> t) {
+	protected BenutzerKompetenzConverterDeserializer(final Class<BenutzerKompetenz> t) {
 		super(t);
 	}
 
 	@Override
-	public BenutzerKompetenz deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public BenutzerKompetenz deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return BenutzerKompetenzConverter.instance.convertToEntityAttribute(Long.parseLong(p.getText()));
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 }

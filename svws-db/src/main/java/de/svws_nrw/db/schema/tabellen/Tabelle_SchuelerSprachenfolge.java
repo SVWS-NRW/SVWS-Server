@@ -114,15 +114,15 @@ public class Tabelle_SchuelerSprachenfolge extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachenfolge_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerSprachenfolge_Schueler_FK = addForeignKey(
-			"SchuelerSprachenfolge_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerSprachenfolge_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerSprachenfolge_IDX1 */
-	public SchemaTabelleIndex index_SchuelerSprachenfolge_IDX1 = addIndex("SchuelerSprachenfolge_IDX1", 
+	public SchemaTabelleIndex index_SchuelerSprachenfolge_IDX1 = addIndex("SchuelerSprachenfolge_IDX1",
 			col_Schueler_ID
 		);
 

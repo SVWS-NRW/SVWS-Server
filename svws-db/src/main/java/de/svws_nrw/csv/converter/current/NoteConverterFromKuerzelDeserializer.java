@@ -12,10 +12,10 @@ import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
 
 /**
  * Diese Klasse ist ein Deserialisierer für Noten. Sie deserialisiert
- * die Datenbankdarstellung als Notenkuerzel, welche als Zeichenkette 
+ * die Datenbankdarstellung als Notenkuerzel, welche als Zeichenkette
  * dargestellt werden, in einen Wert der Aufzählung {@link Note}.
  */
-public class NoteConverterFromKuerzelDeserializer extends StdDeserializer<Note> {
+public final class NoteConverterFromKuerzelDeserializer extends StdDeserializer<Note> {
 
 	private static final long serialVersionUID = 7505421606549933149L;
 
@@ -25,19 +25,19 @@ public class NoteConverterFromKuerzelDeserializer extends StdDeserializer<Note> 
 	public NoteConverterFromKuerzelDeserializer() {
 		super(Note.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected NoteConverterFromKuerzelDeserializer(Class<Note> t) {
+	protected NoteConverterFromKuerzelDeserializer(final Class<Note> t) {
 		super(t);
 	}
 
 	@Override
-	public Note deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Note deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return NoteConverterFromKuerzel.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

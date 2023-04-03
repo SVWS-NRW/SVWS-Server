@@ -313,48 +313,48 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_Credentials_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_Credentials_FK = addForeignKey(
-			"K_Lehrer_Credentials_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Lehrer_Credentials_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_Credentials.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_Ort_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_Ort_FK = addForeignKey(
-			"K_Lehrer_Ort_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Lehrer_Ort_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Ort_ID, Schema.tab_K_Ort.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_Ortsteil_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_Ortsteil_FK = addForeignKey(
-			"K_Lehrer_Ortsteil_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Lehrer_Ortsteil_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Ortsteil_ID, Schema.tab_K_Ortsteil.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_PersonTyp_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_PersonTyp_FK = addForeignKey(
-			"K_Lehrer_PersonTyp_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Lehrer_PersonTyp_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_PersonTyp, Schema.tab_PersonalTypen.col_Kuerzel)
 		);
 
 	/** Die Definition des Fremdschlüssels K_Lehrer_Statkue_Nationalitaeten_FK */
 	public SchemaTabelleFremdschluessel fk_K_Lehrer_Statkue_Nationalitaeten_FK = addForeignKey(
-			"K_Lehrer_Statkue_Nationalitaeten_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Lehrer_Statkue_Nationalitaeten_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_StaatKrz, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Unique-Index K_Lehrer_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Lehrer_UC1 = addUniqueIndex("K_Lehrer_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Lehrer_UC1 = addUniqueIndex("K_Lehrer_UC1",
 			col_Kuerzel
 		);
 

@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.core.types.schule.Schulform;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert den CoreType 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert den CoreType
  * Schulform in das Kürzel der amtlichen Schulstatistik.
  */
-public class SchulformKuerzelConverterDeserializer extends StdDeserializer<Schulform> {
+public final class SchulformKuerzelConverterDeserializer extends StdDeserializer<Schulform> {
 
 	private static final long serialVersionUID = -3520968291156156611L;
 
@@ -23,19 +23,19 @@ public class SchulformKuerzelConverterDeserializer extends StdDeserializer<Schul
 	public SchulformKuerzelConverterDeserializer() {
 		super(Schulform.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected SchulformKuerzelConverterDeserializer(Class<Schulform> t) {
+	protected SchulformKuerzelConverterDeserializer(final Class<Schulform> t) {
 		super(t);
 	}
 
 	@Override
-	public Schulform deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Schulform deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return Schulform.getByKuerzel(p.getText());
 	}
-	
+
 }

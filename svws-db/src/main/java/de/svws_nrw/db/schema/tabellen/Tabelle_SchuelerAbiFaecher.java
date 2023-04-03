@@ -317,25 +317,25 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerAbiFaecher_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbiFaecher_Fach_FK = addForeignKey(
-			"SchuelerAbiFaecher_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAbiFaecher_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAbiFaecher_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbiFaecher_Schueler_FK = addForeignKey(
-			"SchuelerAbiFaecher_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAbiFaecher_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAbiFaecher_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbiFaecher_Kurs_FK = addForeignKey(
-			"SchuelerAbiFaecher_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerAbiFaecher_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

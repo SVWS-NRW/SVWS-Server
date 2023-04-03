@@ -10,10 +10,10 @@ import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.db.converter.current.gost.GOStAbiturFachConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung
  * als GOStAbiturfach.
  */
-public class GOStAbiturFachConverterSerializer extends StdSerializer<GostAbiturFach> {
+public final class GOStAbiturFachConverterSerializer extends StdSerializer<GostAbiturFach> {
 
 	private static final long serialVersionUID = 3985680930817774032L;
 
@@ -23,18 +23,18 @@ public class GOStAbiturFachConverterSerializer extends StdSerializer<GostAbiturF
 	public GOStAbiturFachConverterSerializer() {
 		super(GostAbiturFach.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public GOStAbiturFachConverterSerializer(Class<GostAbiturFach> t) {
+	public GOStAbiturFachConverterSerializer(final Class<GostAbiturFach> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(GostAbiturFach value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final GostAbiturFach value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(GOStAbiturFachConverter.instance.convertToDatabaseColumn(value));
 	}
 

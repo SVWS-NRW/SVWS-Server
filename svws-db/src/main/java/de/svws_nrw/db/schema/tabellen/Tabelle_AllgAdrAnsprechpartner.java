@@ -64,9 +64,9 @@ public class Tabelle_AllgAdrAnsprechpartner extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels AllgAdrAnsprechpartner_Adr_FK */
 	public SchemaTabelleFremdschluessel fk_AllgAdrAnsprechpartner_Adr_FK = addForeignKey(
-			"AllgAdrAnsprechpartner_Adr_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"AllgAdrAnsprechpartner_Adr_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Adresse_ID, Schema.tab_K_AllgAdresse.col_ID)
 		);
 

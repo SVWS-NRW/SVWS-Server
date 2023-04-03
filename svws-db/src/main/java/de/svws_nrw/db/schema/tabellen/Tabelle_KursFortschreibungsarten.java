@@ -36,7 +36,7 @@ public class Tabelle_KursFortschreibungsarten extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index KursFortschreibungsarten_UC1 */
-	public SchemaTabelleUniqueIndex unique_KursFortschreibungsarten_UC1 = addUniqueIndex("KursFortschreibungsarten_UC1", 
+	public SchemaTabelleUniqueIndex unique_KursFortschreibungsarten_UC1 = addUniqueIndex("KursFortschreibungsarten_UC1",
 			col_Kuerzel
 		);
 

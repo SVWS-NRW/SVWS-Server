@@ -54,13 +54,13 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EnmLeistungsdaten_FK */
 	public SchemaTabelleFremdschluessel fk_EnmLeistungsdaten_FK = addForeignKey(
-			"EnmLeistungsdaten_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EnmLeistungsdaten_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
 		);
 
-	
+
     /** Trigger t_INSERT_EnmLeistungsdaten */
     public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLeistungsdaten = addTrigger(
     		"t_INSERT_EnmLeistungsdaten",

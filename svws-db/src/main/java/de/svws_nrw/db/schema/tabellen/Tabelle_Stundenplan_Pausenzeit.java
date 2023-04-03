@@ -46,18 +46,18 @@ public class Tabelle_Stundenplan_Pausenzeit extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Pausenzeit_Stundenplan_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Pausenzeit_Stundenplan_FK = addForeignKey(
-			"Stundenplan_Pausenzeit_Stundenplan_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Pausenzeit_Stundenplan_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Stundenplan_ID, Schema.tab_Stundenplan.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index Stundenplan_Pausenzeit_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundenplan_Pausenzeit_UC1 = addUniqueIndex("Stundenplan_Pausenzeit_UC1", 
-			col_Stundenplan_ID, 
-			col_Beginn, 
-			col_Ende, 
+	public SchemaTabelleUniqueIndex unique_Stundenplan_Pausenzeit_UC1 = addUniqueIndex("Stundenplan_Pausenzeit_UC1",
+			col_Stundenplan_ID,
+			col_Beginn,
+			col_Ende,
 			col_Tag
 		);
 

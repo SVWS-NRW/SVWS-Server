@@ -11,10 +11,10 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.db.converter.current.gost.GOStKursartConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung
  * als GOStKursart.
  */
-public class GOStKursartConverterDeserializer extends StdDeserializer<GostKursart> {
+public final class GOStKursartConverterDeserializer extends StdDeserializer<GostKursart> {
 
 	private static final long serialVersionUID = -5121032441860213925L;
 
@@ -24,19 +24,19 @@ public class GOStKursartConverterDeserializer extends StdDeserializer<GostKursar
 	public GOStKursartConverterDeserializer() {
 		super(GostKursart.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected GOStKursartConverterDeserializer(Class<GostKursart> t) {
+	protected GOStKursartConverterDeserializer(final Class<GostKursart> t) {
 		super(t);
 	}
 
 	@Override
-	public GostKursart deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public GostKursart deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return GOStKursartConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

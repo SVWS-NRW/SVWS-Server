@@ -69,54 +69,54 @@ public class Tabelle_SchuelerZP10 extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerZP10_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerZP10_Schuljahreabschnitt_FK = addForeignKey(
-			"SchuelerZP10_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerZP10_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerZP10_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerZP10_Fach_FK = addForeignKey(
-			"SchuelerZP10_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerZP10_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerZP10_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerZP10_Schueler_FK = addForeignKey(
-			"SchuelerZP10_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerZP10_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerZP10_IDX1 */
-	public SchemaTabelleIndex index_SchuelerZP10_IDX1 = addIndex("SchuelerZP10_IDX1", 
+	public SchemaTabelleIndex index_SchuelerZP10_IDX1 = addIndex("SchuelerZP10_IDX1",
 			col_Schueler_ID
 		);
 
 	/** Die Definition des Non-Unique-Index SchuelerZP10_IDX2 */
-	public SchemaTabelleIndex index_SchuelerZP10_IDX2 = addIndex("SchuelerZP10_IDX2", 
+	public SchemaTabelleIndex index_SchuelerZP10_IDX2 = addIndex("SchuelerZP10_IDX2",
 			col_Schuljahresabschnitts_ID
 		);
 
 	/** Die Definition des Non-Unique-Index SchuelerZP10_IDX3 */
-	public SchemaTabelleIndex index_SchuelerZP10_IDX3 = addIndex("SchuelerZP10_IDX3", 
+	public SchemaTabelleIndex index_SchuelerZP10_IDX3 = addIndex("SchuelerZP10_IDX3",
 			col_Fach_ID
 		);
 
 	/** Die Definition des Non-Unique-Index SchuelerZP10_IDX4 */
-	public SchemaTabelleIndex index_SchuelerZP10_IDX4 = addIndex("SchuelerZP10_IDX4", 
+	public SchemaTabelleIndex index_SchuelerZP10_IDX4 = addIndex("SchuelerZP10_IDX4",
 			col_Fachlehrer_ID
 		);
 
 
 	/** Die Definition des Unique-Index SchuelerZP10_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerZP10_UC1 = addUniqueIndex("SchuelerZP10_UC1", 
-			col_Schueler_ID, 
-			col_Schuljahresabschnitts_ID, 
+	public SchemaTabelleUniqueIndex unique_SchuelerZP10_UC1 = addUniqueIndex("SchuelerZP10_UC1",
+			col_Schueler_ID,
+			col_Schuljahresabschnitts_ID,
 			col_Fach_ID
 		);
 

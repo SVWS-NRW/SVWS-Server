@@ -33,24 +33,24 @@ public class Tabelle_Stundenplan_UnterrichtKlasse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Stundenplan_UnterrichtKlasse_Klasse_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_UnterrichtKlasse_Klasse_FK = addForeignKey(
-			"Stundenplan_UnterrichtKlasse_Klasse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_UnterrichtKlasse_Klasse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Klasse_ID, Schema.tab_Klassen.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Stundenplan_UnterrichtKlasse_Unterricht_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_UnterrichtKlasse_Unterricht_FK = addForeignKey(
-			"Stundenplan_UnterrichtKlasse_Unterricht_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_UnterrichtKlasse_Unterricht_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Unterricht_ID, Schema.tab_Stundenplan_Unterricht.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index Stundenplan_UnterrichtKlasse_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundenplan_UnterrichtKlasse_UC1 = addUniqueIndex("Stundenplan_UnterrichtKlasse_UC1", 
-			col_Unterricht_ID, 
+	public SchemaTabelleUniqueIndex unique_Stundenplan_UnterrichtKlasse_UC1 = addUniqueIndex("Stundenplan_UnterrichtKlasse_UC1",
+			col_Unterricht_ID,
 			col_Klasse_ID
 		);
 

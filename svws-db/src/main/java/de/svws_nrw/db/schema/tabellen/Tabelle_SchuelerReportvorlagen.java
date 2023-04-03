@@ -35,9 +35,9 @@ public class Tabelle_SchuelerReportvorlagen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerReportvorlagen_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerReportvorlagen_Benutzer_FK = addForeignKey(
-			"SchuelerReportvorlagen_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerReportvorlagen_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_User_ID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -57,15 +57,15 @@ public class Tabelle_SchuelerLD_PSFachBem extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerLD_PSFachBem_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLD_PSFachBem_Abschnitt_FK = addForeignKey(
-			"SchuelerLD_PSFachBem_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLD_PSFachBem_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index SchuelerLD_PSFachBem_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerLD_PSFachBem_UC1 = addUniqueIndex("SchuelerLD_PSFachBem_UC1", 
+	public SchemaTabelleUniqueIndex unique_SchuelerLD_PSFachBem_UC1 = addUniqueIndex("SchuelerLD_PSFachBem_UC1",
 			col_Abschnitt_ID
 		);
 

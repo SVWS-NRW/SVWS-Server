@@ -51,17 +51,17 @@ public class Tabelle_EigeneSchule_Abt_Kl extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Abt_Kl_Abteilung_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Abt_Kl_Abteilung_FK = addForeignKey(
-			"EigeneSchule_Abt_Kl_Abteilung_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EigeneSchule_Abt_Kl_Abteilung_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abteilung_ID, Schema.tab_EigeneSchule_Abteilungen.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Abt_Kl_Klassen_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_Abt_Kl_Klassen_FK = addForeignKey(
-			"EigeneSchule_Abt_Kl_Klassen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EigeneSchule_Abt_Kl_Klassen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Klassen_ID, Schema.tab_Klassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -151,67 +151,67 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Credentials_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Credentials_FK = addForeignKey(
-			"SchuelerErzAdr_Credentials_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_Credentials_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_Credentials.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_ErzieherArt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_ErzieherArt_FK = addForeignKey(
-			"SchuelerErzAdr_ErzieherArt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_ErzieherArt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_ErzieherArt_ID, Schema.tab_K_ErzieherArt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Ort_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Ort_FK = addForeignKey(
-			"SchuelerErzAdr_Ort_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_Ort_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_ErzOrt_ID, Schema.tab_K_Ort.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Ortsteil_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Ortsteil_FK = addForeignKey(
-			"SchuelerErzAdr_Ortsteil_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_Ortsteil_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_ErzOrtsteil_ID, Schema.tab_K_Ortsteil.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Schueler_FK = addForeignKey(
-			"SchuelerErzAdr_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerErzAdr_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Staat1_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Staat1_FK = addForeignKey(
-			"SchuelerErzAdr_Staat1_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_Staat1_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Erz1StaatKrz, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerErzAdr_Staat2_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerErzAdr_Staat2_FK = addForeignKey(
-			"SchuelerErzAdr_Staat2_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerErzAdr_Staat2_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Erz2StaatKrz, Schema.tab_Nationalitaeten_Keys.col_DEStatisCode)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerErzAdr_IDX1 */
-	public SchemaTabelleIndex index_SchuelerErzAdr_IDX1 = addIndex("SchuelerErzAdr_IDX1", 
+	public SchemaTabelleIndex index_SchuelerErzAdr_IDX1 = addIndex("SchuelerErzAdr_IDX1",
 			col_Schueler_ID
 		);
 

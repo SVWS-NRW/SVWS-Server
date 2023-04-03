@@ -32,17 +32,17 @@ public class Tabelle_SchuelerListe_Inhalt extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerListeInhalt_Liste_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerListeInhalt_Liste_FK = addForeignKey(
-			"SchuelerListeInhalt_Liste_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerListeInhalt_Liste_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Liste_ID, Schema.tab_SchuelerListe.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerListeInhalt_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerListeInhalt_Schueler_FK = addForeignKey(
-			"SchuelerListeInhalt_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerListeInhalt_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

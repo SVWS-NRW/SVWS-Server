@@ -70,7 +70,7 @@ public class Tabelle_Fachgruppen extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Fachgruppen_UC1 */
-	public SchemaTabelleUniqueIndex unique_Fachgruppen_UC1 = addUniqueIndex("Fachgruppen_UC1", 
+	public SchemaTabelleUniqueIndex unique_Fachgruppen_UC1 = addUniqueIndex("Fachgruppen_UC1",
 			col_SchildFgID
 		);
 

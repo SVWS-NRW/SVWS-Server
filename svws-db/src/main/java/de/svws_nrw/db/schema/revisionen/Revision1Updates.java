@@ -2500,134 +2500,134 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_Benutzergruppen, Schema.tab_BenutzergruppenKompetenzen
 		);
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für die Stundenplanung anhand vorhandener Kompetenzen",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)" +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.LEHRERDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_IMPORT.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_EXPORT.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_LEHRERDATEN_EXPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ERSTELLEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_AKTIVIEREN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")",
+            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.LEHRERDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_IMPORT.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_EXPORT.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_LEHRERDATEN_EXPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ERSTELLEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_AKTIVIEREN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für das Noten-Modul anhand der Kompetenzen zu den Schüler-Leistungsdaten",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)" +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_ADMINISTRATION.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
+            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_ADMINISTRATION.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für das Datenbank-Management anhand der alten Kompetenz Backup durchführen",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)" +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SQLITE_IMPORT.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SQLITE_EXPORT.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
+            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SQLITE_IMPORT.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SQLITE_EXPORT.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für Oberstufenberechnungen anhand der alten Kompetenz zum Kurs42-Import",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)" +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
+            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für Oberstufenberechnungen anhand der alten Kompetenz zum Kurs42-Import",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)" +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
-            " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN.daten.id +
-            " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
-            " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
+            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
+            + " UNION "
+            + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN.daten.id
+            + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
+            + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen
         );
 		add("BenutzergruppenKompetenzen: Entferne alte Admin-Einträge, da diese keine Verweise auf die Kompetenztabelle besitzen",

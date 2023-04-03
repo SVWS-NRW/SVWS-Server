@@ -13,7 +13,7 @@ import de.svws_nrw.db.converter.current.NationalitaetenConverter;
  * Diese Klasse ist ein Serialisierer für Nationalitäten. Sie serialisiert
  * einen Wert der Aufzählung {@link Nationalitaeten} in die Datenbankdarstellung als String.
  */
-public class NationalitaetenConverterSerializer extends StdSerializer<Nationalitaeten> {
+public final class NationalitaetenConverterSerializer extends StdSerializer<Nationalitaeten> {
 
 	private static final long serialVersionUID = -4990083704215366131L;
 
@@ -29,12 +29,12 @@ public class NationalitaetenConverterSerializer extends StdSerializer<Nationalit
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public NationalitaetenConverterSerializer(Class<Nationalitaeten> t) {
+	public NationalitaetenConverterSerializer(final Class<Nationalitaeten> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Nationalitaeten value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Nationalitaeten value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(NationalitaetenConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

@@ -27,17 +27,17 @@ public class Tabelle_Gost_Jahrgang_Beratungslehrer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Beratungslehrer_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Beratungslehrer_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Jahrgang_Beratungslehrer_Abi_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Jahrgang_Beratungslehrer_Abi_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK = addForeignKey(
-			"Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Jahrgang_Beratungslehrer_Lehrer_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 

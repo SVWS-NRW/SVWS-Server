@@ -46,7 +46,7 @@ public class Tabelle_K_TelefonArt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_TelefonArt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_TelefonArt_UC1 = addUniqueIndex("K_TelefonArt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_TelefonArt_UC1 = addUniqueIndex("K_TelefonArt_UC1",
 			col_Bezeichnung
 		);
 

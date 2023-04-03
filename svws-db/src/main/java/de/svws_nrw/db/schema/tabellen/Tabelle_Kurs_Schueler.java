@@ -29,17 +29,17 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels KursSchueler_Kurse_FK */
 	public SchemaTabelleFremdschluessel fk_KursSchueler_Kurse_FK = addForeignKey(
-			"KursSchueler_Kurse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"KursSchueler_Kurse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels KursSchueler_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_KursSchueler_Schueler_FK = addForeignKey(
-			"KursSchueler_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"KursSchueler_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
@@ -79,7 +79,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 					UPDATE Kurs_Schueler SET Kurs_Schueler.Kurs_ID = NEW.Kurs_ID, Kurs_Schueler.Schueler_ID = neueSchuelerID WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.SCHUELER_ID = alteSchuelerID;
 				ELSEIF NEW.Kurs_ID IS NULL THEN
 					SET alteSchuelerID := (SELECT Schueler.id FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID);
-					DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.SCHUELER_ID = alteSchuelerID;        
+					DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.SCHUELER_ID = alteSchuelerID;
 				ELSEIF OLD.Kurs_ID IS NULL THEN
 					SET neueSchuelerID := (SELECT Schueler.id FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID);
 					INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID) VALUES (NEW.Kurs_ID, neueSchuelerID);
@@ -126,23 +126,23 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			DBDriver.SQLITE,
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
-			WHEN NEW.Kurs_ID IS NOT NULL AND 
-				OLD.Kurs_ID IS NOT NULL AND 
+			WHEN NEW.Kurs_ID IS NOT NULL AND
+				OLD.Kurs_ID IS NOT NULL AND
 				OLD.Kurs_ID <> NEW.Kurs_ID AND
 				OLD.Abschnitt_ID <> NEW.Abschnitt_ID
 			BEGIN
 				UPDATE Kurs_Schueler
-				SET 
-					Kurs_ID = NEW.Kurs_ID, 
+				SET
+					Kurs_ID = NEW.Kurs_ID,
 					Schueler_ID = (
-						SELECT Schueler.id 
-						FROM SchuelerLernabschnittsdaten JOIN Schueler 
+						SELECT Schueler.id
+						FROM SchuelerLernabschnittsdaten JOIN Schueler
 							ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
 				WHERE Kurs_ID = OLD.Kurs_ID
 					AND	SCHUELER_ID = (
-						SELECT Schueler.id 
-						FROM SchuelerLernabschnittsdaten JOIN Schueler 
+						SELECT Schueler.id
+						FROM SchuelerLernabschnittsdaten JOIN Schueler
 							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
 				;
@@ -157,17 +157,17 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			DBDriver.SQLITE,
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
-			WHEN NEW.Kurs_ID IS NOT NULL AND 
-				OLD.Kurs_ID IS NOT NULL AND 
+			WHEN NEW.Kurs_ID IS NOT NULL AND
+				OLD.Kurs_ID IS NOT NULL AND
 				OLD.Kurs_ID <> NEW.Kurs_ID AND
 				OLD.Abschnitt_ID = NEW.Abschnitt_ID
 			BEGIN
-				UPDATE Kurs_Schueler 
-				SET  Kurs_ID = NEW.Kurs_ID 
-				WHERE 
-					Kurs_ID = OLD.Kurs_ID AND 
+				UPDATE Kurs_Schueler
+				SET  Kurs_ID = NEW.Kurs_ID
+				WHERE
+					Kurs_ID = OLD.Kurs_ID AND
 					SCHUELER_ID = (
-						SELECT Schueler.id 
+						SELECT Schueler.id
 						FROM SchuelerLernabschnittsdaten JOIN Schueler
 							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
@@ -183,15 +183,15 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			DBDriver.SQLITE,
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
-			WHEN NEW.Kurs_ID IS NULL AND 
+			WHEN NEW.Kurs_ID IS NULL AND
 				OLD.Kurs_ID IS NOT NULL
 			BEGIN
-				DELETE FROM Kurs_Schueler 
-				WHERE 
-					Kurs_ID = OLD.Kurs_ID AND 
+				DELETE FROM Kurs_Schueler
+				WHERE
+					Kurs_ID = OLD.Kurs_ID AND
 					SCHUELER_ID = (
-						SELECT Schueler.id 
-						FROM SchuelerLernabschnittsdaten JOIN Schueler 
+						SELECT Schueler.id
+						FROM SchuelerLernabschnittsdaten JOIN Schueler
 							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
 				;
@@ -206,14 +206,14 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			DBDriver.SQLITE,
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
-			WHEN NEW.Kurs_ID IS NOT NULL AND 
+			WHEN NEW.Kurs_ID IS NOT NULL AND
 				OLD.Kurs_ID IS NULL
 			BEGIN
-				INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID) 
+				INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID)
 				VALUES (
-					NEW.Kurs_ID, ( 
-						SELECT Schueler.id 
-						FROM SchuelerLernabschnittsdaten JOIN Schueler 
+					NEW.Kurs_ID, (
+						SELECT Schueler.id
+						FROM SchuelerLernabschnittsdaten JOIN Schueler
 						ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
 				);
@@ -230,12 +230,12 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			AFTER DELETE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN OLD.Kurs_ID IS NOT NULL
 			BEGIN
-				DELETE FROM Kurs_Schueler 
-				WHERE 
-					Kurs_ID = OLD.Kurs_ID AND 
-					SCHUELER_ID = ( 
-						SELECT Schueler.id 
-						FROM SchuelerLernabschnittsdaten JOIN Schueler 
+				DELETE FROM Kurs_Schueler
+				WHERE
+					Kurs_ID = OLD.Kurs_ID AND
+					SCHUELER_ID = (
+						SELECT Schueler.id
+						FROM SchuelerLernabschnittsdaten JOIN Schueler
 						ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 					)
 				;
@@ -253,7 +253,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			ON SchuelerLeistungsdaten AFTER INSERT AS
 			BEGIN
 			INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID)
-				SELECT i.Kurs_ID, sla.Schueler_ID 
+				SELECT i.Kurs_ID, sla.Schueler_ID
 				FROM Inserted i JOIN SchuelerLernabschnittsdaten sla ON i.Abschnitt_ID = sla.ID
 				WHERE i.Kurs_ID IS NOT NULL
 			END;
@@ -267,8 +267,8 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			DBDriver.MSSQL,
 			"""
 			ON SchuelerLeistungsdaten AFTER UPDATE AS
-			BEGIN	
-				DELETE Kurs_Schueler FROM  
+			BEGIN
+				DELETE Kurs_Schueler FROM
 					Inserted i JOIN Deleted d ON i.ID = d.ID AND i.Kurs_ID IS NULL AND d.Kurs_ID IS NOT NULL
 					JOIN SchuelerLernabschnittsdaten sla ON sla.ID = d.Abschnitt_ID
 					JOIN Kurs_Schueler ks ON ks.Kurs_ID = d.Kurs_ID AND ks.Schueler_ID = sla.Schueler_ID
@@ -283,7 +283,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 						JOIN SchuelerLernabschnittsdaten sla ON sla.ID = d.Abschnitt_ID
 				UPDATE Kurs_Schueler
 					SET Kurs_ID = i.Kurs_ID, Schueler_ID = sla.Schueler_ID
-					FROM 
+					FROM
 						Inserted i JOIN Deleted d ON i.ID = d.ID AND i.Kurs_ID IS NOT NULL AND d.Kurs_ID IS NOT NULL AND i.Kurs_ID <> d.Kurs_ID AND i.Abschnitt_ID <> d.Abschnitt_ID
 						JOIN SchuelerLernabschnittsdaten sla ON sla.ID = i.Abschnitt_ID
 			END;
@@ -298,8 +298,8 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			ON SchuelerLeistungsdaten AFTER DELETE AS
 			BEGIN
-				DELETE Kurs_Schueler FROM 
-					Deleted d 
+				DELETE Kurs_Schueler FROM
+					Deleted d
 					JOIN SchuelerLernabschnittsdaten sla ON sla.ID = d.Abschnitt_ID AND d.Kurs_ID IS NOT NULL
 					JOIN Kurs_Schueler ks ON ks.Kurs_ID = d.Kurs_ID AND ks.Schueler_ID = sla.Schueler_ID
 			END;

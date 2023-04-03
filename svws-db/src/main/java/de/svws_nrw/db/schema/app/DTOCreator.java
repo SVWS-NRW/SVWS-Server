@@ -33,43 +33,43 @@ public class DTOCreator {
 
 	/** Die Konsole als Ziel der Log-Informationen */
 	private static LogConsumerConsole logConsumerConsole = new LogConsumerConsole();
-	
+
 	/** Ein Vector mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
 	private static Vector<String> allClasses = new Vector<>();
 
 
 	/**
 	 * Erstellt das Verzeichnis für die DTO-Packages
-	 * 
+	 *
 	 * @param baseDir   das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
 	 * @param rev        die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
-	 * 
-	 * @return das {@link File}-Objekt, falls das Verzeichnis erstellt wurde, im Fehlerfall null 
+	 *
+	 * @return das {@link File}-Objekt, falls das Verzeichnis erstellt wurde, im Fehlerfall null
 	 */
 	private static File createPackageDirectory(final String baseDir, final long rev) {
 		try {
 			// Erstelle das Verzeichnis für das Package
-			String pack = Schema.javaPackage + "." + Schema.javaDTOPackage;
+			final String pack = Schema.javaPackage + "." + Schema.javaDTOPackage;
 			logger.logLn("Erzeuge Package " + pack);
 			String packPath = pack.replace(".", "/");
 			if ((baseDir != null) && !baseDir.isEmpty())
 				packPath = baseDir + ((baseDir.endsWith("/") ? "" : "/")) + packPath;
-			Path dir = Paths.get(packPath);
+			final Path dir = Paths.get(packPath);
 			Files.createDirectories(dir);
 			return dir.toFile();
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return null;
 		}
 	}
-	
+
 
 	/**
-	 * Generiert den JavaDTO-Klassencode des Parameter Schemas und legt ihn an dem 
+	 * Generiert den JavaDTO-Klassencode des Parameter Schemas und legt ihn an dem
 	 * spezifiziertem Pfad ab.
-	 * 
+	 *
 	 * @param baseDir    das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
 	 * @param rev        die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
-	 * 
+	 *
 	 * @return das {@link File}-Objekt für das Package-Verzeichnis
 	 */
 	private static File createJavaCode(final String baseDir, final long rev) {
@@ -85,9 +85,9 @@ public class DTOCreator {
 		String codeMapTablename2DTOClass = "";
 
 		// Erzeuge die DTOs für die einzelnen Tabellen
-		for (DTOCreatorTable dto : DTOCreatorTable.all) {
+		for (final DTOCreatorTable dto : DTOCreatorTable.all) {
 			logger.log("Tabelle " + dto.tabelle.name() + ": ");
-			String javaPackage = dto.getPackageName(rev);
+			final String javaPackage = dto.getPackageName(rev);
 			if (!dto.tabelle.isDefined(rev)) {
 				logger.logLn("---");
 				continue;
@@ -98,17 +98,17 @@ public class DTOCreator {
 			}
 			try {
 				// Erstelle das Verzeichnis für das Package
-				String fullqualifiedClassname = javaPackage + "." + dto.tabelle.getJavaKlasse(rev);
+				final String fullqualifiedClassname = javaPackage + "." + dto.tabelle.getJavaKlasse(rev);
 				logger.log("-> " + fullqualifiedClassname);
 				allClasses.add(fullqualifiedClassname);
-				File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
+				final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
 				Files.createDirectories(dir.toPath());
 				// Generiere den Code für die Java DTO-Klasse
 				File file = new File(dir, dto.tabelle.getJavaKlasse(rev) + ".java");
 				String code = dto.getCode(rev);
 				try {
 					Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-				} catch (@SuppressWarnings("unused") IOException e) {
+				} catch (@SuppressWarnings("unused") final IOException e) {
 					cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 				}
 				// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
@@ -122,43 +122,43 @@ public class DTOCreator {
 					code = dto.getCode4PrimaryKeyClass(rev);
 					try {
 						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (@SuppressWarnings("unused") IOException e) {
+					} catch (@SuppressWarnings("unused") final IOException e) {
 						cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 					}
 				}
 				logger.logLn("");
-			} catch (@SuppressWarnings("unused") IOException e) {
+			} catch (@SuppressWarnings("unused") final IOException e) {
 				cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad oder die CSV-Datei.");
 				return packageDir;
 			}
 		}
-		
+
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
-			long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-			String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
-			for (View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
+			final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
+			final String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
+			for (final View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
 				logger.log("View " + view.name + ": ");
 				if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!view.brauchtDeveloperDTO()))) {
 					logger.logLn("- nicht benötigt");
 					continue;
 				}
-				DTOCreatorView creator = new DTOCreatorView(view);
-				String javaPackage = packagename + view.packageName; 
-				String className = (rev < 0) ? view.dtoName : "Dev" + view.dtoName;
+				final DTOCreatorView creator = new DTOCreatorView(view);
+				final String javaPackage = packagename + view.packageName;
+				final String className = (rev < 0) ? view.dtoName : "Dev" + view.dtoName;
 				try {
 					// Erstelle das Verzeichnis für das Package
-					String fullqualifiedClassname = javaPackage + "." + className;
+					final String fullqualifiedClassname = javaPackage + "." + className;
 					logger.log("-> " + fullqualifiedClassname);
 					allClasses.add(fullqualifiedClassname);
-					File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
+					final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
 					Files.createDirectories(dir.toPath());
 					// Generiere den Code für die Java DTO-Klasse
 					File file = new File(dir, className + ".java");
 					String code = creator.getCode(rev);
 					try {
 						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (@SuppressWarnings("unused") IOException e) {
+					} catch (@SuppressWarnings("unused") final IOException e) {
 						cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 					}
 					// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
@@ -172,20 +172,20 @@ public class DTOCreator {
 						code = creator.getCode4PrimaryKeyClass(rev);
 						try {
 							Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-						} catch (@SuppressWarnings("unused") IOException e) {
+						} catch (@SuppressWarnings("unused") final IOException e) {
 							cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 						}
-					}				
-					logger.logLn("");				
-				} catch (@SuppressWarnings("unused") IOException e) {
+					}
+					logger.logLn("");
+				} catch (@SuppressWarnings("unused") final IOException e) {
 					cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad oder die CSV-Datei.");
 					return packageDir;
 				}
 			}
 		}
-		
+
 		try {
-			String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+			final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 			 + "import java.util.HashMap;" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -208,7 +208,7 @@ public class DTOCreator {
 			 + "    /**" + System.lineSeparator()
 			 + "     * Gibt das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB zurück." + System.lineSeparator()
 			 + "     *" + System.lineSeparator()
-			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator() 
+			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
 			 + "     private static final HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {" + System.lineSeparator()
 			 + "         if (mapDTOName2DTOClass == null) {" + System.lineSeparator()
@@ -235,7 +235,7 @@ public class DTOCreator {
 			 + "     * Gibt das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den zugehörigen" + System.lineSeparator()
 			 + "     * Java-DTO-Klassen zurück." + System.lineSeparator()
 			 + "     *" + System.lineSeparator()
-			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator() 
+			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
 			 + "     private static final HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {" + System.lineSeparator()
 			 + "         if (mapTablename2DTOClass == null) {" + System.lineSeparator()
@@ -259,24 +259,24 @@ public class DTOCreator {
 			 + "" + System.lineSeparator()
 			 + "}" + System.lineSeparator();
 			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
 		}
-		
+
 		return packageDir;
 	}
-	
-	
+
+
 	/**
 	 * Schreibt eine Hilfsklasse, um auf die DTOs der Migrationsversion, der aktuellen Revision und der Entwicklerversion
 	 * zugreifen zu können.
-	 * 
+	 *
 	 * @param packageDir   das {@link File}-Objekt für das DTO-Package-Verzeichnis
 	 */
-	private static void writeDTOHelper(File packageDir) {
+	private static void writeDTOHelper(final File packageDir) {
 		final File dtosFile = new File(packageDir, "DTOHelper.java");
 		try {
-			String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+			final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 			 + "import de.svws_nrw.db.schema.SchemaRevisionen;" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -331,14 +331,14 @@ public class DTOCreator {
 			 + "" + System.lineSeparator()
 			 + "}" + System.lineSeparator();
 			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
 		}
 	}
-	
-	
-	private static void createPersistenceXml(String pathxml) {
-		Path p = Paths.get(pathxml);
+
+
+	private static void createPersistenceXml(final String pathxml) {
+		final Path p = Paths.get(pathxml);
 		String xml = """
                      <?xml version="1.0" encoding="UTF-8"?>
                      <persistence version="2.1"
@@ -368,7 +368,7 @@ public class DTOCreator {
                              <class>de.svws_nrw.db.converter.gost.GOStKursartConverter</class>
                              <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
                      """;
-		for (String cl : allClasses)
+		for (final String cl : allClasses)
 			xml += "        <class>" + cl + "</class>" + System.lineSeparator();
 		xml += """
                         <exclude-unlisted-classes>false</exclude-unlisted-classes>
@@ -377,44 +377,44 @@ public class DTOCreator {
                """;
 		try {
 			Files.writeString(p, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben der persistence.xml in die Datei " + pathxml);
 		}
 	}
-	
-	
+
+
 	/**
-	 * Liest den Pfad zu dem Ordner ein, in dem der generierte Code abgelegt wird. Anschließend wird die 
+	 * Liest den Pfad zu dem Ordner ein, in dem der generierte Code abgelegt wird. Anschließend wird die
 	 * Java-DTO-Codegenerierung angestoßen.
-	 *   
+	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		logger.addConsumer(logConsumerConsole);
 
 		// Gib das aktuelle Verzeichnis aus
 		logger.logLn("Aktuelles Verzeichnis: " + Paths.get("").toAbsolutePath().toString());
-		
+
 		cmdLine = new CommandLineParser(args);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Source-Ordner, wo die Java-DTO-Klassen abgelegt werden"));
 			cmdLine.addOption(new CommandLineOption("p", "persistence", true, "Der Dateiname der persistence.xml-Datei"));
-			String path = cmdLine.getValue("o", "../svws-db-dto/src/main/java");
-			String pathxml = cmdLine.getValue("p", "src/main/resources/META-INF/persistence.xml");
+			final String path = cmdLine.getValue("o", "../svws-db-dto/src/main/java");
+			final String pathxml = cmdLine.getValue("p", "src/main/resources/META-INF/persistence.xml");
 
 			DTOCreatorTable.addLogConsumer(logConsumerConsole);
 			DTOCreatorTable.init();
-			
+
 			logger.logLn("Erzeuge DTO-Klassen für die Revision 0, d.h. für die Migration alter Datenbanken...");
 			logger.modifyIndent(2);
 			createJavaCode(path, 0);
 			logger.modifyIndent(-2);
-			
+
 			logger.logLn("Erzeuge DTO-Klassen für die neueste Revision, d.h. für den normalen SVWS-Server-Betrieb...");
 			logger.modifyIndent(2);
-			File packageDir = createJavaCode(path, -1);
+			final File packageDir = createJavaCode(path, -1);
 			logger.modifyIndent(-2);
-			
+
 			logger.logLn("Erzeuge DTO-Klassen für die aktuelle Entwickler-Revision, d.h. für den experimentellen SVWS-Server-Betrieb...");
 			logger.modifyIndent(2);
 			createJavaCode(path, SchemaRevisionen.maxDeveloperRevision.revision);
@@ -424,9 +424,9 @@ public class DTOCreator {
 			logger.modifyIndent(2);
 			createPersistenceXml(pathxml);
 			logger.modifyIndent(-2);
-			
+
 			writeDTOHelper(packageDir);
-		} catch (CommandLineException e) {
+		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}
 	}

@@ -39,17 +39,17 @@ public class Tabelle_Gost_Blockung_Kurslehrer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurslehrer_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Kurslehrer_Kurs_FK = addForeignKey(
-			"Gost_Blockung_Kurslehrer_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Kurslehrer_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_Kurs_ID, Schema.tab_Gost_Blockung_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurslehrer_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Kurslehrer_Lehrer_FK = addForeignKey(
-			"Gost_Blockung_Kurslehrer_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Kurslehrer_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 

@@ -13,7 +13,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Gost_Klausuren_NtaZeiten.
  */
 public class Tabelle_Gost_Klausuren_NtaZeiten extends SchemaTabelle {
-	
+
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
@@ -32,21 +32,21 @@ public class Tabelle_Gost_Klausuren_NtaZeiten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 		.setJavaComment("Text für Ergänzungen/Bemerkungen zum Nachteilsausgleich");
-	
-	
+
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_NtaZeiten_Schueler_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_NtaZeiten_Schueler_ID_FK = addForeignKey(
-			"Gost_Klausuren_NtaZeiten_Schueler_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_NtaZeiten_Schueler_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_NtaZeiten_Vorgabe_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_NtaZeiten_Vorgabe_ID_FK = addForeignKey(
-			"Gost_Klausuren_NtaZeiten_Vorgabe_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_NtaZeiten_Vorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Vorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
 		);
 

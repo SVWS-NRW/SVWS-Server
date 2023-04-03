@@ -55,36 +55,36 @@ public class Tabelle_Benutzer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Benutzer_Allgemein_FK */
 	public SchemaTabelleFremdschluessel fk_Benutzer_Allgemein_FK = addForeignKey(
-			"Benutzer_Allgemein_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Benutzer_Allgemein_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Allgemein_ID, Schema.tab_BenutzerAllgemein.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Benutzer_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_Benutzer_Lehrer_FK = addForeignKey(
-			"Benutzer_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Benutzer_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Benutzer_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_Benutzer_Schueler_FK = addForeignKey(
-			"Benutzer_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Benutzer_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Benutzer_Erzieher_FK */
 	public SchemaTabelleFremdschluessel fk_Benutzer_Erzieher_FK = addForeignKey(
-			"Benutzer_Erzieher_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Benutzer_Erzieher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Erzieher_ID, Schema.tab_SchuelerErzAdr.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -46,7 +46,7 @@ public class Tabelle_K_ErzieherFunktion extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_ErzieherFunktion_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_ErzieherFunktion_UC1 = addUniqueIndex("K_ErzieherFunktion_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_ErzieherFunktion_UC1 = addUniqueIndex("K_ErzieherFunktion_UC1",
 			col_Bezeichnung
 		);
 

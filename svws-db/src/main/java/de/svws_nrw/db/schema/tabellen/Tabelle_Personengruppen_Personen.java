@@ -111,9 +111,9 @@ public class Tabelle_Personengruppen_Personen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Personengruppen_Personen_Gruppe */
 	public SchemaTabelleFremdschluessel fk_Personengruppen_Personen_Gruppe = addForeignKey(
-			"Personengruppen_Personen_Gruppe", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Personengruppen_Personen_Gruppe",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Gruppe_ID, Schema.tab_Personengruppen.col_ID)
 		);
 

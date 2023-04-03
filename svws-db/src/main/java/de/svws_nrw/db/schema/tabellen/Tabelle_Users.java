@@ -76,7 +76,7 @@ public class Tabelle_Users extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Users_UC1 */
-	public SchemaTabelleUniqueIndex unique_Users_UC1 = addUniqueIndex("Users_UC1", 
+	public SchemaTabelleUniqueIndex unique_Users_UC1 = addUniqueIndex("Users_UC1",
 			col_US_LoginName
 		);
 

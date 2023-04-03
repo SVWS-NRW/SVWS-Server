@@ -33,17 +33,17 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 		.setNotNull()
 		.setConverter(GOStHalbjahrConverter.class)
 		.setJavaComment("Das Halbjahr, welchem die Klausurvorgabe zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2)");
-	
+
 	/** Die Definition der Tabellenspalte Quartal */
 	public SchemaTabelleSpalte col_Quartal = add("Quartal", SchemaDatentypen.INT, false)
 		.setNotNull()
 		.setJavaComment("Das Quartal, in dem die Klausur geschrieben wird.");
-	
+
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
 		.setJavaComment("Fach_ID der Klausurvorgaben");
-	
+
 	/** Die Definition der Tabellenspalte Kursart */
 	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setDefault("GK")
@@ -60,7 +60,7 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Auswahlzeit = add("Auswahlzeit", SchemaDatentypen.INT, false)
 		.setNotNull()
 		.setJavaComment("Das Dauer der Auswahlzeit in Minuten");
-	
+
 	/** Die Definition der Tabellenspalte IstMdlPruefung */
 	public SchemaTabelleSpalte col_IstMdlPruefung = add("IstMdlPruefung", SchemaDatentypen.INT, false)
 		.setDefault("0")
@@ -81,29 +81,29 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um eine Klausur handelt, in der ein Video gezeigt werden muss oder nicht: 1 - true, 0 - false.");
-	
+
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 		.setJavaComment("Text für Bemerkungen zur Klausurvorlage");
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Vorgaben_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Vorgaben_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Klausuren_Vorgaben_Abi_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Vorgaben_Abi_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Vorgaben_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Vorgaben_Fach_FK = addForeignKey(
-			"Gost_Klausuren_Vorgaben_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Vorgaben_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Vorgaben_UC1 */
-	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Vorgaben_UC1 = addUniqueIndex("Gost_Klausuren_Vorgaben_UC1", 
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Vorgaben_UC1 = addUniqueIndex("Gost_Klausuren_Vorgaben_UC1",
 			col_Abi_Jahrgang, col_Fach_ID, col_Halbjahr, col_Kursart, col_Quartal
 		);
 

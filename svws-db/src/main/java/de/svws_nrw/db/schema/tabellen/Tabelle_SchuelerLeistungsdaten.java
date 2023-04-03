@@ -66,7 +66,7 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 		.setConverter(NoteConverterFromKuerzel.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Notenkürzel der Quartals-Note");
-	
+
 	/** Die Definition der Tabellenspalte Warnung */
 	public SchemaTabelleSpalte col_Warnung = add("Warnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
@@ -188,70 +188,70 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerLeistungsdaten_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Abschnitt_FK = addForeignKey(
-			"SchuelerLeistungsdaten_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLeistungsdaten_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLeistungsdaten_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Fach_FK = addForeignKey(
-			"SchuelerLeistungsdaten_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLeistungsdaten_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLeistungsdaten_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Lehrer_FK = addForeignKey(
-			"SchuelerLeistungsdaten_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLeistungsdaten_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fachlehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLeistungsdaten_Lehrer_Zusatzkraft_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Lehrer_Zusatzkraft_FK = addForeignKey(
-			"SchuelerLeistungsdaten_Lehrer_Zusatzkraft_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLeistungsdaten_Lehrer_Zusatzkraft_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Zusatzkraft_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLeistungsdaten_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Kurs_FK = addForeignKey(
-			"SchuelerLeistungsdaten_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLeistungsdaten_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Kurs_ID, Schema.tab_Kurse.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX1 */
-	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX1 = addIndex("SchuelerLeistungsdaten_IDX1", 
+	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX1 = addIndex("SchuelerLeistungsdaten_IDX1",
 			col_Kurs_ID
 		);
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX2 */
-	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX2 = addIndex("SchuelerLeistungsdaten_IDX2", 
+	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX2 = addIndex("SchuelerLeistungsdaten_IDX2",
 			col_Fach_ID
 		);
 
 	/** Die Definition des Non-Unique-Index SchuelerLeistungsdaten_IDX3 */
-	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX3 = addIndex("SchuelerLeistungsdaten_IDX3", 
+	public SchemaTabelleIndex index_SchuelerLeistungsdaten_IDX3 = addIndex("SchuelerLeistungsdaten_IDX3",
 			col_Fachlehrer_ID
 		);
 
 
 	/** Die Definition des Unique-Index SchuelerLeistungsdaten_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerLeistungsdaten_UC1 = addUniqueIndex("SchuelerLeistungsdaten_UC1", 
-			col_Abschnitt_ID, 
-			col_Fach_ID, 
-			col_Kurs_ID, 
-			col_Kursart, 
+	public SchemaTabelleUniqueIndex unique_SchuelerLeistungsdaten_UC1 = addUniqueIndex("SchuelerLeistungsdaten_UC1",
+			col_Abschnitt_ID,
+			col_Fach_ID,
+			col_Kurs_ID,
+			col_Kursart,
 			col_Fachlehrer_ID
 		)
 		.setRevision(SchemaRevisionen.REV_2);

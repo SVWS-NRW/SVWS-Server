@@ -10,10 +10,10 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.db.converter.current.gost.GOStKursartConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung
  * als GOStKursart.
  */
-public class GOStKursartConverterSerializer extends StdSerializer<GostKursart> {
+public final class GOStKursartConverterSerializer extends StdSerializer<GostKursart> {
 
 	private static final long serialVersionUID = -5121032441860213925L;
 
@@ -23,18 +23,18 @@ public class GOStKursartConverterSerializer extends StdSerializer<GostKursart> {
 	public GOStKursartConverterSerializer() {
 		super(GostKursart.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public GOStKursartConverterSerializer(Class<GostKursart> t) {
+	public GOStKursartConverterSerializer(final Class<GostKursart> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(GostKursart value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final GostKursart value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(GOStKursartConverter.instance.convertToDatabaseColumn(value));
 	}
 

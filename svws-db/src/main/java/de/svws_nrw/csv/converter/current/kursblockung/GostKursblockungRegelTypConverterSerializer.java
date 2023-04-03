@@ -10,10 +10,10 @@ import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.db.converter.current.kursblockung.GostKursblockungRegelTypConverter;
 
 /**
- * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Serialisierer und serialisiert die Datenbankdarstellung
  * als GostKursblockungRegelTyp.
  */
-public class GostKursblockungRegelTypConverterSerializer extends StdSerializer<GostKursblockungRegelTyp> {
+public final class GostKursblockungRegelTypConverterSerializer extends StdSerializer<GostKursblockungRegelTyp> {
 
 	private static final long serialVersionUID = -5121032441860213925L;
 
@@ -23,18 +23,18 @@ public class GostKursblockungRegelTypConverterSerializer extends StdSerializer<G
 	public GostKursblockungRegelTypConverterSerializer() {
 		super(GostKursblockungRegelTyp.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public GostKursblockungRegelTypConverterSerializer(Class<GostKursblockungRegelTyp> t) {
+	public GostKursblockungRegelTypConverterSerializer(final Class<GostKursblockungRegelTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(GostKursblockungRegelTyp value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final GostKursblockungRegelTyp value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(GostKursblockungRegelTypConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

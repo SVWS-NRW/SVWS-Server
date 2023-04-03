@@ -46,7 +46,7 @@ public class Tabelle_K_FahrschuelerArt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_FahrschuelerArt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_FahrschuelerArt_UC1 = addUniqueIndex("K_FahrschuelerArt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_FahrschuelerArt_UC1 = addUniqueIndex("K_FahrschuelerArt_UC1",
 			col_Bezeichnung
 		);
 

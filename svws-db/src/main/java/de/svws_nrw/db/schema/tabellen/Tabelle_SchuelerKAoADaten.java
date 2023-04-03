@@ -84,70 +84,70 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Abschnitt_FK = addForeignKey(
-			"SchuelerKAoADaten_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerKAoADaten_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Schueler_FK = addForeignKey(
-			"SchuelerKAoADaten_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerKAoADaten_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Kategorie_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Kategorie_FK = addForeignKey(
-			"SchuelerKAoADaten_Kategorie_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerKAoADaten_Kategorie_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_KategorieID, Schema.tab_KAoA_Kategorie_Keys.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Merkmal_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Merkmal_FK = addForeignKey(
-			"SchuelerKAoADaten_Merkmal_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerKAoADaten_Merkmal_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_MerkmalID, Schema.tab_KAoA_Merkmal_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Zusatzmerkmal_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Zusatzmerkmal_FK = addForeignKey(
-			"SchuelerKAoADaten_Zusatzmerkmal_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerKAoADaten_Zusatzmerkmal_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_ZusatzmerkmalID, Schema.tab_KAoA_Zusatzmerkmal_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Anschlussoption_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Anschlussoption_FK = addForeignKey(
-			"SchuelerKAoADaten_Anschlussoption_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerKAoADaten_Anschlussoption_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_AnschlussoptionID, Schema.tab_KAoA_Anschlussoption_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Berufsfeld_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_Berufsfeld_FK = addForeignKey(
-			"SchuelerKAoADaten_Berufsfeld_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerKAoADaten_Berufsfeld_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_BerufsfeldID, Schema.tab_KAoA_Berufsfeld_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_SBO_Ebene4_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerKAoADaten_SBO_Ebene4_FK = addForeignKey(
-			"SchuelerKAoADaten_SBO_Ebene4_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerKAoADaten_SBO_Ebene4_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_SBO_Ebene4ID, Schema.tab_KAoA_SBO_Ebene4_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

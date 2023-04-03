@@ -44,16 +44,16 @@ public class Tabelle_Stundenplan_Raeume extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Raeume_Stundenplan_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Raeume_Stundenplan_FK = addForeignKey(
-			"Stundenplan_Raeume_Stundenplan_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Raeume_Stundenplan_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Stundenplan_ID, Schema.tab_Stundenplan.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index Stundenplan_Raeume_UC1 */
-	public SchemaTabelleUniqueIndex unique_Stundenplan_Raeume_UC1 = addUniqueIndex("Stundenplan_Raeume_UC1", 
-			col_Stundenplan_ID, 
+	public SchemaTabelleUniqueIndex unique_Stundenplan_Raeume_UC1 = addUniqueIndex("Stundenplan_Raeume_UC1",
+			col_Stundenplan_ID,
 			col_Kuerzel
 		);
 

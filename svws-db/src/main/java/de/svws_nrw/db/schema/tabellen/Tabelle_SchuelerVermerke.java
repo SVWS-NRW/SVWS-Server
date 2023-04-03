@@ -55,23 +55,23 @@ public class Tabelle_SchuelerVermerke extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerVermerke_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerVermerke_Schueler_FK = addForeignKey(
-			"SchuelerVermerke_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerVermerke_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerVermerke_VermerkArt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerVermerke_VermerkArt_FK = addForeignKey(
-			"SchuelerVermerke_VermerkArt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerVermerke_VermerkArt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_VermerkArt_ID, Schema.tab_K_Vermerkart.col_ID)
 		);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerVermerke_IDX1 */
-	public SchemaTabelleIndex index_SchuelerVermerke_IDX1 = addIndex("SchuelerVermerke_IDX1", 
+	public SchemaTabelleIndex index_SchuelerVermerke_IDX1 = addIndex("SchuelerVermerke_IDX1",
 			col_Schueler_ID
 		);
 

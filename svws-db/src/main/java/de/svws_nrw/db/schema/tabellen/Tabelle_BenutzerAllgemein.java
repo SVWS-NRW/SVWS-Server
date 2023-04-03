@@ -30,9 +30,9 @@ public class Tabelle_BenutzerAllgemein extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels BenutzerAllgemein_Credential_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzerAllgemein_Credential_FK = addForeignKey(
-			"BenutzerAllgemein_Credential_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"BenutzerAllgemein_Credential_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_CredentialID, Schema.tab_Credentials.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

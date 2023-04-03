@@ -14,7 +14,7 @@ import java.io.IOException;
  * Diese Klasse ist ein Deserialisierer für das Niveau einer Sprachprüfung. Sie deserialisiert
  * die Datenbankdarstellung als Zahl in einen Wert der Aufzählung {@link Sprachpruefungniveau}.
  */
-public class SprachpruefungniveauConverterDeserializer extends StdDeserializer<Sprachpruefungniveau> {
+public final class SprachpruefungniveauConverterDeserializer extends StdDeserializer<Sprachpruefungniveau> {
 
 	private static final long serialVersionUID = -5130396859369645143L;
 
@@ -30,19 +30,19 @@ public class SprachpruefungniveauConverterDeserializer extends StdDeserializer<S
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected SprachpruefungniveauConverterDeserializer(Class<Sprachpruefungniveau> t) {
+	protected SprachpruefungniveauConverterDeserializer(final Class<Sprachpruefungniveau> t) {
 		super(t);
 	}
 
 	@Override
-	public Sprachpruefungniveau deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Sprachpruefungniveau deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		Integer i;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			i = null;
 		}
 		return SprachpruefungniveauConverter.instance.convertToEntityAttribute(i);
 	}
-	
+
 }

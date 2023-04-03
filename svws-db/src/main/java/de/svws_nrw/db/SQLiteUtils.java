@@ -5,29 +5,29 @@ import java.util.regex.Pattern;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für die spezielle
- * Handhabung von SQL für SQLite zur Verfügung. 
+ * Handhabung von SQL für SQLite zur Verfügung.
  */
 public class SQLiteUtils {
-	
+
 	private static final Pattern patternConcat = Pattern.compile(Pattern.quote("concat"), Pattern.CASE_INSENSITIVE);
 	private static final Pattern patternBraceCommaOrQuote = Pattern.compile("[\'\\(\\),]");
-	
+
 	/**
 	 * Ersetze alle Vorkommnisse der concat-Methode in dem SQL-String
 	 * mit dem || - Operator
-	 *  
+	 *
 	 * @param sql   der SQL-String
-	 * 
+	 *
 	 * @return der SQL-String mit dem ersetzten concat
 	 */
-	public static String replaceConcat(String sql) {
+	public static String replaceConcat(final String sql) {
 		String tmpSql = sql;
 		while (true) {
 			Matcher matcher = patternConcat.matcher(tmpSql);
 			if (!matcher.find())
 				break;
-			StringBuilder result = new StringBuilder();
-			result.append(tmpSql.substring(0, matcher.start()));			
+			final StringBuilder result = new StringBuilder();
+			result.append(tmpSql.substring(0, matcher.start()));
 			int countBraces = 0;
 			int countQuotes = 0;
 			String tmp = tmpSql.substring(matcher.end());
@@ -63,7 +63,7 @@ public class SQLiteUtils {
 					case '\'' -> {
 						countQuotes = (countQuotes == 0) ? 1 : 0;
 						result.append(tmp.substring(0, matcher.end()));
-					}			
+					}
 					case ',' -> {
 						if ((countQuotes == 0) && (countBraces == 1)) {
 							result.append(tmp.substring(0, matcher.start())).append(" || ");

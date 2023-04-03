@@ -54,13 +54,13 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 			.setConverter(DatumUhrzeitConverter.class)
 			.setJavaComment("Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde.");
 
-	
+
 
 	/** Die Definition des Fremdschlüssels DavRessourceCollection_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessourceCollection_Benutzer_FK = addForeignKey(
-			"DavRessourceCollection_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"DavRessourceCollection_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		);
 

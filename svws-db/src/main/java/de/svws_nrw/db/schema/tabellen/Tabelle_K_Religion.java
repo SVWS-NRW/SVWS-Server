@@ -58,7 +58,7 @@ public class Tabelle_K_Religion extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_Religion_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Religion_UC1 = addUniqueIndex("K_Religion_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_Religion_UC1 = addUniqueIndex("K_Religion_UC1",
 			col_Bezeichnung
 		)
 		.setRevision(SchemaRevisionen.REV_1);

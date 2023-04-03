@@ -27,18 +27,18 @@ public class Tabelle_BenutzerKompetenzen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels BenutzerKompetenzen_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzerKompetenzen_Benutzer_FK = addForeignKey(
-			"BenutzerKompetenzen_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"BenutzerKompetenzen_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels BenutzerKompetenzen_Kompetenzen_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzerKompetenzen_Kompetenzen_FK = addForeignKey(
-			"BenutzerKompetenzen_Kompetenzen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"BenutzerKompetenzen_Kompetenzen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Kompetenz_ID, Schema.tab_Kompetenzen.col_KO_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -77,9 +77,9 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels K_Ankreuzfloskeln_Fach_ID_FK */
 	public SchemaTabelleFremdschluessel fk_K_Ankreuzfloskeln_Fach_ID_FK = addForeignKey(
-			"K_Ankreuzfloskeln_Fach_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_Ankreuzfloskeln_Fach_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

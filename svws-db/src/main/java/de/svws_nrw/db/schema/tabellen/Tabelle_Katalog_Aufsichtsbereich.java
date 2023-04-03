@@ -28,7 +28,7 @@ public class Tabelle_Katalog_Aufsichtsbereich extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Katalog_Aufsichtsbereich_UC1 */
-	public SchemaTabelleUniqueIndex unique_Katalog_Aufsichtsbereich_UC1 = addUniqueIndex("Katalog_Aufsichtsbereich_UC1", 
+	public SchemaTabelleUniqueIndex unique_Katalog_Aufsichtsbereich_UC1 = addUniqueIndex("Katalog_Aufsichtsbereich_UC1",
 			col_Kuerzel
 		);
 

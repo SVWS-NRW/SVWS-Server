@@ -16,7 +16,7 @@ import de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager;
  * auf Korrektheit geprüft.
  */
 public class TestBerufskollegFachklassenManager {
-	
+
 	// TODO Tests für BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 	/**
 	 * Prüft die Einträge der Kataloge für die Fachklassen
@@ -26,16 +26,16 @@ public class TestBerufskollegFachklassenManager {
 	@DisplayName("Prüfe Fachklassendaten Jsons auf Korrektheit.")
 	void testBerufskollegFachklassen() {
 		System.out.println("Erstelle FachklassenManager...");
-		BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
+		final BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 		System.out.println("  Die Daten liegen in Version " + manager.getVersion() + " vor.");
 		System.out.println("Prüfe die Einträge des Fachklassen-Katalogs für berufsbildende Schulformen");
-		for (BerufskollegFachklassenKatalogIndex index : manager.getKatalog().indizes) {
-			for (BerufskollegFachklassenKatalogEintrag eintrag : index.fachklassen) {
+		for (final BerufskollegFachklassenKatalogIndex index : manager.getKatalog().indizes) {
+			for (final BerufskollegFachklassenKatalogEintrag eintrag : index.fachklassen) {
 			if (eintrag.schluessel == null)
 					fail("Katalog-Eintrag " + eintrag.schluessel + " ist fehlerhaft, da bei Fachklassen der erste Teil des Schlüssels nicht leer sein darf .");
 			if (eintrag.schluessel2 == null)
 				fail("Katalog-Eintrag " + eintrag.schluessel2 + " ist fehlerhaft, da bei Fachklassen der zweite Teil des Schlüssels nicht leer sein darf .");
-			for (BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
+			for (final BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
 			    if (daten.bezeichnung == null)
 	                fail("Katalog-Eintrag " + daten.bezeichnung + " ist fehlerhaft, da bei Fachklassen die Bezeichnung nicht leer sein darf .");
 			    if (daten.bezeichnungM == null)

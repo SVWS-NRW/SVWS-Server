@@ -60,25 +60,25 @@ public class Tabelle_LehrerMehrleistung extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerMehrleistung_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerMehrleistung_Abschnitt_FK = addForeignKey(
-			"LehrerMehrleistung_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerMehrleistung_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_LehrerAbschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerMehrleistung_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerMehrleistung_Lehrer_FK = addForeignKey(
-			"LehrerMehrleistung_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerMehrleistung_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 
 	/** Die Definition des Unique-Index LehrerMehrleistung_UC1 */
-	public SchemaTabelleUniqueIndex unique_LehrerMehrleistung_UC1 = addUniqueIndex("LehrerMehrleistung_UC1", 
-			col_Abschnitt_ID, 
+	public SchemaTabelleUniqueIndex unique_LehrerMehrleistung_UC1 = addUniqueIndex("LehrerMehrleistung_UC1",
+			col_Abschnitt_ID,
 			col_MehrleistungsgrundKrz
 		)
 		.setRevision(SchemaRevisionen.REV_2);

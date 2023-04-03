@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.db.converter.current.DatumConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer für Datumswerte. Sie deserialisiert die 
+ * Diese Klasse ist ein Deserialisierer für Datumswerte. Sie deserialisiert die
  * Datenbankdarstellung als Timestamp in ein Datum als Zeichenkette nach ISO-8601.
  */
-public class MigrationDatumConverterDeserializer extends StdDeserializer<String> {
+public final class MigrationDatumConverterDeserializer extends StdDeserializer<String> {
 
 	private static final long serialVersionUID = 1997235870466236373L;
 
@@ -24,23 +24,23 @@ public class MigrationDatumConverterDeserializer extends StdDeserializer<String>
 	public MigrationDatumConverterDeserializer() {
 		super(String.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected MigrationDatumConverterDeserializer(Class<String> t) {
+	protected MigrationDatumConverterDeserializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public String deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return DatumConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
-		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) {
 			return null;
 		}
 	}
-	
+
 }

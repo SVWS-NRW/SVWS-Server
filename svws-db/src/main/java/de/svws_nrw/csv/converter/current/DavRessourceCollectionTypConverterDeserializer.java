@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Diese Klasse ist einen Deserialisierer von Benutzer-Typ-Objekten.
  */
-public class DavRessourceCollectionTypConverterDeserializer extends StdDeserializer<DavRessourceCollectionTyp> {
+public final class DavRessourceCollectionTypConverterDeserializer extends StdDeserializer<DavRessourceCollectionTyp> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -24,25 +24,25 @@ public class DavRessourceCollectionTypConverterDeserializer extends StdDeseriali
 	public DavRessourceCollectionTypConverterDeserializer() {
 		super(BenutzerKompetenz.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected DavRessourceCollectionTypConverterDeserializer(Class<DavRessourceCollectionTyp> t) {
+	protected DavRessourceCollectionTypConverterDeserializer(final Class<DavRessourceCollectionTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public DavRessourceCollectionTyp deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public DavRessourceCollectionTyp deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		Integer i;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			i = null;
 		}
 		return DavRessourceCollectionTypConverter.instance.convertToEntityAttribute(i);
 	}
-	
+
 }

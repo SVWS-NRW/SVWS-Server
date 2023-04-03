@@ -48,7 +48,7 @@ public class Tabelle_Gost_Klausuren_Kalenderinformationen extends SchemaTabelle 
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um einen Sperrtermin handelt oder nicht: 1 - true, 0 - false.");
-	
+
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 		.setJavaComment("Text für Bemerkungen zur Kalenderinformation");

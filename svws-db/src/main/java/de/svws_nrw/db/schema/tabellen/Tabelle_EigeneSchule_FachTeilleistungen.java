@@ -38,9 +38,9 @@ public class Tabelle_EigeneSchule_FachTeilleistungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_FachTeilleistungen_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_EigeneSchule_FachTeilleistungen_Fach_FK = addForeignKey(
-			"EigeneSchule_FachTeilleistungen_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EigeneSchule_FachTeilleistungen_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

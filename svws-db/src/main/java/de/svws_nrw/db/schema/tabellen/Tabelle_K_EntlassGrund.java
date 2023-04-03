@@ -46,7 +46,7 @@ public class Tabelle_K_EntlassGrund extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_EntlassGrund_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_EntlassGrund_UC1 = addUniqueIndex("K_EntlassGrund_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_EntlassGrund_UC1 = addUniqueIndex("K_EntlassGrund_UC1",
 			col_Bezeichnung
 		);
 

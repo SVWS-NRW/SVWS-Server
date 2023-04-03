@@ -37,9 +37,9 @@ public class Tabelle_SVWS_Client_Konfiguration_Benutzer extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SVWSClientKonfigurationBenutzer_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_SVWSClientKonfigurationBenutzer_Benutzer_FK = addForeignKey(
-			"SVWSClientKonfigurationBenutzer_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SVWSClientKonfigurationBenutzer_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		);
 

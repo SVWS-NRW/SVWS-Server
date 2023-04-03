@@ -44,7 +44,7 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 	    .setDatenlaenge(3)
 		.setNotNull()
 		.setJavaComment("Der Zeitstempel der letzten Änderung an den Bemerkungen zum Arbeits- und Sozialverhalten.");
-	
+
 	/** Die Definition der Tabellenspalte tsAUE */
 	public SchemaTabelleSpalte col_tsAUE = add("tsAUE", SchemaDatentypen.DATETIME, false)
 	    .setDatenlaenge(3)
@@ -60,13 +60,13 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels EnmLernabschnittsdaten_FK */
 	public SchemaTabelleFremdschluessel fk_EnmLernabschnittsdaten_FK = addForeignKey(
-			"EnmLernabschnittsdaten_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"EnmLernabschnittsdaten_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
-	
+
     /** Trigger t_INSERT_EnmLernabschnittsdaten */
     public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLernabschnittsdaten = addTrigger(
     		"t_INSERT_EnmLernabschnittsdaten",

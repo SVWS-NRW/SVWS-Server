@@ -103,9 +103,9 @@ public class Tabelle_SchuelerGSDaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerGSDaten_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerGSDaten_Schueler_FK = addForeignKey(
-			"SchuelerGSDaten_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerGSDaten_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 

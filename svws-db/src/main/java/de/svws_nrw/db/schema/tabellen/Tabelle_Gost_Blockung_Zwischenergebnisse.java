@@ -45,9 +45,9 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Blockung_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Blockung_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Blockung_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Blockung_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_ID, Schema.tab_Gost_Blockung.col_ID)
 		);
 

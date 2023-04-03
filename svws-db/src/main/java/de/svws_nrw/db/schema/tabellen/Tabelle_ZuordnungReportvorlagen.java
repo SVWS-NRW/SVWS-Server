@@ -68,18 +68,18 @@ public class Tabelle_ZuordnungReportvorlagen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels ZuordnungReportvorlagen_Fachklasse_FK */
 	public SchemaTabelleFremdschluessel fk_ZuordnungReportvorlagen_Fachklasse_FK = addForeignKey(
-			"ZuordnungReportvorlagen_Fachklasse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"ZuordnungReportvorlagen_Fachklasse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fachklasse_ID, Schema.tab_EigeneSchule_Fachklassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels ZuordnungReportvorlagen_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_ZuordnungReportvorlagen_Jahrgang_FK = addForeignKey(
-			"ZuordnungReportvorlagen_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"ZuordnungReportvorlagen_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Jahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert den CoreType 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert den CoreType
  * ZulaessigesFach in das Kürzel der amtlichen Schulstatistik.
  */
-public class ZulaessigesFachKuerzelASDConverterDeserializer extends StdDeserializer<ZulaessigesFach> {
+public final class ZulaessigesFachKuerzelASDConverterDeserializer extends StdDeserializer<ZulaessigesFach> {
 
 	private static final long serialVersionUID = -3520968291156156611L;
 
@@ -23,19 +23,19 @@ public class ZulaessigesFachKuerzelASDConverterDeserializer extends StdDeseriali
 	public ZulaessigesFachKuerzelASDConverterDeserializer() {
 		super(ZulaessigesFach.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected ZulaessigesFachKuerzelASDConverterDeserializer(Class<ZulaessigesFach> t) {
+	protected ZulaessigesFachKuerzelASDConverterDeserializer(final Class<ZulaessigesFach> t) {
 		super(t);
 	}
 
 	@Override
-	public ZulaessigesFach deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public ZulaessigesFach deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return ZulaessigesFach.getByKuerzelASD(p.getText());
 	}
-	
+
 }

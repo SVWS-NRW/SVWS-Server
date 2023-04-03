@@ -47,9 +47,9 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerMerkmale_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerMerkmale_Schueler_FK = addForeignKey(
-		"SchuelerMerkmale_Schueler_FK", 
-		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+		"SchuelerMerkmale_Schueler_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 		new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 	);
 

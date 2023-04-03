@@ -17,22 +17,22 @@ public class SVWSConfigFileWriter {
 
 	/// Der Parser für die Kommandozeile
 	private static CommandLineParser cmdLine;
-	
-	
+
+
 	/**
-	 * Die Main-Methode zum Starten des Kommandozeilenprogramms zum Erzeugen einer SVWS-Konfiguration mit 
+	 * Die Main-Methode zum Starten des Kommandozeilenprogramms zum Erzeugen einer SVWS-Konfiguration mit
 	 * Default-Einstellungen.
-	 * 
-	 * @param args   enthält die Kommandozeilen-Parameter zur Angabe von Konfigurationsoptionen 
+	 *
+	 * @param args   enthält die Kommandozeilen-Parameter zur Angabe von Konfigurationsoptionen
 	 */
-	public static void main(String[] args) {
-		
+	public static void main(final String[] args) {
+
 		cmdLine = new CommandLineParser(args);
 		try {
-			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Dateiname mit Pfad von der anzulegenden Konfigurationsdatei"));		
-			cmdLine.addOption(new CommandLineOption("c", "clientpath", true, "Der Pfad, in welchem der Server die Dateien für den Webclient sucht"));		
-			cmdLine.addOption(new CommandLineOption("l", "loggingpath", true, "Der Pfad, in welchem der Server Log-Dateien anlegt"));		
-			cmdLine.addOption(new CommandLineOption("t", "temppath", true, "Der Pfad, in welchem temporäre Dateien angelegt werden"));		
+			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Dateiname mit Pfad von der anzulegenden Konfigurationsdatei"));
+			cmdLine.addOption(new CommandLineOption("c", "clientpath", true, "Der Pfad, in welchem der Server die Dateien für den Webclient sucht"));
+			cmdLine.addOption(new CommandLineOption("l", "loggingpath", true, "Der Pfad, in welchem der Server Log-Dateien anlegt"));
+			cmdLine.addOption(new CommandLineOption("t", "temppath", true, "Der Pfad, in welchem temporäre Dateien angelegt werden"));
 			cmdLine.addOption(new CommandLineOption("k", "keystorepath", true, "Der Pfad, in welchem der Server den Keystore für die TLS-Verbindung sucht"));
 			cmdLine.addOption(new CommandLineOption("w", "keystorepassword", true, "Das Kennwort, welches für den Keystore für die TLS-Verbindung genutzt wird"));
 			cmdLine.addOption(new CommandLineOption("d", "dbms", true, "Das DBMS, welches vom SVWS-Server verwendet wird"));
@@ -42,27 +42,27 @@ public class SVWSConfigFileWriter {
 			cmdLine.addOption(new CommandLineOption("s", "schema", true, "Der Name des Datenbankschemas"));
 			cmdLine.addOption(new CommandLineOption("u", "user", true, "Der Benutzername für den Administrative Zugriff auf das Datenbankschema"));
 			cmdLine.addOption(new CommandLineOption("p", "password", true, "Das zum Benutzernamen gehörende Kennwort"));
-	    	
-		    // Lese die Kommandozeilenparameter ein und setze ggf. Default-Werte, falls diese nicht angegeben sind. 
-		    String outputFile = cmdLine.getValue("o", "svwsconfig.json");
-			String clientPath = cmdLine.getValue("c");
-			String loggingPath = cmdLine.getValue("l");
-			String tempPath = cmdLine.getValue("t");
-			String keystorePath = cmdLine.getValue("k");
-			String keystorePassword = cmdLine.getValue("w");
-			DBDriver dbms = DBDriver.fromString(cmdLine.getValue("d", ""));
-			String dbLocation = cmdLine.getValue("h", "localhost");
-			String dbPortStr = cmdLine.getValue("j");
-			int dbPort = NumberUtils.toInt(dbPortStr, ((dbms != null) && dbms.equals(DBDriver.MSSQL)) ? 1433 : 3306);
-			boolean noSchema = cmdLine.isSet("n");
-			String schema = cmdLine.getValue("s");
-			String schemaUser = cmdLine.getValue("u");
-			String schemaPassword = cmdLine.getValue("p");
+
+		    // Lese die Kommandozeilenparameter ein und setze ggf. Default-Werte, falls diese nicht angegeben sind.
+		    final String outputFile = cmdLine.getValue("o", "svwsconfig.json");
+			final String clientPath = cmdLine.getValue("c");
+			final String loggingPath = cmdLine.getValue("l");
+			final String tempPath = cmdLine.getValue("t");
+			final String keystorePath = cmdLine.getValue("k");
+			final String keystorePassword = cmdLine.getValue("w");
+			final DBDriver dbms = DBDriver.fromString(cmdLine.getValue("d", ""));
+			final String dbLocation = cmdLine.getValue("h", "localhost");
+			final String dbPortStr = cmdLine.getValue("j");
+			final int dbPort = NumberUtils.toInt(dbPortStr, ((dbms != null) && dbms.equals(DBDriver.MSSQL)) ? 1433 : 3306);
+			final boolean noSchema = cmdLine.isSet("n");
+			final String schema = cmdLine.getValue("s");
+			final String schemaUser = cmdLine.getValue("u");
+			final String schemaPassword = cmdLine.getValue("p");
 
 			// Erstelle die Default-Konfiguration
-			SVWSKonfiguration config = SVWSKonfiguration.getDefault(clientPath, loggingPath, tempPath, keystorePath, keystorePassword, 
+			final SVWSKonfiguration config = SVWSKonfiguration.getDefault(clientPath, loggingPath, tempPath, keystorePath, keystorePassword,
 					dbms, dbLocation, dbPort, noSchema, schema, schemaUser, schemaPassword);
-			
+
 			// Schreibe die Konfiguration in die angegeben Datei
 			config.setFilename(outputFile);
 			SVWSKonfiguration.write();

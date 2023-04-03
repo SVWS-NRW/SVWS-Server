@@ -32,25 +32,25 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen extends Sche
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_ErgID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_ErgID_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_ErgID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_ErgID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zwischenergebnis_ID, Schema.tab_Gost_Blockung_Zwischenergebnisse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Kurs_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Kurs_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Kurs_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Kurs_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_Kurs_ID, Schema.tab_Gost_Blockung_Kurse.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Schiene_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Schiene_FK = addForeignKey(
-			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Schiene_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_Schiene_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schienen_ID, Schema.tab_Gost_Blockung_Schienen.col_ID)
 		);
 

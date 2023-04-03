@@ -49,9 +49,9 @@ public class Tabelle_Gost_Blockung extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Blockung_Abi_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Abi_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
 		);
 

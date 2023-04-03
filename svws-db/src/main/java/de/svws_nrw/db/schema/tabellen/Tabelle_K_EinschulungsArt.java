@@ -46,7 +46,7 @@ public class Tabelle_K_EinschulungsArt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_EinschulungsArt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_EinschulungsArt_UC1 = addUniqueIndex("K_EinschulungsArt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_EinschulungsArt_UC1 = addUniqueIndex("K_EinschulungsArt_UC1",
 			col_Bezeichnung
 		);
 

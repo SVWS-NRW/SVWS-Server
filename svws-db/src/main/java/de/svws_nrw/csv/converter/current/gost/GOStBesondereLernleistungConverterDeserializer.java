@@ -11,10 +11,10 @@ import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.db.converter.current.gost.GOStBesondereLernleistungConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung
  * als GOStBesondereLernleistung.
  */
-public class GOStBesondereLernleistungConverterDeserializer extends StdDeserializer<GostBesondereLernleistung> {
+public final class GOStBesondereLernleistungConverterDeserializer extends StdDeserializer<GostBesondereLernleistung> {
 
 	private static final long serialVersionUID = 1295380111565891607L;
 
@@ -24,19 +24,19 @@ public class GOStBesondereLernleistungConverterDeserializer extends StdDeseriali
 	public GOStBesondereLernleistungConverterDeserializer() {
 		super(GostBesondereLernleistung.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected GOStBesondereLernleistungConverterDeserializer(Class<GostBesondereLernleistung> t) {
+	protected GOStBesondereLernleistungConverterDeserializer(final Class<GostBesondereLernleistung> t) {
 		super(t);
 	}
 
 	@Override
-	public GostBesondereLernleistung deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public GostBesondereLernleistung deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return GOStBesondereLernleistungConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

@@ -87,26 +87,26 @@ public class Tabelle_SchuelerAnkreuzfloskeln extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerAnkreuzfloskeln_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAnkreuzfloskeln_Abschnitt_FK = addForeignKey(
-			"SchuelerAnkreuzfloskeln_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAnkreuzfloskeln_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAnkreuzfloskeln_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAnkreuzfloskeln_Schueler_FK = addForeignKey(
-			"SchuelerAnkreuzfloskeln_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAnkreuzfloskeln_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 	/** Die Definition des Fremdschlüssels SchuelerAnkreuzfloskeln_Floskel_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAnkreuzfloskeln_Floskel_FK = addForeignKey(
-			"SchuelerAnkreuzfloskeln_Floskel_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAnkreuzfloskeln_Floskel_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Floskel_ID, Schema.tab_K_Ankreuzfloskeln.col_ID)
 		);
 

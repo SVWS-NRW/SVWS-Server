@@ -10,10 +10,10 @@ import de.svws_nrw.db.converter.current.StringToIntegerConverter;
 
 
 /**
- * Diese Klasse ist ein Serialisierer für Stringwerte. Sie serialisiert 
+ * Diese Klasse ist ein Serialisierer für Stringwerte. Sie serialisiert
  * ein String als Intergerwert.
  */
-public class MigrationStringToIntegerConverterSerializer extends StdSerializer<Integer> {
+public final class MigrationStringToIntegerConverterSerializer extends StdSerializer<Integer> {
 
 	private static final long serialVersionUID = 899602939694388520L;
 
@@ -23,18 +23,18 @@ public class MigrationStringToIntegerConverterSerializer extends StdSerializer<I
 	public MigrationStringToIntegerConverterSerializer() {
 		super(Integer.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Serialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public MigrationStringToIntegerConverterSerializer(Class<Integer> t) {
+	public MigrationStringToIntegerConverterSerializer(final Class<Integer> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(Integer value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final Integer value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(StringToIntegerConverter.instance.convertToDatabaseColumn(value));
 	}
 

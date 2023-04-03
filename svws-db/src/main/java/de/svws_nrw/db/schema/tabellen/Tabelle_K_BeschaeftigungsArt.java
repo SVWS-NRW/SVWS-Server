@@ -46,7 +46,7 @@ public class Tabelle_K_BeschaeftigungsArt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_BeschaeftigungsArt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_BeschaeftigungsArt_UC1 = addUniqueIndex("K_BeschaeftigungsArt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_BeschaeftigungsArt_UC1 = addUniqueIndex("K_BeschaeftigungsArt_UC1",
 			col_Bezeichnung
 		);
 

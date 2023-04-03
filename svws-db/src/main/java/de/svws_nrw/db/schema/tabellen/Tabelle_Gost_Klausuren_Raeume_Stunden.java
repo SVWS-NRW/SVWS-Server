@@ -31,20 +31,20 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Stunden_Klausurraum_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Stunden_Klausurraum_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Stunden_Klausurraum_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Raeume_Stunden_Klausurraum_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Klausurraum_ID, Schema.tab_Gost_Klausuren_Raeume.col_ID)
 		);
-	
+
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Raeume_Stunden_Zeitraster_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Raeume_Stunden_Zeitraster_ID_FK = addForeignKey(
-			"Gost_Klausuren_Raeume_Stunden_Zeitraster_ID_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Klausuren_Raeume_Stunden_Zeitraster_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zeitraster_ID, Schema.tab_Katalog_Zeitraster.col_ID)
 		);
-	
+
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Klausuren_Raeume_Stunden.

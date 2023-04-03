@@ -50,7 +50,7 @@ public class Tabelle_K_ErzieherArt extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index K_ErzieherArt_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_ErzieherArt_UC1 = addUniqueIndex("K_ErzieherArt_UC1", 
+	public SchemaTabelleUniqueIndex unique_K_ErzieherArt_UC1 = addUniqueIndex("K_ErzieherArt_UC1",
 			col_Bezeichnung
 		)
 		.setRevision(SchemaRevisionen.REV_1);

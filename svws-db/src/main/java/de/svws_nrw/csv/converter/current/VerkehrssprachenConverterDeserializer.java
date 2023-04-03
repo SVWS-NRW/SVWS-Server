@@ -14,7 +14,7 @@ import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
  * Diese Klasse ist ein Deserialisierer für Nationalitäten. Sie deserialisiert
  * die Datenbankdarstellung als String in einen Wert der Aufzählung {@link Verkehrssprache}.
  */
-public class VerkehrssprachenConverterDeserializer extends StdDeserializer<Verkehrssprache> {
+public final class VerkehrssprachenConverterDeserializer extends StdDeserializer<Verkehrssprache> {
 
 	private static final long serialVersionUID = -5130396859369645143L;
 
@@ -30,13 +30,13 @@ public class VerkehrssprachenConverterDeserializer extends StdDeserializer<Verke
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected VerkehrssprachenConverterDeserializer(Class<Verkehrssprache> t) {
+	protected VerkehrssprachenConverterDeserializer(final Class<Verkehrssprache> t) {
 		super(t);
 	}
 
 	@Override
-	public Verkehrssprache deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Verkehrssprache deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		return VerkehrssprachenConverter.instance.convertToEntityAttribute(p.getText());
 	}
-	
+
 }

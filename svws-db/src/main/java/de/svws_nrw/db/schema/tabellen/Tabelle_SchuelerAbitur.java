@@ -268,23 +268,23 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerAbitur_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbitur_Schuljahreabschnitt_FK = addForeignKey(
-			"SchuelerAbitur_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerAbitur_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerAbitur_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerAbitur_Schueler_FK = addForeignKey(
-			"SchuelerAbitur_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerAbitur_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index SchuelerAbitur_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerAbitur_UC1 = addUniqueIndex("SchuelerAbitur_UC1", 
+	public SchemaTabelleUniqueIndex unique_SchuelerAbitur_UC1 = addUniqueIndex("SchuelerAbitur_UC1",
 			col_Schueler_ID
 		);
 

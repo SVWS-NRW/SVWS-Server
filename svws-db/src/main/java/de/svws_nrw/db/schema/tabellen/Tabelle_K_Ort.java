@@ -60,14 +60,14 @@ public class Tabelle_K_Ort extends SchemaTabelle {
 
 
 	/** Die Definition des Non-Unique-Index K_Ort_IDX1 */
-	public SchemaTabelleIndex index_K_Ort_IDX1 = addIndex("K_Ort_IDX1", 
+	public SchemaTabelleIndex index_K_Ort_IDX1 = addIndex("K_Ort_IDX1",
 			col_PLZ
 		);
 
 
 	/** Die Definition des Unique-Index K_Ort_UC1 */
-	public SchemaTabelleUniqueIndex unique_K_Ort_UC1 = addUniqueIndex("K_Ort_UC1", 
-			col_Bezeichnung, 
+	public SchemaTabelleUniqueIndex unique_K_Ort_UC1 = addUniqueIndex("K_Ort_UC1",
+			col_Bezeichnung,
 			col_PLZ
 		)
 		.setRevision(SchemaRevisionen.REV_1);

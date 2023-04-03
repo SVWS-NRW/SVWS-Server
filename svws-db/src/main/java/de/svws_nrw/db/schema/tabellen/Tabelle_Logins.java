@@ -35,9 +35,9 @@ public class Tabelle_Logins extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Logins_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_Logins_Benutzer_FK = addForeignKey(
-			"Logins_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Logins_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_LI_UserID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

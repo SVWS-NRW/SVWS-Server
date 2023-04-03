@@ -180,18 +180,18 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels K_AllgAdresse_K_Adressart_FK */
 	public SchemaTabelleFremdschluessel fk_K_AllgAdresse_K_Adressart_FK = addForeignKey(
-			"K_AllgAdresse_K_Adressart_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_AllgAdresse_K_Adressart_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_AdressArt_ID, Schema.tab_K_Adressart.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels K_AllgAdresse_Ort_FK */
 	public SchemaTabelleFremdschluessel fk_K_AllgAdresse_Ort_FK = addForeignKey(
-			"K_AllgAdresse_Ort_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"K_AllgAdresse_Ort_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_AllgAdrOrt_ID, Schema.tab_K_Ort.col_ID)
 		);
 

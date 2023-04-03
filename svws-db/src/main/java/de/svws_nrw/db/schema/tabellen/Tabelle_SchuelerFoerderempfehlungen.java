@@ -145,35 +145,35 @@ public class Tabelle_SchuelerFoerderempfehlungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerFoerderempfehlungen_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFoerderempfehlungen_Abschnitt_FK = addForeignKey(
-			"SchuelerFoerderempfehlungen_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerFoerderempfehlungen_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerFoerderempfehlungen_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFoerderempfehlungen_Schueler_FK = addForeignKey(
-			"SchuelerFoerderempfehlungen_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerFoerderempfehlungen_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 	/** Die Definition des Fremdschlüssels SchuelerFoerderempfehlungen_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFoerderempfehlungen_Lehrer_FK = addForeignKey(
-			"SchuelerFoerderempfehlungen_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerFoerderempfehlungen_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerFoerderempfehlungen_Klassen_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFoerderempfehlungen_Klassen_FK = addForeignKey(
-			"SchuelerFoerderempfehlungen_Klassen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerFoerderempfehlungen_Klassen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Klassen_ID, Schema.tab_Klassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

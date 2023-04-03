@@ -12,10 +12,10 @@ public class RevisionNoUpdates extends SchemaRevisionUpdateSQL {
 	/**
 	 * Erzeugt eine Instanz für Revisions-Updates ohne
 	 * SQL-Befehle.
-	 * 
+	 *
 	 * @param revision   die Revision
 	 */
-	public RevisionNoUpdates(SchemaRevisionen revision) {
+	public RevisionNoUpdates(final SchemaRevisionen revision) {
 		super(revision);
 	}
 

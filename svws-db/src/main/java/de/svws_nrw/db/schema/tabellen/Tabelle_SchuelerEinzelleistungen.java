@@ -55,27 +55,27 @@ public class Tabelle_SchuelerEinzelleistungen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Art_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerEinzelleistungen_Art_FK = addForeignKey(
-			"SchuelerEinzelleistungen_Art_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerEinzelleistungen_Art_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Art_ID, Schema.tab_K_Einzelleistungen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerEinzelleistungen_Lehrer_FK = addForeignKey(
-			"SchuelerEinzelleistungen_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerEinzelleistungen_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerEinzelleistungen_Leistungsdaten_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerEinzelleistungen_Leistungsdaten_FK = addForeignKey(
-			"SchuelerEinzelleistungen_Leistungsdaten_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerEinzelleistungen_Leistungsdaten_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Leistung_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

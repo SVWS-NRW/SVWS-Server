@@ -41,7 +41,7 @@ public class Tabelle_EigeneSchule_Zertifikate extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index EigeneSchule_Zertifikate_UC1 */
-	public SchemaTabelleUniqueIndex unique_EigeneSchule_Zertifikate_UC1 = addUniqueIndex("EigeneSchule_Zertifikate_UC1", 
+	public SchemaTabelleUniqueIndex unique_EigeneSchule_Zertifikate_UC1 = addUniqueIndex("EigeneSchule_Zertifikate_UC1",
 			col_Kuerzel
 		);
 

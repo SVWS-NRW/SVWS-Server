@@ -68,26 +68,26 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFehlstunden_Abschnitt_FK = addForeignKey(
-			"SchuelerFehlstunden_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerFehlstunden_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_SchuelerLernabschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFehlstunden_Fach_FK = addForeignKey(
-			"SchuelerFehlstunden_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerFehlstunden_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerFehlstunden_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFehlstunden_Lehrer_FK = addForeignKey(
-			"SchuelerFehlstunden_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerFehlstunden_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

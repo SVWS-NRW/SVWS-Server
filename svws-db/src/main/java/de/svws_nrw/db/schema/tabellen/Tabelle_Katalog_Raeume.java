@@ -34,7 +34,7 @@ public class Tabelle_Katalog_Raeume extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index Katalog_Raeume_UC1 */
-	public SchemaTabelleUniqueIndex unique_Katalog_Raeume_UC1 = addUniqueIndex("Katalog_Raeume_UC1", 
+	public SchemaTabelleUniqueIndex unique_Katalog_Raeume_UC1 = addUniqueIndex("Katalog_Raeume_UC1",
 			col_Kuerzel
 		);
 

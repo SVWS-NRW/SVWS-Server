@@ -52,9 +52,9 @@ public class Tabelle_BenutzerEmail extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels BenutzerEmail_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_BenutzerEmail_Benutzer_FK = addForeignKey(
-			"BenutzerEmail_Benutzer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"BenutzerEmail_Benutzer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

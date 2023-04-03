@@ -47,13 +47,13 @@ public class Tabelle_Stundenplan extends SchemaTabelle {
 		.setDefault("0")
 		.setNotNull()
 		.setJavaComment("Gibt das Modell für die Wochen an, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die Anzahl der unterschiedlichen Wochentypen festgelegt.");
-	
+
 
 	/** Die Definition des Fremdschlüssels Stundenplan_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_Stundenplan_Schuljahreabschnitt_FK = addForeignKey(
-			"Stundenplan_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Stundenplan_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 

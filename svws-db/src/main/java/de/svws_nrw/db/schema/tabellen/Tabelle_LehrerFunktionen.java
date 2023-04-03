@@ -56,33 +56,33 @@ public class Tabelle_LehrerFunktionen extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels LehrerFunktionen_Abschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerFunktionen_Abschnitt_FK = addForeignKey(
-			"LehrerFunktionen_Abschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerFunktionen_Abschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Abschnitt_ID, Schema.tab_LehrerAbschnittsdaten.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerFunktionen_Funktion_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerFunktionen_Funktion_FK = addForeignKey(
-			"LehrerFunktionen_Funktion_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerFunktionen_Funktion_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Funktion_ID, Schema.tab_K_Schulfunktionen.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels LehrerFunktionen_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerFunktionen_Lehrer_FK = addForeignKey(
-			"LehrerFunktionen_Lehrer_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"LehrerFunktionen_Lehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setVeraltet(SchemaRevisionen.REV_1);
 
 
 	/** Die Definition des Unique-Index LehrerFunktionen_UC1 */
-	public SchemaTabelleUniqueIndex unique_LehrerFunktionen_UC1 = addUniqueIndex("LehrerFunktionen_UC1", 
-			col_Abschnitt_ID, 
+	public SchemaTabelleUniqueIndex unique_LehrerFunktionen_UC1 = addUniqueIndex("LehrerFunktionen_UC1",
+			col_Abschnitt_ID,
 			col_Funktion_ID
 		)
 		.setRevision(SchemaRevisionen.REV_2);

@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * Diese Klasse ist einen Serialisierer von Benutzer-Typ-Objekten.
  */
-public class DavRessourceCollectionTypConverterSerializer extends StdSerializer<DavRessourceCollectionTyp> {
+public final class DavRessourceCollectionTypConverterSerializer extends StdSerializer<DavRessourceCollectionTyp> {
 
 	private static final long serialVersionUID = -1745427357127293925L;
 
@@ -22,18 +22,18 @@ public class DavRessourceCollectionTypConverterSerializer extends StdSerializer<
 	public DavRessourceCollectionTypConverterSerializer() {
 		super(DavRessourceCollectionTyp.class);
 	}
-	
+
 	/**
 	 * Erzeugt ein neues Objekt zur Serialisierung
-	 * 
+	 *
 	 * @param t   ein Klassenobjekt für die Benutzer-Typ-Klasse
 	 */
-	public DavRessourceCollectionTypConverterSerializer(Class<DavRessourceCollectionTyp> t) {
+	public DavRessourceCollectionTypConverterSerializer(final Class<DavRessourceCollectionTyp> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(DavRessourceCollectionTyp value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(final DavRessourceCollectionTyp value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(DavRessourceCollectionTypConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

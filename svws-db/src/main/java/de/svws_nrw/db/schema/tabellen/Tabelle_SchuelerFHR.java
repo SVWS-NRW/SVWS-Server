@@ -180,15 +180,15 @@ public class Tabelle_SchuelerFHR extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerFHR_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerFHR_Schueler_FK = addForeignKey(
-			"SchuelerFHR_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerFHR_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 
 	/** Die Definition des Unique-Index SchuelerFHR_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerFHR_UC1 = addUniqueIndex("SchuelerFHR_UC1", 
+	public SchemaTabelleUniqueIndex unique_SchuelerFHR_UC1 = addUniqueIndex("SchuelerFHR_UC1",
 			col_Schueler_ID
 		);
 

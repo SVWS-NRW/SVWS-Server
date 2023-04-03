@@ -361,131 +361,131 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Schuljahreabschnitt_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Schuljahreabschnitt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLernabschnittsdaten_Schuljahreabschnitt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Fach_Nachpruefung_1_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Fach_Nachpruefung_1_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_1_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_1_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_NPV_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Fach_Nachpruefung_2_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Fach_Nachpruefung_2_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_2_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_2_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_NPAA_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Fach_Nachpruefung_3_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Fach_Nachpruefung_3_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_3_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Fach_Nachpruefung_3_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_NPBQ_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Fachklasse_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Fachklasse_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Fachklasse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Fachklasse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Fachklasse_ID, Schema.tab_EigeneSchule_Fachklassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Foerderschwerpunkt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Foerderschwerpunkt_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Foerderschwerpunkt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Foerderschwerpunkt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Foerderschwerpunkt_ID, Schema.tab_K_Foerderschwerpunkt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Foerderschwerpunkt2_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Foerderschwerpunkt2_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Foerderschwerpunkt2_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Foerderschwerpunkt2_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Foerderschwerpunkt2_ID, Schema.tab_K_Foerderschwerpunkt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Jahrgang_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Jahrgang_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Jahrgang_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Jahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Klassen_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Klassen_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Klassen_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Klassen_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Klassen_ID, Schema.tab_Klassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_FolgeKlasse_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_FolgeKlasse_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_FolgeKlasse_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_FolgeKlasse_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Folgeklasse_ID, Schema.tab_Klassen.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Schueler_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"SchuelerLernabschnittsdaten_Schueler_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Schwerpunkt_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Schwerpunkt_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Schwerpunkt_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Schwerpunkt_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Schwerpunkt_ID, Schema.tab_K_Schwerpunkt.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Sonderpaedagoge_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Sonderpaedagoge_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Sonderpaedagoge_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Sonderpaedagoge_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Sonderpaedagoge_ID, Schema.tab_K_Lehrer.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels SchuelerLernabschnittsdaten_Tutor_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerLernabschnittsdaten_Tutor_FK = addForeignKey(
-			"SchuelerLernabschnittsdaten_Tutor_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
+			"SchuelerLernabschnittsdaten_Tutor_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Tutor_ID, Schema.tab_K_Lehrer.col_ID)
 		);
- 
+
 	/** Die Definition des Unique-Index SchuelerLernabschnittsdaten_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerLernabschnittsdaten_UC1 = addUniqueIndex("SchuelerLernabschnittsdaten_UC1", 
-			col_Schueler_ID, 
-			col_Schuljahresabschnitts_ID, 
+	public SchemaTabelleUniqueIndex unique_SchuelerLernabschnittsdaten_UC1 = addUniqueIndex("SchuelerLernabschnittsdaten_UC1",
+			col_Schueler_ID,
+			col_Schuljahresabschnitts_ID,
 			col_WechselNr
 		)
 		.setRevision(SchemaRevisionen.REV_1);

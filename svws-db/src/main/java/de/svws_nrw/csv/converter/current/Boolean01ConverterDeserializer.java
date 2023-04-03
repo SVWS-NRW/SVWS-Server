@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 
 /**
- * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung 
+ * Diese Klasse ist ein Deserialisierer und deserialisiert die Datenbankdarstellung
  * als Zahl, die 0 (false) oder 1 (true) sein kann, in einen Java-String-Wert.
  */
-public class Boolean01ConverterDeserializer extends StdDeserializer<Boolean> {
+public final class Boolean01ConverterDeserializer extends StdDeserializer<Boolean> {
 
 	private static final long serialVersionUID = 5630376392284015049L;
 
@@ -23,23 +23,23 @@ public class Boolean01ConverterDeserializer extends StdDeserializer<Boolean> {
 	public Boolean01ConverterDeserializer() {
 		super(Boolean.class);
 	}
-	
+
 	/**
 	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
-	 * 
+	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected Boolean01ConverterDeserializer(Class<Boolean> t) {
+	protected Boolean01ConverterDeserializer(final Class<Boolean> t) {
 		super(t);
 	}
 
 	@Override
-	public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Boolean deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return Boolean01Converter.instance.convertToEntityAttribute(p.getIntValue());
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return null;
 		}
 	}
-	
+
 }

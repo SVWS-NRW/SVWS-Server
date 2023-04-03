@@ -39,7 +39,7 @@ public class Tabelle_SchuelerListe extends SchemaTabelle {
 
 
 	/** Die Definition des Unique-Index SchuelerListe_UC1 */
-	public SchemaTabelleUniqueIndex unique_SchuelerListe_UC1 = addUniqueIndex("SchuelerListe_UC1", 
+	public SchemaTabelleUniqueIndex unique_SchuelerListe_UC1 = addUniqueIndex("SchuelerListe_UC1",
 			col_Bezeichnung
 		);
 
