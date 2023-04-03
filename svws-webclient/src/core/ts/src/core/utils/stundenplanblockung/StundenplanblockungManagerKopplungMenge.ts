@@ -30,7 +30,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
 	public addOrException(pKopplungID : number, pKuerzel : string) : void {
-		if (this._map.containsKey(pKopplungID) === true)
+		if (this._map.containsKey(pKopplungID))
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!")
 		const ko : StundenplanblockungManagerKopplung | null = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
 		this._map.put(pKopplungID, ko);

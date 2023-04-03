@@ -94,74 +94,82 @@ public class KlausurterminblockungDynDaten {
 		}
 	}
 
+	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausur> pInput) {
+		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+
+			final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+			gruppe.add(klausurNr);
+			_klausurGruppen.add(gruppe);
+		}
+	}
+
+	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
+		final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
+		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+
+			final long fachID = gostKursklausur.idFach;
+			if (fachID < 0) {
+				// Ohne FachID --> Erzeuge eigene Gruppe
+				final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+				gruppe.add(klausurNr);
+				_klausurGruppen.add(gruppe);
+			} else {
+				// Mit FachID --> Suche zugehörige Gruppe
+				Vector<@NotNull Integer> gruppe = mapFachZuKlausurGruppe.get(fachID);
+				if (gruppe == null) {
+					gruppe = new Vector<>();
+					mapFachZuKlausurGruppe.put(fachID, gruppe);
+					_klausurGruppen.add(gruppe);
+				}
+				gruppe.add(klausurNr);
+			}
+		}
+	}
+
+	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
+		final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
+		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
+			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+
+			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
+			if (schienenID < 0) {
+				// Ohne schienenID --> Erzeuge eigene Gruppe
+				final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
+				gruppe.add(klausurNr);
+				_klausurGruppen.add(gruppe);
+			} else {
+				// Mit schienenID --> Suche zugehörige Gruppe
+				Vector<@NotNull Integer> gruppe = mapSchieneZuKlausurGruppe.get(schienenID);
+				if (gruppe == null) {
+					gruppe = new Vector<>();
+					mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
+					_klausurGruppen.add(gruppe);
+				}
+				gruppe.add(klausurNr);
+			}
+		}
+	}
+
 	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
 		// pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 
 		switch (pConfig.get_algorithmus()) {
 			// Jede Gruppe besteht aus einer einzelnen Klausur
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
-				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
-
-					final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
-					gruppe.add(klausurNr);
-					_klausurGruppen.add(gruppe);
-				}
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL:
+				initialisiereKlausurgruppenNormal(pInput);
 				break;
-			}
 			// Jede Gruppe besteht aus allen Klausuren des selben Faches.
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
-				final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
-				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
-
-					final long fachID = gostKursklausur.idFach;
-					if (fachID < 0) {
-						// Ohne FachID --> Erzeuge eigene Gruppe
-						final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
-						gruppe.add(klausurNr);
-						_klausurGruppen.add(gruppe);
-					} else {
-						// Mit FachID --> Suche zugehörige Gruppe
-						Vector<@NotNull Integer> gruppe = mapFachZuKlausurGruppe.get(fachID);
-						if (gruppe == null) {
-							gruppe = new Vector<>();
-							mapFachZuKlausurGruppe.put(fachID, gruppe);
-							_klausurGruppen.add(gruppe);
-						}
-						gruppe.add(klausurNr);
-					}
-
-				}
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE:
+				initialisiereKlausurgruppenFaecherweise(pInput);
 				break;
-			}
 			// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:
-				final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
-				for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-					final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
-
-					final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
-					if (schienenID < 0) {
-						// Ohne schienenID --> Erzeuge eigene Gruppe
-						final @NotNull Vector<@NotNull Integer> gruppe = new Vector<>();
-						gruppe.add(klausurNr);
-						_klausurGruppen.add(gruppe);
-					} else {
-						// Mit schienenID --> Suche zugehörige Gruppe
-						Vector<@NotNull Integer> gruppe = mapSchieneZuKlausurGruppe.get(schienenID);
-						if (gruppe == null) {
-							gruppe = new Vector<>();
-							mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
-							_klausurGruppen.add(gruppe);
-						}
-						gruppe.add(klausurNr);
-					}
-
-				}
+				initialisiereKlausurgruppenSchienenweise(pInput);
 				break;
 			default:
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!");

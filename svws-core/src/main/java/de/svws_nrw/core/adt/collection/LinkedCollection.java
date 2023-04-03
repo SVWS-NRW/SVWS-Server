@@ -48,7 +48,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   der Inhaltstyp der LinkedCollection
  */
-public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneable {
+public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneable {
 
 	/** Das erste Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _head;
@@ -223,7 +223,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		if ((c == null) || (c.size() == 0))
 			return false;
 		if (c instanceof LinkedCollection) {  // handle the special case where c is this collection (and also other cases)
-			final @NotNull LinkedCollection<? extends @NotNull E> coll = (LinkedCollection<? extends @NotNull E>)c;
+			final @NotNull LinkedCollection<? extends @NotNull E> coll = (LinkedCollection<? extends @NotNull E>) c;
 			// _tail and _head are never null since coll is not empty
 			if ((coll._tail == null) || (coll._head == null))
 				throw new NullPointerException();
@@ -258,12 +258,9 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 		}
 		boolean result = false;
 		for (final Object o : c) {
-			if (this.remove(o)) {
+			// Entferne alle Vorkommen...
+			while (this.remove(o))
 				result = true;
-				while (this.remove(o)) {
-					// Entferne ggf. noch weitere vorkommen...
-				}
-			}
 		}
 		return result;
 	}

@@ -122,7 +122,7 @@ public enum Reformpaedagogik {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private @NotNull Vector<@NotNull Schulform>@NotNull[] schulformen;
+	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
@@ -135,7 +135,7 @@ public enum Reformpaedagogik {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {

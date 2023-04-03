@@ -30,7 +30,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
 	public addOrException(pLehrkraftID : number, pKuerzel : string) : void {
-		if (this._map.containsKey(pLehrkraftID) === true)
+		if (this._map.containsKey(pLehrkraftID))
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!")
 		const le : StundenplanblockungManagerLehrkraft | null = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
 		this._map.put(pLehrkraftID, le);

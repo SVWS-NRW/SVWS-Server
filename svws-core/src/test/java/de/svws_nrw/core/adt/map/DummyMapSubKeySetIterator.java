@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author Benjamin A. Bartsch
  */
-public class DummyMapSubKeySetIterator implements Iterator<@NotNull Integer> {
+public final class DummyMapSubKeySetIterator implements Iterator<@NotNull Integer> {
 
 	/**
 	 * Die {@link DummyMapSub} auf der dieser Iterator operiert.
@@ -29,10 +29,10 @@ public class DummyMapSubKeySetIterator implements Iterator<@NotNull Integer> {
 
 	/**
 	 * Erzeugt einen DummyMapSubKeySetIterator der auf der {@link DummyMapSub} operiert.
-	 * 
+	 *
 	 * @param sub Die {@link DummyMapSub} auf der dieser Iterator operiert.
 	 */
-	DummyMapSubKeySetIterator(@NotNull DummyMapSub sub) {
+	DummyMapSubKeySetIterator(final @NotNull DummyMapSub sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.firstEntry();
@@ -48,7 +48,7 @@ public class DummyMapSubKeySetIterator implements Iterator<@NotNull Integer> {
 	}
 
 	@Override
-	public final boolean hasNext() {
+	public boolean hasNext() {
 		return _next != null;
 	}
 

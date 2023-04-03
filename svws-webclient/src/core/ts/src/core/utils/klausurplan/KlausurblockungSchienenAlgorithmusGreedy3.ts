@@ -42,7 +42,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 		this._saved = false;
 		this.berechneRekursiv();
 		this._dynDaten.aktionZustand1Laden();
-		if (this._dynDaten.gibIstBesserAlsZustand2() === true)
+		if (this._dynDaten.gibIstBesserAlsZustand2())
 			this._dynDaten.aktionZustand2Speichern();
 	}
 
@@ -64,7 +64,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 			const schienenAnzahl : number = this._dynDaten.gibAnzahlSchienen();
 			const differenz : number = schiene < schienenAnzahl ? 0 : (schiene - schienenAnzahl + 1);
 			this._dynDaten.aktionSchienenAnzahlVeraendern(+differenz);
-			if (this._dynDaten.aktionSetzeKlausurInSchiene(klausurNr, schiene) === true) {
+			if (this._dynDaten.aktionSetzeKlausurInSchiene(klausurNr, schiene)) {
 				this.berechneRekursiv();
 				this._dynDaten.aktionEntferneKlausurAusSchiene(klausurNr);
 			}

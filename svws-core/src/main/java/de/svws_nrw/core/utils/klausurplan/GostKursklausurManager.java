@@ -163,11 +163,11 @@ public class GostKursklausurManager {
 				final Vector<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
 				if (entry == null) {
 					// TODO Fehler, denn kann eigentlich nicht sein.
-				} else {
-					if (entry.contains(klausur)) {
-						oldTerminId = key;
-						entry.remove(klausur);
-					}
+					continue;
+				}
+				if (entry.contains(klausur)) {
+					oldTerminId = key;
+					entry.remove(klausur);
 				}
 			}
 
@@ -177,9 +177,8 @@ public class GostKursklausurManager {
 				final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = quartalMap.get(oldTerminId);
 				if (listOldQuartalTerminKursklausuren != null)
 					listOldQuartalTerminKursklausuren.remove(klausur);
-			} else {
-				// TODO Fehler, denn kann eigentlich nicht sein.
 			}
+			// TODO else ... Fehler, denn kann eigentlich nicht sein.
 
 			// aus _mapQuartalTerminKursklausuren löschen
 			final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>>> quartalKursartMap = _mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
@@ -189,12 +188,10 @@ public class GostKursklausurManager {
 					final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren != null)
 						listOldQuartalTerminKursklausuren.remove(klausur);
-				} else {
-					// TODO Fehler, denn kann eigentlich nicht sein.
 				}
-			} else {
-				// TODO Fehler, denn kann eigentlich nicht sein.
+				// TODO else ... Fehler, denn kann eigentlich nicht sein.
 			}
+			// TODO else ... Fehler, denn kann eigentlich nicht sein.
 
 			// _mapQuartalKursKlausuren muss nicht geändert werden
 

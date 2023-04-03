@@ -8,11 +8,11 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse implementiert eine Sub-Collection für die {@link DummyMapSub}. <br>
  * Alle Methodenaufrufe werden an die {@link DummyMapSub} delegiert.
- * 
+ *
  * @author Benjamin A. Bartsch
- * 
+ *
  */
-public class DummyMapSubCollection implements Collection<@NotNull Integer> {
+public final class DummyMapSubCollection implements Collection<@NotNull Integer> {
 
 	/**
 	 * Die {@link DummyMapSub} auf der diese Sub-Collection operiert.
@@ -21,17 +21,17 @@ public class DummyMapSubCollection implements Collection<@NotNull Integer> {
 
 	/**
 	 * Erstellt eine neue Sub-Collection zur übergebenen {@link DummyMapSub}.
-	 * 
+	 *
 	 * @param sub Die {@link DummyMapSub} auf der diese Sub-Collection operiert.
 	 */
-	DummyMapSubCollection(@NotNull DummyMapSub sub) {
+	DummyMapSubCollection(final @NotNull DummyMapSub sub) {
 		_sub = sub;
 	}
 
 	@Override
 	public @NotNull String toString() {
 		String s = "";
-		Iterator<Integer> iter = this.iterator();
+		final Iterator<Integer> iter = this.iterator();
 		while (iter.hasNext())
 			s += (s.isEmpty() ? "" : ", ") + iter.next();
 		// Transpieler kann diese FOR-Schleife (nocht) nicht.
@@ -51,7 +51,7 @@ public class DummyMapSubCollection implements Collection<@NotNull Integer> {
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(@NotNull final Object o) {
 		return _sub.containsValue(o);
 	}
 
@@ -66,37 +66,37 @@ public class DummyMapSubCollection implements Collection<@NotNull Integer> {
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull T @NotNull [] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull final T @NotNull [] a) {
 		return _sub.bcGetArrayListOfValues().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull Integer e) {
+	public boolean add(@NotNull final Integer e) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(@NotNull final Object o) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) {
+	public boolean containsAll(@NotNull final Collection<?> c) {
 		return _sub.bcContainsAllValues(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull Integer> c) {
+	public boolean addAll(@NotNull final Collection<? extends @NotNull Integer> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(@NotNull final Collection<?> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll(@NotNull final Collection<?> c) {
 		throw new UnsupportedOperationException(); // TODO BAR
 	}
 

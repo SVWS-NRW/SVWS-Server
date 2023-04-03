@@ -36,8 +36,9 @@ public class ResourceUtils {
 	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
 	 * sowie die angegebene Dateiendung haben.
 	 *
+	 * @param fs              das Dateisystem, auf dem die Dateien gesucht werden.
 	 * @param path            der Pfad in den Classpath-Resourcen
-	 * @param packageName     der Name des Packages
+	 * @param packagePath     der relative Pfad für das Packages
 	 * @param fileextension   die Dateiendung
 	 *
 	 * @return eine List mit den Pfaden der gefundenen Dateien

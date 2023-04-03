@@ -43,8 +43,8 @@ export class SprachendatenUtils extends JavaObject {
 			return false;
 		}
 		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
-		if (belegung !== null && SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) > 0) {
-			return SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) <= 10;
+		if (belegung !== null && SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang) > 0) {
+			return SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang) <= 10;
 		}
 		return false;
 	}
@@ -70,8 +70,8 @@ export class SprachendatenUtils extends JavaObject {
 		let belegtBisJahrgangNumerisch : number;
 		let letzterJahrgangSekI : number;
 		if (belegung.belegungVonJahrgang !== null) {
-			belegtVonJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
-			belegtBisJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
+			belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
+			belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
 			letzterJahrgangSekI = 10;
 			if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
 				letzterJahrgangSekI = 9;
@@ -130,13 +130,13 @@ export class SprachendatenUtils extends JavaObject {
 			const alleBelegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 			for (const belegung of alleBelegungen) {
 				if (belegung.belegungVonJahrgang !== null) {
-					belegtVonJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
-					belegtBisJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
+					belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
+					belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
 					letzterJahrgangSekI = 10;
 					if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
 						letzterJahrgangSekI = 9;
 					}
-					if (belegtVonJahrgangNumerisch > 0 && SprachendatenUtils.ASDJahrgangNumerisch(belegungbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenUtils.ASDJahrgangNumerisch(belegungbeginnEnde)) {
+					if (belegtVonJahrgangNumerisch > 0 && SprachendatenUtils.getJahrgangNumerisch(belegungbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenUtils.getJahrgangNumerisch(belegungbeginnEnde)) {
 						if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
 							belegtBisJahrgangNumerisch = letzterJahrgangSekI;
 						}
@@ -151,7 +151,7 @@ export class SprachendatenUtils extends JavaObject {
 			}
 		}
 		if (belegungen.size() > 0) {
-			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.ASDJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.ASDJahrgangNumerisch(b.belegungVonJahrgang)) };
+			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.getJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.getJahrgangNumerisch(b.belegungVonJahrgang)) };
 			belegungen.sort(comparator);
 		}
 		return belegungen;
@@ -212,20 +212,18 @@ export class SprachendatenUtils extends JavaObject {
 					if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 						if (!(pruefung.ersetzteSprache === null || JavaObject.equalsTranspiler(pruefung.ersetzteSprache, ("")))) {
 							sprachen.add(pruefung.ersetzteSprache);
-						} else {
+						} else
 							if (!(pruefung.sprache === null || JavaObject.equalsTranspiler(pruefung.sprache, ("")))) {
 								sprachen.add(pruefung.sprache);
 							}
-						}
 					}
 					if (pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id)))) {
 						if (!(pruefung.ersetzteSprache === null || JavaObject.equalsTranspiler(pruefung.ersetzteSprache, ("")))) {
 							sprachen.add(pruefung.ersetzteSprache);
-						} else {
+						} else
 							if (!(pruefung.sprache === null || JavaObject.equalsTranspiler(pruefung.sprache, ("")))) {
 								sprachen.add(pruefung.sprache);
 							}
-						}
 					}
 				}
 			}
@@ -243,19 +241,16 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static hatEineSpracheMitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return false;
-		}
 		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
-		if (anzahlSprachen >= 1) {
+		if (anzahlSprachen >= 1)
 			return true;
-		}
 		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (const pruefung of pruefungen) {
-				if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4))
 					return true;
-				}
 			}
 		}
 		return false;
@@ -271,22 +266,19 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static hatZweiSprachenMitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return false;
-		}
 		const belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
 		const anzahlSprachen : number = belegungen.size();
-		if (anzahlSprachen >= 2) {
+		if (anzahlSprachen >= 2)
 			return true;
-		}
 		if (anzahlSprachen === 1) {
 			const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 			if (pruefungen !== null) {
 				for (const pruefung of pruefungen) {
 					if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
-						if (!JavaObject.equalsTranspiler(belegungen.get(0).sprache, (pruefung.sprache))) {
+						if (!JavaObject.equalsTranspiler(belegungen.get(0).sprache, (pruefung.sprache)))
 							return true;
-						}
 					}
 				}
 			}
@@ -303,13 +295,11 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static hatSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return false;
-		}
 		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
-		if (anzahlSprachen >= 1) {
+		if (anzahlSprachen >= 1)
 			return true;
-		}
 		return false;
 	}
 
@@ -322,17 +312,15 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls entsprechende Sprachprüfungen vorhanden sind, andernfalls false.
 	 */
 	public static hatSprachfeststellungspruefungAufEFNiveau(sprachendaten : Sprachendaten | null) : boolean {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return false;
-		}
 		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (const pruefungS1 of pruefungen) {
 				if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefungS1.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefungS1.note !== null) && (pruefungS1.note <= 4)) {
 					for (const pruefungEF of pruefungen) {
-						if (pruefungEF.istFeststellungspruefung && JavaObject.equalsTranspiler(pruefungEF.ersetzteSprache, (pruefungS1.ersetzteSprache)) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId === Sprachpruefungniveau.EF.daten.id && (pruefungEF.note !== null) && (pruefungEF.note <= 4)) {
+						if (pruefungEF.istFeststellungspruefung && JavaObject.equalsTranspiler(pruefungEF.ersetzteSprache, (pruefungS1.ersetzteSprache)) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId === Sprachpruefungniveau.EF.daten.id && (pruefungEF.note !== null) && (pruefungEF.note <= 4))
 							return true;
-						}
 					}
 				}
 			}
@@ -351,23 +339,20 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Die erste belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
 	public static getErsteSpracheInSekI(sprachendaten : Sprachendaten | null) : string | null {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return null;
-		}
 		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (const pruefung of pruefungen) {
-				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4))
 					return pruefung.ersetzteSprache;
-				}
 			}
 		}
 		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
-			if (sprachbelegungen.size() > 0) {
+			if (sprachbelegungen.size() > 0)
 				return sprachbelegungen.get(0).sprache;
-			}
 		}
 		return null;
 	}
@@ -383,9 +368,8 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Die zweite belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
 	public static getZweiteSpracheInSekI(sprachendaten : Sprachendaten | null) : string | null {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return null;
-		}
 		let pruefungErsteSprache : string | null = "";
 		let pruefungZweiteSprache : string | null = "";
 		const pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
@@ -399,22 +383,19 @@ export class SprachendatenUtils extends JavaObject {
 				}
 			}
 		}
-		if (!JavaObject.equalsTranspiler(pruefungZweiteSprache, (""))) {
+		if (!JavaObject.equalsTranspiler(pruefungZweiteSprache, ("")))
 			return pruefungZweiteSprache;
-		}
 		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
 			if (!JavaObject.equalsTranspiler(pruefungErsteSprache, (""))) {
 				for (const sprachbelegung of sprachbelegungen) {
-					if (!JavaObject.equalsTranspiler(sprachbelegung.sprache, (pruefungErsteSprache))) {
+					if (!JavaObject.equalsTranspiler(sprachbelegung.sprache, (pruefungErsteSprache)))
 						return sprachbelegung.sprache;
-					}
 				}
 			} else {
-				if (sprachbelegungen.size() > 1) {
+				if (sprachbelegungen.size() > 1)
 					return sprachbelegungen.get(1).sprache;
-				}
 			}
 		}
 		return null;
@@ -429,9 +410,8 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Sprache, falls eine Belegung vorhanden ist, sonst null
 	 */
 	public static getSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : string | null {
-		if (sprachendaten === null) {
+		if (sprachendaten === null)
 			return null;
-		}
 		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
@@ -446,15 +426,14 @@ export class SprachendatenUtils extends JavaObject {
 	 * Hilfsfunktion, die einen ASDJahrgang nach APO-SI und APO-GOSt und in einen numerischen Wert für Vergleiche umwandelt.
 	 * Dabei wird EF zu 11, Q1 zu 12 und Q2 zu 13. Die übrigen Stufen werden gemäß ihrer numerischen Stufenangaben umgewandelt.
 	 *
-	 * @param ASDJahrgang Der in den mumerischen Wert umzuwandelnde ASDJahrgang.
+	 * @param kuerzelJg   der in den mumerischen Wert umzuwandelnde ASDJahrgang.
 	 *
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
-	private static ASDJahrgangNumerisch(ASDJahrgang : string | null) : number {
-		if (ASDJahrgang === null || JavaObject.equalsTranspiler(ASDJahrgang, (""))) {
+	private static getJahrgangNumerisch(kuerzelJg : string | null) : number {
+		if (kuerzelJg === null || JavaObject.equalsTranspiler(kuerzelJg, ("")))
 			return 0;
-		}
-		switch (ASDJahrgang) {
+		switch (kuerzelJg) {
 			case "EF": {
 				return 11;
 			}
@@ -466,7 +445,7 @@ export class SprachendatenUtils extends JavaObject {
 			}
 			default: {
 				try {
-					return JavaInteger.parseInt(ASDJahrgang);
+					return JavaInteger.parseInt(kuerzelJg);
 				} catch(e) {
 					return 0;
 				}

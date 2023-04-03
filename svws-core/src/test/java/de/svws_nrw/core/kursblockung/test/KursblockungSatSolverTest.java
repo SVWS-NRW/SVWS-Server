@@ -21,13 +21,13 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testLeereFormelSAT")
 	void testLeereFormelSAT() {
-		Random random = new Random(1);
-		SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+		final Random random = new Random(1);
+		final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 		// Leere Formel.
 
 		// Lösen
-		int result = ssa.solve(60000);
+		final int result = ssa.solve(60000);
 
 		// Überprüfen
 		if (result != SatSolverA.RESULT_SATISFIABLE) {
@@ -41,17 +41,17 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testFreieVariablen")
 	void testFreieVariablen() {
-		Random random = new Random(1);
-		SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+		final Random random = new Random(1);
+		final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 		// Formel.
-		int x = ssa.createNewVar();
-		int y = ssa.createNewVar();
-		int z = ssa.createNewVar();
+		final int x = ssa.createNewVar();
+		final int y = ssa.createNewVar();
+		final int z = ssa.createNewVar();
 		ssa.c_3(x, y, z);
 
 		// Lösen
-		int result = ssa.solve(60000);
+		final int result = ssa.solve(60000);
 
 		// Überprüfen
 		if (result != SatSolverA.RESULT_SATISFIABLE) {
@@ -65,23 +65,23 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testUnitSAT")
 	void testUnitSAT() {
-		Random random = new Random(1);
-		SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+		final Random random = new Random(1);
+		final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 		// Formel erzeugen.
-		int x = ssa.createNewVar();
+		final int x = ssa.createNewVar();
 		ssa.c_1(x);
 		ssa.c_1(x);
 
 		// Lösen
-		int result = ssa.solve(60000);
+		final int result = ssa.solve(60000);
 
 		// Überprüfen
 		if (result != SatSolverA.RESULT_SATISFIABLE) {
 			fail("Solver antwortet nicht SATISFIABLE.");
 		}
 
-		if (ssa.isVarTrue(x) == false) {
+		if (!ssa.isVarTrue(x)) {
 			fail("Solver sagt x ist nicht TRUE.");
 		}
 
@@ -92,16 +92,16 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testUnitUNSAT")
 	void testUnitUNSAT() {
-		Random random = new Random(1);
-		SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+		final Random random = new Random(1);
+		final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 		// Formel erzeugen.
-		int x = ssa.createNewVar();
+		final int x = ssa.createNewVar();
 		ssa.c_1(x);
 		ssa.c_1(-x);
 
 		// Lösen
-		int result = ssa.solve(60000);
+		final int result = ssa.solve(60000);
 
 		// Überprüfen
 		if (result != SatSolverA.RESULT_UNSATISFIABLE) {
@@ -115,18 +115,18 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testNotBothUNSAT")
 	void testNotBothUNSAT() {
-		Random random = new Random(1);
-		SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+		final Random random = new Random(1);
+		final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 		// Formel erzeugen.
-		int x = ssa.createNewVar();
-		int y = ssa.createNewVar();
+		final int x = ssa.createNewVar();
+		final int y = ssa.createNewVar();
 		ssa.c_1(x);
 		ssa.c_1(y);
 		ssa.c_not_both(x, y);
 
 		// Lösen
-		int result = ssa.solve(60000);
+		final int result = ssa.solve(60000);
 
 		// Überprüfen
 		if (result != SatSolverA.RESULT_UNSATISFIABLE) {
@@ -141,17 +141,17 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testExactlyNoutOf2nSAT")
 	void testExactlyNoutOf2nSAT() {
-		Random random = new Random(1);
+		final Random random = new Random(1);
 
 		for (int n = 1; n <= 10; n++) {
-			SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+			final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 			// Formel erzeugen.
-			int[] vars = ssa.createNewVars(2 * n);
+			final int[] vars = ssa.createNewVars(2 * n);
 			ssa.c_exactly_GENERIC(vars, n);
 
 			// Lösen
-			int result = ssa.solve(60000);
+			final int result = ssa.solve(60000);
 
 			// Überprüfen
 			if (result != SatSolverA.RESULT_SATISFIABLE) {
@@ -159,7 +159,7 @@ public class KursblockungSatSolverTest {
 			}
 
 			int count = 0;
-			for (int x : vars) {
+			for (final int x : vars) {
 				if (ssa.isVarTrue(x)) {
 					count++;
 				}
@@ -178,20 +178,20 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testSquareExactlyOneRowAndColumnSAT")
 	void testSquareExactlyOneRowAndColumnSAT() {
-		Random random = new Random(1);
+		final Random random = new Random(1);
 
 		for (int n = 1; n <= 10; n++) {
-			SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+			final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 			// Formel erzeugen.
-			int[][] data = new int[n][n];
+			final int[][] data = new int[n][n];
 			for (int r = 0; r < n; r++)
 				for (int c = 0; c < n; c++)
 					data[r][c] = ssa.createNewVar();
 
 			// Jede Zeile genau eine Variable TRUE.
 			for (int r = 0; r < n; r++) {
-				LinkedCollection<Integer> list = new LinkedCollection<>();
+				final LinkedCollection<Integer> list = new LinkedCollection<>();
 				for (int c = 0; c < n; c++)
 					list.addLast(data[r][c]);
 				ssa.c_exactly_GENERIC(list, 1);
@@ -199,14 +199,14 @@ public class KursblockungSatSolverTest {
 
 			// Jede Spalte genau eine Variable TRUE.
 			for (int c = 0; c < n; c++) {
-				LinkedCollection<Integer> list = new LinkedCollection<>();
+				final LinkedCollection<Integer> list = new LinkedCollection<>();
 				for (int r = 0; r < n; r++)
 					list.addLast(data[r][c]);
 				ssa.c_exactly_GENERIC(list, 1);
 			}
 
 			// Lösen
-			int result = ssa.solve(60000);
+			final int result = ssa.solve(60000);
 
 			// Überprüfen
 			if (result != SatSolverA.RESULT_SATISFIABLE)
@@ -244,13 +244,13 @@ public class KursblockungSatSolverTest {
 	@Test
 	@DisplayName("testRectangleExactlyOneRowAndColumnUNSAT")
 	void testRectangleExactlyOneRowAndColumnUNSAT() {
-		Random random = new Random(1);
+		final Random random = new Random(1);
 
 		for (int n = 1; n <= 6; n++) {
-			SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
+			final SatSolverWrapper ssa = new SatSolverWrapper(new SatSolver3(random));
 
 			// Formel erzeugen.
-			int[][] data = new int[n][n + 1];
+			final int[][] data = new int[n][n + 1];
 			for (int r = 0; r < n; r++) {
 				for (int c = 0; c < n + 1; c++) {
 					data[r][c] = ssa.createNewVar();
@@ -259,7 +259,7 @@ public class KursblockungSatSolverTest {
 
 			// Jede Zeile genau eine Variable TRUE.
 			for (int r = 0; r < n; r++) {
-				LinkedCollection<Integer> list = new LinkedCollection<>();
+				final LinkedCollection<Integer> list = new LinkedCollection<>();
 				for (int c = 0; c < n + 1; c++) {
 					list.addLast(data[r][c]);
 				}
@@ -268,7 +268,7 @@ public class KursblockungSatSolverTest {
 
 			// Jede Spalte genau eine Variable TRUE.
 			for (int c = 0; c < n + 1; c++) {
-				LinkedCollection<Integer> list = new LinkedCollection<>();
+				final LinkedCollection<Integer> list = new LinkedCollection<>();
 				for (int r = 0; r < n; r++) {
 					list.addLast(data[r][c]);
 				}
@@ -276,7 +276,7 @@ public class KursblockungSatSolverTest {
 			}
 
 			// Lösen
-			int result = ssa.solve(60000);
+			final int result = ssa.solve(60000);
 
 			// Überprüfen
 			if (result != SatSolverA.RESULT_UNSATISFIABLE) {

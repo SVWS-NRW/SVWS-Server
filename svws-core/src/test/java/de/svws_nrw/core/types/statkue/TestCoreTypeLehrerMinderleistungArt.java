@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt;
  */
 @DisplayName("Teste den Core-Type LehrerMinderleistungArt")
 public class TestCoreTypeLehrerMinderleistungArt {
-	
+
     /**
      * Führt grundlegende Tests zu dem Core-Type LehrerMinderleistungArt aus.
      */
@@ -38,7 +38,7 @@ public class TestCoreTypeLehrerMinderleistungArt {
     	assertEquals(LehrerMinderleistungArt.ID_365, LehrerMinderleistungArt.getByKuerzel("365"));
     	assertEquals(LehrerMinderleistungArt.ID_370, LehrerMinderleistungArt.getByKuerzel("370"));
     	assertEquals(LehrerMinderleistungArt.ID_380, LehrerMinderleistungArt.getByKuerzel("380"));
-    	
+
     	assertEquals(LehrerMinderleistungArt.ID_200.daten.kuerzel, ("200"));
     	assertEquals(LehrerMinderleistungArt.ID_210.daten.kuerzel, ("210"));
     	assertEquals(LehrerMinderleistungArt.ID_220.daten.kuerzel, ("220"));
@@ -57,7 +57,7 @@ public class TestCoreTypeLehrerMinderleistungArt {
     	assertEquals(LehrerMinderleistungArt.ID_365.daten.kuerzel, ("365"));
     	assertEquals(LehrerMinderleistungArt.ID_370.daten.kuerzel, ("370"));
     	assertEquals(LehrerMinderleistungArt.ID_380.daten.kuerzel, ("380"));
-    	
+
     	assertEquals(LehrerMinderleistungArt.ID_200.daten.text, ("Pflichtstundenermäßigung aus Altersgründen"));
     	assertEquals(LehrerMinderleistungArt.ID_210.daten.text, ("Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)"));
     	assertEquals(LehrerMinderleistungArt.ID_220.daten.text, ("Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)"));
@@ -76,9 +76,8 @@ public class TestCoreTypeLehrerMinderleistungArt {
     	assertEquals(LehrerMinderleistungArt.ID_365.daten.text, ("Unterschreitung der Pflichtstundenzahl wegen COVID-19"));
     	assertEquals(LehrerMinderleistungArt.ID_370.daten.text, ("Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite"));
     	assertEquals(LehrerMinderleistungArt.ID_380.daten.text, ("Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes"));
-    	
     }
 
 	// TODO add additional tests
-    
+
 }

@@ -22,7 +22,7 @@ public class TestAdressenUtils {
 
 	/** Testdaten für das Testen des Aufteilens von Strasseninformationen in Name, Hausnummer und Zusatz */
 	static List<TestdatenSplitStrasse> testdatenSplitStrasse;
-	
+
     /**
      * Initialisiert den Test
      */
@@ -36,28 +36,28 @@ public class TestAdressenUtils {
         System.out.println();
     }
 
-    
+
     /**
      * Testet die Methode {@link AdressenUtils#splitStrasse(String)}
-     * 
+     *
      * @return ein Stream der Testfälle als {@link DynamicTest}-Objekte
      */
     @TestFactory
     @DisplayName("Teste Aufteilung von Strassen in Name, Hausnummer und Zusatz ...")
     Stream<DynamicTest> pruefePrognose() {
         System.out.println("  - Prüfe Aufteilung für " + testdatenSplitStrasse.size() + " Strassen:");
-        Vector<DynamicTest> tests = new Vector<>();
+        final Vector<DynamicTest> tests = new Vector<>();
         testdatenSplitStrasse.forEach((data) -> {
         	tests.add(DynamicTest.dynamicTest(
-				"Strasse \"" + data.strasse + "\"", 
+				"Strasse \"" + data.strasse + "\"",
 				() -> {
 		        	System.out.println();
 		            System.out.println("    - Prüfe Strasse \"" + data.strasse + "\":");
-		            String[] aufgeteilt = AdressenUtils.splitStrasse(data.strasse);
+		            final String[] aufgeteilt = AdressenUtils.splitStrasse(data.strasse);
 		            System.out.println("        -> Name: \"" + aufgeteilt[0] + "\" (erwartet: \"" + data.name + "\")");
 		            System.out.println("        -> Hausnummer: \"" + aufgeteilt[1] + "\" (erwartet: \"" + data.hausNr + "\")");
 		            System.out.println("        -> Zusatz: \"" + aufgeteilt[2] + "\" (erwartet: \"" + data.zusatz + "\")");
-		            		            
+
 		            // Ausgabe überprüfen
 		            assertEquals(aufgeteilt[0], data.name, "Fehler: Name der Strasse stimmt nicht mit den Testdaten überein!");
 		            assertEquals(aufgeteilt[1], data.hausNr, "Fehler: Bezeichnung der Hausnummer stimmt nicht mit den Testdaten überein!");
@@ -66,5 +66,5 @@ public class TestAdressenUtils {
         });
         return tests.stream();
     }
-    
+
 }

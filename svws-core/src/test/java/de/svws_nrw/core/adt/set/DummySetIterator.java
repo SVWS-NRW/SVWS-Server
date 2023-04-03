@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public class DummySetIterator implements Iterator<Integer> {
+public final class DummySetIterator implements Iterator<Integer> {
 
 	/**
 	 * Das {@link DummySetSub} auf dem dieser Iterator operiert.
@@ -30,10 +30,10 @@ public class DummySetIterator implements Iterator<Integer> {
 
 	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param parent Das {@link DummySetSub} auf dem dieser Iterator operiert.
 	 */
-	public DummySetIterator(DummySetSub parent) {
+	public DummySetIterator(final DummySetSub parent) {
 		_parent = parent;
 		_current = null;
 		_next = _parent.isEmpty() ? null : _parent.first();

@@ -4,7 +4,7 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerLehrkraft {
@@ -33,7 +33,7 @@ public class StundenplanblockungManagerLehrkraft {
 
 	/**
 	 * Liefert die Datenbank-ID der Lehrkraft.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Lehrkraft.
 	 */
 	public long getID() {
@@ -42,7 +42,7 @@ public class StundenplanblockungManagerLehrkraft {
 
 	/**
 	 * Liefert TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann.
-	 * 
+	 *
 	 * @return TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann.
 	 */
 	public boolean getDarfVertreten() {
@@ -51,7 +51,7 @@ public class StundenplanblockungManagerLehrkraft {
 
 	/**
 	 * Setzt das Kürzel der Lehrkraft.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel der Lehrkraft.
 	 */
 	public void setKuerzel(final @NotNull String pKuerzel) {

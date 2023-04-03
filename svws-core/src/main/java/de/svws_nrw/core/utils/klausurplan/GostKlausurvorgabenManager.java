@@ -85,12 +85,11 @@ public class GostKlausurvorgabenManager {
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void updateKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
-		if (!_vorgaben.contains(vorgabe)) {
-			// TODO Error Klausurvorgabe nicht da
+		if (_vorgaben.contains(vorgabe)) {
+			removeUpdateKlausurvorgabeCommons(vorgabe);
+			addVorgabeToInternalMaps(vorgabe);
 		}
-
-		removeUpdateKlausurvorgabeCommons(vorgabe);
-		addVorgabeToInternalMaps(vorgabe);
+		// TODO else ... Error Klausurvorgabe nicht da
 	}
 
 	/**

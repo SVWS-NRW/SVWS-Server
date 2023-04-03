@@ -3,10 +3,12 @@ package de.svws_nrw.core.klausurblockung;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung im Format von
+/**
+ * Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung im Format von
  * Michael Plümper. In dieser Datei findet man alle Tripel aus [Stufen, Schüler, Kurse].
- * 
- * @author Benjamin A. Bartsch */
+ *
+ * @author Benjamin A. Bartsch
+ */
 @JsonPropertyOrder({ "stufe", "schuelerid", "kursid" })
 public class PluemperFormatStufeSchuelerKurs {
 

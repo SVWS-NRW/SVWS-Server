@@ -33,7 +33,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
 	public createOrException(pLerngruppeID : number) : StundenplanblockungManagerLerngruppe {
-		if (this._map.containsKey(pLerngruppeID) === true)
+		if (this._map.containsKey(pLerngruppeID))
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!")
 		const gr : StundenplanblockungManagerLerngruppe | null = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		this._map.put(pLerngruppeID, gr);

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt einen Abschnitt eines Schuljahres.  
+ * Sie beschreibt einen Abschnitt eines Schuljahres.
  */
 @XmlRootElement
 @Schema(description = "Ein Abschnitt eines Schuljahres (z.B. Quartal / Halbjahr).")
@@ -16,13 +16,13 @@ public class Schuljahresabschnitt {
 	/** Die ID des Schuljahresabschnittes */
 	@Schema(description = "Das Schuljahr, in welchem der Abschnitt liegt", example = "2024")
 	public long id;
-	
+
 	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
 	@Schema(description = "Das Schuljahr, in welchem der Abschnitt liegt", example = "2024")
-	public int schuljahr;	
+	public int schuljahr;
 
 	/** Die Nummer des Abschnitts im Schuljahr */
 	@Schema(description = "Die Nummer des Abschnitts im Schuljahr", example = "2")
-	public int abschnitt;	
-	
+	public int abschnitt;
+
 }

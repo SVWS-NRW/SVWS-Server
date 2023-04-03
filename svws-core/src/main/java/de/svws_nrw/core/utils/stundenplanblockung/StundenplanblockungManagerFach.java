@@ -4,7 +4,7 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerFach {
@@ -20,7 +20,7 @@ public class StundenplanblockungManagerFach {
 
 	/**
 	 * Erzeugt ein neues Fach.
-	 * 
+	 *
 	 * @param pFachID   Die Datenbank-ID des Faches.
 	 * @param pKuerzel  Das Kürzel des Faches.
 	 */
@@ -28,10 +28,10 @@ public class StundenplanblockungManagerFach {
 		_id = pFachID;
 		_kuerzel = pKuerzel;
 	}
-	
+
 	/**
 	 * Liefert die Datenbank-ID des Faches.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Faches.
 	 */
 	public long getID() {

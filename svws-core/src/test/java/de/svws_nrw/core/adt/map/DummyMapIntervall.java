@@ -5,7 +5,7 @@ package de.svws_nrw.core.adt.map;
  *
  * @author Benjamin A. Bartsch
  */
-public class DummyMapIntervall {
+public final class DummyMapIntervall {
 
 	/**
 	 * Der Anfang des Intervalls.
@@ -33,7 +33,7 @@ public class DummyMapIntervall {
 	 * @param pTo      Das Ende des Intervalls.
 	 * @param pToInc   Gibt an, ob das Intervall-Ende inklusive ist.
 	 */
-	DummyMapIntervall(int pFrom, boolean pFromInc, int pTo, boolean pToInc) {
+	DummyMapIntervall(final int pFrom, final boolean pFromInc, final int pTo, final boolean pToInc) {
 		from = pFrom;
 		fromInc = pFromInc;
 		to = pTo;
@@ -48,7 +48,7 @@ public class DummyMapIntervall {
 	/**
 	 * Liefert das ganzzahlige Minimum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 * werden muss.
-	 * 
+	 *
 	 * @return Das ganzzahlige Minimum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 *         werden muss.
 	 */
@@ -59,7 +59,7 @@ public class DummyMapIntervall {
 	/**
 	 * Liefert das ganzzahlige Maximum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 * werden muss.
-	 * 
+	 *
 	 * @return Das ganzzahlige Maximum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 *         werden muss.
 	 */
@@ -69,26 +69,26 @@ public class DummyMapIntervall {
 
 	/**
 	 * Liefert TRUE, wenn der übergebene Wert im Intervall liegt.
-	 * 
+	 *
 	 * @param e Der Wert der überprüft werden soll, ob er im Intervall liegt.
-	 * 
+	 *
 	 * @return TRUE, wenn der übergebene Wert im Intervall liegt.
 	 */
-	boolean contains(int e) {
+	boolean contains(final int e) {
 		return (e >= min()) && (e <= max());
 	}
 
 	/**
 	 * Liefert TRUE, wenn der übergebene Wert außerhalb des Intervalls liegt. Beachtet dabei, ob der Wert selbst
 	 * inklusive interpretiert werden muss.
-	 * 
+	 *
 	 * @param x   Der Wert, der überprüft werden soll, ob er im Intervall liegt.
 	 * @param inc TRUE, falls der Wert selbst inklusive interpretiert werden muss.
-	 * 
+	 *
 	 * @return TRUE, wenn der übergebene Wert außerhalb des Intervalls liegt. Beachtet dabei, ob der Wert selbst
 	 *         inklusive interpretiert werden muss.
 	 */
-	boolean isOutOfRange(int x, boolean inc) {
+	boolean isOutOfRange(final int x, final boolean inc) {
 
 		if (x < from)
 			return true;

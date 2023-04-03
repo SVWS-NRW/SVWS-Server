@@ -62,7 +62,7 @@ public final class Deutsch extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.D_10);
 
 		// Gesamtprüfung Punkt 25: Prüfe, ob Deutsch von EF.1 bis Q2.1 schriftlich belegt wurde
-		if (!manager.pruefeBelegungMitSchriftlichkeit(deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21 ))
+		if (!manager.pruefeBelegungMitSchriftlichkeit(deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			addFehler(GostBelegungsfehler.D_11);
 	}
 

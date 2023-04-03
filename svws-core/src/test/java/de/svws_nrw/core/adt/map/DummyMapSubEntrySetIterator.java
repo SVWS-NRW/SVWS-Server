@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse implementiert einen ENTRY-Iterator, welcher auf der {@link DummyMapSub} operiert.
  *
  * @author Benjamin A. Bartsch
- * 
+ *
  */
 class DummyMapSubEntrySetIterator implements Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> {
 
@@ -32,10 +32,10 @@ class DummyMapSubEntrySetIterator implements Iterator<@NotNull Entry<@NotNull In
 
 	/**
 	 * Erstellt einen neuen ENTRY-Iterator für die angegebene {@link DummyMapSub}.
-	 * 
+	 *
 	 * @param sub Die {@link DummyMapSub} auf der operiert wird.
 	 */
-	DummyMapSubEntrySetIterator(@NotNull DummyMapSub sub) {
+	DummyMapSubEntrySetIterator(@NotNull final DummyMapSub sub) {
 		_sub = sub;
 		_current = null;
 		_next = _sub.firstEntry();

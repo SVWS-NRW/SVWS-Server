@@ -4,9 +4,9 @@ package de.svws_nrw.core.adt.set;
  * Diese Klasse definiert ein gültiges Intervall. Die Intervallgrenzen können inklusive oder exklusive sein.
  *
  * @author Benjamin A. Bartsch
- * 
+ *
  */
-public class DummySetIntervall {
+public final class DummySetIntervall {
 
 	/**
 	 * Der Anfang des Intervalls.
@@ -34,7 +34,7 @@ public class DummySetIntervall {
 	 * @param pTo      Das Ende des Intervalls.
 	 * @param pToInc   Gibt an, ob das Intervall-Ende inklusive ist.
 	 */
-	DummySetIntervall(int pFrom, boolean pFromInc, int pTo, boolean pToInc) {
+	DummySetIntervall(final int pFrom, final boolean pFromInc, final int pTo, final boolean pToInc) {
 		from = pFrom;
 		fromInc = pFromInc;
 		to = pTo;
@@ -49,7 +49,7 @@ public class DummySetIntervall {
 	/**
 	 * Liefert das ganzzahlige Minimum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 * werden muss.
-	 * 
+	 *
 	 * @return Das ganzzahlige Minimum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 *         werden muss.
 	 */
@@ -60,7 +60,7 @@ public class DummySetIntervall {
 	/**
 	 * Liefert das ganzzahlige Maximum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 * werden muss.
-	 * 
+	 *
 	 * @return Das ganzzahlige Maximum des Intervalls. Beachtet dabei, ob die Intervallsgrenze inklusive interpretiert
 	 *         werden muss.
 	 */
@@ -70,25 +70,25 @@ public class DummySetIntervall {
 
 	/**
 	 * Liefert TRUE, wenn der übergebene Wert im Intervall liegt.
-	 * 
+	 *
 	 * @param e Der Wert der überprüft werden soll, ob er im Intervall liegt.
-	 * 
+	 *
 	 * @return TRUE, wenn der übergebene Wert im Intervall liegt.
 	 */
-	boolean contains(int e) {
+	boolean contains(final int e) {
 		return (e >= min()) && (e <= max());
 	}
 
 	/**
 	 * Liefert TRUE, wenn der übergebene Wert im Intervall liegt. Beachtet dabei, ob der Wert inklusive interpretiert
 	 * werden muss.
-	 * 
+	 *
 	 * @param e         Der Wert der überprüft werden soll, ob er im Intervall liegt.
 	 * @param inclusive Falls TRUE, dann soll der übergebene Wert inklusive interpretiert werden.
-	 * 
+	 *
 	 * @return TRUE, wenn der übergebene Wert im Intervall liegt.
 	 */
-	boolean contains(int e, boolean inclusive) {
+	boolean contains(final int e, final boolean inclusive) {
 		if (inclusive)
 			return contains(e);
 		return (e >= min() + 1) && (e <= max() - 1);

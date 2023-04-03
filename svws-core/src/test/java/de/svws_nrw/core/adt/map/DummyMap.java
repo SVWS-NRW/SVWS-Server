@@ -274,7 +274,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
 	boolean bcAddKey(@NotNull final DummyMapIntervall iv, @NotNull final Integer e) {
-		if (_allowKeyAlone == false)
+		if (!_allowKeyAlone)
 			throw new UnsupportedOperationException(); // KEY kann nicht ohne VALUE hinzugefügt werden.
 		if (bcContainsKey(iv, e))
 			return false;
@@ -410,12 +410,12 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@SuppressWarnings("unchecked")
 	boolean bcContainsEntry(@NotNull final DummyMapIntervall iv, final Object o) {
-		if (o instanceof Entry<?, ?> == false)
+		if (!(o instanceof Entry<?, ?>))
 			return false;
 		@NotNull
 		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		final int key = (Integer) e.getKey();
-		if (iv.contains(key) == false)
+		if (!iv.contains(key))
 			return false;
 		if (_isMapped[key] == null)
 			return false;
@@ -450,7 +450,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcRemoveKeyReturnOldValue(@NotNull final DummyMapIntervall iv, @NotNull final Object objKey) {
 		final int key = (Integer) objKey;
-		if (iv.contains(key) == false)
+		if (!iv.contains(key))
 			return null; // keine Exception (analog zur JAVA-TreeMap-Implementation)
 		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = null;
@@ -483,7 +483,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@SuppressWarnings({ "unchecked" })
 	boolean bcRemoveEntryReturnBool(@NotNull final DummyMapIntervall iv, @NotNull final Object o) {
-		if (bcContainsEntry(iv, o) == false)
+		if (!bcContainsEntry(iv, o))
 			return false;
 		@NotNull
 		final Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
@@ -588,7 +588,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcAddEntryReturnOldValueOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Integer key,
 			@NotNull final Integer value) {
-		if (iv.contains(key) == false)
+		if (!(iv.contains(key)))
 			throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
 		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = value;
@@ -644,7 +644,7 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcGetValueOfKeyOrNull(@NotNull final DummyMapIntervall iv, @NotNull final Object objKey) {
 		final int e = (Integer) objKey;
-		if (iv.contains(e) == false)
+		if (!iv.contains(e))
 			return null;
 		// throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
 		return _isMapped[e];

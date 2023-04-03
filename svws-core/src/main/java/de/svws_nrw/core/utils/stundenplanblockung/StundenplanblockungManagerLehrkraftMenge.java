@@ -8,9 +8,9 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLehrkraft;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerLehrkraftMenge {
@@ -29,13 +29,13 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	/**
 	 * Fügt die Lehrkraft hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID bereits existiert.
-	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft. 
+	 *
+	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel               Das Kürzel der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
 	public void addOrException(final long pLehrkraftID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pLehrkraftID) == true)
+		if (_map.containsKey(pLehrkraftID))
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!");
 		final StundenplanblockungManagerLehrkraft le = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
 		_map.put(pLehrkraftID, le);
@@ -45,7 +45,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	/**
 	 * Liefert das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @return                       Das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
@@ -59,9 +59,9 @@ public class StundenplanblockungManagerLehrkraftMenge {
 
 	/**
 	 * Liefert eine zufällige Lehrkraft. <br>
-	 * Liefert eine Exception, falls die Menge der Lehrkräfte leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Lehrkräfte leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert eine zufällige Lehrkraft.
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraft getRandomOrException(final @NotNull Random pRandom) {
@@ -74,7 +74,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	/**
 	 * Löscht die übergebene Lehrkraft. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
@@ -85,8 +85,8 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Lehrkraft-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Lehrkraft-ID existiert.
+	 *
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @return              TRUE, falls die Lehrkraft-ID existiert.
 	 */
@@ -96,7 +96,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 
 	/**
 	 * Liefert die Menge aller Lehrkräfte.
-	 * 
+	 *
 	 * @return Die Menge aller Lehrkräfte.
 	 */
 	public Vector<StundenplanblockungManagerLehrkraft> getMenge() {
@@ -105,7 +105,7 @@ public class StundenplanblockungManagerLehrkraftMenge {
 
 	/**
 	 * Liefert die Anzahl an Lehrkräften.
-	 * 
+	 *
 	 * @return Die Anzahl an Lehrkräften.
 	 */
 	public int size() {

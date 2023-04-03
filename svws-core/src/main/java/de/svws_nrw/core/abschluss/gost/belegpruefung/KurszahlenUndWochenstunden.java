@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse gruppiert alle Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw.
  * für die Gesamtprüfungen, welche sich auf Kurszahlen und Wochenstunden beziehen.
  */
-public class KurszahlenUndWochenstunden extends GostBelegpruefung {
+public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/// Die Kurszahlen der einzelnen Halbjahre
 	private HashMap<@NotNull GostHalbjahr, @NotNull HashMap<@NotNull GostKursart, @NotNull Integer>> kurszahlen;
@@ -66,11 +66,11 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Erstellt eine neue Belegprüfung für die Kurszahlen.
 	 *
 	 * @param manager                 der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public KurszahlenUndWochenstunden(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungs_art, final @NotNull GostBelegpruefung pruefungProjektkurse) {
-		super(manager, pruefungs_art, pruefungProjektkurse);
+	public KurszahlenUndWochenstunden(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt, final @NotNull GostBelegpruefung pruefungProjektkurse) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 
@@ -89,7 +89,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		wochenstunden = new HashMap<>();
 		wochenstundenEinfuehrungsphase = 0;
 		wochenstundenQualifikationsphase = 0;
-		final @NotNull Projektkurse projektkurse = ((@NotNull Projektkurse)pruefungen_vorher[0]);
+		final @NotNull Projektkurse projektkurse = ((@NotNull Projektkurse) pruefungen_vorher[0]);
 
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		final @NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
@@ -139,9 +139,8 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
 
 				// Für die Grundkurse
-				if ((kursart == GostKursart.GK) ||
-					(halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
-													   || ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr)))))) {
+				if ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
+						|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr)))))) {
 					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
 					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
@@ -380,7 +379,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlen(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart) {
+	public int getKurszahlen(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart) {
 		if (kurszahlen == null)
 			return 0;
 		final HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
@@ -400,7 +399,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlenGrundkurse(final @NotNull GostHalbjahr halbjahr) {
+	public int getKurszahlenGrundkurse(final @NotNull GostHalbjahr halbjahr) {
 		if (kurszahlenGrundkurse == null)
 			return 0;
 		final Integer kurszahl = kurszahlenGrundkurse.get(halbjahr);
@@ -417,7 +416,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlenLeistungskurse(final @NotNull GostHalbjahr halbjahr) {
+	public int getKurszahlenLeistungskurse(final @NotNull GostHalbjahr halbjahr) {
 		if (kurszahlenLeistungskurse == null)
 			return 0;
 		final Integer kurszahl = kurszahlenLeistungskurse.get(halbjahr);
@@ -434,7 +433,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlenAnrechenbar(final @NotNull GostHalbjahr halbjahr) {
+	public int getKurszahlenAnrechenbar(final @NotNull GostHalbjahr halbjahr) {
 		if (kurszahlenAnrechenbar == null)
 			return 0;
 		final Integer kurszahl = kurszahlenAnrechenbar.get(halbjahr);
@@ -451,7 +450,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlenEinfuehrungsphase(final @NotNull GostKursart kursart) {
+	public int getKurszahlenEinfuehrungsphase(final @NotNull GostKursart kursart) {
 		if (kurszahlenEinfuehrungsphase == null)
 			return 0;
 		final Integer kurszahl = kurszahlenEinfuehrungsphase.get(kursart);
@@ -468,7 +467,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Kurszahlen
 	 */
-	public final int getKurszahlenQualifikationsphase(final @NotNull GostKursart kursart) {
+	public int getKurszahlenQualifikationsphase(final @NotNull GostKursart kursart) {
 		if (kurszahlenQualifikationsphase == null)
 			return 0;
 		final Integer kurszahl = kurszahlenQualifikationsphase.get(kursart);
@@ -483,7 +482,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der Grundkurse
 	 */
-	public final int getBlockIAnzahlGrundkurse() {
+	public int getBlockIAnzahlGrundkurse() {
 		return blockIAnzahlGrundkurse;
 	}
 
@@ -493,7 +492,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der Leistungskurse
 	 */
-	public final int getBlockIAnzahlLeistungskurse() {
+	public int getBlockIAnzahlLeistungskurse() {
 		return blockIAnzahlLeistungskurse;
 	}
 
@@ -503,7 +502,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
-	public final int getBlockIAnzahlAnrechenbar() {
+	public int getBlockIAnzahlAnrechenbar() {
 		return blockIAnzahlAnrechenbar;
 	}
 
@@ -515,7 +514,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
-	public final int getWochenstunden(final @NotNull GostHalbjahr halbjahr) {
+	public int getWochenstunden(final @NotNull GostHalbjahr halbjahr) {
 		if (wochenstunden == null)
 			return 0;
 		Integer stunden = wochenstunden.get(halbjahr);
@@ -530,7 +529,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
-	public final int getWochenstundenEinfuehrungsphase() {
+	public int getWochenstundenEinfuehrungsphase() {
 		return wochenstundenEinfuehrungsphase;
 	}
 
@@ -540,7 +539,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
-	public final int getWochenstundenQualifikationsphase() {
+	public int getWochenstundenQualifikationsphase() {
 		return wochenstundenQualifikationsphase;
 	}
 

@@ -59,7 +59,7 @@ public enum KAOAKategorie {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;
+	public static final long VERSION = 1;
 
 	/** Die aktuellsten Daten der KAoA-Kategorie*/
 	public final @NotNull KAOAKategorieEintrag daten;
@@ -79,7 +79,7 @@ public enum KAOAKategorie {
 	 *
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAKategorieEintrag} ist
 	 */
-	private KAOAKategorie(final @NotNull KAOAKategorieEintrag@NotNull[] historie) {
+	KAOAKategorie(final @NotNull KAOAKategorieEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

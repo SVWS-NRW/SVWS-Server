@@ -3,7 +3,7 @@ package de.svws_nrw.core.utils.stundenplanblockung;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerLerngruppeStunde {
@@ -22,7 +22,7 @@ public class StundenplanblockungManagerLerngruppeStunde {
 
 	/**
 	 * Erzeugt ein neues Stundenelement.
-	 * 
+	 *
 	 * @param pID     Die Datenbank-ID der Lerngruppe.
 	 * @param pParent Das Eltern-Objekt.
 	 */
@@ -33,7 +33,7 @@ public class StundenplanblockungManagerLerngruppeStunde {
 
 	/**
 	 * Liefert die Datenbank-ID des Objektes.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Objektes.
 	 */
 	public long getID() {

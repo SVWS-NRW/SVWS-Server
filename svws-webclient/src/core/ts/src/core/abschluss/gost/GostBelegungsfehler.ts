@@ -571,14 +571,14 @@ export class GostBelegungsfehler extends JavaObject {
 	 * Gibt je nach angegebenener Belegprüfungsart den zugehörigen Text für den Belegungsfehler
 	 * zurück.
 	 *
-	 * @param pruef_art   die Belegprüfungsart
+	 * @param pruefArt   die Belegprüfungsart
 	 *
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
-	public getText(pruef_art : GostBelegpruefungsArt) : string {
-		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.EF1)))
+	public getText(pruefArt : GostBelegpruefungsArt) : string {
+		if (JavaObject.equalsTranspiler(pruefArt, (GostBelegpruefungsArt.EF1)))
 			return this.textEF1;
-		if (JavaObject.equalsTranspiler(pruef_art, (GostBelegpruefungsArt.GESAMT)))
+		if (JavaObject.equalsTranspiler(pruefArt, (GostBelegpruefungsArt.GESAMT)))
 			return this.textGESAMT;
 		return this.textGESAMT;
 	}

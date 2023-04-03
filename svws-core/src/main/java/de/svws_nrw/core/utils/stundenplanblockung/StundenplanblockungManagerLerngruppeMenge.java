@@ -8,15 +8,15 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLerngruppe;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerLerngruppeMenge {
-	
+
 	/** Alle Lerngruppen. */
 	private final @NotNull Vector<@NotNull StundenplanblockungManagerLerngruppe> _menge;
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungManagerLerngruppe> _map;
-	
+
 	/**
 	 * Erzeugt eine neue Menge an Lerngruppen.
 	 */
@@ -28,13 +28,13 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	/**
 	 * Liefert die zuvor erzeugte Lerngruppe. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID bereits existiert.
-	 * 
-	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe. 
+	 *
+	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID bereits existiert.
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe createOrException(final long pLerngruppeID) throws NullPointerException {
-		if (_map.containsKey(pLerngruppeID) == true)
+		if (_map.containsKey(pLerngruppeID))
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!");
 		final StundenplanblockungManagerLerngruppe gr = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		_map.put(pLerngruppeID, gr);
@@ -45,7 +45,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	/**
 	 * Liefert das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
@@ -56,12 +56,12 @@ public class StundenplanblockungManagerLerngruppeMenge {
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!");
 		return gr;
 	}
-	
+
 	/**
 	 * Liefert eine zufällige Lerngruppe. <br>
-	 * Liefert eine Exception, falls die Menge der Lerngruppen leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Lerngruppen leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
 	 * @return         Liefert eine zufällige Lerngruppe.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe getRandomOrException(final @NotNull Random pRandom) {
@@ -70,11 +70,11 @@ public class StundenplanblockungManagerLerngruppeMenge {
 			throw new NullPointerException("Es gibt keine Lerngruppen!");
 		return _menge.get(pRandom.nextInt(size));
 	}
-	
+
 	/**
 	 * Löscht die übergebene Lerngruppe. <br>
 	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
 	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
 	 */
@@ -83,10 +83,10 @@ public class StundenplanblockungManagerLerngruppeMenge {
 		_map.remove(pLerngruppeID);
 		_menge.remove(gr);
 	}
-	
+
 	/**
 	 * Liefert die Menge aller Lerngruppen.
-	 * 
+	 *
 	 * @return Die Menge aller Lerngruppen.
 	 */
 	public Vector<StundenplanblockungManagerLerngruppe> getMenge() {
@@ -94,8 +94,8 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Lerngruppe-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Lerngruppe-ID existiert.
+	 *
 	 * @param pRaumID Die Datenbank-ID des Raumes.
 	 * @return TRUE, falls die Lerngruppe-ID existiert.
 	 */
@@ -105,11 +105,11 @@ public class StundenplanblockungManagerLerngruppeMenge {
 
 	/**
 	 * Liefert die Anzahl an Lerngruppen.
-	 * 
+	 *
 	 * @return Die Anzahl an Lerngruppen.
 	 */
 	public int size() {
 		return _menge.size();
 	}
-	
+
 }
