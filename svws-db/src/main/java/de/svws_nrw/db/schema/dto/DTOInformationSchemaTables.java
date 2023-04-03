@@ -20,28 +20,28 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.TABLES")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name="DTOInformationSchemaTables.mysql", query="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_TYPE='BASE TABLE'")
-@NamedNativeQuery(name="DTOInformationSchemaTables.mdb", query="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG='PUBLIC' AND TABLE_SCHEMA='PUBLIC'")
-@NamedNativeQuery(name="DTOInformationSchemaTables.mssql", query="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG=? AND TABLE_SCHEMA='dbo' AND TABLE_TYPE='BASE TABLE'")
-@NamedNativeQuery(name="DTOInformationSchemaTables.sqlite", query="SELECT name AS TABLE_NAME FROM sqlite_master WHERE type='table'")
-public class DTOInformationSchemaTables {
-	
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mysql", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=? AND TABLE_TYPE='BASE TABLE'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mdb", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG='PUBLIC' AND TABLE_SCHEMA='PUBLIC'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.mssql", query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG=? AND TABLE_SCHEMA='dbo' AND TABLE_TYPE='BASE TABLE'")
+@NamedNativeQuery(name = "DTOInformationSchemaTables.sqlite", query = "SELECT name AS TABLE_NAME FROM sqlite_master WHERE type='table'")
+public final class DTOInformationSchemaTables {
+
 	/** Der Name der Datenbank-Tabelle */
 	@Id
 	@Column(name = "TABLE_NAME")
-	private String Name;	
+	private String Name;
 
-	
+
 	/**
-	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
+	 * Default-Konstruktor für das Erzeugen dieser DBEntity
 	 */
 	private DTOInformationSchemaTables() {
 	}
 
-	
+
 	/**
 	 * Gibt den Tabellennamen zurück.
-	 * 
+	 *
 	 * @return der Tabellenname
 	 */
 	public String getName() {
@@ -56,7 +56,7 @@ public class DTOInformationSchemaTables {
 	 *
 	 * @return die Map mit den Datenbank-Tabellen-DTOs, welche den Tabellen-Namen zugeordnet sind.
 	 */
-	public static Map<String, DTOInformationSchemaTables> query(DBEntityManager conn) {
+	public static Map<String, DTOInformationSchemaTables> query(final DBEntityManager conn) {
 		List<DTOInformationSchemaTables> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -85,12 +85,12 @@ public class DTOInformationSchemaTables {
 
 	/**
 	 * Stellt eine Anfrage nach den Namen aller Tabellen des angebenenen Datenbank-Schemas.
-	 * 
+	 *
 	 * @param conn   die Datenbankverbindung
-	 * 
+	 *
 	 * @return die Liste mit den Tabellennamen
 	 */
-	public static List<String> queryNames(DBEntityManager conn) {
+	public static List<String> queryNames(final DBEntityManager conn) {
 		List<String> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -115,16 +115,16 @@ public class DTOInformationSchemaTables {
 	}
 
 
-	
+
 	/**
 	 * Stellt eine Anfrage nach den Namen aller Tabellen des angebenenen Datenbank-Schemas.
-	 * 
+	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param schemaName   der Name des zu prüfenden Schemas
-	 * 
+	 *
 	 * @return die Liste mit den Tabellennamen
 	 */
-	public static List<String> queryNames(DBEntityManager conn, String schemaName) {
+	public static List<String> queryNames(final DBEntityManager conn, final String schemaName) {
 		List<String> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -151,7 +151,7 @@ public class DTOInformationSchemaTables {
 		}
 		return results;
 	}
-	
+
 
 	@Override
 	public int hashCode() {
@@ -164,14 +164,14 @@ public class DTOInformationSchemaTables {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOInformationSchemaTables other = (DTOInformationSchemaTables) obj;
+		final DTOInformationSchemaTables other = (DTOInformationSchemaTables) obj;
 		if (Name == null) {
 			if (other.Name != null)
 				return false;
@@ -186,7 +186,7 @@ public class DTOInformationSchemaTables {
 	public String toString() {
 		return "DTOInformationSchemaTables [Name=" + Name + "]";
 	}
-	
-	
-	
+
+
+
 }

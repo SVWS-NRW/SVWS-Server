@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.db.DBDriver;
 
 /**
- * Diese Klasse dient der Definition eines Fremdschlüssels bei SVWS-Datenbank-Tabellen.  
+ * Diese Klasse dient der Definition eines Fremdschlüssels bei SVWS-Datenbank-Tabellen.
  */
 public class SchemaTabelleFremdschluessel {
 
@@ -18,29 +18,29 @@ public class SchemaTabelleFremdschluessel {
 
 	/** Die Tabelle, die dieser Fremdschluessel referenziert */
 	private final SchemaTabelle _tabelleReferenziert;
-	
+
 	/** Die Spalten dieser Tabelle */
 	private final List<SchemaTabelleSpalte> _spalten;
 
 	/** Die zugehörigen Spalten der referenzierten Tabelle */
 	private final List<SchemaTabelleSpalte> _spaltenReferenziert;
-	
+
 	/** Die Aktion bei einer Aktualisierung des referenzierten Schlüsselwertes */
 	private final SchemaFremdschluesselAktionen _onUpdate;
 
 	/** Die Aktion bei dem Entfernen des referenzierten Schlüsselwertes */
 	private final SchemaFremdschluesselAktionen _onDelete;
-	
+
 	/** Die Revision, ab wann der Fremdschluessel gültig ist. */
 	private SchemaRevisionen _revision;
-	
+
 	/** Die Revision, ab wann der Fremdschluessel veraltet ist, sofern er veraltet ist, ansonsten {@link SchemaRevisionen#UNDEFINED} */
 	private SchemaRevisionen _veraltet;
 
 
 	/**
-	 * Erstellt einen neuen Fremdschluessel. 
-	 * 
+	 * Erstellt einen neuen Fremdschluessel.
+	 *
 	 * @param name         der Name des Index
 	 * @param tab          die Tabelle, der diese Index zugeordnet ist.
 	 * @param tabRef       die referenzierte Tabelle
@@ -49,8 +49,8 @@ public class SchemaTabelleFremdschluessel {
 	 * @param spalten      die Spalten des Fremdschlüssel dieser Tabelle
 	 * @param spaltenRef   die referenzierten Spalten der referentierten Tabelle des Fremdschlüssels
 	 */
-	SchemaTabelleFremdschluessel(String name, SchemaTabelle tab, SchemaTabelle tabRef, SchemaFremdschluesselAktionen onUpdate,
-			SchemaFremdschluesselAktionen onDelete, List<SchemaTabelleSpalte> spalten, List<SchemaTabelleSpalte> spaltenRef) {
+	SchemaTabelleFremdschluessel(final String name, final SchemaTabelle tab, final SchemaTabelle tabRef, final SchemaFremdschluesselAktionen onUpdate,
+			final SchemaFremdschluesselAktionen onDelete, final List<SchemaTabelleSpalte> spalten, final List<SchemaTabelleSpalte> spaltenRef) {
 		this._name = name;
 		this._tabelle = tab;
 		this._tabelleReferenziert = tabRef;
@@ -65,13 +65,13 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Setzt die Revision, ab wann der Fremdschlüssel gültig ist. Dabei wird
-	 * der übernommene Wert von der Tabelle überschrieben. 
-	 * 
+	 * der übernommene Wert von der Tabelle überschrieben.
+	 *
 	 * @param revision   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleFremdschluessel setRevision(SchemaRevisionen revision) {
+	public SchemaTabelleFremdschluessel setRevision(final SchemaRevisionen revision) {
 		if (revision == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nicht auf undefiniert gesetzt werden.");
 		if (revision.revision <= this._revision.revision)
@@ -83,12 +83,12 @@ public class SchemaTabelleFremdschluessel {
 	/**
 	 * Setzt die Revision, ab wann der Fremdschlüssel veraltet ist. Dabei wird
 	 * der übernommene Wert von der Tabelle überschrieben.
-	 * 
+	 *
 	 * @param veraltet   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleFremdschluessel setVeraltet(SchemaRevisionen veraltet) {
+	public SchemaTabelleFremdschluessel setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
 		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
@@ -99,7 +99,7 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Gibt die Tabelle zurück, der dieser Fremdschlüssel zugeordnet ist.
-	 * 
+	 *
 	 * @return die Tabelle
 	 */
 	public SchemaTabelle tabelle() {
@@ -108,7 +108,7 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Gibt die vom Fremdschlüssel referenzierte Tabelle zurück.
-	 * 
+	 *
 	 * @return die referenzierte Tabelle
 	 */
 	public SchemaTabelle tabelleReferenziert() {
@@ -117,35 +117,35 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Gibt den Namen des Fremdschlüssels zurück.
-	 * 
+	 *
 	 * @return der Name des Fremdschlüssels
 	 */
 	public String name() {
 		return _name;
 	}
-	
+
 	/**
 	 * Gibt die Spalten der Tabelle des Fremdschlüssels zurück.
-	 * 
+	 *
 	 * @return die Spalten der Tabelle des Fremdschlüssels
 	 */
 	public List<SchemaTabelleSpalte> spalten() {
 		return _spalten;
 	}
-	
+
 	/**
 	 * Gibt die referenzierten Spalten der referenzierten Tabelle des Fremdschlüssels zurück.
-	 * 
+	 *
 	 * @return die referenzierten Spalten der referenzierten Tabelle des Fremdschlüssels
 	 */
 	public List<SchemaTabelleSpalte> spaltenReferenziert() {
 		return _spaltenReferenziert;
 	}
-	
+
 	/**
 	 * Gibt die Aktion bei einer Aktualisierung des referenzierten Schlüsselwertes.
-	 * 
-	 * @return die Aktion bei einer Aktualisierung des referenzierten Schlüsselwertes 
+	 *
+	 * @return die Aktion bei einer Aktualisierung des referenzierten Schlüsselwertes
 	 */
 	public SchemaFremdschluesselAktionen onUpdate() {
 		return _onUpdate;
@@ -153,8 +153,8 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Gibt die Aktion bei dem Entfernen des referenzierten Schlüsselwertes.
-	 * 
-	 * @return die Aktion bei dem Entfernen des referenzierten Schlüsselwertes 
+	 *
+	 * @return die Aktion bei dem Entfernen des referenzierten Schlüsselwertes
 	 */
 	public SchemaFremdschluesselAktionen onDelete() {
 		return _onDelete;
@@ -162,8 +162,8 @@ public class SchemaTabelleFremdschluessel {
 
 	/**
 	 * Gibt die Revision zurück, ab wann der Fremdschlüssel gültig ist.
-	 * 
-	 * @return die Revision 
+	 *
+	 * @return die Revision
 	 */
 	public SchemaRevisionen revision() {
 		return _revision;
@@ -173,49 +173,49 @@ public class SchemaTabelleFremdschluessel {
 	 * Gibt die Revision zurück, ab wann der Fremdschlüssel veraltet ist.
 	 * Ist er nicht veraltet, so wird {@link SchemaRevisionen#UNDEFINED}
 	 * zurückgegeben.
-	 * 
+	 *
 	 * @return die Revision, ab wann der Fremdschlüssel veraltet ist, oder {@link SchemaRevisionen#UNDEFINED}
 	 */
 	public SchemaRevisionen veraltet() {
 		return _veraltet;
 	}
 
-	
+
     /**
      * Liefert die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
-     * 
-     * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge 
+     *
+     * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
     }
-	
-	
+
+
 	/**
-	 * Erstellt einen SQL-String für das Erstellen einen Fremdschlüssels als SQL-CONSTRAINT 
-	 * 
+	 * Erstellt einen SQL-String für das Erstellen einen Fremdschlüssels als SQL-CONSTRAINT
+	 *
 	 * @return der SQL-String für das Erstellen des Fremdschlüssels
 	 */
 	public String getSQL() {
-		return "CONSTRAINT " + this.name() + " FOREIGN KEY (" 
+		return "CONSTRAINT " + this.name() + " FOREIGN KEY ("
 				+ getSpalten().stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
 				+ ") REFERENCES " + this._tabelleReferenziert.name() + '('
 				+ _spaltenReferenziert.stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
-				+ ")" 
+				+ ")"
 				+ ((this._onUpdate == null) || this._onUpdate == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON UPDATE " + this._onUpdate.sql())
 				+ ((this._onDelete == null) || this._onDelete == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON DELETE " + this._onDelete.sql());
 	}
 
-	
+
 	/**
-	 * Erstellt einen SQL-String für das nachträgliche Erstellen einen Fremdschlüssels 
+	 * Erstellt einen SQL-String für das nachträgliche Erstellen einen Fremdschlüssels
 	 * für den SQL-Dialekt des angegebenen DBMS
-	 * 
+	 *
 	 * @param dbms   das DBMS
-	 * 
+	 *
 	 * @return der SQL-String für das nachträgliche Erstellen des Fremdschlüssels
 	 */
-	public String getSQLCreate(DBDriver dbms) {
+	public String getSQLCreate(final DBDriver dbms) {
 		switch (dbms) {
 			case SQLITE:
 				// TODO currently not supported
@@ -225,23 +225,23 @@ public class SchemaTabelleFremdschluessel {
 			case MYSQL:
 			case MSSQL:
 			default:
-				return "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();		
+				return "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Erzeugt den SQL-Drop-Befehl für diesen Fremdschlüssel für den SQL-Dialekt des angegebenen DBMS
-	 * 
+	 *
 	 * @param dbms   das DBMS
-	 * 
+	 *
 	 * @return der SQL-Drop-Befehl
 	 */
-	public String getSQLDrop(DBDriver dbms) {
+	public String getSQLDrop(final DBDriver dbms) {
 		switch (dbms) {
 			case SQLITE:
 				// TODO SQLite - Currently not supported
-				return null;  
+				return null;
 			case MARIA_DB:
 			case MYSQL:
 			default:

@@ -19,12 +19,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.COLUMNS")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name="DTOInformationSchemaTableColumn.mysql", query="SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=? AND TABLE_NAME=?", resultClass=DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name="DTOInformationSchemaTableColumn.mdb", query="SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = 'PUBLIC' AND TABLE_SCHEMA='PUBLIC' AND TABLE_NAME=?", resultClass=DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name="DTOInformationSchemaTableColumn.mssql", query="SELECT DISTINCT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG=? AND TABLE_NAME=?", resultClass=DTOInformationSchemaTableColumn.class)
-@NamedNativeQuery(name="DTOInformationSchemaTableColumn.sqlite", query="SELECT ? AS TABLE_NAME, name AS COLUMN_NAME, cid + 1 AS ORDINAL_POSITION, dflt_value AS COLUMN_DEFAULT, CASE \"notnull\" WHEN 0 THEN 'YES' ELSE 'NO' END AS IS_NULLABLE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN type ELSE substr(type, 0, instr(type, '(')) END AS DATA_TYPE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN NULL ELSE substr(type, instr(type, '(') + 1, instr(type, ')') - instr(type, '(') - 1) END AS CHARACTER_MAXIMUM_LENGTH, * FROM pragma_table_info((?))", resultClass=DTOInformationSchemaTableColumn.class)
-public class DTOInformationSchemaTableColumn {
-	
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mysql", query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=? AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mdb", query = "SELECT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = 'PUBLIC' AND TABLE_SCHEMA='PUBLIC' AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.mssql", query = "SELECT DISTINCT TABLE_NAME, COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG=? AND TABLE_NAME=?", resultClass = DTOInformationSchemaTableColumn.class)
+@NamedNativeQuery(name = "DTOInformationSchemaTableColumn.sqlite", query = "SELECT ? AS TABLE_NAME, name AS COLUMN_NAME, cid + 1 AS ORDINAL_POSITION, dflt_value AS COLUMN_DEFAULT, CASE \"notnull\" WHEN 0 THEN 'YES' ELSE 'NO' END AS IS_NULLABLE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN type ELSE substr(type, 0, instr(type, '(')) END AS DATA_TYPE, CASE WHEN instr(type, '(') = 0 OR instr(type, ')') = 0 THEN NULL ELSE substr(type, instr(type, '(') + 1, instr(type, ')') - instr(type, '(') - 1) END AS CHARACTER_MAXIMUM_LENGTH, * FROM pragma_table_info((?))", resultClass = DTOInformationSchemaTableColumn.class)
+public final class DTOInformationSchemaTableColumn {
+
 	/** Der Name der Tabelle */
 	@Column(name = "TABLE_NAME")
 	private String NameTabelle;
@@ -32,8 +32,8 @@ public class DTOInformationSchemaTableColumn {
 	/** Der Name der Tabellenspalte */
 	@Id
 	@Column(name = "COLUMN_NAME")
-	private String Name;	
-	
+	private String Name;
+
 	/** Die Reihenfolge der Spalte in Bezug auf alle Spalten der Tabelle */
 	@Column(name = "ORDINAL_POSITION")
 	private Integer Reihenfolge;
@@ -41,40 +41,40 @@ public class DTOInformationSchemaTableColumn {
 	/** Der Default-Wert der Spalte */
 	@Column(name = "COLUMN_DEFAULT")
 	private String DefaultValue;
-	
+
 	/** Gibt an, ob die Spalte auch NULL enthalten darf. */
 	@Column(name = "IS_NULLABLE")
 	private String Nullable;
-	
+
 	/** Der Datentyp der Spalte */
 	@Column(name = "DATA_TYPE")
 	private String DataType;
-	
+
 	/** Die maximale Länge der Daten der Spalte (Anzahl der Zeichen) */
 	@Column(name = "CHARACTER_MAXIMUM_LENGTH")
 	private Long DataLength;
-	
-	
+
+
 	/**
-	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
+	 * Default-Konstruktor für das Erzeugen dieser DBEntity
 	 */
 	private DTOInformationSchemaTableColumn() {
 	}
 
-	
+
 	/**
 	 * Gibt den Namen der Tabelle zurück, zu der die Spalte gehört.
-	 * 
+	 *
 	 * @return der Tabellenname
 	 */
 	public String getNameTabelle() {
 		return NameTabelle;
 	}
 
-	
+
 	/**
 	 * Gibt den Namen der Spalte zurück.
-	 * 
+	 *
 	 * @return der Spaltenname
 	 */
 	public String getName() {
@@ -84,7 +84,7 @@ public class DTOInformationSchemaTableColumn {
 
 	/**
 	 * Gibt die Position der Spalte in der Reihenfolge an, wie die Spalten defininiert wurden.
-	 * 
+	 *
 	 * @return die Position der Spalte in der Reihenfolge, wie die Spalten defininiert wurden
 	 */
 	public Integer getReihenfolge() {
@@ -94,17 +94,17 @@ public class DTOInformationSchemaTableColumn {
 
 	/**
 	 * Gibt den Default-Wert für diese Spalte zurück.
-	 * 
+	 *
 	 * @return der Default-Wert
 	 */
 	public String getDefaultValue() {
 		return DefaultValue;
 	}
 
-	
+
 	/**
 	 * Gibt zurück, ob die Spalte Null-Werte zulässt oder nicht
-	 * 
+	 *
 	 * @return die Information, ob die Spalte Null-Werte zulässt oder nicht
 	 */
 	public String getNullable() {
@@ -114,8 +114,8 @@ public class DTOInformationSchemaTableColumn {
 
 	/**
 	 * Gibt den DBMS-spezifischen Datentyp der Spalte zurück.
-	 * 
-	 * @return der DBMS-spezifische Datentyp der Spalte 
+	 *
+	 * @return der DBMS-spezifische Datentyp der Spalte
 	 */
 	public String getDataType() {
 		return DataType;
@@ -123,8 +123,8 @@ public class DTOInformationSchemaTableColumn {
 
 
 	/**
-	 * Gibt die maximale Länge von Daten in der Spalte zurück. 
-	 * 
+	 * Gibt die maximale Länge von Daten in der Spalte zurück.
+	 *
 	 * @return die maximal zulässige Länge der Daten
 	 */
 	public Long getDataLength() {
@@ -142,7 +142,7 @@ public class DTOInformationSchemaTableColumn {
 	 *
 	 * @return die Map mit den Spalten-DTOs, welche den Tabellen-Namen in Kleinschreibung (!) zugeordnet sind.
 	 */
-	public static Map<String, DTOInformationSchemaTableColumn> query(DBEntityManager conn, String tabname) {
+	public static Map<String, DTOInformationSchemaTableColumn> query(final DBEntityManager conn, final String tabname) {
 		List<DTOInformationSchemaTableColumn> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -172,7 +172,7 @@ public class DTOInformationSchemaTableColumn {
 		}
 		if (results == null)
 			return null;
-		// TODO Vereinheitlichung der Darstellung aus den Informations-Schemata der unterschiedlichen DBMS 		
+		// TODO Vereinheitlichung der Darstellung aus den Informations-Schemata der unterschiedlichen DBMS
 		return results.stream().collect(Collectors.toMap(e -> e.Name.toLowerCase(), e -> e, (first, duplicate) -> first));
 	}
 
@@ -193,14 +193,14 @@ public class DTOInformationSchemaTableColumn {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOInformationSchemaTableColumn other = (DTOInformationSchemaTableColumn) obj;
+		final DTOInformationSchemaTableColumn other = (DTOInformationSchemaTableColumn) obj;
 		if (DataLength == null) {
 			if (other.DataLength != null)
 				return false;

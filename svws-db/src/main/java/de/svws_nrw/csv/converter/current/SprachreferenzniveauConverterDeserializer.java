@@ -13,7 +13,7 @@ import java.io.IOException;
  * Diese Klasse ist ein Deserialisierer für das Sprachreferenzniveau (z.B. A2/B1). Sie deserialisiert
  * die Datenbankdarstellung als String in einen Wert der Aufzählung {@link Sprachreferenzniveau}.
  */
-public class SprachreferenzniveauConverterDeserializer extends StdDeserializer<Sprachreferenzniveau> {
+public final class SprachreferenzniveauConverterDeserializer extends StdDeserializer<Sprachreferenzniveau> {
 
     private static final long serialVersionUID = 2214600102039874189L;
 
@@ -29,12 +29,12 @@ public class SprachreferenzniveauConverterDeserializer extends StdDeserializer<S
      *
      * @param t   das Klassen-Objekt
      */
-    protected SprachreferenzniveauConverterDeserializer(Class<Sprachreferenzniveau> t) {
+    protected SprachreferenzniveauConverterDeserializer(final Class<Sprachreferenzniveau> t) {
         super(t);
     }
 
     @Override
-    public Sprachreferenzniveau deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Sprachreferenzniveau deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
         return Sprachreferenzniveau.getByKuerzel(p.getText());
     }
 

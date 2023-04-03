@@ -6,23 +6,23 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Kursmarkierungen im Abitur.
- *  
+ *
  */
 @Converter(autoApply = true)
-public class AbiturKursMarkierungConverter extends DBAttributeConverter<AbiturKursMarkierung, String> {
+public final class AbiturKursMarkierungConverter extends DBAttributeConverter<AbiturKursMarkierung, String> {
 
 	/** Die Instanz des Konverters */
-	public final static AbiturKursMarkierungConverter instance = new AbiturKursMarkierungConverter();
+	public static final AbiturKursMarkierungConverter instance = new AbiturKursMarkierungConverter();
 
 	@Override
-	public String convertToDatabaseColumn(AbiturKursMarkierung value) {
+	public String convertToDatabaseColumn(final AbiturKursMarkierung value) {
 		if (value == null)
 			return "-";
 		return value.aufAbiturZeugnis ? (value.fuerBerechnung ? "+" : "-") : "/";
 	}
 
 	@Override
-	public AbiturKursMarkierung convertToEntityAttribute(String dbData) {
+	public AbiturKursMarkierung convertToEntityAttribute(final String dbData) {
 		if ((dbData == null) || (!"+".equals(dbData) && !"-".equals(dbData) && !"/".equals(dbData)))
 			return new AbiturKursMarkierung();
 		return new AbiturKursMarkierung("+".equals(dbData), !"/".equals(dbData));

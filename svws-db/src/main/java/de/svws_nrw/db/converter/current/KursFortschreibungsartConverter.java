@@ -9,22 +9,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * zu einer Stringdarstellung in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter(autoApply = true)
-public class KursFortschreibungsartConverter extends DBAttributeConverter<KursFortschreibungsart, String> {
+public final class KursFortschreibungsartConverter extends DBAttributeConverter<KursFortschreibungsart, String> {
 
 	/** Die Instanz des Konverters */
-	public final static KursFortschreibungsartConverter instance = new KursFortschreibungsartConverter();	
-	
+	public static KursFortschreibungsartConverter instance = new KursFortschreibungsartConverter();
+
 	@Override
-	public String convertToDatabaseColumn(KursFortschreibungsart attribute) {
+	public String convertToDatabaseColumn(final KursFortschreibungsart attribute) {
 		return attribute.kuerzel;
 	}
 
 	@Override
-	public KursFortschreibungsart convertToEntityAttribute(String dbData) {
+	public KursFortschreibungsart convertToEntityAttribute(final String dbData) {
 		return KursFortschreibungsart.fromKuerzel(dbData);
 	}
 

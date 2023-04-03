@@ -6,23 +6,23 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Kursarten im Abitur.
- *  
+ *
  */
 @Converter(autoApply = true)
-public class GOStKursartConverter extends DBAttributeConverter<GostKursart, String> {
+public final class GOStKursartConverter extends DBAttributeConverter<GostKursart, String> {
 
 	/** Die Instanz des Konverters */
-	public final static GOStKursartConverter instance = new GOStKursartConverter();
-	
+	public static final GOStKursartConverter instance = new GOStKursartConverter();
+
 	@Override
-	public String convertToDatabaseColumn(GostKursart value) {
+	public String convertToDatabaseColumn(final GostKursart value) {
 		if (value == null)
 			return null;
 		return value.toString();
 	}
 
 	@Override
-	public GostKursart convertToEntityAttribute(String dbData) {
+	public GostKursart convertToEntityAttribute(final String dbData) {
 		return GostKursart.fromKuerzel(dbData);
 	}
 

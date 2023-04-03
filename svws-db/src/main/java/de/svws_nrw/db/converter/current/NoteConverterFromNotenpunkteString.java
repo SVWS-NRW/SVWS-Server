@@ -12,13 +12,13 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * Diese Klasse dient dem Konvertieren Notentext zur Note.
  */
 @Converter(autoApply = true)
-public class NoteConverterFromNotenpunkteString extends DBAttributeConverter<Note, String> {
+public final class NoteConverterFromNotenpunkteString extends DBAttributeConverter<Note, String> {
 
 	/** Die Instanz des Konverters */
-	public final static NoteConverterFromNotenpunkteString instance = new NoteConverterFromNotenpunkteString();
-	
+	public static final NoteConverterFromNotenpunkteString instance = new NoteConverterFromNotenpunkteString();
+
 	@Override
-	public String convertToDatabaseColumn(Note note) {
+	public String convertToDatabaseColumn(final Note note) {
 		if (note == null)
 			return null;
 		if (note == Note.KEINE)
@@ -31,12 +31,12 @@ public class NoteConverterFromNotenpunkteString extends DBAttributeConverter<Not
 	}
 
 	@Override
-	public Note convertToEntityAttribute(String dbData) {
+	public Note convertToEntityAttribute(final String dbData) {
 		if (dbData == null)
 			return Note.KEINE;
-		try {			
+		try {
 			return Note.fromNotenpunkte(Integer.parseInt(dbData));
-		} catch(@SuppressWarnings("unused") NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			return Note.fromKuerzel(dbData);
 		}
 	}

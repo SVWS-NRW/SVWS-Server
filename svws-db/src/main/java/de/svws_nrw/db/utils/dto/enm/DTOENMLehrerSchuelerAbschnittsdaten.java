@@ -26,39 +26,39 @@ import jakarta.persistence.Id;
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-public class DTOENMLehrerSchuelerAbschnittsdaten {
-	
+public final class DTOENMLehrerSchuelerAbschnittsdaten {
+
 	/** Eine eindeutige ID für die Leistungsdaten des Schülers */
 	@Id
 	public long leistungID;
-	
+
 	/** Die erteilte Note */
-	@Convert(converter=NoteConverterFromKuerzel.class)
-	@JsonSerialize(using=NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using=NoteConverterFromKuerzelDeserializer.class)
+	@Convert(converter = NoteConverterFromKuerzel.class)
+	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
+	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
 	public Note note;
 
 	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
 	public String tsNote;
-	
+
 	/** Die allgemeine Kursart des Faches (z.B. GK, LK) */
 	public String kursart;
-	
+
 	/** gibt an, ob das Fach als Abiturfach belegt wurde (NULL, 1, 2, 3, 4) */
 	public String AbiturFach;
-	
+
 	/** die ID des Fachlehrers */
 	public Long lehrerID;
-	
+
 	/** die ID des Kurses, sofern es sich um Kursunterricht handelt - ansonsten null */
 	public Long kursID;
-	
+
 	/** die ID des Faches */
 	public Long fachID;
-	
+
 	/** Die Wochenstunden des Faches. */
 	public Integer wochenstunden;
-	
+
 	/** Fachbezogene Fehlstunden */
 	public Integer fehlstundenGesamt;
 	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Fehlstunden */
@@ -69,68 +69,68 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Fehlstunden, unentschuldigt */
 	public String tsFehlstundenUnentschuldigt;
-	
+
 	/** Abschnittsbezogene Fehlstunden */
 	public Integer fehlstundenSummeGesamt;
-	
+
 	/** Zeitstempel: Abschnittsbezogene Fehlstunden */
 	public String tsFehlstundenSummeGesamt;
-	
+
 	/** Abschnittsbezogene Fehlstunden, unentschuldigt */
 	public Integer fehlstundenSummeUnentschuldigt;
 	/** Zeitstempel: Abschnittsbezogene Fehlstunden, unentschuldigt */
 	public String tsFehlstundenSummeUnentschuldigt;
-	
+
 	/** Text für Fachbezogene Lernentwicklung Bemerkung */
 	public String fachbezogeneBemerkungen;
 
 	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zur fachbezogenen Lernentwicklung */
 	public String tsFachbezogeneBemerkungen;
-	
+
 	/** Die ID des Schuelers zu dem die Leistungsdaten gehören. */
 	public long schuelerID;
-	
+
 	/** Eine eindeutige ID für den Lernabschnitt des Schülers */
 	public long abschnittID;
-	
+
 	/** Die eindeutige ID für Jahrgang des Lernabschnitts */
 	public long jahrgangID;
-	
+
 	/** Die Klasse, in der sich der Schüler im dem Abschnitt befindet */
 	public String klasse;
-	
+
 	/** Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss. */
 	public String pruefungsordnung;
-	
+
 	/** ggf. die Sprache des Bilingualen Zweigs */
 	public String BilingualerZweig;
-	
-	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */  
-	@Convert(converter=NoteConverterFromInteger.class)
+
+	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
+	@Convert(converter = NoteConverterFromInteger.class)
 	public Note lernbereich1note;
-	
+
 	/** Lernbereichnote Naturwissenschaft HA10 */
-	@Convert(converter=NoteConverterFromInteger.class)
+	@Convert(converter = NoteConverterFromInteger.class)
 	public Note lernbereich2note;
-	
+
 	/** Das Kürzel des Hauptförderschwerpunktes */
 	public String foerderschwerpunkt1Kuerzel;
-	
+
 	/** Das Kürzel des weitereren Förderschwerpunktes */
 	public String foerderschwerpunkt2Kuerzel;
-	
+
 	/** Gibt an ob der Schüler zieldifferent unterrichtet wird */
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
 	public Boolean ZieldifferentesLernen;
-	
+
 	/** Gibt an ob die Leistung gemahnt wurde. */
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
 	public Boolean istGemahnt;
 	/** Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde */
 	public String tsIstGemahnt;
-	
+
 	/** Enthält bei erfolgter Mahnung das Mahndatum */
-	@Convert(converter=DatumConverter.class)
+	@Convert(converter = DatumConverter.class)
 	public String mahndatum;
 
 	/** Die Zeugnis-Bemerkungen */
@@ -140,7 +140,7 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	public String tsZeugnisBemerkungen;
 	/** Die Bemerkungen zum Arbeits- und Sozialverhalten */
 	public String ASV;
-	
+
 	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zum Arbeits- und Sozialverhalten */
 	public String tsASV;
 
@@ -152,29 +152,29 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zum außerunterrichtlichen Engagement */
 	public String tsAUE;
-	
+
 	/** Die ESF-Bemerkungen */
 	public String ESF;
-	
+
 	/** Die Bemerkungen zu den Förderschwerpunkten */
 	public String bemerkungFSP;
-	
+
 	/** Die Bemerkungen zur Versetzung */
 	public String bemerkungVersetzung;
-	
+
 	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zur Versetzung */
 	public String tsBemerkungVersetzung;
 
 
 	/**
-	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
+	 * Default-Konstruktor für das Erzeugen dieser DBEntity
 	 */
 	private DTOENMLehrerSchuelerAbschnittsdaten() {
 	}
 
-	
+
 	/**
-	 * Stellt eine Anfrage nach den Daten des Externen Notenmoduls (ENM) zu dem 
+	 * Stellt eine Anfrage nach den Daten des Externen Notenmoduls (ENM) zu dem
 	 * angegebenen Abschnitt aus dem angegebenen Schuljahr bezogen auf den Lehrer,
 	 * dessen Kürzel angegeben ist.
 	 *
@@ -184,8 +184,8 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	 *
 	 * @return eine Liste mit den DTOs
 	 */
-	public static List<DTOENMLehrerSchuelerAbschnittsdaten> query(DBEntityManager conn, long schuljahresabschnitt, String lehrerKrz) {
-		List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
+	public static List<DTOENMLehrerSchuelerAbschnittsdaten> query(final DBEntityManager conn, final long schuljahresabschnitt, final String lehrerKrz) {
+		final List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
 				SELECT
 					la.Schueler_ID as schuelerID,
 					la.ID as abschnittID,
@@ -238,12 +238,12 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					 	JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID AND kl.Kuerzel = '%s'
 					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
-					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID 
+					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
 					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
 					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
-					 la.Schueler_ID, la.ID, ld.ID 
+					 la.Schueler_ID, la.ID, ld.ID
 				;""".formatted(schuljahresabschnitt, lehrerKrz),
 				DTOENMLehrerSchuelerAbschnittsdaten.class);
 		return results;
@@ -251,7 +251,7 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 
 
 	/**
-	 * Stellt eine Anfrage nach den Daten des Externen Notenmoduls (ENM) zu dem 
+	 * Stellt eine Anfrage nach den Daten des Externen Notenmoduls (ENM) zu dem
 	 * angegebenen Abschnitt aus dem angegebenen Schuljahr bezogen auf den Lehrer,
 	 * dessen Kürzel angegeben ist.
 	 *
@@ -260,8 +260,8 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	 *
 	 * @return eine Liste mit den DTOs
 	 */
-	public static List<DTOENMLehrerSchuelerAbschnittsdaten> queryAll(DBEntityManager conn, long schuljahresabschnitt) {
-		List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
+	public static List<DTOENMLehrerSchuelerAbschnittsdaten> queryAll(final DBEntityManager conn, final long schuljahresabschnitt) {
+		final List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
 				SELECT
 					la.Schueler_ID as schuelerID,
 					la.ID as abschnittID,
@@ -314,12 +314,12 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					 	JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
 					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
-					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID 
+					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
 					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
 					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
-					 la.Schueler_ID, la.ID, ld.ID 
+					 la.Schueler_ID, la.ID, ld.ID
 				;""".formatted(schuljahresabschnitt),
 				DTOENMLehrerSchuelerAbschnittsdaten.class);
 		return results;
@@ -352,14 +352,14 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOENMLehrerSchuelerAbschnittsdaten other = (DTOENMLehrerSchuelerAbschnittsdaten) obj;
+		final DTOENMLehrerSchuelerAbschnittsdaten other = (DTOENMLehrerSchuelerAbschnittsdaten) obj;
 		if (AbiturFach == null) {
 			if (other.AbiturFach != null)
 				return false;
@@ -436,21 +436,21 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 		return true;
 	}
 
-	
+
 	/**
 	 * Konvertiert die Nummer des Abiturfaches als String in den Integer-Wert.
-	 *  
+	 *
 	 * @return der Integer-Wert für die Nummer des Abiturfaches
 	 */
 	public Integer getAbiturFach() {
 		try {
 			return Integer.parseInt(this.AbiturFach);
-		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			return null;
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public String toString() {
@@ -461,7 +461,7 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 				+ ", lernbereich1note=" + lernbereich1note + ", lernbereich2note=" + lernbereich2note
 				+ ", foerderschwerpunkt1Kuerzel=" + foerderschwerpunkt1Kuerzel + ", foerderschwerpunkt2Kuerzel="
 				+ foerderschwerpunkt2Kuerzel + "]";
-	}	
+	}
 
 
 }

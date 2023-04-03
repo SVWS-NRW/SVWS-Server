@@ -9,22 +9,22 @@ import jakarta.persistence.Converter;
  * und die + true. Dieser Converter setzt den Defaultwertwert +.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class BooleanPlusMinusDefaultPlusConverter extends DBAttributeConverter<Boolean, String> {
+public final class BooleanPlusMinusDefaultPlusConverter extends DBAttributeConverter<Boolean, String> {
 
 	/** Die Instanz des Konverters */
-	public final static BooleanPlusMinusDefaultPlusConverter instance = new BooleanPlusMinusDefaultPlusConverter();
-	
+	public static final BooleanPlusMinusDefaultPlusConverter instance = new BooleanPlusMinusDefaultPlusConverter();
+
 	@Override
-	public String convertToDatabaseColumn(Boolean value) {
+	public String convertToDatabaseColumn(final Boolean value) {
 		return ((value == null) || value) ? "+" : "-";
 	}
 
 	@Override
-	public Boolean convertToEntityAttribute(String dbData) {
+	public Boolean convertToEntityAttribute(final String dbData) {
 		return !("-".equals(dbData));
 	}
 

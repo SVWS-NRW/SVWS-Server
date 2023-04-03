@@ -10,22 +10,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * zu einer Integer-Darstellung (siehe {@link Geschlecht#id}) in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter(autoApply = true)
-public class GeschlechtConverter extends DBAttributeConverter<Geschlecht, Integer> {
+public final class GeschlechtConverter extends DBAttributeConverter<Geschlecht, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static GeschlechtConverter instance = new GeschlechtConverter();
-	
+	public static final GeschlechtConverter instance = new GeschlechtConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(Geschlecht geschlecht) {
+	public Integer convertToDatabaseColumn(final Geschlecht geschlecht) {
 		return geschlecht.id;
 	}
 
 	@Override
-	public Geschlecht convertToEntityAttribute(Integer dbData) {
+	public Geschlecht convertToEntityAttribute(final Integer dbData) {
 		if (dbData == null)
 			return Geschlecht.X;
 		return Geschlecht.fromValue(dbData);

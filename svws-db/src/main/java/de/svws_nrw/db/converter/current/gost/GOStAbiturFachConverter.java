@@ -6,23 +6,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Abiturfächern im Abitur.
- *  
  */
 @Converter(autoApply = true)
-public class GOStAbiturFachConverter extends DBAttributeConverter<GostAbiturFach, String> {
+public final class GOStAbiturFachConverter extends DBAttributeConverter<GostAbiturFach, String> {
 
 	/** Die Instanz des Konverters */
-	public final static GOStAbiturFachConverter instance = new GOStAbiturFachConverter();
+	public static final GOStAbiturFachConverter instance = new GOStAbiturFachConverter();
 
 	@Override
-	public String convertToDatabaseColumn(GostAbiturFach value) {
+	public String convertToDatabaseColumn(final GostAbiturFach value) {
 		if (value == null)
 			return null;
 		return "" + value.id;
 	}
 
 	@Override
-	public GostAbiturFach convertToEntityAttribute(String dbData) {
+	public GostAbiturFach convertToEntityAttribute(final String dbData) {
 		return GostAbiturFach.fromIDString(dbData);
 	}
 

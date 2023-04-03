@@ -20,27 +20,27 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.TABLES")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name="DTOInformationSchema.mysql", query="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA")
-@NamedNativeQuery(name="DTOInformationSchema.mdb", query="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA")
-@NamedNativeQuery(name="DTOInformationSchema.mssql", query="SELECT name AS SCHEMA_NAME FROM master.sys.databases")
-@NamedNativeQuery(name="DTOInformationSchema.sqlite", query="SELECT 'master' AS SCHEMA_NAME")
-public class DTOInformationSchema {
-	
+@NamedNativeQuery(name = "DTOInformationSchema.mysql", query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA")
+@NamedNativeQuery(name = "DTOInformationSchema.mdb", query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA")
+@NamedNativeQuery(name = "DTOInformationSchema.mssql", query = "SELECT name AS SCHEMA_NAME FROM master.sys.databases")
+@NamedNativeQuery(name = "DTOInformationSchema.sqlite", query = "SELECT 'master' AS SCHEMA_NAME")
+public final class DTOInformationSchema {
+
 	/** Der Name des Datenbank-Schemas */
 	@Id
 	@Column(name = "SCHEMA_NAME")
-	private String Name;	
+	private String Name;
 
 	/**
-	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
+	 * Default-Konstruktor für das Erzeugen dieser DBEntity
 	 */
 	private DTOInformationSchema() {
 	}
-	
+
 
 	/**
 	 * Gibt den Namen des Schemas zurück.
-	 * 
+	 *
 	 * @return der Name des Schemas
 	 */
 	public String getName() {
@@ -55,7 +55,7 @@ public class DTOInformationSchema {
 	 *
 	 * @return die Map mit den Schemata-DTOs, welche den Schema-Namen in Kleinschreibung zugeordnet sind.
 	 */
-	public static Map<String, DTOInformationSchema> query(DBEntityManager conn) {
+	public static Map<String, DTOInformationSchema> query(final DBEntityManager conn) {
 		List<DTOInformationSchema> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -79,18 +79,18 @@ public class DTOInformationSchema {
 
 
 	/**
-	 * Stellt eine Anfrage nach den Namen in Kleinschreibung (!) nach aller Schemata. Hierbei werden alle 
+	 * Stellt eine Anfrage nach den Namen in Kleinschreibung (!) nach aller Schemata. Hierbei werden alle
 	 * Schemata ignoriert, die vom DBMS vorgegeben sind.
-	 * 
+	 *
 	 * @param conn   die Datenbankverbindung
-	 * 
+	 *
 	 * @return die Liste mit den Schemanamen in Kleinschreibung
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<String> queryNames(DBEntityManager conn) {
+	public static List<String> queryNames(final DBEntityManager conn) {
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
-				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter(name -> {
 					switch (name.toLowerCase()) {
 						case "information_schema":
 						case "mysql":
@@ -100,7 +100,7 @@ public class DTOInformationSchema {
 					return true;
 				}).map(name -> name.toLowerCase()).collect(Collectors.toList());
 			case MYSQL:
-				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter(name -> {
 					switch (name.toLowerCase()) {
 						case "information_schema":
 						case "mysql":
@@ -113,7 +113,7 @@ public class DTOInformationSchema {
 			case MDB:
 				return Collections.EMPTY_LIST;
 			case MSSQL:
-				return conn.queryNamed("DTOInformationSchema.mssql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationSchema.mssql", String.class).getResultList().stream().filter(name -> {
 					switch (name) {
 						case "master":
 						case "tempdb":
@@ -140,14 +140,14 @@ public class DTOInformationSchema {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOInformationSchema other = (DTOInformationSchema) obj;
+		final DTOInformationSchema other = (DTOInformationSchema) obj;
 		if (Name == null) {
 			if (other.Name != null)
 				return false;
@@ -161,5 +161,5 @@ public class DTOInformationSchema {
 	public String toString() {
 		return "DTOInformationSchema [Name=" + Name + "]";
 	}
-	
+
 }

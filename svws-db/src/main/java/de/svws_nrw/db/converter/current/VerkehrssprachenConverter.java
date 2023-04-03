@@ -14,18 +14,18 @@ import jakarta.persistence.Converter;
  * registriert werden.
  */
 @Converter(autoApply = true)
-public class VerkehrssprachenConverter extends DBAttributeConverter<Verkehrssprache, String> {
+public final class VerkehrssprachenConverter extends DBAttributeConverter<Verkehrssprache, String> {
 
     /** Die Instanz des Konverters */
-    public final static VerkehrssprachenConverter instance = new VerkehrssprachenConverter();
+    public static final VerkehrssprachenConverter instance = new VerkehrssprachenConverter();
 
     @Override
-    public String convertToDatabaseColumn(Verkehrssprache attribute) {
+    public String convertToDatabaseColumn(final Verkehrssprache attribute) {
         return attribute == null ? null : attribute.daten.kuerzel;
     }
 
     @Override
-    public Verkehrssprache convertToEntityAttribute(String dbData) {
+    public Verkehrssprache convertToEntityAttribute(final String dbData) {
     	return Verkehrssprache.getByKuerzelAuto(dbData);
     }
 

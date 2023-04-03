@@ -10,22 +10,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * welches in der SVWS-Datenbank verwendet wird.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class ZulaessigesFachKuerzelASDConverter extends DBAttributeConverter<ZulaessigesFach, String> {
+public final class ZulaessigesFachKuerzelASDConverter extends DBAttributeConverter<ZulaessigesFach, String> {
 
 	/** Die Instanz des Konverters */
-	public final static ZulaessigesFachKuerzelASDConverter instance = new ZulaessigesFachKuerzelASDConverter();
-	
+	public static final ZulaessigesFachKuerzelASDConverter instance = new ZulaessigesFachKuerzelASDConverter();
+
 	@Override
-	public String convertToDatabaseColumn(ZulaessigesFach value) {
+	public String convertToDatabaseColumn(final ZulaessigesFach value) {
 		return value.daten.kuerzelASD;
 	}
 
 	@Override
-	public ZulaessigesFach convertToEntityAttribute(String dbData) {
+	public ZulaessigesFach convertToEntityAttribute(final String dbData) {
 		return ZulaessigesFach.getByKuerzelASD(dbData);
 	}
 

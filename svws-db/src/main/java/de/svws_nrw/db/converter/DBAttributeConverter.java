@@ -52,36 +52,36 @@ import jakarta.persistence.AttributeConverter;
  * von Objekt-Attributen in der SVWS-DB eingesetzt werden.
  *
  * @param <X>   der Datentyp, welcher im Java-DTO verwendet wird
- * @param <Y>   der Datentyp, welcher für die Persistierung in der Datenbank verwendet wird. 
+ * @param <Y>   der Datentyp, welcher für die Persistierung in der Datenbank verwendet wird.
  */
 public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X, Y> {
 
-	/** 
-	 * Eine Map, welche einer Attribut-Konverter-Klasse eine Instanz der Klasse 
+	/**
+	 * Eine Map, welche einer Attribut-Konverter-Klasse eine Instanz der Klasse
 	 * zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
-	 */  
+	 */
 	@SuppressWarnings("rawtypes")
 	private static HashMap<Class<? extends DBAttributeConverter>, DBAttributeConverter> converter = new HashMap<>();
-	/** 
-	 * Eine Map, welche dem Namen einer Attribut-Konverter-Klasse eine 
+	/**
+	 * Eine Map, welche dem Namen einer Attribut-Konverter-Klasse eine
 	 * Instanz der Klasse zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
-	 */  
+	 */
 	@SuppressWarnings("rawtypes")
 	private static HashMap<String, DBAttributeConverter> converterByName = new HashMap<>();
-	
+
 	/**
 	 * Fügt einen neuen Attribut-Konverter hinzu
-	 * 
-	 * @param <T>   der Typ des Attribut-Konverters 
-	 * 
+	 *
+	 * @param <T>   der Typ des Attribut-Konverters
+	 *
 	 * @param conv   die Instanz des Konverters
 	 */
-	private static <T extends DBAttributeConverter<?,?>> void add(T conv) {
+	private static <T extends DBAttributeConverter<?, ?>> void add(final T conv) {
 		converter.put(conv.getClass(), conv);
 		converterByName.put(conv.getClass().getSimpleName(), conv);
 	}
-	
-	
+
+
 	/**
 	 * Initialisiert die Attribut-Konverter
 	 */
@@ -131,75 +131,75 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new UhrzeitConverter());
 		add(new VerkehrssprachenConverter());
 		add(new ZulaessigesFachKuerzelASDConverter());
-		
-		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN		
+
+		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN
 	}
-	
-	
+
+
 	/**
 	 * Bestimmt den Attributkonverter anhand der Klasse.
-	 * 
-	 * @param <T>     der Typ des Attribut-Konverters 
+	 *
+	 * @param <T>     der Typ des Attribut-Konverters
 	 * @param clazz   die Converter-Klasse
-	 * 
+	 *
 	 * @return eine Instanz der Converter-Klasse
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends DBAttributeConverter<?,?>> T getByClass(Class<T> clazz) {
+	public static <T extends DBAttributeConverter<?, ?>> T getByClass(final Class<T> clazz) {
 		if (converter.size() == 0)
 			init();
 		return (T) converter.get(clazz);
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
 	 * Bestimmt den Attributkonverter anhand des Klassennamens.
-	 * 
-	 * @param <T>         der Typ des Attribut-Konverters 
+	 *
+	 * @param <T>         der Typ des Attribut-Konverters
 	 * @param classname   der Name der Converter-Klasse
-	 * 
+	 *
 	 * @return eine Instanz der Converter-Klasse
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends DBAttributeConverter<?,?>> T getByClassName(String classname) {
+	public static <T extends DBAttributeConverter<?, ?>> T getByClassName(final String classname) {
 		if (converter.size() == 0)
 			init();
 		return (T) converterByName.get(classname);
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
 	 * Gibt die Klasse des Datentyps zurück, welcher in der Java-DTO-Klasse verwendet wird.
-	 * 
-	 * @return die Klasse des Java-DTO-Datentyps. 
+	 *
+	 * @return die Klasse des Java-DTO-Datentyps.
 	 */
 	public abstract Class<X> getResultType();
-	
-	
+
+
 	/**
 	 * Gibt die Klasse des Datentyps zurück, welcher für die Persistierung in der Datenbank
 	 * verwendet wird.
-	 *   
+	 *
 	 * @return der Datentyp für die Persistierung in der Datenbank
 	 */
 	public abstract Class<Y> getDBType();
 
-	
+
 	/**
 	 * Wandelt die übergebenen Daten in den Typ X um. Hierbei wird geprüft,
 	 * ob dbData ein Objekt des korrekten Typs ist.
-	 * 
+	 *
 	 * @param dbData   die umzuwandelnden Daten
-	 * 
-	 * @return Die umgewandelten Daten oder null, falls dies nicht möglich ist 
+	 *
+	 * @return Die umgewandelten Daten oder null, falls dies nicht möglich ist
 	 */
 	@SuppressWarnings("unchecked")
-	public X convertToEntityAttributeFromObject(Object dbData) {
+	public X convertToEntityAttributeFromObject(final Object dbData) {
 		if ((dbData == null) || (!getDBType().isInstance(dbData.getClass())))
 			return null;
-		return convertToEntityAttribute((Y)dbData);
+		return convertToEntityAttribute((Y) dbData);
 	}
-	
+
 }

@@ -5,25 +5,25 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
 /**
- * Diese Klasse dient dem Konvertieren von Halbjahren der gymnasialen 
- * Oberstufe zu eindeutigen Integer-Werten (ID des Core-Types {@link GostHalbjahr}) 
+ * Diese Klasse dient dem Konvertieren von Halbjahren der gymnasialen
+ * Oberstufe zu eindeutigen Integer-Werten (ID des Core-Types {@link GostHalbjahr})
  * und umgekehrt.
  */
 @Converter(autoApply = true)
-public class GOStHalbjahrConverter extends DBAttributeConverter<GostHalbjahr, Integer> {
+public final class GOStHalbjahrConverter extends DBAttributeConverter<GostHalbjahr, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static GOStHalbjahrConverter instance = new GOStHalbjahrConverter();
-	
+	public static final GOStHalbjahrConverter instance = new GOStHalbjahrConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(GostHalbjahr value) {
+	public Integer convertToDatabaseColumn(final GostHalbjahr value) {
 		if (value == null)
 			return null;
 		return value.id;
 	}
 
 	@Override
-	public GostHalbjahr convertToEntityAttribute(Integer dbData) {
+	public GostHalbjahr convertToEntityAttribute(final Integer dbData) {
 		return GostHalbjahr.fromID(dbData);
 	}
 

@@ -9,24 +9,24 @@ import jakarta.persistence.Converter;
  * und "J" true.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class BooleanJNConverter extends DBAttributeConverter<Boolean, String> {
+public final class BooleanJNConverter extends DBAttributeConverter<Boolean, String> {
 
 	/** Die Instanz des Konverters */
-	public final static BooleanJNConverter instance = new BooleanJNConverter();
-	
+	public static final BooleanJNConverter instance = new BooleanJNConverter();
+
 	@Override
-	public String convertToDatabaseColumn(Boolean value) {
+	public String convertToDatabaseColumn(final Boolean value) {
 		if (value == null)
 			return null;
 		return value ? "J" : "N";
 	}
 
 	@Override
-	public Boolean convertToEntityAttribute(String dbData) {
+	public Boolean convertToEntityAttribute(final String dbData) {
 		if (dbData == null)
 			return null;
 		return "J".equals(dbData);

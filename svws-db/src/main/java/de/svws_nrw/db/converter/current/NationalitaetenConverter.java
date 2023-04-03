@@ -14,18 +14,18 @@ import jakarta.persistence.Converter;
  * registriert werden.
  */
 @Converter(autoApply = true)
-public class NationalitaetenConverter extends DBAttributeConverter<Nationalitaeten, String> {
+public final class NationalitaetenConverter extends DBAttributeConverter<Nationalitaeten, String> {
 
     /** Die Instanz des Konverters */
-    public final static NationalitaetenConverter instance = new NationalitaetenConverter();
+    public static final NationalitaetenConverter instance = new NationalitaetenConverter();
 
     @Override
-    public String convertToDatabaseColumn(Nationalitaeten attribute) {
+    public String convertToDatabaseColumn(final Nationalitaeten attribute) {
         return attribute == null ? null : attribute.daten.codeDEStatis;
     }
 
     @Override
-    public Nationalitaeten convertToEntityAttribute(String dbData) {
+    public Nationalitaeten convertToEntityAttribute(final String dbData) {
         return Nationalitaeten.getByDESTATIS(dbData);
     }
 

@@ -12,24 +12,24 @@ import jakarta.persistence.Converter;
  * zu einer Uhrzeitdarstellung (siehe {@link Timestamp}) in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class UhrzeitConverter extends DBAttributeConverter<String, Timestamp> {
+public final class UhrzeitConverter extends DBAttributeConverter<String, Timestamp> {
 
 	/** Die Instanz des Konverters */
-	public final static UhrzeitConverter instance = new UhrzeitConverter();
-	
+	public static final UhrzeitConverter instance = new UhrzeitConverter();
+
 	@Override
-	public Timestamp convertToDatabaseColumn(String attribute) {
+	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))
 				? null
 			    : Timestamp.valueOf(LocalTime.parse(attribute).atDate(LocalDate.of(1970, 1, 1)));
 	}
 
 	@Override
-	public String convertToEntityAttribute(Timestamp dbData) {
+	public String convertToEntityAttribute(final Timestamp dbData) {
 		if (dbData == null)
 			return null;
 		return dbData.toLocalDateTime().toLocalTime().toString();

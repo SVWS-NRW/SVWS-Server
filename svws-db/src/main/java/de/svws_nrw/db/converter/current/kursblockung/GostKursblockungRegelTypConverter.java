@@ -5,25 +5,25 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
 /**
- * Diese Klasse dient dem Konvertieren von Regel-Typen für die Kursblockung in der gymnasialen 
- * Oberstufe zu eindeutigen Integer-Werten (ID des Core-Types {@link GostKursblockungRegelTyp}) 
+ * Diese Klasse dient dem Konvertieren von Regel-Typen für die Kursblockung in der gymnasialen
+ * Oberstufe zu eindeutigen Integer-Werten (ID des Core-Types {@link GostKursblockungRegelTyp})
  * und umgekehrt.
  */
 @Converter(autoApply = true)
-public class GostKursblockungRegelTypConverter extends DBAttributeConverter<GostKursblockungRegelTyp, Integer> {
+public final class GostKursblockungRegelTypConverter extends DBAttributeConverter<GostKursblockungRegelTyp, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static GostKursblockungRegelTypConverter instance = new GostKursblockungRegelTypConverter();
-	
+	public static final GostKursblockungRegelTypConverter instance = new GostKursblockungRegelTypConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(GostKursblockungRegelTyp value) {
+	public Integer convertToDatabaseColumn(final GostKursblockungRegelTyp value) {
 		if (value == null)
 			return null;
 		return value.typ;
 	}
 
 	@Override
-	public GostKursblockungRegelTyp convertToEntityAttribute(Integer dbData) {
+	public GostKursblockungRegelTyp convertToEntityAttribute(final Integer dbData) {
 		return GostKursblockungRegelTyp.fromTyp(dbData);
 	}
 

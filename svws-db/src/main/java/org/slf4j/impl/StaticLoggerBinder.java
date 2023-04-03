@@ -4,10 +4,10 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
 /**
- * Eine einfacher Implementierung des StaticLoggerBinder für den SVWS-Server 
+ * Eine einfacher Implementierung des StaticLoggerBinder für den SVWS-Server
  * zur Unterstützung von SLF4J.
  */
-public class StaticLoggerBinder implements LoggerFactoryBinder {
+public final class StaticLoggerBinder implements LoggerFactoryBinder {
 
 	/** Die Instanz dieser Binding-Klasse */
     private static final StaticLoggerBinder _instance = new StaticLoggerBinder();
@@ -24,7 +24,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
      *
      * @return die Instanz
      */
-    public static final StaticLoggerBinder getSingleton() {
+    public static StaticLoggerBinder getSingleton() {
         return _instance;
     }
 

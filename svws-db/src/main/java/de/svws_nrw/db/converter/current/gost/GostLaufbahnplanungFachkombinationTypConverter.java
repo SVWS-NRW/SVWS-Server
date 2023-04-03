@@ -6,23 +6,23 @@ import jakarta.persistence.Converter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Kursarten im Abitur.
- *  
+ *
  */
 @Converter(autoApply = true)
-public class GostLaufbahnplanungFachkombinationTypConverter extends DBAttributeConverter<GostLaufbahnplanungFachkombinationTyp, Integer> {
+public final class GostLaufbahnplanungFachkombinationTypConverter extends DBAttributeConverter<GostLaufbahnplanungFachkombinationTyp, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static GostLaufbahnplanungFachkombinationTypConverter instance = new GostLaufbahnplanungFachkombinationTypConverter();
-	
+	public static final GostLaufbahnplanungFachkombinationTypConverter instance = new GostLaufbahnplanungFachkombinationTypConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(GostLaufbahnplanungFachkombinationTyp value) {
+	public Integer convertToDatabaseColumn(final GostLaufbahnplanungFachkombinationTyp value) {
 		if (value == null)
 			return null;
 		return value.getValue();
 	}
 
 	@Override
-	public GostLaufbahnplanungFachkombinationTyp convertToEntityAttribute(Integer dbData) {
+	public GostLaufbahnplanungFachkombinationTyp convertToEntityAttribute(final Integer dbData) {
 		return GostLaufbahnplanungFachkombinationTyp.fromValue(dbData);
 	}
 

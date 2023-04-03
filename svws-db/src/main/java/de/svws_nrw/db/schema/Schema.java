@@ -5,11 +5,226 @@ import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.db.schema.tabellen.*;
+import de.svws_nrw.db.schema.tabellen.Tabelle_AllgAdrAnsprechpartner;
+import de.svws_nrw.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Benutzer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerAllgemein;
+import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerEmail;
+import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerKompetenzen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Benutzergruppen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzergruppenKompetenzen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzergruppenMitglieder;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Berufskolleg_Anlagen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Berufskolleg_Berufsebenen1;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Berufskolleg_Berufsebenen2;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Berufskolleg_Berufsebenen3;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Berufskolleg_Fachklassen_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Credentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_CredentialsLernplattformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_DavRessourceCollections;
+import de.svws_nrw.db.schema.tabellen.Tabelle_DavRessourceCollectionsACL;
+import de.svws_nrw.db.schema.tabellen.Tabelle_DavRessources;
+import de.svws_nrw.db.schema.tabellen.Tabelle_DavSyncTokenLehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_DavSyncTokenSchueler;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Abt_Kl;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Abteilungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_FachTeilleistungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Fachklassen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Faecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Jahrgaenge;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_KAoADaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Kursart;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Merkmale;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Schulformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Teilstandorte;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Texte;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EigeneSchule_Zertifikate;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EinschulungsartKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EnmLeistungsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_EnmLernabschnittsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ErzieherDatenschutz;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ErzieherLernplattform;
+import de.svws_nrw.db.schema.tabellen.Tabelle_FachKatalog;
+import de.svws_nrw.db.schema.tabellen.Tabelle_FachKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_FachKatalog_Schulformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Fach_Gliederungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Fachgruppen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Floskelgruppen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Floskeln;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Kurse;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Kurslehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Regeln;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Regelparameter;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Schienen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Zwischenergebnisse;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Beratungslehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Fachkombinationen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Faecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgangsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Kalenderinformationen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Kursklausuren;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_NtaZeiten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume_Stunden;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Schuelerklausuren;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Termine;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Vorgaben;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler_Fachwahlen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft_Schulformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunftsart;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunftsart_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunftsart_Schulformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ImpExp_EigeneImporte;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ImpExp_EigeneImporte_Felder;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ImpExp_EigeneImporte_Tabellen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Jahrgaenge_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_Anschlussoption_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_Berufsfeld_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_Kategorie_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_Merkmal_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_SBO_Ebene4_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KAoA_Zusatzmerkmal_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Adressart;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_AllgAdresse;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Ankreuzdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Ankreuzfloskeln;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_BeschaeftigungsArt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Datenschutz;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_EinschulungsArt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Einzelleistungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_EntlassGrund;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_ErzieherArt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_ErzieherFunktion;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_FahrschuelerArt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Foerderschwerpunkt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Haltestelle;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Kindergarten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Lehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Ort;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Ortsteil;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Religion;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Schule;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Schulfunktionen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Schwerpunkt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Sportbefreiung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_TelefonArt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Textdateien;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Vermerkart;
+import de.svws_nrw.db.schema.tabellen.Tabelle_K_Zertifikate;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Katalog_Aufsichtsbereich;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Katalog_Pausenzeiten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Katalog_Raeume;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Katalog_Zeitraster;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Klassen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KlassenLehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KlassenartenKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Kompetenzen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Kompetenzgruppen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KursFortschreibungsarten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KursLehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Kurs_Schueler;
+import de.svws_nrw.db.schema.tabellen.Tabelle_KursartenKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Kurse;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerAbschnittsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerAnrechnung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerDatenschutz;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerEntlastung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerFotos;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerFunktionen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLehramt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLehramtFachr;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLehramtLehrbef;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLeitungsfunktion_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerLernplattform;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerMehrleistung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Lernplattformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Logins;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Nationalitaeten_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_NichtMoeglAbiFachKombi;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Noten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_OrganisationsformenKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_PersonalTypen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen_Personen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Religionen_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Client_Konfiguration_Benutzer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Client_Konfiguration_Global;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Core_Type_Versionen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_Version;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchildFilter;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schild_Verwaltung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schueler;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerAbgaenge;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerAbiFaecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerAbitur;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerAnkreuzfloskeln;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerBKAbschluss;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerBKFaecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerDatenschutz;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerEinzelleistungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerErzAdr;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerFHR;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerFHRFaecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerFehlstunden;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerFoerderempfehlungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerFotos;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerGSDaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerKAoADaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerLD_PSFachBem;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerLeistungsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerLernabschnittsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerLernplattform;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerListe;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerListe_Inhalt;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerMerkmale;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerReportvorlagen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerSprachenfolge;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerSprachpruefungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerStatus_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerTelefone;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerVermerke;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerWiedervorlage;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerZP10;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerZuweisungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schueler_AllgAdr;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuleCredentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schulformen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schuljahresabschnitte;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schulleitung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Aufsichtsbereiche;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Kalenderwochen_Zuordnung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenaufsichten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_PausenaufsichtenBereich;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenzeit;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Raeume;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Unterricht;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtKlasse;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtLehrer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtRaum;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Zeitraster;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TextExportVorlagen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Usergroups;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Users;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Versetzung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_ZuordnungReportvorlagen;
 
-	/**
-	 * Diese Klasse stellt alle Tabellen des Schemas zur Verfügung.
-	 */
+
+/**
+ * Diese Klasse stellt alle Tabellen des Schemas zur Verfügung.
+ */
 public class Schema {
 
 	/** Das übergeordnete Java-Paket, welches die Klassen für die SVWS-Datenbank beinhaltet */
@@ -23,13 +238,13 @@ public class Schema {
 
 	/**
 	 * Fügt eine Tabelle zu dem Schema hinzu.
-	 * 
+	 *
 	 * @param <T> der Typ der Tabellen-Definitions-Klasse
 	 * @param t   die Instanz der Tabellen-Definitions-Klasse
-	 * 
+	 *
 	 * @return die Instanz der Tabellen-Definitions-Klasse
 	 */
-	public static <T extends SchemaTabelle> T add(T t) {
+	public static <T extends SchemaTabelle> T add(final T t) {
 		tabellen.put(t.name(), t);
 		return t;
 	}
@@ -547,7 +762,7 @@ public class Schema {
 
 	/** Tabelle DavRessourceCollectionsACL */
 	public static final Tabelle_DavRessourceCollectionsACL tab_DavRessourceCollectionACL = add(new Tabelle_DavRessourceCollectionsACL());
-	
+
 	/** Tabelle Logins */
 	public static final Tabelle_Logins tab_Logins = add(new Tabelle_Logins());
 
@@ -607,7 +822,7 @@ public class Schema {
 
 	/** Tabelle_Stundenplan_Kalenderwochen_Zuordnung */
 	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung = add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());
-	
+
 	/** Tabelle Stundentafel */
 	public static final Tabelle_Stundentafel tab_Stundentafel = add(new Tabelle_Stundentafel());
 
@@ -640,7 +855,7 @@ public class Schema {
 
 	/** Tabelle DavSyncTokenSchueler */
 	public static final Tabelle_DavSyncTokenSchueler tab_DavSyncTokenSchueler = add(new Tabelle_DavSyncTokenSchueler());
-	
+
     /** Tabelle DavSyncTokenLehrer */
     public static final Tabelle_DavSyncTokenLehrer tab_DavSyncTokenLehrer = add(new Tabelle_DavSyncTokenLehrer());
 
@@ -652,7 +867,7 @@ public class Schema {
 
     /** Tabelle Gost_Klausuren_Vorgaben */
     public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
-    
+
     /** Tabelle Gost_Klausuren_Termine */
     public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
 
@@ -661,7 +876,7 @@ public class Schema {
 
     /** Tabelle Gost_Klausuren_Schuelerklausuren */
     public static final Tabelle_Gost_Klausuren_Schuelerklausuren tab_Gost_Klausuren_Schuelerklausuren = add(new Tabelle_Gost_Klausuren_Schuelerklausuren());
-    
+
     /** Tabelle Gost_Klausuren_NtaZeiten */
     public static final Tabelle_Gost_Klausuren_NtaZeiten tab_Tabelle_Gost_Klausuren_NtaZeiten = add(new Tabelle_Gost_Klausuren_NtaZeiten());
 
@@ -670,7 +885,7 @@ public class Schema {
 
     /** Tabelle Gost_Klausuren_Raeume_Stunden */
     public static final Tabelle_Gost_Klausuren_Raeume_Stunden tab_Gost_Klausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Raeume_Stunden());
-    
+
     /** Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden */
     public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden tab_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden());
 
@@ -683,16 +898,17 @@ public class Schema {
     /** Tabelle Gost_Klausuren_Kalenderinformationen */
     public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen = add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
 
+
     /**
      * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
      * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.
-     * 
+     *
      * @param rev    die Revision
-     * 
+     *
      * @return eine Liste mit den SQL-Befehlen
      */
-    public static final List<String> getCreateBenutzerSQL(long rev) {
-    	Vector<String> result = new Vector<>();
+    public static final List<String> getCreateBenutzerSQL(final long rev) {
+    	final Vector<String> result = new Vector<>();
     	if (rev == 0) {
     		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
     			 	 + "(1,'Administrator','Admin','1;2;3','$');");
@@ -719,15 +935,15 @@ public class Schema {
     	return result;
     }
 
-    
+
     /**
-     * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind. 
-     * 
+     * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind.
+     *
      * @param rev   die SVWS-DB-Revision
-     * 
+     *
      * @return eine Liste mit den definierten Tabellen
      */
-    public static final List<SchemaTabelle> getTabellen(long rev) {
+    public static final List<SchemaTabelle> getTabellen(final long rev) {
     	return tabellen.values().stream()
     			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
     					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))

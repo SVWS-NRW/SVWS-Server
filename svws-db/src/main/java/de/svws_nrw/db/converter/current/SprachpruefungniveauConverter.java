@@ -9,22 +9,22 @@ import jakarta.persistence.Converter;
  * zu einer ID in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter(autoApply = true)
-public class SprachpruefungniveauConverter extends DBAttributeConverter<Sprachpruefungniveau, Integer> {
+public final class SprachpruefungniveauConverter extends DBAttributeConverter<Sprachpruefungniveau, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static SprachpruefungniveauConverter instance = new SprachpruefungniveauConverter();
-	
+	public static final SprachpruefungniveauConverter instance = new SprachpruefungniveauConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(Sprachpruefungniveau attribute) {
+	public Integer convertToDatabaseColumn(final Sprachpruefungniveau attribute) {
 		return attribute.daten.id;
 	}
 
 	@Override
-	public Sprachpruefungniveau convertToEntityAttribute(Integer dbData) {
+	public Sprachpruefungniveau convertToEntityAttribute(final Integer dbData) {
 		return Sprachpruefungniveau.getByID(dbData);
 	}
 

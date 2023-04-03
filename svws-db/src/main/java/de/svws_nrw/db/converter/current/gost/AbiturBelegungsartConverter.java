@@ -6,23 +6,23 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Belegarten im Abitur.
- *  
+ *
  */
 @Converter(autoApply = true)
-public class AbiturBelegungsartConverter extends DBAttributeConverter<AbiturBelegungsart, String> {
+public final class AbiturBelegungsartConverter extends DBAttributeConverter<AbiturBelegungsart, String> {
 
 	/** Die Instanz des Konverters */
-	public final static AbiturBelegungsartConverter instance = new AbiturBelegungsartConverter();
+	public static final AbiturBelegungsartConverter instance = new AbiturBelegungsartConverter();
 
 	@Override
-	public String convertToDatabaseColumn(AbiturBelegungsart value) {
+	public String convertToDatabaseColumn(final AbiturBelegungsart value) {
 		if (value == null)
 			return AbiturBelegungsart.NICHT_BELEGT.toString();
 		return value.toString();
 	}
 
 	@Override
-	public AbiturBelegungsart convertToEntityAttribute(String dbData) {
+	public AbiturBelegungsart convertToEntityAttribute(final String dbData) {
 		return AbiturBelegungsart.fromKuerzel(dbData);
 	}
 

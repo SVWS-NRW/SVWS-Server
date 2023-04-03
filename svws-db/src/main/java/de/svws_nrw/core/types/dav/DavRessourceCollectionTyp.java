@@ -18,20 +18,20 @@ public enum DavRessourceCollectionTyp {
 
 	/**
 	 * Privater Konstruktor für das Enum mit der in der DB verwendeten ID des Typs
-	 * 
+	 *
 	 * @param id die ID
 	 */
-	private DavRessourceCollectionTyp(int id) {
+	DavRessourceCollectionTyp(final int id) {
 		this.id = id;
 	}
 
 	/**
 	 * Gibt den RessourceCollectionTyp anhand der ID zurück.
-	 * 
+	 *
 	 * @param id die ID des DavRessourceCollectionTyps
 	 * @return den DavRessourceCollectionTyp oder null, wenn die ID fehlerhaft ist
 	 */
-	public static @NotNull DavRessourceCollectionTyp getByID(int id) {
+	public static @NotNull DavRessourceCollectionTyp getByID(final int id) {
 		switch (id) {
 		case 0:
 			return ADRESSBUCH;

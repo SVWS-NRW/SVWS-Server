@@ -11,24 +11,24 @@ import jakarta.persistence.Converter;
  * zu einer Datumsdarstellung (siehe {@link Timestamp}) in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class MigrationDatumConverter extends DBAttributeConverter<String, Timestamp> {
+public final class MigrationDatumConverter extends DBAttributeConverter<String, Timestamp> {
 
 	/** Die Instanz des Konverters */
-	public final static MigrationDatumConverter instance = new MigrationDatumConverter();
-	
+	public static final MigrationDatumConverter instance = new MigrationDatumConverter();
+
 	@Override
-	public Timestamp convertToDatabaseColumn(String attribute) {
+	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))
 				? null
-			    : Timestamp.valueOf(LocalDate.parse(attribute).atStartOfDay());		
+			    : Timestamp.valueOf(LocalDate.parse(attribute).atStartOfDay());
 	}
 
 	@Override
-	public String convertToEntityAttribute(Timestamp dbData) {
+	public String convertToEntityAttribute(final Timestamp dbData) {
 		if (dbData == null)
 			return null;
 		return dbData.toLocalDateTime().toLocalDate().toString();

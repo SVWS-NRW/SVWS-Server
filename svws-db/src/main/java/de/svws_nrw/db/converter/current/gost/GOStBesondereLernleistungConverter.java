@@ -6,23 +6,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Daten der Besonderen Lernleistung im Abitur.
- *  
  */
 @Converter(autoApply = true)
-public class GOStBesondereLernleistungConverter extends DBAttributeConverter<GostBesondereLernleistung, String> {
+public final class GOStBesondereLernleistungConverter extends DBAttributeConverter<GostBesondereLernleistung, String> {
 
 	/** Die Instanz des Konverters */
-	public final static GOStBesondereLernleistungConverter instance = new GOStBesondereLernleistungConverter();
-	
+	public static final GOStBesondereLernleistungConverter instance = new GOStBesondereLernleistungConverter();
+
 	@Override
-	public String convertToDatabaseColumn(GostBesondereLernleistung value) {
+	public String convertToDatabaseColumn(final GostBesondereLernleistung value) {
 		if (value == null)
 			return null;
 		return value.toString();
 	}
 
 	@Override
-	public GostBesondereLernleistung convertToEntityAttribute(String dbData) {
+	public GostBesondereLernleistung convertToEntityAttribute(final String dbData) {
 		return GostBesondereLernleistung.fromKuerzel(dbData);
 	}
 

@@ -7,21 +7,21 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Benutzerkompetenzen.
- *  
+ *
  */
 @Converter(autoApply = true)
-public class BenutzerKompetenzConverter extends DBAttributeConverter<BenutzerKompetenz, Long> {
+public final class BenutzerKompetenzConverter extends DBAttributeConverter<BenutzerKompetenz, Long> {
 
 	/** Die Instanz des Konverters */
-	public final static BenutzerKompetenzConverter instance = new BenutzerKompetenzConverter();
-	
+	public static final BenutzerKompetenzConverter instance = new BenutzerKompetenzConverter();
+
 	@Override
-	public Long convertToDatabaseColumn(BenutzerKompetenz kompetenz) {
+	public Long convertToDatabaseColumn(final BenutzerKompetenz kompetenz) {
 		return kompetenz.daten.id;
 	}
 
 	@Override
-	public BenutzerKompetenz convertToEntityAttribute(Long dbData) {
+	public BenutzerKompetenz convertToEntityAttribute(final Long dbData) {
 		return BenutzerKompetenz.getByID(dbData);
 	}
 

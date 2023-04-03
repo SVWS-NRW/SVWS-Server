@@ -21,26 +21,26 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "INFORMATION_SCHEMA.TABLES")
 @Cacheable(DBEntityManager.use_db_caching)
-@NamedNativeQuery(name="DTOInformationUser.mysql", query="SELECT DISTINCT User AS USER_NAME FROM mysql.user")
-@NamedNativeQuery(name="DTOInformationUser.mssql", query="SELECT DISTINCT name AS USER_NAME FROM sys.sql_logins WHERE type='S'")
-public class DTOInformationUser {
-	
+@NamedNativeQuery(name = "DTOInformationUser.mysql", query = "SELECT DISTINCT User AS USER_NAME FROM mysql.user")
+@NamedNativeQuery(name = "DTOInformationUser.mssql", query = "SELECT DISTINCT name AS USER_NAME FROM sys.sql_logins WHERE type='S'")
+public final class DTOInformationUser {
+
 	/** Der Name Datenbank des Datenbank-Benutzers */
 	@Id
 	@Column(name = "USER_NAME")
-	private String Name;	
+	private String Name;
 
-	
+
 	/**
-	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
+	 * Default-Konstruktor für das Erzeugen dieser DBEntity
 	 */
 	private DTOInformationUser() {
 	}
-	
-	
+
+
 	/**
 	 * Gibt den Benutzernamen zurück.
-	 * 
+	 *
 	 * @return   der Benutzername
 	 */
 	public String getName() {
@@ -55,7 +55,7 @@ public class DTOInformationUser {
 	 *
 	 * @return die Map mit den Benutzer-DTOs, welche den Benutzer-Namen zugeordnet sind.
 	 */
-	public static Map<String, DTOInformationUser> query(DBEntityManager conn) {
+	public static Map<String, DTOInformationUser> query(final DBEntityManager conn) {
 		List<DTOInformationUser> results = null;
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
@@ -79,15 +79,15 @@ public class DTOInformationUser {
 	/**
 	 * Stellt eine Anfrage nach den Namen nach aller Benutzer der Datenbank. Hierbei werden alle Benutzer ignoriert, die vom DBMS
 	 * vorgegeben sind.
-	 * 
+	 *
 	 * @param conn   die Datenbankverbindung
-	 * 
+	 *
 	 * @return die Liste mit den Benutzernamen
 	 */
-	public static List<String> queryNames(DBEntityManager conn) {
+	public static List<String> queryNames(final DBEntityManager conn) {
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
-				return conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(name -> {
 					switch (name) {
 						case "root":
 							return false;
@@ -95,7 +95,7 @@ public class DTOInformationUser {
 					return true;
 				}).collect(Collectors.toList());
 			case MYSQL:
-				return conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationUser.mysql", String.class).getResultList().stream().filter(name -> {
 					switch (name) {
 						case "root":
 						case "mysql.infoschema":
@@ -106,7 +106,7 @@ public class DTOInformationUser {
 					return true;
 				}).collect(Collectors.toList());
 			case MSSQL:
-				return conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter( name -> {
+				return conn.queryNamed("DTOInformationUser.mssql", String.class).getResultList().stream().filter(name -> {
 						switch (name) {
 						case "sa":
 						case "##MS_PolicyTsqlExecutionLogin##":
@@ -133,14 +133,14 @@ public class DTOInformationUser {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOInformationUser other = (DTOInformationUser) obj;
+		final DTOInformationUser other = (DTOInformationUser) obj;
 		if (Name == null) {
 			if (other.Name != null)
 				return false;
@@ -154,6 +154,6 @@ public class DTOInformationUser {
 	public String toString() {
 		return "DTOInformationUser [Name=" + Name + "]";
 	}
-	
-	
+
+
 }

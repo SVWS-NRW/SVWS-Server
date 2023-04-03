@@ -19,32 +19,30 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager für die Datenbank-Verbindungen der Anwendung.
  */
-public class ConnectionManager {
-	
-	/**
-	 * Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten Datenbank-Verbindungen,
-	 * d.h. die zugehörigen {@link EntityManagerFactory} zu schließen.
-	 */
+public final class ConnectionManager {
+
+	/* Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten Datenbank-Verbindungen,
+	 * d.h. die zugehörigen {@link EntityManagerFactory} zu schließen. */
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> { ConnectionManager.closeAll(); }));
 	}
-	
+
 	/** Eine HashMap für den Zugriff auf einen Connection-Manager, der einer Datenbank-Konfiguration zugeordnet ist  */
 	private static final HashMap<DBConfig, ConnectionManager> mapManager = new HashMap<>();
-	
+
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final @NotNull DBConfig config;
 
 	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz der {@link EntityManagerFactory} */
 	private final @NotNull EntityManagerFactory emf;
 
-	
+
 	/**
 	 * Erstellt einen neuen Connection-Manager
-	 * 
+	 *
 	 * @param config   die Konfiguration für den Connection-Manager
 	 */
-	private ConnectionManager(@NotNull DBConfig config) {
+	private ConnectionManager(@NotNull final DBConfig config) {
 		this.config = config;
 		this.emf = createEntityManagerFactory();
 	}
@@ -53,7 +51,7 @@ public class ConnectionManager {
 	/**
 	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird innerhalb dieses
 	 * Packages vom DBEntityManager bei der Erneuerung der Verbindung verwendet.
-	 *  
+	 *
 	 * @return der neue JPA {@link EntityManager}
 	 */
 	EntityManager getNewJPAEntityManager() {
@@ -63,7 +61,7 @@ public class ConnectionManager {
 
 	/**
 	 * Gibt die Datenbank-Konfiguration dieses Verbindungs-Managers zurück.
-	 *  
+	 *
 	 * @return die Datenbank-Konfiguration dieses Verbindungs-Managers
 	 */
 	public DBConfig getConfig() {
@@ -72,15 +70,15 @@ public class ConnectionManager {
 
 
 	/**
-	 * Intern genutzte Methode, um eine {@link EntityManagerFactory} für diesen 
+	 * Intern genutzte Methode, um eine {@link EntityManagerFactory} für diesen
 	 * {@link ConnectionManager} zu erstellen. Hierbei werden auch die Standardeinstellungen
 	 * für die Datenbankverbindung in Form der Property-Map hinzugefügt
 	 * (siehe {@link Persistence#createEntityManagerFactory(String, java.util.Map)})
-	 * 
+	 *
 	 * @return die {@link EntityManagerFactory}
 	 */
 	private @NotNull EntityManagerFactory createEntityManagerFactory() {
-		HashMap<String,Object> propertyMap = new HashMap<>();
+		final HashMap<String, Object> propertyMap = new HashMap<>();
 		propertyMap.put("jakarta.persistence.jdbc.driver", config.getDBDriver().getJDBCDriver());
 		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
 		if (config.getDBDriver() == DBDriver.MDB && config.createDBFile())
@@ -100,7 +98,7 @@ public class ConnectionManager {
 		if (config.getDBDriver() == DBDriver.SQLITE) {
 			propertyMap.put("eclipselink.target-database", "Database");
 			// Einstellungen des SQ-Lite-Treibers
-			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");   // READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. // READWRITE (2) + OPEN_URI (64)  = 66  
+			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");   // READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. // READWRITE (2) + OPEN_URI (64)  = 66
 			propertyMap.put("foreign_keys", "true");
 		}
 		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
@@ -114,18 +112,18 @@ public class ConnectionManager {
 	private void close() {
 		emf.close();
 	}
-	
+
 
 	/**
 	 * Gibt den Manager für die Datenbank-Verbindung für die übergebene
 	 * Konfiguration zurück. Sollt keine Verbindung bestehen, so
 	 * wird eine neue Verbindung erzeugt.
-	 * 
+	 *
 	 * @param config   die Konfiguration der Datenbank-Verbindung
-	 * 
+	 *
 	 * @return der Manager
 	 */
-	public static @NotNull ConnectionManager get(DBConfig config) {
+	public static @NotNull ConnectionManager get(final DBConfig config) {
 		ConnectionManager man = mapManager.get(config);
 		if (man == null) {
 			man = new ConnectionManager(config);
@@ -136,6 +134,7 @@ public class ConnectionManager {
 		    	try {
 					em.getTransaction().begin();
 					@SuppressWarnings("resource")
+					final
 					Connection conn = em.unwrap(Connection.class);
 					try (Statement stmt = conn.createStatement()) {
 						try (ResultSet rs = stmt.executeQuery("SELECT 1")) {
@@ -147,8 +146,8 @@ public class ConnectionManager {
 		    		em.clear();
 		    	} catch (@SuppressWarnings("unused") SQLException | DatabaseException e) {
 		            // Bestimme die Anzahl der verfügbaren Verbindungen
-		            ServerSession serverSession = em.unwrap(ServerSession.class);
-		            ConnectionPool pool = serverSession.getConnectionPools().get("default");
+		            final ServerSession serverSession = em.unwrap(ServerSession.class);
+		            final ConnectionPool pool = serverSession.getConnectionPools().get("default");
 		            if (pool == null) {
 		                System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
 		            } else {
@@ -162,15 +161,15 @@ public class ConnectionManager {
 		}
 		return man;
 	}
-	
+
 	/**
-	 * Schließt den übergebenen Connection-Manager und entfernt ihn
-	 * aus der Lister der Manager
-	 *  
-	 * @param manager   der zu schließende Manager
+	 * Schließt den Connection-Manager für die übergebene Config und entfernt ihn
+	 * aus der Liste der Manager
+	 *
+	 * @param config   die Konfiguration des zu schließenden Managers
 	 */
-	private static void closeSingle(DBConfig config) {
-		ConnectionManager manager = mapManager.get(config);
+	private static void closeSingle(final DBConfig config) {
+		final ConnectionManager manager = mapManager.get(config);
 		if (manager == null) {
 			System.err.println("Fehler beim Schließen des Verbindungs-Managers zu " + config.getDBLocation()
 				+ " (Schema: " + config.getDBSchema() + "), Datenbank-Benutzer: " + config.getUsername());
@@ -178,18 +177,17 @@ public class ConnectionManager {
 		}
 		manager.close();
 		mapManager.remove(config);
-		System.out.println("Verbindungs-Manager des Datenbank-Benutzers " + config.getUsername() 
+		System.out.println("Verbindungs-Manager des Datenbank-Benutzers " + config.getUsername()
 			+ " zu " + config.getDBLocation() + " (Schema: " + config.getDBSchema() + ") geschlossen.");
 	}
-	
+
 	/**
 	 * Schließt alle noch offenenen Datenbank-Verbindungen.
 	 */
 	private static void closeAll() {
-		List<DBConfig> configs = mapManager.keySet().stream().toList();
-		for (DBConfig config : configs)
+		final List<DBConfig> configs = mapManager.keySet().stream().toList();
+		for (final DBConfig config : configs)
 			closeSingle(config);
 	}
-	
-	
+
 }

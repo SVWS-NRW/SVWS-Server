@@ -55,11 +55,11 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 		.setJavaComment("Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden)");
 
 	/** Die Definition der Tabellenspalte Schienenanzahl */
-	public SchemaTabelleSpalte col_Schienenanzahl = add ("Schienenanzahl", SchemaDatentypen.INT, false)
+	public SchemaTabelleSpalte col_Schienenanzahl = add("Schienenanzahl", SchemaDatentypen.INT, false)
 	    .setDefault("1")
 	    .setNotNull()
 	    .setJavaComment("Gibt die Anzahl der Schienen an, die für den Kurs in der Blockung verwendet werden soll (normalerweise 1)");
-	
+
 	/** Die Definition der Tabellenspalte Wochenstunden */
 	public SchemaTabelleSpalte col_Wochenstunden = add("Wochenstunden", SchemaDatentypen.INT, false)
 		.setDefault("3")
@@ -69,17 +69,17 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurse_Blockung_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Kurse_Blockung_FK = addForeignKey(
-			"Gost_Blockung_Kurse_Blockung_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Kurse_Blockung_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_ID, Schema.tab_Gost_Blockung.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurse_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Kurse_Fach_FK = addForeignKey(
-			"Gost_Blockung_Kurse_Fach_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+			"Gost_Blockung_Kurse_Fach_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

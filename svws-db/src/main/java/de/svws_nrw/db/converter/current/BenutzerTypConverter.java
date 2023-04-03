@@ -9,18 +9,18 @@ import jakarta.persistence.Converter;
  * Diese Klasse dient dem Konvertieren von Benutzertypen.
  */
 @Converter(autoApply = true)
-public class BenutzerTypConverter extends DBAttributeConverter<BenutzerTyp, Integer> {
+public final class BenutzerTypConverter extends DBAttributeConverter<BenutzerTyp, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static BenutzerTypConverter instance = new BenutzerTypConverter();
-	
+	public static final BenutzerTypConverter instance = new BenutzerTypConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(BenutzerTyp typ) {
+	public Integer convertToDatabaseColumn(final BenutzerTyp typ) {
 		return typ.id;
 	}
 
 	@Override
-	public BenutzerTyp convertToEntityAttribute(Integer dbData) {
+	public BenutzerTyp convertToEntityAttribute(final Integer dbData) {
 		return BenutzerTyp.getByID(dbData);
 	}
 

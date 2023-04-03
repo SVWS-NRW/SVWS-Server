@@ -10,24 +10,24 @@ import jakarta.persistence.Converter;
  * welches in der SVWS-Datenbank verwendet wird.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter
-public class SchulgliederungKuerzelConverter extends DBAttributeConverter<Schulgliederung, String> {
+public final class SchulgliederungKuerzelConverter extends DBAttributeConverter<Schulgliederung, String> {
 
 	/** Die Instanz des Konverters */
-	public final static SchulgliederungKuerzelConverter instance = new SchulgliederungKuerzelConverter();
-	
+	public static final SchulgliederungKuerzelConverter instance = new SchulgliederungKuerzelConverter();
+
 	@Override
-	public String convertToDatabaseColumn(Schulgliederung value) {
+	public String convertToDatabaseColumn(final Schulgliederung value) {
 		if (value == null)
 			return null;
 		return value.daten.kuerzel;
 	}
 
 	@Override
-	public Schulgliederung convertToEntityAttribute(String dbData) {
+	public Schulgliederung convertToEntityAttribute(final String dbData) {
 		return Schulgliederung.getByKuerzel(dbData);
 	}
 

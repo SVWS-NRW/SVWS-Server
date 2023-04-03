@@ -9,22 +9,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * zu einer Stringdarstellung in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter(autoApply = true)
-public class PersonalTypConverter extends DBAttributeConverter<PersonalTyp, String> {
+public final class PersonalTypConverter extends DBAttributeConverter<PersonalTyp, String> {
 
 	/** Die Instanz des Konverters */
-	public final static PersonalTypConverter instance = new PersonalTypConverter();	
-	
+	public static final PersonalTypConverter instance = new PersonalTypConverter();
+
 	@Override
-	public String convertToDatabaseColumn(PersonalTyp attribute) {
+	public String convertToDatabaseColumn(final PersonalTyp attribute) {
 		return attribute.kuerzel;
 	}
 
 	@Override
-	public PersonalTyp convertToEntityAttribute(String dbData) {
+	public PersonalTyp convertToEntityAttribute(final String dbData) {
 		if (dbData == null)
 			return PersonalTyp.LEHRKRAFT;
 		return PersonalTyp.fromBezeichnung(dbData);

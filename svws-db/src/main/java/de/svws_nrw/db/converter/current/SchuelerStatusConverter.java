@@ -9,22 +9,22 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * zu einer Stringdarstellung in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
- * registriert werden. 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}
+ * registriert werden.
  */
 @Converter(autoApply = true)
-public class SchuelerStatusConverter extends DBAttributeConverter<SchuelerStatus, Integer> {
+public final class SchuelerStatusConverter extends DBAttributeConverter<SchuelerStatus, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static SchuelerStatusConverter instance = new SchuelerStatusConverter();
-	
+	public static final SchuelerStatusConverter instance = new SchuelerStatusConverter();
+
 	@Override
-	public Integer convertToDatabaseColumn(SchuelerStatus attribute) {
+	public Integer convertToDatabaseColumn(final SchuelerStatus attribute) {
 		return attribute.id;
 	}
 
 	@Override
-	public SchuelerStatus convertToEntityAttribute(Integer dbData) {
+	public SchuelerStatus convertToEntityAttribute(final Integer dbData) {
 		if (dbData == null)
 			return SchuelerStatus.NEUAUFNAHME;
 		return SchuelerStatus.fromID(dbData);

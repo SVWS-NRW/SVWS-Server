@@ -6,62 +6,62 @@ import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.converter.DBAttributeConverter;
 
 /**
- * Diese Klasse dient der Definition des Schemas von SVWS-Datenbank-Tabellenspalten.  
+ * Diese Klasse dient der Definition des Schemas von SVWS-Datenbank-Tabellenspalten.
  */
-public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
+public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/** Die Tabelle, der diese Spalte zugeordnet ist */
 	private final SchemaTabelle _tabelle;
-	
+
 	/** Die Position der Spalte bei der Definition der Tabelle */
 	private final int _sortierung;
-	
+
 	/** Der Name der Spalte */
 	private final String _name;
-	
+
 	/** Der Datentyp der Spalte */
 	private final SchemaDatentypen _datentyp;
-	
+
 	/** Die Länge des Datentyps (z.B. bei String-Datentypen) */
 	private Integer _datenlaenge = null;
 
 	/** Der Default-Wert für diese Tabellenspalte */
 	private String _default;
-	
+
 	/** Gibt an, ob die Tabellenspalte eine NOT-NULL-Beschränkung hat oder nicht */
 	private boolean _notNull = false;
 
 	/** Die Revision, ab wann die Spalte gültig ist. */
 	private SchemaRevisionen _revision;
-	
+
 	/** Die Revision, ab wann die Spalte veraltet ist, sofern sie veraltet ist, ansonsten {@link SchemaRevisionen#UNDEFINED} */
 	private SchemaRevisionen _veraltet;
 
 	/** Gibt den Namen an, welchen das zugehörige Java-Attribut erhält, sofern dieser sich vom Spaltennamen unterscheiden sollte */
     private String _javaAttributName;
-	  
-	/** Gibt an, ob (null) und welcher Java-Converter-Klasse genutzt werden soll, um dass Attribut in einen zuhörigen Java-Datentyp umzuwandeln */  
+
+	/** Gibt an, ob (null) und welcher Java-Converter-Klasse genutzt werden soll, um dass Attribut in einen zuhörigen Java-Datentyp umzuwandeln */
     private Class<? extends DBAttributeConverter<?, ?>> _javaConverter;
-    
+
     /** Gibt an, ab welcher Revision der Attribut-Converter eingesetzt werden soll.*/
     private SchemaRevisionen _javaConverterRevision;
-    
+
     /** Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und bis zu welcher er nur eingesetzt werden soll. */
     private SchemaRevisionen _javaConverterVeraltet;
 
 	/** Gibt den Javadoc-Kommentar für das Attribut innerhalt der Java-DTO-Klasse an */
     private String _javaComment;
-	
+
 	/**
-	 * Erstellt eine neue Spalte mit dem übergebenen Namen und dem übergebenen 
-	 * Datentyp. 
-	 * 
+	 * Erstellt eine neue Spalte mit dem übergebenen Namen und dem übergebenen
+	 * Datentyp.
+	 *
 	 * @param tab          die Tabelle, der diese Spalte zugeordnet ist.
 	 * @param sortierung   die Position der Spalte bei der Tabelle
 	 * @param name         der Name der Spalte
 	 * @param typ          der Datentyp der Spalte
 	 */
-	SchemaTabelleSpalte(SchemaTabelle tab, int sortierung, String name, SchemaDatentypen typ) {
+	SchemaTabelleSpalte(final SchemaTabelle tab, final int sortierung, final String name, final SchemaDatentypen typ) {
 		this._tabelle = tab;
 		this._sortierung = sortierung;
 		this._name = name;
@@ -71,45 +71,45 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	}
 
 	/**
-	 * Prüft, ob diese Spalte eine Änderung hat, welche eine Entwickler-Version 
+	 * Prüft, ob diese Spalte eine Änderung hat, welche eine Entwickler-Version
 	 * des Tabellen-DTO notwendig macht.
-	 * 
+	 *
 	 * @return true, falls ein Entwickler-DTO benötigt wird und ansonsten false
 	 */
 	public boolean brauchtDeveloperDTO() {
-		return (this._revision.revision > SchemaRevisionen.maxRevision.revision) ||
-			((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)) ||
-			((this._javaConverterRevision != null) && (this._javaConverterRevision.revision > SchemaRevisionen.maxRevision.revision)) ||
-			((this._javaConverterVeraltet != null) && (this._javaConverterVeraltet.revision > SchemaRevisionen.maxRevision.revision));
-	}	
+		return (this._revision.revision > SchemaRevisionen.maxRevision.revision)
+			|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision))
+			|| ((this._javaConverterRevision != null) && (this._javaConverterRevision.revision > SchemaRevisionen.maxRevision.revision))
+			|| ((this._javaConverterVeraltet != null) && (this._javaConverterVeraltet.revision > SchemaRevisionen.maxRevision.revision));
+	}
 
 	/**
 	 * Setzt die Länge der Daten (z.B. bei String-Datentypen).
-	 * 
+	 *
 	 * @param laenge   die Länge der Daten
 	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setDatenlaenge(int laenge) {
+	public SchemaTabelleSpalte setDatenlaenge(final int laenge) {
 		this._datenlaenge = laenge;
 		return this;
 	}
 
 	/**
 	 * Setzt den Default-Wert für diese Spalte.
-	 * 
+	 *
 	 * @param def   der default-Wert
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setDefault(String def) {
+	public SchemaTabelleSpalte setDefault(final String def) {
 		this._default = def;
 		return this;
 	}
 
 	/**
 	 * Setzt eine NOT-NULL-Beschränkung auf diese Spalte.
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleSpalte setNotNull() {
@@ -119,13 +119,13 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Setzt die Revision, ab wann die Spalte gültig ist. Dabei wird
-	 * der übernommene Wert von der Tabelle überschrieben. 
-	 * 
+	 * der übernommene Wert von der Tabelle überschrieben.
+	 *
 	 * @param revision   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setRevision(SchemaRevisionen revision) {
+	public SchemaTabelleSpalte setRevision(final SchemaRevisionen revision) {
 		if (revision == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision einer Spalte kann nicht auf undefiniert gesetzt werden.");
 		if (revision.revision <= this._revision.revision)
@@ -137,12 +137,12 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	/**
 	 * Setzt die Revision, ab wann die Spalte veraltet ist. Dabei wird
 	 * der übernommene Wert von der Tabelle überschrieben.
-	 * 
+	 *
 	 * @param veraltet   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setVeraltet(SchemaRevisionen veraltet) {
+	public SchemaTabelleSpalte setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
 		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
@@ -153,67 +153,67 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Setzt den Namen des Java-Attributes, sofern dieser vom Spaltennamen abweicht.
-	 * 
+	 *
 	 * @param name   der Name des Java-Attributes
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setJavaName(String name) {
+	public SchemaTabelleSpalte setJavaName(final String name) {
 		this._javaAttributName = name;
 		return this;
 	}
 
 	/**
 	 * Setzt den zu verwendenden Java-Attribut-Converter
-	 * 
+	 *
 	 * @param converter   der Konverter
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setConverter(Class<? extends DBAttributeConverter<?, ?>> converter) {
+	public SchemaTabelleSpalte setConverter(final Class<? extends DBAttributeConverter<?, ?>> converter) {
 		this._javaConverter = converter;
 		return this;
 	}
 
 	/**
 	 * Setzt die Revision, ab der der Konverter eingesetzt werden soll.
-	 * 
+	 *
 	 * @param revision   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setConverterRevision(SchemaRevisionen revision) {
+	public SchemaTabelleSpalte setConverterRevision(final SchemaRevisionen revision) {
 		this._javaConverterRevision = revision;
 		return this;
 	}
 
 	/**
 	 * Setzt die Revision, ab der der Konverter nicht mehr eingesetzt werden soll.
-	 * 
+	 *
 	 * @param veraltet   die Revision
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setConverterVeraltet(SchemaRevisionen veraltet) {
+	public SchemaTabelleSpalte setConverterVeraltet(final SchemaRevisionen veraltet) {
 		this._javaConverterVeraltet = veraltet;
 		return this;
 	}
 
 	/**
 	 * Setzt den Kommentar, der für das Java-Doc der Spalte verwendet werden soll.
-	 * 
+	 *
 	 * @param comment   der Kommentar
-	 * 
+	 *
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setJavaComment(String comment) {
+	public SchemaTabelleSpalte setJavaComment(final String comment) {
 		this._javaComment = comment;
 		return this;
 	}
 
 	/**
 	 * Gibt die Tabelle zurück, der diese Spalte zugeordnet ist.
-	 * 
+	 *
 	 * @return die Tabelle
 	 */
 	public SchemaTabelle tabelle() {
@@ -222,7 +222,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt die Position der Spalte bei der Tabelle zurück.
-	 * 
+	 *
 	 * @return die Position der Spalte für eine Sortierung
 	 */
 	public int sortierung() {
@@ -231,16 +231,16 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt den Namen der Spalte zurück.
-	 * 
+	 *
 	 * @return der Name der Spalte
 	 */
 	public String name() {
 		return _name;
 	}
-	
+
 	/**
 	 * Gibt den Datentyp der Spalte zurück.
-	 * 
+	 *
 	 * @return der Datentyp der Spalte
 	 */
 	public SchemaDatentypen datentyp() {
@@ -249,7 +249,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt die Länge des Datentyps (z.B. bei String-Datentypen) der Spalte zurück.
-	 * 
+	 *
 	 * @return der Länge des Datentyps der Spalte
 	 */
 	public Integer datenlaenge() {
@@ -258,7 +258,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt den Default-Wert der Tabellenspalte zurück.
-	 * 
+	 *
 	 * @return der Default-Wert
 	 */
 	public String defaultWert() {
@@ -267,7 +267,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt zurück, ob die Tabellenspalte eine NOT-NULL-Beschränkung hat oder nicht.
-	 * 
+	 *
 	 * @return true, falls eine NOT-NULL-Beschränkung existiert und ansonsten false
 	 */
 	public boolean notNull() {
@@ -276,8 +276,8 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt die Revision zurück, ab wann die Spalte gültig ist.
-	 * 
-	 * @return die Revision 
+	 *
+	 * @return die Revision
 	 */
 	public SchemaRevisionen revision() {
 		return _revision;
@@ -287,7 +287,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	 * Gibt die Revision zurück, ab wann die Spalte veraltet ist.
 	 * Ist sie nicht veraltet, so wird {@link SchemaRevisionen#UNDEFINED}
 	 * zurückgegeben.
-	 * 
+	 *
 	 * @return die Revision, ab wann die Spalte veraltet ist, oder {@link SchemaRevisionen#UNDEFINED}
 	 */
 	public SchemaRevisionen veraltet() {
@@ -296,7 +296,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 	/**
 	 * Gibt den Namen des zugehörigen Java-Attributs zurück.
-	 * 
+	 *
 	 * @return der Name des Java-Attributs
 	 */
 	public String javaAttributName() {
@@ -306,12 +306,12 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
     }
 
 	/**
-	 * Gibt die Java-Attribut-Converter-Klasse zurück, welche genutzt wird um dass Attribut 
+	 * Gibt die Java-Attribut-Converter-Klasse zurück, welche genutzt wird um dass Attribut
 	 * in den zuhörigen Java-Datentyp umzuwandeln.
 	 * Wird kein Converter genutzt, so wird null zurückgegeben.
-	 * 
+	 *
 	 * @param rev   die Revision, für welche der Attribute-Converter bestimmt werden soll.
-	 * 
+	 *
 	 * @return der Converter oder null
 	 */
 	public DBAttributeConverter<?, ?> javaConverter(final long rev) {
@@ -329,9 +329,9 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 		return DBAttributeConverter.getByClassName("Dev" + _javaConverter.getSimpleName());
     }
 
-    /** 
+    /**
      * Gibt die Revision zurück, ab welcher der Attribut-Converter eingesetzt werden soll.
-     * 
+     *
      * @return die Revision
      */
 	public SchemaRevisionen javaConverterRevision() {
@@ -340,10 +340,10 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
     	return this._javaConverterRevision;
     }
 
-    /** 
-     * Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und 
+    /**
+     * Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und
      * bis zu welcher er nur eingesetzt werden soll.
-     * 
+     *
      * @return die Revision
      */
 	public SchemaRevisionen javaConverterVeraltet() {
@@ -352,22 +352,22 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
     	return this._javaConverterVeraltet;
 	}
 
-	/** 
+	/**
 	 * Gibt den Javadoc-Kommentar für das Attribut innerhalt der Java-DTO-Klasse an
-	 * 
+	 *
 	 * @return der Kommentar
 	 */
 	public String javaComment() {
 		return this._javaComment;
 	}
 
-	
+
 	/**
 	 * Liefert den Attribute Converter, sofern einer gesetzt wurde und in der angegebenen
 	 * Revision gültig ist.
-	 *  
+	 *
 	 * @param rev   die Revision, für welche der Attribute-Converter bestimmt werden soll.
-	 * 
+	 *
 	 * @return der Name des Attribut-Converters oder null
 	 */
 	public String getJavaAttributConverter(final long rev) {
@@ -384,12 +384,12 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 			return "Migration" + _javaConverter.getSimpleName();
 		return "Dev" + _javaConverter.getSimpleName();
 	}
-	
-	
+
+
 	/**
 	 * Liefert ein Object mit dem zugeordneten Default-Wert zurück. Der
 	 * tatsächliche Typ hängt von dem Datentyp der Spalte ab.
-	 *  
+	 *
 	 * @return der Default-Wert der Spalte
 	 */
 	public Object getDefaultWertConverted() {
@@ -434,17 +434,17 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 			return result;
 		return DBAttributeConverter.getByClass(_javaConverter).convertToEntityAttributeFromObject(result);
 	}
-	
-	
+
+
 	/**
 	 * Liefert den SQL-Code für diese Spalte und das angegeben DBMS
-	 * 
+	 *
 	 * @param dbms     das DBMS
-	 * 
-	 * @return der SQL-Code zur Verwendung beim Erzeugen der Tabellenspalte 
+	 *
+	 * @return der SQL-Code zur Verwendung beim Erzeugen der Tabellenspalte
 	 */
-	public String getSQL(DBDriver dbms) {
-	    boolean skipDatenlaenge = ((_datentyp == SchemaDatentypen.DATETIME) && ((dbms != DBDriver.MARIA_DB) && (dbms != DBDriver.MYSQL)));
+	public String getSQL(final DBDriver dbms) {
+	    final boolean skipDatenlaenge = ((_datentyp == SchemaDatentypen.DATETIME) && ((dbms != DBDriver.MARIA_DB) && (dbms != DBDriver.MYSQL)));
 		return this._name + " " + _datentyp.getDBType(dbms)
 	         + (((this._datenlaenge == null) || (this._datenlaenge <= 0) || skipDatenlaenge) ? "" : "(" + this._datenlaenge + ")")
 	         + this.getSQLAutoinkrement(dbms)
@@ -452,28 +452,28 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	         + (this._notNull ? " NOT NULL" : "")
 	         + ((dbms == DBDriver.MARIA_DB || dbms == DBDriver.MYSQL) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
 	}
-	
-	
+
+
 	/**
 	 * Liefert den SQL-Code für das nachträgliche Hinzufügen dieser Spalte für das angegebene DBMS
-	 * 
+	 *
 	 * @param dbms     das DBMS
-	 * 
-	 * @return der SQL-Code zur nachträglichen Erzeugung der Tabellenspalte 
+	 *
+	 * @return der SQL-Code zur nachträglichen Erzeugung der Tabellenspalte
 	 */
-	public String getSQLCreate(DBDriver dbms) {
+	public String getSQLCreate(final DBDriver dbms) {
 		return "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL(dbms);
 	}
-	
-	
+
+
 	/**
 	 * Erzeugt den SQL-Drop-Befehl für diese Tabellenspalte für den SQL-Dialekt des angegebenen DBMS
-	 * 
+	 *
 	 * @param dbms   das DBMS
-	 * 
+	 *
 	 * @return der SQL-Drop-Befehl
 	 */
-	public String getSQLDrop(DBDriver dbms) {
+	public String getSQLDrop(final DBDriver dbms) {
 		switch (dbms) {
 			case SQLITE:
 				// TODO SQLite - Currently not supported
@@ -486,20 +486,20 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 				return "ALTER TABLE "  + this._tabelle.name() + " DROP COLUMN " + this.name() + ";";
 		}
 	}
-	
 
-	
+
+
 	/**
 	 * Liefert in Abhängigkeit des angegebenen DBMS den SQL-Code,
 	 * um bei dieser Spalte ein SQL-Autoinkrement zu ergänzen.
-	 * 
+	 *
 	 * @param dbms   das DBMS
-	 * 
+	 *
 	 * @return der SQL-Code für ein Autoinkrement bei dieser Spalte
 	 */
-	private String getSQLAutoinkrement(DBDriver dbms) {
+	private String getSQLAutoinkrement(final DBDriver dbms) {
 		if ((!this._tabelle.istPrimaerschlusselAttribut(this))
-			|| (!this._tabelle.pkAutoIncrement()) 
+			|| (!this._tabelle.pkAutoIncrement())
 			|| (!this._datentyp.isIntType()))
 			return "";
 		switch (dbms) {
@@ -514,23 +514,23 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 				return "";
 		}
 	}
-	
-	
+
+
 	/**
 	 * Gibt den SQL-Code für eine Default-Wert bei dieser Spalte zurück.
 	 * Dabei wird das angegebene DBMS und der Datentyp berücksichtigt.
-	 * 
+	 *
 	 * @param dbms   das DBMS
 	 * @param type   der Datentyp
-	 * 
+	 *
 	 * @return der SQL-Code für eine Default-Wert bei dieser Spalte
 	 */
-	private String getSQLDefault(DBDriver dbms, SchemaDatentypen type) {
+	private String getSQLDefault(final DBDriver dbms, final SchemaDatentypen type) {
 		if (this._default != null)
 			return " DEFAULT " + (type.isQuoted() ? "'" : "") + this._default + (type.isQuoted() ? "'" : "");
 		if (!this._notNull)
 			return "";
-		return switch(this._datentyp) {
+		return switch (this._datentyp) {
 			case DATE -> switch (dbms) {
 				case MYSQL -> " DEFAULT (CURRENT_DATE)";
 				case MARIA_DB -> " DEFAULT now()";
@@ -561,8 +561,8 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 
 
 	@Override
-	public int compareTo(SchemaTabelleSpalte other) {
-		int result = this._tabelle.name().compareTo(other._tabelle.name()); 
+	public int compareTo(final SchemaTabelleSpalte other) {
+		final int result = this._tabelle.name().compareTo(other._tabelle.name());
 		if (result != 0)
 			return result;
 		return this.sortierung() < other.sortierung() ? -1 : 1;

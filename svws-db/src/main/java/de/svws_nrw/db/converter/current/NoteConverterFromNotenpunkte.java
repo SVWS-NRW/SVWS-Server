@@ -10,18 +10,18 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
  * Diese Klasse dient dem Konvertieren von Notenpunkte zur Note.
  */
 @Converter(autoApply = true)
-public class NoteConverterFromNotenpunkte extends DBAttributeConverter<Note, Integer> {
+public final class NoteConverterFromNotenpunkte extends DBAttributeConverter<Note, Integer> {
 
 	/** Die Instanz des Konverters */
-	public final static NoteConverterFromNotenpunkte instance = new NoteConverterFromNotenpunkte();
+	public static final NoteConverterFromNotenpunkte instance = new NoteConverterFromNotenpunkte();
 
 	@Override
-	public Integer convertToDatabaseColumn(Note note) {
+	public Integer convertToDatabaseColumn(final Note note) {
 		return note.notenpunkte;
 	}
 
 	@Override
-	public Note convertToEntityAttribute(Integer dbData) {
+	public Note convertToEntityAttribute(final Integer dbData) {
 		return Note.fromNotenpunkte(dbData);
 	}
 

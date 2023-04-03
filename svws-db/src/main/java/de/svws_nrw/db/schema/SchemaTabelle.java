@@ -11,25 +11,25 @@ import de.svws_nrw.db.DBDriver;
 
 /**
  * Diese Klasse dient als Basisklasse für die Schema-Definitionen
- * von SVWS-Datenbank-Tabellen.  
+ * von SVWS-Datenbank-Tabellen.
  */
 public class SchemaTabelle {
-	
+
 	/** Der Name der Tabelle */
 	private final String _name;
-	
+
 	/** Die Revision, ab wann die Tabelle gültig ist. */
 	private final SchemaRevisionen _revision;
-	
+
 	/** Die Revision, ab wann die Tabelle veraltet ist, sofern sie veraltet ist, ansonsten {@link SchemaRevisionen#UNDEFINED} */
 	private SchemaRevisionen _veraltet = SchemaRevisionen.UNDEFINED;
-	
+
 	/** Gibt an, ob die Tabelle bei der Migration aus einer Schild 2 - Datenbank berücksichtigt werden soll */
-	private boolean _migrate = false; 
+	private boolean _migrate = false;
 
 	/** Gibt an, ob die Tabelle bei Import und Export-Operationen berücksichtigt werden soll. */
 	private boolean _importExport = false;
-	
+
 	/** Das Package unterhalb des allgemeinen DTO-Packages für Datenbanktabellen an, wo das zugehörige DTO-Objekt erzeugt werden soll */
 	private String _javaSubPackage;
 
@@ -41,41 +41,41 @@ public class SchemaTabelle {
 
 
 	/** Die Spalten der Tabelle*/
-	private Vector<SchemaTabelleSpalte> _spalten = new Vector<>();
-	
+	private final Vector<SchemaTabelleSpalte> _spalten = new Vector<>();
+
 	/** Eine Map für die Spalten der Tabelle */
-	private LinkedHashMap<String, SchemaTabelleSpalte> _mapSpalten = new LinkedHashMap<>();
-	
+	private final LinkedHashMap<String, SchemaTabelleSpalte> _mapSpalten = new LinkedHashMap<>();
+
 	/** Gibt an, ob der Primärschlüssel dieser Tabelle aus einer numerischen Spalte besteht und ein Auto-Inkrement hat. */
 	private boolean _pkAutoIncrement = false;
-	
+
 	/** Die Spalten des Primärschlüssels dieser Tabelle */
-	private LinkedHashSet<SchemaTabelleSpalte> _pkSpalten = new LinkedHashSet<>();
+	private final LinkedHashSet<SchemaTabelleSpalte> _pkSpalten = new LinkedHashSet<>();
 
 	/** Die Fremdschlüssel dieser Tabelle */
-	private Vector<SchemaTabelleFremdschluessel> _fremdschluessel = new Vector<>();
+	private final Vector<SchemaTabelleFremdschluessel> _fremdschluessel = new Vector<>();
 
 	/** Die Indizes dieser Tabelle */
-	private Vector<SchemaTabelleIndex> _indizes = new Vector<>();
+	private final Vector<SchemaTabelleIndex> _indizes = new Vector<>();
 
 	/** Die Unqiue-Indizes dieser Tabelle */
-	private Vector<SchemaTabelleUniqueIndex> _unique = new Vector<>();
+	private final Vector<SchemaTabelleUniqueIndex> _unique = new Vector<>();
 
 	/** Die Trigger, die dieser Tabelle zugeordnet sind */
-	private Vector<SchemaTabelleTrigger> _trigger = new Vector<>();
-	
+	private final Vector<SchemaTabelleTrigger> _trigger = new Vector<>();
+
 	/** Der Core-Type, welcher dieser Tabelle für Update-Prozesse zugeordnet ist. */
 	private SchemaTabelleCoreType _coreType = null;
 
 
 	/**
-	 * Erstellt eine neue Schema-Definition für eine 
-	 * Tabelle der SVWS-Datenbank. 
-	 * 
+	 * Erstellt eine neue Schema-Definition für eine
+	 * Tabelle der SVWS-Datenbank.
+	 *
 	 * @param name       der Tabellenname
 	 * @param revision   die Revision, ab wann die Tabelle gültig ist.
 	 */
-	public SchemaTabelle(String name, SchemaRevisionen revision) {
+	public SchemaTabelle(final String name, final SchemaRevisionen revision) {
 		if (revision == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision, ab wann eine Tabelle gültig ist muss definiert sein.");
 		this._name = name;
@@ -83,86 +83,86 @@ public class SchemaTabelle {
 		this._javaSubPackage = "svws";
 		this._javaClassName = "DTO" + name;
 	}
-	
+
 	/**
 	 * Prüft, ob diese Tabelle eine Entwickler-Version des DTO
 	 * benötigt, indem überprüft wird, ob an diesem Tabellen-Objekt oder bei
 	 * einem der Spalten-Objekte Änderungen zwischen der Aktuellen Revision
 	 * und der Entwickler Revision vorgenommen wurden.
-	 * 
+	 *
 	 * @return true, falls ein Entwickler-DTO benötigt wird und ansonsten false
 	 */
 	public boolean brauchtDeveloperDTO() {
-		if ((this._revision.revision > SchemaRevisionen.maxRevision.revision) ||
-			((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)))
+		if ((this._revision.revision > SchemaRevisionen.maxRevision.revision)
+				|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)))
 			return true;
-		for (SchemaTabelleSpalte spalte: this._spalten)
+		for (final SchemaTabelleSpalte spalte: this._spalten)
 			if (spalte.brauchtDeveloperDTO())
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * Setzt die Revision, ab wann diese Tabelle veraltet ist.
-	 * 
+	 *
 	 * @param veraltet    die Revision, ab wann die Tabelle veraltet ist
 	 */
-	public void setVeraltet(SchemaRevisionen veraltet) {
+	public void setVeraltet(final SchemaRevisionen veraltet) {
 		if (veraltet == SchemaRevisionen.UNDEFINED)
 			throw new RuntimeException("Die Revision, ab wann eine Tabelle veraltet ist kann nicht auf undefiniert gesetzt werden. Dies ist bereits der Default-Wert.");
 		this._veraltet = veraltet;
 	}
 
-	/** 
-	 * Setzt die Information, ob die Tabelle bei der Migration aus einer Schild 2 - Datenbank 
+	/**
+	 * Setzt die Information, ob die Tabelle bei der Migration aus einer Schild 2 - Datenbank
 	 * berücksichtigt werden soll.
-	 *  
-	 * @param migrate   true, falls sie berücksichtigt werden soll und ansonsten false 
+	 *
+	 * @param migrate   true, falls sie berücksichtigt werden soll und ansonsten false
 	 */
-	public void setMigrate(boolean migrate) {
+	public void setMigrate(final boolean migrate) {
 		this._migrate = migrate;
 	}
 
-	/** 
+	/**
 	 * Setzt die Information ob die Tabelle bei Import und Export-Operationen berücksichtigt werden soll.
-	 * 
+	 *
 	 * @param importExport   true, falls sie berücksichtigt werden soll und ansonsten false
 	 */
-	public void setImportExport(boolean importExport) {
+	public void setImportExport(final boolean importExport) {
 		this._importExport = importExport;
 	}
-	
-	/** 
-	 * Setzt das Package unterhalb des allgemeinen DTO-Packages für Datenbanktabellen, 
+
+	/**
+	 * Setzt das Package unterhalb des allgemeinen DTO-Packages für Datenbanktabellen,
 	 * wo das zugehörige DTO-Objekt erzeugt werden soll.
-	 * 
+	 *
 	 * @param subPackage   das Sub-Package
 	 */
-	public void setJavaSubPackage(String subPackage) {
+	public void setJavaSubPackage(final String subPackage) {
 		this._javaSubPackage = subPackage;
 	}
 
-	/** 
+	/**
 	 * Setzt den Java-DTO-Klassennamen für die Tabelle.
-	 * 
+	 *
 	 * @param name   der Java-DTO-Klassenname
 	 */
-	public void setJavaClassName(String name) {
+	public void setJavaClassName(final String name) {
 		this._javaClassName = name;
 	}
 
-	/** 
-	 * Setzt die Beschreibung für die Tabelle, welche bei der DTO-Klassendefinition 
+	/**
+	 * Setzt die Beschreibung für die Tabelle, welche bei der DTO-Klassendefinition
 	 * verwendet wird.
-	 * 
+	 *
 	 * @param beschreibung   die Beschreibung
 	 */
-	public void setJavaComment(String beschreibung) {
+	public void setJavaComment(final String beschreibung) {
 		this._javaComment = beschreibung;
 	}
 
-	/** 
-	 * Setzt, ob der Primärschlüssel dieser Tabellen ein Auto-Inkrement 
+	/**
+	 * Setzt, ob der Primärschlüssel dieser Tabellen ein Auto-Inkrement
 	 * unterstützt oder nicht.
 	 */
 	public void setPKAutoIncrement() {
@@ -173,17 +173,17 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt den Namen der Tabelle zurück.
-	 * 
+	 *
 	 * @return der Name der Tabelle
 	 */
 	public String name() {
 		return _name;
 	}
-	
+
 	/**
 	 * Gibt die Revision zurück, ab wann die Tabelle gültig ist.
-	 * 
-	 * @return die Revision 
+	 *
+	 * @return die Revision
 	 */
 	public SchemaRevisionen revision() {
 		return _revision;
@@ -193,16 +193,16 @@ public class SchemaTabelle {
 	 * Gibt die Revision zurück, ab wann die Tabelle veraltet ist.
 	 * Ist sie nicht veraltet, so wird {@link SchemaRevisionen#UNDEFINED}
 	 * zurückgegeben.
-	 * 
+	 *
 	 * @return die Revision, ab wann die Tabelle veraltet ist, oder {@link SchemaRevisionen#UNDEFINED}
 	 */
 	public SchemaRevisionen veraltet() {
 		return _veraltet;
 	}
-	
+
 	/**
 	 * Gibt an, ob die Tabelle bei der Migration aus einer Schild 2 - Datenbank berücksichtigt werden soll.
-	 * 
+	 *
 	 * @return true, falls die Tabelle bei der Migration berücksichtigt werden soll.
 	 */
 	public boolean migrate() {
@@ -211,7 +211,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt an, ob die Tabelle bei Import und Export-Operationen berücksichtigt werden soll.
-	 * 
+	 *
 	 * @return true, falls die Tabelle bei Import-/Export-Operationen berücksichtigt werden soll.
 	 */
 	public boolean importExport() {
@@ -219,9 +219,9 @@ public class SchemaTabelle {
 	}
 
 	/**
-	 * Gibt das Package unterhalb des allgemeinen DTO-Packages für Datenbanktabellen zurück, 
+	 * Gibt das Package unterhalb des allgemeinen DTO-Packages für Datenbanktabellen zurück,
 	 * wo das zugehörige DTO-Objekt erzeugt werden soll.
-	 * 
+	 *
 	 * @return das Sub-Package
 	 */
 	public String javaSubPackage() {
@@ -230,7 +230,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt den Java-DTO-Klassennamen für die Tabelle zurück.
-	 * 
+	 *
 	 * @return der Klassenname
 	 */
 	public String javaClassName() {
@@ -239,7 +239,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt die Beschreibung für die Tabelle zurück, welche bei der DTO-Klassendefinition verwendet wird.
-	 * 
+	 *
 	 * @return die Beschreibung
 	 */
 	public String javaComment() {
@@ -249,7 +249,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt das Set der Spalten des Primärschlüssels zurück.
-	 * 
+	 *
 	 * @return das Set der Primärschlüsselpalten
 	 */
 	public LinkedHashSet<SchemaTabelleSpalte> pkSpalten() {
@@ -259,7 +259,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt die Liste der Fremdschlüsel zurück.
-	 * 
+	 *
 	 * @return die Liste der Fremdschlüsel
 	 */
 	public List<SchemaTabelleFremdschluessel> fremdschluessel() {
@@ -269,7 +269,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt die Liste der Indizes zurück.
-	 * 
+	 *
 	 * @return die Liste der Indizes
 	 */
 	public List<SchemaTabelleIndex> indizes() {
@@ -279,7 +279,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt die Liste der Unique-Indizes zurück.
-	 * 
+	 *
 	 * @return die Liste der Unique-Indizes
 	 */
 	public List<SchemaTabelleUniqueIndex> unique() {
@@ -289,7 +289,7 @@ public class SchemaTabelle {
 
 	/**
 	 * Gibt die Liste der Trigger zurück.
-	 * 
+	 *
 	 * @return die Liste der Trigger
 	 */
 	public List<SchemaTabelleTrigger> trigger() {
@@ -299,15 +299,15 @@ public class SchemaTabelle {
 
 	/**
 	 * Fügt eine neue Spalte zu dieser Tabelle hinzu
-	 * 
+	 *
 	 * @param name   der Name der Spalte
 	 * @param typ    der Typ der Spalte
 	 * @param pk     gibt an, ob die Spalte zu dem Primärschlüssel gehört oder nicht.
-	 * 
+	 *
 	 * @return die Tabellenspalte
 	 */
-	public SchemaTabelleSpalte add(String name, SchemaDatentypen typ, boolean pk) {
-		SchemaTabelleSpalte col = new SchemaTabelleSpalte(this, _spalten.size() + 1, name, typ);
+	public SchemaTabelleSpalte add(final String name, final SchemaDatentypen typ, final boolean pk) {
+		final SchemaTabelleSpalte col = new SchemaTabelleSpalte(this, _spalten.size() + 1, name, typ);
 		_spalten.add(col);
 		_mapSpalten.put(name, col);
 		if (pk) {
@@ -319,7 +319,7 @@ public class SchemaTabelle {
 	}
 
 	/**
-	 * Gibt zurück, ob der Primärschlüssel dieser Tabelle aus einer numerischen Spalte besteht 
+	 * Gibt zurück, ob der Primärschlüssel dieser Tabelle aus einer numerischen Spalte besteht
 	 * und ein Auto-Inkrement hat oder nicht.
 	 *
 	 * @return true, falls der Primärschlüssel ein Autoinkrement unterstützt oder nicht.
@@ -330,23 +330,23 @@ public class SchemaTabelle {
 
 	/**
 	 * Fügt einen neuen Fremdschlüssel zu der Tabelle hinzu
-	 * 
+	 *
 	 * @param name           der Name des Fremdschlüssels
 	 * @param onUpdate       die Aktion bei einer Aktualisierung des referenzierten Schlüssels
 	 * @param onDelete       die Aktion bei einem Entfernen des referenzierten Schlüssels
 	 * @param referenziert   die Paare von Spalte aus dieser Tabelle und der referenzierten Tabelle
-	 * 
+	 *
 	 * @return der Fremdschlüssel
 	 */
-	@SafeVarargs 
-	public final SchemaTabelleFremdschluessel addForeignKey(String name, SchemaFremdschluesselAktionen onUpdate, 
-			SchemaFremdschluesselAktionen onDelete, Pair<SchemaTabelleSpalte, SchemaTabelleSpalte>... referenziert) {
+	@SafeVarargs
+	public final SchemaTabelleFremdschluessel addForeignKey(final String name, final SchemaFremdschluesselAktionen onUpdate,
+			final SchemaFremdschluesselAktionen onDelete, final Pair<SchemaTabelleSpalte, SchemaTabelleSpalte>... referenziert) {
 		if (referenziert.length <= 0)
 			throw new RuntimeException("Ein Fremdschlüssel muss mindestens eine fremde Spalte referenzieren.");
 		SchemaTabelle tabReferenziert = null;
-		Vector<SchemaTabelleSpalte> spalten = new Vector<>();
-		Vector<SchemaTabelleSpalte> spaltenReferenziert = new Vector<>();
-		for (Pair<SchemaTabelleSpalte, SchemaTabelleSpalte> ref : referenziert) {
+		final Vector<SchemaTabelleSpalte> spalten = new Vector<>();
+		final Vector<SchemaTabelleSpalte> spaltenReferenziert = new Vector<>();
+		for (final Pair<SchemaTabelleSpalte, SchemaTabelleSpalte> ref : referenziert) {
 			if (ref.a.tabelle() != this)
 				throw new RuntimeException("Die Tabelle der ersten Spalte muss diese Tabelle referenzieren.");
 			if (tabReferenziert == null)
@@ -358,35 +358,35 @@ public class SchemaTabelle {
 			spalten.add(ref.a);
 			spaltenReferenziert.add(ref.b);
 		}
-		SchemaTabelleFremdschluessel fk = new SchemaTabelleFremdschluessel(name, this, tabReferenziert, onUpdate, onDelete, spalten, spaltenReferenziert);
+		final SchemaTabelleFremdschluessel fk = new SchemaTabelleFremdschluessel(name, this, tabReferenziert, onUpdate, onDelete, spalten, spaltenReferenziert);
 		_fremdschluessel.add(fk);
 		return fk;
 	}
 
 	/**
 	 * Fügt einen neuen Non-Unqiue-Index zu dieser Tabelle hinzu
-	 * 
+	 *
 	 * @param name      der Name des Index
 	 * @param spalten   die Spalten des Index
-	 * 
+	 *
 	 * @return der Index
 	 */
-	public SchemaTabelleIndex addIndex(String name, SchemaTabelleSpalte... spalten) {
-		SchemaTabelleIndex idx = new SchemaTabelleIndex(this, name, spalten);
+	public SchemaTabelleIndex addIndex(final String name, final SchemaTabelleSpalte... spalten) {
+		final SchemaTabelleIndex idx = new SchemaTabelleIndex(this, name, spalten);
 		_indizes.add(idx);
 		return idx;
 	}
 
 	/**
 	 * Fügt einen neuen Unqiue-Index zu dieser Tabelle hinzu
-	 * 
+	 *
 	 * @param name      der Name des Index
 	 * @param spalten   die Spalten des Index
-	 * 
+	 *
 	 * @return der Index
 	 */
-	public SchemaTabelleUniqueIndex addUniqueIndex(String name, SchemaTabelleSpalte... spalten) {
-		SchemaTabelleUniqueIndex idx = new SchemaTabelleUniqueIndex(this, name, spalten);
+	public SchemaTabelleUniqueIndex addUniqueIndex(final String name, final SchemaTabelleSpalte... spalten) {
+		final SchemaTabelleUniqueIndex idx = new SchemaTabelleUniqueIndex(this, name, spalten);
 		_unique.add(idx);
 		return idx;
 	}
@@ -394,36 +394,36 @@ public class SchemaTabelle {
 
 	/**
 	 * Fügt einen neuen Trigger zu dieser Tabelle hinzu
-	 * 
+	 *
 	 * @param name      der Name des Triggers
 	 * @param dbDriver  das DBMS für welches der Trigger eingerichtet wird
 	 * @param sql       der Teil des SQL-Befehls für das Erstellen des Triggers hinter "CREATE TRIGGER name "
 	 * @param genutzt   die Spalten des Index
-	 * 
+	 *
 	 * @return der Trigger
 	 */
-	public SchemaTabelleTrigger addTrigger(String name, DBDriver dbDriver, String sql, SchemaTabelle... genutzt) {
-		SchemaTabelleTrigger trig = new SchemaTabelleTrigger(this, name, dbDriver, sql, genutzt);
+	public SchemaTabelleTrigger addTrigger(final String name, final DBDriver dbDriver, final String sql, final SchemaTabelle... genutzt) {
+		final SchemaTabelleTrigger trig = new SchemaTabelleTrigger(this, name, dbDriver, sql, genutzt);
 		_trigger.add(trig);
 		return trig;
 	}
-	
+
 
 	/**
 	 * Ordnet dieser Tabelle einen Core-Type zu.
-	 * 
+	 *
 	 * @param coreType    die Klasse mit den Informationen zur des Core-Types
 	 */
-	public void setCoreType(SchemaTabelleCoreType coreType) {
+	public void setCoreType(final SchemaTabelleCoreType coreType) {
 	    if (_coreType != null)
 	        throw new RuntimeException("Der Tabelle wurde bereits zuvor ein Core-Type zugeordnet. Zwei Zuordnungen sind nicht zulässig.");
 	    _coreType = coreType;
 	}
-	
-	
+
+
 	/**
 	 * Gibt zurück, ob diese Tabelle einen Core-Type zugeordnet hat oder nicht.
-	 * 
+	 *
 	 * @return true, falls ein Core-Type zugeordet ist und ansonsten false
 	 */
 	public boolean hasCoreType() {
@@ -434,7 +434,7 @@ public class SchemaTabelle {
     /**
      * Gibt die Core-Type-Zuordnung dieser Tabelle zurück, falls
      * einer zugeordnet ist. Ansonsten wird null zurückgegeben.
-     * 
+     *
      * @return die Core-Type-Zuordnung oder null
      */
     public SchemaTabelleCoreType getCoreType() {
@@ -444,48 +444,48 @@ public class SchemaTabelle {
 
     /**
      * Prüft, ob die Tabelle in der angegebenen Revision definiert ist oder nicht.
-     * 
+     *
      * @param rev   die zu prüfende Revision
-     * 
+     *
      * @return true, falls die Tabelle in der Revision definiert ist und ansonsten false
      */
     public boolean isDefined(final long rev) {
     	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
     	return (revision >= _revision.revision) && ((_veraltet.revision < 0) || (revision < _veraltet.revision));
     }
-    
-    
+
+
     /**
      * Liefert die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
-     * 
+     *
      * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
     }
-    
-    
+
+
     /**
-     * Liefert die Tabellenspalten, die in der angegeben Revision definiert sind in der durch das 
+     * Liefert die Tabellenspalten, die in der angegeben Revision definiert sind in der durch das
      * Feld Sortierung definierten Reihenfolge.
-     * 
+     *
      * @param rev   die Revision, in der die Tabellenspalte definiert sein muss
-     * 
+     *
      * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten(final long rev) {
     	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
     	return _spalten.stream()
     			.filter(sp -> (revision >= sp.revision().revision) && ((sp.veraltet().revision < 0) || (revision < sp.veraltet().revision)))
-    			.sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    			.sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
     }
 
 
     /**
      * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
-     * 
+     *
      * @param rev   die Revision
-     * 
+     *
      * @return der Name der Java-Klasse
      */
     public String getJavaKlasse(final long rev) {
@@ -495,16 +495,16 @@ public class SchemaTabelle {
     		return "Migration" + _javaClassName;
 		return _javaClassName;
 	}
-	
-    
+
+
 	/**
      * Liefert die Spalte mit dem angegebenen Spaltennamen
-     * 
+     *
      * @param name   der Spaltenname
-     * 
+     *
      * @return die Tabellenspalte
      */
-    public SchemaTabelleSpalte getSpalte(String name) {
+    public SchemaTabelleSpalte getSpalte(final String name) {
     	return _mapSpalten.get(name);
     }
 
@@ -512,15 +512,15 @@ public class SchemaTabelle {
     /**
      * Liefert den CREATE TABLE-Befehl in der entsprechenden Version zu dieser Tabelle. Dabei
      * wird der Dialekt des angegebenen DBMS genutzt.
-     *  
+     *
      * @param dbms     das DBMS in dessen Dialekt der CREATE TABLE Befehl formuliert ist
-     * @param rev      die Revision des Schemas, für welche der SQL-Befehl erzeugt wird 
-     * 
+     * @param rev      die Revision des Schemas, für welche der SQL-Befehl erzeugt wird
+     *
      * @return der entsprechende SQL-Befehl
      */
-    public String getSQL(DBDriver dbms, long rev) {
-		String newline = System.lineSeparator();
-		String pk = this.getPrimaerschluesselSQL();
+    public String getSQL(final DBDriver dbms, final long rev) {
+		final String newline = System.lineSeparator();
+		final String pk = this.getPrimaerschluesselSQL();
 		return "CREATE TABLE " + this._name + " (" + newline
 				+ "  " + getSQLSpalten(dbms, rev)
 				+ (((pk == null) || ("".equals(pk))) ? "" : "," + newline + "  " + pk)
@@ -532,41 +532,41 @@ public class SchemaTabelle {
 
 	/**
 	 * Erzeugt den SQL-Drop-Befehl für diese Tabelle für den SQL-Dialekt des angegebenen DBMS
-	 * 
+	 *
 	 * @param dbms   das DBMS
-	 * 
+	 *
 	 * @return der SQL-Drop-Befehl
 	 */
-	public String getSQLDrop(DBDriver dbms) {
+	public String getSQLDrop(final DBDriver dbms) {
 		return "DROP TABLE " + (dbms.supportsIfExists() ? "IF EXISTS " : "") + this._name + ";";
 	}
 
 
     /**
      * Liefert alle in der angegebenen Revision gültigen Fremdschlüssel
-     * 
+     *
      * @param rev   die Revision
-     * 
+     *
      * @return die in der angegebenen Revision gültigen Fremdschlüssel
      */
-    public List<SchemaTabelleFremdschluessel> getFremdschluessel(long rev) {
+    public List<SchemaTabelleFremdschluessel> getFremdschluessel(final long rev) {
     	return _fremdschluessel.stream()
-			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1)) 
+			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
 				|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
 			.collect(Collectors.toList());
     }
-    
-    
+
+
     /**
      * Generiert den SQL-Code für die Fremdschlüssel-Constraints der Tabelle
-     * 
+     *
      * @param rev   die Revision, für welche die Fremdschlüssel-Constraints der Tabelle erzeugt werden sollen
-     * 
+     *
      * @return der SQL-Code für die Fremdschlüssel-Constraints der Tabelle
      */
-    private String getSQLFremdschluessel(long rev) {
-    	String result = _fremdschluessel.stream()
-			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1)) 
+    private String getSQLFremdschluessel(final long rev) {
+    	final String result = _fremdschluessel.stream()
+			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
 				|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
 			.map(fk -> fk.getSQL())
 			.collect(Collectors.joining("," + System.lineSeparator() + "  "));
@@ -575,34 +575,34 @@ public class SchemaTabelle {
     	return "," + System.lineSeparator() + "  " + result;
     }
 
-    
+
     /**
      * Erzeugt den SQL-Code für die Spalten der Tabelle.
-     * 
+     *
      * @param dbms     das DBMS in dessen SQL-Dialekt formuliert wird
      * @param rev      die Revision des Schemas, für welche der Spalten-SQL-Code erzeugt wird
-     *  
+     *
      * @return der SQL-Code
      */
-    private String getSQLSpalten(DBDriver dbms, long rev) {
+    private String getSQLSpalten(final DBDriver dbms, final long rev) {
     	return getSpalten().stream()
-			.filter(col -> ((rev == -1) && (col.veraltet().revision == -1)) 
+			.filter(col -> ((rev == -1) && (col.veraltet().revision == -1))
 					|| ((rev != -1) && (rev >= col.revision().revision) && ((col.veraltet().revision == -1) || (rev < col.veraltet().revision))))
 			.map(col -> col.getSQL(dbms))
-			.collect(Collectors.joining(", " + System.lineSeparator() + "  "));    	
+			.collect(Collectors.joining(", " + System.lineSeparator() + "  "));
     }
 
 
     /**
      * Generiert den SQL-Code für die Unique-Constraints der Tabelle
-     * 
+     *
      * @param rev   die Revision, für welche die Unique-Constraints der Tabelle erzeugt werden sollen
-     * 
+     *
      * @return der SQL-Code für die Unique-Constraints der Tabelle
      */
-    private String getSQLUniqueContraints(long rev) {
-    	String result = _unique.stream()
-    		.filter(uc -> ((rev == -1) && (uc.veraltet().revision == -1)) 
+    private String getSQLUniqueContraints(final long rev) {
+    	final String result = _unique.stream()
+    		.filter(uc -> ((rev == -1) && (uc.veraltet().revision == -1))
     				|| ((rev != -1) && (rev >= uc.revision().revision) && ((uc.veraltet().revision == -1) || (rev < uc.veraltet().revision))))
     		.map(uc -> uc.getSQL())
     		.collect(Collectors.joining("," + System.lineSeparator() + "  "));
@@ -614,14 +614,14 @@ public class SchemaTabelle {
 
     /**
      * Generiert den SQL-Code für das Erstellen der Indizes der Tabelle
-     * 
+     *
      * @param rev   die Revision, für welche die Indizes der Tabelle erzeugt werden sollen
-     * 
+     *
      * @return der SQL-Code für die Indizes der Tabelle
      */
-    public String getSQLIndizes(long rev) {
+    public String getSQLIndizes(final long rev) {
     	return _indizes.stream()
-        		.filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1)) 
+        		.filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
         				|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
         		.map(idx -> idx.getSQL())
         		.collect(Collectors.joining(System.lineSeparator()));
@@ -630,17 +630,17 @@ public class SchemaTabelle {
 
     /**
      * Generiert den SQL-Code für das Erstellen oder Entfernen der Trigger der Tabelle
-     * 
+     *
      * @param dbms     das DBMS, für welches der Trigger-SQL-Code generiert wird
      * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
-     * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird. 
-     * 
+     * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird.
+     *
      * @return der SQL-Code für die Trigger der Tabelle
      */
-    public String getSQLTrigger(DBDriver dbms, long rev, boolean create) {
+    public String getSQLTrigger(final DBDriver dbms, final long rev, final boolean create) {
     	// Lese die einzelnen Trigger aus
-    	Vector<String> sqlTrigger = new Vector<>();
-    	for (SchemaTabelleTrigger t : this._trigger) {
+    	final Vector<String> sqlTrigger = new Vector<>();
+    	for (final SchemaTabelleTrigger t : this._trigger) {
     		if (!dbms.equals(t.dbms()))
     			continue;
     		// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
@@ -655,15 +655,15 @@ public class SchemaTabelle {
     	}
     	sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
     	// Füge die einzelnen SQL-Code-Abschnitte zu einem Skript zusammen
-    	var newline = System.lineSeparator();
+    	final var newline = System.lineSeparator();
     	if (create) {
 	    	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
 	    		return sqlTrigger.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
 	    				.collect(Collectors.joining(newline + newline));
 	    	} else if (DBDriver.MSSQL.equals(dbms)) {
 	    		return sqlTrigger.stream().map(sql -> sql + newline + "GO" + newline)
-	    				.collect(Collectors.joining(newline + newline));    		
-	    	} 
+	    				.collect(Collectors.joining(newline + newline));
+	    	}
 	    	// DBDriver.SQLITE.equals(dbms))
 			return sqlTrigger.stream().collect(Collectors.joining(newline + newline));
     	}
@@ -672,20 +672,20 @@ public class SchemaTabelle {
 
 
     /**
-     * Prüft, ob die angegebene Spalte eine Spalte des Primärschlüssels ist. 
-     * 
+     * Prüft, ob die angegebene Spalte eine Spalte des Primärschlüssels ist.
+     *
      * @param col   die zu prüfende Spalte
-     * 
+     *
      * @return true, falls die Spalte Teil des Primärschlüssels ist.
      */
-    public boolean istPrimaerschlusselAttribut(SchemaTabelleSpalte col) {
+    public boolean istPrimaerschlusselAttribut(final SchemaTabelleSpalte col) {
     	return this._pkSpalten.contains(col);
     }
 
 
 	/**
-	 * Erstellt einen SQL-String für das Erstellen einen Primärschlüssel als SQL-CONSTRAINT 
-	 * 
+	 * Erstellt einen SQL-String für das Erstellen einen Primärschlüssel als SQL-CONSTRAINT
+	 *
 	 * @return der SQL-String für das Erstellen des Primärschlüssels
 	 */
 	public String getPrimaerschluesselSQL() {
@@ -695,265 +695,261 @@ public class SchemaTabelle {
 	}
 
 
-	
+
 	/**
 	 * Erstellt die SQL-Skripte zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
-	 * 
+	 *
 	 * @param dbms     das DBMS für welches das Skript angefragt wird
      * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
 	 * @param create   gibt an, ob das CREATE-Skript oder das Drop-Skript angefragt wird.
-	 * 
+	 *
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
-	public String getPrimaerschluesselTriggerSQL(DBDriver dbms, int rev, boolean create) {
-    	var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
+	public String getPrimaerschluesselTriggerSQL(final DBDriver dbms, final int rev, final boolean create) {
+    	final var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
     	if (triggerList.size() <= 0)
     		return "";
-    	var newline = System.lineSeparator();
+    	final var newline = System.lineSeparator();
     	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
     		return triggerList.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
     				.collect(Collectors.joining(newline + newline));
     	} else if (DBDriver.MSSQL.equals(dbms)) {
     		return triggerList.stream().map(sql -> sql + newline + "GO" + newline)
-    				.collect(Collectors.joining(newline + newline));    		
-    	} 
+    				.collect(Collectors.joining(newline + newline));
+    	}
     	// DBDriver.SQLITE.equals(dbms))
-		return triggerList.stream().collect(Collectors.joining(newline + newline));    		
+		return triggerList.stream().collect(Collectors.joining(newline + newline));
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Erstellt die SQL-Skripte zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
-	 * 
+	 *
 	 * @param dbms     das DBMS für welches das Skript angefragt wird
      * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
 	 * @param create   gibt an, ob das CREATE-Skript oder das Drop-Skript angefragt wird.
-	 * 
+	 *
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
-	public List<String> getPrimaerschluesselTriggerSQLList(DBDriver dbms, long rev, boolean create) {
-		Vector<String> result = new Vector<>();
+	public List<String> getPrimaerschluesselTriggerSQLList(final DBDriver dbms, final long rev, final boolean create) {
+		final Vector<String> result = new Vector<>();
 		if ((!this._pkAutoIncrement) || (this._pkSpalten.size() != 1))
 			return result;
 		// DBDriver.MDB wird hier nicht unterstützt !!!
-		String tab = this._name;
-		String spalte = this._pkSpalten.iterator().next().name();
-		String newline = System.lineSeparator();
+		final String tab = this._name;
+		final String spalte = this._pkSpalten.iterator().next().name();
+		final String newline = System.lineSeparator();
 		if (create) {
 			if (!(((rev == -1) && (this.veraltet().revision == -1))
 					|| ((rev != -1) && (rev >= this.revision().revision) && ((this.veraltet().revision == -1) || (rev < this.veraltet().revision)))))
 				return result;
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-				result.add( 
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + newline +
-						"BEFORE INSERT" + newline +
-						"  ON " + tab + " FOR EACH ROW" + newline +
-						"BEGIN" + newline +
-						"  DECLARE tmpID bigint;" + newline +
-						"  SELECT MaxID INTO tmpID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "';" + newline +
-						"  IF tmpID IS NULL THEN" + newline +
-						"    SELECT max(" + spalte + ") INTO tmpID FROM " + tab + ";" + newline +
-						"    IF tmpID IS NULL THEN" + newline +
-						"      SET tmpID = 0;" + newline +
-						"    END IF;" + newline +
-						"    INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', tmpID);" + newline +
-						"  END IF;" + newline +
-						"  IF NEW." + spalte + " < 0 THEN" + newline +
-						"    SET NEW." + spalte + " = tmpID + 1;" + newline +
-						"  END IF;" + newline +
-						"  IF NEW." + spalte + " > tmpID THEN" + newline +
-						"    UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline +
-						"  END IF;" + newline +
-						"END" + newline
+				result.add("CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + newline
+						+ "BEFORE INSERT" + newline
+						+ "  ON " + tab + " FOR EACH ROW" + newline
+						+ "BEGIN" + newline
+						+ "  DECLARE tmpID bigint;" + newline
+						+ "  SELECT MaxID INTO tmpID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "';" + newline
+						+ "  IF tmpID IS NULL THEN" + newline
+						+ "    SELECT max(" + spalte + ") INTO tmpID FROM " + tab + ";" + newline
+						+ "    IF tmpID IS NULL THEN" + newline
+						+ "      SET tmpID = 0;" + newline
+						+ "    END IF;" + newline
+						+ "    INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', tmpID);" + newline
+						+ "  END IF;" + newline
+						+ "  IF NEW." + spalte + " < 0 THEN" + newline
+						+ "    SET NEW." + spalte + " = tmpID + 1;" + newline
+						+ "  END IF;" + newline
+						+ "  IF NEW." + spalte + " > tmpID THEN" + newline
+						+ "    UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline
+						+ "  END IF;" + newline
+						+ "END" + newline
 				);
-				result.add( 
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + newline + 
-						"BEFORE UPDATE" + newline + 
-						"  ON " + tab + " FOR EACH ROW" + newline + 
-						"BEGIN" + newline +
-						"  DECLARE tmpID bigint;" + newline + 
-						"  IF (OLD." + spalte + " <> NEW." + spalte + ") THEN" + newline + 
-						"    SELECT MaxID INTO tmpID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "';" + newline +
-						"    IF tmpID IS NULL THEN" + newline +
-						"      SELECT max(" + spalte + ") INTO tmpID FROM " + tab + ";" + newline + 
-						"      IF tmpID IS NULL THEN" + newline +
-						"        SET tmpID = 0;" + newline +
-						"      END IF;" + newline +
-						"      INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', tmpID);" + newline + 
-						"    END IF;" + newline +
-						"    IF NEW." + spalte + " < 0 THEN" + newline + 
-						"      SET NEW." + spalte + " = tmpID + 1;" + newline + 
-						"    END IF;" + newline +
-						"    IF NEW." + spalte + " > tmpID THEN" + newline + 
-						"      UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline + 
-						"    END IF;" + newline + 
-						"  END IF;" + newline +
-						"END" + newline
+				result.add("CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + newline
+						+ "BEFORE UPDATE" + newline
+						+ "  ON " + tab + " FOR EACH ROW" + newline
+						+ "BEGIN" + newline
+						+ "  DECLARE tmpID bigint;" + newline
+						+ "  IF (OLD." + spalte + " <> NEW." + spalte + ") THEN" + newline
+						+ "    SELECT MaxID INTO tmpID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "';" + newline
+						+ "    IF tmpID IS NULL THEN" + newline
+						+ "      SELECT max(" + spalte + ") INTO tmpID FROM " + tab + ";" + newline
+						+ "      IF tmpID IS NULL THEN" + newline
+						+ "        SET tmpID = 0;" + newline
+						+ "      END IF;" + newline
+						+ "      INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', tmpID);" + newline
+						+ "    END IF;" + newline
+						+ "    IF NEW." + spalte + " < 0 THEN" + newline
+						+ "      SET NEW." + spalte + " = tmpID + 1;" + newline
+						+ "    END IF;" + newline
+						+ "    IF NEW." + spalte + " > tmpID THEN" + newline
+						+ "      UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle='" + tab + "';" + newline
+						+ "    END IF;" + newline
+						+ "  END IF;" + newline
+						+ "END" + newline
 				);
 			} else if (DBDriver.MSSQL.equals(dbms)) {
-				result.add(
-						"exec('" + newline + 
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + " ON " + tab + " INSTEAD OF INSERT AS" + newline + 
-						"BEGIN" + newline + 
-						"  DECLARE @tmpID bigint" + newline + 
-						"  DECLARE @maxInsertedID bigint" + newline + 
-						newline + 
-						"  SET @maxInsertedID = (SELECT max(" + spalte + ") FROM inserted WHERE " + spalte + " >= 0)" + newline + 
-						"  INSERT INTO " + tab + newline + 
-						"    SELECT * FROM inserted WHERE " + spalte + " >= 0" + newline + 
-						"    " + newline + 
-						"  SET @tmpID = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle = ''" + tab + "'')" + newline + 
-						"  IF (@tmpID IS NULL)" + newline + 
-						"    BEGIN" + newline + 
-						"      SET @tmpID = (SELECT max(" + spalte + ") FROM " + tab + ")" + newline + 
-						"      IF (@tmpID IS NULL)" + newline + 
-						"        BEGIN" + newline + 
-						"          SET @tmpID = 0" + newline + 
-						"        END" + newline + 
-						"      SET NOCOUNT ON" + newline + 
-						"      INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES (''" + tab + "'', @tmpID)" + newline + 
-						"      SET NOCOUNT OFF" + newline + 
-						"    END" + newline + 
-						"  " + newline + 
-						"  IF ((SELECT count(*) FROM inserted WHERE " + spalte + " < 0) > 0)" + newline + 
-						"    BEGIN  " + newline + 
-						"      SELECT * INTO #tmp FROM inserted WHERE " + spalte + " < 0" + newline + 
-						"      UPDATE #tmp SET " + spalte + " = @tmpID, @tmpID = @tmpID + 1" + newline + 
-						"      INSERT INTO " + tab + newline + 
-						"        SELECT * FROM #tmp" + newline + 
-						"      DROP TABLE #tmp" + newline + 
-						"    END" + newline + 
-						"  " + newline + 
-						"  SET NOCOUNT ON" + newline + 
-						"  IF (@maxInsertedID > @tmpID)" + newline + 
-						"    BEGIN" + newline + 
-						"      SET @tmpID = @maxInsertedID" + newline + 
-						"	 END" + newline + 
-						"  UPDATE SVWS_DB_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline + 
-						"  SET NOCOUNT OFF" + newline + 
-						"END;" + newline + 
-						"')" + newline
+				result.add("exec('" + newline
+						+ "CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + " ON " + tab + " INSTEAD OF INSERT AS" + newline
+						+ "BEGIN" + newline
+						+ "  DECLARE @tmpID bigint" + newline
+						+ "  DECLARE @maxInsertedID bigint" + newline
+						+ newline
+						+ "  SET @maxInsertedID = (SELECT max(" + spalte + ") FROM inserted WHERE " + spalte + " >= 0)" + newline
+						+ "  INSERT INTO " + tab + newline
+						+ "    SELECT * FROM inserted WHERE " + spalte + " >= 0" + newline
+						+ "    " + newline
+						+ "  SET @tmpID = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle = ''" + tab + "'')" + newline
+						+ "  IF (@tmpID IS NULL)" + newline
+						+ "    BEGIN" + newline
+						+ "      SET @tmpID = (SELECT max(" + spalte + ") FROM " + tab + ")" + newline
+						+ "      IF (@tmpID IS NULL)" + newline
+						+ "        BEGIN" + newline
+						+ "          SET @tmpID = 0" + newline
+						+ "        END" + newline
+						+ "      SET NOCOUNT ON" + newline
+						+ "      INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES (''" + tab + "'', @tmpID)" + newline
+						+ "      SET NOCOUNT OFF" + newline
+						+ "    END" + newline
+						+ "  " + newline
+						+ "  IF ((SELECT count(*) FROM inserted WHERE " + spalte + " < 0) > 0)" + newline
+						+ "    BEGIN  " + newline
+						+ "      SELECT * INTO #tmp FROM inserted WHERE " + spalte + " < 0" + newline
+						+ "      UPDATE #tmp SET " + spalte + " = @tmpID, @tmpID = @tmpID + 1" + newline
+						+ "      INSERT INTO " + tab + newline
+						+ "        SELECT * FROM #tmp" + newline
+						+ "      DROP TABLE #tmp" + newline
+						+ "    END" + newline
+						+ "  " + newline
+						+ "  SET NOCOUNT ON" + newline
+						+ "  IF (@maxInsertedID > @tmpID)" + newline
+						+ "    BEGIN" + newline
+						+ "      SET @tmpID = @maxInsertedID" + newline
+						+ "	 END" + newline
+						+ "  UPDATE SVWS_DB_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
+						+ "  SET NOCOUNT OFF" + newline
+						+ "END;" + newline
+						+ "')" + newline
 				);
-				result.add(
-						"exec('" + newline +
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + " ON " + tab + " AFTER UPDATE AS" + newline + 
-						"BEGIN" + newline + 
-						"  if (UPDATE(" + spalte + "))" + newline + 
-						"    BEGIN" + newline + 
-						"      DECLARE @tmpID bigint" + newline + 
-						"      DECLARE @maxInsertedID bigint" + newline + 
-						newline + 
-						"      SET @maxInsertedID = (SELECT max(" + spalte + ") FROM inserted WHERE " + spalte + " >= 0)" + newline + 
-						"      SET @tmpID = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle = ''" + tab + "'')" + newline + 
-						"      IF (@tmpID IS NULL)" + newline + 
-						"        BEGIN" + newline + 
-						"          SET @tmpID = (SELECT max(" + spalte + ") FROM " + tab + ")" + newline + 
-						"          IF (@tmpID IS NULL)" + newline + 
-						"            BEGIN" + newline + 
-						"              SET @tmpID = 0" + newline + 
-						"            END" + newline + 
-						"          INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES (''" + tab + "'', @tmpID)" + newline + 
-						"        END    " + newline + 
-						"      IF (@maxInsertedID > @tmpID)" + newline + 
-						"        BEGIN" + newline + 
-						"          SET @tmpID = @maxInsertedID" + newline + 
-						"	      END" + newline + 
-						"      UPDATE SVWS_DB_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline + 
-						"    END" + newline + 
-						"END;" + newline +
-						"')" + newline
+				result.add("exec('" + newline
+						+ "CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + " ON " + tab + " AFTER UPDATE AS" + newline
+						+ "BEGIN" + newline
+						+ "  if (UPDATE(" + spalte + "))" + newline
+						+ "    BEGIN" + newline
+						+ "      DECLARE @tmpID bigint" + newline
+						+ "      DECLARE @maxInsertedID bigint" + newline
+						+ newline
+						+ "      SET @maxInsertedID = (SELECT max(" + spalte + ") FROM inserted WHERE " + spalte + " >= 0)" + newline
+						+ "      SET @tmpID = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle = ''" + tab + "'')" + newline
+						+ "      IF (@tmpID IS NULL)" + newline
+						+ "        BEGIN" + newline
+						+ "          SET @tmpID = (SELECT max(" + spalte + ") FROM " + tab + ")" + newline
+						+ "          IF (@tmpID IS NULL)" + newline
+						+ "            BEGIN" + newline
+						+ "              SET @tmpID = 0" + newline
+						+ "            END" + newline
+						+ "          INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES (''" + tab + "'', @tmpID)" + newline
+						+ "        END    " + newline
+						+ "      IF (@maxInsertedID > @tmpID)" + newline
+						+ "        BEGIN" + newline
+						+ "          SET @tmpID = @maxInsertedID" + newline
+						+ "	      END" + newline
+						+ "      UPDATE SVWS_DB_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
+						+ "    END" + newline
+						+ "END;" + newline
+						+ "')" + newline
 				);
 			} else if (DBDriver.SQLITE.equals(dbms)) {
-				result.add( 
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_1 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline + 
-						"	  NEW." + spalte + " > (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline + 
-						"BEGIN" + newline + 
-						"  UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline + 
-						"END;\r\n"
-				);
-				result.add( 
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_2 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " < 0 AND" + newline + 
-						"	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline + 
-						"BEGIN" + newline + 
-						"  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline + 
-						"  UPDATE SVWS_DB_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline + 
-						"END;\r\n"
+				result.add(
+					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_1 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+					+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+					+ "BEGIN" + newline
+					+ "  UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_3 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline + 
-						"	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline + 
-						"BEGIN" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_2 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+					+ "	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+					+ "BEGIN" + newline
+					+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
+					+ "  UPDATE SVWS_DB_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_4 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline + 
-						"	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline + 
-						"BEGIN" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_3 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+					+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+					+ "BEGIN" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_5 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " < 0 AND" + newline + 
-						"	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline + 
-						"BEGIN" + newline + 
-						"  UPDATE " + tab + " SET " + spalte + " = coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1);" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_4 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+					+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+					+ "BEGIN" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_1 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline + 
-						"	  NEW." + spalte + " > (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline + 
-						"BEGIN" + newline + 
-						"  UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_5 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+					+ "	  (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+					+ "BEGIN" + newline
+					+ "  UPDATE " + tab + " SET " + spalte + " = coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1);" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_2 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " < 0 AND" + newline + 
-						"	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline + 
-						"BEGIN" + newline + 
-						"  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline + 
-						"  UPDATE SVWS_DB_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_1 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+					+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+					+ "BEGIN" + newline
+					+ "  UPDATE SVWS_DB_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_3 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline + 
-						"	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline + 
-						"BEGIN" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_2 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+					+ "	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+					+ "BEGIN" + newline
+					+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
+					+ "  UPDATE SVWS_DB_AutoInkremente SET MaxID = MaxID + 1 WHERE NameTabelle = '" + tab + "';" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_4 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " >= 0 AND " + newline + 
-						"	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline + 
-						"	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline + 
-						"BEGIN" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_3 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+					+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+					+ "BEGIN" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
+					+ "END;\r\n"
 				);
 				result.add(
-						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_5 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline + 
-						"	WHEN NEW." + spalte + " < 0 AND" + newline + 
-						"	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline + 
-						"BEGIN" + newline + 
-						"  -- Update der " + spalte + " in der Tabelle " + tab + " erfolgt durch den Autoinkrement-Trigger 2, daher hier auch kein +1, sondern nur den Max-Wert schreiben" + newline + 
-						"  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline + 
-						"END;\r\n"
+					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_4 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
+					+ "	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+					+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+					+ "BEGIN" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
+					+ "END;\r\n"
+				);
+				result.add(
+					"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_5 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
+					+ "	WHEN NEW." + spalte + " < 0 AND" + newline
+					+ "	  (SELECT max(MaxID) FROM SVWS_DB_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+					+ "BEGIN" + newline
+					+ "  -- Update der " + spalte + " in der Tabelle " + tab + " erfolgt durch den Autoinkrement-Trigger 2, daher hier auch kein +1, sondern nur den Max-Wert schreiben" + newline
+					+ "  INSERT INTO SVWS_DB_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0));" + newline
+					+ "END;\r\n"
 				);
 			}
 		} else {
@@ -964,7 +960,7 @@ public class SchemaTabelle {
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_UPDATE_" + tab + ";");
 			} else if (DBDriver.MSSQL.equals(dbms)) {
 				result.add("DROP TRIGGER t_AutoIncrement_INSERT_" + tab + ";");
-				result.add("DROP TRIGGER t_AutoIncrement_UPDATE_" + tab + ";"); 
+				result.add("DROP TRIGGER t_AutoIncrement_UPDATE_" + tab + ";");
 			} else if (DBDriver.SQLITE.equals(dbms)) {
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_INSERT_" + tab + "_1;");
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_INSERT_" + tab + "_2;");
