@@ -47,37 +47,44 @@ import de.svws_nrw.db.schema.SchemaTabelleCoreType;
  * Datenbank. Diese Updates werden von Prozessen, wie z.B. dem Erstellen,
  * Migrieren, Aktualisieren, Importieren und Exportieren von DB-Schemata
  * durchgeführt. Eine Prüfung beim Serverstart im Rahmen des dortigen
- * Update-Prozesses ist wünschenswert, da die Core-Typs nicht zwingend 
+ * Update-Prozesses ist wünschenswert, da die Core-Typs nicht zwingend
  * an neue Datenbank-Revisionen geknüpft sind.
  */
 public class DBCoreTypeUpdater {
-	
-	/** Der Schema-Manager, welcher für die Updates verwendet wird */
-	private final DBSchemaManager schemaManager;
-	
-	/** Ein Logger, um die Abläufe bei dem Update-Prozess zu loggen */ 
-	private final Logger logger;	
 
-	/** Der Status des Datenbank-Schema */
-	private final DBSchemaStatus status;
-	
-	/** Ein Record mit dem Tabellen-Namen, der Version des Core-Types und einem Lambda für die Aktualisierung der Tabelle mit den Core-Type-Daten */
+	/** Der Schema-Manager, welcher für die Updates verwendet wird. */
+	private final DBSchemaManager _schemaManager;
+
+	/** Ein Logger, um die Abläufe bei dem Update-Prozess zu loggen. */
+	private final Logger _logger;
+
+	/** Der Status des Datenbank-Schema. */
+	private final DBSchemaStatus _status;
+
+	/**
+	 * Ein Record mit dem Tabellen-Namen, der Version des Core-Types und einem Lambda für die
+	 * Aktualisierung der Tabelle mit den Core-Type-Daten.
+	 *
+	 * @param name     der Name der Core-Type-Tabelle
+	 * @param version  die Version des Core-Types
+	 * @param updater  der Lambda-Ausdruck zum Aktualisieren der DB-Tabellen mit Daten des Core-Types
+	 */
 	private record CoreTypeTable(String name, long version, Consumer<Logger> updater) { /**/ }
 
-	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable} */
+	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable}. */
 	private final Vector<CoreTypeTable> tables = new Vector<>();
-	
-	
+
+
 	/**
 	 * Erzeugt einen neuen {@link DBCoreTypeUpdater}.
-	 * 
+	 *
 	 * @param schemaManager   der Schema-Manager, welcher verwendet wird
 	 * @param returnOnError   gibt an, ob Operatioen bei Einzelfehlern abgebrochen werden sollen
 	 */
-	DBCoreTypeUpdater(DBSchemaManager schemaManager, boolean returnOnError) {
-		this.schemaManager = schemaManager;
-		this.logger = schemaManager.getLogger();
-		this.status = schemaManager.getSchemaStatus();
+	DBCoreTypeUpdater(final DBSchemaManager schemaManager, final boolean returnOnError) {
+		this._schemaManager = schemaManager;
+		this._logger = schemaManager.getLogger();
+		this._status = schemaManager.getSchemaStatus();
 		tables.add(new CoreTypeTable("Fachgruppen", Fachgruppe.VERSION, updateFachgruppen));
 		tables.add(new CoreTypeTable("KursFortschreibungsarten", KursFortschreibungsart.VERSION, updateKursFortschreibungsarten));
 		tables.add(new CoreTypeTable("Schulformen", Schulform.VERSION, updateSchulformen));
@@ -99,57 +106,59 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
 		tables.add(new CoreTypeTable("Religionen_Keys", Religion.VERSION, updateReligionenKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
-		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenKeys));
-        tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
+		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION
+				+ WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
+				updateOrganisationsformenKeys));
+		tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
 	}
-	
+
 
 	/**
-	 * Prüft, ob die Core-Types aktuell sind, d.h. die Version in den Core-Types mit der 
+	 * Prüft, ob die Core-Types aktuell sind, d.h. die Version in den Core-Types mit der
 	 * Version in der Datenbank übereinstimmt.
-	 * 
+	 *
 	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
 	 */
 	public boolean isUptodate() {
-		status.update();
-		for (CoreTypeTable entry : tables)
-			if ((entry.name == null) || (!pruefeVersion(entry.name, entry.version))) 
-				return false;			
+		_status.update();
+		for (final CoreTypeTable entry : tables)
+			if ((entry.name == null) || (!pruefeVersion(entry.name, entry.version)))
+				return false;
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Prüft, ob eine Aktualisierung der Core-Types möglich ist,
 	 * d.h. die Java-Core-Types gleich alt oder neuer sind als die in
 	 * der Datenbank vorhandenen Core-Types. Ist dies nicht der
 	 * Fall, so wird i.A. eine veraltete Server-Version mit einem neueren Schema
 	 * verwendet.
-	 * 
+	 *
 	 * @return true, falls eine Aktualisierung möglich ist, sonst false
 	 */
 	public boolean isUpdatable() {
 		// Prüfe zunächst, ob ein Update möglich ist
-		status.update();
+		_status.update();
 		long status_revision;
-		try { 
-			status_revision = status.version.getRevision(); 
-		} catch (@SuppressWarnings("unused") Exception e) { 
-			status_revision = 0; 
+		try {
+			status_revision = _status.version.getRevision();
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			status_revision = 0;
 		}
-        for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
-            if (!tab.hasCoreType())
-                continue;
-            DTOCoreTypeVersion v = status.getCoreTypeVersion(tab.name());
-            if ((v == null) || (v.Version == null))
-                continue; // Bisher keine Version gespeichert - Update also möglich
-            if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
-                return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
-        }
-        // TODO unten deprecated, oben aktuell
-		for (CoreTypeTable entry : tables) {
-			DTOCoreTypeVersion v = status.getCoreTypeVersion(entry.name);
+		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
+			if (!tab.hasCoreType())
+				continue;
+			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tab.name());
+			if ((v == null) || (v.Version == null))
+				continue; // Bisher keine Version gespeichert - Update also möglich
+			if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
+				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
+		}
+		// TODO unten deprecated, oben aktuell
+		for (final CoreTypeTable entry : tables) {
+			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(entry.name);
 			if ((v == null) || (v.Version == null))
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(entry.version, v.Version) < 0)
@@ -160,21 +169,21 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision
-	 * 
-	 * @param lockSchema          gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht 
-	 *                            notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.  
-	 * @param rev                 die Datenbank-Revision auf welche aktualisiert wird
-	 * 
+	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision.
+	 *
+	 * @param lockSchema   gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
+	 *                     notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.
+	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
+	 *
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(boolean lockSchema, long rev) {
+	public boolean update(final boolean lockSchema, final long rev) {
 		// Sperre ggf. das Datenbankschema
-		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
-			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
+		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(_schemaManager.getSchemaStatus().schemaName))) {
+			_logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
 			return false;
 		}
-		
+
 		try {
 			long revision = rev;
 			// Prüfe zunächst, ob ein Update möglich ist
@@ -182,59 +191,59 @@ public class DBCoreTypeUpdater {
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Core-Type-Version in der Datenbank neuer sind als die des Servers.");
 			// Bestimme ggf. die aktuelle Datenbank-Revision
 			if (revision < 0)
-				revision = status.getVersion().getRevisionOrDefault(-1);
+				revision = _status.getVersion().getRevisionOrDefault(-1);
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
-            // Aktualisiere ggf. die Daten der einzelnen Core-Types
-	        long status_revision;
-	        try { 
-	        	status_revision = status.version.getRevision(); 
-	        } catch (@SuppressWarnings("unused") Exception e) {
-	        	status_revision = 0;
-	        }
-            for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
-                if (!tab.hasCoreType())
-                    continue;
-                SchemaTabelleCoreType ct = tab.getCoreType();
-                if (pruefeVersion(tab.name(), ct.getCoreTypeVersion()))
-                    continue;
-                logger.logLn("Aktualisiere Core-Type in Tabelle " + tab.name());
-                updateCoreTypeTabelle(tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
-            }
+			// Aktualisiere ggf. die Daten der einzelnen Core-Types
+			long status_revision;
+			try {
+				status_revision = _status.version.getRevision();
+			} catch (@SuppressWarnings("unused") final Exception e) {
+				status_revision = 0;
+			}
+			for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
+				if (!tab.hasCoreType())
+					continue;
+				final SchemaTabelleCoreType ct = tab.getCoreType();
+				if (pruefeVersion(tab.name(), ct.getCoreTypeVersion()))
+					continue;
+				_logger.logLn("Aktualisiere Core-Type in Tabelle " + tab.name());
+				updateCoreTypeTabelle(tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
+			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
-			for (CoreTypeTable entry : tables)
+			for (final CoreTypeTable entry : tables)
 				if (!pruefeVersion(entry.name, entry.version))
-					entry.updater.accept(logger);
+					entry.updater.accept(_logger);
 			return true;
-		} catch (@SuppressWarnings("unused") Exception e) {
+		} catch (@SuppressWarnings("unused") final Exception e) {
 			return false;
 		} finally {
 			// Entsperre ggf. das Datenbankschema
-			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
-				logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName))) {
+				_logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
 				return false;
 			}
 		}
 	}
-	
+
 	/**
 	 * Aktualisiert die Datenbank in Bezug auf den Core-Type in der angegebenen
 	 * Tabelle mithilfe des übergebenen SQL-Befehls.
-	 * Dabei wird in einer Datenbank-Transaktion zunächst eine 
-	 * Lösch-Operation für alle Daten der Tabelle durchgeführt und 
+	 * Dabei wird in einer Datenbank-Transaktion zunächst eine
+	 * Lösch-Operation für alle Daten der Tabelle durchgeführt und
 	 * anschließend die Insert-Operation, bevor die Version in der Versions-Tabelle
 	 * für die Core-Types aktualisiert wird.
 	 * Die Operationen müssen sicherstellen, dass die referentielle
 	 * Integrität nicht zerstört wird. Ist dies nicht der Fall, so wird
 	 * die Transaktion nicht ausgeführt.
-	 * 
+	 *
 	 * @param tabname     der Name der Tabelle
 	 * @param typename    der Simple-Name des Core-Types
 	 * @param version     die neu zu setzende Version des Core-Type
 	 * @param sqlInsert   der Befehl zum Einfügen der Core-type-Daten
 	 */
-	private void updateCoreTypeTabelle(String tabname, String typename, long version, String sqlInsert) {
-		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+	private void updateCoreTypeTabelle(final String tabname, final String typename, final long version, final String sqlInsert) {
+		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
 			try {
 				conn.transactionBegin();
 				// Lösche alle Daten
@@ -242,7 +251,7 @@ public class DBCoreTypeUpdater {
 				// Füge die aktuellen Daten des Core-Types ein
 				conn.transactionNativeUpdate(sqlInsert);
 				// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
-				DTOCoreTypeVersion v = status.getCoreTypeVersion(tabname);
+				DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
 				if (v == null) {
 					v = new DTOCoreTypeVersion(tabname, typename, version);
 				} else {
@@ -250,7 +259,7 @@ public class DBCoreTypeUpdater {
 				}
 				conn.transactionPersist(v);
 				conn.transactionCommit();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				conn.transactionRollback();
 				throw e;
 			}
@@ -259,18 +268,18 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Fachgruppe 
+	 * Aktualisiert die Tabelle für den Core-Type Fachgruppe.
 	 */
-	private Consumer<Logger> updateFachgruppen = (Logger logger) -> {
-		String tabname = "Fachgruppen";
+	private final Consumer<Logger> updateFachgruppen = (final Logger logger) -> {
+		final String tabname = "Fachgruppen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Fachbereich, SchildFgID, FG_Bezeichnung, FG_Kuerzel, Schulformen, FarbeR, FarbeG, FarbeB, Sortierung, FuerZeugnis, gueltigVon, gueltigBis) ");
-		Fachgruppe[] values = Fachgruppe.values();
+		final Fachgruppe[] values = Fachgruppe.values();
 		for (int i = 0; i < values.length; i++) {
-			Fachgruppe f = values[i];
+			final Fachgruppe f = values[i];
 			sql.append(i == 0 ? "VALUES (" : ", (");
 			sql.append(f.daten.id).append(",");
 			sql.append(f.daten.nummer).append(",");
@@ -291,17 +300,17 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge 
+	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge.
 	 */
-	private Consumer<Logger> updateJahrgaengeKeys = (Logger logger) -> {
-		String tabname = "Jahrgaenge_Keys";
+	private final Consumer<Logger> updateJahrgaengeKeys = (final Logger logger) -> {
+		final String tabname = "Jahrgaenge_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		Jahrgaenge[] values = Jahrgaenge.values();
-		String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet()).toArray(new String[0]);
+		final Jahrgaenge[] values = Jahrgaenge.values();
+		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet()).toArray(new String[0]);
 		boolean isFirst = true;
 		for (int i = 0; i < jg_kuerzel.length; i++) {
 			sql.append(isFirst ? "VALUES (" : ", (");
@@ -313,18 +322,18 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type KursFortschreibungsart 
+	 * Aktualisiert die Tabelle für den Core-Type KursFortschreibungsart.
 	 */
-	private Consumer<Logger> updateKursFortschreibungsarten = (Logger logger) -> {
-		String tabname = "KursFortschreibungsarten";
+	private final Consumer<Logger> updateKursFortschreibungsarten = (final Logger logger) -> {
+		final String tabname = "KursFortschreibungsarten";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
-		KursFortschreibungsart[] values = KursFortschreibungsart.values();
+		final KursFortschreibungsart[] values = KursFortschreibungsart.values();
 		for (int i = 0; i < values.length; i++) {
-			KursFortschreibungsart p = values[i];
+			final KursFortschreibungsart p = values[i];
 			sql.append(i == 0 ? "VALUES (" : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
@@ -337,41 +346,41 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Nationalitaeten 
+	 * Aktualisiert die Tabelle für den Core-Type Nationalitaeten.
 	 */
-	private Consumer<Logger> updateNationalitaeten_Keys = (Logger logger) -> {
-		String tabname = "Nationalitaeten_Keys";
+	private final Consumer<Logger> updateNationalitaeten_Keys = (final Logger logger) -> {
+		final String tabname = "Nationalitaeten_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(DEStatisCode) ");
-		List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().collect(Collectors.toList());
+		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < codes.size(); i++) {
-			String code = codes.get(i);
+			final String code = codes.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(code).append("')");
 		}
 		updateCoreTypeTabelle(tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Note 
+	 * Aktualisiert die Tabelle für den Core-Type Note.
 	 */
-	private Consumer<Logger> updateNoten = (Logger logger) -> {
-		String tabname = "Noten";
+	private final Consumer<Logger> updateNoten = (final Logger logger) -> {
+		final String tabname = "Noten";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, IstTendenznote, Text, AufZeugnis, Notenpunkte, TextLaufbahnSII, AufLaufbahnSII, Sortierung, gueltigVon, gueltigBis) ");
-		Note[] values = Note.values();
+		final Note[] values = Note.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Note n = values[i];
+			final Note n = values[i];
 			if (n == Note.KEINE)
 				continue;
 			sql.append(isFirst ? "VALUES (" : ", (");
@@ -388,11 +397,8 @@ public class DBCoreTypeUpdater {
 				sql.append("'").append(n.kuerzel).append("'").append(",");
 			else
 				sql.append("null,");
-			sql.append((n.notenpunkte != null) || 
-					   (n == Note.E3_TEILGENOMMEN) || 
-					   (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || 
-					   (n == (Note.E3_TEILGENOMMEN)) || 
-					   (n == Note.ATTEST)).append(",");
+			sql.append((n.notenpunkte != null) || (n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN)
+					|| (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)).append(",");
 			sql.append(n.sortierung).append(",");
 			sql.append(n.gueltigVon).append(",");
 			sql.append(n.gueltigBis).append(")");
@@ -402,18 +408,18 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type PersonalTyp 
+	 * Aktualisiert die Tabelle für den Core-Type PersonalTyp.
 	 */
-	private Consumer<Logger> updatePersonalTypen = (Logger logger) -> {
-		String tabname = "PersonalTypen";
+	private final Consumer<Logger> updatePersonalTypen = (final Logger logger) -> {
+		final String tabname = "PersonalTypen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
-		PersonalTyp[] values = PersonalTyp.values();
+		final PersonalTyp[] values = PersonalTyp.values();
 		for (int i = 0; i < values.length; i++) {
-			PersonalTyp p = values[i];
+			final PersonalTyp p = values[i];
 			sql.append(i == 0 ? "VALUES (" : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
@@ -426,20 +432,20 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Schulform 
+	 * Aktualisiert die Tabelle für den Core-Type Schulform.
 	 */
-	private Consumer<Logger> updateSchulformen = (Logger logger) -> {
-		String tabname = "Schulformen";
+	private final Consumer<Logger> updateSchulformen = (final Logger logger) -> {
+		final String tabname = "Schulformen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Nummer, Bezeichnung, HatGymOb, gueltigVon, gueltigBis) ");
-		Schulform[] values = Schulform.values();
+		final Schulform[] values = Schulform.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Schulform schulform = values[i];
-			for (SchulformKatalogEintrag sf : schulform.historie) {
+			final Schulform schulform = values[i];
+			for (final SchulformKatalogEintrag sf : schulform.historie) {
 				sql.append(isFirst ? "VALUES (" : ", (");
 				isFirst = false;
 				sql.append(sf.id).append(",");
@@ -457,22 +463,22 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, Schulform.class.getCanonicalName(), Schulform.VERSION, sql.toString());
 	};
 
-	
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunft 
+	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private Consumer<Logger> updateHerkuenfte = (Logger logger) -> {
-		String tabname = "Herkunft";
+	private final Consumer<Logger> updateHerkuenfte = (final Logger logger) -> {
+		final String tabname = "Herkunft";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
-		Herkunft[] values = Herkunft.values();
+		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Herkunft herkunft = values[i];
-			for (HerkunftKatalogEintrag h : herkunft.historie) {
+			final Herkunft herkunft = values[i];
+			for (final HerkunftKatalogEintrag h : herkunft.historie) {
 				sql.append(isFirst ? "VALUES (" : ", (");
 				isFirst = false;
 				sql.append(h.id).append(",");
@@ -485,46 +491,46 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
 	};
 
-	
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunft 
+	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private Consumer<Logger> updateHerkuenfteKeys = (Logger logger) -> {
-		String tabname = "Herkunft_Keys";
+	private final Consumer<Logger> updateHerkuenfteKeys = (final Logger logger) -> {
+		final String tabname = "Herkunft_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunft 
+	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private Consumer<Logger> updateHerkuenfteSchulformen = (Logger logger) -> {
-		String tabname = "Herkunft_Schulformen";
+	private final Consumer<Logger> updateHerkuenfteSchulformen = (final Logger logger) -> {
+		final String tabname = "Herkunft_Schulformen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Herkunft_ID, Schulform_Kuerzel) ");
-		Herkunft[] values = Herkunft.values();
+		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Herkunft herkunft = values[i];
-			for (HerkunftKatalogEintrag h : herkunft.historie) {
-				List<Schulform> schulformen = h.schulformen.stream().map(s -> Schulform.getByKuerzel(s)).collect(Collectors.toList());
-				for (Schulform sf : schulformen) {
+			final Herkunft herkunft = values[i];
+			for (final HerkunftKatalogEintrag h : herkunft.historie) {
+				final List<Schulform> schulformen = h.schulformen.stream().map(s -> Schulform.getByKuerzel(s)).collect(Collectors.toList());
+				for (final Schulform sf : schulformen) {
 					sql.append(isFirst ? "VALUES (" : ", (");
 					isFirst = false;
 					sql.append(h.id).append(",");
@@ -537,20 +543,20 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten
+	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private Consumer<Logger> updateHerkunftsarten = (Logger logger) -> {
-		String tabname = "Herkunftsart";
+	private final Consumer<Logger> updateHerkunftsarten = (final Logger logger) -> {
+		final String tabname = "Herkunftsart";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, Kuerzel, gueltigVon, gueltigBis) ");
-		Herkunftsarten[] values = Herkunftsarten.values();
+		final Herkunftsarten[] values = Herkunftsarten.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Herkunftsarten herkunft = values[i];
-			for (HerkunftsartKatalogEintrag h : herkunft.historie) {
+			final Herkunftsarten herkunft = values[i];
+			for (final HerkunftsartKatalogEintrag h : herkunft.historie) {
 				sql.append(isFirst ? "VALUES (" : ", (");
 				isFirst = false;
 				sql.append(h.id).append(",");
@@ -562,45 +568,45 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
-	
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten 
+	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private Consumer<Logger> updateHerkunftsartenKeys = (Logger logger) -> {
-		String tabname = "Herkunftsart_Keys";
+	private final Consumer<Logger> updateHerkunftsartenKeys = (final Logger logger) -> {
+		final String tabname = "Herkunftsart_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten
+	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private Consumer<Logger> updateHerkunftsartenSchulformen = (Logger logger) -> {
-		String tabname = "Herkunftsart_Schulformen";
+	private final Consumer<Logger> updateHerkunftsartenSchulformen = (final Logger logger) -> {
+		final String tabname = "Herkunftsart_Schulformen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Herkunftsart_ID, Schulform_Kuerzel, KurzBezeichnung, Bezeichnung) ");
-		Herkunftsarten[] values = Herkunftsarten.values();
+		final Herkunftsarten[] values = Herkunftsarten.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			Herkunftsarten herkunftsart = values[i];
-			for (HerkunftsartKatalogEintrag h : herkunftsart.historie) {
-				for (HerkunftsartKatalogEintragBezeichnung hb : h.bezeichnungen) {
+			final Herkunftsarten herkunftsart = values[i];
+			for (final HerkunftsartKatalogEintrag h : herkunftsart.historie) {
+				for (final HerkunftsartKatalogEintragBezeichnung hb : h.bezeichnungen) {
 					sql.append(isFirst ? "VALUES (" : ", (");
 					isFirst = false;
 					sql.append(h.id).append(",");
@@ -615,64 +621,64 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Klassenart 
+	 * Aktualisiert die Tabelle für den Core-Type Klassenart.
 	 */
-	private Consumer<Logger> updateKlassenartenKeys = (Logger logger) -> {
-		String tabname = "KlassenartenKatalog_Keys";
+	private final Consumer<Logger> updateKlassenartenKeys = (final Logger logger) -> {
+		final String tabname = "KlassenartenKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart 
+	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart.
 	 */
-	private Consumer<Logger> updateKursartenKeys = (Logger logger) -> {
-		String tabname = "KursartenKatalog_Keys";
+	private final Consumer<Logger> updateKursartenKeys = (final Logger logger) -> {
+		final String tabname = "KursartenKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach
+	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private Consumer<Logger> updateZulaessigeFaecher = (Logger logger) -> {
-		String tabname = "FachKatalog";
+	private final Consumer<Logger> updateZulaessigeFaecher = (final Logger logger) -> {
+		final String tabname = "FachKatalog";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
-		ZulaessigesFach[] values = ZulaessigesFach.values();
+		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			ZulaessigesFach fach = values[i];
-			for (FachKatalogEintrag f : fach.historie) {
+			final ZulaessigesFach fach = values[i];
+			for (final FachKatalogEintrag f : fach.historie) {
 				sql.append(isFirst ? "VALUES (" : ", (");
 				isFirst = false;
 				sql.append(f.id).append(",");
@@ -705,45 +711,45 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
 	};
 
-	
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach 
+	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private Consumer<Logger> updateZulaessigeFaecherKeys = (Logger logger) -> {
-		String tabname = "FachKatalog_Keys";
+	private final Consumer<Logger> updateZulaessigeFaecherKeys = (final Logger logger) -> {
+		final String tabname = "FachKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
 		updateCoreTypeTabelle(tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
 	};
-	
-	
+
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach
+	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private Consumer<Logger> updateZulaessigeFaecherSchulformen = (Logger logger) -> {
-		String tabname = "FachKatalog_Schulformen";
+	private final Consumer<Logger> updateZulaessigeFaecherSchulformen = (final Logger logger) -> {
+		final String tabname = "FachKatalog_Schulformen";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Fach_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
-		ZulaessigesFach[] values = ZulaessigesFach.values();
+		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
 		for (int i = 0; i < values.length; i++) {
-			ZulaessigesFach fach = values[i];
-			for (FachKatalogEintrag f : fach.historie) {
-				for (SchulformSchulgliederung sfsg : f.zulaessig) {
+			final ZulaessigesFach fach = values[i];
+			for (final FachKatalogEintrag f : fach.historie) {
+				for (final SchulformSchulgliederung sfsg : f.zulaessig) {
 					sql.append(isFirst ? "VALUES (" : ", (");
 					isFirst = false;
 					sql.append(f.id).append(",");
@@ -763,19 +769,19 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart 
+	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart.
 	 */
-	private Consumer<Logger> updateEinschulungsartenKeys = (Logger logger) -> {
-		String tabname = "EinschulungsartKatalog_Keys";
+	private final Consumer<Logger> updateEinschulungsartenKeys = (final Logger logger) -> {
+		final String tabname = "EinschulungsartKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -785,19 +791,19 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Religion 
+	 * Aktualisiert die Tabelle für den Core-Type Religion.
 	 */
-	private Consumer<Logger> updateReligionenKeys = (Logger logger) -> {
-		String tabname = "Religionen_Keys";
+	private final Consumer<Logger> updateReligionenKeys = (final Logger logger) -> {
+		final String tabname = "Religionen_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -805,21 +811,21 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, Religion.class.getCanonicalName(), Religion.VERSION, sql.toString());
 	};
 
-	
+
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale 
+	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale.
 	 */
-	private Consumer<Logger> updateAllgemeineMerkmaleKeys = (Logger logger) -> {
-		String tabname = "AllgemeineMerkmaleKatalog_Keys";
+	private final Consumer<Logger> updateAllgemeineMerkmaleKeys = (final Logger logger) -> {
+		final String tabname = "AllgemeineMerkmaleKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
@@ -830,59 +836,59 @@ public class DBCoreTypeUpdater {
 
 	/**
 	 * Aktualisiert die Tabelle für die Core-Types BerufskollegOrganisationsformen,
-	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen
+	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen.
 	 */
-	private Consumer<Logger> updateOrganisationsformenKeys = (Logger logger) -> {
-		String tabname = "OrganisationsformenKatalog_Keys";
+	private final Consumer<Logger> updateOrganisationsformenKeys = (final Logger logger) -> {
+		final String tabname = "OrganisationsformenKatalog_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
-		sql.append(tabname); 
+		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		List<String> kuerzel = Stream.of( 
+		final List<String> kuerzel = Stream.of(
 				Stream.of(BerufskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)
-			).flatMap(o -> o).distinct().collect(Collectors.toList());
+				).flatMap(o -> o).distinct().collect(Collectors.toList());
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
-			String k = kuerzel.get(i);
+			final String k = kuerzel.get(i);
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, 
-			BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(), 
-			BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, 
-			sql.toString()
-		);
+		updateCoreTypeTabelle(tabname,
+				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
+				BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
+				sql.toString()
+				);
 	};
 
 
-    /**
-     * Aktualisiert die Tabelle für den Core-Type LehrerLeitungsfunktion 
-     */
-    private Consumer<Logger> updateLehrerLeitungsfunktionenKeys = (Logger logger) -> {
-        String tabname = "LehrerLeitungsfunktion_Keys";
-        logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-        updateCoreTypeTabelle(tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION, 
-            Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
-                .collect(Collectors.joining("), (", "INSERT INTO " + tabname + "(ID) VALUES (", ")"))
-        );
-    };
+	/**
+	 * Aktualisiert die Tabelle für den Core-Type LehrerLeitungsfunktion.
+	 */
+	private final Consumer<Logger> updateLehrerLeitungsfunktionenKeys = (final Logger logger) -> {
+		final String tabname = "LehrerLeitungsfunktion_Keys";
+		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		updateCoreTypeTabelle(tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
+				Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
+				.collect(Collectors.joining("), (", "INSERT INTO " + tabname + "(ID) VALUES (", ")"))
+				);
+	};
 
 
 	/**
-	 * Prüft, ob die übergebene Version mit der Version des in der 
+	 * Prüft, ob die übergebene Version mit der Version des in der
 	 * Datenbank gespeicherten Core-Types übereinstimmt oder nicht.
-	 * 
+	 *
 	 * @param tabname   der Name der Tabelle, wo der Core-Type gespechert ist
-	 * @param version   die Version, auf welche geprüft wird 
-	 * 
-	 * @return true, falls die Versionen übereinstimmen, und ansonsten false 
+	 * @param version   die Version, auf welche geprüft wird
+	 *
+	 * @return true, falls die Versionen übereinstimmen, und ansonsten false
 	 */
-	private boolean pruefeVersion(String tabname, long version) {
-		DTOCoreTypeVersion v = status.getCoreTypeVersion(tabname);
+	private boolean pruefeVersion(final String tabname, final long version) {
+		final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
 		return (v == null) || (v.Version == null) ? false : v.Version == version;
 	}
 
