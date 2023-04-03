@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Objekte dieser Klasse enthalten die im Rahmen von KAoA 
- * gültigen Berufsfelder.   
+ * Objekte dieser Klasse enthalten die im Rahmen von KAoA
+ * gültigen Berufsfelder.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der KAoA-Berufsfelder.")
@@ -21,7 +21,7 @@ public class KAOABerufsfeldEintrag {
 	/** Das Kürzel des Berufsfeldes. */
 	@Schema(description = "das Kürzel des Berufsfeldes", example = "BAV")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Beschreibung des Berufsfeldes. */
 	@Schema(description = "die Beschreibung des Berufsfeldes", example = "Bau, Architektur, Vermessung")
 	public @NotNull String beschreibung = "";
@@ -43,9 +43,9 @@ public class KAOABerufsfeldEintrag {
 
 	/**
 	 * Erstellt einen KAoA-Berufsfeld-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id             die ID
-	 * @param kuerzel        das Kürzel 
+	 * @param kuerzel        das Kürzel
 	 * @param beschreibung   die Beschreibung
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist

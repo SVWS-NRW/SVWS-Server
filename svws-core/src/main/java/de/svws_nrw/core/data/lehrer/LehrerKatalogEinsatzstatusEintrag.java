@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerEinsatzstati.  
+ * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerEinsatzstati.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog des Lehrer-Einsatzstatus.")
@@ -21,7 +21,7 @@ public class LehrerKatalogEinsatzstatusEintrag {
 	/** Das Kürzel für den Einsatzstatus. */
 	@Schema(description = "das Kürzel für den Einsatzstatus", example = "A")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext des Einsatzstatus.*/
 	@Schema(description = "der Einsatzstatus", example = "Stammschule, ganz oder teilweise auch an anderen Schulen tätig")
 	public @NotNull String text = "";
@@ -44,9 +44,9 @@ public class LehrerKatalogEinsatzstatusEintrag {
 
 	/**
 	 * Erstellt einen Einsatzstatus-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -59,5 +59,4 @@ public class LehrerKatalogEinsatzstatusEintrag {
 		this.gueltigBis = gueltigBis;
 	}
 
-	
 }

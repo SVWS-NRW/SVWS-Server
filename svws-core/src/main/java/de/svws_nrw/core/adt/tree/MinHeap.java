@@ -48,7 +48,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <T> der Inhaltstyp des Minimum-Heaps
  */
-public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
+public final class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 
 	/** Die Anzahl der Elemente in diesem Heap. */
 	private int _size = 0;
@@ -242,12 +242,9 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 		}
 		boolean result = false;
 		for (final Object o : c) {
-			if (this.remove(o)) {
+			// Entferne alle Vorkommen...
+			while (this.remove(o))
 				result = true;
-				while (this.remove(o)) {
-					// Entferne ggf. noch weitere vorkommen...
-				}
-			}
 		}
 		return result;
 	}

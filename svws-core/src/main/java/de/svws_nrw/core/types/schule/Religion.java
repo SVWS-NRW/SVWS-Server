@@ -59,7 +59,7 @@ public enum Religion {
 	XO(new ReligionKatalogEintrag[] {
 		new ReligionKatalogEintrag(10000, "XO", "sonstige orthodoxe", null, null)
 	}),
-	
+
 	/** Religion: andere Religionen */
 	XR(new ReligionKatalogEintrag[] {
 		new ReligionKatalogEintrag(11000, "XR", "andere Religionen", null, null)
@@ -67,36 +67,36 @@ public enum Religion {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Religionen */
 	public final @NotNull ReligionKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Religionen */
-	public final @NotNull ReligionKatalogEintrag@NotNull[] historie;	
+	public final @NotNull ReligionKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, Religion> _mapKuerzel = new HashMap<>();
 
 
 	/**
 	 * Erzeugt eine neue Religion in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Religionen, welche ein Array von 
-	 *                   {@link ReligionKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Religionen, welche ein Array von
+	 *                   {@link ReligionKatalogEintrag} ist
 	 */
-	private Religion(final @NotNull ReligionKatalogEintrag@NotNull[] historie) {
+	Religion(final @NotNull ReligionKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von den Kürzeln der Religionen auf die 
-	 * zugehörigen Religionen zurück. 
+	 * Gibt eine Map von den Kürzeln der Religionen auf die
+	 * zugehörigen Religionen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
 	private static @NotNull HashMap<@NotNull String, Religion> getMapByKuerzel() {
@@ -112,13 +112,13 @@ public enum Religion {
 
 	/**
 	 * Gibt die Religion für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Religion
-	 * 
+	 *
 	 * @return die Religion oder null, falls das Kürzel ungültig ist
 	 */
 	public static Religion getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
-	
+
 }

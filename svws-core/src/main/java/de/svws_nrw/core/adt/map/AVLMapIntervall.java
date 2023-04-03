@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
  * Die Intervallgrenzen können inklusive oder exklusive sein.
  *
  * @author Benjamin A. Bartsch
- * 
+ *
  * @param <K> Der Typ der Schlüssel-Werte.
  */
-public class AVLMapIntervall<@NotNull K> {
+public final class AVLMapIntervall<@NotNull K> {
 
 	/**
 	 * Ein Dummy-Element für den Schlüsselwert "-Unendlich".

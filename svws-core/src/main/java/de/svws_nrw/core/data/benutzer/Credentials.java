@@ -7,21 +7,21 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Daten eines internen Account-Credentials mit der angegebenen ID.  
+ * Sie beschreibt die Daten eines internen Account-Credentials mit der angegebenen ID.
  */
 @XmlRootElement
 @Schema(description = "Die Daten eines Account-Credentials.")
 @TranspilerDTO
 public class Credentials {
 
-    
-    /** Benutzername des Account-Credentials*/
-    @Schema(description = "Benutzername des Account-Credentials", example = "Max")
-    public @NotNull String benutzername = "";
-    
-    /** Passwort des Account-Credentials*/
-    @Schema(description = "Benutzername des Account-Credentials", example = "Max")
-    public @NotNull String password = "";
-   
+
+	/** Benutzername des Account-Credentials*/
+	@Schema(description = "Benutzername des Account-Credentials", example = "Max")
+	public @NotNull String benutzername = "";
+
+	/** Passwort des Account-Credentials*/
+	@Schema(description = "Benutzername des Account-Credentials", example = "Max")
+	public @NotNull String password = "";
+
 
 }

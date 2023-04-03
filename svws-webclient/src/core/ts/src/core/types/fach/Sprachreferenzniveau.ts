@@ -84,7 +84,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Der aktuellen Daten des Sprachprüfungsniveaus
@@ -107,7 +107,6 @@ export class Sprachreferenzniveau extends JavaObject {
 	private static readonly _mapKuerzel : HashMap<string, Sprachreferenzniveau> = new HashMap();
 
 	/**
-	 *
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.
 	 *
 	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von

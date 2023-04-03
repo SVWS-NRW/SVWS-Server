@@ -1,29 +1,29 @@
 /*
  * Copyright 2022 Marina Bachran
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- * 
- * 1. Redistributions of source code must retain the above copyright 
+ *
+ * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holder nor the names of its 
- *    contributors may be used to endorse or promote products derived from 
- *    this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.svws_nrw.core.adt.tree;
@@ -50,20 +50,20 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Testet die Klassen {@link MinHeap} und {@link MinHeapIterator}.
- * 
+ *
  * @author Marina Bachran
  */
 class TestMinHeap {
 
-	static private MinHeap<Integer> emptyHeap;
-	static private MinHeap<Integer> heap; // 1, 3, 2, 5, 4, 7, 5
+	private static MinHeap<Integer> emptyHeap;
+	private static MinHeap<Integer> heap; // 1, 3, 2, 5, 4, 7, 5
 
-	static private final List<Integer> content = Arrays.asList(1, 3, 2, 5, 4, 7, 5);
-	static private final List<Integer> contained = Arrays.asList(1, 3, 2);
-	static private final List<Integer> notContained = Arrays.asList(10, 30, 20);
-	static private final List<Integer> partlyContained = Arrays.asList(1, 30, 2);
-	static private final List<Integer> partlyContained2 = Arrays.asList(5, 17);
-	static private final Integer[] heapArray = new Integer[] { 1, 3, 2, 5, 4, 7, 5 };
+	private static final List<Integer> content = Arrays.asList(1, 3, 2, 5, 4, 7, 5);
+	private static final List<Integer> contained = Arrays.asList(1, 3, 2);
+	private static final List<Integer> notContained = Arrays.asList(10, 30, 20);
+	private static final List<Integer> partlyContained = Arrays.asList(1, 30, 2);
+	private static final List<Integer> partlyContained2 = Arrays.asList(5, 17);
+	private static final Integer[] heapArray = new Integer[] { 1, 3, 2, 5, 4, 7, 5 };
 
 	/**
 	 * Erstellt einen Heap mit Elementen und einen ohne für die Tests.
@@ -87,7 +87,7 @@ class TestMinHeap {
 	@SuppressWarnings("unused")
 	@Test
 	void testMinHeapComparatorOfTInt() {
-		MinHeap<Integer> heap2 = new MinHeap<>((a, b) -> Integer.compare(a, b), 1);
+		final MinHeap<Integer> heap2 = new MinHeap<>((a, b) -> Integer.compare(a, b), 1);
 		assertNotNull(heap2);
 		assertEquals(1, heap2.capacity());
 		assertThrows(IllegalArgumentException.class, () -> {
@@ -100,7 +100,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testMinHeapComparatorOfT() {
-		MinHeap<Integer> heap = new MinHeap<>((a, b) -> Integer.compare(a, b));
+		final MinHeap<Integer> heap = new MinHeap<>((a, b) -> Integer.compare(a, b));
 		assertNotNull(heap);
 		assertEquals(63, heap.capacity());
 	}
@@ -110,7 +110,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testMinHeapMinHeapOfT() {
-		MinHeap<Integer> copy = new MinHeap<>(heap);
+		final MinHeap<Integer> copy = new MinHeap<>(heap);
 		assertEquals(heap.capacity(), copy.capacity());
 		assertEquals(heap.size(), copy.size());
 		assertEquals(heap.comparator(), copy.comparator());
@@ -297,7 +297,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testRemoveAll() {
-		MinHeap<Integer> heap2 = new MinHeap<>(heap);
+		final MinHeap<Integer> heap2 = new MinHeap<>(heap);
 		assertTrue(heap2.removeAll(heap2));
 		assertEquals(0, heap2.size());
 		assertFalse(heap.removeAll(notContained));
@@ -339,7 +339,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testToArray() {
-		Integer[] heapContent = (Integer[]) heap.toArray();
+		final Integer[] heapContent = (Integer[]) heap.toArray();
 		assertEquals(7, heapContent.length);
 		assertArrayEquals(heapArray, heapContent);
 	}
@@ -366,10 +366,10 @@ class TestMinHeap {
 	void testIterator() {
 		final Iterator<Integer> iter = heap.iterator();
 		assertNotNull(iter);
-		Integer[] heapContent = heap.toArray(new Integer[heap.size()]);
+		final Integer[] heapContent = heap.toArray(new Integer[heap.size()]);
 		for (int i = 0; i < heapContent.length; i++) {
 			assertTrue(iter.hasNext());
-			Integer value = iter.next();
+			final Integer value = iter.next();
 			assertNotNull(value);
 			assertEquals(heapContent[i], value);
 		}
@@ -401,10 +401,11 @@ class TestMinHeap {
 	void testClone() {
 		try {
 			@SuppressWarnings("unchecked")
+			final
 			MinHeap<Integer> h = (MinHeap<Integer>) heap.clone();
 			assertEquals(heap.size(), h.size());
 			assertEquals(heap, h);
-		} catch (@SuppressWarnings("unused") CloneNotSupportedException e) {
+		} catch (@SuppressWarnings("unused") final CloneNotSupportedException e) {
 			// Clone is supported...
 		}
 	}
@@ -414,7 +415,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testToSortedArray() {
-		Integer[] sorted = heap.toSortedArray();
+		final Integer[] sorted = heap.toSortedArray();
 		assertNotNull(sorted);
 		assertEquals(heap.size(), sorted.length);
 		assertTrue(heap.containsAll(Arrays.asList(sorted)));
@@ -435,7 +436,7 @@ class TestMinHeap {
 	 */
 	@Test
 	void testHashCode() {
-		int hashcode = -1604500284;
+		final int hashcode = -1604500284;
 		assertEquals(hashcode, heap.hashCode());
 		assertNotEquals(heap.hashCode(), emptyHeap.hashCode());
 		assertEquals(heap.hashCode(), heap.hashCode());

@@ -247,12 +247,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		}
 		let result : boolean = false;
 		for (const o of c) {
-			if (this.remove(o)) {
+			while (this.remove(o))
 				result = true;
-				while (this.remove(o)) {
-					// empty block
-				}
-			}
 		}
 		return result;
 	}

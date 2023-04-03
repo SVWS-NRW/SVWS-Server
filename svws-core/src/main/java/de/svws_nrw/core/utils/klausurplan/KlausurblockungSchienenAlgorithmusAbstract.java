@@ -4,11 +4,11 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
- * Ein Algorithmus der diese Klasse erweitert dient dazu Klausuren auf Schienen zu verteilen. 
- * Ziel ist es die minimale Anzahl an Schienen zu verwenden. In einer Schiene dürfen nicht zwei 
+/**
+ * Ein Algorithmus der diese Klasse erweitert dient dazu Klausuren auf Schienen zu verteilen.
+ * Ziel ist es die minimale Anzahl an Schienen zu verwenden. In einer Schiene dürfen nicht zwei
  * Klausuren landen, die dem selben Schüler zugeordnet sind.
- * 
+ *
  * @author Benjamin A. Bartsch */
 public abstract class KlausurblockungSchienenAlgorithmusAbstract {
 
@@ -19,7 +19,7 @@ public abstract class KlausurblockungSchienenAlgorithmusAbstract {
 	protected final @NotNull KlausurblockungSchienenDynDaten _dynDaten;
 
 	/** Der Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
@@ -30,7 +30,7 @@ public abstract class KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Eine Unterklasse, die diese Methode implementiert, berechnet eine Verteilung der Klausuren auf die Schienen und
 	 * überschreitet dabei nicht die Endzeit (in Millisekunden).
-	 * 
+	 *
 	 * @param pZeitEnde Die Endzeit (in Millisekunden). */
 	public abstract void berechne(long pZeitEnde);
 

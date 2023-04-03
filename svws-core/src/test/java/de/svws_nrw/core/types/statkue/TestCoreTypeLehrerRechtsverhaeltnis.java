@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.lehrer.LehrerRechtsverhaeltnis;
  */
 @DisplayName("Teste den Core-Type LehrerRechtsverhaeltnis")
 public class TestCoreTypeLehrerRechtsverhaeltnis {
-	
+
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type LehrerRechtsverhaeltnis aus.
 	 */
@@ -30,19 +30,19 @@ public class TestCoreTypeLehrerRechtsverhaeltnis {
     	assertEquals(LehrerRechtsverhaeltnis.J, LehrerRechtsverhaeltnis.getByKuerzel("J"));
     	assertEquals(LehrerRechtsverhaeltnis.S, LehrerRechtsverhaeltnis.getByKuerzel("S"));
     	assertEquals(LehrerRechtsverhaeltnis.X, LehrerRechtsverhaeltnis.getByKuerzel("X"));
-    	
-    	assertEquals(LehrerRechtsverhaeltnis.L.daten.text,("Beamter auf Lebenszeit"));
-    	assertEquals(LehrerRechtsverhaeltnis.P.daten.text,("Beamter auf Probe"));
-    	assertEquals(LehrerRechtsverhaeltnis.A.daten.text,("Beamter auf Probe zur Anstellung"));
-    	assertEquals(LehrerRechtsverhaeltnis.N.daten.text,("Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)"));
-    	assertEquals(LehrerRechtsverhaeltnis.W.daten.text,("Beamter auf Widerruf (LAA)"));
-    	assertEquals(LehrerRechtsverhaeltnis.U.daten.text,("Angestellte, unbefristet (BAT-Vertrag)"));
-    	assertEquals(LehrerRechtsverhaeltnis.B.daten.text,("Angestellte, befristet (BAT-Vertrag)"));
-    	assertEquals(LehrerRechtsverhaeltnis.J.daten.text,("Angestellte, nicht BAT-Vertrag"));
-    	assertEquals(LehrerRechtsverhaeltnis.S.daten.text,("Gestellungsvertrag"));
-    	assertEquals(LehrerRechtsverhaeltnis.X.daten.text,("Unentgeltlich Beschäftigte"));
+
+    	assertEquals(LehrerRechtsverhaeltnis.L.daten.text, "Beamter auf Lebenszeit");
+    	assertEquals(LehrerRechtsverhaeltnis.P.daten.text, "Beamter auf Probe");
+    	assertEquals(LehrerRechtsverhaeltnis.A.daten.text, "Beamter auf Probe zur Anstellung");
+    	assertEquals(LehrerRechtsverhaeltnis.N.daten.text, "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)");
+    	assertEquals(LehrerRechtsverhaeltnis.W.daten.text, "Beamter auf Widerruf (LAA)");
+    	assertEquals(LehrerRechtsverhaeltnis.U.daten.text, "Angestellte, unbefristet (BAT-Vertrag)");
+    	assertEquals(LehrerRechtsverhaeltnis.B.daten.text, "Angestellte, befristet (BAT-Vertrag)");
+    	assertEquals(LehrerRechtsverhaeltnis.J.daten.text, "Angestellte, nicht BAT-Vertrag");
+    	assertEquals(LehrerRechtsverhaeltnis.S.daten.text, "Gestellungsvertrag");
+    	assertEquals(LehrerRechtsverhaeltnis.X.daten.text, "Unentgeltlich Beschäftigte");
     }
 
 	// TODO add additional tests
-    
+
 }

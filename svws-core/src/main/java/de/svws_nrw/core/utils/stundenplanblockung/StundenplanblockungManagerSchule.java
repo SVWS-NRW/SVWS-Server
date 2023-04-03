@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.stundenplanblockung;
 
 /**
  * Dieses Objekt speichert die globale Konfiguration der Schule.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerSchule {
@@ -18,7 +18,7 @@ public class StundenplanblockungManagerSchule {
 
 	/**
 	 * Liefert die Anzahl an Unterrichtstagen in der Woche.
-	 * 
+	 *
 	 * @return Die Anzahl an Unterrichtstagen in der Woche.
 	 */
 	public int get_tage_pro_woche() {

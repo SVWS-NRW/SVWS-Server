@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Kursverteilungs-Algorithmus verteilt die Kurse auf ihre Schienen. Die SuS werden nacheinander mit einem
  * angepassten Matching-Algorithmus auf die Kurse verteilt. Das besondere dabei ist, dass ein S. beim Matching sich auch
  * wünschen kann, dass ein Kurs die Schiene wechselt.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgorithmusK {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -22,7 +22,7 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -79,6 +79,8 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	/**
 	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechter, wird die Veränderung
 	 * rückgängig gemacht.
+	 *
+	 * @return true, wenn der Zustand angepasst wurde
 	 */
 	private boolean verteileKurseMitSchuelerwunsch() {
 
@@ -106,6 +108,8 @@ public class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	/**
 	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
 	 * Veränderung rückgängig gemacht.
+	 *
+	 * @return true, wenn der Zustand angepasst wurde
 	 */
 	private boolean verteileKurseZufaelligEinWenig() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.

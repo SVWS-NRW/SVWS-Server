@@ -105,66 +105,78 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
-		switch (pConfig.get_algorithmus()) {
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL:{
-				for (const gostKursklausur of pInput) {
-					const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr === null)
-						throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
-					const gruppe : Vector<number> = new Vector();
-					gruppe.add(klausurNr);
+	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausur>) : void {
+		for (const gostKursklausur of pInput) {
+			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr === null)
+				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const gruppe : Vector<number> = new Vector();
+			gruppe.add(klausurNr);
+			this._klausurGruppen.add(gruppe);
+		}
+	}
+
+	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausur>) : void {
+		const mapFachZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+		for (const gostKursklausur of pInput) {
+			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr === null)
+				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const fachID : number = gostKursklausur.idFach;
+			if (fachID < 0) {
+				const gruppe : Vector<number> = new Vector();
+				gruppe.add(klausurNr);
+				this._klausurGruppen.add(gruppe);
+			} else {
+				let gruppe : Vector<number> | null = mapFachZuKlausurGruppe.get(fachID);
+				if (gruppe === null) {
+					gruppe = new Vector();
+					mapFachZuKlausurGruppe.put(fachID, gruppe);
 					this._klausurGruppen.add(gruppe);
 				}
-				break;
+				gruppe.add(klausurNr);
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE:{
-				const mapFachZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
-				for (const gostKursklausur of pInput) {
-					const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr === null)
-						throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
-					const fachID : number = gostKursklausur.idFach;
-					if (fachID < 0) {
-						const gruppe : Vector<number> = new Vector();
-						gruppe.add(klausurNr);
-						this._klausurGruppen.add(gruppe);
-					} else {
-						let gruppe : Vector<number> | null = mapFachZuKlausurGruppe.get(fachID);
-						if (gruppe === null) {
-							gruppe = new Vector();
-							mapFachZuKlausurGruppe.put(fachID, gruppe);
-							this._klausurGruppen.add(gruppe);
-						}
-						gruppe.add(klausurNr);
-					}
+		}
+	}
+
+	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausur>) : void {
+		const mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+		for (const gostKursklausur of pInput) {
+			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
+			if (klausurNr === null)
+				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
+			if (schienenID < 0) {
+				const gruppe : Vector<number> = new Vector();
+				gruppe.add(klausurNr);
+				this._klausurGruppen.add(gruppe);
+			} else {
+				let gruppe : Vector<number> | null = mapSchieneZuKlausurGruppe.get(schienenID);
+				if (gruppe === null) {
+					gruppe = new Vector();
+					mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
+					this._klausurGruppen.add(gruppe);
 				}
+				gruppe.add(klausurNr);
+			}
+		}
+	}
+
+	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
+		switch (pConfig.get_algorithmus()) {
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
+				this.initialisiereKlausurgruppenNormal(pInput);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:{
-				const mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
-				for (const gostKursklausur of pInput) {
-					const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-					if (klausurNr === null)
-						throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
-					const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
-					if (schienenID < 0) {
-						const gruppe : Vector<number> = new Vector();
-						gruppe.add(klausurNr);
-						this._klausurGruppen.add(gruppe);
-					} else {
-						let gruppe : Vector<number> | null = mapSchieneZuKlausurGruppe.get(schienenID);
-						if (gruppe === null) {
-							gruppe = new Vector();
-							mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
-							this._klausurGruppen.add(gruppe);
-						}
-						gruppe.add(klausurNr);
-					}
-				}
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
+				this.initialisiereKlausurgruppenFaecherweise(pInput);
 				break;
 			}
-			default:{
+			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
+				this.initialisiereKlausurgruppenSchienenweise(pInput);
+				break;
+			}
+			default: {
 				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
 		}

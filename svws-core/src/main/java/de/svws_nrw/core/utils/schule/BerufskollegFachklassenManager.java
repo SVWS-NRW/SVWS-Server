@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Manager zum Zugriff auf die Fachklassen aus dem Katalog
- * für berufsbildende Schulformen.   
+ * für berufsbildende Schulformen.
  */
 public class BerufskollegFachklassenManager {
 
@@ -27,10 +27,10 @@ public class BerufskollegFachklassenManager {
 
 	/** Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index. */
 	private final @NotNull HashMap<@NotNull Integer, @NotNull BerufskollegFachklassenKatalogIndex> _mapByIndex = new HashMap<>();
-	
+
 	/** Eine HashMap für den Zugriff auf den Index anhand eines Eintrags. */
 	private final @NotNull HashMap<@NotNull BerufskollegFachklassenKatalogEintrag, @NotNull Integer> _mapIndexByEintrag = new HashMap<>();
-	
+
 	/** Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels. */
 	private final @NotNull HashMap<@NotNull String, @NotNull BerufskollegFachklassenKatalogEintrag> _mapByKuerzel = new HashMap<>();
 
@@ -43,7 +43,7 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Erstellt einen neuen Manager für den Katalog der Fachklassen
-	 * 
+	 *
 	 * @param katalog   der Katalog der Fachklassen
 	 */
 	public BerufskollegFachklassenManager(final @NotNull BerufskollegFachklassenKatalog katalog) {
@@ -69,7 +69,7 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Gibt die Version der Katalog-Daten zurück.
-	 * 
+	 *
 	 * @return die Version
 	 */
 	public long getVersion() {
@@ -79,9 +79,9 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Gibt die Version der Daten eines Teilkatalog für einen Index zurück.
-	 * 
+	 *
 	 * @param index   der Index für die Fachklassen
-	 * 
+	 *
 	 * @return die Version des Teilkatalogs
 	 */
 	public long getVersion(final int index) {
@@ -93,11 +93,11 @@ public class BerufskollegFachklassenManager {
 
 
 	/**
-	 * Gibt die Version der Daten des Teilkatalog für den Index 
+	 * Gibt die Version der Daten des Teilkatalog für den Index
 	 * der angegebenen Schulgliederung zurück.
-	 * 
+	 *
 	 * @param gliederung   die Schulgliederung
-	 * 
+	 *
 	 * @return die Version des Teilkatalogs
 	 */
 	public long getVersion(final Schulgliederung gliederung) {
@@ -114,10 +114,10 @@ public class BerufskollegFachklassenManager {
 	 * Gibt den Katalog-Eintrag für das übergebene Kürzel zurück. Das Kürzel setzt
 	 * sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel des Katalog-Eintrags
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist.
 	 */
 	public BerufskollegFachklassenKatalogEintrag get(final @NotNull String kuerzel) {
 		return this._mapByKuerzel.get(kuerzel);
@@ -126,7 +126,7 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Gibt alle Katalog-Einträge zurück.
-	 * 
+	 *
 	 * @return ein Array mit allen Katalog-Einträgen
 	 */
 	public BerufskollegFachklassenKatalogEintrag[] values() {
@@ -138,30 +138,30 @@ public class BerufskollegFachklassenManager {
 	 * Gibt die Katalog-Daten für das übergebene Kürzel und das angegebene Schuljahr zurück.
 	 * Das Kürzel setzt sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param kuerzel     das Kürzel des Katalog-Eintrags
 	 * @param schuljahr   das Schuljahr für welches die Katalog-Daten bestimmt werden sollen
-	 * 
-	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag 
-	 *         keine Daten für das übergebene Schuljahr hat 
+	 *
+	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag
+	 *         keine Daten für das übergebene Schuljahr hat
 	 */
 	public BerufskollegFachklassenKatalogDaten getDaten(final @NotNull String kuerzel, final int schuljahr) {
 		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
 		if (eintrag == null)
 			return null;
 		for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie)
-			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr)) &&
-			    ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
+			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr))
+					&& ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
 				return daten;
 		return null;
 	}
 
 
 	/**
-	 * Gibt die Katalog-Daten für die Fachklasse zurück. 
-	 * 
+	 * Gibt die Katalog-Daten für die Fachklasse zurück.
+	 *
 	 * @param id   die die des Katalog-Eintrags
-	 * 
+	 *
 	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
 	 */
 	public BerufskollegFachklassenKatalogDaten getDaten(final long id) {
@@ -173,10 +173,10 @@ public class BerufskollegFachklassenManager {
 	 * Gibt das Kürzel für die Fachklasse mit der angebenen ID zurück. Das Kürzel setzt
 	 * sich zusammen aus dem Index und den beiden Teilschlüsseln der Fachklasse:
 	 * "Index-Schlüssel1-Schlüssel2".
-	 * 
+	 *
 	 * @param id   die ID der Fachklasse
-	 * 
-	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist 
+	 *
+	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist
 	 */
 	public String getKuerzel(final long id) {
 		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByID.get(id);
@@ -187,9 +187,9 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Gibt den Teilkatalog für den angegebenen Fachklassen-Index zurück.
-	 * 
-	 * @param index   der Fachklassen-Index des Teilkatalogs 
-	 * 
+	 *
+	 * @param index   der Fachklassen-Index des Teilkatalogs
+	 *
 	 * @return der Teilkatalog
 	 */
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalog(final int index) {
@@ -201,11 +201,11 @@ public class BerufskollegFachklassenManager {
 
 
 	/**
-	 * Gibt den Teilkatalog des Fachklassen-Index 
+	 * Gibt den Teilkatalog des Fachklassen-Index
 	 * für die angegebene Schulgliederung zurück.
-	 * 
+	 *
 	 * @param gliederung   die Schulgliederung
-	 * 
+	 *
 	 * @return der Teilkatalog
 	 */
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalog(final Schulgliederung gliederung) {
@@ -220,7 +220,7 @@ public class BerufskollegFachklassenManager {
 
 	/**
 	 * Gibt den Katalog zurück.
-	 * 
+	 *
 	 * @return der Katalog
 	 */
 	public @NotNull BerufskollegFachklassenKatalog getKatalog() {

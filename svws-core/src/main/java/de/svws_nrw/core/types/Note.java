@@ -6,7 +6,7 @@ import de.svws_nrw.core.data.schule.NotenKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt die Core-Types als Enumeration für 
+ * Diese Klasse stellt die Core-Types als Enumeration für
  * die zulässigen Noteneinträge zur Verfügung.
  */
 public enum Note {
@@ -91,7 +91,7 @@ public enum Note {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;
+	public static final long VERSION = 1;
 
 
 	/** Die eindeutige ID der Note */
@@ -124,9 +124,9 @@ public enum Note {
 
 	/**
 	 * Erzeugt ein neues Element der Aufzählung
-	 *  
+	 *
 	 * @param id              die eindeutige ID der Note
-	 * @param sortierung      eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt  
+	 * @param sortierung      eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt
 	 * @param notenpunkte     die Notenpunkte, die dieser Note zugeordnet sind
 	 * @param kuerzel         die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)
 	 * @param text            die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)
@@ -134,21 +134,21 @@ public enum Note {
 	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
-    	this.id = id;
-    	this.sortierung = sortierung;
+	Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
+		this.id = id;
+		this.sortierung = sortierung;
 		this.notenpunkte = notenpunkte;
 		this.kuerzel = kuerzel;
 		this.text = text;
 		this.textZeugnis = textZeugnis;
-        this.gueltigVon = gueltigVon;
-        this.gueltigBis = gueltigBis;
+		this.gueltigVon = gueltigVon;
+		this.gueltigBis = gueltigBis;
 	}
 
 
 	/**
 	 * Gibt zurück, ob es sich um eine echte Note oder nur um eine "Pseudonote" handelt
-	 * 
+	 *
 	 * @return true, wenn es sich bei der Note um eine echte Note handelt
 	 */
 	@JsonIgnore
@@ -160,9 +160,9 @@ public enum Note {
 	/**
 	 * Bestimmt die Note anhand des übergebenen Integer-Wert, welcher eine
 	 * Note ohne Tendenz darstellt.
-	 *  
+	 *
 	 * @param noteSekI    die Note ohne Tendenz
-	 * 
+	 *
 	 * @return die Note
 	 */
 	public static Note fromNoteSekI(final Integer noteSekI) {
@@ -182,9 +182,9 @@ public enum Note {
 
 	/**
 	 * Gibt die Note anhand der angebenen Notenpunkte zurück.
-	 * 
+	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromNotenpunkte(final Integer notenpunkte) {
@@ -195,29 +195,29 @@ public enum Note {
 			case 1: return MANGELHAFT_MINUS;
 			case 2: return MANGELHAFT;
 			case 3: return MANGELHAFT_PLUS;
-			case 4: return AUSREICHEND_MINUS;		
-			case 5: return AUSREICHEND;		
-			case 6: return AUSREICHEND_PLUS;		
-			case 7: return BEFRIEDIGEND_MINUS;		
-			case 8: return BEFRIEDIGEND;		
-			case 9: return BEFRIEDIGEND_PLUS;		
-			case 10: return GUT_MINUS;		
-			case 11: return GUT;		
-			case 12: return GUT_PLUS;		
-			case 13: return SEHR_GUT_MINUS;		
-			case 14: return SEHR_GUT;		
-			case 15: return SEHR_GUT_PLUS;	
+			case 4: return AUSREICHEND_MINUS;
+			case 5: return AUSREICHEND;
+			case 6: return AUSREICHEND_PLUS;
+			case 7: return BEFRIEDIGEND_MINUS;
+			case 8: return BEFRIEDIGEND;
+			case 9: return BEFRIEDIGEND_PLUS;
+			case 10: return GUT_MINUS;
+			case 11: return GUT;
+			case 12: return GUT_PLUS;
+			case 13: return SEHR_GUT_MINUS;
+			case 14: return SEHR_GUT;
+			case 15: return SEHR_GUT_PLUS;
 		}
 		return KEINE;
 	}
 
-	
-	
+
+
 	/**
 	 * Gibt die Note bzw. Pseudonote anhand des angebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel anhand derer die Note ermittelt wird
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromKuerzel(final String kuerzel) {
@@ -253,14 +253,14 @@ public enum Note {
 		}
 		return KEINE;
 	}
-	
-	
+
+
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String 
+	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String
 	 * übergeben werden.
-	 * 
+	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String
-	 * 
+	 *
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromNotenpunkteString(final String notenpunkte) {
@@ -271,47 +271,47 @@ public enum Note {
 			case "1": return MANGELHAFT_MINUS;
 			case "2": return MANGELHAFT;
 			case "3": return MANGELHAFT_PLUS;
-			case "4": return AUSREICHEND_MINUS;		
-			case "5": return AUSREICHEND;		
-			case "6": return AUSREICHEND_PLUS;		
-			case "7": return BEFRIEDIGEND_MINUS;		
-			case "8": return BEFRIEDIGEND;		
-			case "9": return BEFRIEDIGEND_PLUS;		
-			case "10": return GUT_MINUS;		
-			case "11": return GUT;		
-			case "12": return GUT_PLUS;		
-			case "13": return SEHR_GUT_MINUS;		
-			case "14": return SEHR_GUT;		
-			case "15": return SEHR_GUT_PLUS;		
+			case "4": return AUSREICHEND_MINUS;
+			case "5": return AUSREICHEND;
+			case "6": return AUSREICHEND_PLUS;
+			case "7": return BEFRIEDIGEND_MINUS;
+			case "8": return BEFRIEDIGEND;
+			case "9": return BEFRIEDIGEND_PLUS;
+			case "10": return GUT_MINUS;
+			case "11": return GUT;
+			case "12": return GUT_PLUS;
+			case "13": return SEHR_GUT_MINUS;
+			case "14": return SEHR_GUT;
+			case "15": return SEHR_GUT_PLUS;
 		}
 		return KEINE;
 	}
-	
-	
+
+
 	/**
 	 * Gibt an, ob es sich um eine Note mit Tendenz handelt oder nicht.
-	 * 
+	 *
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public boolean hatTendenz() {
 		if (notenpunkte == null)
 			return false;
 		switch (notenpunkte) {
-			case 0: 
-			case 2: 
+			case 0:
+			case 2:
 			case 5:
-			case 8: 		
-			case 11: 		
-			case 14: 		
-				return false;				
+			case 8:
+			case 11:
+			case 14:
+				return false;
 		}
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Ermittelt die zu der Note gehörende Note ohne Tendenz (z.B. 3+ wird zu 3)
-	 * 
+	 *
 	 * @return die entsprechende Note ohne Tendenz
 	 */
 	@JsonIgnore
@@ -319,28 +319,28 @@ public enum Note {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
-			case 0: 
+			case 0:
 				return UNGENUEGEND;
-			case 1: 
-			case 2: 
-			case 3: 
+			case 1:
+			case 2:
+			case 3:
 				return MANGELHAFT;
-			case 4: 		
+			case 4:
 			case 5:
-			case 6: 
+			case 6:
 				return AUSREICHEND;
-			case 7: 		
-			case 8: 		
-			case 9: 
+			case 7:
+			case 8:
+			case 9:
 				return BEFRIEDIGEND;
-			case 10: 		
-			case 11: 		
-			case 12: 
-				return GUT;		
-			case 13: 		
-			case 14: 		
-			case 15: 
-				return SEHR_GUT;				
+			case 10:
+			case 11:
+			case 12:
+				return GUT;
+			case 13:
+			case 14:
+			case 15:
+				return SEHR_GUT;
 		}
 		return KEINE;
 	}
@@ -355,8 +355,8 @@ public enum Note {
 
 	/**
 	 * Gibt die Note als Note der Sekundarstufe I ohne Tendenz als Zahl zurück.
-	 * 
-	 * @return die Noten 1-6 oder im Fehlerfall null  
+	 *
+	 * @return die Noten 1-6 oder im Fehlerfall null
 	 */
 	@JsonIgnore
 	public Integer getNoteSekI() {
@@ -391,7 +391,7 @@ public enum Note {
 
 	/**
 	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
-	 *  
+	 *
 	 * @return der Noten-Katalog-Eintrag
 	 */
 	public @NotNull NotenKatalogEintrag getKatalogEintrag() {

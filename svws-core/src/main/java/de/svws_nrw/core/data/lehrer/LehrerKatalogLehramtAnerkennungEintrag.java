@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gültigen Statistikwerte für den Katalog der Anerkennungsgründe für 
- * ein Lehramt.  
+ * Sie liefert die gültigen Statistikwerte für den Katalog der Anerkennungsgründe für
+ * ein Lehramt.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Anerkennungsgründe für Lehrämter.")
@@ -22,7 +22,7 @@ public class LehrerKatalogLehramtAnerkennungEintrag {
 	/** Das Kürzel für den Anerkennungsgrund eines Lehramts. */
 	@Schema(description = "das Kürzel für den Anerkennungsgrund eines Lehramts", example = "AP")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext des Anerkennungsgrundes eines Lehramts. */
 	@Schema(description = "der Anerkennungsgrund eines Lehramts", example = "Anerkennung geeignete Prüfung")
 	public @NotNull String text = "";
@@ -34,8 +34,8 @@ public class LehrerKatalogLehramtAnerkennungEintrag {
 	/** Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
-	
-	
+
+
 	/**
 	 * Erstellt einen Anerkennungsgrund-Eintrag mit Standardwerten
 	 */
@@ -45,9 +45,9 @@ public class LehrerKatalogLehramtAnerkennungEintrag {
 
 	/**
 	 * Erstellt einen Anerkennungsgrund-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -58,6 +58,6 @@ public class LehrerKatalogLehramtAnerkennungEintrag {
 		this.text = text;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

@@ -14,14 +14,14 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
  */
 @DisplayName("Teste den Core-Type Schulgliederung")
 public class TestCoreTypeSchulgliederung {
-	
+
     /**
      * Prüft, ob die Schulformen mindestens eine Schulgliederungen haben.
      */
     @Test
     @DisplayName("Teste ob die Schulformen mindestens eine Schulgliederungen haben")
     void testSchulformMindestensEineSchulgliederung() {
-    	for (Schulform sf : Schulform.values()) {
+    	for (final Schulform sf : Schulform.values()) {
     		if (Schulgliederung.get(sf).size() <= 0)
         		fail("Keine Schulgliederungen für die Schulform " + sf.name() + " gefunden.");
     	}
@@ -33,12 +33,12 @@ public class TestCoreTypeSchulgliederung {
     @Test
     @DisplayName("Teste ob die Schulgliederungen jeweils mindestens eine Schulform haben")
     void testSchulgliederungMindestensEineSchulform() {
-    	for (Schulgliederung gl : Schulgliederung.values()) {
+    	for (final Schulgliederung gl : Schulgliederung.values()) {
     		if (gl.getSchulformen().size() <= 0)
     			fail("Keine Schulform für die Schulgliederung " + gl.name() + "angegeben.");
     	}
     }
-    
+
     // TODO weitere Tests
-    
+
 }

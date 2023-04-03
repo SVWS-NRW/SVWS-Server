@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Fachwahlinformationen eines Faches in einem Jahrgang der gymnasialen Oberstufe.  
+ * Sie beschreibt die Fachwahlinformationen eines Faches in einem Jahrgang der gymnasialen Oberstufe.
  */
 @XmlRootElement
 @Schema(description = "Die Statistik zu den Fachwahlen eines Jahrgangs zu einem Fach der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostStatistikFachwahl {
-	
+
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2042")
 	public int abiturjahr;
@@ -26,15 +26,15 @@ public class GostStatistikFachwahl {
 	/** Das eindeutige Kürzel des Faches */
 	@Schema(description = "das eindeutige Kürzel des Faches", example = "M")
 	public String kuerzel;
-	
+
 	/** Die Bezeichnung des Faches */
 	@Schema(description = "die Bezeichnung des Faches ", example = "Mathematik")
 	public String bezeichnung;
-	
+
 	/** Das Statistik-Kürzel des Faches */
 	@Schema(description = "das Statistik-Kürzel des Faches ", example = "M")
 	public String kuerzelStatistik;
-	
+
 	/** Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostStatistikFachwahlHalbjahr.class))
 	public @NotNull GostStatistikFachwahlHalbjahr @NotNull[] fachwahlen = new GostStatistikFachwahlHalbjahr[6];

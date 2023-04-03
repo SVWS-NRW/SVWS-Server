@@ -75,8 +75,7 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
-	 * Führt eine Sortierung der Fächer anhand des
-	 * Sortierungsfeldes durch.
+	 * Führt eine Sortierung der Fächer anhand des Sortierungsfeldes durch.
 	 */
 	private sort() : void {
 		this._faecher.sort(GostFaecherManager.comp);

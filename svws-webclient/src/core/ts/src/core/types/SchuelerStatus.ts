@@ -58,7 +58,7 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Die Zuordnung des Schüler-Status zu der ID
@@ -137,7 +137,6 @@ export class SchuelerStatus extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den Schülerstatus anhand der ID zurück.
 	 *
 	 * @param status	die id des Schülerstatus
@@ -150,7 +149,6 @@ export class SchuelerStatus extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Ermittelt den Schülerstatus anhand der Bezeichnung.
 	 *
 	 * @param value	  die Bezeichnung des Schülerstatus

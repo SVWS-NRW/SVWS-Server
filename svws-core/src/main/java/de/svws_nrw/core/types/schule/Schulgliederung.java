@@ -13,35 +13,35 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Aufzählung stellt einen Core-Type für die Schulgliederungen zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
 public enum Schulgliederung {
 
 	/**
-	 * Schulgliederung DEFAULT: 
+	 * Schulgliederung DEFAULT:
 	 *   Standard für diese Schulform
 	 */
 	DEFAULT(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(0, "***", false, Arrays.asList(
 				Schulform.FW, Schulform.HI, Schulform.WF,
-				Schulform.G, 
-				Schulform.GE, 
-				Schulform.GY, 
-				Schulform.H, 
-				Schulform.PS, 
-				Schulform.R, 
-				Schulform.SG, 
-				Schulform.SK, 
-				Schulform.SR, 
+				Schulform.G,
+				Schulform.GE,
+				Schulform.GY,
+				Schulform.H,
+				Schulform.PS,
+				Schulform.R,
+				Schulform.SG,
+				Schulform.SK,
+				Schulform.SR,
 				Schulform.V
 			), false, false, "Standard für diese Schulform", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung A01: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A01:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 01 (Fachklassen (BS; TZ))
 	 */
 	A01(new SchulgliederungKatalogEintrag[]{
@@ -50,7 +50,7 @@ public enum Schulgliederung {
 			), false, false, "Fachklassen (BS; TZ)", BerufskollegAnlage.A, "01", 10, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A,
@@ -61,8 +61,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A02: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A02:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 02 (Fachklassen/Fachhochschulreife (BS/FHR; TZ))
 	 */
 	A02(new SchulgliederungKatalogEintrag[]{
@@ -71,7 +71,7 @@ public enum Schulgliederung {
 			), false, false, "Fachklassen/Fachhochschulreife (BS/FHR; TZ)", BerufskollegAnlage.A, "02", 10, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A,
@@ -83,8 +83,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A03: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A03:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 03 (Fachklassen/erweiterte Zusatzqualifikation (BS/ZQ; TZ))
 	 */
 	A03(new SchulgliederungKatalogEintrag[]{
@@ -93,7 +93,7 @@ public enum Schulgliederung {
 			), false, false, "Fachklassen/erweiterte Zusatzqualifikation (BS/ZQ; TZ)", BerufskollegAnlage.A, "03", 10, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A,
@@ -104,8 +104,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A04: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A04:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 04 (Fachklassen mit erweitertem Stützunterricht (BS/Stütz; TZ))
 	 */
 	A04(new SchulgliederungKatalogEintrag[]{
@@ -114,7 +114,7 @@ public enum Schulgliederung {
 			), false, false, "Fachklassen mit erweitertem Stützunterricht (BS/Stütz; TZ)", BerufskollegAnlage.A, "04", 10, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A,
@@ -125,8 +125,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A05 (ausgelaufen): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A05 (ausgelaufen):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 05 (Berufsorientierungsjahr (BV; VZ))
 	 */
 	A05(new SchulgliederungKatalogEintrag[]{
@@ -135,30 +135,30 @@ public enum Schulgliederung {
 			), true, true, "Berufsorientierungsjahr (BV; VZ)", BerufskollegAnlage.A, "05", 20, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BV 
+				SchulabschlussBerufsbildend.BV
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A06 (ausgelaufen): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A06 (ausgelaufen):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 06 (Berufsgrundschuljahr (BG; VZ))
 	 */
 	A06(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(1006000, "A06", true, Arrays.asList(
 				Schulform.BK, Schulform.SB
 			), true, true, "Berufsgrundschuljahr (BG; VZ)", BerufskollegAnlage.A, "06", 30, true, Arrays.asList(
-				SchulabschlussBerufsbildend.BG 
+				SchulabschlussBerufsbildend.BG
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A07 (ausgelaufen): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A07 (ausgelaufen):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 07 (Klassen für Schüler/innen ohne Ausbildungsverhältnis (BS 1j; TZ) bzw. Werkstattjahr (BS 1j;TZ))
 	 */
 	A07(new SchulgliederungKatalogEintrag[]{
@@ -167,15 +167,15 @@ public enum Schulgliederung {
 			), true, true, "Klassen für Schüler/innen ohne Ausbildungsverhältnis (BS 1j; TZ) bzw. Werkstattjahr (BS 1j;TZ)", BerufskollegAnlage.A, "07", 40, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A08 (ausgelaufen): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A08 (ausgelaufen):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 08 (Vorpraktikum (VP))
 	 */
 	A08(new SchulgliederungKatalogEintrag[]{
@@ -184,15 +184,15 @@ public enum Schulgliederung {
 			), true, true, "Vorpraktikum (VP)", BerufskollegAnlage.A, "08", 50, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VP 
+				SchulabschlussBerufsbildend.VP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A09 (ausgelaufen): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A09 (ausgelaufen):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 09 (Klassen für Schüler/innen ohne Ausbildungsverhältnis (BS 1j; VZ))
 	 */
 	A09(new SchulgliederungKatalogEintrag[]{
@@ -201,15 +201,15 @@ public enum Schulgliederung {
 			), true, true, "Klassen für Schüler/innen ohne Ausbildungsverhältnis (BS 1j; VZ)", BerufskollegAnlage.A, "09", 55, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BS 
+				SchulabschlussBerufsbildend.BS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A10 (auslaufend): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A10 (auslaufend):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 10 (Berufsabschluss/mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ))
 	 */
 	A10(new SchulgliederungKatalogEintrag[]{
@@ -218,15 +218,15 @@ public enum Schulgliederung {
 			), true, false, "Berufsabschluss/mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)", BerufskollegAnlage.A, "10", 56, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.MSA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A11 (auslaufend): 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A11 (auslaufend):
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 11 (Berufsabschluss/Fachhochschulreife (BKAZVO) (BAB/FHR; VZ))
 	 */
 	A11(new SchulgliederungKatalogEintrag[]{
@@ -235,15 +235,15 @@ public enum Schulgliederung {
 			), true, false, "Berufsabschluss/Fachhochschulreife (BKAZVO) (BAB/FHR; VZ)", BerufskollegAnlage.A, "11", 56, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.FHR
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung A12: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A12:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 12 (Ausbildungsvorbereitung (BS 1j; VZ))
 	 */
 	A12(new SchulgliederungKatalogEintrag[]{
@@ -252,7 +252,7 @@ public enum Schulgliederung {
 			), false, false, "Ausbildungsvorbereitung (BS 1j; VZ)", BerufskollegAnlage.A, "12", 57, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VORB 
+				SchulabschlussBerufsbildend.VORB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A,
@@ -261,8 +261,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A13: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A13:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 13 (Ausbildungsvorbereitung (BS 1j; TZ))
 	 */
 	A13(new SchulgliederungKatalogEintrag[]{
@@ -271,7 +271,7 @@ public enum Schulgliederung {
 			), false, false, "Ausbildungsvorbereitung (BS 1j; TZ)", BerufskollegAnlage.A, "13", 58, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VORB 
+				SchulabschlussBerufsbildend.VORB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA9A
@@ -279,8 +279,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A14: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A14:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 14 (Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss (BAB/FOR; VZ))
 	 */
 	A14(new SchulgliederungKatalogEintrag[]{
@@ -289,7 +289,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss (BAB/FOR; VZ)", BerufskollegAnlage.A, "14", 59, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -299,8 +299,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A15: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A15:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 15 (Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife BAB/FHR; VZ)
 	 */
 	A15(new SchulgliederungKatalogEintrag[]{
@@ -309,7 +309,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife BAB/FHR; VZ", BerufskollegAnlage.A, "15", 59, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -320,8 +320,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung A16: 
-	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung), 
+	 * Schulgliederung A16:
+	 *   Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *   Typ 16 (Fachklassen (nach §2 BKAZVO) BAB; VZ)
 	 */
 	A16(new SchulgliederungKatalogEintrag[]{
@@ -330,7 +330,7 @@ public enum Schulgliederung {
 			), false, false, "Fachklassen (nach §2 BKAZVO) BAB; VZ", BerufskollegAnlage.A, "16", 59, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -341,7 +341,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung AB: 
+	 * Schulgliederung AB:
 	 *   Schule für Kranke: Allgemeinbildend
 	 */
 	AB(new SchulgliederungKatalogEintrag[]{
@@ -352,8 +352,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B01 (ausgelaufen): 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B01 (ausgelaufen):
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 01 (Berufsabschluss/Fachoberschulreife (BAB/FOR 2j; VZ))
 	 */
 	B01(new SchulgliederungKatalogEintrag[]{
@@ -362,7 +362,7 @@ public enum Schulgliederung {
 			), true, true, "Berufsabschluss/Fachoberschulreife (BAB/FOR 2j; VZ)", BerufskollegAnlage.B, "01", 60, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -372,8 +372,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B02 (ausgelaufen): 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B02 (ausgelaufen):
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 02 (Berufsgrundbildung/Fachoberschulreife (BG/FOR 2j; VZ))
 	 */
 	B02(new SchulgliederungKatalogEintrag[]{
@@ -382,7 +382,7 @@ public enum Schulgliederung {
 			), true, true, "Berufsgrundbildung/Fachoberschulreife (BG/FOR 2j; VZ)", BerufskollegAnlage.B, "02", 70, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BG 
+				SchulabschlussBerufsbildend.BG
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -392,8 +392,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B03 (ausgelaufen): 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B03 (ausgelaufen):
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 03 (Berufsgrundbildung (für Schüler mit FOR) (BG 1j; VZ))
 	 */
 	B03(new SchulgliederungKatalogEintrag[]{
@@ -402,15 +402,15 @@ public enum Schulgliederung {
 			), true, true, "Berufsgrundbildung (für Schüler mit FOR) (BG 1j; VZ)", BerufskollegAnlage.B, "03", 80, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BG 
+				SchulabschlussBerufsbildend.BG
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung B04 (ausgelaufen): 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B04 (ausgelaufen):
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 04 (Berufsabschluss/Fachoberschulreife (BAB/FOR; VZ))
 	 */
 	B04(new SchulgliederungKatalogEintrag[]{
@@ -419,7 +419,7 @@ public enum Schulgliederung {
 			), true, true, "Berufsabschluss/Fachoberschulreife (BAB/FOR; VZ)", BerufskollegAnlage.B, "04", 90, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -429,8 +429,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B05 (ausgelaufen): 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B05 (ausgelaufen):
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 05 (Berufsabschluss/Fachhochschulreife (BAB/FHR; VZ))
 	 */
 	B05(new SchulgliederungKatalogEintrag[]{
@@ -439,7 +439,7 @@ public enum Schulgliederung {
 			), true, true, "Berufsabschluss/Fachhochschulreife (BAB/FHR; VZ)", BerufskollegAnlage.B, "05", 90, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -450,8 +450,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B06: 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B06:
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 06 (Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ))
 	 */
 	B06(new SchulgliederungKatalogEintrag[]{
@@ -460,7 +460,7 @@ public enum Schulgliederung {
 			), false, false, "Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ)", BerufskollegAnlage.B, "06", 91, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10
@@ -468,8 +468,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B07: 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B07:
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 07 (Berufliche Kenntnisse/mittlerer Schulabschluss (BK/FOR; 1j. VZ))
 	 */
 	B07(new SchulgliederungKatalogEintrag[]{
@@ -478,7 +478,7 @@ public enum Schulgliederung {
 			), false, false, "Berufliche Kenntnisse/mittlerer Schulabschluss (BK/FOR; 1j. VZ)", BerufskollegAnlage.B, "07", 92, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.MSA,
@@ -487,8 +487,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B08: 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B08:
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 08 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ))
 	 */
 	B08(new SchulgliederungKatalogEintrag[]{
@@ -497,7 +497,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ)", BerufskollegAnlage.B, "08", 93, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -507,8 +507,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B09: 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B09:
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 09 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ))
 	 */
 	B09(new SchulgliederungKatalogEintrag[]{
@@ -517,7 +517,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)", BerufskollegAnlage.B, "09", 93, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -527,8 +527,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung B10: 
-	 *   Anlage B (Berufsfachschule), 
+	 * Schulgliederung B10:
+	 *   Anlage B (Berufsfachschule),
 	 *   Typ 10 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ))
 	 */
 	B10(new SchulgliederungKatalogEintrag[]{
@@ -537,7 +537,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ)", BerufskollegAnlage.B, "10", 93, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -547,7 +547,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung BT: 
+	 * Schulgliederung BT:
 	 *   Schule für Kranke: Berufsbildend (Teilzeit)
 	 */
 	BT(new SchulgliederungKatalogEintrag[]{
@@ -562,12 +562,12 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung BV: 
+	 * Schulgliederung BV:
 	 *   Schule für Kranke: Berufsbildend (Vollzeit)
 	 */
 	BV(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(90003000, "BV", false, Arrays.asList(
-				Schulform.FW, Schulform.HI,Schulform.WF,
+				Schulform.FW, Schulform.HI, Schulform.WF,
 				Schulform.KS, Schulform.S
 			), false, false, "Schule für Kranke: Berufsbildend (Vollzeit)", null, null, null, true, Arrays.asList(
 				// TODO
@@ -577,8 +577,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C01: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C01:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 01 (Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum) BAB/FHR 3j; VZ BFS)
 	 */
 	C01(new SchulgliederungKatalogEintrag[]{
@@ -587,7 +587,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum) BAB/FHR 3j; VZ BFS", BerufskollegAnlage.C, "01", 100, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -598,8 +598,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C02: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C02:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 02 (Berufsabschluss f. Hochschulzugangsberechtigte (BAB 2j; VZ) BFS)
 	 */
 	C02(new SchulgliederungKatalogEintrag[]{
@@ -608,15 +608,15 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss f. Hochschulzugangsberechtigte (BAB 2j; VZ) BFS", BerufskollegAnlage.C, "02", 110, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung C03: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C03:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 03 (Berufliche Kenntnisse/FHR (BK/FHR 2j; VZ) HBFS)
 	 */
 	C03(new SchulgliederungKatalogEintrag[]{
@@ -625,7 +625,7 @@ public enum Schulgliederung {
 			), false, false, "Berufliche Kenntnisse/FHR (BK/FHR 2j; VZ) HBFS", BerufskollegAnlage.C, "03", 120, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -634,8 +634,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C04 (ausgelaufen): 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C04 (ausgelaufen):
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 04 (Berufliche Kenntnisse/Sonderform für Abiturienten (BK 1j; VZ) HBFS)
 	 */
 	C04(new SchulgliederungKatalogEintrag[]{
@@ -644,15 +644,15 @@ public enum Schulgliederung {
 			), true, true, "Berufliche Kenntnisse/Sonderform für Abiturienten (BK 1j; VZ) HBFS", BerufskollegAnlage.C, "04", 130, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung C05: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C05:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 05 (Fachoberschule Kl. 11 (BK/FHR 1j; TZ))
 	 */
 	C05(new SchulgliederungKatalogEintrag[]{
@@ -661,7 +661,7 @@ public enum Schulgliederung {
 			), false, false, "Fachoberschule Kl. 11 (BK/FHR 1j; TZ)", BerufskollegAnlage.C, "05", 140, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VERS 
+				SchulabschlussBerufsbildend.VERS
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -671,8 +671,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C06: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C06:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 06 (Fachoberschule Kl. 12S (BK/FHR 1j; VZ))
 	 */
 	C06(new SchulgliederungKatalogEintrag[]{
@@ -681,7 +681,7 @@ public enum Schulgliederung {
 			), false, false, "Fachoberschule Kl. 12S (BK/FHR 1j; VZ)", BerufskollegAnlage.C, "06", 140, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.FHR
@@ -689,8 +689,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C07: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C07:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 07 (Fachoberschule Kl. 12B (BK/FHR 2j; TZ))
 	 */
 	C07(new SchulgliederungKatalogEintrag[]{
@@ -700,7 +700,7 @@ public enum Schulgliederung {
 			), false, false, "Fachoberschule Kl. 12B (BK/FHR 2j; TZ)", BerufskollegAnlage.C, "07", 140, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VBK 
+				SchulabschlussBerufsbildend.VBK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -710,8 +710,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C08: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C08:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 08 (Fachoberschule Kl. 12B (BK/FHR 1j; VZ))
 	 */
 	C08(new SchulgliederungKatalogEintrag[]{
@@ -720,7 +720,7 @@ public enum Schulgliederung {
 			), false, false, "Fachoberschule Kl. 12B (BK/FHR 1j; VZ)", BerufskollegAnlage.C, "08", 140, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VBK 
+				SchulabschlussBerufsbildend.VBK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -730,8 +730,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C09 (ausgelaufen): 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C09 (ausgelaufen):
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 09 (Berufspraktikum Erzieher/innen (Vollzeit) (BP/Erz 1j; VZ))
 	 */
 	C09(new SchulgliederungKatalogEintrag[]{
@@ -740,15 +740,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum Erzieher/innen (Vollzeit) (BP/Erz 1j; VZ)", BerufskollegAnlage.C, "09", 150, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung C10 (ausgelaufen): 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C10 (ausgelaufen):
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 10 (Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ))
 	 */
 	C10(new SchulgliederungKatalogEintrag[]{
@@ -757,15 +757,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ)", BerufskollegAnlage.C, "10", 150, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung C11: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C11:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 11 (Fachoberschule Kl. 12B (BK/FHR 3j; TZ))
 	 */
 	C11(new SchulgliederungKatalogEintrag[]{
@@ -774,7 +774,7 @@ public enum Schulgliederung {
 			), false, false, "Fachoberschule Kl. 12B (BK/FHR 3j; TZ)", BerufskollegAnlage.C, "11", 141, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.VBK 
+				SchulabschlussBerufsbildend.VBK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -784,8 +784,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C12: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C12:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 12 (Berufsabschluss/Fachhochschulreife (mit  Berufspraktikum) BAB/FHR 3,5j; VZ)
 	 */
 	C12(new SchulgliederungKatalogEintrag[]{
@@ -794,7 +794,7 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss/Fachhochschulreife (mit  Berufspraktikum) BAB/FHR 3,5j; VZ", BerufskollegAnlage.C, "12", 145, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -805,8 +805,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung C13: 
-	 *   Anlage C (Berufsfachschule und Fachoberschule), 
+	 * Schulgliederung C13:
+	 *   Anlage C (Berufsfachschule und Fachoberschule),
 	 *   Typ 13 (Berufsabschluss/Fachhochschulreife (gestuft) (BAB/FHR 3j; VZ))
 	 */
 	C13(new SchulgliederungKatalogEintrag[]{
@@ -815,8 +815,8 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss/Fachhochschulreife (gestuft) (BAB/FHR 3j; VZ)", BerufskollegAnlage.C, "13", 146, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK, 
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BK,
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -837,8 +837,8 @@ public enum Schulgliederung {
 			), false, false, "Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum) (BAB/AHR 4j; VZ)", BerufskollegAnlage.D, "01", 160, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK, 
-				SchulabschlussBerufsbildend.BAB 
+				SchulabschlussBerufsbildend.BK,
+				SchulabschlussBerufsbildend.BAB
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -850,8 +850,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung D02: 
-	 *   Anlage D (Berufliches Gymnasium und Fachoberschule), 
+	 * Schulgliederung D02:
+	 *   Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *   Typ 02 (Berufl. Kenntnisse/Allg. Hochschulreife (BK/AHR 3j; VZ))
 	 */
 	D02(new SchulgliederungKatalogEintrag[]{
@@ -860,7 +860,7 @@ public enum Schulgliederung {
 			), false, false, "Berufl. Kenntnisse/Allg. Hochschulreife (BK/AHR 3j; VZ)", BerufskollegAnlage.D, "02", 170, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BK 
+				SchulabschlussBerufsbildend.BK
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10,
@@ -871,8 +871,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung D03 (ausgelaufen): 
-	 *   Anlage D (Berufliches Gymnasium und Fachoberschule), 
+	 * Schulgliederung D03 (ausgelaufen):
+	 *   Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *   Typ 03 (Berufspraktikum (Vollzeit) (BP 1j; VZ))
 	 */
 	D03(new SchulgliederungKatalogEintrag[]{
@@ -881,15 +881,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum (Vollzeit) (BP 1j; VZ)", BerufskollegAnlage.D, "03", 180, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung D04 (ausgelaufen): 
-	 *   Anlage D (Berufliches Gymnasium und Fachoberschule), 
+	 * Schulgliederung D04 (ausgelaufen):
+	 *   Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *   Typ 04 (Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ))
 	 */
 	D04(new SchulgliederungKatalogEintrag[]{
@@ -898,15 +898,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ)", BerufskollegAnlage.D, "04", 190, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung D05: 
-	 *   Anlage D (Berufliches Gymnasium und Fachoberschule), 
+	 * Schulgliederung D05:
+	 *   Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *   Typ 05 (AHR (gem. § 2 Abs. 3 Anlage D) (AHR 1j; VZ) FOS13)
 	 */
 	D05(new SchulgliederungKatalogEintrag[]{
@@ -923,8 +923,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung D06: 
-	 *   Anlage D (Berufliches Gymnasium und Fachoberschule), 
+	 * Schulgliederung D06:
+	 *   Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *   Typ 06 (AHR (gem. § 2 Abs. 3 Anlage D) (AHR 2j; TZ) FOS13)
 	 */
 	D06(new SchulgliederungKatalogEintrag[]{
@@ -941,8 +941,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung E01: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E01:
+	 *   Anlage E (Fachschule),
 	 *   Typ 01 (Fachschule Vollzeit (BW 2j; VZ))
 	 */
 	E01(new SchulgliederungKatalogEintrag[]{
@@ -951,7 +951,7 @@ public enum Schulgliederung {
 			), false, false, "Fachschule Vollzeit (BW 2j; VZ)", BerufskollegAnlage.E, "01", 210, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.MSA,
@@ -960,8 +960,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung E02: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E02:
+	 *   Anlage E (Fachschule),
 	 *   Typ 02 (Fachschule Teilzeit (BW 4j; TZ))
 	 */
 	E02(new SchulgliederungKatalogEintrag[]{
@@ -970,7 +970,7 @@ public enum Schulgliederung {
 			), false, false, "Fachschule Teilzeit (BW 4j; TZ)", BerufskollegAnlage.E, "02", 210, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.MSA,
@@ -979,8 +979,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung E03: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E03:
+	 *   Anlage E (Fachschule),
 	 *   Typ 03 (Fachschule (verkürzt) Vollzeit (BW 1j; VZ))
 	 */
 	E03(new SchulgliederungKatalogEintrag[]{
@@ -990,15 +990,15 @@ public enum Schulgliederung {
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.AUFB,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E04: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E04:
+	 *   Anlage E (Fachschule),
 	 *   Typ 04 (Fachschule (verkürzt) Teilzeit (BW 2j; TZ))
 	 */
 	E04(new SchulgliederungKatalogEintrag[]{
@@ -1008,15 +1008,15 @@ public enum Schulgliederung {
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.AUFB,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E05: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E05:
+	 *   Anlage E (Fachschule),
 	 *   Typ 05 (Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 3j; VZ))
 	 */
 	E05(new SchulgliederungKatalogEintrag[]{
@@ -1025,7 +1025,7 @@ public enum Schulgliederung {
 			), false, false, "Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 3j; VZ)", BerufskollegAnlage.E, "05", 230, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.MSA,
@@ -1034,8 +1034,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung E06 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E06 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 06 (Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 1j; VZ))
 	 */
 	E06(new SchulgliederungKatalogEintrag[]{
@@ -1044,15 +1044,15 @@ public enum Schulgliederung {
 			), true, true, "Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 1j; VZ)", BerufskollegAnlage.E, "06", 240, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E07: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E07:
+	 *   Anlage E (Fachschule),
 	 *   Typ 07 (Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 6j; TZ))
 	 */
 	E07(new SchulgliederungKatalogEintrag[]{
@@ -1061,7 +1061,7 @@ public enum Schulgliederung {
 			), false, false, "Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 6j; TZ)", BerufskollegAnlage.E, "07", 230, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.MSA,
@@ -1070,8 +1070,8 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung E08 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E08 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 08 (Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 2j; TZ))
 	 */
 	E08(new SchulgliederungKatalogEintrag[]{
@@ -1080,15 +1080,15 @@ public enum Schulgliederung {
 			), true, true, "Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 2j; TZ)", BerufskollegAnlage.E, "08", 240, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E09 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E09 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 09 (Fachschule (Sonderform) Vollzeit (BW 3j; VZ))
 	 */
 	E09(new SchulgliederungKatalogEintrag[]{
@@ -1097,15 +1097,15 @@ public enum Schulgliederung {
 			), true, true, "Fachschule (Sonderform) Vollzeit (BW 3j; VZ)", BerufskollegAnlage.E, "09", 250, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E10 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E10 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 10 (Fachschule (Sonderform) Teilzeit (BW 6j; TZ))
 	 */
 	E10(new SchulgliederungKatalogEintrag[]{
@@ -1114,15 +1114,15 @@ public enum Schulgliederung {
 			), true, true, "Fachschule (Sonderform) Teilzeit (BW 6j; TZ)", BerufskollegAnlage.E, "10", 260, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BW 
+				SchulabschlussBerufsbildend.BW
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E11 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E11 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 11 (Berufspraktikum Erzieher/innen (FS/BP/Erz 1j; VZ))
 	 */
 	E11(new SchulgliederungKatalogEintrag[]{
@@ -1131,15 +1131,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum Erzieher/innen (FS/BP/Erz 1j; VZ)", BerufskollegAnlage.E, "11", 270, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E12 (ausgelaufen): 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E12 (ausgelaufen):
+	 *   Anlage E (Fachschule),
 	 *   Typ 12 (Berufspraktikum Erzieher/innen (FS/BP/Erz 2j; TZ))
 	 */
 	E12(new SchulgliederungKatalogEintrag[]{
@@ -1148,15 +1148,15 @@ public enum Schulgliederung {
 			), true, true, "Berufspraktikum Erzieher/innen (FS/BP/Erz 2j; TZ)", BerufskollegAnlage.E, "12", 270, false, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
-				SchulabschlussBerufsbildend.BP 
+				SchulabschlussBerufsbildend.BP
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA
 			), null, null)
 	}),
 
 	/**
-	 * Schulgliederung E13: 
-	 *   Anlage E (Fachschule), 
+	 * Schulgliederung E13:
+	 *   Anlage E (Fachschule),
 	 *   Typ 13 (Fachschule Teilzeit (BW 3j; TZ))
 	 */
 	E13(new SchulgliederungKatalogEintrag[]{
@@ -1174,7 +1174,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung ER: 
+	 * Schulgliederung ER:
 	 *   kooperative Form: Erweiterungsebene
 	 */
 	ER(new SchulgliederungKatalogEintrag[]{
@@ -1184,7 +1184,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung EVB: 
+	 * Schulgliederung EVB:
 	 *   Evangelische Bekenntnisschule
 	 */
 	EVB(new SchulgliederungKatalogEintrag[]{
@@ -1194,7 +1194,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung G01: 
+	 * Schulgliederung G01:
 	 *   Aufbaugymnasium
 	 */
 	G01(new SchulgliederungKatalogEintrag[]{
@@ -1204,7 +1204,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung G02: 
+	 * Schulgliederung G02:
 	 *   Bildungsgang Abendgymnasium
 	 */
 	G02(new SchulgliederungKatalogEintrag[]{
@@ -1214,7 +1214,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GGS (auslaufend): 
+	 * Schulgliederung GGS (auslaufend):
 	 *   Gemeinschaftsschule (auslaufend) integrierte Form
 	 */
 	GGS(new SchulgliederungKatalogEintrag[]{
@@ -1224,7 +1224,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GGY (auslaufend): 
+	 * Schulgliederung GGY (auslaufend):
 	 *   Gemeinschaftsschule (auslaufend) Gymnasialbildungsgang
 	 */
 	GGY(new SchulgliederungKatalogEintrag[]{
@@ -1234,7 +1234,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GMS: 
+	 * Schulgliederung GMS:
 	 *   Gemeinschaftsschule
 	 */
 	GMS(new SchulgliederungKatalogEintrag[]{
@@ -1244,18 +1244,18 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GR: 
+	 * Schulgliederung GR:
 	 *   kooperative Form: Grundebene
 	 */
 	GR(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(15003000, "GR", false, Arrays.asList(
-				Schulform.GE, 
+				Schulform.GE,
 				Schulform.SK
 			), false, false, "kooperative Form: Grundebene", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung GRH (auslaufend): 
+	 * Schulgliederung GRH (auslaufend):
 	 *   Gemeinschaftsschule auslaufend: teilintegrierte Form
 	 */
 	GRH(new SchulgliederungKatalogEintrag[]{
@@ -1265,7 +1265,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GS: 
+	 * Schulgliederung GS:
 	 *   integrierte Form (Binnendifferenzierung)
 	 */
 	GS(new SchulgliederungKatalogEintrag[]{
@@ -1275,53 +1275,53 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung GY: 
+	 * Schulgliederung GY:
 	 *   Bildungsgang Gymnasium
 	 */
 	GY(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(15005000, "GY", false, Arrays.asList(
-				Schulform.GE, 
-				Schulform.GM, 
+				Schulform.GE,
+				Schulform.GM,
 				Schulform.SK
 			), false, false, "Bildungsgang Gymnasium", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung GY8: 
+	 * Schulgliederung GY8:
 	 *   Bildungsgang G8-Gymnasium
 	 */
 	GY8(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(60002000, "GY8", false, Arrays.asList(
-				Schulform.GE, 
+				Schulform.GE,
 				Schulform.GY
 			), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung GY9: 
+	 * Schulgliederung GY9:
 	 *   Bildungsgang G9-Gymnasium
 	 */
 	GY9(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(60003000, "GY9", false, Arrays.asList(
-				Schulform.GE, 
+				Schulform.GE,
 				Schulform.GY
 			), false, false, "Bildungsgang G9-Gymnasium", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung H: 
+	 * Schulgliederung H:
 	 *   Bildungsgang Hauptschule
 	 */
 	H(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(10001000, "H", false, Arrays.asList(
-				Schulform.GM, 
-				Schulform.R, 
+				Schulform.GM,
+				Schulform.R,
 				Schulform.SK
 			), false, false, "Bildungsgang Hauptschule", null, "  ", null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung H01: 
+	 * Schulgliederung H01:
 	 *   Berufsgrundbildung (Jahrgang 07 bis 10)
 	 */
 	H01(new SchulgliederungKatalogEintrag[]{
@@ -1331,7 +1331,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung H02: 
+	 * Schulgliederung H02:
 	 *   Berufsausbildung (Jahrgang 11 und 12)
 	 */
 	H02(new SchulgliederungKatalogEintrag[]{
@@ -1341,7 +1341,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung K02: 
+	 * Schulgliederung K02:
 	 *   Bildungsgang Kolleg
 	 */
 	K02(new SchulgliederungKatalogEintrag[]{
@@ -1352,19 +1352,19 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung R: 
+	 * Schulgliederung R:
 	 *   Bildungsgang Realschule
 	 */
 	R(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(10002000, "R", false, Arrays.asList(
-				Schulform.GM, 
-				Schulform.H, 
+				Schulform.GM,
+				Schulform.H,
 				Schulform.SK
 			), false, false, "Bildungsgang Realschule", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung R00: 
+	 * Schulgliederung R00:
 	 *   Realschule
 	 */
 	R00(new SchulgliederungKatalogEintrag[]{
@@ -1374,7 +1374,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung R01: 
+	 * Schulgliederung R01:
 	 *   Aufbaurealschule
 	 */
 	R01(new SchulgliederungKatalogEintrag[]{
@@ -1384,7 +1384,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung R02: 
+	 * Schulgliederung R02:
 	 *   Bildungsgang Abendrealschule
 	 */
 	R02(new SchulgliederungKatalogEintrag[]{
@@ -1394,19 +1394,19 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung RH: 
+	 * Schulgliederung RH:
 	 *   teilintegrierte Form
 	 */
 	RH(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(10005000, "RH", false, Arrays.asList(
-				Schulform.GE, 
-				Schulform.GM, 
+				Schulform.GE,
+				Schulform.GM,
 				Schulform.SK
 			), false, false, "teilintegrierte Form", null, null, null, false, null, null, null, null)
 	}),
 
 	/**
-	 * Schulgliederung RKB: 
+	 * Schulgliederung RKB:
 	 *   Katholische  Bekenntnisschule
 	 */
 	RKB(new SchulgliederungKatalogEintrag[]{
@@ -1416,7 +1416,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung SRH (auslaufend): 
+	 * Schulgliederung SRH (auslaufend):
 	 *   Sekundarschule, teilintegrierte Form (auslaufend)
 	 */
 	SRH(new SchulgliederungKatalogEintrag[]{
@@ -1426,7 +1426,7 @@ public enum Schulgliederung {
 	}),
 
 	/**
-	 * Schulgliederung SSI (auslaufend): 
+	 * Schulgliederung SSI (auslaufend):
 	 *   Sekundarschule, integrierte Form (auslaufend)
 	 */
 	SSI(new SchulgliederungKatalogEintrag[]{
@@ -1437,7 +1437,7 @@ public enum Schulgliederung {
 
 
 	/**
-	 * Schulgliederung Y8: 
+	 * Schulgliederung Y8:
 	 *   Lehrplan G8
 	 */
 	Y8(new SchulgliederungKatalogEintrag[]{
@@ -1447,37 +1447,37 @@ public enum Schulgliederung {
 	});
 
 
-	
+
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Schulgliederung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulgliederungKatalogEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der Schulgliederungen */
-	public final @NotNull SchulgliederungKatalogEintrag@NotNull[] historie;	
+	public final @NotNull SchulgliederungKatalogEintrag@NotNull[] historie;
 
 	/** Eine Map mit der Zuordnung der Schulgliederung zu dem Kürzel der Schulgliederung */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Schulgliederung> _schulgliederungenKuerzel = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Schulgliederung zu der ID der Schulgliederung */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> _schulgliederungenID = new HashMap<>();
-	
+
 	/** Die Schulformen, bei welchen die Schulgliederung vorkommt */
-	private @NotNull Vector<@NotNull Schulform>@NotNull[] schulformen;
-	
-	
+	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
+
+
 	/**
 	 * Erzeugt eine neue Schulgliederung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Schulgliederung, welches ein Array von {@link SchulgliederungKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Schulgliederung, welches ein Array von {@link SchulgliederungKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	private Schulgliederung(final @NotNull SchulgliederungKatalogEintrag@NotNull[] historie) {
+	Schulgliederung(final @NotNull SchulgliederungKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
+		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -1492,21 +1492,21 @@ public enum Schulgliederung {
 	/**
 	 * Gibt eine Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Schulgliederung> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
 			for (final Schulgliederung s : Schulgliederung.values())
-				_schulgliederungenKuerzel.put(s.daten.kuerzel, s);				
+				_schulgliederungenKuerzel.put(s.daten.kuerzel, s);
 		return _schulgliederungenKuerzel;
 	}
-	
+
 
 	/**
 	 * Gibt eine Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> getMapSchulgliederungByID() {
@@ -1517,13 +1517,13 @@ public enum Schulgliederung {
 			}
 		return _schulgliederungenID;
 	}
-	
+
 
 	/**
-	 * Liefert die Schulgliederung anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert die Schulgliederung anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Schulgliederung
-	 * 
+	 *
 	 * @return die Schulgliederung oder null, falls das Kürzel ungültig ist
 	 */
 	public static Schulgliederung getByKuerzel(final String kuerzel) {
@@ -1535,10 +1535,10 @@ public enum Schulgliederung {
 
 
 	/**
-	 * Liefert die Schulgliederung anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert die Schulgliederung anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID der Schulgliederung
-	 * 
+	 *
 	 * @return die Schulgliederung oder null, falls die ID ungültig ist
 	 */
 	public static Schulgliederung getByID(final Long id) {
@@ -1549,9 +1549,9 @@ public enum Schulgliederung {
 	/**
 	 * Gibt alle Schulgliderungen zurück, die zu dem angebenen
 	 * Fachklassen-Index am Berufskolleg gehören.
-	 * 
+	 *
 	 * @param index   der Fachklassen-Index
-	 * 
+	 *
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static @NotNull List<@NotNull Schulgliederung> getByBkIndex(final int index) {
@@ -1568,7 +1568,7 @@ public enum Schulgliederung {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Schulgliederung vorkommt.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
@@ -1580,9 +1580,9 @@ public enum Schulgliederung {
 
 	/**
 	 * Liefert alle zulässigen Gliederungen für die angegeben Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static @NotNull List<@NotNull Schulgliederung> get(final Schulform schulform) {
@@ -1597,14 +1597,14 @@ public enum Schulgliederung {
 		}
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob die Schulform diese Gliederung
 	 * hat oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
@@ -1616,17 +1616,17 @@ public enum Schulgliederung {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Prüft, ob die Schulform diese Gliederung hat oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
 	@JsonIgnore
@@ -1638,60 +1638,51 @@ public enum Schulgliederung {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Gibt zurück, ob es sich um einen 8-jährigen gymnasialen Bildungsgang
 	 * handelt oder nicht.
-	 *  
+	 *
 	 * @return true, falls es sich um einen 8-jährigen gymnasialen Bildungsgang
-	 *         handelt, sonst false 
+	 *         handelt, sonst false
 	 */
 	public boolean istG8() {
 		return (this == Schulgliederung.GY8) || (this == Schulgliederung.Y8);
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Standard-Gliederung der angegebenen Schulform zurück.
-	 * 
+	 *
 	 * @param sf        die Schulform
-	 * 
-	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null 
+	 *
+	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null
 	 */
 	public static Schulgliederung getDefault(final Schulform sf) {
 		if (sf == null)
 			return null;
-		if ((sf == Schulform.GY) ||
-		    (sf == Schulform.SK) ||
-		    (sf == Schulform.GM) ||
-		    (sf == Schulform.G) ||
-			(sf == Schulform.S) ||
-			(sf == Schulform.PS) ||
-			(sf == Schulform.V) ||
-			(sf == Schulform.FW) ||
-			(sf == Schulform.H) ||
-			(sf == Schulform.R) ||
-			(sf == Schulform.GE) ||
-			(sf == Schulform.SR) ||
-			(sf == Schulform.SG))
+		if ((sf == Schulform.GY) || (sf == Schulform.SK) || (sf == Schulform.GM) || (sf == Schulform.G)
+				|| (sf == Schulform.S) || (sf == Schulform.PS) || (sf == Schulform.V) || (sf == Schulform.FW)
+				|| (sf == Schulform.H) || (sf == Schulform.R) || (sf == Schulform.GE) || (sf == Schulform.SR)
+				|| (sf == Schulform.SG))
 			return Schulgliederung.DEFAULT;
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Gliederung der angegebenen Schulform mit dem übergegebenen Kürzel zurück.
 	 * Dabei setzt sich das zu prüfende Kürzel aus Anlage und Typ zusammen.
-	 * 
+	 *
 	 * @param sf        die Schulform
 	 * @param kuerzel   Anlage und Typ als String aneinandergehängt
-	 * 
-	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null 
+	 *
+	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null
 	 */
 	public static Schulgliederung getBySchulformAndKuerzel(final Schulform sf, final String kuerzel) {
 		if (sf == null)
@@ -1700,7 +1691,7 @@ public enum Schulgliederung {
 		if ((kuerzel == null) || "".equals(kuerzel))
 			return getDefault(sf);
 		// Prüfe, ob die Gliederung bei der Schulform existiert
-		final @NotNull List<@NotNull Schulgliederung> gliederungen = get(sf); 
+		final @NotNull List<@NotNull Schulgliederung> gliederungen = get(sf);
 		for (int i = 0; i < gliederungen.size(); i++) {
 			final Schulgliederung sg = gliederungen.get(i);
 			if ((sg.daten.kuerzel).equalsIgnoreCase(kuerzel))

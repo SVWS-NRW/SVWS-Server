@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt, wie die Daten für die Klassen übergeben werden.  
+ * Sie beschreibt, wie die Daten für die Klassen übergeben werden.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag einer Klasse in der Liste der Klassen.")
@@ -22,7 +22,7 @@ public class KlassenListeEintrag {
 	/** Die ID der Klasse. */
 	@Schema(description = "die ID der Klasse", example = "4711")
 	public long id;
-	
+
 	/** Das Kürzel der Klasse. */
 	@Schema(description = "das Kürzel der Klasse", example = "06b")
 	public String kuerzel;
@@ -33,7 +33,7 @@ public class KlassenListeEintrag {
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
 	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B")
-	public String parallelitaet; 
+	public String parallelitaet;
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
@@ -42,13 +42,12 @@ public class KlassenListeEintrag {
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
-	
+
 	/** Die Liste der IDs der Klassen-Lehrer der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
 	public Vector<@NotNull Long> klassenLehrer = new Vector<>();
 
 	/** Die Schüler der Klasse. */
 	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
-	
-	
+
 }

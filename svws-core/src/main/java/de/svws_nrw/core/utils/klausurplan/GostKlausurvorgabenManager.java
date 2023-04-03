@@ -32,7 +32,7 @@ public class GostKlausurvorgabenManager {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen
 	 * GostKlausurvorgaben und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param vorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs und
 	 *                 Gost-Halbjahres
 	 */
@@ -81,22 +81,20 @@ public class GostKlausurvorgabenManager {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich Informationen einer
 	 * Klausurvorgabe geändert hat.
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void updateKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
-		if (!_vorgaben.contains(vorgabe)) {
-			// TODO Error Klausurvorgabe nicht da
+		if (_vorgaben.contains(vorgabe)) {
+			removeUpdateKlausurvorgabeCommons(vorgabe);
+			addVorgabeToInternalMaps(vorgabe);
 		}
-
-		removeUpdateKlausurvorgabeCommons(vorgabe);
-		addVorgabeToInternalMaps(vorgabe);
-
+		// TODO else ... Error Klausurvorgabe nicht da
 	}
-	
+
 	/**
 	 * Fügt die Klausurvorgabe den internen Strukturen hinzu.
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void addKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
@@ -137,7 +135,7 @@ public class GostKlausurvorgabenManager {
 
 	/**
 	 * Löscht eine Klausurvorgabe aus den internen Strukturen
-	 * 
+	 *
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void removeVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
@@ -148,7 +146,7 @@ public class GostKlausurvorgabenManager {
 
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurvorgabe> getKlausurvorgaben() {
@@ -157,9 +155,9 @@ public class GostKlausurvorgabenManager {
 
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
 	public List<@NotNull GostKlausurvorgabe> getKlausurvorgaben(final int quartal) {
@@ -168,9 +166,9 @@ public class GostKlausurvorgabenManager {
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idVorgabe die ID der Klausurvorgabe
-	 * 
+	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe gibGostKlausurvorgabe(final long idVorgabe) {
@@ -179,11 +177,11 @@ public class GostKlausurvorgabenManager {
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zu den übergebenen Parametern zurück.
-	 * 
+	 *
 	 * @param quartal     das Quartal
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
 	public GostKlausurvorgabe gibGostKlausurvorgabe(final int quartal, final String kursartAllg, final long idFach) {
@@ -200,11 +198,11 @@ public class GostKlausurvorgabenManager {
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
-	 * 
+	 *
 	 * @param quartal     das Quartal, wenn 0, Vorgaben für alle Quartale
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
 	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(final int quartal, final String kursartAllg, final long idFach) {
@@ -221,10 +219,10 @@ public class GostKlausurvorgabenManager {
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
 	 * zurück.
-	 * 
+	 *
 	 * @param kursartAllg die Kursart
 	 * @param idFach      die ID des Fachs
-	 * 
+	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
 	public List<@NotNull GostKlausurvorgabe> gibGostKlausurvorgaben(final String kursartAllg, final long idFach) {

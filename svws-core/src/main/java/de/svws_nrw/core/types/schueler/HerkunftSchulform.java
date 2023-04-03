@@ -8,8 +8,8 @@ import de.svws_nrw.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Core-Type für die für die amtliche Schulstatistik möglichen 
- * Herkunftsschulformen von Schülern in Abhängigkeit von dessen 
+ * Ein Core-Type für die für die amtliche Schulstatistik möglichen
+ * Herkunftsschulformen von Schülern in Abhängigkeit von dessen
  * aktueller Schulform.
  */
 public enum HerkunftSchulform {
@@ -273,36 +273,36 @@ public enum HerkunftSchulform {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Herkunftsschulform, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftSchulformKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen der Herkunftsschulform */
-	public final @NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie;	
+	public final @NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln */ 
+	/** Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, HerkunftSchulform> _ebenen = new HashMap<>();
 
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulform in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Herkunftsschulform, welche ein Array von 
-	 *                   {@link HerkunftSchulformKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Herkunftsschulform, welche ein Array von
+	 *                   {@link HerkunftSchulformKatalogEintrag} ist
 	 */
-	private HerkunftSchulform(final @NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie) {
+	HerkunftSchulform(final @NotNull HerkunftSchulformKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
-	
+
 	/**
-	 * Gibt eine Map von den Kürzeln der Herkunftsschulformen auf die 
-	 * zugehörigen Herkunftsschulformen zurück. 
+	 * Gibt eine Map von den Kürzeln der Herkunftsschulformen auf die
+	 * zugehörigen Herkunftsschulformen zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsschulformen
 	 */
 	private static @NotNull HashMap<@NotNull String, HerkunftSchulform> getMapByKuerzel() {
@@ -318,13 +318,13 @@ public enum HerkunftSchulform {
 
 	/**
 	 * Gibt die Herkunftsschulform für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Herkunftsschulform
-	 * 
+	 *
 	 * @return die Herkunftsschulform oder null, falls das Kürzel ungültig ist
 	 */
 	public static HerkunftSchulform getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
-	
+
 }

@@ -12,8 +12,8 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der möglichen Herkünfte 
- * aus Bildungsgängen an Berufskollegs beim Wechsel zu einem Berufskolleg.  
+ * Sie liefert die Werte für den Katalog der möglichen Herkünfte
+ * aus Bildungsgängen an Berufskollegs beim Wechsel zu einem Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Herkünfte aus Bildungsgängen an Berufskollegs.")
@@ -31,7 +31,7 @@ public class HerkunftBildungsgangKatalogEintrag {
 	/** Die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB). */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB)")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Die textuelle Beschreibung der sonstigen Herkunft. */
 	@Schema(description = "die textuelle Beschreibung des Bildungsganges", example = "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)")
 	public @NotNull String beschreibung = "";
@@ -54,9 +54,9 @@ public class HerkunftBildungsgangKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param gliederung      die Schulgliederung 
+	 * @param gliederung      die Schulgliederung
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */

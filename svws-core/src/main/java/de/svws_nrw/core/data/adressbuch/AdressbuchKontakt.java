@@ -68,13 +68,13 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 	public List<String> kategorien = new Vector<>();
 
 	/**
-	 * Die Organisation dieses Kontakts 
+	 * Die Organisation dieses Kontakts
 	 */
 	@Schema(description = "die Organisation des Kontakts", example = "Sophie-Scholl-Gymnasium")
 	public String organisation;
-	
+
 	/**
-	 * Die Rolle innerhalb der Organisation dieses Kontakts 
+	 * Die Rolle innerhalb der Organisation dieses Kontakts
 	 */
 	@Schema(description = "Die Rolle innerhalb der Organisation des Kontakts", example = "Schüler")
 	public String rolle;
@@ -82,7 +82,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 	/** Die ID des Adressbuchkontakts des Kinds */
 	@Schema(description = "Die ID des Adressbuchkontakts des Kinds", example = "Schueler_1234")
 	public String idKind;
-	
+
 	/** Die ID des Adressbuchkontakts der Eltern */
 	@Schema(description = "Die ID des Adressbuchkontakts der Eltern", example = "Erzieher_1234")
 	public String idEltern;

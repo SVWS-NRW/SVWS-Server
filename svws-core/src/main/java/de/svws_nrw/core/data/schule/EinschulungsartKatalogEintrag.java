@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der Einschulungsarten.  
+ * Sie liefert die Werte für den Katalog der Einschulungsarten.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Einschulungsarten.")
@@ -48,7 +48,7 @@ public class EinschulungsartKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel der Einschulungsart
 	 * @param bezeichnung     eine kurze Bezeichnung der Einschulungsart

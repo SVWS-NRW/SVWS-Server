@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public class DummySetSub implements NavigableSet<Integer> {
+public final class DummySetSub implements NavigableSet<Integer> {
 
 	/**
 	 * Das Set auf das sich diese Sub-Sicht bezieht.
@@ -30,16 +30,16 @@ public class DummySetSub implements NavigableSet<Integer> {
 	/**
 	 * Falls FALSE werden alle Elemente absteigend interpretiert.
 	 */
-	private boolean _asc;
+	private final boolean _asc;
 
 	/**
 	 * Definiert mit Hilfe von {@link DummySetIntervall} eine Sicht auf das {@link DummySet}.
-	 * 
+	 *
 	 * @param par Das Set auf das sich diese Sub-Sicht bezieht.
 	 * @param iv  Definiert das Intervall der Sub-Sicht.
 	 * @param asc Falls FALSE werden alle Elemente absteigend interpretiert.
 	 */
-	public DummySetSub(@NotNull DummySet par, @NotNull DummySetIntervall iv, boolean asc) {
+	public DummySetSub(@NotNull final DummySet par, @NotNull final DummySetIntervall iv, final boolean asc) {
 		_par = par;
 		_iv = iv;
 		_asc = asc;
@@ -71,37 +71,37 @@ public class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(@NotNull final Object o) {
 		return _par.bcContainsKey(_iv, o);
 	}
 
 	@Override
-	public boolean add(@NotNull Integer e) {
+	public boolean add(@NotNull final Integer e) {
 		return _par.bcAddKey(_iv, e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) {
+	public boolean remove(@NotNull final Object o) {
 		return _par.bcRemoveKeyReturnBool(_iv, o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) {
+	public boolean containsAll(@NotNull final Collection<?> c) {
 		return _par.bcContainsAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull Integer> c) {
+	public boolean addAll(@NotNull final Collection<? extends @NotNull Integer> c) {
 		return _par.bcAddAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll(@NotNull final Collection<?> c) {
 		return _par.bcRetainAllKeys(_iv, c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(@NotNull final Collection<?> c) {
 		return _par.bcRemoveAllKeys(_iv, c);
 	}
 
@@ -111,22 +111,22 @@ public class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public Integer lower(@NotNull Integer e) {
+	public Integer lower(@NotNull final Integer e) {
 		return _asc ? _par.bcGetLowerKeyOrNull(_iv, e) : _par.bcGetHigherKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer floor(@NotNull Integer e) {
+	public Integer floor(@NotNull final Integer e) {
 		return _asc ? _par.bcGetFloorKeyOrNull(_iv, e) : _par.bcGetCeilingKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer ceiling(@NotNull Integer e) {
+	public Integer ceiling(@NotNull final Integer e) {
 		return _asc ? _par.bcGetCeilingKeyOrNull(_iv, e) : _par.bcGetFloorKeyOrNull(_iv, e);
 	}
 
 	@Override
-	public Integer higher(@NotNull Integer e) {
+	public Integer higher(@NotNull final Integer e) {
 		return _asc ? _par.bcGetHigherKeyOrNull(_iv, e) : _par.bcGetLowerKeyOrNull(_iv, e);
 	}
 
@@ -156,43 +156,43 @@ public class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public NavigableSet<Integer> subSet(Integer fromElement, boolean fromInclusive, Integer toElement,
-			boolean toInclusive) {
+	public NavigableSet<Integer> subSet(final Integer fromElement, final boolean fromInclusive, final Integer toElement,
+			final boolean toInclusive) {
 		return createSet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull Integer toElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull final Integer toElement, final boolean inclusive) {
 		return createSet(_iv.from, _iv.fromInc, toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull Integer fromElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement, final boolean inclusive) {
 		return createSet(fromElement, inclusive, _iv.to, _iv.toInc);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull Integer fromElement, @NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
 		return createSet(fromElement, true, toElement, false);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull final Integer toElement) {
 		return createSet(_iv.from, _iv.fromInc, toElement, false);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull Integer fromElement) {
+	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement) {
 		return createSet(fromElement, true, _iv.to, _iv.toInc);
 	}
 
-	private @NotNull NavigableSet<@NotNull Integer> createSet(Integer from, boolean fromInc, @NotNull Integer to,
-			boolean toInc) {
+	private @NotNull NavigableSet<@NotNull Integer> createSet(final Integer from, final boolean fromInc, @NotNull final Integer to,
+			final boolean toInc) {
 		if (_iv.contains(from, fromInc))
 			throw new IllegalArgumentException();
 		if (_iv.contains(to, toInc))
 			throw new IllegalArgumentException();
-		DummySetIntervall info = new DummySetIntervall(from, fromInc, to, toInc);
+		final DummySetIntervall info = new DummySetIntervall(from, fromInc, to, toInc);
 		return new DummySetSub(_par, info, _asc);
 	}
 
@@ -202,13 +202,13 @@ public class DummySetSub implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public <T> T[] toArray(T[] a) {
+	public <T> T[] toArray(final T[] a) {
 		return getArrayListOfKeys().toArray(a);
 	}
 
 	private ArrayList<Integer> getArrayListOfKeys() {
-		ArrayList<Integer> list = new ArrayList<>();
-		for (Integer key : this)
+		final ArrayList<Integer> list = new ArrayList<>();
+		for (final Integer key : this)
 			list.add(key);
 		return list;
 	}

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Dieser Algorithmus hat folgende Strategie - Pseudocode:
  * <pre>
  * Gehe die Klausuren in zufälliger Reihenfolge durch.
@@ -13,15 +13,15 @@ import jakarta.validation.constraints.NotNull;
  *     Keinen Termin gefunden?
  *         Erzeuge einen neuen Termin und füge Klausur hinzu.
  * </pre>
- * 
+ *
  * @author Benjamin A. Bartsch */
-public class KlausurterminblockungAlgorithmusGreedy1 extends KlausurterminblockungAlgorithmusAbstract {
+public final class KlausurterminblockungAlgorithmusGreedy1 extends KlausurterminblockungAlgorithmusAbstract {
 
-	/** 
+	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurterminblockungAlgorithmusGreedy1(final @NotNull Random pRandom, final @NotNull KlausurterminblockungDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);

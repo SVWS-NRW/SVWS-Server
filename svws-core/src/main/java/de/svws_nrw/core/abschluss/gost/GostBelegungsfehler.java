@@ -514,7 +514,7 @@ public enum GostBelegungsfehler {
 	 * @param textGESAMT   der zugeordnete Text für die Gesamtbelegprüfung oder null
 	 * @param textEF1      der zugeordnete Text für die EF.1-Prüfung oder null
 	 */
-	private GostBelegungsfehler(final @NotNull String code, final @NotNull GostBelegungsfehlerArt art, final String textGESAMT, final String textEF1) {
+	GostBelegungsfehler(final @NotNull String code, final @NotNull GostBelegungsfehlerArt art, final String textGESAMT, final String textEF1) {
 		this.code = code;
 		this.art = art;
 		this.textGESAMT = (textGESAMT != null) ? textGESAMT : "Programmfehler: Diese Belegungsfehlerart ist für eine Gesamt-Prüfung nicht vorgesehen!";
@@ -558,14 +558,14 @@ public enum GostBelegungsfehler {
 	 * Gibt je nach angegebenener Belegprüfungsart den zugehörigen Text für den Belegungsfehler
 	 * zurück.
 	 *
-	 * @param pruef_art   die Belegprüfungsart
+	 * @param pruefArt   die Belegprüfungsart
 	 *
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
-	public @NotNull String getText(final @NotNull GostBelegpruefungsArt pruef_art) {
-		if (pruef_art.equals(GostBelegpruefungsArt.EF1))
+	public @NotNull String getText(final @NotNull GostBelegpruefungsArt pruefArt) {
+		if (pruefArt.equals(GostBelegpruefungsArt.EF1))
 			return textEF1;
-		if (pruef_art.equals(GostBelegpruefungsArt.GESAMT))
+		if (pruefArt.equals(GostBelegpruefungsArt.GESAMT))
 			return textGESAMT;
 		return textGESAMT;
 	}

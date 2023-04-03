@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Die Klasse liefert die Informationen zu Nachprüfungen bei eines Lernabschnitts eines Schülers zurück.
- * Siehe auch {@link SchuelerLernabschnittsdaten}.  
+ * Siehe auch {@link SchuelerLernabschnittsdaten}.
  */
 @XmlRootElement
 @Schema(description = "Die Informationen zu Nachprüfungen bei eines Lernabschnitts eines Schülers.")

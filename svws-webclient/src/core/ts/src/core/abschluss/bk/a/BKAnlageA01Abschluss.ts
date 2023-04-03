@@ -13,6 +13,13 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 		super();
 	}
 
+	/**
+	 * TODO
+	 *
+	 * @param input   die Fächer für die Abschlussprüfung
+	 *
+	 * @return das Ergebnis der Abschlussprüfung
+	 */
 	public handle(input : BKAnlageAFaecher) : AbschlussErgebnisBerufsbildend {
 		this.logger.log(LogLevel.INFO, "Prüfe BSA:");
 		if (AbschlussManagerBerufsbildend.getAnzahlUngenuegend(input) > 0) {

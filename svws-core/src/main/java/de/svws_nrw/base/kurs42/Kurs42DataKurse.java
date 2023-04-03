@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.svws_nrw.core.types.gost.GostKursart;
 
-/** 
+/**
  * Diese Klasse dient als DTO für die CSV-Tabelle {@code Kurse.txt} eines Kurs42-Textdatei-Exportes. Ein Kurs ist
  * eindeutig über das Attribut {@link #Name} spezifiziert. Die Attribute {@link #Fach} und {@link #Kursart} definieren
  * zusammen die Fachart, z.B. {@code D;LK}.
- * 
- * @author Benjamin A. Bartsch, Thomas Bachran 
+ *
+ * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "KursId", "Fach", "Name", "Lehrer", "Std", "Raum", "Kursart", "Schulnummer", "Schienenzahl",
-		"Gesperrt", "Blocken", "ParallelKursZahl", "ParallelKursNr" })
+	"Gesperrt", "Blocken", "ParallelKursZahl", "ParallelKursNr" })
 public class Kurs42DataKurse {
 
 	/** Die ID des Kurses innerhalb von Kurs 42. Die Spalte wird ignoriert, da sie für den Import nicht nötig ist. */
@@ -33,7 +33,7 @@ public class Kurs42DataKurse {
 	/** Der Raum, der dem Kurs zugeordnet ist. Diese Spalte wird ignoriert, da sie für den Import nicht nötig ist. */
 	public String Raum;
 
-	/** Das Kürzel der Kursart (z.B. 'LK') des Kurses. Eine von zwei Spalten in Kurs 42, um die 
+	/** Das Kürzel der Kursart (z.B. 'LK') des Kurses. Eine von zwei Spalten in Kurs 42, um die
 	 * Fachart eindeutig zu identifizieren. (siehe auch {@link GostKursart}) */
 	public String Kursart;
 

@@ -38,7 +38,6 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         {@code S2 2022}<br>
 	 *         {@code Q4 2022}<br>
 	 *         {@code 4/6 2022}<br>
-	 *
 	 */
 	public getSchuljahresAbschnittAsString() : string {
 		return SchuljahresAbschnittsManager.createSchuljahresAbschnittString(this.abschnitt, this.anzahlAbschnitte);
@@ -57,7 +56,6 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         {@code S2 2022}<br>
 	 *         {@code Q4 2022}<br>
 	 *         {@code 4/6 2022}<br>
-	 *
 	 */
 	public static createSchuljahresAbschnittString(abschnitt : Schuljahresabschnitt, anzahlAbschnitte : number) : string {
 		if (anzahlAbschnitte <= 1) {

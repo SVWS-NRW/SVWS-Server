@@ -14,7 +14,7 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
 /**
  * Testet die Klasse {@link AVLSet} mit randomisierten Daten, indem alle Operationen auf der Dummy-Klasse
  * {@link DummySet} simultan durchgeführt werden.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class TestAVLSetRandom {
@@ -56,143 +56,143 @@ public class TestAVLSetRandom {
 					fail("set1.size() != set2.size() --> " + set1.size() + " != " + set2.size());
 			}
 			case 3 -> { // isEmpty
-				boolean b1 = set1.isEmpty();
-				boolean b2 = set2.isEmpty();
+				final boolean b1 = set1.isEmpty();
+				final boolean b2 = set2.isEmpty();
 				if (b1 != b2)
 					fail("set1.isEmpty() != set2.isEmpty() --> " + b1 + " != " + b2);
 			}
 			case 4 -> { // contains
-				int v = RANDOM.nextInt(MAX_VALUE);
-				boolean b1 = set1.contains(v);
-				boolean b2 = set2.contains(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final boolean b1 = set1.contains(v);
+				final boolean b2 = set2.contains(v);
 				if (b1 != b2)
 					fail("set1.contains(" + v + ") != set2.contains(" + v + ") --> " + b1 + " != " + b2);
 			}
 			case 5 -> { // Object[] toArray()
-				Object[] oArr1 = set1.toArray();
-				Object[] oArr2 = set2.toArray();
+				final Object[] oArr1 = set1.toArray();
+				final Object[] oArr2 = set2.toArray();
 				for (int i = 0; i < Math.max(oArr1.length, oArr2.length); i++) {
-					Integer i1 = (Integer) oArr1[i];
-					Integer i2 = (Integer) oArr2[i];
+					final Integer i1 = (Integer) oArr1[i];
+					final Integer i2 = (Integer) oArr2[i];
 					if (unequal(i1, i2))
 						fail("oArr1[" + i + "] != oArr2[" + i + "] --> " + i1 + " != " + i2);
 				}
 			}
 			case 6 -> { // T[] toArray()
-				Integer[] tArr1 = set1.toArray(new Integer[0]);
-				Integer[] tArr2 = set2.toArray(new Integer[0]);
+				final Integer[] tArr1 = set1.toArray(new Integer[0]);
+				final Integer[] tArr2 = set2.toArray(new Integer[0]);
 				for (int i = 0; i < Math.max(tArr1.length, tArr2.length); i++) {
-					Integer i1 = tArr1[i];
-					Integer i2 = tArr2[i];
+					final Integer i1 = tArr1[i];
+					final Integer i2 = tArr2[i];
 					if (unequal(i1, i2))
 						fail("oArr1[" + i + "] != oArr2[" + i + "] --> " + i1 + " != " + i2);
 				}
 			}
 			case 7 -> { // add
-				int v = RANDOM.nextInt(MAX_VALUE);
-				boolean b1 = set1.add(v);
-				boolean b2 = set2.add(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final boolean b1 = set1.add(v);
+				final boolean b2 = set2.add(v);
 				if (b1 != b2)
 					fail("set1.add(" + v + ") != set2.add(" + v + ") --> " + b1 + " != " + b2);
 			}
 			case 8 -> { // remove
-				int v = RANDOM.nextInt(MAX_VALUE);
-				boolean b1 = set1.remove(v);
-				boolean b2 = set2.remove(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final boolean b1 = set1.remove(v);
+				final boolean b2 = set2.remove(v);
 				if (b1 != b2)
 					fail("set1.remove(" + v + ") != set2.remove(" + v + ") --> " + b1 + " != " + b2);
 			}
 			case 9 -> { // containsAll
-				LinkedCollection<Integer> c = new LinkedCollection<>();
+				final LinkedCollection<Integer> c = new LinkedCollection<>();
 				for (int i = 0; i < MAX_VALUE / 5; i++)
 					c.addLast(RANDOM.nextInt(MAX_VALUE));
-				boolean b1 = set1.containsAll(c);
-				boolean b2 = set2.containsAll(c);
+				final boolean b1 = set1.containsAll(c);
+				final boolean b2 = set2.containsAll(c);
 				if (b1 != b2)
 					fail("set1.containsAll(" + c + ") != set2.containsAll(" + c + ") --> " + b1 + " != " + b2);
 			}
 			case 10 -> { // addAll
-				LinkedCollection<Integer> c = new LinkedCollection<>();
+				final LinkedCollection<Integer> c = new LinkedCollection<>();
 				for (int i = 0; i < 10; i++)
 					c.addLast(RANDOM.nextInt(MAX_VALUE));
-				boolean b1 = set1.addAll(c);
-				boolean b2 = set2.addAll(c);
+				final boolean b1 = set1.addAll(c);
+				final boolean b2 = set2.addAll(c);
 				if (b1 != b2)
 					fail("set1.addAll(" + c + ") != set2.addAll(" + c + ") --> " + b1 + " != " + b2);
 			}
 			case 11 -> { // retainAll
-				LinkedCollection<Integer> c = new LinkedCollection<>();
+				final LinkedCollection<Integer> c = new LinkedCollection<>();
 				for (int i = 0; i < 10; i++)
 					c.addLast(RANDOM.nextInt(MAX_VALUE));
-				boolean b1 = set1.retainAll(c);
-				boolean b2 = set2.retainAll(c);
+				final boolean b1 = set1.retainAll(c);
+				final boolean b2 = set2.retainAll(c);
 				if (b1 != b2)
 					fail("set1.retainAll(" + c + ") != set2.retainAll(" + c + ") --> " + b1 + " != " + b2);
 				checkEquality();
 			}
 			case 12 -> { // removeAll
-				LinkedCollection<Integer> c = new LinkedCollection<>();
+				final LinkedCollection<Integer> c = new LinkedCollection<>();
 				for (int i = 0; i < 10; i++)
 					c.addLast(RANDOM.nextInt(MAX_VALUE));
-				boolean b1 = set1.removeAll(c);
-				boolean b2 = set2.removeAll(c);
+				final boolean b1 = set1.removeAll(c);
+				final boolean b2 = set2.removeAll(c);
 				if (b1 != b2)
 					fail("set1.removeAll(" + c + ") != set2.removeAll(" + c + ") --> " + b1 + " != " + b2);
 			}
 			case 13 -> { // clear
 				set1.clear();
 				set2.clear();
-				boolean b1 = set1.isEmpty();
-				boolean b2 = set2.isEmpty();
+				final boolean b1 = set1.isEmpty();
+				final boolean b2 = set2.isEmpty();
 				if (b1 != b2)
 					fail("set1.clear()/isEmpty?, set2.clear/isEmpty? --> " + b1 + " != " + b2);
 			}
 			case 14 -> { // lower
-				int v = RANDOM.nextInt(MAX_VALUE);
-				Integer i1 = set1.lower(v);
-				Integer i2 = set2.lower(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final Integer i1 = set1.lower(v);
+				final Integer i2 = set2.lower(v);
 				if (unequal(i1, i2))
 					fail("set1.lower(" + v + ") != set2.lower(" + v + ") --> " + i1 + " != " + i2);
 			}
 			case 15 -> { // floor
-				int v = RANDOM.nextInt(MAX_VALUE);
-				Integer i1 = set1.floor(v);
-				Integer i2 = set2.floor(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final Integer i1 = set1.floor(v);
+				final Integer i2 = set2.floor(v);
 				if (unequal(i1, i2))
 					fail("set1.floor(" + v + ") != set2.floor(" + v + ") --> " + i1 + " != " + i2);
 			}
 			case 16 -> { // ceiling
-				int v = RANDOM.nextInt(MAX_VALUE);
-				Integer i1 = set1.ceiling(v);
-				Integer i2 = set2.ceiling(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final Integer i1 = set1.ceiling(v);
+				final Integer i2 = set2.ceiling(v);
 				if (unequal(i1, i2))
 					fail("set1.ceiling(" + v + ") != set2.ceiling(" + v + ") --> " + i1 + " != " + i2);
 			}
 			case 17 -> { // higher
-				int v = RANDOM.nextInt(MAX_VALUE);
-				Integer i1 = set1.higher(v);
-				Integer i2 = set2.higher(v);
+				final int v = RANDOM.nextInt(MAX_VALUE);
+				final Integer i1 = set1.higher(v);
+				final Integer i2 = set2.higher(v);
 				if (unequal(i1, i2))
 					fail("set1.higher(" + v + ") != set2.higher(" + v + ") --> " + i1 + " != " + i2);
 			}
 			case 18 -> { // pollFirst
-				Integer i1 = set1.pollFirst();
-				Integer i2 = set2.pollFirst();
+				final Integer i1 = set1.pollFirst();
+				final Integer i2 = set2.pollFirst();
 				if (unequal(i1, i2))
 					fail("set1.pollFirst() != set2.pollFirst() --> " + i1 + " != " + i2);
 			}
 			case 19 -> { // pollLast
-				Integer i1 = set1.pollLast();
-				Integer i2 = set2.pollLast();
+				final Integer i1 = set1.pollLast();
+				final Integer i2 = set2.pollLast();
 				if (unequal(i1, i2))
 					fail("set1.pollLast() != set2.pollLast() --> " + i1 + " != " + i2);
 			}
 			case 20 -> { // iterator
-				Iterator<Integer> iter1 = set1.iterator();
-				Iterator<Integer> iter2 = set2.iterator();
+				final Iterator<Integer> iter1 = set1.iterator();
+				final Iterator<Integer> iter2 = set2.iterator();
 				while (iter1.hasNext() || iter2.hasNext()) {
-					Integer i1 = iter1.next();
-					Integer i2 = iter2.next();
+					final Integer i1 = iter1.next();
+					final Integer i2 = iter2.next();
 					if (unequal(i1, i2))
 						fail("iter1.next() != iter2.next() --> " + i1 + " != " + i2);
 				}
@@ -202,8 +202,8 @@ public class TestAVLSetRandom {
 	}
 
 	private void checkEquality() {
-		Integer[] t1 = set1.toArray(new Integer[0]);
-		Integer[] t2 = set2.toArray(new Integer[0]);
+		final Integer[] t1 = set1.toArray(new Integer[0]);
+		final Integer[] t2 = set2.toArray(new Integer[0]);
 		if (t1.length != t2.length) {
 			System.out.println(Arrays.toString(t1));
 			System.out.println(Arrays.toString(t2));
@@ -211,7 +211,7 @@ public class TestAVLSetRandom {
 		}
 	}
 
-	private static boolean unequal(Integer a, Integer b) {
+	private static boolean unequal(final Integer a, final Integer b) {
 		return (a == null) ? (b != null) : !a.equals(b);
 	}
 

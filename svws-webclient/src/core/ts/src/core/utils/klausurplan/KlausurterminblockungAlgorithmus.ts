@@ -32,28 +32,24 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
 		const out : List<List<number>> = new Vector();
 		switch (pConfig.get_lk_gk_modus()) {
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:{
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE: {
 				KlausurterminblockungAlgorithmus.berechne_helper(pInput, pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK:{
-				const nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
-				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK: {
+				KlausurterminblockungAlgorithmus.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, true), pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK:{
-				const nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
-				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK: {
+				KlausurterminblockungAlgorithmus.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, false), pConfig, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT:{
-				const nurLK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, true);
-				const nurGK : List<GostKursklausur> = KlausurterminblockungAlgorithmus.filter(pInput, false);
-				KlausurterminblockungAlgorithmus.berechne_helper(nurLK, pConfig, out);
-				KlausurterminblockungAlgorithmus.berechne_helper(nurGK, pConfig, out);
+			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT: {
+				KlausurterminblockungAlgorithmus.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, true), pConfig, out);
+				KlausurterminblockungAlgorithmus.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, false), pConfig, out);
 				break;
 			}
-			default:{
+			default: {
 				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!")
 			}
 		}

@@ -43,7 +43,7 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 	/**
 	 * Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden.
 	 */
-	filterWeitereFremdsprachen : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (!JavaObject.equalsTranspiler("E", (f.kuerzel)) && (f.istFremdsprache !== null) && (f.istFremdsprache === true)) };
+	filterWeitereFremdsprachen : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (!JavaObject.equalsTranspiler("E", (f.kuerzel)) && (f.istFremdsprache !== null) && (f.istFremdsprache)) };
 
 
 	public constructor() {
@@ -119,11 +119,11 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 	 * Prüft in Bezug auf Defizite, ob der Abschluss erworben wurde.
 	 *
 	 * @param faecher      die Abschlussfächer nach Fächergruppen sortiert
-	 * @param log_indent   die Einrückung für das Logging
+	 * @param logIndent    die Einrückung für das Logging
 	 *
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
-	private pruefeDefizite(faecher : AbschlussFaecherGruppen, log_indent : string) : AbschlussErgebnis {
+	private pruefeDefizite(faecher : AbschlussFaecherGruppen, logIndent : string) : AbschlussErgebnis {
 		const fg1_defizite : number = faecher.fg1.getFaecherAnzahl(this.filterDefizit);
 		const fg2_defizite : number = faecher.fg2.getFaecherAnzahl(this.filterDefizit);
 		const ges_defizite : number = fg1_defizite + fg2_defizite;
@@ -131,29 +131,29 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 		const fg1_ungenuegend : number = faecher.fg1.getFaecherAnzahl(this.filterUngenuegend);
 		const fg2_ungenuegend : number = faecher.fg2.getFaecherAnzahl(this.filterUngenuegend);
 		if (fg1_defizite > 0)
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizit)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizit)!);
 		if (fg2_defizite > 0)
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizit)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizit)!);
 		if ((fg1_ungenuegend > 0) || (fg2_ungenuegend > 1)) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, false);
 		}
-		this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> " + ((fg2_ungenuegend === 1) ? "1x6 in FG2 erlaubt" : "0x6 in FG1 und FG2") + " -> prüfe weitere Defizite");
+		this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> " + ((fg2_ungenuegend === 1) ? "1x6 in FG2 erlaubt" : "0x6 in FG1 und FG2") + " -> prüfe weitere Defizite");
 		if (fg1_mangelhaft > 2) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: Mehr als 2x5 in FG1");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: Mehr als 2x5 in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, false);
 		}
 		if ((fg1_mangelhaft === 2) && (fg2_defizite > 1)) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: 2x5 in FG1 und mind. ein weiteres Defizit in FG2");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: 2x5 in FG1 und mind. ein weiteres Defizit in FG2");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, false);
 		}
 		if (ges_defizite > 3) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: Insgesamt mehr als 3 Defizite");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: Insgesamt mehr als 3 Defizite");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, false);
 		}
 		const hatNP : boolean = (fg1_mangelhaft === 2) || (ges_defizite === 3);
 		if (hatNP) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 			this.logger.logLn(LogLevel.INFO, " -> Hinweis: Nachprüfungen in ZP10-Fächern nicht möglich");
 			const np_faecher : List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(this.filterMangelhaftOhneZP10Faecher) : faecher.getKuerzel(this.filterMangelhaftOhneZP10Faecher);
 			const abschlussergebnis : AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
@@ -161,10 +161,10 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 			return abschlussergebnis;
 		}
 		if ((fg1_defizite === 0) && (fg2_defizite === 0)) {
-			this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> keine Defizite in FG1 und FG2");
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> keine Defizite in FG1 und FG2");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, true);
 		}
-		this.logger.logLn(LogLevel.DEBUG, log_indent! + " -> zwei Defizite erlaubt (solange nicht beide in FG1)");
+		this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zwei Defizite erlaubt (solange nicht beide in FG1)");
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA10, true);
 	}
 

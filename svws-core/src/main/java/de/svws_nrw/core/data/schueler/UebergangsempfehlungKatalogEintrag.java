@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Core-DTO für Katalog-Einträge zu der Übergangsempfehlung eines Schüler nach der 4. Klasse in die
- * 5. Klasse der Sekundarstufe I  
+ * 5. Klasse der Sekundarstufe I
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Übergangsempfehlungen.")
@@ -27,9 +27,9 @@ public class UebergangsempfehlungKatalogEintrag {
 	@Schema(description = "die Bezeichnung der Übergangsempfehlung", example = "Realschule")
 	public @NotNull String bezeichnung = "";
 
-    /** Der Statistikschlüssel der Übergangsempfehlung */
-    @Schema(description = "der Statistikschlüssel der Übergangsempfehlung", example = "10XX")
-    public @NotNull String schluessel = "";
+	/** Der Statistikschlüssel der Übergangsempfehlung */
+	@Schema(description = "der Statistikschlüssel der Übergangsempfehlung", example = "10XX")
+	public @NotNull String schluessel = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
@@ -49,29 +49,29 @@ public class UebergangsempfehlungKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel
 	 * @param bezeichnung     die Bezeichnung
-     * @param empfehlung      die Empfehlung
-     * @param teilweise       die eingeschränkte Empfehlung
+	 * @param empfehlung      die Empfehlung
+	 * @param teilweise       die eingeschränkte Empfehlung
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public UebergangsempfehlungKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
-	        final Schulform empfehlung, final Schulform teilweise, final Integer gueltigVon, final Integer gueltigBis) {
+			final Schulform empfehlung, final Schulform teilweise, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;
 		if (empfehlung == null) {
-		    this.schluessel = "****";
+			this.schluessel = "****";
 		} else {
-		    this.schluessel = empfehlung.daten.nummer;
-		    if (teilweise == null) {
-	            this.schluessel += "XX";
-	        } else { 
-	            this.schluessel += teilweise.daten.nummer.toString();
-	        }
+			this.schluessel = empfehlung.daten.nummer;
+			if (teilweise == null) {
+				this.schluessel += "XX";
+			} else {
+				this.schluessel += teilweise.daten.nummer.toString();
+			}
 		}
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.types.gost;
 
 /**
- * Diese Klasse stellt die Core-Types als Aufzählung für Schriftlichkeit von 
+ * Diese Klasse stellt die Core-Types als Aufzählung für Schriftlichkeit von
  * Kursen in der Gymnasialen Oberstufe zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
@@ -22,7 +22,7 @@ public enum GostSchriftlichkeit {
 	public final Boolean istSchriftlich;
 
 
-	private GostSchriftlichkeit(final Boolean istSchriftlich) {
+	GostSchriftlichkeit(final Boolean istSchriftlich) {
 		this.istSchriftlich = istSchriftlich;
 	}
 

@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.Geschlecht;
  */
 @DisplayName("Teste den Core-Type Geschlecht")
 public class TestCoreTypeGeschlecht {
-	
+
     /**
      * Führt grundlegende Tests zu der Defintion zu dem Core-Type-Geschlecht durch.
      */
@@ -28,9 +28,9 @@ public class TestCoreTypeGeschlecht {
     	assertEquals(Geschlecht.M, Geschlecht.fromValue(3));
     	assertEquals(Geschlecht.W, Geschlecht.fromValue(4));
     	assertEquals(Geschlecht.D, Geschlecht.fromValue(5));
-    	assertEquals(Geschlecht.X, Geschlecht.fromValue(6));    	
+    	assertEquals(Geschlecht.X, Geschlecht.fromValue(6));
     }
 
 	// TODO add additional tests
-    
+
 }

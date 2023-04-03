@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert den Katalog der Abgangsarten.  
+ * Sie liefert den Katalog der Abgangsarten.
  */
 @XmlRootElement
 @Schema(description = "der Katalog der Abgangsarten.")

@@ -6,14 +6,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt eine Auswahl von Daten eines Betriebs aus einer Liste.  
+ * Sie beschreibt eine Auswahl von Daten eines Betriebs aus einer Liste.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag eines Betriebs in der Erzieherliste.")
 @TranspilerDTO
 public class BetriebListeEintrag {
 
-    /** ID der weiteren Adresse (Betriebe) */
+	/** ID der weiteren Adresse (Betriebe) */
 	@Schema(description = "die ID des Betriebes", example = "4711")
 	public long id;
 
@@ -44,5 +44,5 @@ public class BetriebListeEintrag {
 	/** Brache des Betriebs */
 	@Schema(description = " Brache des Betriebs ", example = "true")
 	public String branche;
-    
+
 }

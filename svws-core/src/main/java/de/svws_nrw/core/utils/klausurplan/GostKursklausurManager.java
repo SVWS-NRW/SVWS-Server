@@ -51,7 +51,7 @@ public class GostKursklausurManager {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param klausuren die Liste der GostKursklausuren eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 * @param termine   die Liste der GostKlausurtermine eines Abiturjahrgangs und
@@ -68,7 +68,7 @@ public class GostKursklausurManager {
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und erzeugt die privaten Attribute.
-	 * 
+	 *
 	 * @param klausuren die Liste der GostKursklausuren eines Abiturjahrgangs und
 	 *                  Gost-Halbjahres
 	 */
@@ -146,7 +146,7 @@ public class GostKursklausurManager {
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
-	 * 
+	 *
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public void updateKursklausur(final @NotNull GostKursklausur klausur) {
@@ -163,11 +163,11 @@ public class GostKursklausurManager {
 				final Vector<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
 				if (entry == null) {
 					// TODO Fehler, denn kann eigentlich nicht sein.
-				} else {
-					if (entry.contains(klausur)) {
-						oldTerminId = key;
-						entry.remove(klausur);
-					}
+					continue;
+				}
+				if (entry.contains(klausur)) {
+					oldTerminId = key;
+					entry.remove(klausur);
 				}
 			}
 
@@ -177,9 +177,8 @@ public class GostKursklausurManager {
 				final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = quartalMap.get(oldTerminId);
 				if (listOldQuartalTerminKursklausuren != null)
 					listOldQuartalTerminKursklausuren.remove(klausur);
-			} else {
-				// TODO Fehler, denn kann eigentlich nicht sein.
 			}
+			// TODO else ... Fehler, denn kann eigentlich nicht sein.
 
 			// aus _mapQuartalTerminKursklausuren löschen
 			final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostKursklausur>>> quartalKursartMap = _mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
@@ -189,12 +188,10 @@ public class GostKursklausurManager {
 					final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren != null)
 						listOldQuartalTerminKursklausuren.remove(klausur);
-				} else {
-					// TODO Fehler, denn kann eigentlich nicht sein.
 				}
-			} else {
-				// TODO Fehler, denn kann eigentlich nicht sein.
+				// TODO else ... Fehler, denn kann eigentlich nicht sein.
 			}
+			// TODO else ... Fehler, denn kann eigentlich nicht sein.
 
 			// _mapQuartalKursKlausuren muss nicht geändert werden
 
@@ -222,7 +219,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
-	 * 
+	 *
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public void addTermin(final @NotNull GostKlausurtermin termin) {
@@ -241,7 +238,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
-	 * 
+	 *
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public void addKlausur(final @NotNull GostKursklausur klausur) {
@@ -252,7 +249,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Fügt den internen Strukturen neue Kursklausuren hinzu.
-	 * 
+	 *
 	 * @param klausuren die Liste von GostKursklausur-Objekten
 	 */
 	public void addKlausuren(final @NotNull List<@NotNull GostKursklausur> klausuren) {
@@ -263,7 +260,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
-	 * 
+	 *
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public void removeTermin(final @NotNull GostKlausurtermin termin) {
@@ -289,9 +286,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(final Long idTermin) {
@@ -301,7 +298,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausuren() {
@@ -310,9 +307,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public List<@NotNull GostKursklausur> getKursklausuren(final int quartal) {
@@ -322,7 +319,7 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten für die noch kein Termin /
 	 * Schiene gesetzt wurde
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin() {
@@ -332,9 +329,9 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin(final int quartal) {
@@ -350,9 +347,9 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull List<@NotNull GostKursklausur>> getKursklausurenKursartOhneTermin(final int quartal) {
@@ -370,9 +367,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
 	public GostKlausurtermin gibGostKlausurtermin(final long idTermin) {
@@ -382,9 +379,9 @@ public class GostKursklausurManager {
 	/**
 	 * Gibt eine Liste von Schüler-IDs zurück, die vom übergebenen Termin betroffen
 	 * sind.
-	 * 
+	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * 
+	 *
 	 * @return die Liste der betroffenen Schüler-IDs
 	 */
 	public List<@NotNull Long> gibSchuelerIDsZuTermin(final long idTermin) {
@@ -394,9 +391,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Gibt das GostKursklausur-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idKursklausur die ID der Kursklausur
-	 * 
+	 *
 	 * @return das GostKursklausur-Objekt
 	 */
 	public GostKursklausur gibKursklausur(final long idKursklausur) {
@@ -405,7 +402,7 @@ public class GostKursklausurManager {
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres
-	 * 
+	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine() {
@@ -414,9 +411,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 * 
+	 *
 	 * @param idTermin die ID des GostKlausurtermins
-	 * 
+	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
 	public GostKlausurtermin gibKlausurtermin(final long idTermin) {
@@ -425,9 +422,9 @@ public class GostKursklausurManager {
 
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
-	 * 
+	 *
 	 * @param quartal die Nummer des Quartals
-	 * 
+	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine(final int quartal) {
@@ -440,10 +437,10 @@ public class GostKursklausurManager {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param termin  der zu prüfende Klausurtermin
 	 * @param klausur die zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktTerminInternKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
@@ -465,10 +462,10 @@ public class GostKursklausurManager {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param termin  der zu prüfende Klausurtermin
 	 * @param klausur die zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
@@ -492,10 +489,10 @@ public class GostKursklausurManager {
 	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
 	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
 	 * gibt es keinen Konflikt.
-	 * 
+	 *
 	 * @param idTermin      die ID des zu prüfenden Klausurtermins
 	 * @param idKursklausur die ID der zu prüfenden Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(final long idTermin, final long idKursklausur) {
@@ -513,9 +510,9 @@ public class GostKursklausurManager {
 	/**
 	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
 	 * wird die Anzahl der Konflikte zurückgegeben.
-	 * 
+	 *
 	 * @param idTermin die ID des zu prüfenden Klausurtermins
-	 * 
+	 *
 	 * @return die Anzahl der Konflikte innerhalb des Termins.
 	 */
 	public int gibAnzahlKonflikteZuTermin(final long idTermin) {
@@ -536,10 +533,10 @@ public class GostKursklausurManager {
 	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
 	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
 	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 * 
+	 *
 	 * @param idKursklausur1 die ID der ersten zu prüfenden Kursklausur
 	 * @param idKursklausur2 die ID der zweiten zu prüfenden Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(final long idKursklausur1, final long idKursklausur2) {
@@ -556,10 +553,10 @@ public class GostKursklausurManager {
 	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
 	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
 	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 * 
+	 *
 	 * @param klausur1 die erste zu prüfende Kursklausur
 	 * @param klausur2 die zweite zu prüfende Kursklausur
-	 * 
+	 *
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(final @NotNull GostKursklausur klausur1, final @NotNull GostKursklausur klausur2) {

@@ -10,14 +10,14 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Stammdaten eines Betriebs.  
+ * Sie beschreibt die Stammdaten eines Betriebs.
  */
 @XmlRootElement
 @Schema(description = "Die Stammdaten eines Betriebes.")
 @TranspilerDTO
 public class BetriebStammdaten {
 
-    /** ID der weiteren Adresse (Betriebe) */
+	/** ID der weiteren Adresse (Betriebe) */
 	@Schema(description = "die ID des Betriebes", example = "4711")
 	public long id;
 
@@ -98,7 +98,7 @@ public class BetriebStammdaten {
 	public String zusatz2;
 
 	/** Sichtbarkeit des Datensatzes */
-    @Schema(description = " Sichtbarkeit des Datensatzes ", example = "true")
+	@Schema(description = " Sichtbarkeit des Datensatzes ", example = "true")
 	public Boolean Sichtbar;
 
 	/** Datensatz ist änderbar Ja Nein */
@@ -124,9 +124,9 @@ public class BetriebStammdaten {
 	/** Externe ID des Betriebsdatensatzes */
 	@Schema(description = " Externe ID des Betriebsdatensatzes  ", example = "1234")
 	public String ExtID;
-    
+
 	/** Ein Array mit den Ansprechpartnern im Betrieb. */
 	@ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class, description = "Ein Array mit den Ansprechpartnern im Betrieb."))
 	public @NotNull Vector<@NotNull BetriebAnsprechpartner> ansprechpartner = new Vector<>();
-	
+
 }

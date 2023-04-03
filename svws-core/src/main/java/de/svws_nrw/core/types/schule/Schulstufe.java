@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Core-Type enthält die unterschiedlichen Schulstufen.
- * Siehe auch: 
+ * Siehe auch:
  * - https://de.wikipedia.org/wiki/Bildungssystem_in_Deutschland
  * - https://www.schulministerium.nrw/schule-bildung/schulorganisation/schulformen
  */
@@ -25,10 +25,10 @@ public enum Schulstufe {
     PRIMARSTUFE(new SchulstufeKatalogEintrag[] {
         new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", Arrays.asList(
                 Schulform.FW, Schulform.HI, Schulform.WF,
-                Schulform.G, 
-                Schulform.PS, 
-                Schulform.R, 
-                Schulform.S, Schulform.KS, 
+                Schulform.G,
+                Schulform.PS,
+                Schulform.R,
+                Schulform.S, Schulform.KS,
                 Schulform.V
             ), null, null)
     }),
@@ -37,16 +37,16 @@ public enum Schulstufe {
     SEKUNDARSTUFE_I(new SchulstufeKatalogEintrag[] {
         new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", Arrays.asList(
                 Schulform.FW, Schulform.HI, Schulform.WF,
-                Schulform.PS, 
-                Schulform.S, Schulform.KS, 
-                Schulform.GE, 
-                Schulform.GM, 
-                Schulform.GY, 
-                Schulform.H, 
-                Schulform.R, 
-                Schulform.SG, 
-                Schulform.SK, 
-                Schulform.SR, 
+                Schulform.PS,
+                Schulform.S, Schulform.KS,
+                Schulform.GE,
+                Schulform.GM,
+                Schulform.GY,
+                Schulform.H,
+                Schulform.R,
+                Schulform.SG,
+                Schulform.SK,
+                Schulform.SR,
                 Schulform.V
             ), null, null)
     }),
@@ -55,12 +55,12 @@ public enum Schulstufe {
     SEKUNDARSTUFE_II(new SchulstufeKatalogEintrag[] {
         new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", Arrays.asList(
                 Schulform.FW, Schulform.HI, Schulform.WF,
-                Schulform.GE, 
-                Schulform.GM, 
-                Schulform.GY, 
-                Schulform.PS, 
-                Schulform.SG 
-            ),null, null)
+                Schulform.GE,
+                Schulform.GM,
+                Schulform.GY,
+                Schulform.PS,
+                Schulform.SG
+            ), null, null)
     }),
 
     /** Die Tertiärstufe */
@@ -77,7 +77,7 @@ public enum Schulstufe {
     });
 
     /** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-    public static long VERSION = 1;
+    public static final long VERSION = 1;
 
     /** Der aktuellen Daten der Schulstufe, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
     public final @NotNull SchulstufeKatalogEintrag daten;
@@ -85,18 +85,18 @@ public enum Schulstufe {
     /** Die Historie mit den Einträgen der Schulstufe */
     public final @NotNull SchulstufeKatalogEintrag@NotNull[] historie;
 
-    /** Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln */ 
+    /** Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln */
     private static final @NotNull HashMap<@NotNull String, @NotNull Schulstufe> _mapByKuerzel = new HashMap<>();
 
 
     /**
      * Erzeugt eine neue Schulstufe in der Aufzählung.
-     * 
-     * @param historie   die Historie der Schulstufe, welches ein Array von {@link SchulstufeKatalogEintrag} ist  
+     *
+     * @param historie   die Historie der Schulstufe, welches ein Array von {@link SchulstufeKatalogEintrag} ist
      */
-    private Schulstufe(final @NotNull SchulstufeKatalogEintrag@NotNull[] historie) {
+    Schulstufe(final @NotNull SchulstufeKatalogEintrag@NotNull[] historie) {
         this.historie = historie;
-        // TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+        // TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
         this.daten = historie[historie.length - 1];
     }
 
@@ -104,7 +104,7 @@ public enum Schulstufe {
     /**
      * Gibt eine Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
      * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-     *    
+     *
      * @return die Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
      */
     private static @NotNull HashMap<@NotNull String, @NotNull Schulstufe> getMapByKuerzel() {
@@ -120,9 +120,9 @@ public enum Schulstufe {
 
     /**
      * Gibt die Schulstufe für das angegebene Kürzel zurück.
-     * 
+     *
      * @param kuerzel   das Kürzel der Schulstufe
-     * 
+     *
      * @return die Schulstufe oder null, falls das Kürzel ungültig ist
      */
     public static Schulstufe getByKuerzel(final String kuerzel) {

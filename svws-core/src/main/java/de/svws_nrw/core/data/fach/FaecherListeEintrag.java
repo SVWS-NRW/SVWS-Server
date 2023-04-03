@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt, wie die Daten für die Fächer übergeben werden.  
+ * Sie beschreibt, wie die Daten für die Fächer übergeben werden.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag eines Faches in der Fächerliste.")
@@ -16,7 +16,7 @@ public class FaecherListeEintrag {
 	/** Die ID des Faches. */
 	@Schema(description = "die ID des Faches", example = "4711")
 	public long id;
-	
+
 	/** Das Kürzel des Faches. */
 	@Schema(description = "das Kürzel des Faches", example = "BI")
 	public String kuerzel;
@@ -24,7 +24,7 @@ public class FaecherListeEintrag {
 	/** Das dem Fach zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Fach zugeordnete Statistik-Kürzel", example = "BI")
 	public String kuerzelStatistik;
-	
+
 	/** Der Name / die Bezeichnung des Faches. */
 	@Schema(description = "der Name / die Bezeichnung des Faches", example = "Biologie")
 	public String bezeichnung;
@@ -32,18 +32,17 @@ public class FaecherListeEintrag {
 	/** Die Sortierreihenfolge des Fächerlisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Fächerlisten-Eintrags", example = "1")
 	public int sortierung;
-	
+
 	/** Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht. */
 	@Schema(description = "gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht", example = "true")
-	public boolean istOberstufenFach;	
-	
+	public boolean istOberstufenFach;
+
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
-	
+
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
 	public boolean istAenderbar;
-	
-	
+
 }

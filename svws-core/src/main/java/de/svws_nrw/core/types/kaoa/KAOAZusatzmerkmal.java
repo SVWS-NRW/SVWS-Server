@@ -597,7 +597,7 @@ public enum KAOAZusatzmerkmal {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;
+	public static final long VERSION = 1;
 
 	/** Die aktuellsten Daten des KAoA-Merkmals */
 	public final @NotNull KAOAZusatzmerkmalEintrag daten;
@@ -617,7 +617,7 @@ public enum KAOAZusatzmerkmal {
 	 *
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAZusatzmerkmalEintrag} ist
 	 */
-	private KAOAZusatzmerkmal(final @NotNull KAOAZusatzmerkmalEintrag@NotNull[] historie) {
+	KAOAZusatzmerkmal(final @NotNull KAOAZusatzmerkmalEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

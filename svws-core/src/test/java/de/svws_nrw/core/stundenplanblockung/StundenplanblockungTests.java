@@ -33,19 +33,19 @@ public class StundenplanblockungTests {
 	private static final int _MAX_KOPPLUNGEN = 40;
 	private static final int _MAX_LERNGRUPPEN = 800;
 
-	/** 
+	/**
 	 * Diese Klasse testet den {@link StundenplanblockungManager} mit randomisierten Daten.
 	 */
 	@DisplayName("testManagerRandom")
 	@Test
 	public void testManagerRandom() {
-		Random lRandom = new Random(_SEED);
+		final Random lRandom = new Random(_SEED);
 		for (int i = 0; i < _ANZAHL_MANAGER_TESTS; i++)
 			subTestManagerZufaellig(lRandom);
 	}
 
-	private static void subTestManagerZufaellig(Random pRandom) {
-		StundenplanblockungManager manager = new StundenplanblockungManager();
+	private static void subTestManagerZufaellig(final Random pRandom) {
+		final StundenplanblockungManager manager = new StundenplanblockungManager();
 
 		for (int i = 0; i < _ANZAHL_MANAGER_SUB_TESTS; i++)
 			subTestManagerSubZufaellig(manager, pRandom);
@@ -53,7 +53,7 @@ public class StundenplanblockungTests {
 		manager.miscCheckConsistencyOrException();
 	}
 
-	private static void subTestManagerSubZufaellig(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestManagerSubZufaellig(final StundenplanblockungManager pMan, final Random pRandom) {
 		subTestLehrkraefte(pMan, pRandom);
 		subTestKlassen(pMan, pRandom);
 		subTestFaecher(pMan, pRandom);
@@ -62,9 +62,9 @@ public class StundenplanblockungTests {
 		subTestLerngruppen(pMan, pRandom);
 	}
 
-	private static void subTestLehrkraefte(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestLehrkraefte(final StundenplanblockungManager pMan, final Random pRandom) {
 		// exists, removeOrException, addOrException
-		long lehrkraftID = pRandom.nextLong(_MAX_LEHRKRAEFTE);
+		final long lehrkraftID = pRandom.nextLong(_MAX_LEHRKRAEFTE);
 		if (pMan.getLehrkraefte().exists(lehrkraftID)) {
 			pMan.getLehrkraefte().removeOrException(lehrkraftID);
 			if (pMan.getLehrkraefte().exists(lehrkraftID))
@@ -76,14 +76,14 @@ public class StundenplanblockungTests {
 		}
 		// getRandomOrException --> setKuerzel
 		if (pMan.getLehrkraefte().size() > 0) {
-			StundenplanblockungManagerLehrkraft le = pMan.getLehrkraefte().getRandomOrException(pRandom);
+			final StundenplanblockungManagerLehrkraft le = pMan.getLehrkraefte().getRandomOrException(pRandom);
 			le.setKuerzel("Lehrkraft " + le.getID() + "-" + pRandom.nextInt(_MAX_LEHRKRAEFTE));
 		}
 	}
 
-	private static void subTestKlassen(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestKlassen(final StundenplanblockungManager pMan, final Random pRandom) {
 		// exists, removeOrException, addOrException
-		long klasseID = pRandom.nextLong(_MAX_KLASSEN);
+		final long klasseID = pRandom.nextLong(_MAX_KLASSEN);
 		if (pMan.getKlassen().exists(klasseID)) {
 			pMan.getKlassen().removeOrException(klasseID);
 			if (pMan.getKlassen().exists(klasseID))
@@ -95,14 +95,14 @@ public class StundenplanblockungTests {
 		}
 		// getRandomOrException --> setKuerzel
 		if (pMan.getKlassen().size() > 0) {
-			StundenplanblockungManagerKlasse kl = pMan.getKlassen().getRandomOrException(pRandom);
+			final StundenplanblockungManagerKlasse kl = pMan.getKlassen().getRandomOrException(pRandom);
 			kl.setKuerzel("Klasse " + kl.getID() + "-" + pRandom.nextInt(_MAX_KLASSEN));
 		}
 	}
 
-	private static void subTestFaecher(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestFaecher(final StundenplanblockungManager pMan, final Random pRandom) {
 		// exists, removeOrException, addOrException
-		long fachID = pRandom.nextLong(_MAX_FAECHER);
+		final long fachID = pRandom.nextLong(_MAX_FAECHER);
 		if (pMan.getFaecher().exists(fachID)) {
 			pMan.getFaecher().removeOrException(fachID);
 			if (pMan.getFaecher().exists(fachID))
@@ -114,10 +114,10 @@ public class StundenplanblockungTests {
 		}
 	}
 
-	private static void subTestRaeume(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestRaeume(final StundenplanblockungManager pMan, final Random pRandom) {
 		switch (pRandom.nextInt(2)) {
 			case 0 -> {
-				long raumID = pRandom.nextLong(_MAX_RAEUME);
+				final long raumID = pRandom.nextLong(_MAX_RAEUME);
 				if (pMan.getRaeume().exists(raumID)) {
 					pMan.getRaeume().removeOrException(raumID);
 					if (pMan.getRaeume().exists(raumID))
@@ -130,17 +130,17 @@ public class StundenplanblockungTests {
 			}
 			case 1 -> {
 				if (pMan.getRaeume().size() > 0) {
-					StundenplanblockungManagerRaum ra = pMan.getRaeume().getRandomOrException(pRandom);
+					final StundenplanblockungManagerRaum ra = pMan.getRaeume().getRandomOrException(pRandom);
 					ra.setKuerzel("Raum " + ra.getID() + "-" + pRandom.nextInt(_MAX_RAEUME));
 				}
 			}
 		}
 	}
 
-	private static void subTestKopplungen(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestKopplungen(final StundenplanblockungManager pMan, final Random pRandom) {
 		switch (pRandom.nextInt(2)) {
 			case 0 -> {
-				long kopplungID = pRandom.nextLong(_MAX_KOPPLUNGEN);
+				final long kopplungID = pRandom.nextLong(_MAX_KOPPLUNGEN);
 				if (pMan.getKopplungen().exists(kopplungID)) {
 					pMan.getKopplungen().removeOrException(kopplungID);
 					if (pMan.getKopplungen().exists(kopplungID))
@@ -153,17 +153,17 @@ public class StundenplanblockungTests {
 			}
 			case 1 -> {
 				if (pMan.getKopplungen().size() > 0) {
-					StundenplanblockungManagerKopplung ko = pMan.getKopplungen().getRandomOrException(pRandom);
+					final StundenplanblockungManagerKopplung ko = pMan.getKopplungen().getRandomOrException(pRandom);
 					ko.setKuerzel("Kopplung " + ko.getID() + "-" + pRandom.nextInt(_MAX_KOPPLUNGEN));
 				}
 			}
 		}
 	}
 
-	private static void subTestLerngruppen(StundenplanblockungManager pMan, Random pRandom) {
+	private static void subTestLerngruppen(final StundenplanblockungManager pMan, final Random pRandom) {
 		// exists, removeOrException, addOrException
-		long lerngruppeID = pRandom.nextLong(_MAX_LERNGRUPPEN);
-		if (pMan.getLerngruppen().exists(lerngruppeID) == true) {
+		final long lerngruppeID = pRandom.nextLong(_MAX_LERNGRUPPEN);
+		if (pMan.getLerngruppen().exists(lerngruppeID)) {
 			pMan.getLerngruppen().removeOrException(lerngruppeID);
 			if (pMan.getLerngruppen().exists(lerngruppeID))
 				fail("Kopplung sollte nicht mehr existieren!");
@@ -174,19 +174,19 @@ public class StundenplanblockungTests {
 		}
 		// size
 		if (pMan.getLerngruppen().size() > 0) {
-			StundenplanblockungManagerLerngruppe gr = pMan.getLerngruppen().getRandomOrException(pRandom);
+			final StundenplanblockungManagerLerngruppe gr = pMan.getLerngruppen().getRandomOrException(pRandom);
 			// hasLehrkraft, removeLehrkraftOrException, addLehrkraftOrException
 			if (pMan.getLehrkraefte().size() > 0) {
-				StundenplanblockungManagerLehrkraft le = pMan.getLehrkraefte().getRandomOrException(pRandom);
-				if (gr.hasLehrkraft(le) == true)
+				final StundenplanblockungManagerLehrkraft le = pMan.getLehrkraefte().getRandomOrException(pRandom);
+				if (gr.hasLehrkraft(le))
 					gr.removeLehrkraftOrException(le);
 				else
 					gr.addLehrkraftOrException(le);
 			}
 			// hasKlasse, removeKlasseOrException, addKlasseOrException
 			if (pMan.getKlassen().size() > 0) {
-				StundenplanblockungManagerKlasse kl = pMan.getKlassen().getRandomOrException(pRandom);
-				if (gr.hasKlasse(kl) == true)
+				final StundenplanblockungManagerKlasse kl = pMan.getKlassen().getRandomOrException(pRandom);
+				if (gr.hasKlasse(kl))
 					gr.removeKlasseOrException(kl);
 				else
 					gr.addKlasseOrException(kl);
@@ -195,13 +195,13 @@ public class StundenplanblockungTests {
 
 	}
 
-	/** 
+	/**
 	 * Diese Klasse testet den {@link StundenplanblockungManager} mit echten Testdaten.
 	 */
 	@DisplayName("testEchteDaten1")
 	@Test
 	public void testEchteDaten1() {
-		StundenplanblockungManager man = new StundenplanblockungManager();
+		final StundenplanblockungManager man = new StundenplanblockungManager();
 
 		// Alle Lehrkräfte hinzufügen.
 		man.getLehrkraefte().addOrException(18, "BCS");
@@ -366,7 +366,7 @@ public class StundenplanblockungTests {
 		man.getRaeume().addOrException(3, "SpH1");
 		man.getRaeume().addOrException(4, "SpH2");
 		man.getRaeume().addOrException(6, "Z. Saal");
-		
+
 		// Alle Kopplungen hinzufügen.
 		man.getKopplungen().addOrException(46, "5För");
 		man.getKopplungen().addOrException(45, "5RE");
@@ -418,8 +418,6 @@ public class StundenplanblockungTests {
 		man.getKopplungen().addOrException(12, "Q2B10");
 		man.getKopplungen().addOrException(1, "Q2LK01");
 		man.getKopplungen().addOrException(2, "Q2LK02");
-		
-		
 	}
 
 }

@@ -6,21 +6,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Ansprechpartner eines Betriebs.  
+ * Sie beschreibt die Ansprechpartner eines Betriebs.
  */
 @XmlRootElement
 @Schema(description = "Die Ansprechpartner eines Betriebes.")
 @TranspilerDTO
 public class BetriebAnsprechpartner {
-	
-    /** ID des Ansprechpartners */
+
+	/** ID des Ansprechpartners */
 	@Schema(description = "die ID des Ansprechpartners", example = "4711")
 	public long id;
 
-    /** ID des Betriebs, dem der Ansprechpartner zugeordnet ist */
+	/** ID des Betriebs, dem der Ansprechpartner zugeordnet ist */
 	@Schema(description = "die ID des Betriebs, dem der Ansprechpartner zugeorndet ist", example = "4712")
 	public long betrieb_id;
-	
+
 	/** Name des Ansprechpartners im Betrieb */
 	@Schema(description = "Name des Ansprechpartners", example = "Bergmann")
 	public String name;

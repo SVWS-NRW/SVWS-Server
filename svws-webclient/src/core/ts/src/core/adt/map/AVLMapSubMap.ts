@@ -63,13 +63,13 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	public equals(o : unknown) : boolean {
 		if (o as unknown === this as unknown)
 			return true;
-		if (((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map'))) === false)
+		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map')))))
 			return false;
 		const mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
 		if (mapO.size() !== this.size())
 			return false;
 		for (const e of this.entrySet())
-			if (JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))) === false)
+			if (!JavaObject.equalsTranspiler(e.getValue(), (mapO.get(e.getKey()))))
 				return false;
 		return true;
 	}
@@ -352,7 +352,6 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	 * @param c Die Collection deren Werte (Values) überprüft werden sollen.
 	 *
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
-	 *
 	 */
 	bcContainsAllValues(c : Collection<unknown>) : boolean {
 		return this._par.bcContainsAllValues(c, this._iv);
@@ -443,7 +442,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		const iterOfKeys : JavaIterator<K | null> | null = this.bcGetSubKeySetIterator();
 		while (iterOfKeys.hasNext()) {
 			const key : K | null = iterOfKeys.next();
-			if (mapRetain.containsKey(key) === false) {
+			if (!mapRetain.containsKey(key)) {
 				iterOfKeys.remove();
 				changed = true;
 			}
@@ -467,11 +466,12 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 				setSave.add(cast_java_util_Map_Entry(o));
 		let changed : boolean = false;
 		const iterOfEntries : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.bcGetSubEntrySetIterator();
-		while (iterOfEntries.hasNext())
-			if (setSave.contains(iterOfEntries.next()) === false) {
+		while (iterOfEntries.hasNext()) {
+			if (!setSave.contains(iterOfEntries.next())) {
 				iterOfEntries.remove();
 				changed = true;
 			}
+		}
 		return changed;
 	}
 

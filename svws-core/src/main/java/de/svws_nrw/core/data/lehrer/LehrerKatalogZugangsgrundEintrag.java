@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerZugangsgründe.  
+ * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerZugangsgründe.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Lehrer-Zugangsgründe.")
@@ -21,7 +21,7 @@ public class LehrerKatalogZugangsgrundEintrag {
 	/** Das Kürzel für den Zugangsgrund. */
 	@Schema(description = "das Kürzel für den Zugangsgrund", example = "WIEDER")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Kartext des Zugangsgrunds. */
 	@Schema(description = "der Zugangsgrund", example = "Wiedereintritt in den Schuldienst")
 	public @NotNull String text = "";
@@ -38,8 +38,8 @@ public class LehrerKatalogZugangsgrundEintrag {
 	@Schema(description = "gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
-	
-	
+
+
 	/**
 	 * Erstellt einen Zugangsgrund-Eintrag mit Standardwerten
 	 */
@@ -49,16 +49,16 @@ public class LehrerKatalogZugangsgrundEintrag {
 
 	/**
 	 * Erstellt einen Zugangsgrund-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param schluessel   der Schlüssel für die ASD-Schulstatistik
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public LehrerKatalogZugangsgrundEintrag(final long id, final @NotNull String kuerzel, final @NotNull String text,
-			                                final @NotNull String schluessel, final Integer gueltigVon, final Integer gueltigBis) {
+			final @NotNull String schluessel, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.text = text;
@@ -67,5 +67,5 @@ public class LehrerKatalogZugangsgrundEintrag {
 		this.gueltigBis = gueltigBis;
 	}
 
-	
+
 }

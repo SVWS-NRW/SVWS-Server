@@ -3,13 +3,13 @@ package de.svws_nrw.core.adt;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse definiert ein einfaches Paar von Werten der 
- * spezifizierten Typen. Der zweite Wert kann auch null werden. 
- * 
+ * Diese Klasse definiert ein einfaches Paar von Werten der
+ * spezifizierten Typen. Der zweite Wert kann auch null werden.
+ *
  * @param <A> Der erste Typ bei dem Paar.
  * @param <B> Der zweite Typ bei dem Paar.
  */
-public class Pair<@NotNull A, @NotNull B> {
+public final class Pair<@NotNull A, @NotNull B> {
 
 	/** Der erster Wert des Paares */
 	public @NotNull A a;
@@ -19,7 +19,7 @@ public class Pair<@NotNull A, @NotNull B> {
 
 	/**
 	 * Erstellt ein neues Paar.
-	 * 
+	 *
 	 * @param a   der erste Wert des Paares
 	 * @param b   der zweite Wert des Paares
 	 */
@@ -37,7 +37,7 @@ public class Pair<@NotNull A, @NotNull B> {
 	public boolean equals(final Object o) {
 		if (o == null)
 			return false;
-		if (o instanceof Pair<?, ?> == false)
+		if (!(o instanceof Pair<?, ?>))
 			return false;
 		final Pair<?, ?> e = (Pair<?, ?>) o;
 		final boolean a_equals = a.equals(e.a);

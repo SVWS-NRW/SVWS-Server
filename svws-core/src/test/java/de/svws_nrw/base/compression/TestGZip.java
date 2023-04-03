@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 /**
- * Diese Klasse prüft die Methoden der {@link GZip}-Klasse.  
+ * Diese Klasse prüft die Methoden der {@link GZip}-Klasse.
  */
 public class TestGZip {
 
@@ -16,13 +16,13 @@ public class TestGZip {
 	@Test
 	void testStringCompression() {
 		try {
-			String original = "EineNachricht";
-			String encoded = GZip.encodeBase64(original.getBytes());
-			String decoded = new String(GZip.decodeBase64(encoded));
+			final String original = "EineNachricht";
+			final String encoded = GZip.encodeBase64(original.getBytes());
+			final String decoded = new String(GZip.decodeBase64(encoded));
 			assertEquals(original, decoded);
-		} catch (CompressionException e) {
+		} catch (final CompressionException e) {
 			fail(e);
 		}
 	}
-	
+
 }

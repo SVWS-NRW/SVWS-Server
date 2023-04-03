@@ -5,7 +5,7 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Diese Klasse stellt den Core-Type für Markierung eines Kurses aus den Leistungsdaten 
+ * Diese Klasse stellt den Core-Type für Markierung eines Kurses aus den Leistungsdaten
  * für die Abiturberechnung zur Verfügung.
  */
 @XmlRootElement
@@ -15,34 +15,34 @@ public class AbiturKursMarkierung {
 
 	/** Gibt an, ob der Kurs in die Berechnung eingeht */
 	public boolean fuerBerechnung;
-	
+
 	/** Gibt an, ob der Kurs auf dem Zeugnis angegeben werden soll. */
 	public boolean aufAbiturZeugnis;
-	
-	
+
+
 	/**
 	 * Erzeugt eine neue Markierung, die angibt, dass der Kurs nicht in die Berechnung eingeht,
-	 * aber auf dem Abiturzeugnis erscheinen soll. 
+	 * aber auf dem Abiturzeugnis erscheinen soll.
 	 */
 	public AbiturKursMarkierung() {
 		this.fuerBerechnung = false;
 		this.aufAbiturZeugnis = true;
 	}
-	
-	/** 
+
+	/**
 	 * Erzeugt eine neue Markierung. Diese gibt an, dass der Kurs auf dem Abiturzeugnis erscheinen soll.
-	 * 
+	 *
 	 * @param fuerBerechnung   gibt an, on der Kurs in die Berechnung eingehen soll oder nicht
 	 */
 	public AbiturKursMarkierung(final boolean fuerBerechnung) {
 		this.fuerBerechnung = fuerBerechnung;
 		this.aufAbiturZeugnis = true;
 	}
-	
-	
-	/** 
-	 * Erzeugt eine neue Markierung.  
-	 * 
+
+
+	/**
+	 * Erzeugt eine neue Markierung.
+	 *
 	 * @param fuerBerechnung      gibt an, on der Kurs in die Berechnung eingehen soll oder nicht
 	 * @param aufAbiturZeugnis    gibt an, ob der Kurs auf dem Abiturzeugnis erscheinen soll
 	 */

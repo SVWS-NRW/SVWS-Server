@@ -202,7 +202,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Array aller Klausurnummern in aufsteigender Reihenfolge ihrer Nummer.
 	 *
 	 * @return ein Array aller Klausurnummern in aufsteigender Reihenfolge ihrer Nummer.
@@ -215,7 +214,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Ausgabe-Objekt: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 *
 	 * @return ein Ausgabe-Objekt: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
@@ -242,7 +240,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Array aller Klausurnummern in zufälliger Reihenfolge.
 	 *
 	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge.
@@ -262,7 +259,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
 	 *
 	 * @return ein Array aller Klausurnummern in zufälliger Reihenfolge nach bevorzugter Lage.
@@ -287,7 +283,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 *
 	 * @return ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
@@ -309,7 +304,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 *
 	 * @return ein Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
@@ -322,7 +316,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert ein Array aller derzeit verwendeten Schienen in zufälliger Reihenfolge.
 	 *
 	 * @return ein Array aller derzeit verwendeten Schienen in zufälliger Reihenfolge.
@@ -342,7 +335,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist.
 	 *
 	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 1 ist.
@@ -352,7 +344,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist.
 	 *
 	 * @return TRUE, wenn der aktuelle Zustand besser als der gespeicherte Zustand 2 ist.
@@ -397,7 +388,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl noch nicht verteilter Klausuren.
 	 *
 	 * @return die Anzahl noch nicht verteilter Klausuren.
@@ -411,7 +401,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl an Klausuren.
 	 *
 	 * @return die Anzahl an Klausuren.
@@ -421,7 +410,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls die übergebene Klausurnummer noch nicht verteilt wurde.
 	 *
 	 * @param  klausurNr die Klausurnummer, nach der gefragt wird.
@@ -432,7 +420,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Nummer einer neu erzeugten Schiene.
 	 *
 	 * @return die Nummer einer neu erzeugten Schiene.
@@ -443,7 +430,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert die Anzahl der derzeit verwendeten Schienen.
 	 *
 	 * @return die Anzahl der derzeit verwendeten Schienen.
@@ -453,7 +439,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den freien Knoten (Klausur), der die meisten Nachbarsfarben hat oder -1 falls es keinen gibt.
 	 * Falls mehrere Knoten dieses Kriterium erfüllen, wird ein zufälliger ausgewählt.
 	 *
@@ -489,7 +474,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert den freien Knoten, der die meisten freien Nachbarn hat oder -1 falls es keinen gibt.
 	 * Falls mehrere Knoten dieses Kriterium erfüllen, wird ein zufälliger ausgewählt.
 	 *
@@ -519,7 +503,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert eine freie Klausur, die nicht mit "nr1" benachbart ist, welche aber die meisten freien Nachbarn hat,
 	 * die widerum mit "nr1" benachbart sind.
 	 *
@@ -561,7 +544,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Speichert die aktuelle Klausur-Schienen-Lage in Zustand 1.
 	 */
 	aktionZustand1Speichern() : void {
@@ -571,7 +553,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Lädt die aktuelle Klausur-Schienen-Lage aus Zustand 1.
 	 */
 	aktionZustand1Laden() : void {
@@ -582,7 +563,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Speichert die aktuelle Klausur-Schienen-Lage in Zustand 2.
 	 */
 	aktionZustand2Speichern() : void {
@@ -592,7 +572,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Lädt die aktuelle Klausur-Schienen-Lage aus Zustand 2.
 	 */
 	aktionZustand2Laden() : void {
@@ -603,7 +582,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt alle Klausur-Schienen-Zuordnungen und passt die Datenstrukturen entsprechend an.
 	 */
 	aktionKlausurenAusSchienenEntfernen() : void {
@@ -613,7 +591,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls die übergebene Klausur in die übergebene Schiene gesetzt werden konnte.
 	 *
 	 * @param  nr die Klausur, die in die übergebene Schiene gesetzt werden soll.
@@ -634,7 +611,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt die übergebene Klausur aus ihrer aktuellen Schiene.
 	 * Falls die Klausur keiner Schiene zugeordnet war, wird eine {@link DeveloperNotificationException} geworfen.
 	 *
@@ -647,7 +623,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Erhöht die Schienenanzahl um 1, setzt die übergebene Klausur in die neue Schiene und
 	 * liefert die neue Schienennummer.
 	 *
@@ -664,7 +639,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Addiert pDifferenz zur Schienenanzahl.
 	 *
 	 * @param pDifferenz Die Differenz der Veränderung.
@@ -674,7 +648,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Setzt die übergebene Klausur in eine zufällige vorhandene Schiene.
 	 * Falls dies nicht möglich ist, wird die Klausur in eine neue Schiene gesetzt.
 	 *
@@ -683,13 +656,12 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(klausurNr : number) : void {
 		for (const schienenNr of this.gibErzeugeSchienenInZufaelligerReihenfolge())
-			if (this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr) === true)
+			if (this.aktionSetzeKlausurInSchiene(klausurNr, schienenNr))
 				return;
 		this.aktionSetzeKlausurInNeueSchiene(klausurNr);
 	}
 
 	/**
-	 *
 	 * Verteilt nicht verteilte Klausuren in zufällige Schienen.
 	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
@@ -700,7 +672,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Zerstört einige Schienen, d.h. entfernt alle Klausuren aus den zerstörten Schienen
 	 * und setzt danach alle entfernen Klausuren neu.
 	 */
@@ -721,7 +692,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Ausgabe zum Debuggen der Tests.
 	 *
 	 * @param header Überschrift der Debug-Ausgabe.
@@ -747,7 +717,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Schienen und setzt sie dann in eine zufällige Schiene.
 	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
@@ -758,7 +727,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Schienen und füllt dann die Schienen nacheinander auf.
 	 */
 	aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig() : void {
@@ -772,7 +740,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Schienen. Verteilt dann die Klausuren mit höherem Grad zuerst auf
 	 * eine zufällige Schiene. Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
@@ -783,7 +750,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Schienen und füllt dann die Schienen nacheinander auf.
 	 * Dabei werden Klausuren mit höherem Grad bevorzugt.
 	 */
@@ -798,7 +764,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Schienen. Verteilt dann die Klausuren mit den meisten Nachbarsfarben
 	 * auf eine zufällige Schiene. Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
@@ -812,7 +777,6 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Entfernt zunächst alle Klausuren aus ihren Terminen,
 	 * füllt dann die Schienen nacheinander auf
 	 * und wählt die Klausuren so, dass bevorzugte Klausuren-Paare sequentiell durchlaufen werden.

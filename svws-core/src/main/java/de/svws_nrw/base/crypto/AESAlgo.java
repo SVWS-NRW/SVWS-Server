@@ -14,10 +14,10 @@ public enum AESAlgo {
 	/**
 	 * Erstellt einen neuen Eintrag für die unterstützen
 	 * AES-Verfahren.
-	 * 
+	 *
 	 * @param value   die Bezeichnung des Verfahrens in der Java-Crypto-Bilbilthek
 	 */
-	private AESAlgo(String value) {
+	AESAlgo(final String value) {
 		this.value = value;
 	}
 

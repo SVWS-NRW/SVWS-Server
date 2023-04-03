@@ -3,10 +3,12 @@ package de.svws_nrw.core.klausurblockung;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** Diese Klasse dient als DTO für die CSV-Tabelle {@code kdata.txt} eines Datensatzes einer Klausurplanung im Format
+/**
+ * Diese Klasse dient als DTO für die CSV-Tabelle {@code kdata.txt} eines Datensatzes einer Klausurplanung im Format
  * von Mirko Esser. In dieser Datei findet man die Zuordnungen der Klausuren zu Quartalen.
- * 
- * @author Benjamin A. Bartsch */
+ *
+ * @author Benjamin A. Bartsch
+ */
 @JsonPropertyOrder({ "id", "fach", "kursart", "stufe", "halbjahr", "klausnr", "dauer", "zeitdiff", "bemerkung" })
 public class EsserFormatKData {
 

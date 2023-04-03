@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert den Katalog der zusätzlichen Schulnummern für Herkünfte 
+ * Sie liefert den Katalog der zusätzlichen Schulnummern für Herkünfte
  * aus anderen Bundesländern und Ländern.
  */
 @XmlRootElement
@@ -28,11 +28,11 @@ public class HerkunftsschulnummerKatalogEintrag {
 	/** Die Herkunfts-Schulnummer */
 	@Schema(description = "die Herkunfts-Schulnummer", example = "999000")
 	public int schulnummer = -1;
-	
+
 	/** Die Bezeichnung der Herkunfts-Schulnummer */
 	@Schema(description = "die Bezeichnung der Herkunfts-Schulnummer", example = "Schule aus dem sonstigen Ausland")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
@@ -55,17 +55,17 @@ public class HerkunftsschulnummerKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param schulnummer        die Nummer der Herkunfts-Schulnummer
 	 * @param bezeichnung        die Bezeichnung der Kursart
-	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist 
-	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist
+	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public HerkunftsschulnummerKatalogEintrag(final long id, final int schulnummer, final @NotNull String bezeichnung, 
-			final List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
+	 */
+	public HerkunftsschulnummerKatalogEintrag(final long id, final int schulnummer, final @NotNull String bezeichnung,
+			final List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.schulnummer = schulnummer;

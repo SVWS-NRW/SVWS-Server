@@ -32,11 +32,11 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	/**
 	 * Erstellt eine neue Belegprüfung für den Bereich der Gesellschaftswissenschaften und Religion.
 	 *
-	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager        der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
-	public constructor(manager : AbiturdatenManager, pruefungs_art : GostBelegpruefungsArt) {
-		super(manager, pruefungs_art);
+	public constructor(manager : AbiturdatenManager, pruefungsArt : GostBelegpruefungsArt) {
+		super(manager, pruefungsArt);
 	}
 
 	protected init() : void {

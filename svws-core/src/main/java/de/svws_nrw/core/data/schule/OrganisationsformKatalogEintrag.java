@@ -11,9 +11,9 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten für den Katalog der Organisationsformen 
- * bei allgemeinbildenden Schulen, bei berufsbildenden Schule und beim 
- * Weiterbildungskolleg.  
+ * Sie liefert die Daten für den Katalog der Organisationsformen
+ * bei allgemeinbildenden Schulen, bei berufsbildenden Schule und beim
+ * Weiterbildungskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Organistationsformen.")
@@ -27,7 +27,7 @@ public class OrganisationsformKatalogEintrag {
 	/** Das Kürzel der Organisationsform */
 	@Schema(description = "das Kürzel der Organisationsform", example = "1")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Beschreibung der Organisationsform. */
 	@Schema(description = "die Beschreibung der Organisationsform", example = "Teilnahme am gebundenen Ganztag")
 	public @NotNull String beschreibung = "";
@@ -35,7 +35,7 @@ public class OrganisationsformKatalogEintrag {
 	/** Die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
@@ -44,7 +44,7 @@ public class OrganisationsformKatalogEintrag {
 	@Schema(description = "gibt an, bis zu welchem Schuljahr die Organisationsform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
-	
+
 	/**
 	 * Erstellt einen Organisationsform-Eintrag mit Standardwerten
 	 */
@@ -54,9 +54,9 @@ public class OrganisationsformKatalogEintrag {
 
 	/**
 	 * Erstellt einen Organisationsform-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param kuerzel         das Kürzel 
+	 * @param kuerzel         das Kürzel
 	 * @param beschreibung    die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges
 	 * @param schulformen     die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
@@ -72,5 +72,5 @@ public class OrganisationsformKatalogEintrag {
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}
-	
+
 }

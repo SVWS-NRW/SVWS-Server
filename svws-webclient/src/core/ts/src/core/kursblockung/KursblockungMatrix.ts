@@ -119,7 +119,7 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 *Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
+	 * Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
 	 * ausschließlich die Werte 0 und 1 vorkommen. Werte ungleich 0 werden andernfalls als 1 (eine Kante im Graphen)
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
@@ -160,7 +160,7 @@ export class KursblockungMatrix extends JavaObject {
 							queue_last = queue_first;
 							break;
 						}
-						if (this.besuchtR[zuR] === false) {
+						if (!this.besuchtR[zuR]) {
 							this.besuchtR[zuR] = true;
 							this.queueR[queue_last] = zuR;
 							queue_last++;

@@ -20,15 +20,15 @@ public class SchuelerblockungInput {
 	public int schienen = 0;
 
 	/** Alle Kurse, die zu den Fachwahlen des Schülers passen. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputKurs.class)) 
+	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputKurs.class))
 	public @NotNull Vector<@NotNull SchuelerblockungInputKurs> kurse = new Vector<>();
 
 	/** Alle Fachwahlen des Schülers. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputFachwahl.class)) 
+	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputFachwahl.class))
 	public @NotNull Vector<@NotNull GostFachwahl> fachwahlen = new Vector<>();
 
 	/** Zu jeder Fachwahl eine textuelle Darstellung. */
-	@ArraySchema(schema = @Schema(implementation = String.class)) 
+	@ArraySchema(schema = @Schema(implementation = String.class))
 	public @NotNull Vector<@NotNull String> fachwahlenText = new Vector<>();
 
 }

@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt Hilfsmethoden in Bezug auf Jahrgänge zur Verfügung. 
+ * Diese Klasse stellt Hilfsmethoden in Bezug auf Jahrgänge zur Verfügung.
  */
 public class JahrgangsUtils {
 
@@ -14,12 +14,12 @@ public class JahrgangsUtils {
 	 * und den angegebenen Jahrgang die restlichen Jahre an der Schule.
 	 * Ist keine Berechnung für diese Kombination implementiert,
 	 * so wird null zurückgegeben.
-	 * 
-	 * @param schulform    die Schulform 
+	 *
+	 * @param schulform    die Schulform
 	 * @param gliederung   die Schulgliederung
 	 * @param jahrgang     der Jahrgang, für den die restlichen Jahre bestimmt werden sollen
-	 * 
-	 * @return die restlichen Jahre oder null 
+	 *
+	 * @return die restlichen Jahre oder null
 	 */
 	public static Integer getRestlicheJahre(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final @NotNull String jahrgang) {
 		// TODO Benutze einen noch zu definierenden Core-Type für Jahrgänge und verschiebe diese Methode in diesen Core-Type
@@ -29,7 +29,7 @@ public class JahrgangsUtils {
 			return null;
 		if (jahrgang == null)
 			return null;
-		if (schulform == Schulform.GY){
+		if (schulform == Schulform.GY) {
 			// Gymnasium zählt Restjahre immer bis zum Abitur
 			switch (jahrgang) {
 				// DEFAULT (***) wird hier als G8 interpretiert, Ausnahme Jahrgang 10
@@ -76,6 +76,6 @@ public class JahrgangsUtils {
 			}
 		}
 		return null;
-	}	
-	
+	}
+
 }

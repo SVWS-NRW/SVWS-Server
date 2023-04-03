@@ -8,10 +8,10 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Algorithmus des <b>Typs K</b> verteilt die Kurse auf ihre Schienen. Die Strategie <b>KOptimiereBest</b> lädt
  * das derzeit beste Blockungsergebnis und versucht dieses systematisch weiter zu optimieren.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithmusK {
 
 	/**
 	 * Mit diesem Algorithmus werden die SuS verteilt.
@@ -21,7 +21,7 @@ public class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.

@@ -6,18 +6,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Betriebsdtaen einer Schülers in einem Betriebss.  
+ * Sie beschreibt die Betriebsdtaen einer Schülers in einem Betriebss.
  */
 @XmlRootElement
 @Schema(description = "Die Betriebsdaten eines Schülers in einem Betriebes.")
 @TranspilerDTO
 public class SchuelerBetriebsdaten {
 
-    /** ID des Datensatzes */
+	/** ID des Datensatzes */
 	@Schema(description = "die ID des Datensatzes", example = "4711")
 	public long id;
 
-    /** ID des Schülers */
+	/** ID des Schülers */
 	@Schema(description = "die ID des Schülers", example = "4713")
 	public long schueler_id;
 
@@ -56,9 +56,9 @@ public class SchuelerBetriebsdaten {
 	/** AnsprechpartnerID des Betriebeeintrags beim Schüler */
 	@Schema(description = "AnsprechpartnerID des Betriebeeintrags beim Schüler", example = "1")
 	public Long ansprechpartner_id;
-	
+
 	/** BetreuungslehrerID des Betriebeeintrags beim Schüler */
 	@Schema(description = "BetreuungslehrerID des Betriebeeintrags beim Schüler", example = "1")
 	public Long betreuungslehrer_id;
-	
+
 }

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt einen Listeneintrag einer Benutzergruppe.  
+ * Sie beschreibt einen Listeneintrag einer Benutzergruppe.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag einer Benutzergruppe in der Benutzerliste.")
@@ -21,9 +21,9 @@ public class BenutzergruppeListeEintrag {
 	/** Die Bezeichnung der Benutzergruppe. */
 	@Schema(description = "die Bezeichnung der Benutzergruppe", example = "Administrator")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. */
 	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example = "true")
 	public @NotNull boolean istAdmin = false;
-	
+
 }

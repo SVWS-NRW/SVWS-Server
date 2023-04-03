@@ -75,7 +75,6 @@ export class Geschlecht extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Bestimmt das Geschlecht anhand der ID.
 	 *
 	 * @param value   die ID des Geschlechtes
@@ -103,7 +102,6 @@ export class Geschlecht extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Bestimmt das Geschlecht anhand des übergebenen Strings.
 	 * Enthält der übegebene String einen ungültigen Wert,
 	 * so wird als Geschlecht "x", d.h. ohne Angabe im Geburtenregister

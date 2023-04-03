@@ -58,7 +58,7 @@ export class KursblockungDynFachart extends JavaObject {
 
 
 	/**
-	 *@param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pNr          Eine laufende Nummer (ID) für alle Facharten.
 	 * @param pGostFach    Referenz zum zugehörigen GOST-Fach.
 	 * @param pGostKursart Referenz zur zugehörigen GOST-Kursart.
@@ -123,7 +123,7 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 *Liefert die aktuell größte Kursdifferenz.
+	 * Liefert die aktuell größte Kursdifferenz.
 	 *
 	 * @return Die aktuell größte Kursdifferenz.
 	 */
@@ -132,7 +132,7 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 *Liefert das Array aller Kurse dieser Fachart.
+	 * Liefert das Array aller Kurse dieser Fachart.
 	 *
 	 * @return Das Array aller Kurse dieser Fachart.
 	 */
@@ -141,7 +141,7 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 *Liefert den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene {@code pSchiene } vorkommt.
+	 * Liefert den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene {@code pSchiene } vorkommt.
 	 *
 	 * @param  pSchiene     Die Schiene, in der gesucht wird.
 	 * @param  kursGesperrt Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.

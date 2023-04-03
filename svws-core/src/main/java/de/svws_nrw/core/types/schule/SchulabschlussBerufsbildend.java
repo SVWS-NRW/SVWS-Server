@@ -14,22 +14,22 @@ public enum SchulabschlussBerufsbildend {
 	OA(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(0, "OA", "Ohne Abschluss", "0", null, null)
 	}),
-	
+
 	/** Abschluss der Ausbildungsvorbereitung */
 	VORB(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(10, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)
-	}),	
-	
+	}),
+
 	/** Versetzungszeugnis */
 	VERS(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(11, "VERS", "Versetzungszeugnis", "1", null, null)
-	}),	
+	}),
 
 	/** Abschlusszeugnis in Aufbaubildungsgängen */
 	AUFB(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(12, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)
-	}),	
-	
+	}),
+
 	/** Abschluss der Berufschulvorbereitung */
 	BV(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(13, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)
@@ -49,17 +49,17 @@ public enum SchulabschlussBerufsbildend {
 	BG(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(20, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)
 	}),
-	
+
 	/** Berufschulabschluss */
 	BS(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(30, "BS", "Berufschulabschluss", "3", null, null)
 	}),
-	
+
 	/** Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	BK(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(40, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)
 	}),
-	
+
 	/** Berufsabschluss */
 	BAB(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(50, "BAB", "Berufsabschluss", "5", null, null)
@@ -69,7 +69,7 @@ public enum SchulabschlussBerufsbildend {
 	BW(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(60, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)
 	}),
-		
+
 	/** Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	VBK(new SchulabschlussBerufsbildendKatalogEintrag[] {
 		new SchulabschlussBerufsbildendKatalogEintrag(80, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)
@@ -82,37 +82,37 @@ public enum SchulabschlussBerufsbildend {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Abschlussarten */
-	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie;	
 
-	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */ 
+	/** Die Historie mit den Einträgen der Abschlussarten */
+	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie;
+
+	/** Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden */
 	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> _mapByKuerzel = new HashMap<>();
 
-	/** Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden */ 
+	/** Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden */
 	private static final @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> _mapByKuerzelStatistik = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussBerufsbildendKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Abschlussarten, welches ein Array von {@link SchulabschlussBerufsbildendKatalogEintrag} ist
 	 */
-	private SchulabschlussBerufsbildend(final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie) {
+	SchulabschlussBerufsbildend(final @NotNull SchulabschlussBerufsbildendKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
-	
-	
+
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzel() {
@@ -128,9 +128,9 @@ public enum SchulabschlussBerufsbildend {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
 	public static SchulabschlussBerufsbildend getByKuerzel(final String kuerzel) {
@@ -141,7 +141,7 @@ public enum SchulabschlussBerufsbildend {
 	/**
 	 * Gibt eine Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull SchulabschlussBerufsbildend> getMapByKuerzelStatistik() {
@@ -157,9 +157,9 @@ public enum SchulabschlussBerufsbildend {
 
 	/**
 	 * Gibt die Abschlussart für das angegebene Statistik-Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Statistik-Kürzel der Abschlussart
-	 * 
+	 *
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
 	public static SchulabschlussBerufsbildend getByKuerzelStatistik(final String kuerzel) {

@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.  
+ * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
@@ -32,11 +32,11 @@ public class SchulgliederungKatalogEintrag {
 	/** Gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt", example = "true")
 	public boolean istBK = false;
-	
+
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. */
 	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example = "false")
 	public boolean istAuslaufend = false;
@@ -67,7 +67,7 @@ public class SchulgliederungKatalogEintrag {
 
 	/** Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "BS")
-	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new Vector<>(); 
+	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new Vector<>();
 
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
@@ -91,9 +91,9 @@ public class SchulgliederungKatalogEintrag {
 
 	/**
 	 * Erstellt einen Schulgliederung-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
-	 * @param kuerzel         das Kürzel 
+	 * @param kuerzel         das Kürzel
 	 * @param istBK           gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt
 	 * @param schulformen     die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt
 	 * @param istAuslaufend   gibt an, ob es sich um eine ausgelaufene Schulgliederung oder einen ausgelaufenen Bildungsgang handelt
@@ -101,23 +101,23 @@ public class SchulgliederungKatalogEintrag {
 	 * @param beschreibung    die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges
 	 * @param bkAnlage        die Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt
 	 * @param bkTyp           der Typ der Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt
-	 * @param bkIndex         der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei 
+	 * @param bkIndex         der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei
 	 *                        unterschiedlichen Gliederungen identisch sein
 	 * @param istVZ           gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht
 	 * @param bkAbschlussBerufsbildend
-	 *                        gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, 
-	 *                        wenn es sich um einen Bildungsgang am Berufskolleg handelt 
+	 *                        gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können,
+	 *                        wenn es sich um einen Bildungsgang am Berufskolleg handelt
 	 * @param bkAbschlussAllgemeinbildend
-	 *                        gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, 
-	 *                        wenn es sich um einen Bildungsgang am Berufskolleg handelt 
+	 *                        gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können,
+	 *                        wenn es sich um einen Bildungsgang am Berufskolleg handelt
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulgliederungKatalogEintrag(final long id, final @NotNull String kuerzel, final boolean istBK, 
+	public SchulgliederungKatalogEintrag(final long id, final @NotNull String kuerzel, final boolean istBK,
 			final @NotNull List<@NotNull Schulform> schulformen, final boolean istAuslaufend, final boolean istAusgelaufen,
 			final @NotNull String beschreibung, final BerufskollegAnlage bkAnlage, final String bkTyp, final Integer bkIndex, final boolean istVZ,
-			final List<@NotNull SchulabschlussBerufsbildend> bkAbschlussBerufsbildend, 
-			final List<@NotNull SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend, 
+			final List<@NotNull SchulabschlussBerufsbildend> bkAbschlussBerufsbildend,
+			final List<@NotNull SchulabschlussAllgemeinbildend> bkAbschlussAllgemeinbildend,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

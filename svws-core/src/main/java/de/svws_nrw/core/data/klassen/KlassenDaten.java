@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die grundlegenden Daten einer Klasse.  
+ * Sie beschreibt die grundlegenden Daten einer Klasse.
  */
 @XmlRootElement
 @Schema(description = "Die Daten einer Klasse.")
@@ -22,7 +22,7 @@ public class KlassenDaten {
 	/** Die ID der Klasse. */
 	@Schema(description = "die ID der Klasse", example = "4711")
 	public long id;
-	
+
 	/** Das Kürzel der Klasse. */
 	@Schema(description = "das Kürzel der Klasse", example = "06b")
 	public String kuerzel;
@@ -33,7 +33,7 @@ public class KlassenDaten {
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
 	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B")
-	public String parallelitaet; 
+	public String parallelitaet;
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
@@ -50,6 +50,6 @@ public class KlassenDaten {
 	/** Die Schüler der Klasse. */
 	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
 
-	
-	// TODO Weitere Daten	
+
+	// TODO Weitere Daten
 }

@@ -78,11 +78,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public updateKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
-		if (!this._vorgaben.contains(vorgabe)) {
-			// empty block
+		if (this._vorgaben.contains(vorgabe)) {
+			this.removeUpdateKlausurvorgabeCommons(vorgabe);
+			this.addVorgabeToInternalMaps(vorgabe);
 		}
-		this.removeUpdateKlausurvorgabeCommons(vorgabe);
-		this.addVorgabeToInternalMaps(vorgabe);
 	}
 
 	/**

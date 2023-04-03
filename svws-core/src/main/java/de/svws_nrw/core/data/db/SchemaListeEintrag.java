@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beinhaltet den Namen und die Versionsinformationen eines SVWS-Datenbank-Schemas.  
+ * Sie beinhaltet den Namen und die Versionsinformationen eines SVWS-Datenbank-Schemas.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag eines SVWS-Schemas in der SVWS-Schema-Liste.")

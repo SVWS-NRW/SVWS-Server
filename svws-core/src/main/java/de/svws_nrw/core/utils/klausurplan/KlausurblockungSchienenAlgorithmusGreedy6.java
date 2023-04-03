@@ -6,18 +6,18 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Die Strategie implementiert den Algorithmus "Recursive Largest First (RLF)".
- * 
- * @author Benjamin A. Bartsch 
+ *
+ * @author Benjamin A. Bartsch
  */
-public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSchienenAlgorithmusAbstract {
+public final class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSchienenAlgorithmusAbstract {
 
-	/** 
+	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurblockungSchienenAlgorithmusGreedy6(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
@@ -36,20 +36,20 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 		while (System.currentTimeMillis() < pZeitEnde) {
 			berechne();
 
-			if (_dynDaten.gibIstBesserAlsZustand1() == true) 
+			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();
-			 else 
+			 else
 				_dynDaten.aktionZustand1Laden();
 		}
 
-		if (_dynDaten.gibIstBesserAlsZustand2() == true)
+		if (_dynDaten.gibIstBesserAlsZustand2())
 			_dynDaten.aktionZustand2Speichern();
 	}
 
 	private void berechne() {
 		// reset
 		_dynDaten.aktionKlausurenAusSchienenEntfernen();
-		
+
 		final @NotNull LinkedCollection<@NotNull Integer> setS = new LinkedCollection<>();
 
 		while (_dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
@@ -64,7 +64,7 @@ public class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 			int nr2 = _dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 			while (nr2 >= 0) {
 				setS.addLast(nr2);
-				if (_dynDaten.aktionSetzeKlausurInSchiene(nr2, s) == false)
+				if (!_dynDaten.aktionSetzeKlausurInSchiene(nr2, s))
 					throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!");
 				nr2 = _dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 			}

@@ -224,12 +224,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 		}
 		let result : boolean = false;
 		for (const o of c) {
-			if (this.remove(o)) {
+			while (this.remove(o))
 				result = true;
-				while (this.remove(o)) {
-					// empty block
-				}
-			}
 		}
 		return result;
 	}

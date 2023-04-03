@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert einen Eintrag in der Historie eines Katalog-Eintrags der Abgangsarten.  
+ * Sie liefert einen Eintrag in der Historie eines Katalog-Eintrags der Abgangsarten.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in der Historie eines Katalog-Eintrags der Abgangsarten.")
@@ -24,7 +24,7 @@ public class AbgangsartKatalogDaten {
 	/** Die Beschreibung der Abgangsart. */
 	@Schema(description = "die Beschreibung der Abgangsart", example = "Ohne Abschluss")
 	public @NotNull String beschreibung = "";
-	
+
 	/** Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist. */
 	@Schema(description = "die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist")
 	public @NotNull List<@NotNull SchulformGliederungJahrgaenge> zulaessig = new Vector<>();
@@ -36,5 +36,5 @@ public class AbgangsartKatalogDaten {
 	/** Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
-	
+
 }

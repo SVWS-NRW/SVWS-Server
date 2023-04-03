@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Schubesuchsdaten zu einer bisher besuchten Schule.  
+ * Sie beschreibt die Schubesuchsdaten zu einer bisher besuchten Schule.
  */
 @XmlRootElement
 @Schema(description = "Ein Eintrag in der Liste der bisher besuchtn Schulen.")
@@ -21,15 +21,15 @@ public class SchuelerSchulbesuchSchule {
 	/** Die ID des Bildungsganges/Schulgliederung an der Schule. */
 	@Schema(description = "die ID des Bildungsganges/Schulgliederung an der Schule", example = "***")
 	public String schulgliederung;
-	
+
 	/** Die ID des Grundes für die Entlassung von der Schule. */
 	@Schema(description = "die ID des Grundes für die Entlassung von der Schule", example = "2")
 	public Long entlassgrundID;
-	
+
 	/** Die ID des Abschlusses, welcher an der Schule erworben wurde. */
 	@Schema(description = "die ID des Abschlusses, welcher an der Schule erworben wurde", example = "OA")
 	public String abschlussartID;
-	
+
 	/** Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht). */
 	@Schema(description = "die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht)", example = "1")
 	public String organisationsFormID;
@@ -49,5 +49,5 @@ public class SchuelerSchulbesuchSchule {
 	/** Der Jahrgang, bis zu dem die Schule besucht wurde. */
 	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example = "07")
 	public String jahrgangBis;
-	
+
 }

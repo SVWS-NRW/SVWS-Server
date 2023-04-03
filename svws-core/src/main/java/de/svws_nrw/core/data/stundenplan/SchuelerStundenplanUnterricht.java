@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert die Informationen zu einem Unterricht im Stundenplan eines Schülers
- * (bestehend auf mehreren Unterrichtsstunden).  
+ * (bestehend auf mehreren Unterrichtsstunden).
  */
 @XmlRootElement
 @Schema(description = "der Unterricht im Stundenplan eines Schülers.")
@@ -22,11 +22,11 @@ public class SchuelerStundenplanUnterricht {
 	/** Die ID der Unterrichtseinheit */
 	@Schema(description = "die ID der Unterrichtseinheit", example = "815")
 	public long idUnterricht = -1;
-	
+
 	/** Die ID im Zeitraster des Stundenplans */
 	@Schema(description = "die ID im Zeitraster des Stundenplans", example = "1")
 	public long idZeitraster = -1;
-	
+
 	/** Die Kursart der Unterrichtseinheit. */
 	@Schema(description = "die Kursart der Unterrichtseinheit", example = "GKS")
 	public @NotNull String kursart = "";
@@ -34,7 +34,7 @@ public class SchuelerStundenplanUnterricht {
 	/** Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 */
 	@Schema(description = "er Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
 	public int wochentyp = -1;
-	
+
 	/** Die ID des Faches */
 	@Schema(description = "die ID des Faches", example = "89")
 	public long idFach = -1;
@@ -58,11 +58,11 @@ public class SchuelerStundenplanUnterricht {
 	/** Der Nachname des Schülers. */
 	@Schema(description = "das Kürzel des Lehrers", example = "007")
 	public @NotNull String lehrerKuerzel = "";
-	
+
 	/** Der Nachname des Schülers. */
 	@Schema(description = "der Nachname des Lehrers", example = "Mustermann")
 	public @NotNull String lehrerNachname = "";
-	
+
 	/** Der Vorname des Schülers. */
 	@Schema(description = "der Vorname des Lehrers", example = "Max")
 	public @NotNull String lehrerVorname = "";

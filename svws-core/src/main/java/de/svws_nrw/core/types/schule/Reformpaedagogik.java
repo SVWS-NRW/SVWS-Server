@@ -12,7 +12,7 @@ import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Aufzählung ist der Core-Type für die Reformpaedagogik an 
+ * Diese Aufzählung ist der Core-Type für die Reformpaedagogik an
  * unterschiedlichen Schulformen.
  */
 public enum Reformpaedagogik {
@@ -21,15 +21,15 @@ public enum Reformpaedagogik {
     KEIN_EINTRAG(new ReformpaedagogikKatalogEintrag[]{
 		new ReformpaedagogikKatalogEintrag(0, "*", "ohne Eintrag", Arrays.asList(
 				Schulform.FW, Schulform.HI, Schulform.WF,
-				Schulform.G, 
-				Schulform.GE, 
-				Schulform.GY, 
-				Schulform.H, 
-				Schulform.PS, 
-				Schulform.R, 
-				Schulform.SG, 
-				Schulform.SK, 
-				Schulform.SR, 
+				Schulform.G,
+				Schulform.GE,
+				Schulform.GY,
+				Schulform.H,
+				Schulform.PS,
+				Schulform.R,
+				Schulform.SG,
+				Schulform.SK,
+				Schulform.SR,
 				Schulform.V
 			), null, null)
 	}),
@@ -37,24 +37,24 @@ public enum Reformpaedagogik {
     /** Reformpaedagogik Celestin Freinet */
     FREINET(new ReformpaedagogikKatalogEintrag[]{
         new ReformpaedagogikKatalogEintrag(1000, "C", "Celestin Freinet", Arrays.asList(
-                Schulform.G, 
-                Schulform.GY 
+                Schulform.G,
+                Schulform.GY
             ), null, null)
     }),
 
     /** Reformpaedagogik Janusz Korczak (Pädagogik der Achtung) */
     KORCZAK(new ReformpaedagogikKatalogEintrag[]{
         new ReformpaedagogikKatalogEintrag(2000, "J", "Janusz Korczak (Pädagogik der Achtung)", Arrays.asList(
-                Schulform.G, 
-                Schulform.GE, 
-                Schulform.GY, 
-                Schulform.H, 
-                Schulform.PS, 
-                Schulform.R, 
-                Schulform.S, Schulform.KS, 
-                Schulform.SG, 
-                Schulform.SK, 
-                Schulform.SR, 
+                Schulform.G,
+                Schulform.GE,
+                Schulform.GY,
+                Schulform.H,
+                Schulform.PS,
+                Schulform.R,
+                Schulform.S, Schulform.KS,
+                Schulform.SG,
+                Schulform.SK,
+                Schulform.SR,
                 Schulform.V
             ), null, null)
     }),
@@ -62,16 +62,16 @@ public enum Reformpaedagogik {
     /** Reformpaedagogik Montessori */
     MONTESSORI(new ReformpaedagogikKatalogEintrag[]{
         new ReformpaedagogikKatalogEintrag(3000, "M", "Montessori", Arrays.asList(
-                Schulform.G, 
-                Schulform.GE, 
-                Schulform.GY, 
-                Schulform.H, 
-                Schulform.PS, 
-                Schulform.R, 
-                Schulform.S, Schulform.KS, 
-                Schulform.SG, 
-                Schulform.SK, 
-                Schulform.SR, 
+                Schulform.G,
+                Schulform.GE,
+                Schulform.GY,
+                Schulform.H,
+                Schulform.PS,
+                Schulform.R,
+                Schulform.S, Schulform.KS,
+                Schulform.SG,
+                Schulform.SK,
+                Schulform.SR,
                 Schulform.V
             ), null, null)
     }),
@@ -79,10 +79,10 @@ public enum Reformpaedagogik {
     /** Reformpaedagogik Peter Petersen/Jena-Plan */
     PETERSEN(new ReformpaedagogikKatalogEintrag[]{
         new ReformpaedagogikKatalogEintrag(4000, "P", "Peter Petersen/Jena-Plan", Arrays.asList(
-                Schulform.G, 
-                Schulform.GY, 
-                Schulform.S, Schulform.KS, 
-                Schulform.SG, 
+                Schulform.G,
+                Schulform.GY,
+                Schulform.S, Schulform.KS,
+                Schulform.SG,
                 Schulform.SR
             ), null, null)
     }),
@@ -91,15 +91,15 @@ public enum Reformpaedagogik {
 	SONSTIGE(new ReformpaedagogikKatalogEintrag[]{
 		new ReformpaedagogikKatalogEintrag(5000, "S", "sonstige", Arrays.asList(
                 Schulform.FW, Schulform.HI, Schulform.WF,
-                Schulform.G, 
-                Schulform.GE, 
-                Schulform.GY, 
-                Schulform.H, 
-                Schulform.PS, 
-                Schulform.R, 
-                Schulform.SG, 
-                Schulform.SK, 
-                Schulform.SR, 
+                Schulform.G,
+                Schulform.GE,
+                Schulform.GY,
+                Schulform.H,
+                Schulform.PS,
+                Schulform.R,
+                Schulform.SG,
+                Schulform.SK,
+                Schulform.SR,
                 Schulform.V
 			), null, null)
 	});
@@ -107,13 +107,13 @@ public enum Reformpaedagogik {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
+	public static final long VERSION = 1;
 
 	/** Der aktuellen Daten der Reformpädagogik, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull ReformpaedagogikKatalogEintrag daten;
 
 	/** Die Historie mit den Einträgen zu der Reformpädagogik */
-	public final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie;	
+	public final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie;
 
 	/** Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> _schulgliederungenKuerzel = new HashMap<>();
@@ -122,20 +122,20 @@ public enum Reformpaedagogik {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private @NotNull Vector<@NotNull Schulform>@NotNull[] schulformen;
+	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
 	 * Erzeugt eine Reformpädagogik in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Reformpädagogik, welches ein Array von {@link ReformpaedagogikKatalogEintrag} ist
 	 */
 	@SuppressWarnings("unchecked")
-	private Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
+	Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform>@NotNull[])Array.newInstance(Vector.class, historie.length); 
+		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new Vector<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
@@ -150,13 +150,13 @@ public enum Reformpaedagogik {
 	/**
 	 * Gibt eine Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Reformpaedagogik> getMapSchulgliederungByKuerzel() {
 		if (_schulgliederungenKuerzel.size() == 0)
 			for (final Reformpaedagogik r : Reformpaedagogik.values())
-				_schulgliederungenKuerzel.put(r.daten.kuerzel, r);				
+				_schulgliederungenKuerzel.put(r.daten.kuerzel, r);
 		return _schulgliederungenKuerzel;
 	}
 
@@ -164,7 +164,7 @@ public enum Reformpaedagogik {
 	/**
 	 * Gibt eine Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull Reformpaedagogik> getMapSchulgliederungByID() {
@@ -178,10 +178,10 @@ public enum Reformpaedagogik {
 
 
 	/**
-	 * Liefert die Reformpädagogik anhand des übergebenen Kürzels zurück. 
-	 * 
+	 * Liefert die Reformpädagogik anhand des übergebenen Kürzels zurück.
+	 *
 	 * @param kuerzel   das Kürzel der Reformpädagogik
-	 * 
+	 *
 	 * @return die Reformpädagogik oder null, falls das Kürzel ungültig ist
 	 */
 	public static Reformpaedagogik getByKuerzel(final String kuerzel) {
@@ -192,10 +192,10 @@ public enum Reformpaedagogik {
 
 
 	/**
-	 * Liefert die Reformpädagogik anhand der übergebenen ID zurück. 
-	 * 
+	 * Liefert die Reformpädagogik anhand der übergebenen ID zurück.
+	 *
 	 * @param id   die ID der Reformpädagogik
-	 * 
+	 *
 	 * @return die Reformpädagogik oder null, falls die ID ungültig ist
 	 */
 	public static Reformpaedagogik getByID(final Long id) {
@@ -205,7 +205,7 @@ public enum Reformpaedagogik {
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Reformpädagogik vorkommen kann.
-	 * 
+	 *
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
@@ -216,9 +216,9 @@ public enum Reformpaedagogik {
 
 	/**
 	 * Liefert alle möglichen Reformpädagogik-Einträge für die angegeben Schulform.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
 	public static @NotNull List<@NotNull Reformpaedagogik> get(final Schulform schulform) {
@@ -238,9 +238,9 @@ public enum Reformpaedagogik {
 	/**
 	 * Prüft anhand des Schulform-Kürzels, ob bei der Schulform diese Reformpädagogik
 	 * vorkommen kann oder nicht.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Schulform
-	 * 
+	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	@JsonIgnore
@@ -252,7 +252,7 @@ public enum Reformpaedagogik {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}
@@ -260,9 +260,9 @@ public enum Reformpaedagogik {
 
 	/**
 	 * Prüft, ob bei der Schulform diese Reformpädagogik vorkommen kann oder nicht.
-	 * 
+	 *
 	 * @param schulform   die Schulform
-	 * 
+	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	@JsonIgnore
@@ -274,7 +274,7 @@ public enum Reformpaedagogik {
 				final String sfKuerzel = daten.schulformen.get(i);
 				if (sfKuerzel.equals(schulform.daten.kuerzel))
 					return true;
-			}			
+			}
 		}
 		return false;
 	}

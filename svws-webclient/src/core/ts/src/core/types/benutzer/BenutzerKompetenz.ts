@@ -447,7 +447,7 @@ export class BenutzerKompetenz extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 1;
+	public static readonly VERSION : number = 1;
 
 	/**
 	 * Die Daten der Benutzerkompetenz
@@ -467,9 +467,7 @@ export class BenutzerKompetenz extends JavaObject {
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz für die Aufzählung.
 	 *
-	 * @param id                  die ID der Benutzerkompetenz
-	 * @param bezeichnungGruppe   die Bezeichnung der Gruppe von Kompetenzen zu dieser diese Benutzerkompetenz gehört
-	 * @param bezeichnung         die Bezeichnung der Benutzerkompetenz
+	 * @param daten   die Daten der Benutzerkompetenz
 	 */
 	private constructor(name : string, ordinal : number, daten : BenutzerKompetenzKatalogEintrag) {
 		super();
@@ -516,7 +514,6 @@ export class BenutzerKompetenz extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Benutzerkompetenz anhand der übergebenen ID zurück.
 	 *
 	 * @param id    die ID der Benutzerkompetenz

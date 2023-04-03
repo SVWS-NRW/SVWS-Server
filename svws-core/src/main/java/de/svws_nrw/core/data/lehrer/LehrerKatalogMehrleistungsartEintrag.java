@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der Mehrleistungsarten für Lehrer.  
+ * Sie liefert die gütligen Statistikwerte für den Katalog der Mehrleistungsarten für Lehrer.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Mehrleistungsarten für Lehrer.")
@@ -21,7 +21,7 @@ public class LehrerKatalogMehrleistungsartEintrag {
 	/** Das Kürzel für die Mehrleistungsart, welches für die amtliche Schulstatistik verwendet wird. */
 	@Schema(description = "das Kürzel für die Mehrleistungsart", example = "110")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext der Mehrleistungsart. */
 	@Schema(description = "die textuelle Beschreibung der Mehrleistungsart", example = "Mehrarbeit (angeordnet und regelmäßig)")
 	public @NotNull String text = "";
@@ -33,7 +33,7 @@ public class LehrerKatalogMehrleistungsartEintrag {
 	/** Gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
-	
+
 
 	/**
 	 * Erstellt einen Mehrleistungsart-Eintrag mit Standardwerten
@@ -44,9 +44,9 @@ public class LehrerKatalogMehrleistungsartEintrag {
 
 	/**
 	 * Erstellt einen Mehrleistungsart-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist

@@ -4,7 +4,7 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerRaum {
@@ -30,16 +30,16 @@ public class StundenplanblockungManagerRaum {
 
 	/**
 	 * Liefert die Datenbank-ID des Raumes.
-	 * 
+	 *
 	 * @return Die Datenbank-ID des Raumes.
 	 */
 	public long getID() {
 		return _id;
 	}
-	
+
 	/**
 	 * Setzt das Kürzel des Raumes.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel des Raumes.
 	 */
 	public void setKuerzel(final @NotNull String pKuerzel) {

@@ -24,18 +24,18 @@ public class GostLaufbahnplanungDaten {
 	/** Der erste Teil (von dreien) der Bezeichnung der Schule */
 	@Schema(description = "die Bezeichnung 1 der Schule", example = "Städt. Gymnasium")
 	public @NotNull String schulBezeichnung1 = "";
-	
+
 	/** Der zweite Teil (von dreien) der Bezeichnung der Schule */
 	@Schema(description = "die Bezeichnung 2 der Schule", example = "der Stadt Wuppertal")
 	public @NotNull String schulBezeichnung2 = "";
-	
+
 	/** Der dritte Teil (von dreien) der Bezeichnung der Schule */
 	@Schema(description = "die Bezeichnung 3 der Schule", example = "")
 	public @NotNull String schulBezeichnung3 = "";
 	/** Anmerkungen zu diesen Daten */
-	@Schema(description = "anmerkungen zu diesen Daten", example = "Exportiert am 30.2.2023")	
+	@Schema(description = "anmerkungen zu diesen Daten", example = "Exportiert am 30.2.2023")
 	public @NotNull String anmerkungen = "";
-	
+
 	/** Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	@Schema(description = "Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.", example = "2025")
 	public int abiturjahr = -1;
@@ -44,7 +44,7 @@ public class GostLaufbahnplanungDaten {
 	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist", example = "Q1")
 	public String jahrgang;
 
-	/** Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die 
+	/** Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die
 	 * gymnasiale Oberstufe gedruckt wird. */
 	@Schema(description = "Der derzeitige Beratungstext, welcher auf einem Ausdruck eines "
 			+ "Schülerlaufbahnbogens für die gymnasiale Oberstufe gedruckt wird.", example = "Wahlen zum Beginn der Q1.1")
@@ -76,7 +76,7 @@ public class GostLaufbahnplanungDaten {
 
 	/** Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))
-	public final @NotNull Vector<@NotNull GostJahrgangFachkombination> fachkombinationen = new Vector<>(); 
+	public final @NotNull Vector<@NotNull GostJahrgangFachkombination> fachkombinationen = new Vector<>();
 
 	/** Die Liste der Schüler mit ihren Laufbahnplanungsdaten. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenSchueler.class))

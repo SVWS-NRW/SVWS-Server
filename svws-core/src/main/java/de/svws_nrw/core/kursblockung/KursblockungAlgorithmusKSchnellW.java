@@ -8,15 +8,15 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Algorithmus des <b>Typs K</b> verteilt die Kurse zunächst zufällig auf ihre Schienen. Dann wird die Lage durch
  * gezieltes Tauschen versucht zu verbessern.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -25,7 +25,7 @@ public class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
-	
+
 	@Override
 	public @NotNull String toString() {
 		return "SchnellW";

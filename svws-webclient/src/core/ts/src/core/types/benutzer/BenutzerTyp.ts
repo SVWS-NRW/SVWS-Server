@@ -61,7 +61,6 @@ export class BenutzerTyp extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt den Benutzertyp die Benutzerkompetenz anhand der übergebenen ID zurück.
 	 *
 	 * @param id    die ID der Benutzerkompetenz

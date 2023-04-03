@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Schüler-Objekt (während des Blockungsvorgangs).
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class KursblockungDynSchueler {
@@ -53,7 +53,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
-	 * 
+	 *
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pStatistik      Referenz um die Nichtwahlen mitzuteilen.
 	 * @param pSchuelerID     Die ID des Schülers von der GUI/DB.
@@ -78,6 +78,11 @@ public class KursblockungDynSchueler {
 		matrix = new KursblockungMatrix(_random, 0, 0);
 	}
 
+	/**
+	 * Gibt die String-Repräsentation der Schiene zurück.
+	 *
+	 * @return die String-Repräsentation der Schiene
+	 */
 	@Override
 	public @NotNull String toString() {
 		return representation;
@@ -89,7 +94,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Liefert die ID (von der GUI) dieses Schülers, beispielsweise 42.
-	 * 
+	 *
 	 * @return Die ID (von der GUI) dieses Schülers.
 	 */
 	@NotNull long gibDatenbankID() {
@@ -99,7 +104,7 @@ public class KursblockungDynSchueler {
 	/**
 	 * Eine String-Darstellung des Schülers. Beinhaltet meistens den Vornamen, den Nachnamen, das Geburtsdatum und das
 	 * Geschlecht.
-	 * 
+	 *
 	 * @return Eine String-Darstellung des Schülers.
 	 */
 	@NotNull String gibRepresentation() {
@@ -108,7 +113,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Liefert die aktuelle Anzahl an Nichtwahlen.
-	 * 
+	 *
 	 * @return Die aktuelle Anzahl an Nichtwahlen.
 	 */
 	int gibNichtwahlen() {
@@ -117,7 +122,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Liefert ein Array aller Facharten (= Fachwahlen) des Schülers.
-	 * 
+	 *
 	 * @return Ein Array aller Facharten (= Fachwahlen) des Schülers.
 	 */
 	@NotNull KursblockungDynFachart @NotNull [] gibFacharten() {
@@ -127,7 +132,7 @@ public class KursblockungDynSchueler {
 	/**
 	 * Liefert TRUE, falls der Schüler mindestens einen Multikurs hat. Ein Multikurs ist ein Kurs, der über mehr als
 	 * eine Schiene geht.
-	 * 
+	 *
 	 * @return TRUE, falls der Schüler mindestens einen Multikurs hat.
 	 */
 	boolean gibHatMultikurs() {
@@ -141,7 +146,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Liefert ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
-	 * 
+	 *
 	 * @return Ein Array der aktuell zugeordneten Kurse. Das Array kann NULL-Werte enthalten.
 	 */
 	@NotNull KursblockungDynKurs[] gibKurswahlen() {
@@ -154,7 +159,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Setzt alle Facharten (=Fachwahlen) des Schülers.
-	 * 
+	 *
 	 * @param pFacharten Die Facharten des Schülers.
 	 */
 	void aktionSetzeFachartenUndIDs(final @NotNull KursblockungDynFachart @NotNull [] pFacharten) {
@@ -185,7 +190,7 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Sperrt einen bestimmten Kurs für diesen Schüler.
-	 * 
+	 *
 	 * @param pInterneKursID Die ID des Kurses, der gesperrt wird.
 	 */
 	void aktionSetzeKursSperrung(final int pInterneKursID) {
@@ -355,7 +360,7 @@ public class KursblockungDynSchueler {
 	 * Kurse werden in der Wahl bevorzugt.
 	 */
 	void aktionKurseVerteilenMitBipartiteMatchingGewichtetem() {
-		final long INFINITY = 1000000;
+		final long _INFINITY = 1000000;
 
 		// Matrix füllen.
 		final @NotNull long @NotNull [][] data = matrix.getMatrix();
@@ -363,7 +368,7 @@ public class KursblockungDynSchueler {
 
 			// Zeile löschen.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				data[r][c] = INFINITY;
+				data[r][c] = _INFINITY;
 			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
@@ -400,7 +405,7 @@ public class KursblockungDynSchueler {
 			}
 
 			// Matching ungültig?
-			if (data[r][c] == INFINITY) {
+			if (data[r][c] == _INFINITY) {
 				continue;
 			}
 
@@ -476,13 +481,13 @@ public class KursblockungDynSchueler {
 	 * Die (nicht Multi) Facharten des S. werden auf eine Schiene gematched. Falls dies nicht klappt, wird der Fachart
 	 * gesagt, dass einer ihrer Kurse die Schiene wechseln muss. Um welche Schiene es sich dabei handelt, wird durch den
 	 * Matching-Algorithmus berechnet. Der S. wird bei den Berechnungen nicht einem Kurs hinzugefügt.
-	 * 
+	 *
 	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
 	 */
 	boolean aktionKurseVerteilenNachDeinemWunsch() {
-		final long VAL_UNGUELTIG = 1000000;
-		final long VAL_KURS_GEWAEHLT = 0;
-		final long VAL_KURS_MUSS_WANDERN = 1;
+		final long _VAL_UNGUELTIG = 1000000;
+		final long _VAL_KURS_GEWAEHLT = 0;
+		final long _VAL_KURS_MUSS_WANDERN = 1;
 
 		// 1) Matrix füllen.
 
@@ -492,7 +497,7 @@ public class KursblockungDynSchueler {
 
 			// Zeile löschen.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				data[r][c] = VAL_UNGUELTIG;
+				data[r][c] = _VAL_UNGUELTIG;
 			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
@@ -503,8 +508,8 @@ public class KursblockungDynSchueler {
 			// Bewerte die Zeile, falls die Schiene c nicht belegt ist.
 			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
-					data[r][c] = fachart.gibHatKursInSchiene(c, kursGesperrt) ? VAL_KURS_GEWAEHLT : //
-							fachart.gibHatKursMitFreierSchiene(c, kursGesperrt) ? VAL_KURS_MUSS_WANDERN : VAL_UNGUELTIG;
+					data[r][c] = fachart.gibHatKursInSchiene(c, kursGesperrt) ? _VAL_KURS_GEWAEHLT
+							: fachart.gibHatKursMitFreierSchiene(c, kursGesperrt) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
 				}
 			}
 
@@ -530,12 +535,12 @@ public class KursblockungDynSchueler {
 			}
 
 			// Alle Kurse der Fachart nicht wählbar, alle gesperrt?
-			if (data[r][c] == VAL_UNGUELTIG) {
+			if (data[r][c] == _VAL_UNGUELTIG) {
 				continue;
 			}
 
 			// S. wäre in diesem Kurs, aber S. trotzdem nicht hinzufügen, da dies nur eine Simulation ist.
-			if (data[r][c] == VAL_KURS_GEWAEHLT) {
+			if (data[r][c] == _VAL_KURS_GEWAEHLT) {
 				continue;
 			}
 
@@ -599,7 +604,7 @@ public class KursblockungDynSchueler {
 	// ########################################
 
 	private void aktionKursHinzufuegen(final int fachartIndex, final @NotNull KursblockungDynKurs kurs) {
-		kurs.aktionSchuelerHinzufügen();
+		kurs.aktionSchuelerHinzufuegen();
 		statistik.aktionNichtwahlenVeraendern(-1);
 		nichtwahlen--;
 		for (final int nr : kurs.gibSchienenLage()) {
@@ -626,9 +631,9 @@ public class KursblockungDynSchueler {
 
 	/**
 	 * Liefert TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
-	 * 
+	 *
 	 * @param  kurs Der Kurs in dem der Schüler potentiell ist.
-	 * 
+	 *
 	 * @return      TRUE, wenn dieser Schüler dem übergebenen Kurs zugeordnet wurde.
 	 */
 	boolean gibIstInKurs(final KursblockungDynKurs kurs) {
@@ -649,16 +654,16 @@ public class KursblockungDynSchueler {
 			final KursblockungDynKurs kurs = fachartZuKurs[i];
 			if (kurs == null)
 				continue;
-			System.out.println("    " + kurs.toString() +"    "+Arrays.toString(kurs.gibSchienenLage()));
+			System.out.println("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
 			for (final int schiene : kurs.gibSchienenLage()) {
-				if (setSchienenLage.add(schiene) == false) {
+				if (!setSchienenLage.add(schiene)) {
 					System.out.println("Kollision");
 					return;
 				}
-					
+
 			}
 		}
-		
+
 	}
 
 }

@@ -3,9 +3,9 @@ package de.svws_nrw.core.utils.klausurplan;
 import java.util.List;
 
 /**
- * Konfiguration des Algorithmus. Die GUI muss diese Daten definieren und dem Algorithmus beim 
- * Aufruf der Methode {@link KlausurblockungSchienenAlgorithmus#berechne(List, long)} übergeben. 
- * 
+ * Konfiguration des Algorithmus. Die GUI muss diese Daten definieren und dem Algorithmus beim
+ * Aufruf der Methode {@link KlausurblockungSchienenAlgorithmus#berechne(List, long)} übergeben.
+ *
  * @author Benjamin A. Bartsch
  */
 public class KlausurterminblockungAlgorithmusConfig {
@@ -14,22 +14,22 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 * Dieser LK-GK-Modus blockt beide Kursarten gemischt.
 	 */
 	public static final int LK_GK_MODUS_BEIDE = 0;
-	
+
 	/**
 	 * Dieser LK-GK-Modus blockt nur die Kursart LK.
 	 */
 	public static final int LK_GK_MODUS_NUR_LK = 1;
-	
+
 	/**
 	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
 	 */
 	public static final int LK_GK_MODUS_NUR_GK = 2;
-	
+
 	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
 	 */
 	public static final int LK_GK_MODUS_GETRENNT = 3;
-	
+
 	/**
 	 * Der normale Algorithmus minimiert die Anzahl der Termine.
 	 */
@@ -66,6 +66,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Liefert die maximale Blockungszeit.
+	 *
 	 * @return die maximale Blockungszeit.
 	 */
 	public long get_max_time_millis() {
@@ -74,20 +75,22 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Setzt die maximale Blockungszeit.
-	 * @param pMax_time_millis die maximale Blockungszeit.
+	 *
+	 * @param pMaxTimeMillis die maximale Blockungszeit.
 	 */
-	public void set_max_time_millis(final long pMax_time_millis) {
-		max_time_millis = pMax_time_millis;
+	public void set_max_time_millis(final long pMaxTimeMillis) {
+		max_time_millis = pMaxTimeMillis;
 	}
 
 	/**
 	 * Liefert den selektierten Algorithmus.
+	 *
 	 * @return den selektierten Algorithmus.
 	 */
 	public int get_algorithmus() {
 		return algorithmus;
 	}
-	
+
 	/**
 	 * Der normale Algorithmus minimiert die Anzahl der Termine.
 	 */
@@ -102,7 +105,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public void set_algorithmus_faecherweise() {
 		algorithmus = ALGORITHMUS_FAECHERWEISE;
 	}
-	
+
 	/**
 	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
 	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
@@ -127,7 +130,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public int get_lk_gk_modus() {
 		return lk_gk_modus;
 	}
-	
+
 	/**
 	 * 	Dieser LK-GK-Modus blockt beide Kursarten gemischt.
 	 */
@@ -150,7 +153,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK. 
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
 	 */
 	public void set_lk_gk_modus_getrennt() {
 		lk_gk_modus = LK_GK_MODUS_GETRENNT;
@@ -158,11 +161,11 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Setzt den LK-GK-Modus.
-	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
+	 * @param modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
 	 */
 	@Deprecated
-	public void set_lk_gk_modus(final int lk_gk_modus) {
-		this.lk_gk_modus = lk_gk_modus;
+	public void set_lk_gk_modus(final int modus) {
+		this.lk_gk_modus = modus;
 	}
 
 	/**

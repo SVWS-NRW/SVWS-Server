@@ -189,7 +189,7 @@ public enum KAOAMerkmal {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;
+	public static final long VERSION = 1;
 
 	/** Die aktuellsten Daten des KAoA-Merkmals */
 	public final @NotNull KAOAMerkmalEintrag daten;
@@ -209,7 +209,7 @@ public enum KAOAMerkmal {
 	 *
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAMerkmalEintrag} ist
 	 */
-	private KAOAMerkmal(final @NotNull KAOAMerkmalEintrag@NotNull[] historie) {
+	KAOAMerkmal(final @NotNull KAOAMerkmalEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 	}

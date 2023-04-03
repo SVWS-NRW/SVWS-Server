@@ -131,9 +131,9 @@ public class KursblockungDynDaten {
 		schritt10FehlerBeiFachartKursArrayErstellung();
 
 		schritt11FehlerBeiRegel_4_oder_5();
-		
+
 		schritt12FehlerBeiRegel_7_oder_8();
-		
+
 		schritt13FehlerBeiRegel_9(pInput);
 
 		// Zustände Speichern
@@ -200,7 +200,7 @@ public class KursblockungDynDaten {
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer < 1");
 			if (gSchiene.nummer > schienenAnzahl)
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer > schienenAnzahl");
-			if (usedSchiene.add(gSchiene.nummer) == false)
+			if (!usedSchiene.add(gSchiene.nummer))
 				throw new DeveloperNotificationException("GostBlockungSchiene.nummer existiert doppelt!");
 		}
 
@@ -214,7 +214,7 @@ public class KursblockungDynDaten {
 			if (iKursart.id < 0)
 				throw new DeveloperNotificationException("GostKursart.id < 0 (" + iKursart.kuerzel + ")");
 
-			if (setKursarten.add(iKursart.id) == false)
+			if (!setKursarten.add(iKursart.id))
 				throw new DeveloperNotificationException("GostKursart.id (" + iKursart.id + ") gibt es doppelt!");
 
 		}
@@ -229,7 +229,7 @@ public class KursblockungDynDaten {
 			if (iFach.id < 0)
 				throw new DeveloperNotificationException("GostFach.id < 0 (" + iFach.kuerzel + ")");
 
-			if (setFaecher.add(iFach.id) == false)
+			if (!setFaecher.add(iFach.id))
 				throw new DeveloperNotificationException("GostFach.id (" + iFach.id + ") gibt es doppelt!");
 		}
 
@@ -309,7 +309,7 @@ public class KursblockungDynDaten {
 				final int von = daten[1].intValue(); // Schiene ist 1-indiziert!
 				final int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
 				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
-					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis+ ") ist unlogisch!");
+					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!");
 			}
 
 			// Regeltyp = 2
@@ -387,23 +387,23 @@ public class KursblockungDynDaten {
 				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
 					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!");
 			}
-			
+
 			// Regeltyp = 7
 			if (gostRegel == GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS) {
 				final int length = daten.length;
 				if (length != 2)
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!");
-				
+
 				final long kursID1 = daten[0];
 				if (!setKurse.contains(kursID1))
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!");
-				
+
 				final long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!");
 
 				if (kursID1 == kursID2)
-					throw new UserNotificationException("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs ("+kursID1+") und sich selbst kombiniert!");
+					throw new UserNotificationException("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!");
 			}
 
 			// Regeltyp = 8
@@ -411,17 +411,17 @@ public class KursblockungDynDaten {
 				final int length = daten.length;
 				if (length != 2)
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!");
-				
+
 				final long kursID1 = daten[0];
 				if (!setKurse.contains(kursID1))
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!");
-				
+
 				final long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
 					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!");
 
 				if (kursID1 == kursID2)
-					throw new UserNotificationException("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs ("+kursID1+") und sich selbst kombiniert!");
+					throw new UserNotificationException("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!");
 			}
 
 			// Regeltyp = 9
@@ -429,7 +429,7 @@ public class KursblockungDynDaten {
 				final int length = daten.length;
 				if (length != 1)
 					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!");
-				
+
 				final long auchExtern = daten[0];
 				if ((auchExtern < 0) || (auchExtern > 1))
 					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!");
@@ -452,7 +452,7 @@ public class KursblockungDynDaten {
 			if (iRegel.id < 0)
 				throw new DeveloperNotificationException("GostBlockungRegel.id < 0");
 
-			if (regelDatabaseIDs.add(iRegel.id) == false)
+			if (!regelDatabaseIDs.add(iRegel.id))
 				throw new DeveloperNotificationException("GostBlockungRegel.id (" + iRegel.id + ") gibt es doppelt!");
 
 			// Passende Liste holen, ggf. eine neue Liste erzeugen.
@@ -502,11 +502,11 @@ public class KursblockungDynDaten {
 		for (final @NotNull GostFachwahl iFachwahl : pInput.daten().fachwahlen) {
 			final GostFach fach = pInput.faecherManager().get(iFachwahl.fachID);
 			if (fach == null)
-				throw new DeveloperNotificationException("GostFachwahl: Die Fach-ID ("+iFachwahl.fachID+") ist im Manager unbekannt!");
+				throw new DeveloperNotificationException("GostFachwahl: Die Fach-ID (" + iFachwahl.fachID + ") ist im Manager unbekannt!");
 
 			final GostKursart kursart = GostKursart.fromIDorNull(iFachwahl.kursartID);
 			if (kursart == null)
-				throw new DeveloperNotificationException("GostFachwahl: Die Kursart-ID ("+iFachwahl.kursartID+") ist bei GostKursart unbekannt!");
+				throw new DeveloperNotificationException("GostFachwahl: Die Kursart-ID (" + iFachwahl.kursartID + ") ist bei GostKursart unbekannt!");
 
 			final long schuelerID = iFachwahl.schuelerID;
 			if (schuelerID < 0)
@@ -684,15 +684,15 @@ public class KursblockungDynDaten {
 			final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp6 = regelMap.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
 			if (regelnTyp6 != null)
 				for (final @NotNull GostBlockungRegel regel6 : regelnTyp6) {
-						final int von = regel6.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
-						final int bis = regel6.parameter.get(2).intValue(); // DB-Schiene ist 1-indiziert!
-						for (int schiene = 1; schiene <= schienenArr.length; schiene++) {
-							final boolean innerhalb = (von <= schiene) && (schiene <= bis);
-							final boolean gleicheArt = kurs.kursart == regel6.parameter.get(0);
-							if (innerhalb != gleicheArt)
-								schieneFrei.remove(schienenArr[schiene - 1]); // Intern 0-indiziert!
-						}
+					final int von = regel6.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
+					final int bis = regel6.parameter.get(2).intValue(); // DB-Schiene ist 1-indiziert!
+					for (int schiene = 1; schiene <= schienenArr.length; schiene++) {
+						final boolean innerhalb = (von <= schiene) && (schiene <= bis);
+						final boolean gleicheArt = kurs.kursart == regel6.parameter.get(0);
+						if (innerhalb != gleicheArt)
+							schieneFrei.remove(schienenArr[schiene - 1]); // Intern 0-indiziert!
 					}
+				}
 
 			// Regel 3 - Pro Kurs gesperrte Schienen entfernen.
 			final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp3 = regelMap.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE);
@@ -713,7 +713,7 @@ public class KursblockungDynDaten {
 						if (schieneLage.contains(dynSchiene))
 							continue; // Doppeltfixierungen ignorieren
 						if (!schieneFrei.contains(dynSchiene)) // Intern 0-indiziert!
-							throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene+ ") fixieren, aber die Schiene wurde bereits gesperrt!");
+							throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!");
 						schieneFrei.remove(dynSchiene);
 						schieneLage.addLast(dynSchiene);
 					}
@@ -817,7 +817,7 @@ public class KursblockungDynDaten {
 
 		// Regel 5 - SCHUELER_VERBIETEN_IN_KURS
 		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp5 = regelMap.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
-		if (regelnTyp5 != null) 
+		if (regelnTyp5 != null)
 			for (final @NotNull GostBlockungRegel regel5 : regelnTyp5) {
 				final long schuelerID = regel5.parameter.get(0);
 				final long kursID = regel5.parameter.get(1);
@@ -851,7 +851,7 @@ public class KursblockungDynDaten {
 				statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
 			}
 	}
-	
+
 	private void schritt13FehlerBeiRegel_9(final @NotNull GostBlockungsdatenManager pInput) {
 		// Regel 9 - LEHRKRAFT_BEACHTEN
 		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
@@ -859,19 +859,19 @@ public class KursblockungDynDaten {
 			// Sammle zunächst alle potentiellen Kurse
 			final @NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
 			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
-				if (gKurs.lehrer.isEmpty() == false) 
+				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
-			
+
 			// Finde Kurse mit der selben Lehrkraft
 			for (final @NotNull GostBlockungRegel regel9 : regelnTyp9) {
 				final boolean externBeachten = regel9.parameter.get(0) == 1L;
-				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft) 
+				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
 					for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
 						if (gKurs1.id < gKurs2.id)
 							for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) 
-									if (gLehr1.id == gLehr2.id) 
-										if ( (externBeachten) || (!gLehr1.istExtern) ) {
+								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
+									if (gLehr1.id == gLehr2.id)
+										if ((externBeachten) || (!gLehr1.istExtern)) {
 											final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
 											final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
 											statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
@@ -885,15 +885,15 @@ public class KursblockungDynDaten {
 			// Sammle zunächst alle potentiellen Kurse
 			final @NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
 			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
-				if (gKurs.lehrer.isEmpty() == false) 
+				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
 			// Finde Kurse mit der selben Lehrkraft
-			for (@SuppressWarnings("unused") final @NotNull GostBlockungRegel regel10 : regelnTyp10) 
-				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft) 
+			for (@SuppressWarnings("unused") final @NotNull GostBlockungRegel regel10 : regelnTyp10)
+				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
 					for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
 						if (gKurs1.id < gKurs2.id)
 							for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) 
+								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
 									if (gLehr1.id == gLehr2.id) {
 										final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
 										final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
@@ -983,7 +983,7 @@ public class KursblockungDynDaten {
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen (Manager hat eine 1-Indizierung der Schiene!)
 		for (final @NotNull KursblockungDynKurs dynKurs : kursArr)
-			for (final int schienenNr : dynKurs.gibSchienenLage()) 
+			for (final int schienenNr : dynKurs.gibSchienenLage())
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);
 
 		// Erzeuge die Schüler-Kurs-Zuordnungen.
@@ -991,13 +991,13 @@ public class KursblockungDynDaten {
 			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
 				if (kurs != null)
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
-		
+
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
-		for (final @NotNull GostBlockungRegel gRegel : pDataManager.getMengeOfRegeln()) 
+		for (final @NotNull GostBlockungRegel gRegel : pDataManager.getMengeOfRegeln())
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				final long schuelerID = gRegel.parameter.get(0);
 				final long kursID = gRegel.parameter.get(1);
-				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) == false) 
+				if (!out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
 					out.setSchuelerKurs(schuelerID, kursID, true); // Kann zu Kollisionen führen!
 			}
 
@@ -1005,7 +1005,7 @@ public class KursblockungDynDaten {
 		/*
 		for (@NotNull KursblockungDynKurs dynKurs : kursArr)
 			dynKurs.debug(schuelerArr);
-		for (@NotNull KursblockungDynSchueler dynSchueler : schuelerArr) 
+		for (@NotNull KursblockungDynSchueler dynSchueler : schuelerArr)
 			dynSchueler.debugKurswahlen();*/
 
 		return out;
@@ -1276,13 +1276,13 @@ public class KursblockungDynDaten {
 
 	/** Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. */
 	void aktionKurseFreieZufaelligVerteilen() {
-		for (final @NotNull KursblockungDynKurs kurs : kursArrFrei) 
+		for (final @NotNull KursblockungDynKurs kurs : kursArrFrei)
 			kurs.aktionZufaelligVerteilen();
 	}
 
 	/** Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. */
 	void aktionKursVerteilenEinenZufaelligenFreien() {
-		if (kursArrFrei.length == 0) 
+		if (kursArrFrei.length == 0)
 			return;
 		final int index = _random.nextInt(kursArrFrei.length);
 		final @NotNull KursblockungDynKurs kurs = kursArrFrei[index];
@@ -1352,7 +1352,6 @@ public class KursblockungDynDaten {
 			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
 		}
-
 	}
 
 	/**
@@ -1369,7 +1368,6 @@ public class KursblockungDynDaten {
 			schueler.aktionKurseVerteilenNurFachartenMitEinemKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		}
-
 	}
 
 }

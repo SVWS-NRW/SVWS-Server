@@ -24,9 +24,9 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
-	 * Fügt die Zuordnung der Map hinzu. 
+	 * Fügt die Zuordnung der Map hinzu.
 	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird er erzeugt.
-	 * 
+	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
@@ -43,11 +43,11 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	/**
 	 * Liefert den Wert zum Mapping (key1, key2). <br>
 	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird eine Exception geworfen.
-	 * 
+	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 * @return Den Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!  
+	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws NullPointerException {
 		final @NotNull HashMap<@NotNull K2, V> map2 = getSubMapOrException(key1);
@@ -60,11 +60,11 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * Liefert den Nicht-Null-Wert zum Mapping (key1, key2).<br>
 	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird eine Exception geworfen.<br>
 	 * Falls der zugeordnete Wert NULL ist, wird eine Exception geworfen.
-	 * 
+	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 * @return Den Nicht-Null-Wert zum Mapping (key1, key2).
-	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!  
+	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws NullPointerException {
 		final V value = getOrException(key1, key2);
@@ -75,8 +75,8 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 
 	/**
 	 * Liefert für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
-	 * 
-	 * @param key1 Der 1. Schlüssel des Paares(key1, key2). 
+	 *
+	 * @param key1 Der 1. Schlüssel des Paares(key1, key2).
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
 	public @NotNull HashMap<@NotNull K2, V> getSubMapOrException(final @NotNull K1 key1) {

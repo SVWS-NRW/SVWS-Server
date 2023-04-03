@@ -152,12 +152,11 @@ export class GostKursklausurManager extends JavaObject {
 			for (const key of this._mapTerminKursklausuren.keySet()) {
 				const entry : Vector<GostKursklausur> | null = this._mapTerminKursklausuren.get(key);
 				if (entry === null) {
-					// empty block
-				} else {
-					if (entry.contains(klausur)) {
-						oldTerminId = key.valueOf();
-						entry.remove(klausur);
-					}
+					continue;
+				}
+				if (entry.contains(klausur)) {
+					oldTerminId = key.valueOf();
+					entry.remove(klausur);
 				}
 			}
 			const quartalMap : HashMap<number, Vector<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
@@ -165,8 +164,6 @@ export class GostKursklausurManager extends JavaObject {
 				const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
 				if (listOldQuartalTerminKursklausuren !== null)
 					listOldQuartalTerminKursklausuren.remove(klausur);
-			} else {
-				// empty block
 			}
 			const quartalKursartMap : HashMap<string, HashMap<number, Vector<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
 			if (quartalKursartMap !== null) {
@@ -175,11 +172,7 @@ export class GostKursklausurManager extends JavaObject {
 					const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
 					if (listOldQuartalTerminKursklausuren !== null)
 						listOldQuartalTerminKursklausuren.remove(klausur);
-				} else {
-					// empty block
 				}
-			} else {
-				// empty block
 			}
 			this.addKlausurToInternalMaps(klausur);
 			this.updateSchuelerIdsZuTermin(oldTerminId);

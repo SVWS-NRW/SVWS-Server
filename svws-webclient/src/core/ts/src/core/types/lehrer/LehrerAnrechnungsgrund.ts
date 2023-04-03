@@ -428,7 +428,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static VERSION : number = 2;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten des Abgangsgrundes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

@@ -84,6 +84,7 @@ export class GostKursart extends JavaObject {
 	 * @param id             die eindeutige ID der Kursart der Gymnasialen Oberstufe
 	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
 	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
+	 * @param kursarten      die zulässigen Kursarten, die dieser Kursart der gymnasialen Oberstufe zugeordnet sind
 	 */
 	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string, kursarten : List<ZulaessigeKursart>) {
 		super();

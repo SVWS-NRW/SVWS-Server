@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert den gesamten Katalog der Fachklassen beim Berufskolleg.  
+ * Sie liefert den gesamten Katalog der Fachklassen beim Berufskolleg.
  */
 @XmlRootElement
 @Schema(description = "der gesamte Katalog der Fachklassen beim Berufskolleg.")

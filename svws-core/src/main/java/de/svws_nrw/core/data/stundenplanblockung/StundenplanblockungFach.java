@@ -5,9 +5,9 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-/** 
+/**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für ein Fach bei {@link StundenplanblockungInput}.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 @XmlRootElement(name = "StundenplanblockungFach")
@@ -20,7 +20,7 @@ public class StundenplanblockungFach {
 
 	/** Das Kürzel des Faches. Beispielsweise 'KU'. */
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Nummer, welche die Sortierung der Fächer angibt. */
 	public int sortierung = 32000;
 

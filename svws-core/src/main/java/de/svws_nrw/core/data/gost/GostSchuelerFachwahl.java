@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Dieses DTO beschreibt die Informationen zu der Fachwahl eines Schülers 
+ * Dieses DTO beschreibt die Informationen zu der Fachwahl eines Schülers
  * in seinem Abiturjahrgang in Bezug auf ein Fach der gymnasialen Oberstufe.
  */
 @XmlRootElement()
@@ -21,6 +21,6 @@ public class GostSchuelerFachwahl {
 
 	/** Die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null */
 	@Schema(description = "die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null", example = "3")
-	public Integer abiturFach;	
-	
+	public Integer abiturFach;
+
 }

@@ -47,11 +47,11 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Erstellt eine neue Belegprüfung für die Kurszahlen.
 	 *
 	 * @param manager                 der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public constructor(manager : AbiturdatenManager, pruefungs_art : GostBelegpruefungsArt, pruefungProjektkurse : GostBelegpruefung) {
-		super(manager, pruefungs_art, pruefungProjektkurse);
+	public constructor(manager : AbiturdatenManager, pruefungsArt : GostBelegpruefungsArt, pruefungProjektkurse : GostBelegpruefung) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 	protected init() : void {

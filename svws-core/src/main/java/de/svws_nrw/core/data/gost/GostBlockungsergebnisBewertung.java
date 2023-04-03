@@ -24,7 +24,7 @@ public class GostBlockungsergebnisBewertung {
 
 	/** Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden. */
 	public int anzahlKurseNichtZugeordnet = 0;
-	
+
 	/** Bewertungskriterium 2a: Anzahl aller Fachwahlen der SuS, die nicht zugeordnet wurden. */
 	public int anzahlSchuelerNichtZugeordnet = 0;
 
@@ -34,7 +34,7 @@ public class GostBlockungsergebnisBewertung {
 
 	/** Bewertungskriterium 3a: Die größte Kursdifferenz in der Blockung. */
 	public int kursdifferenzMax = 0;
-	
+
 	/** Bewertungskriterium 3b: Array mit dem Histogramm der Kursdifferenzen. <br>
 	 * Beispiel: [7, 5, 2, 1, 0, 0, ...] bedeutet: <br>
 	 * Die Kursdifferenz 0 gibt es 7 Mal <br>
@@ -42,7 +42,7 @@ public class GostBlockungsergebnisBewertung {
 	 * Die Kursdifferenz 2 gibt es 2 Mal <br>
 	 * Die Kursdifferenz 3 gibt es 1 Mal <br>
 	 */
-	public @NotNull int [] kursdifferenzHistogramm = new int[0];
+	public @NotNull int[] kursdifferenzHistogramm = new int[0];
 
 	/** Bewertungskriterium 4: Anzahl aller Kurse mit gleicher Fachart in einer Schiene. */
 	public int anzahlKurseMitGleicherFachartProSchiene = 0;

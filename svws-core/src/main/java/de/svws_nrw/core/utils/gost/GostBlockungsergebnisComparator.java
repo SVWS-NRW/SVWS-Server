@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /** Dieser Klasse dient der GUI dazu, Blockungsergebnisse zu sortieren. <br>
  * Die GUI erhält von der Datenbank eine Liste von {@link GostBlockungsergebnisListeneintrag}, sobald man auf
  * ein Element der Liste klickt, wird ein {@link GostBlockungsergebnis} Objekt geladen. */
-public class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnisListeneintrag> {
+public final class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnisListeneintrag> {
 
 	/** Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}. Zwei
 	 * Elemente werden nach folgender Priorität sortiert: <br>
@@ -25,9 +25,9 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 
 	@Override
 	public int compare(final @NotNull GostBlockungsergebnisListeneintrag o1, final @NotNull GostBlockungsergebnisListeneintrag o2) {
-		final @NotNull GostBlockungsergebnisBewertung b1 = o1.bewertung; 
+		final @NotNull GostBlockungsergebnisBewertung b1 = o1.bewertung;
 		final @NotNull GostBlockungsergebnisBewertung b2 = o2.bewertung;
-		
+
 		// Bewertungskriterium 1: Je weniger nicht erfüllter Regeln, desto besser.
 		final int o1Wert1 = b1.regelVerletzungen.size() + b1.anzahlKurseNichtZugeordnet;
 		final int o2Wert1 = b2.regelVerletzungen.size() + b2.anzahlKurseNichtZugeordnet;
@@ -45,7 +45,7 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 		final int kdMax2 = b2.kursdifferenzMax;
 		if (kdMax1 < kdMax2) return -1;
 		if (kdMax1 > kdMax2) return +1;
-		
+
 		final int[] o1Kursdifferenzen = b1.kursdifferenzHistogramm;
 		final int[] o2Kursdifferenzen = b2.kursdifferenzHistogramm;
 		for (int i = kdMax1; i >= 0; i--) {

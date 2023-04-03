@@ -15,10 +15,10 @@ import jakarta.validation.constraints.NotNull;
  * gemapped. NULL-Werte sind in dem Set nicht erlaubt.
  *
  * @author Benjamin A. Bartsch
- * 
+ *
  * @param <E> Der Typ der Schlüssel-Werte.
  */
-public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
+public final class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 
 	private final @NotNull NavigableSet<@NotNull E> _set;
 
@@ -34,7 +34,7 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 
 	/**
 	 * Erstellt eine neues Set und nutzt dabei die angegeben Ordnung der Schlüssel.
-	 * 
+	 *
 	 * @param comparator Die Ordnung für die Schlüssel.
 	 */
 	public AVLSet(final @NotNull Comparator<@NotNull E> comparator) {
@@ -45,7 +45,7 @@ public class AVLSet<@NotNull E> implements NavigableSet<@NotNull E> {
 
 	/**
 	 * Erstellt ein neues Set mit den Daten des angegebenen Sets und nutzt dabei die Ordnung dieses Sets.
-	 * 
+	 *
 	 * @param set Die Map mit den Daten.
 	 */
 	public AVLSet(final @NotNull SortedSet<@NotNull E> set) {

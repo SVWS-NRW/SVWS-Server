@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerRechtsverhältnisse.  
+ * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerRechtsverhältnisse.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog des Lehrer-Rechtsverhältnis.")
@@ -21,7 +21,7 @@ public class LehrerKatalogRechtsverhaeltnisEintrag {
 	/** Das Kürzel für das Rechtsverhältnis. */
 	@Schema(description = "das Kürzel für das Rechtsverhältnis", example = "L")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext des Rechtsverhältnisses. */
 	@Schema(description = "das Rechtsverhältnis", example = "Beamter auf Lebenszeit")
 	public @NotNull String text = "";
@@ -33,8 +33,8 @@ public class LehrerKatalogRechtsverhaeltnisEintrag {
 	/** Gibt an, bis zu welchem Schuljahr das Rechtsverhältnis gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, bis zu welchem Schuljahr das Rechtsverhältnis gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
-	
-	
+
+
 	/**
 	 * Erstellt einen Rechtsverhältnis-Eintrag mit Standardwerten
 	 */
@@ -44,9 +44,9 @@ public class LehrerKatalogRechtsverhaeltnisEintrag {
 
 	/**
 	 * Erstellt einen Rechtsverhältnis-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -57,6 +57,6 @@ public class LehrerKatalogRechtsverhaeltnisEintrag {
 		this.text = text;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
-	}	
-	
+	}
+
 }

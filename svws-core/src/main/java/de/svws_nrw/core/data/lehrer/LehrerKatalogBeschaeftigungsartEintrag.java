@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerBeschäftigungsarten.  
+ * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerBeschäftigungsarten.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Lehrer-Beschäftigungsart.")
@@ -21,7 +21,7 @@ public class LehrerKatalogBeschaeftigungsartEintrag {
 	/** Das Kürzel für die Beschäftigungsart. */
 	@Schema(description = "das Kürzel für die Beschäftigungsart", example = "V")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Der Klartext der Beschäftigungsart. */
 	@Schema(description = "die Beschäftigungsart", example = "Vollzeit")
 	public @NotNull String text = "";
@@ -43,9 +43,9 @@ public class LehrerKatalogBeschaeftigungsartEintrag {
 
 	/**
 	 * Erstellt einen Beschäftigungsart-Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id           die ID
-	 * @param kuerzel      das Kürzel 
+	 * @param kuerzel      das Kürzel
 	 * @param text         die textuelle Beschreibung
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
@@ -58,5 +58,5 @@ public class LehrerKatalogBeschaeftigungsartEintrag {
 		this.gueltigBis = gueltigBis;
 	}
 
-	
+
 }

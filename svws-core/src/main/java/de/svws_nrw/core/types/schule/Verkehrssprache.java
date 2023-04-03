@@ -6,12 +6,12 @@ import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Core-Type für die Verkehrssprachen. Die Daten bilden einen 
- * Ausschnitt aus dem ISO-Standard 639-2 
+ * Ein Core-Type für die Verkehrssprachen. Die Daten bilden einen
+ * Ausschnitt aus dem ISO-Standard 639-2
  * (siehe https://de.wikipedia.org/wiki/Liste_der_ISO-639-2-Codes).
- * Teilweise wurden Codes aus dem ISO-Standard 639-3 
- * (siehe https://de.wikipedia.org/wiki/Überblicksliste_der_ISO-639-3-Codes) 
- * ergänzt. 
+ * Teilweise wurden Codes aus dem ISO-Standard 639-3
+ * (siehe https://de.wikipedia.org/wiki/Überblicksliste_der_ISO-639-3-Codes)
+ * ergänzt.
  */
 public enum Verkehrssprache {
 
@@ -2352,29 +2352,29 @@ public enum Verkehrssprache {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Verkehrssprache, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull VerkehrsspracheKatalogEintrag daten;
-	
-	/** Die Historie mit den Einträgen der Verkehrssprache */
-	public final @NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie;	
 
-	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren Kürzeln */ 
+	/** Die Historie mit den Einträgen der Verkehrssprache */
+	public final @NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie;
+
+	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren Kürzeln */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> _sprachen = new HashMap<>();
 
-	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren zweistelligen ISO 639-1-Codes */ 
+	/** Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren zweistelligen ISO 639-1-Codes */
 	private static final @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> _kuerzel2 = new HashMap<>();
-	
+
 
 	/**
 	 * Erzeugt eine neue Verkehrssprache in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist  
+	 *
+	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist
 	 */
-	private Verkehrssprache(final @NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie) {
+	Verkehrssprache(final @NotNull VerkehrsspracheKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -2382,7 +2382,7 @@ public enum Verkehrssprache {
 	/**
 	 * Gibt eine Map von den Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel() {
@@ -2399,7 +2399,7 @@ public enum Verkehrssprache {
 	/**
 	 * Gibt eine Map von den zweistelligen Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
-	 *    
+	 *
 	 * @return die Map von den zweistelligen Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
 	private static @NotNull HashMap<@NotNull String, @NotNull Verkehrssprache> getMapSpracheByKuerzel2() {
@@ -2415,9 +2415,9 @@ public enum Verkehrssprache {
 
 	/**
 	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static Verkehrssprache getByKuerzel(final String kuerzel) {
@@ -2427,9 +2427,9 @@ public enum Verkehrssprache {
 
 	/**
 	 * Gibt die Verkehrssprache für das angegebene zweistellige ISO 639-1-Kürzel zurück.
-	 * 
+	 *
 	 * @param kuerzel   das zweistellige Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static Verkehrssprache getByKuerzelISO2(final String kuerzel) {
@@ -2441,9 +2441,9 @@ public enum Verkehrssprache {
 	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
 	 * Dabei wird anhand der Länge des Kürzels automatisch geprüft, ob
 	 * eine Sprache nach ISO 639-1 bzw. ISO 639-2 angegeben wurde.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Verkehrssprache
-	 * 
+	 *
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static Verkehrssprache getByKuerzelAuto(final String kuerzel) {

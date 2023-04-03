@@ -13,9 +13,9 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der möglichen Herkünfte 
+ * Sie liefert die Werte für den Katalog der möglichen Herkünfte
  * aus Typen von Bildungsgängen an Berufskollegs oder Weiterbildungskollegs
- * beim Wechsel zu einem Weiterbildungskolleg.  
+ * beim Wechsel zu einem Weiterbildungskolleg.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Herkünfte aus Typen von Bildungsgängen an Berufskollegs oder Weiterbildungskollegs.")
@@ -33,7 +33,7 @@ public class HerkunftBildungsgangTypKatalogEintrag {
 	/** Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB). */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (WB oder BK und SB)")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Die textuelle Beschreibung des Bildungsgangtyps. */
 	@Schema(description = "die textuelle Beschreibung des Bildungsgangtyps", example = "Weiterbildungskolleg: Abendgymnasium")
 	public @NotNull String beschreibung = "";
@@ -56,10 +56,10 @@ public class HerkunftBildungsgangTypKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id            die ID
-	 * @param wbkTyp        der Bildungsgangtyp am Weiterbildungskolleg oder null 
-	 * @param bkTyp         der Bildungsgangtyp am BErufskolleg oder null 
+	 * @param wbkTyp        der Bildungsgangtyp am Weiterbildungskolleg oder null
+	 * @param bkTyp         der Bildungsgangtyp am BErufskolleg oder null
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */

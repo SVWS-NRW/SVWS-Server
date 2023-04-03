@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert die Werte für den Katalog der allgemeinen Merkmale bei Schulen
- * und Schüler.  
+ * und Schüler.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der allgemeinen Merkmale.")
@@ -34,11 +34,11 @@ public class AllgemeineMerkmaleKatalogEintrag {
 	/** Gibt an, das das Merkmal bei der Schule gesetzt werden kann. */
 	@Schema(description = "gibt an, das das Merkmal bei der Schule gesetzt werden kann", example = "false")
 	public boolean beiSchule = false;
-	
+
 	/** Gibt an, das das Merkmal bei einem Schüler gesetzt werden kann. */
 	@Schema(description = "gibt an, das das Merkmal bei einem Schüler gesetzt werden kann", example = "false")
 	public boolean beiSchueler = false;
-	
+
 	/** Ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird. */
 	@Schema(description = "ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "X")
 	public String kuerzelASD = "";
@@ -65,7 +65,7 @@ public class AllgemeineMerkmaleKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel
 	 * @param bezeichnung     die Bezeichnung des Merkmals
@@ -77,7 +77,7 @@ public class AllgemeineMerkmaleKatalogEintrag {
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
 	public AllgemeineMerkmaleKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
-			final boolean beiSchule, final boolean beiSchueler, final String kuerzelASD, 
+			final boolean beiSchule, final boolean beiSchueler, final String kuerzelASD,
 			final @NotNull List<@NotNull Schulform> schulformen, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

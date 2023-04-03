@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert den Katalog der zulässigen Klassenarten und die Information für welche Schulformen
- * diese zulässig sind.  
+ * diese zulässig sind.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Klassenarten.")
@@ -29,11 +29,11 @@ public class KlassenartKatalogEintrag {
 	/** Das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik */
 	@Schema(description = "das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik", example = "RK")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Die Bezeichnung der Klassenart */
 	@Schema(description = "die Bezeichnung der Klassenart", example = "Regelklasse")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
@@ -56,17 +56,17 @@ public class KlassenartKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id                 die ID
 	 * @param kuerzel            das Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik
 	 * @param bezeichnung        die Bezeichnung der Kursart
-	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist 
-	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param zulaessig          die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist
+	 * @param gueltigVon         das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public KlassenartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung, 
-			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig, 
+	 */
+	public KlassenartKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull String bezeichnung,
+			final @NotNull List<@NotNull Pair<@NotNull Schulform, Schulgliederung>> zulaessig,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

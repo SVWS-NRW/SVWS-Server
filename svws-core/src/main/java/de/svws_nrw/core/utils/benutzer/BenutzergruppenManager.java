@@ -8,7 +8,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Manager zur Handhabung von Daten des Typs {@link BenutzergruppeDaten}. Hierbei werden 
+ * Ein Manager zur Handhabung von Daten des Typs {@link BenutzergruppeDaten}. Hierbei werden
  * auch Hilfsmethoden zur Interpretation der Daten erzeugt.
  */
 public class BenutzergruppenManager {
@@ -20,9 +20,9 @@ public class BenutzergruppenManager {
     private final @NotNull HashSet<@NotNull Long> _setKompetenzen = new HashSet<>();
 
 
-    /** 
+    /**
      * Erstellt einen neuen Manager mit leeren Daten für eine Benutzergruppe.
-     * 
+     *
      * @param id            die ID der Benutzergruppe
      * @param bezeichnung   die Bezeichnung der Benutzergruppe
      */
@@ -33,9 +33,9 @@ public class BenutzergruppenManager {
         _daten.istAdmin = false;
     }
 
-    /** 
+    /**
      * Erstellt einen neuen Manager mit den Daten einer Benutzergruppe
-     * 
+     *
      * @param pDaten          die Benutzergruppendaten
      */
     public BenutzergruppenManager(final @NotNull BenutzergruppeDaten pDaten) {
@@ -51,10 +51,10 @@ public class BenutzergruppenManager {
     }
 
 
-    /** 
+    /**
      * Gibt die Benutzergruppen-Daten zurück.
-     * 
-     * @return die Benutzergruppen-Daten (siehe {@link BenutzergruppeDaten}) 
+     *
+     * @return die Benutzergruppen-Daten (siehe {@link BenutzergruppeDaten})
      */
     public @NotNull BenutzergruppeDaten daten() {
         return this._daten;
@@ -63,26 +63,26 @@ public class BenutzergruppenManager {
 
     /**
      * Gibt die ID der Benutzergruppe zurück.
-     * 
+     *
      * @return die ID der Benutzergruppe
      */
     public long getID() {
         return this._daten.id;
     }
-    
+
     /**
      * Gibt die Bezeichnung der Benutzergruppe zurück.
-     * 
+     *
      * @return die Bezeichnung der Benutzergruppe
      */
     public @NotNull String getBezeichnung() {
         return this._daten.bezeichnung;
     }
-    
+
 
     /**
      * Setzt die Bezeichnung der Benutzergruppe.
-     * 
+     *
      * @param bezeichnung  die neue Bezeichnung der Benutzergruppe
      */
     public void setBezeichnung(final @NotNull String bezeichnung) {
@@ -90,32 +90,32 @@ public class BenutzergruppenManager {
             throw new IllegalArgumentException("Die Bezeichnung einer Benutzergruppe darf nicht leer sein.");
         this._daten.bezeichnung = bezeichnung;
     }
-    
+
     /**
      * Setzt, ob es sich um eine administrative Gruppe handelt oder nicht
-     * 
+     *
      * @param istAdmin   true, falls die Gruppe administrativ ist und ansonsten
      */
     public void setAdmin(final boolean istAdmin) {
         _daten.istAdmin = istAdmin;
     }
 
-    
+
     /**
      * Gibt zurück, ob es sich um eine administrative Gruppe handelt oder nicht.
-     *  
+     *
      * @return true, falls es sich um eine administrative Gruppe handelt und ansonsten false
      */
     public boolean istAdmin() {
         return this._daten.istAdmin;
     }
-    
-    
+
+
     /**
      * Prüft, ob die Gruppe die angebene Kompetenz besitzt oder nicht.
-     * 
+     *
      * @param kompetenz   die zu prüfende Kompetenz
-     * 
+     *
      * @return true, falls die Gruppe die Kompetenz besitzt.
      */
     public boolean hatKompetenz(final @NotNull BenutzerKompetenz kompetenz) {
@@ -126,9 +126,9 @@ public class BenutzergruppenManager {
 
     /**
      * Prüft, ob die Gruppe alle angebenen Kompetenzen besitzt oder nicht.
-     * 
+     *
      * @param kompetenzen   die zu prüfenden Kompetenzen
-     * 
+     *
      * @return true, falls die Gruppe die Kompetenzen besitzt.
      */
     public boolean hatKompetenzen(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
@@ -143,9 +143,9 @@ public class BenutzergruppenManager {
 
     /**
      * Prüft, ob die Gruppe mindestens eine der angebenen Kompetenzen besitzt oder nicht.
-     * 
+     *
      * @param kompetenzen   die zu prüfenden Kompetenzen
-     * 
+     *
      * @return true, falls die Gruppe mindestens eine der Kompetenzen besitzt.
      */
     public boolean hatKompetenzenMindestensEine(final @NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
@@ -160,10 +160,10 @@ public class BenutzergruppenManager {
 
     /**
      * Fügt die übergebene Kompetenz zu der Gruppe hinzu.
-     * 
+     *
      * @param kompetenz   die Kompetenz, die hinzugefügt wird
-     * 
-     * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz bereits enthält 
+     *
+     * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz bereits enthält
      */
     public void addKompetenz(final BenutzerKompetenz kompetenz) throws IllegalArgumentException {
         if (kompetenz == null)
@@ -177,10 +177,10 @@ public class BenutzergruppenManager {
 
     /**
      * Entfernt die übergebene Kompetenz aus der Gruppe.
-     * 
+     *
      * @param kompetenz   die Kompetenz, die entfernt wird
-     * 
-     * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält 
+     *
+     * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält
      */
     public void removeKompetenz(final @NotNull BenutzerKompetenz kompetenz) throws IllegalArgumentException {
         if (!_setKompetenzen.contains(kompetenz.daten.id))
@@ -188,5 +188,5 @@ public class BenutzergruppenManager {
         this._daten.kompetenzen.removeElement(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz.daten.id);
     }
-    
+
 }

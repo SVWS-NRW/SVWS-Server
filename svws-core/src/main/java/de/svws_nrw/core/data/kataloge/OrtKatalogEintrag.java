@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt, wie die Daten für die Katalog der Orte übergeben werden.  
+ * Sie beschreibt, wie die Daten für die Katalog der Orte übergeben werden.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Orte.")
@@ -20,7 +20,7 @@ public class OrtKatalogEintrag {
 	/** Die Postleitzahl. */
 	@Schema(description = "die Postleitzahl", example = "53840")
 	public String plz;
-	
+
 	/** Der Name des Ortes. */
 	@Schema(description = "der Name des Ortes", example = "Troisdorf")
 	public String ortsname;
@@ -36,11 +36,11 @@ public class OrtKatalogEintrag {
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
 	public int sortierung;
-	
+
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
-	
+
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
 	public boolean istAenderbar;

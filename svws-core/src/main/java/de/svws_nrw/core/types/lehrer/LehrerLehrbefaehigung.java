@@ -6,9 +6,9 @@ import de.svws_nrw.core.data.lehrer.LehrerKatalogLehrbefaehigungEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Aufzählung stellt einen Core-Type für die Lehrbefähigungen von Lehrkräften 
+ * Diese Aufzählung stellt einen Core-Type für die Lehrbefähigungen von Lehrkräften
  * an der Schule zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -569,13 +569,13 @@ public enum LehrerLehrbefaehigung {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Lehrbefähigungen, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull LehrerKatalogLehrbefaehigungEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der Lehrbefähigungen */
-	public final @NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie;	
+	public final @NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Lehrbefähigungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigung> _lehrbefaehigungenByID = new HashMap<>();
@@ -586,12 +586,12 @@ public enum LehrerLehrbefaehigung {
 
 	/**
 	 * Erzeugt eine neue Lehrbefähigung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Lehrbefähigungen, welches ein Array von {@link LehrerKatalogLehrbefaehigungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Lehrbefähigungen, welches ein Array von {@link LehrerKatalogLehrbefaehigungEintrag} ist
 	 */
-	private LehrerLehrbefaehigung(final @NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie) {
+	LehrerLehrbefaehigung(final @NotNull LehrerKatalogLehrbefaehigungEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -599,36 +599,36 @@ public enum LehrerLehrbefaehigung {
 	/**
 	 * Gibt eine Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehrbefaehigung> getMapLehrbefaehigungByID() {
 		if (_lehrbefaehigungenByID.size() == 0)
 			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
-				_lehrbefaehigungenByID.put(l.daten.id, l);				
+				_lehrbefaehigungenByID.put(l.daten.id, l);
 		return _lehrbefaehigungenByID;
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehrbefaehigung> getMapLehrbefaehigungByKuerzel() {
 		if (_lehrbefaehigungenByKuerzel.size() == 0)
 			for (final LehrerLehrbefaehigung l : LehrerLehrbefaehigung.values())
-				_lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);				
+				_lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);
 		return _lehrbefaehigungenByKuerzel;
 	}
-	
+
 
 	/**
 	 * Gibt die Lehrbefähigung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Lehrbefähigung
-	 * 
+	 *
 	 * @return die Lehrbefähigung oder null, falls die IF ungültig ist
 	 */
 	public static LehrerLehrbefaehigung getByID(final long id) {
@@ -638,9 +638,9 @@ public enum LehrerLehrbefaehigung {
 
 	/**
 	 * Gibt die Lehrbefähigung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Lehrbefähigung
-	 * 
+	 *
 	 * @return die Lehrbefähigung oder null, falls das Kürzel ungültig ist
 	 */
 	public static LehrerLehrbefaehigung getByKuerzel(final String kuerzel) {

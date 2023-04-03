@@ -20,7 +20,6 @@ export class BenutzergruppenManager extends JavaObject {
 
 
 	/**
-	 *
 	 * Erstellt einen neuen Manager mit leeren Daten für eine Benutzergruppe.
 	 *
 	 * @param id            die ID der Benutzergruppe
@@ -29,7 +28,6 @@ export class BenutzergruppenManager extends JavaObject {
 	public constructor(id : number, bezeichnung : string);
 
 	/**
-	 *
 	 * Erstellt einen neuen Manager mit den Daten einer Benutzergruppe
 	 *
 	 * @param pDaten          die Benutzergruppendaten
@@ -62,7 +60,6 @@ export class BenutzergruppenManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Benutzergruppen-Daten zurück.
 	 *
 	 * @return die Benutzergruppen-Daten (siehe {@link BenutzergruppeDaten})

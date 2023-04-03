@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Kursverteilungs-Algorithmus verteilt die Kurse auf ihre Schienen, indem es die Kurslage zufällig verändert und
  * dabei versucht die Nichtwahlen zu minimieren. Die minimale Anzahl an Nichtwahlen wird mit einem
  * Bipartiten-Matching-Algorithmus berechnet.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
+public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -22,7 +22,7 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -31,7 +31,7 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 			final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
-	
+
 	@Override
 	public @NotNull String toString() {
 		return "Matching";
@@ -78,6 +78,8 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
+	 *
+	 * @return true, falls der Zustand angepasst wurde
 	 */
 	private boolean verteileKurseMitMatching() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.
@@ -106,6 +108,8 @@ public class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	/**
 	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechtert, wird die
 	 * Veränderung rückgängig gemacht.
+	 *
+	 * @return true, falls der Zustand angepasst wurde
 	 */
 	private boolean verteileKurseMitMatchingW() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.

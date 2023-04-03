@@ -4,7 +4,7 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerKlasse {
@@ -20,7 +20,7 @@ public class StundenplanblockungManagerKlasse {
 
 	/**
 	 * Erzeugt eine neue Klasse.
-	 * 
+	 *
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @param pKuerzel   Das Kürzel der Klasse.
 	 */
@@ -32,7 +32,7 @@ public class StundenplanblockungManagerKlasse {
 
 	/**
 	 * Liefert die Datenbank-ID der Klasse.
-	 * 
+	 *
 	 * @return Die Datenbank-ID der Klasse.
 	 */
 	public long getID() {
@@ -41,7 +41,7 @@ public class StundenplanblockungManagerKlasse {
 
 	/**
 	 * Setzt das Kürzel der Klasse.
-	 * 
+	 *
 	 * @param pKuerzel  Das neue Kürzel der Klasse.
 	 */
 	public void setKuerzel(final @NotNull String pKuerzel) {

@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 
-/** 
+/**
  * Diese Klasse dient als DTO für die CSV-Tabelle {@code Fachwahlen.txt} eines Kurs42-Textdatei-Exportes. In dieser
  * Datei findet man die Fachwahlen der SuS. Pro Schüler und Fachwahl existiert eine Zeile. Ein Schüler-Objekt ist in der
  * Kurs42-Datenstruktur eindeutig durch die vier Attribute {@link #Name}, {@link #Vorname}, {@link #Geschlecht} und
  * {@link #GebDat} spezifiziert. Das gewählte Fach ist eindeutig durch die zwei Attribute {@link #Fachkrz} und
  * {@link #Kursart} spezifiziert.
- * 
- * @author Benjamin A. Bartsch, Thomas Bachran 
+ *
+ * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "Name", "Vorname", "GebDat", "Geschlecht", "Fachkrz", "Kursart", "Note", "Kl1", "Kl2", "KLG",
-		"SoMi1", "SoMi2", "SomiG", "Fehl1", "Fehl2", "uFehl1", "uFehl2", "FehlStd", "UFehlStd", "Facharbeit",
-		"Facharbeitsthema", "Kurs", "Mahnung" })
+	"SoMi1", "SoMi2", "SomiG", "Fehl1", "Fehl2", "uFehl1", "uFehl2", "FehlStd", "UFehlStd", "Facharbeit",
+	"Facharbeitsthema", "Kurs", "Mahnung" })
 public class Kurs42DataFachwahlen {
 
 	/** Der Nachname des Schülers. Eine von vier Spalten in Kurs 42, um den Schüler zu identifizieren. */
@@ -33,7 +33,7 @@ public class Kurs42DataFachwahlen {
 	/** Das Kürzel des Faches (z.B. 'D') der Fachwahl des Schülers. Eine von zwei Spalten, um die Fachart eindeutig zu identifizieren. */
 	public String Fachkrz;
 
-	/** Das Kürzel der Kursart (z.B. 'LK') der Fachwahl des Schülers. Eine von zwei Spalten, um die Fachart 
+	/** Das Kürzel der Kursart (z.B. 'LK') der Fachwahl des Schülers. Eine von zwei Spalten, um die Fachart
 	 * eindeutig zu identifizieren. (siehe auf {@link ZulaessigeKursart}) */
 	public String Kursart;
 
@@ -84,7 +84,7 @@ public class Kurs42DataFachwahlen {
 
 	/** Der Name des Kurses, dem der Schüler mit dieser Fachwahl zugeordnet wurde. */
 	public String Kurs;
-	
+
 	/** Gibt an, ob der Schüler gemahnt werden soll oder nicht. Diese Spalte wird ignoriert, da
 	 * Leistungsdaten beim Import nicht berücksichtigt werden. */
 	public int Mahnung;

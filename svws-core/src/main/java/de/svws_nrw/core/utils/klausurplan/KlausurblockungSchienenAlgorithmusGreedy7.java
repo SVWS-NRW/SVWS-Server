@@ -4,18 +4,19 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
- * Die Strategie verteilt die Termine nacheinander. 
+/**
+ * Die Strategie verteilt die Termine nacheinander.
  * Dabei werden immer versucht Klausuren zu nehmen, die bevorzugt in der gleichen Schiene sein sollen.
- * 
- * @author Benjamin A. Bartsch */
-public class KlausurblockungSchienenAlgorithmusGreedy7 extends KlausurblockungSchienenAlgorithmusAbstract {
+ *
+ * @author Benjamin A. Bartsch
+ */
+public final class KlausurblockungSchienenAlgorithmusGreedy7 extends KlausurblockungSchienenAlgorithmusAbstract {
 
-	/** 
+	/**
 	 * Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurblockungSchienenAlgorithmusGreedy7(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);

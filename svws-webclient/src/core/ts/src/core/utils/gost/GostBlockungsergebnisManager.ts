@@ -224,7 +224,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
-			if (this._map_fachartID_kurse.containsKey(fachartID) === false)
+			if (!this._map_fachartID_kurse.containsKey(fachartID))
 				this._map_fachartID_kurse.put(fachartID, new Vector());
 		}
 		for (const gSchiene of this._parent.daten().schienen) {
@@ -270,89 +270,67 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 			switch (typ) {
-				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:{
-					const schuelerID : number = r.parameter.get(0).valueOf();
-					const kursID : number = r.parameter.get(1).valueOf();
-					if (!this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
+				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS: {
+					if (!this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
 						regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:{
-					const schuelerID : number = r.parameter.get(0).valueOf();
-					const kursID : number = r.parameter.get(1).valueOf();
-					if (this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
+				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS: {
+					if (this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
 						regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:{
-					const kursID : number = r.parameter.get(0).valueOf();
-					const schienenNr : number = r.parameter.get(1)!;
-					const schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
-					if (!this.getOfKursSchienenmenge(kursID).contains(schiene))
+				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE: {
+					if (!this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
 						regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE:{
-					const kursID : number = r.parameter.get(0).valueOf();
-					const schienenNr : number = r.parameter.get(1)!;
-					const schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
-					if (this.getOfKursSchienenmenge(kursID).contains(schiene))
+				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+					if (this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
 						regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:{
-					const kursart : number = r.parameter.get(0)!;
-					const schienenNrVon : number = r.parameter.get(1)!;
-					const schienenNrBis : number = r.parameter.get(2)!;
-					for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
+				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS: {
+					for (let schienenNr : number = r.parameter.get(1)!; schienenNr <= r.parameter.get(2)!; schienenNr++)
 						for (const eKurs of this.getSchieneEmitNr(schienenNr).kurse)
-							if (eKurs.kursart === kursart)
+							if (eKurs.kursart === r.parameter.get(0)!)
 								regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:{
-					const kursart : number = r.parameter.get(0)!;
-					const schienenNrVon : number = r.parameter.get(1)!;
-					const schienenNrBis : number = r.parameter.get(2)!;
+				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
 					for (const eKurs of this._map_kursID_kurs.values())
 						for (const eSchieneID of eKurs.schienen) {
 							const nr : number = this.getSchieneG(eSchieneID!).nummer;
-							const b1 : boolean = eKurs.kursart === kursart;
-							const b2 : boolean = (schienenNrVon <= nr) && (nr <= schienenNrBis);
+							const b1 : boolean = eKurs.kursart === r.parameter.get(0)!;
+							const b2 : boolean = (r.parameter.get(1)! <= nr) && (nr <= r.parameter.get(2)!);
 							if (b1 !== b2)
 								regelVerletzungen.add(r.id);
 						}
 					break;
 				}
-				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:{
-					const kursID1 : number = r.parameter.get(0).valueOf();
-					const kursID2 : number = r.parameter.get(1).valueOf();
-					const set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
-					const set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
-					for (const schiene1 of set1)
-						for (const schiene2 of set2)
+				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS: {
+					for (const schiene1 of this.getOfKursSchienenmenge(r.parameter.get(0)!))
+						for (const schiene2 of this.getOfKursSchienenmenge(r.parameter.get(1)!))
 							if (schiene1 as unknown === schiene2 as unknown)
 								regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:{
-					const kursID1 : number = r.parameter.get(0).valueOf();
-					const kursID2 : number = r.parameter.get(1).valueOf();
-					const set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
-					const set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
+				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+					const set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!)
+					const set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!)
 					if (set1.size() < set2.size()) {
 						for (const schiene1 of set1)
-							if (set2.contains(schiene1) === false)
+							if (!set2.contains(schiene1))
 								regelVerletzungen.add(r.id);
 					} else {
 						for (const schiene2 of set2)
-							if (set1.contains(schiene2) === false)
+							if (!set1.contains(schiene2))
 								regelVerletzungen.add(r.id);
 					}
 					break;
 				}
-				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN:{
-					const externBeachten : boolean = r.parameter.get(0) === 1;
+				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+					const externBeachten : boolean = r.parameter.get(0) === 1
 					for (const eSchiene of this._map_schienenID_schiene.values())
 						for (const eKurs1 of eSchiene.kurse)
 							for (const eKurs2 of eSchiene.kurse)
@@ -364,7 +342,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 													regelVerletzungen.add(r.id);
 					break;
 				}
-				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN:{
+				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 					for (const eSchiene of this._map_schienenID_schiene.values())
 						for (const eKurs1 of eSchiene.kurse)
 							for (const eKurs2 of eSchiene.kurse)
@@ -375,7 +353,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 												regelVerletzungen.add(r.id);
 					break;
 				}
-				default:{
+				default: {
 					throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
 				}
 			}
@@ -963,7 +941,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return             Der zugeordnete Kurs oder null, falls es keine Zuordnung gibt.
 	 */
 	public getOfSchuelerOfFachZugeordneterKurs(pSchuelerID : number, pFachID : number) : GostBlockungsergebnisKurs | null {
-		if (this.getOfSchuelerFachIDKursMap(pSchuelerID).containsKey(pFachID) === false)
+		if (!this.getOfSchuelerFachIDKursMap(pSchuelerID).containsKey(pFachID))
 			throw new DeveloperNotificationException("Schüler " + pSchuelerID + " hat das Fach " + pFachID + " nicht gewählt!")
 		return this.getOfSchuelerFachIDKursMap(pSchuelerID).get(pFachID);
 	}
@@ -1251,7 +1229,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
 	 *
@@ -1407,7 +1384,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
@@ -1479,22 +1455,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const schueler of this._parent.getMengeOfSchueler()) {
 			const pSchuelerID : number = schueler.id;
 			if (pKonfliktTyp === 1)
-				if (this.getOfSchuelerHatKollision(pSchuelerID) === false)
+				if (!this.getOfSchuelerHatKollision(pSchuelerID))
 					continue;
 			if (pKonfliktTyp === 2)
-				if (this.getOfSchuelerHatNichtwahl(pSchuelerID) === false)
+				if (!this.getOfSchuelerHatNichtwahl(pSchuelerID))
 					continue;
 			if (pKonfliktTyp === 3)
-				if ((this.getOfSchuelerHatKollision(pSchuelerID) === false) && (this.getOfSchuelerHatNichtwahl(pSchuelerID) === false))
+				if ((!this.getOfSchuelerHatKollision(pSchuelerID)) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID)))
 					continue;
 			if (pSubString.length > 0)
-				if (this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString) === false)
+				if (!this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString))
 					continue;
 			if (pKursID > 0)
-				if (this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID) === false)
+				if (!this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID))
 					continue;
 			if ((pFachID > 0) && (pKursartID > 0))
-				if (this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID) === false)
+				if (!this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID))
 					continue;
 			menge.add(schueler);
 		}
@@ -1640,7 +1616,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddSchieneByID(pSchienenID : number) : void {
-		if (this._parent.getSchieneExistiert(pSchienenID) === false)
+		if (!this._parent.getSchieneExistiert(pSchienenID))
 			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!")
 		this.stateRevalidateEverything();
 	}
@@ -1653,7 +1629,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *                               falls die Schiene noch Kurszuordnungen hat.
 	 */
 	public setRemoveSchieneByID(pSchienenID : number) : void {
-		if (this._parent.getSchieneExistiert(pSchienenID) === true)
+		if (this._parent.getSchieneExistiert(pSchienenID))
 			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!")
 		const nKurse : number = this.getSchieneE(pSchienenID).kurse.size();
 		if (nKurse > 0)
@@ -1668,7 +1644,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddRegelByID(pRegelID : number) : void {
-		if (this._parent.getRegelExistiert(pRegelID) === false)
+		if (!this._parent.getRegelExistiert(pRegelID))
 			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!")
 		this.stateRevalidateEverything();
 	}
@@ -1680,7 +1656,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveRegelByID(pRegelID : number) : void {
-		if (this._parent.getRegelExistiert(pRegelID) === true)
+		if (this._parent.getRegelExistiert(pRegelID))
 			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!")
 		this.stateRevalidateEverything();
 	}
@@ -1692,7 +1668,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
 	public setAddKursByID(pKursID : number) : void {
-		if (this._parent.getKursExistiert(pKursID) === false)
+		if (!this._parent.getKursExistiert(pKursID))
 			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!")
 		const kurs : GostBlockungKurs = this._parent.getKurs(pKursID);
 		const nSchienen : number = this._parent.getSchienenAnzahl();
@@ -1711,7 +1687,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *                               falls der Kurs noch Schülerzuordnungen hat.
 	 */
 	public setRemoveKursByID(pKursID : number) : void {
-		if (this._parent.getKursExistiert(pKursID) === true)
+		if (this._parent.getKursExistiert(pKursID))
 			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!")
 		const nSchueler : number = this.getKursE(pKursID).schueler.size();
 		if (nSchueler > 0)
@@ -1734,7 +1710,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursG : GostBlockungKurs = this.getKursG(pKursID);
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const nSchienen : number = this._parent.getSchienenAnzahl();
-		if (this._parent.getIstBlockungsVorlage() === false)
+		if (!this._parent.getIstBlockungsVorlage())
 			throw new DeveloperNotificationException("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!")
 		if (kursE.anzahlSchienen !== kursG.anzahlSchienen)
 			throw new DeveloperNotificationException("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!")
@@ -1748,7 +1724,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			let hinzugefuegt : boolean = false;
 			for (let nr : number = 1; (nr <= this._map_schienenNr_schiene.size()) && (!hinzugefuegt); nr++) {
 				const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
-				if (kursE.schienen.contains(schiene.id) === false) {
+				if (!kursE.schienen.contains(schiene.id)) {
 					hinzugefuegt = true;
 					kursG.anzahlSchienen++;
 					kursE.anzahlSchienen++;
@@ -1762,7 +1738,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			let entfernt : boolean = false;
 			for (let nr : number = this._map_schienenNr_schiene.size(); (nr >= 1) && (!entfernt); nr--) {
 				const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
-				if (kursE.schienen.contains(schiene.id) === true) {
+				if (kursE.schienen.contains(schiene.id)) {
 					entfernt = true;
 					kursG.anzahlSchienen--;
 					kursE.anzahlSchienen--;

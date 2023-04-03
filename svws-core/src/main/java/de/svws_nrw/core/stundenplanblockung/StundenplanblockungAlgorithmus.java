@@ -7,12 +7,11 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Service wandelt die Eingabedaten {@link GostBlockungsdatenManager}. <br>
- * Die Klasse ist noch Fake. 
- * 
- * @author Benjamin A. Bartsch 
+ * Die Klasse ist noch Fake.
+ *
+ * @author Benjamin A. Bartsch
  */
-public class StundenplanblockungAlgorithmus
-		extends Service<@NotNull StundenplanblockungManager, @NotNull StundenplanblockungManager> {
+public final class StundenplanblockungAlgorithmus extends Service<@NotNull StundenplanblockungManager, @NotNull StundenplanblockungManager> {
 
 	@Override
 	public @NotNull StundenplanblockungManager handle(final @NotNull StundenplanblockungManager pInput) {

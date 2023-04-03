@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Schülerverteilungs-Algorithmus verteilt die SuS mit einem bipartiten Matching Algorithmus auf die Kurse in
  * mehreren Runden, bis eine Verbesserung stagniert. Die Nichtwähler sind dabei (bei fixierter Kurslage)
  * optimal/minimal. Die Kursdifferenzen werden nicht primär berücksichtigt.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
-public class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
+public final class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 
 	/**
 	 * Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
@@ -32,7 +32,7 @@ public class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
-	 * 
+	 *
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
@@ -63,7 +63,7 @@ public class KursblockungAlgorithmusSMatching extends KursblockungAlgorithmusS {
 
 	/**
 	 * Der Algorithmus verteilt alle SuS in zufälliger Reihenfolge erneut.
-	 * 
+	 *
 	 * @return TRUE, falls der Zustand sich verbessert hat.
 	 */
 	private boolean verteileAlleSchueler() {

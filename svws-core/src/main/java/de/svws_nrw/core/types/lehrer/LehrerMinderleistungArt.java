@@ -6,9 +6,9 @@ import de.svws_nrw.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Aufzählung stellt einen Core-Type für die Arten von Minderleistungen durch Lehrkräfte 
+ * Diese Aufzählung stellt einen Core-Type für die Arten von Minderleistungen durch Lehrkräfte
  * an der Schule zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -107,13 +107,13 @@ public enum LehrerMinderleistungArt {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Art von Minderleistung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull LehrerKatalogMinderleistungsartEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der Art von Minderleistung */
-	public final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie;	
+	public final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> _artenByID = new HashMap<>();
@@ -124,12 +124,12 @@ public enum LehrerMinderleistungArt {
 
 	/**
 	 * Erzeugt eine neue Art von Minderleistung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist  
+	 *
+	 * @param historie   die Historie der Art von Minderleistung, welches ein Array von {@link LehrerKatalogMinderleistungsartEintrag} ist
 	 */
-	private LehrerMinderleistungArt(final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie) {
+	LehrerMinderleistungArt(final @NotNull LehrerKatalogMinderleistungsartEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -137,36 +137,36 @@ public enum LehrerMinderleistungArt {
 	/**
 	 * Gibt eine Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerMinderleistungArt> getMapArtenByID() {
 		if (_artenByID.size() == 0)
 			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
-				_artenByID.put(g.daten.id, g);				
+				_artenByID.put(g.daten.id, g);
 		return _artenByID;
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerMinderleistungArt> getMapArtenByKuerzel() {
 		if (_artenByKuerzel.size() == 0)
 			for (final LehrerMinderleistungArt g : LehrerMinderleistungArt.values())
-				_artenByKuerzel.put(g.daten.kuerzel, g);				
+				_artenByKuerzel.put(g.daten.kuerzel, g);
 		return _artenByKuerzel;
 	}
-	
+
 
 	/**
 	 * Gibt die Art der Minderleistung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Art der Minderleistung
-	 * 
+	 *
 	 * @return die Art der Minderleistung oder null, falls die ID ungültig ist
 	 */
 	public static LehrerMinderleistungArt getByID(final long id) {
@@ -176,9 +176,9 @@ public enum LehrerMinderleistungArt {
 
 	/**
 	 * Gibt die Art der Minderleistung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Art der Minderleistung
-	 * 
+	 *
 	 * @return die Art der Minderleistung oder null, falls das Kürzel ungültig ist
 	 */
 	public static LehrerMinderleistungArt getByKuerzel(final String kuerzel) {

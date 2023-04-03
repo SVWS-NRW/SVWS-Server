@@ -6,9 +6,9 @@ import de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Aufzählung stellt einen Core-Type für die Fachrichtungen von Lehrkräften 
+ * Diese Aufzählung stellt einen Core-Type für die Fachrichtungen von Lehrkräften
  * an der Schule zur Verfügung.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -538,17 +538,17 @@ public enum LehrerFachrichtung {
 	ID_NU(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(182, "NU", "Natur- und Umweltschutz", null, null)
 	}),
-	
+
 	/** Fachrichtung 'Medizintechnik"' */
 	ID_82(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(183, "82", "Medizintechnik", 2022, null)
 	}),
-	
+
 	/** Fachrichtung 'Augenoptik' */
 	ID_AO(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(184, "AO", "Augenoptik", 2022, null)
 	}),
-	
+
 	/** Fachrichtung 'Orthopädietechnik' */
 	ID_OT(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(185, "OT", "Orthopädietechnik", 2022, null)
@@ -558,12 +558,12 @@ public enum LehrerFachrichtung {
 	ID_ZT(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(186, "ZT", "Zahntechnik", 2022, null)
 	}),
-	
+
 	/** Fachrichtung 'Ingenieurtechnik' */
 	ID_IG(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(187, "IG", "Ingenieurtechnik", 2022, null)
 	}),
-	
+
 	/** Fachrichtung 'Hörakustik' */
 	ID_HA(new LehrerKatalogFachrichtungEintrag[]{
 		new LehrerKatalogFachrichtungEintrag(188, "HA", "Hörakustik", 2022, null)
@@ -571,13 +571,13 @@ public enum LehrerFachrichtung {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten der Fachrichtung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull LehrerKatalogFachrichtungEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen der Fachrichtung */
-	public final @NotNull LehrerKatalogFachrichtungEintrag@NotNull[] historie;	
+	public final @NotNull LehrerKatalogFachrichtungEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Fachrichtungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerFachrichtung> _fachrichtungenByID = new HashMap<>();
@@ -588,12 +588,12 @@ public enum LehrerFachrichtung {
 
 	/**
 	 * Erzeugt eine neuen Fachrichtung in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Fachrichtung, welches ein Array von {@link LehrerKatalogFachrichtungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Fachrichtung, welches ein Array von {@link LehrerKatalogFachrichtungEintrag} ist
 	 */
-	private LehrerFachrichtung(final @NotNull LehrerKatalogFachrichtungEintrag@NotNull[] historie) {
+	LehrerFachrichtung(final @NotNull LehrerKatalogFachrichtungEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -601,36 +601,36 @@ public enum LehrerFachrichtung {
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerFachrichtung> getMapFachrichtungByID() {
 		if (_fachrichtungenByID.size() == 0)
 			for (final LehrerFachrichtung g : LehrerFachrichtung.values())
-				_fachrichtungenByID.put(g.daten.id, g);				
+				_fachrichtungenByID.put(g.daten.id, g);
 		return _fachrichtungenByID;
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerFachrichtung> getMapFachrichtungByKuerzel() {
 		if (_fachrichtungenByKuerzel.size() == 0)
 			for (final LehrerFachrichtung g : LehrerFachrichtung.values())
-				_fachrichtungenByKuerzel.put(g.daten.kuerzel, g);				
+				_fachrichtungenByKuerzel.put(g.daten.kuerzel, g);
 		return _fachrichtungenByKuerzel;
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Fachrichtung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Fachrichtung
-	 * 
+	 *
 	 * @return die Fachrichtung oder null, falls die ID ungültig ist
 	 */
 	public static LehrerFachrichtung getByID(final long id) {
@@ -640,9 +640,9 @@ public enum LehrerFachrichtung {
 
 	/**
 	 * Gibt die Fachrichtung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Fachrichtung
-	 * 
+	 *
 	 * @return die Fachrichtung oder null, falls das Kürzel ungültig ist
 	 */
 	public static LehrerFachrichtung getByKuerzel(final String kuerzel) {

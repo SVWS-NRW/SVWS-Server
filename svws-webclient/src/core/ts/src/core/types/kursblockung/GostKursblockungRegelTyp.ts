@@ -134,8 +134,8 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
-	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
+	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
 	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<GostKursblockungRegelParameterTyp>) {
 		super();
@@ -232,43 +232,33 @@ export class GostKursblockungRegelTyp extends JavaObject {
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		const param : Vector<number> = pRegel.parameter;
 		switch (typ) {
-			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN:{
+			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 				return [];
 			}
-			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN:{
-				const p0 : number = param.get(0).valueOf();
-				return [p0];
+			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+				return [param.get(0)];
 			}
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:
 			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:
-			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:{
-				const p0 : number = param.get(0).valueOf();
-				const p1 : number = param.get(1).valueOf();
-				return [p0, p1];
+			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+				return [param.get(0), param.get(1)];
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
-			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE:{
-				const p0 : number = param.get(0).valueOf();
-				const p1 : number = param.get(1).valueOf();
-				if (p1 < pSchienenNr)
-					return [p0, p1];
-				if (p1 > pSchienenNr)
-					return [p0, p1 - 1];
-				return null;
+			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+				return (param.get(1) < pSchienenNr) ? [param.get(0), param.get(1)] : (param.get(1) > pSchienenNr) ? [param.get(0), param.get(1) - 1] : null;
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
-			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:{
-				const p0 : number = param.get(0).valueOf();
-				let von : number = param.get(1).valueOf();
-				let bis : number = param.get(2).valueOf();
+			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
+				let von : number = param.get(1).valueOf()
+				let bis : number = param.get(2).valueOf()
 				von = pSchienenNr < von ? von - 1 : von;
 				bis = pSchienenNr <= bis ? bis - 1 : bis;
 				if (von <= bis)
-					return [p0, von, bis];
+					return [param.get(0), von, bis];
 				return null;
 			}
-			default:{
+			default: {
 				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
 			}
 		}

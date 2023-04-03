@@ -68,7 +68,6 @@ export class GostAbiturFach extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Abiturfachart anhand der ID zurück.
 	 *
 	 * @param id    die ID der Abiturfachart
@@ -97,7 +96,6 @@ export class GostAbiturFach extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Abiturfachart anhand der ID (als String) zurück.
 	 *
 	 * @param strID    die ID der Abiturfachart (als String)
@@ -126,7 +124,6 @@ export class GostAbiturFach extends JavaObject {
 	}
 
 	/**
-	 *
 	 * Gibt die Abiturfachart anhand des Kürzels zurück.
 	 *
 	 * @param kuerzel    das Kürzel der Abiturfachart

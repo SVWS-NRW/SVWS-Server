@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu dem Stundenplan eines Schülers.  
+ * Sie liefert die Informationen zu dem Stundenplan eines Schülers.
  */
 @XmlRootElement
 @Schema(description = "der Stundenplan eines Schülers.")
@@ -24,7 +24,7 @@ public class SchuelerStundenplan {
 	/** Die textuelle Beschreibung des Stundenplans. */
 	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
 	public @NotNull String bezeichnungStundenplan = "";
-	
+
 	/** Die ID des Schuljahresabschnitts des Stundenplans. */
 	@Schema(description = "die ID des Schuljahresabschnitts des Stundenplans", example = "7")
 	public long idSchuljahresabschnitt = -1;
@@ -40,15 +40,15 @@ public class SchuelerStundenplan {
 	/** Das Datum, bis wann der Stundenplan gültig ist. */
 	@Schema(description = "das Datum, bis wann der Stundenplan gültig ist", example = "31.7.3218")
 	public @NotNull String gueltigBis = "";
-	
+
 	/** Die ID des Schülers. */
 	@Schema(description = "die ID des Schülers", example = "4711")
 	public long idSchueler = -1;
-	
+
 	/** Der Nachname des Schülers. */
 	@Schema(description = "der Nachname des Schülers", example = "Mustermann")
 	public @NotNull String nachname = "";
-	
+
 	/** Der Vorname des Schülers. */
 	@Schema(description = "der Vorname des Schülers", example = "Max")
 	public @NotNull String vorname = "";

@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.svws_nrw.core.types.SchuelerStatus;
 
-/** 
+/**
  * Diese Klasse dient als DTO für die CSV-Tabelle {@code Schueler.txt} eines Kurs42-Textdatei-Exportes. In dieser Datei
  * sind alle SuS und ihre Daten vorhanden. Ein Schüler-Objekt ist eindeutig durch die vier Attribute {@link #Name},
  * {@link #Vorname}, {@link #Geschlecht} und {@link #GebDat} spezifiziert.
- * 
- * @author Benjamin A. Bartsch, Thomas Bachran 
+ *
+ * @author Benjamin A. Bartsch, Thomas Bachran
  */
 @JsonPropertyOrder({ "IdNr", "Status", "Geschlecht", "Jahrgang", "Klasse", "Name", "Vorname", "CollCount", "GebDat",
-		"SchulNr", "DB_IdNr", "Tutor", "PruefOrd", "EMail", "KoopDBIdNr", "ExterneId", "SchulEmail", "Gruppe" })
+	"SchulNr", "DB_IdNr", "Tutor", "PruefOrd", "EMail", "KoopDBIdNr", "ExterneId", "SchulEmail", "Gruppe" })
 public class Kurs42DataSchueler {
 
 	/** Eine von Kurs 42 genutzte ID des Schülers */

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Aufzählung stellt einen Core-Type für die Anerkennung der Fachrichtung eines Lehrers dar.
- *  
+ *
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
@@ -36,13 +36,13 @@ public enum LehrerFachrichtungAnerkennung {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static long VERSION = 1;	
-	
+	public static final long VERSION = 1;
+
 	/** Der aktuellen Daten die Anerkennung der Fachrichtung , wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag daten;
-	
+
 	/** Die Historie mit den Einträgen für die Anerkennung der Fachrichtung  */
-	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie;	
+	public final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie;
 
 	/** Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind. */
 	private static final @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> _anerkennungenByID = new HashMap<>();
@@ -53,12 +53,12 @@ public enum LehrerFachrichtungAnerkennung {
 
 	/**
 	 * Erzeugt neue Anerkennung für Fachrichtungen in der Aufzählung.
-	 * 
-	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist  
+	 *
+	 * @param historie   die Historie der Anerkennung für Fachrichtungen, welches ein Array von {@link LehrerKatalogFachrichtungAnerkennungEintrag} ist
 	 */
-	private LehrerFachrichtungAnerkennung(final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie) {
+	LehrerFachrichtungAnerkennung(final @NotNull LehrerKatalogFachrichtungAnerkennungEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
+		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 	}
 
@@ -66,38 +66,38 @@ public enum LehrerFachrichtungAnerkennung {
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerFachrichtungAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
 			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
-				_anerkennungenByID.put(l.daten.id, l);				
+				_anerkennungenByID.put(l.daten.id, l);
 		return _anerkennungenByID;
 	}
 
-	
+
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
-	 *    
+	 *
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerFachrichtungAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
 			for (final LehrerFachrichtungAnerkennung l : LehrerFachrichtungAnerkennung.values())
-				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);				
+				_anerkennungenByKuerzel.put(l.daten.kuerzel, l);
 		return _anerkennungenByKuerzel;
 	}
-	
 
-	
+
+
 	/**
 	 * Gibt die Fachrichtungsanerkennung anhand der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param id   die ID der Fachrichtungsanerkennung
-	 * 
-	 * @return die Fachrichtungsanerkennung oder null, falls die ID ungültig ist 
+	 *
+	 * @return die Fachrichtungsanerkennung oder null, falls die ID ungültig ist
 	 */
 	public static LehrerFachrichtungAnerkennung getByID(final long id) {
 		return getMapAnerkennungenByID().get(id);
@@ -106,9 +106,9 @@ public enum LehrerFachrichtungAnerkennung {
 
 	/**
 	 * Gibt die Fachrichtungsanerkennung anhand des angegebenen Kürzels zurück.
-	 * 
+	 *
 	 * @param kuerzel   das Kürzel der Fachrichtungsanerkennung
-	 * 
+	 *
 	 * @return die Fachrichtungsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
 	public static LehrerFachrichtungAnerkennung getByKuerzel(final String kuerzel) {

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Eine Aufzählung der Niveaus des Deutschen Qualifikationsrahmens (DQR).
- * 
+ *
  * @see <a href="https://www.dqr.de"> www.dqr.de </a>
  */
 public enum DQR {
@@ -36,18 +36,18 @@ public enum DQR {
 
 	/** Die Bezeichnung des Niveaus */
 	public final String bezeichnung;
-	
+
 	/** Eine Beschreibung des DQR-Niveaus */
 	public final String beschreibung;
 
 
 	/**
 	 * Erstell ein neues DQR-Niveau.
-	 * 
+	 *
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus
 	 */
-	private DQR(final @NotNull String bezeichnung, final @NotNull String beschreibung) {
+	DQR(final @NotNull String bezeichnung, final @NotNull String beschreibung) {
 		this.bezeichnung = bezeichnung;
 		this.beschreibung = beschreibung;
 	}

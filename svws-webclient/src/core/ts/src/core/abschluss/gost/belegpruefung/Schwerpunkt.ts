@@ -11,13 +11,13 @@ export class Schwerpunkt extends GostBelegpruefung {
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
 	 *
-	 * @param manager             der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art       die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
-	 * @param pruefung_sprachen   das Ergebnis für die Belegprüfung der Sprachen
-	 * @param pruefung_nawi       das Ergebnis für die Belegprüfung der Naturwissenschaften
+	 * @param manager            der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt       die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungSprachen   das Ergebnis für die Belegprüfung der Sprachen
+	 * @param pruefungNawi       das Ergebnis für die Belegprüfung der Naturwissenschaften
 	 */
-	public constructor(manager : AbiturdatenManager, pruefungs_art : GostBelegpruefungsArt, pruefung_sprachen : Fremdsprachen, pruefung_nawi : Naturwissenschaften) {
-		super(manager, pruefungs_art, pruefung_sprachen, pruefung_nawi);
+	public constructor(manager : AbiturdatenManager, pruefungsArt : GostBelegpruefungsArt, pruefungSprachen : Fremdsprachen, pruefungNawi : Naturwissenschaften) {
+		super(manager, pruefungsArt, pruefungSprachen, pruefungNawi);
 	}
 
 	protected init() : void {

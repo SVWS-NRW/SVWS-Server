@@ -35,10 +35,10 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Erstellt eine neue Belegprüfung für die Projektkurse.
 	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungs_art   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
-	public constructor(manager : AbiturdatenManager, pruefungs_art : GostBelegpruefungsArt) {
-		super(manager, pruefungs_art);
+	public constructor(manager : AbiturdatenManager, pruefungsArt : GostBelegpruefungsArt) {
+		super(manager, pruefungsArt);
 	}
 
 	protected init() : void {
@@ -163,7 +163,6 @@ export class AbiFaecher extends GostBelegpruefung {
 	 * Gesamtprüfung Punkte 76 und 77:
 	 * Prüfe ob das 3. Abiturfach von Q1.1 bis Q2.2 schriftlich belegt wurde
 	 *   und on das 4. Abiturfach von Q1.1 bis Q2.1 schriftlich und in Q2.2 mündlich belegt wurde
-	 *
 	 */
 	private pruefeSchriftlichkeitAB3undAB4() : void {
 		const ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);

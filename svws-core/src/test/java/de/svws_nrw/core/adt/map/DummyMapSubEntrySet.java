@@ -12,11 +12,11 @@ import java.util.Map.Entry;
 /**
  * Diese Klasse implementiert ein SubEntrySet für die {@link DummyMapSub}. <br>
  * Alle Methodenaufrufe werden an die {@link DummyMapSub} delegiert.
- * 
+ *
  * @author Benjamin A. Bartsch
- * 
+ *
  */
-public class DummyMapSubEntrySet implements Set<Map.@NotNull Entry<@NotNull Integer, @NotNull Integer>> {
+public final class DummyMapSubEntrySet implements Set<Map.@NotNull Entry<@NotNull Integer, @NotNull Integer>> {
 
 	/**
 	 * Die {@link DummyMapSub} auf der diese Sup-Map operiert.
@@ -25,10 +25,10 @@ public class DummyMapSubEntrySet implements Set<Map.@NotNull Entry<@NotNull Inte
 
 	/**
 	 * Erstellt ein neues SubEntrySet auf die übergebene {@link DummyMapSub}.
-	 * 
+	 *
 	 * @param sub Die {@link DummyMapSub} auf der operiert wird.
 	 */
-	DummyMapSubEntrySet(@NotNull DummyMapSub sub) {
+	DummyMapSubEntrySet(final @NotNull DummyMapSub sub) {
 		_sub = sub;
 	}
 
@@ -48,7 +48,7 @@ public class DummyMapSubEntrySet implements Set<Map.@NotNull Entry<@NotNull Inte
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) {
+	public boolean contains(@NotNull final Object o) {
 		return _sub.bcContainsEntry(o);
 	}
 
@@ -63,37 +63,37 @@ public class DummyMapSubEntrySet implements Set<Map.@NotNull Entry<@NotNull Inte
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull T @NotNull [] a) {
+	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull final T @NotNull [] a) {
 		return _sub.bcGetArrayListOfEntries().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull Entry<@NotNull Integer, @NotNull Integer> e) {
+	public boolean add(@NotNull final Entry<@NotNull Integer, @NotNull Integer> e) {
 		return _sub.bcAddEntryReturnBool(e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object e) {
+	public boolean remove(@NotNull final Object e) {
 		return _sub.bcRemoveEntry(e);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) {
+	public boolean containsAll(@NotNull final Collection<?> c) {
 		return _sub.bcContainsAllEntries(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
+	public boolean addAll(@NotNull final Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
 		return _sub.bcAddAllEntries(c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll(@NotNull final Collection<?> c) {
 		return _sub.bcRetainAllEntries(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(@NotNull final Collection<?> c) {
 		return _sub.bcRemoveAllEntriesReturnBool(c);
 	}
 

@@ -61,6 +61,11 @@ export class Variable extends JavaObject {
 		this.negation = null;
 	}
 
+	/**
+	 * Gibt die String-Repräsentation der Variable zurück.
+	 *
+	 * @return die String-Repräsentation der Veriable
+	 */
 	public toString() : string {
 		return "" + this.nr;
 	}

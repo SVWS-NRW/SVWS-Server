@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Klasse der 
- * Schüler für das Externe-Noten-Modul ENM. 
+ * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Klasse der
+ * Schüler für das Externe-Noten-Modul ENM.
  */
 @XmlRootElement
 @Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Klassen der Schüler für das Externe-Noten-Modul ENM.")
@@ -28,10 +28,10 @@ public class ENMKlasse {
 	/** Das Kürzel ser Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) */
 	@Schema(description = "Das Kürzel der Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll.", example = "EF")
 	public String kuerzelAnzeige;
-	
+
 	/** Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört (z.B. 11) oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt */
-    @Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.", example = "11")
-    public Long idJahrgang;
+	@Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.", example = "11")
+	public Long idJahrgang;
 
 	/** Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8) */
 	@Schema(description = "Die Reihenfolge der Klasse bei der Sortierung der Klasse.", example = "20")

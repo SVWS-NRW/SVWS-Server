@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public class DummySet implements NavigableSet<Integer> {
+public final class DummySet implements NavigableSet<Integer> {
 
 	private final boolean[] _isSet;
 	private final @NotNull DummySetSub _sub;
@@ -23,10 +23,10 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Erzeugt ein Set mit Hilfe eines Arrays der Größe {@code maxValueExclusive} zum Speichern von Werten von 0 bis
 	 * maxValueExclusive-1.
-	 * 
+	 *
 	 * @param maxValueExclusive Der größte erlaubte Integer-Wert (exklusiv) im Set. Der kleinste Wert ist 0.
 	 */
-	public DummySet(int maxValueExclusive) {
+	public DummySet(final int maxValueExclusive) {
 		_isSet = new boolean[maxValueExclusive];
 		_sub = new DummySetSub(this, new DummySetIntervall(0, true, maxValueExclusive, false), true);
 	}
@@ -57,7 +57,7 @@ public class DummySet implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public boolean contains(@NotNull Object o) { // tested
+	public boolean contains(@NotNull final Object o) { // tested
 		return _sub.contains(o);
 	}
 
@@ -67,37 +67,37 @@ public class DummySet implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull T @NotNull [] a) { // tested
+	public <@NotNull T> @NotNull T @NotNull [] toArray(@NotNull final T @NotNull [] a) { // tested
 		return _sub.toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull Integer e) { // tested
+	public boolean add(@NotNull final Integer e) { // tested
 		return _sub.add(e);
 	}
 
 	@Override
-	public boolean remove(@NotNull Object o) { // tested
+	public boolean remove(@NotNull final Object o) { // tested
 		return _sub.remove(o);
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) { // tested
+	public boolean containsAll(@NotNull final Collection<?> c) { // tested
 		return _sub.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(@NotNull Collection<? extends @NotNull Integer> c) { // tested
+	public boolean addAll(@NotNull final Collection<? extends @NotNull Integer> c) { // tested
 		return _sub.addAll(c);
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll(@NotNull final Collection<?> c) {
 		return _sub.retainAll(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(@NotNull final Collection<?> c) {
 		return _sub.removeAll(c);
 	}
 
@@ -107,22 +107,22 @@ public class DummySet implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public Integer lower(@NotNull Integer e) {
+	public Integer lower(@NotNull final Integer e) {
 		return _sub.lower(e);
 	}
 
 	@Override
-	public Integer floor(@NotNull Integer e) {
+	public Integer floor(@NotNull final Integer e) {
 		return _sub.floor(e);
 	}
 
 	@Override
-	public Integer ceiling(@NotNull Integer e) {
+	public Integer ceiling(@NotNull final Integer e) {
 		return _sub.ceiling(e);
 	}
 
 	@Override
-	public Integer higher(@NotNull Integer e) {
+	public Integer higher(@NotNull final Integer e) {
 		return _sub.higher(e);
 	}
 
@@ -152,33 +152,33 @@ public class DummySet implements NavigableSet<Integer> {
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> subSet(@NotNull Integer fromElement, boolean fromInclusive,
-			@NotNull Integer toElement, boolean toInclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, final boolean fromInclusive,
+			@NotNull final Integer toElement, final boolean toInclusive) {
 		return _sub.subSet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull Integer toElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull final Integer toElement, final boolean inclusive) {
 		return _sub.headSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull Integer fromElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement, final boolean inclusive) {
 		return _sub.tailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull Integer fromElement, @NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
 		return _sub.subSet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull final Integer toElement) {
 		return _sub.headSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull Integer fromElement) {
+	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement) {
 		return _sub.tailSet(fromElement);
 	}
 
@@ -189,13 +189,13 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#first()} bzw. {@link DummySetSub#last()} falls absteigend sortiert.
 	 * Liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Liefert den ersten Schlüssel (Key) dieser Datenstruktur, falls vorhanden.
 	 * @throws NoSuchElementException falls es kein erstes Element gibt.
 	 */
-	@NotNull Integer bcGetFirstKeyOrException(@NotNull DummySetIntervall iv) {
+	@NotNull Integer bcGetFirstKeyOrException(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isSet[i])
 				return i;
@@ -205,13 +205,13 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#last()} bzw. {@link DummySetSub#first()} falls absteigend sortiert.
 	 * Liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden.
 	 * @throws NoSuchElementException falls es kein letztes Element gibt.
 	 */
-	@NotNull Integer bcGetLastKeyOrException(@NotNull DummySetIntervall iv) {
+	@NotNull Integer bcGetLastKeyOrException(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isSet[i])
 				return i;
@@ -221,12 +221,12 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#size()}. Liefert die Anzahl der Elemente innerhalb des übergebenen
 	 * Intervalls.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Liefert die Anzahl der Elemente innerhalb des übergebenen Intervalls.
 	 */
-	int bcGetSize(@NotNull DummySetIntervall iv) {
+	int bcGetSize(@NotNull final DummySetIntervall iv) {
 		int size = 0;
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isSet[i])
@@ -237,12 +237,12 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#isEmpty()}. Überprüft, ob die Datenstruktur innerhalb des Intervalls leer
 	 * ist.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls die Datenstruktur innerhalb des Intervalls leer ist.
 	 */
-	boolean bcIsEmpty(@NotNull DummySetIntervall iv) {
+	boolean bcIsEmpty(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isSet[i])
 				return false;
@@ -252,43 +252,43 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#contains(Object)}. Überprüft, ob ein Schlüssel (Key) in dieser
 	 * Datenstruktur existiert.
-	 * 
+	 *
 	 * @param objKey Der Schlüssel (Key) nach dem gesucht wird.
 	 * @param iv     Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) in dieser Datenstruktur existiert.
 	 */
-	boolean bcContainsKey(@NotNull DummySetIntervall iv, @NotNull Object objKey) {
-		int e = (Integer) objKey;
+	boolean bcContainsKey(@NotNull final DummySetIntervall iv, @NotNull final Object objKey) {
+		final int e = (Integer) objKey;
 		return iv.contains(e) && (_isSet[e]);
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#containsAll(Collection)}. Überprüft, ob alle Schlüssel (Keys) der
 	 * Collection in dieser Datenstruktur existieren.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys), welche überprüft werden sollen.
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
-	boolean bcContainsAllKeys(@NotNull DummySetIntervall iv, @NotNull Collection<?> c) {
-		for (Object obj : c)
-			if (bcContainsKey(iv, obj) == false)
+	boolean bcContainsAllKeys(@NotNull final DummySetIntervall iv, @NotNull final Collection<?> c) {
+		for (final Object obj : c)
+			if (!bcContainsKey(iv, obj))
 				return false;
 		return true;
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#add(Integer)}. Fügt einen Schlüssel (Key) der Datenstruktur hinzu.
-	 * 
+	 *
 	 * @param e  Der Schlüssel (Key) der hinzugefügt werden soll.
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 */
-	boolean bcAddKey(@NotNull DummySetIntervall iv, @NotNull Integer e) {
-		if ((iv.contains(e)) && (_isSet[e] == false)) {
+	boolean bcAddKey(@NotNull final DummySetIntervall iv, @NotNull final Integer e) {
+		if ((iv.contains(e)) && (!_isSet[e])) {
 			_isSet[e] = true;
 			return true;
 		}
@@ -298,30 +298,30 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#addAll(Collection)}. Fügt alle Schlüssel (Keys) der Collection
 	 * hinzuzufügen.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die hinzugefügt werden sollen.
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) noch nicht existierte und somit hinzugefügt wurde.
 	 */
-	boolean bcAddAllKeys(@NotNull DummySetIntervall iv, @NotNull Collection<? extends @NotNull Integer> c) {
+	boolean bcAddAllKeys(@NotNull final DummySetIntervall iv, @NotNull final Collection<? extends @NotNull Integer> c) {
 		boolean changed = false;
-		for (Object obj : c)
+		for (final Object obj : c)
 			changed |= bcAddKey(iv, (Integer) obj);
 		return changed;
 	}
 
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#remove(Object)}. Entfernt einen Schlüssel (Key) aus dieser Datenstruktur.
-	 * 
+	 *
 	 * @param o  Der Schlüssel (Key) der entfernt werden soll.
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls der Schlüssel existierte und somit entfernt wurde.
 	 */
-	boolean bcRemoveKeyReturnBool(@NotNull DummySetIntervall iv, @NotNull Object o) {
-		int e = (Integer) o;
-		if ((iv.contains(e)) && (_isSet[e] == true)) {
+	boolean bcRemoveKeyReturnBool(@NotNull final DummySetIntervall iv, @NotNull final Object o) {
+		final int e = (Integer) o;
+		if ((iv.contains(e)) && (_isSet[e])) {
 			_isSet[e] = false;
 			return true;
 		}
@@ -334,13 +334,13 @@ public class DummySet implements NavigableSet<Integer> {
 	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
 	 * @param c  Die Collection deren Schlüssel (Keys) nicht entfernt werden dürfen.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	boolean bcRetainAllKeys(@NotNull DummySetIntervall iv, @NotNull Collection<?> c) {
+	boolean bcRetainAllKeys(@NotNull final DummySetIntervall iv, @NotNull final Collection<?> c) {
 		boolean changed = false;
 		for (int i = iv.min(); i <= iv.max(); i++)
-			if ((_isSet[i]) && (c.contains(i) == false)) {
+			if ((_isSet[i]) && (!c.contains(i))) {
 				_isSet[i] = false;
 				changed = true;
 			}
@@ -350,15 +350,15 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#removeAll(Collection)}. Entfernt alle Schlüssel (Keys) der Collection aus
 	 * dieser Datenstruktur.
-	 * 
+	 *
 	 * @param c  Die Collection mit allen Schlüsseln (Keys) die entfernt werden sollen.
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return TRUE, falls mindestens ein Schlüssel (Key) entfernt wurde.
 	 */
-	boolean bcRemoveAllKeys(@NotNull DummySetIntervall iv, @NotNull Collection<?> c) {
+	boolean bcRemoveAllKeys(@NotNull final DummySetIntervall iv, @NotNull final Collection<?> c) {
 		boolean changed = false;
-		for (Object obj : c)
+		for (final Object obj : c)
 			changed |= bcRemoveKeyReturnBool(iv, obj);
 		return changed;
 	}
@@ -366,10 +366,10 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#clear()}. Entfernt alle Schlüssel (Keys) innerhalb des übergebenen
 	 * Intervalls.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
 	 */
-	void bcClear(@NotNull DummySetIntervall iv) {
+	void bcClear(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			_isSet[i] = false;
 	}
@@ -378,13 +378,13 @@ public class DummySet implements NavigableSet<Integer> {
 	 * Wird aufgerufen von {@link DummySetSub#lower(Integer)} bzw. {@link DummySetSub#higher(Integer)} falls absteigend
 	 * sortiert. Liefert den größten Schlüssel (Key) welcher kleiner ist als der übergebene Schlüssel (Key), somit den
 	 * Vorgänger-Schlüssel des Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Vorgänger gesucht wird.
 	 * @param iv  Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Integer bcGetLowerKeyOrNull(@NotNull DummySetIntervall iv, @NotNull Integer key) {
+	Integer bcGetLowerKeyOrNull(@NotNull final DummySetIntervall iv, @NotNull final Integer key) {
 		for (int i = key - 1; i >= iv.min(); i--) // search < key
 			if (_isSet[i])
 				return i;
@@ -396,14 +396,14 @@ public class DummySet implements NavigableSet<Integer> {
 	 * sortiert. Liefert den größten Schlüssel (Key) welcher kleiner oder gleich dem übergebenen Schlüssel (Key) ist.
 	 * Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls den Vorgänger-Schlüssel (Key) falls vorhanden,
 	 * andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Vorgänger-Schlüssel.
 	 * @param iv  Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Vorgänger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	Integer bcGetFloorKeyOrNull(@NotNull DummySetIntervall iv, @NotNull Integer key) {
+	Integer bcGetFloorKeyOrNull(@NotNull final DummySetIntervall iv, @NotNull final Integer key) {
 		for (int i = key; i >= iv.min(); i--) // search <= key
 			if (_isSet[i])
 				return i;
@@ -415,14 +415,14 @@ public class DummySet implements NavigableSet<Integer> {
 	 * sortiert. Liefert den kleinsten Schlüssel (Key) welcher größer oder gleich dem übergebenen Schlüssel (Key) ist.
 	 * Somit der selbe Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel (Key) falls vorhanden,
 	 * andernfalls NULL.
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) der gesucht wird bzw. sein Nachfolger-Schlüssel.
 	 * @param iv  Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Den selben Schlüssel (Key) falls vorhanden, andernfalls sein Nachfolger-Schlüssel falls vorhanden,
 	 *         andernfalls NULL.
 	 */
-	Integer bcGetCeilingKeyOrNull(@NotNull DummySetIntervall iv, @NotNull Integer key) {
+	Integer bcGetCeilingKeyOrNull(@NotNull final DummySetIntervall iv, @NotNull final Integer key) {
 		for (int i = key; i <= iv.max(); i++) // search >= key
 			if (_isSet[i])
 				return i;
@@ -433,13 +433,13 @@ public class DummySet implements NavigableSet<Integer> {
 	 * Wird aufgerufen von {@link DummySetSub#higher(Integer)} bzw. {@link DummySetSub#lower(Integer)} falls absteigend
 	 * sortiert. Liefert den kleinsten Schlüssel (Key) welcher größer ist als der übergebene Schlüssel (Key), somit den
 	 * Nachfolger-Schlüssel des übergebenen Schlüssels (Key).
-	 * 
+	 *
 	 * @param key Der Schlüssel (Key) dessen Nachfolger-Schlüssel gesucht wird.
 	 * @param iv  Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
-	Integer bcGetHigherKeyOrNull(@NotNull DummySetIntervall iv, @NotNull Integer key) {
+	Integer bcGetHigherKeyOrNull(@NotNull final DummySetIntervall iv, @NotNull final Integer key) {
 		for (int i = key + 1; i <= iv.max(); i++) // search > key
 			if (_isSet[i])
 				return i;
@@ -449,12 +449,12 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#pollFirst()} bzw. {@link DummySetSub#pollLast()} falls absteigend
 	 * sortiert. Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Integer bcPollFirstKeyOrNull(@NotNull DummySetIntervall iv) {
+	Integer bcPollFirstKeyOrNull(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.min(); i <= iv.max(); i++)
 			if (_isSet[i]) {
 				_isSet[i] = false;
@@ -466,12 +466,12 @@ public class DummySet implements NavigableSet<Integer> {
 	/**
 	 * Wird aufgerufen von {@link DummySetSub#pollLast()} bzw. {@link DummySetSub#pollFirst()} falls absteigend
 	 * sortiert. Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur.
-	 * 
+	 *
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
-	 * 
+	 *
 	 * @return Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
-	Integer bcPollLastKeyOrNull(@NotNull DummySetIntervall iv) {
+	Integer bcPollLastKeyOrNull(@NotNull final DummySetIntervall iv) {
 		for (int i = iv.max(); i >= iv.min(); i--)
 			if (_isSet[i]) {
 				_isSet[i] = false;

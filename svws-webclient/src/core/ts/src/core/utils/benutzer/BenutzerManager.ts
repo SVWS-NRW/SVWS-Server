@@ -49,7 +49,6 @@ export class BenutzerManager extends JavaObject {
 	 * Erstellt einen neuen Manager mit leeren Daten für einen Benutzer
 	 *
 	 * @param id die ID des Benutzers
-	 *
 	 */
 	public constructor(id : number);
 
@@ -144,10 +143,9 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
 	 */
 	public istInAdminGruppe() : boolean {
-		for (const bg of this._mapGruppen.values()) {
+		for (const bg of this._mapGruppen.values())
 			if (bg.istAdmin)
 				return true;
-		}
 		return false;
 	}
 
@@ -358,7 +356,7 @@ export class BenutzerManager extends JavaObject {
 	 *
 	 * @return true, falls der Benutzer in der Gruppe ist.
 	 */
-	public IstInGruppe(id : number) : boolean {
+	public istInGruppe(id : number) : boolean {
 		return this._setGruppenIDs.contains(id);
 	}
 

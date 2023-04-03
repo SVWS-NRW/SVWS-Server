@@ -7,7 +7,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy4 extends KlausurblockungSc
 
 
 	/**
-	 *Konstruktor.
+	 * Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
@@ -25,12 +25,12 @@ export class KlausurblockungSchienenAlgorithmusGreedy4 extends KlausurblockungSc
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_EntferneAlles_KlausurenMitDenMeistenNachbarsfarben_SchienenZufaellig();
-			if (this._dynDaten.gibIstBesserAlsZustand1() === true)
+			if (this._dynDaten.gibIstBesserAlsZustand1())
 				this._dynDaten.aktionZustand1Speichern();
 			else
 				this._dynDaten.aktionZustand1Laden();
 		}
-		if (this._dynDaten.gibIstBesserAlsZustand2() === true)
+		if (this._dynDaten.gibIstBesserAlsZustand2())
 			this._dynDaten.aktionZustand2Speichern();
 	}
 

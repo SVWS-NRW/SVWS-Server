@@ -31,7 +31,7 @@ public class HerkunftKatalogEintrag {
 	/** Die Kürzel der Schulformen, bei welchen die Herkunft des Schülers vorkommen kann. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Herkunft des Schülers vorkommen kann")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
-	
+
 	/** Die textuelle Beschreibung der Herkunft. */
 	@Schema(description = "die textuelle Beschreibung der Herkunft", example = "Herkunft noch unbekannt (nur Gliederung A12, A13)")
 	public @NotNull String beschreibung = "";
@@ -54,7 +54,7 @@ public class HerkunftKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id              die ID
 	 * @param kuerzel         das Kürzel der Herkunft
 	 * @param schulformen     die Schulformen, für welche die Herkunft zulässig ist
@@ -62,7 +62,7 @@ public class HerkunftKatalogEintrag {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public HerkunftKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull List<@NotNull String> schulformen, 
+	public HerkunftKatalogEintrag(final long id, final @NotNull String kuerzel, final @NotNull List<@NotNull String> schulformen,
 			final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

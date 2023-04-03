@@ -7,9 +7,9 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerRaumMenge {
@@ -28,13 +28,14 @@ public class StundenplanblockungManagerRaumMenge {
 	/**
 	 * Fügt den Raum hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID bereits existiert.
-	 * 
-	 * @param pRaumID                Die Datenbank-ID des Raumes. 
+	 *
+	 * @param pRaumID                Die Datenbank-ID des Raumes.
 	 * @param pKuerzel               Das Kürzel des Raumes.
+	 *
 	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
 	 */
 	public void addOrException(final long pRaumID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pRaumID) == true)
+		if (_map.containsKey(pRaumID))
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!");
 		final @NotNull StundenplanblockungManagerRaum ra = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
 		_map.put(pRaumID, ra);
@@ -44,7 +45,7 @@ public class StundenplanblockungManagerRaumMenge {
 	/**
 	 * Liefert das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pRaumID                Die Datenbank-ID des Raumes.
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 * @return Das {@link StundenplanblockungManagerRaum}-Objekt zur übergebenen ID.
@@ -58,9 +59,10 @@ public class StundenplanblockungManagerRaumMenge {
 
 	/**
 	 * Liefert einen zufälligen Raum. <br>
-	 * Liefert eine Exception, falls die Menge der Räume leer ist. 
-	 * 
-	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen. 
+	 * Liefert eine Exception, falls die Menge der Räume leer ist.
+	 *
+	 * @param pRandom  Das Random-Objekt zum Erzeugen von Zufallszahlen.
+	 *
 	 * @return         Liefert einen zufälligen Raum.
 	 */
 	public @NotNull StundenplanblockungManagerRaum getRandomOrException(final @NotNull Random pRandom) {
@@ -73,8 +75,9 @@ public class StundenplanblockungManagerRaumMenge {
 	/**
 	 * Löscht den übergebenen Raum. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pRaumID                Die Datenbank-ID des Raumes.
+	 *
 	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
 	 */
 	public void removeOrException(final long pRaumID) throws NullPointerException {
@@ -85,7 +88,7 @@ public class StundenplanblockungManagerRaumMenge {
 
 	/**
 	 * Liefert die Menge aller Räume.
-	 * 
+	 *
 	 * @return Die Menge aller Räume.
 	 */
 	public Vector<StundenplanblockungManagerRaum> getMenge() {
@@ -93,8 +96,8 @@ public class StundenplanblockungManagerRaumMenge {
 	}
 
 	/**
-	 * Liefert TRUE, falls die Raum-ID existiert. 
-	 * 
+	 * Liefert TRUE, falls die Raum-ID existiert.
+	 *
 	 * @param pRaumID Die Datenbank-ID des Raumes.
 	 * @return TRUE, falls die Raum-ID existiert.
 	 */
@@ -104,7 +107,7 @@ public class StundenplanblockungManagerRaumMenge {
 
 	/**
 	 * Liefert die Anzahl an Räume.
-	 * 
+	 *
 	 * @return Die Anzahl an Räume.
 	 */
 	public int size() {

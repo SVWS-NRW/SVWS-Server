@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Core-DTO für den Katalog der Sprachreferenzniveaus.  
+ * Core-DTO für den Katalog der Sprachreferenzniveaus.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Sprachreferenzniveaus.")
@@ -20,7 +20,7 @@ public class SprachreferenzniveauKatalogEintrag {
 	/** Das Kürzel des Sprachreferenzniveaus */
 	@Schema(description = "das Kürzel des Sprachreferenzniveaus", example = "A1")
 	public @NotNull String kuerzel = "";
-	
+
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
@@ -39,14 +39,14 @@ public class SprachreferenzniveauKatalogEintrag {
 
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
-	 * 
+	 *
 	 * @param id            die ID
-	 * @param kuerzel       das Kürzel 
-	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
+	 * @param kuerzel       das Kürzel
+	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
-	 */	
-	public SprachreferenzniveauKatalogEintrag(final int id, final @NotNull String kuerzel, 
+	 */
+	public SprachreferenzniveauKatalogEintrag(final int id, final @NotNull String kuerzel,
 			final Integer gueltigVon, final Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;

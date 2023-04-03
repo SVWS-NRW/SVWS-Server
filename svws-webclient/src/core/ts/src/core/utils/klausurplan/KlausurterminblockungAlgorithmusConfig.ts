@@ -64,6 +64,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Liefert die maximale Blockungszeit.
+	 *
 	 * @return die maximale Blockungszeit.
 	 */
 	public get_max_time_millis() : number {
@@ -72,14 +73,16 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Setzt die maximale Blockungszeit.
-	 * @param pMax_time_millis die maximale Blockungszeit.
+	 *
+	 * @param pMaxTimeMillis die maximale Blockungszeit.
 	 */
-	public set_max_time_millis(pMax_time_millis : number) : void {
-		this.max_time_millis = pMax_time_millis;
+	public set_max_time_millis(pMaxTimeMillis : number) : void {
+		this.max_time_millis = pMaxTimeMillis;
 	}
 
 	/**
 	 * Liefert den selektierten Algorithmus.
+	 *
 	 * @return den selektierten Algorithmus.
 	 */
 	public get_algorithmus() : number {
@@ -155,10 +158,10 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Setzt den LK-GK-Modus.
-	 * @param lk_gk_modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
+	 * @param modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
 	 */
-	public set_lk_gk_modus(lk_gk_modus : number) : void {
-		this.lk_gk_modus = lk_gk_modus;
+	public set_lk_gk_modus(modus : number) : void {
+		this.lk_gk_modus = modus;
 	}
 
 	/**

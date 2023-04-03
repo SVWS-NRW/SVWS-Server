@@ -90,8 +90,8 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 *
 	 * @param id            die ID des Regel-Typs
-	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ
+	 * @param paramTypes    die Typen der Parameter für diesen Regel-Typ
 	 */
 	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<StundenplanblockungRegelParameterTyp>) {
 		super();

@@ -7,7 +7,7 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class StundenplanblockungManagerFachMenge {
@@ -22,28 +22,28 @@ public class StundenplanblockungManagerFachMenge {
 		_menge = new Vector<>();
 		_map = new HashMap<>();
 	}
-	
-	
+
+
 	/**
 	 * Fügt das Fach hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID bereits existiert.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Fach. 
+	 *
+	 * @param pFachID                Die Datenbank-ID des Fach.
 	 * @param pKuerzel               Das Kürzel des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
 	public void addOrException(final long pFachID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pFachID) == true)
+		if (_map.containsKey(pFachID))
 			throw new NullPointerException("Die Fach-ID " + pFachID + " existiert bereits!");
 		final @NotNull StundenplanblockungManagerFach fa = new StundenplanblockungManagerFach(pFachID, pKuerzel);
 		_map.put(pFachID, fa);
 		_menge.add(fa);
 	}
-	
+
 	/**
 	 * Liefert das {@link StundenplanblockungFach}-Objekt zur übergebenen ID. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pFachID                Die Datenbank-ID des Faches.
 	 * @return                       Das {@link StundenplanblockungFach}-Objekt zur übergebenen ID.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
@@ -54,11 +54,11 @@ public class StundenplanblockungManagerFachMenge {
 			throw new NullPointerException("Fach-ID " + pFachID + " unbekannt!");
 		return fa;
 	}
-	
+
 	/**
 	 * Löscht das übergebene Fach. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
+	 *
 	 * @param pFachID                Die Datenbank-ID des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
 	 */
@@ -67,11 +67,12 @@ public class StundenplanblockungManagerFachMenge {
 		_map.remove(pFachID);
 		_menge.remove(fa);
 	}
-	
+
 	/**
-	 * Liefert TRUE, falls die Fach-ID existiert. 
-	 * 
-	 * @param pFachID Die Datenbank-ID des Faches.
+	 * Liefert TRUE, falls die Fach-ID existiert.
+	 *
+	 * @param pFachID   die Datenbank-ID des Faches.
+	 *
 	 * @return TRUE, falls die Fach-ID existiert.
 	 */
 	public boolean exists(final long pFachID) {
@@ -81,11 +82,11 @@ public class StundenplanblockungManagerFachMenge {
 
 	/**
 	 * Liefert die Anzahl an Lehrkräften.
-	 * 
+	 *
 	 * @return Die Anzahl an Lehrkräften.
 	 */
 	public int size() {
 		return _menge.size();
 	}
-	
+
 }

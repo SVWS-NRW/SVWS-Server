@@ -4,17 +4,17 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/** 
- * Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy1}, 
+/**
+ * Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy1},
  * nur werden bei dieser Strategie die Schienen nacheinander aufgefüllt.
- * 
+ *
  * @author Benjamin A. Bartsch */
-public class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungSchienenAlgorithmusAbstract {
+public final class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungSchienenAlgorithmusAbstract {
 
 	/** Konstruktor.
-	 * 
+	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pDynDaten Die aktuellen Blockungsdaten. 
+	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
 	public KlausurblockungSchienenAlgorithmusGreedy1b(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		super(pRandom, pDynDaten);
