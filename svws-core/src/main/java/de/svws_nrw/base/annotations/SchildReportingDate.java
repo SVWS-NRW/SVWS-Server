@@ -7,8 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Eine Annotation, um bei einem Attribut eines Core-DTOs zu kennzeichnen, dass dieses 
- * als Datums-Feld zu interpretieren ist.  
+ * Eine Annotation, um bei einem Attribut eines Core-DTOs zu kennzeichnen, dass dieses
+ * als Datums-Feld zu interpretieren ist.
  */
 @Target(FIELD)
 @Retention(RUNTIME)

@@ -21,145 +21,145 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 
 /**
- * Diese Klasse stellt Hilfsmethoden zum Zugriff auf CSV-Dateien zur Verfügung. 
+ * Diese Klasse stellt Hilfsmethoden zum Zugriff auf CSV-Dateien zur Verfügung.
  */
 public class CsvReader {
-	
+
 	/**
-	 * Diese Methode ermittelt für den angebenen String location ein 
+	 * Diese Methode ermittelt für den angebenen String location ein
 	 * zugehöriges Path-Objekt aus dem zugehörigen Resource-Ordner.
 	 * Dabei wird auch der Zugriff auf ein ZIP-Dateisystem genutzt,
 	 * falls sich die Resource in einem JAR-File befindet.
-	 * 
+	 *
 	 * @param location   der Pfad der Resource
-	 * 
+	 *
 	 * @return das Path-Objekt zum Zugriff auf die Ressource
-	 * 
-	 * @throws URISyntaxException   falls der Pfad der Ressource nicht in eine URI 
-	 *                              umgewandelt werden kann.  
+	 *
+	 * @throws URISyntaxException   falls der Pfad der Ressource nicht in eine URI
+	 *                              umgewandelt werden kann.
 	 */
 	@SuppressWarnings("resource")
-	private static Path getPath(String location) throws URISyntaxException {
-        ClassLoader classLoader = CsvReader.class.getClassLoader();
-        var url = classLoader.getResource(location);
-        if (url == null)
-        	return null;
-        var uri = url.toURI();
+	private static Path getPath(final String location) throws URISyntaxException {
+		final ClassLoader classLoader = CsvReader.class.getClassLoader();
+		final var url = classLoader.getResource(location);
+		if (url == null)
+			return null;
+		final var uri = url.toURI();
 		if (uri.toString().contains("jar:file:")) {
 			try {
-				String[] jar_path_elements = uri.toString().split("!");
+				final String[] jar_path_elements = uri.toString().split("!");
 				FileSystem zipfs = null;
 				try {
 					zipfs = FileSystems.getFileSystem(URI.create(jar_path_elements[0]));
-				} catch (@SuppressWarnings("unused") FileSystemNotFoundException e) {
-					Map<String, String> env = new HashMap<>(); 
+				} catch (@SuppressWarnings("unused") final FileSystemNotFoundException e) {
+					final Map<String, String> env = new HashMap<>();
 					env.put("create", "true");
 					zipfs = FileSystems.newFileSystem(URI.create(jar_path_elements[0]), env);
 				}
 				return zipfs.getPath(jar_path_elements[1]);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 				return null;
 			}
 		}
 		return Paths.get(uri);
 	}
-	
-	
+
+
 	/**
 	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei von dem Pfad
 	 * path eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
-	 * konvertiert werden. 
-	 *  
+	 * konvertiert werden.
+	 *
 	 * @param <T>     der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
 	 * @param path    der Pfad, unter dem sich die CSV-Resource befindet
 	 * @param clazz   das Klassenobjekt zur generischen Klasse T
-	 * 
+	 *
 	 * @return die Liste der Objekte vom Typ T
 	 */
-	public static <T> List<T> from(Path path, Class<T> clazz) {
-        try {
-			InputStream inputStream = Files.newInputStream(path);
-	        CsvMapper mapper = new CsvMapper()
-	        		.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-	        CsvSchema schema = CsvSchema
-	        		.emptySchema()
-	    	        .withColumnSeparator(';')
-	    	        .withQuoteChar('\"')
-	    	        .withNullValue("")
-	                .withHeader();
+	public static <T> List<T> from(final Path path, final Class<T> clazz) {
+		try {
+			final InputStream inputStream = Files.newInputStream(path);
+			final CsvMapper mapper = new CsvMapper()
+					.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+			final CsvSchema schema = CsvSchema
+					.emptySchema()
+					.withColumnSeparator(';')
+					.withQuoteChar('\"')
+					.withNullValue("")
+					.withHeader();
 			try (MappingIterator<T> it = mapper
-			        .readerFor(clazz)
-			        .with(schema)
-			        .readValues(inputStream)) {
-	        	return it.readAll();
-        	}
-		} catch (IOException e) {
-			System.err.println("ERROR: Cannot access csv resource file '" + path.toString() + "'" + e);
-			e.printStackTrace();
-			return null;			
-		}
-	}
-
-
-	/**
-	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
-	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
-	 * konvertiert werden. 
-	 *  
-	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
-	 * @param location   der Ort, an dem sich die CSV-Resource befindet
-	 * @param clazz      das Klassenobjekt zur generischen Klasse T
-	 * 
-	 * @return die Liste der Objekte vom Typ T
-	 */
-	public static <T> List<T> fromResource(String location, Class<T> clazz) {
-        try {
-			Path path = getPath(location);
-			return from(path, clazz);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	
-	/**
-	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
-	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
-	 * konvertiert werden. 
-	 *  
-	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
-	 * @param location   der Ort, an dem sich die CSV-Resource befindet
-	 * @param clazz      das Klassenobjekt zur generischen Klasse T
-	 * 
-	 * @return die Liste der Objekt vom Typ T
-	 */
-	public static <T> List<T> fromResourceWithEmptyValues(String location, Class<T> clazz) {
-        try {
-			Path path = getPath(location);
-			InputStream inputStream = Files.newInputStream(path);
-	        CsvMapper mapper = new CsvMapper()
-	        		.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-	        CsvSchema schema = CsvSchema
-	        		.emptySchema()
-	    	        .withColumnSeparator(';')
-	    	        .withQuoteChar('\"')
-	                .withHeader();
-			try (MappingIterator<T> it = mapper
-			        .readerFor(clazz)
-			        .with(schema)
-			        .readValues(inputStream)) {
+					.readerFor(clazz)
+					.with(schema)
+					.readValues(inputStream)) {
 				return it.readAll();
 			}
-		} catch (URISyntaxException e) {
+		} catch (final IOException e) {
+			System.err.println("ERROR: Cannot access csv resource file '" + path.toString() + "'" + e);
 			e.printStackTrace();
 			return null;
-		} catch (IOException e) {
-			System.err.println("ERROR: Cannot access csv resource file '" + location + "'" + e);
-			e.printStackTrace();
-			return null;			
 		}
 	}
-	
+
+
+	/**
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
+	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * konvertiert werden.
+	 *
+	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param location   der Ort, an dem sich die CSV-Resource befindet
+	 * @param clazz      das Klassenobjekt zur generischen Klasse T
+	 *
+	 * @return die Liste der Objekte vom Typ T
+	 */
+	public static <T> List<T> fromResource(final String location, final Class<T> clazz) {
+		try {
+			final Path path = getPath(location);
+			return from(path, clazz);
+		} catch (final URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	/**
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
+	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * konvertiert werden.
+	 *
+	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param location   der Ort, an dem sich die CSV-Resource befindet
+	 * @param clazz      das Klassenobjekt zur generischen Klasse T
+	 *
+	 * @return die Liste der Objekt vom Typ T
+	 */
+	public static <T> List<T> fromResourceWithEmptyValues(final String location, final Class<T> clazz) {
+		try {
+			final Path path = getPath(location);
+			final InputStream inputStream = Files.newInputStream(path);
+			final CsvMapper mapper = new CsvMapper()
+					.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+			final CsvSchema schema = CsvSchema
+					.emptySchema()
+					.withColumnSeparator(';')
+					.withQuoteChar('\"')
+					.withHeader();
+			try (MappingIterator<T> it = mapper
+					.readerFor(clazz)
+					.with(schema)
+					.readValues(inputStream)) {
+				return it.readAll();
+			}
+		} catch (final URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		} catch (final IOException e) {
+			System.err.println("ERROR: Cannot access csv resource file '" + location + "'" + e);
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

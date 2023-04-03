@@ -10,9 +10,9 @@ import java.util.zip.GZIPOutputStream;
 public interface GZipWriterFunction {
 	/**
 	 * Schreibt Daten in den {@link GZIPOutputStream}.
-	 * 
+	 *
 	 * @param gzipOut   der {@link GZIPOutputStream}
-	 * 
+	 *
 	 * @throws Exception   eine beliebige Exception, die im Verlauf des Schreibens der Daten geworfen wird
 	 */
 	void write(GZIPOutputStream gzipOut) throws Exception;
