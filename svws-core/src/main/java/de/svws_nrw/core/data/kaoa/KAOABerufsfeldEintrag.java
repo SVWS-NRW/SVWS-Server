@@ -15,23 +15,23 @@ import jakarta.validation.constraints.NotNull;
 public class KAOABerufsfeldEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="1")
+	@Schema(description = "die ID des Katalog-Eintrags", example="1")
 	public long id;
 
 	/** Das Kürzel des Berufsfeldes. */
-	@Schema(required = true, description = "das Kürzel des Berufsfeldes", example="BAV")
+	@Schema(description = "das Kürzel des Berufsfeldes", example="BAV")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung des Berufsfeldes. */
-	@Schema(required = true, description = "die Beschreibung des Berufsfeldes", example="Bau, Architektur, Vermessung")
+	@Schema(description = "die Beschreibung des Berufsfeldes", example="Bau, Architektur, Vermessung")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

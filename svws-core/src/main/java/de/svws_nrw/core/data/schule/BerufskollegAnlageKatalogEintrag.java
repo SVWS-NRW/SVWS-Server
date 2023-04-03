@@ -16,23 +16,23 @@ public class BerufskollegAnlageKatalogEintrag {
 
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel der Anlage */
-	@Schema(required = true, description = "das Kürzel der Anlage", example="A")
+	@Schema(description = "das Kürzel der Anlage", example="A")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung der Anlage. */
-	@Schema(required = true, description = "die Bezeichnung der Anlage", example="Fachklassen duales System und Ausbildungsvorbereitung")
+	@Schema(description = "die Bezeichnung der Anlage", example="Fachklassen duales System und Ausbildungsvorbereitung")
 	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

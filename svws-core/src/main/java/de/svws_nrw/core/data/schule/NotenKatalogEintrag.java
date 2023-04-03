@@ -15,34 +15,34 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class NotenKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public int id = -1;
 	/** Eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt */
-	@Schema(required = true, description = "eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt", example="3")
+	@Schema(description = "eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt", example="3")
 	public int sortierung = -1;
 
 	/** Die Notenpunkte, die dieser Note zugeordnet sind */
-	@Schema(required = true, description = "die Notenpunkte, die dieser Note zugeordnet sind", example="13")
+	@Schema(description = "die Notenpunkte, die dieser Note zugeordnet sind", example="13")
 	public Integer notenpunkte = null;
 
 	/** Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) */
-	@Schema(required = true, description = "die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)", example="1-")
+	@Schema(description = "die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)", example="1-")
 	public @NotNull String kuerzel = "";
 
 	/** Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) */
-	@Schema(required = true, description = "die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)", example="sehr gut (minus)")
+	@Schema(description = "die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)", example="sehr gut (minus)")
 	public @NotNull String text = "";
 
 	/** Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. */
-	@Schema(required = true, description = "die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird", example="sehr gut (minus)")
+	@Schema(description = "die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird", example="sehr gut (minus)")
 	public @NotNull String textZeugnis = "";
 
 	/** Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

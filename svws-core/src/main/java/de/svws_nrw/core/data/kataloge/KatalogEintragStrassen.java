@@ -19,19 +19,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class KatalogEintragStrassen {
 
 	/** Katalog von ITNRW Straßen: zugehörige Ort */
-	@Schema(required = true, description = "der zugehörige Ort des Katalog-Eintrags", example="Düsseldorf")
+	@Schema(description = "der zugehörige Ort des Katalog-Eintrags", example="Düsseldorf")
 	public String Ort;
 
 	/** Katalog von ITNRW Straßen: zugehöriger Regionalschlüssel */
-	@Schema(required = true, description = "der zugehörige Regionalschlüssel des Katalog-Eintrags", example="05111000")
+	@Schema(description = "der zugehörige Regionalschlüssel des Katalog-Eintrags", example="05111000")
 	public String RegSchl;
 
 	/** Katalog von ITNRW Straßen: Straßenname */
-	@Schema(required = true, description = "der Straßenname des Katalog-Eintrags", example="Aachener Platz")
+	@Schema(description = "der Straßenname des Katalog-Eintrags", example="Aachener Platz")
 	public String Strasse;
 
 	/** Katalog von ITNRW Straßen: aktueller Stand */
-	@Schema(required = true, description = "der Stand des Katalog-Eintrags", example="09.04.2020")
+	@Schema(description = "der Stand des Katalog-Eintrags", example="09.04.2020")
 	public String Stand;
 
 }

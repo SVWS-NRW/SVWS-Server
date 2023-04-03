@@ -15,43 +15,43 @@ import jakarta.validation.constraints.NotNull;
 public class LehrerListeEintrag {
 
 	/** Die ID des Lehrers. */
-	@Schema(required = true, description = "die ID des Lehrers", example="4711")
+	@Schema(description = "die ID des Lehrers", example="4711")
 	public long id;
 	
 	/** Das Kürzel des Lehrers. */
-	@Schema(required = true, description = "das Kürzel des Lehrers", example="MUS")
+	@Schema(description = "das Kürzel des Lehrers", example="MUS")
 	public @NotNull String kuerzel = "";
 	
 	/** Ggf. ein akademischer Grad des Lehrers. */
-	@Schema(required = false, description = "Ggf. ein akademischer Grad des Lehrers.", example="Dr.")
+	@Schema(description = "Ggf. ein akademischer Grad des Lehrers.", example="Dr.")
 	public String titel;
 
 	/** Der Nachname des Lehrers. */
-	@Schema(required = true, description = "der Nachname des Lehrers", example="Mustermann")
+	@Schema(description = "der Nachname des Lehrers", example="Mustermann")
 	public @NotNull String nachname = "";
 	
 	/** Der Vorname des Lehrers. */
-	@Schema(required = true, description = "der Vorname des Lehrers", example="Max")
+	@Schema(description = "der Vorname des Lehrers", example="Max")
 	public @NotNull String vorname = "";
 	
 	/** Der Personaltyp des Lehrerlisten-Eintrags. */
-	@Schema(required = true, description = "der Personaltyp des Lehrerlisten-Eintrags", example="LEHRKRAFT")
+	@Schema(description = "der Personaltyp des Lehrerlisten-Eintrags", example="LEHRKRAFT")
 	public @NotNull String personTyp = "";
 	
 	/** Die Sortierreihenfolge des Lehrerlisten-Eintrags. */
-	@Schema(required = true, description = "die Sortierreihenfolge des Lehrerlisten-Eintrags", example="1")
+	@Schema(description = "die Sortierreihenfolge des Lehrerlisten-Eintrags", example="1")
 	public int sortierung;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
 	public boolean istSichtbar;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example="true")
 	public boolean istAenderbar;
 	
 	/** Gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag für die Schulstatistik relevant ist oder nicht", example="true")
 	public boolean istRelevantFuerStatistik;
 	
 }

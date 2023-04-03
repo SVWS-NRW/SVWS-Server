@@ -15,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 public class BKAnlageAFaecher {
 
 	/** Die Fachinformationen. */
-	@Schema(required = true, description = "Die Fachinformationen.")
+	@Schema(description = "Die Fachinformationen.")
 	public List<@NotNull BKAnlageAFach> faecher;
 
 	/** Information zur praktischen Teil der Berufsabschlussprüfung (IHK). */
-	@Schema(required = false, description = "Information zur praktischen Teil der Berufsabschlussprüfung (IHK).")
+	@Schema(description = "Information zur praktischen Teil der Berufsabschlussprüfung (IHK).")
 	public Boolean hatBestandenBerufsAbschlussPruefung;
 
 	/** Die Bezeichnung des Sprachreferenzniveaus in Englisch nach dem GeR. */
-	@Schema(required = false, description = "die Bezeichnung des Sprachreferenzniveaus in Englisch nach dem GeR")
+	@Schema(description = "die Bezeichnung des Sprachreferenzniveaus in Englisch nach dem GeR")
 	public String englischGeR;
 
 }

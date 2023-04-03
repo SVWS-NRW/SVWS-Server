@@ -16,11 +16,11 @@ public class SchulformKatalogEintrag {
 
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
-	@Schema(required = true, description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="GE")
+	@Schema(description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="GE")
 	public @NotNull String kuerzel = "";
 	
 	/**
@@ -32,23 +32,23 @@ public class SchulformKatalogEintrag {
 	 *                 Wert der Nummer fehlerhaft, da dort eine Doppelung beim Kürzel vorliegt und
 	 *                 diese somit nicht korrekt erfasst werden. 
 	 */
-	@Schema(required = false, description = "die Nummer der Schulform, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="17")
+	@Schema(description = "die Nummer der Schulform, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="17")
 	public @NotNull String nummer = "";
 
 	/** Die Bezeichnung der Schulform. */
-	@Schema(required = true, description = "die Bezeichnung der Schulform", example="Gesamtschule")
+	@Schema(description = "die Bezeichnung der Schulform", example="Gesamtschule")
 	public @NotNull String bezeichnung = "";
 	
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. */
-	@Schema(required = true, description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example="true")
+	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example="true")
 	public boolean hatGymOb;
 	
 	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 	

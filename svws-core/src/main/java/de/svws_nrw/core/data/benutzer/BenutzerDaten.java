@@ -18,39 +18,39 @@ import jakarta.validation.constraints.NotNull;
 public class BenutzerDaten {
 
 	/** Die ID des Benutzers. */
-	@Schema(required = true, description = "die ID des Benutzers", example="4711")
+	@Schema(description = "die ID des Benutzers", example="4711")
 	public long id = -1;
 	
 	/** Der Typ des Benutzers. */
-	@Schema(required = true, description = "der Typ des Benutzers", example="0")
+	@Schema(description = "der Typ des Benutzers", example="0")
 	public @NotNull int typ = 0;
 	
 	/** die ID des Benutzers in der Typ-spezifischen-Tabelle (z.B. Lehrer-ID) */
-	@Schema(required = true, description = "die ID des Benutzers in der Typ-spezifischen-Tabelle (z.B. Lehrer-ID)", example="4712")
+	@Schema(description = "die ID des Benutzers in der Typ-spezifischen-Tabelle (z.B. Lehrer-ID)", example="4712")
 	public @NotNull long typID = -1;
 
 	/** Der Anzeigename des Benutzers. */
-	@Schema(required = true, description = "der Anzeigename des Benutzers", example="Administrator")
+	@Schema(description = "der Anzeigename des Benutzers", example="Administrator")
 	public @NotNull String anzeigename = "";
 	
 	/** Der Anmeldename des Benutzers */
-	@Schema(required = true, description = "der Anmeldename des Benutzers", example="Admin")
+	@Schema(description = "der Anmeldename des Benutzers", example="Admin")
 	public @NotNull String name = "";
 	
 	/** Gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht. */
-	@Schema(required = true, description = "gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht.", example="true")
+	@Schema(description = "gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht.", example="true")
 	public @NotNull boolean istAdmin = false;
 	
 	/** Die ID der Credentials des Benutzers. */
-	@Schema(required = true, description = "die ID der Credentials des Benutzers", example="42")
+	@Schema(description = "die ID der Credentials des Benutzers", example="42")
 	public @NotNull long idCredentials = -1;
 	
 	/** Die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist. */
-	@Schema(required = true, description = "die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist")
+	@Schema(description = "die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist")
 	public @NotNull List<@NotNull BenutzergruppeDaten> gruppen = new Vector<>();
 	
 	/** Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
-	@Schema(required = true, description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
+	@Schema(description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
 	public @NotNull Vector<@NotNull Long> kompetenzen = new Vector<>();
 	
 	

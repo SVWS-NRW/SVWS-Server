@@ -15,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 public class GostBelegpruefungErgebnisFehler {
 
 	/** Ein eindeutiger Fehlercode für den Fehler */
-	@Schema(required = true, description = "Ein eindeutiger Fehlercode für den Fehler.", example = "ABI_11")
+	@Schema(description = "Ein eindeutiger Fehlercode für den Fehler.", example = "ABI_11")
 	public @NotNull String code = "";
 
 	/** Die Art des Belegungsfehlers (siehe {@link GostBelegungsfehlerArt}). */
-	@Schema(required = true, description = "Die Art des Belegungsfehlers.", example = "BELEGUNG")
+	@Schema(description = "Die Art des Belegungsfehlers.", example = "BELEGUNG")
 	public @NotNull String art = "";
 
 	/** Eine textuelle Beschreibung des Fehlers. */
-	@Schema(required = true, description = "Eine textuelle Beschreibung des Fehlers.", example = "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.")
+	@Schema(description = "Eine textuelle Beschreibung des Fehlers.", example = "Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.")
 	public @NotNull String beschreibung = "";
 
 

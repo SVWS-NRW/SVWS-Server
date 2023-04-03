@@ -16,11 +16,11 @@ public class Credentials {
 
     
     /** Benutzername des Account-Credentials*/
-    @Schema(required = true, description = "Benutzername des Account-Credentials", example="Max")
+    @Schema(description = "Benutzername des Account-Credentials", example="Max")
     public @NotNull String benutzername = "";
     
     /** Passwort des Account-Credentials*/
-    @Schema(required = true, description = "Benutzername des Account-Credentials", example="Max")
+    @Schema(description = "Benutzername des Account-Credentials", example="Max")
     public @NotNull String password = "";
    
 

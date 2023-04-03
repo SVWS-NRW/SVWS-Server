@@ -17,11 +17,11 @@ import jakarta.validation.constraints.NotNull;
 public class SchulformSchulgliederung {
 
 	/** Das Kürzel der Schulform */
-	@Schema(required = true, description = "das Kürzel der Schulform", example="BK")
+	@Schema(description = "das Kürzel der Schulform", example="BK")
 	public @NotNull String schulform = "GY";
 	
 	/** Das Kürzel der Schulgliederung bzw. des Bildungsganges. Null, falls alle Gliederungen der Schulform gemeint sind. */
-	@Schema(required = true, description = "das Kürzel der Schulgliederung bzw. des Bildungsganges", example="A01")
+	@Schema(description = "das Kürzel der Schulgliederung bzw. des Bildungsganges", example="A01")
 	public String gliederung = null;
 
 

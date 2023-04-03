@@ -14,15 +14,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SchemaListeEintrag {
 
 	/** Der Name des Schemas. */
-	@Schema(required = true, description = "der Name des Schemas", example="svwsdb")
+	@Schema(description = "der Name des Schemas", example="svwsdb")
 	public String name;
 
 	/** Die Revisionsnummer des Schemas. */
-	@Schema(required = true, description = "die Revisionsnummer des Schemas", example="3")
+	@Schema(description = "die Revisionsnummer des Schemas", example="3")
 	public long revision;
 
 	/** Gibt an, ob das Schema als "verdorben" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte. */
-	@Schema(required = true, description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte", example="false")
+	@Schema(description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte", example="false")
 	public boolean isTainted;
 
 }

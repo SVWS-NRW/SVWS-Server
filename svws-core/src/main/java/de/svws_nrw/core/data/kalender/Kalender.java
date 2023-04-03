@@ -19,42 +19,42 @@ import jakarta.validation.constraints.NotNull;
 public class Kalender {
 
 	/** ID des Kalenders */
-	@Schema(required = true, description = "die ID des Kalenders", example = "global")
+	@Schema(description = "die ID des Kalenders", example = "global")
 	public @NotNull String id = "";
 
 	/** Anzeigename des Kalenders */
-	@Schema(required = false, description = "Name des Kalenders", example = "Globaler Kalender")
+	@Schema(description = "Name des Kalenders", example = "Globaler Kalender")
 	public String displayname;
 
 	/** Beschreibung des Kalenders */
-	@Schema(required = false, description = "Beschreibung des Kalenders", example = "Globaler Kalender für öffentliche Kalender.")
+	@Schema(description = "Beschreibung des Kalenders", example = "Globaler Kalender für öffentliche Kalender.")
 	public String beschreibung;
 
 	/** Versionskennzeichen des Kalenders */
-	@Schema(required = true, description = "Versionskennzeichen des Kalenders", example = "98")
+	@Schema(description = "Versionskennzeichen des Kalenders", example = "98")
 	public long synctoken;
 
 	/**
 	 * der Typ des Kalenders
 	 */
-	@Schema(required = true, description = "der Typ des Kalenders", example = "GENERIERT")
+	@Schema(description = "der Typ des Kalenders", example = "GENERIERT")
 	public @NotNull String kalenderTyp = "";
 
 	/**
 	 * eine Liste der Einträge des Kalenders
 	 */
-	@ArraySchema(schema = @Schema(required = true, description = "eine Liste der Einträge des Kalenders", example = "..."))
+	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Kalenders", example = "..."))
 	public @NotNull List<@NotNull KalenderEintrag> kalenderEintraege = new Vector<>();
 
 	/** ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat */
-	@Schema(required = true, description = "Schreibrecht des angemeldeten Nutzers", example = "true")
+	@Schema(description = "Schreibrecht des angemeldeten Nutzers", example = "true")
 	public boolean darfSchreiben;
 
 	/** ob der angemeldete Nutzer Leserecht auf dem Kalender hat */
-	@Schema(required = true, description = "Leserecht des angemeldeten Nutzers", example = "true")
+	@Schema(description = "Leserecht des angemeldeten Nutzers", example = "true")
 	public boolean darfLesen;
 
 	/** BenutzerId des Besitzers dieses Kalenders */
-	@Schema(required = true, description = "BenutzerId des Besitzers dieses Kalenders", example = "1")
+	@Schema(description = "BenutzerId des Besitzers dieses Kalenders", example = "1")
 	public long besitzer;
 }

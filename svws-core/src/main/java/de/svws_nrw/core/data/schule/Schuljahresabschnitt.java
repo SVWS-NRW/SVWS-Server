@@ -14,15 +14,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class Schuljahresabschnitt {
 
 	/** Die ID des Schuljahresabschnittes */
-	@Schema(required = true, description = "Das Schuljahr, in welchem der Abschnitt liegt", example="2024")
+	@Schema(description = "Das Schuljahr, in welchem der Abschnitt liegt", example="2024")
 	public long id;
 	
 	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
-	@Schema(required = true, description = "Das Schuljahr, in welchem der Abschnitt liegt", example="2024")
+	@Schema(description = "Das Schuljahr, in welchem der Abschnitt liegt", example="2024")
 	public int schuljahr;	
 
 	/** Die Nummer des Abschnitts im Schuljahr */
-	@Schema(required = true, description = "Die Nummer des Abschnitts im Schuljahr", example="2")
+	@Schema(description = "Die Nummer des Abschnitts im Schuljahr", example="2")
 	public int abschnitt;	
 	
 }

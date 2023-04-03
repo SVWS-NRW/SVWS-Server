@@ -21,27 +21,27 @@ import jakarta.validation.constraints.NotNull;
 public class OrganisationsformKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel der Organisationsform */
-	@Schema(required = true, description = "das Kürzel der Organisationsform", example="1")
+	@Schema(description = "das Kürzel der Organisationsform", example="1")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung der Organisationsform. */
-	@Schema(required = true, description = "die Beschreibung der Organisationsform", example="Teilnahme am gebundenen Ganztag")
+	@Schema(description = "die Beschreibung der Organisationsform", example="Teilnahme am gebundenen Ganztag")
 	public @NotNull String beschreibung = "";
 
 	/** Die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt. */
-	@Schema(required = true, description = "die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt")
+	@Schema(description = "die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Organisationsform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr die Organisationsform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Organisationsform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 	

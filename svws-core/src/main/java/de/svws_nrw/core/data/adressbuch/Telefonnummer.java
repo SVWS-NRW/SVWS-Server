@@ -15,12 +15,12 @@ public class Telefonnummer {
 	/**
 	 * die Art der Telefonnummer
 	 */
-	@Schema(required = true, description = "die Art der Telefonnummer")
+	@Schema(description = "die Art der Telefonnummer")
 	public @NotNull String type = "";
 
 	/**
 	 * die Telefon-, Fax- oder Pagernummer
 	 */
-	@Schema(required = true, description = "die Telefon-, Fax- oder Pagernummer")
+	@Schema(description = "die Telefon-, Fax- oder Pagernummer")
 	public @NotNull String number = "";
 }

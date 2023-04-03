@@ -15,27 +15,27 @@ import jakarta.validation.constraints.NotNull;
 public class VerkehrsspracheKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="34")
+	@Schema(description = "die ID des Katalog-Eintrags", example="34")
 	public long id;
 
 	/** Der dreistellige ISO 639-2 code */
-	@Schema(required = true, description = "der dreistellige ISO 639-2 code", example="deu")
+	@Schema(description = "der dreistellige ISO 639-2 code", example="deu")
 	public @NotNull String kuerzel = "";
 	
 	/** Die ISO-Bezeichnung der Sprache. */
-	@Schema(required = true, description = "die ISO-Bezeichnung der Sprache", example="Deutsch")
+	@Schema(description = "die ISO-Bezeichnung der Sprache", example="Deutsch")
 	public @NotNull String bezeichnung = "";
 
 	/** Der zweistellige ISO 639-1 code (wird aktuell für die Statistik verwendet - null entspricht dem Statistik-Code xn) */
-	@Schema(required = true, description = "der zweistellige ISO 639-1 code (wird aktuell für die Statistik verwendet - null entspricht dem Statistik-Code xn)", example="de")
+	@Schema(description = "der zweistellige ISO 639-1 code (wird aktuell für die Statistik verwendet - null entspricht dem Statistik-Code xn)", example="de")
 	public String iso2 = null;
 	
 	/** Gibt an, in welchem Schuljahr die Verkehrssprache ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr die Verkehrssprache ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Verkehrssprache ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Verkehrssprache verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr die Verkehrssprache verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Verkehrssprache verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

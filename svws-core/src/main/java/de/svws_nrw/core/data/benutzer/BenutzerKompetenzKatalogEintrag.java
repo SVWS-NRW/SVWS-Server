@@ -16,15 +16,15 @@ import jakarta.validation.constraints.NotNull;
 public class BenutzerKompetenzKatalogEintrag {
 
 	/** Die ID der Benutzerkompetenz. */
-	@Schema(required = true, description = "die ID der Benutzerkompetenz", example="11")
+	@Schema(description = "die ID der Benutzerkompetenz", example="11")
 	public long id = -1;
 	
 	/** Die ID der zugehörigen Benutzerkompetenzgruppe. */
-	@Schema(required = true, description = "die ID der zugehörigen Benutzerkompetenzgruppe", example="100")
+	@Schema(description = "die ID der zugehörigen Benutzerkompetenzgruppe", example="100")
 	public @NotNull long gruppe_id = -1;
 	
 	/** Die Bezeichnung der Benutzerkompetenz. */
-	@Schema(required = true, description = "die Bezeichnung der Benutzerkompetenz", example="Ansehen")
+	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example="Ansehen")
 	public @NotNull String bezeichnung = "";
 	
 

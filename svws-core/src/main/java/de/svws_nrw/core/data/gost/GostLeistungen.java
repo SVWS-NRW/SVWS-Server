@@ -45,7 +45,7 @@ public class GostLeistungen {
 	public String projektkursLeitfach2Kuerzel = null;
 
 	/** Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind. */
-	@ArraySchema(schema = @Schema(required = true, implementation = Boolean.class, description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind."))
+	@ArraySchema(schema = @Schema(implementation = Boolean.class, description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind."))
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 	
     /** Die einzelnen Fachwahlen des Schülers. */

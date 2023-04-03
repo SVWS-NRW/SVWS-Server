@@ -16,23 +16,23 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class AdressbuchEintrag {
 	/** ID des AdressbuchEintrags */
-	@Schema(required = true, description = "die ID des Kontakts", example = "123")
+	@Schema(description = "die ID des Kontakts", example = "123")
 	public @NotNull String id = "";
 
 	/** ID des Adressbuchs */
-	@Schema(required = true, description = "die ID des Adressbuches, zu dem der Kontakt gehört", example = "global")
+	@Schema(description = "die ID des Adressbuches, zu dem der Kontakt gehört", example = "global")
 	public @NotNull String adressbuchId = "";
 
 	/**
 	 * URI der VCard des Kontakts
 	 */
-	@Schema(required = true, description = "uri des Kontakts", example = "https://example.com/kontakt.vcf")
+	@Schema(description = "uri des Kontakts", example = "https://example.com/kontakt.vcf")
 	public @NotNull String uri = "";
 
 	/**
 	 * Versionskennzeichen des Kontaks
 	 */
-	@Schema(required = true, description = "Versionskennzeichen des Kontakts", example = "78")
+	@Schema(description = "Versionskennzeichen des Kontakts", example = "78")
 	public @NotNull String version = "";
 
 }

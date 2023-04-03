@@ -15,23 +15,23 @@ import jakarta.validation.constraints.NotNull;
 public class BildungsgangTypKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel des (Schul-)Typs von Bildungsgängen */
-	@Schema(required = true, description = "das Kürzel des (Schul-)Typs von Bildungsgängen", example="FO")
+	@Schema(description = "das Kürzel des (Schul-)Typs von Bildungsgängen", example="FO")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung des (Schul-)Typs von Bildungsgängen. */
-	@Schema(required = true, description = "die Bezeichnung des des (Schul-)Typs von Bildungsgängen", example="Fachoberschule")
+	@Schema(description = "die Bezeichnung des des (Schul-)Typs von Bildungsgängen", example="Fachoberschule")
 	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

@@ -19,15 +19,15 @@ import jakarta.validation.constraints.NotNull;
 public class BerufskollegFachklassenKatalogIndex {
 
 	/** Der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen */
-	@Schema(required = true, description = "der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen", example="100")
+	@Schema(description = "der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen", example="100")
 	public int index;
 
 	/** Die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht. */
-	@Schema(required = true, description = "die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht", example="3")
+	@Schema(description = "die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht", example="3")
 	public long version = -1;
 
 	/** Die Einträge des Katalogs. */
-	@Schema(required = true, description = "die Fachklassen des Katalogs")
+	@Schema(description = "die Fachklassen des Katalogs")
 	public @NotNull List<@NotNull BerufskollegFachklassenKatalogEintrag> fachklassen = new Vector<>();
 
 }

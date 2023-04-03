@@ -14,15 +14,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class ENMFoerderschwerpunkt {
 
     /** Die ID des Förderschwerpunktes. */
-    @Schema(required = true, description = "die ID des Förderschwerpunktes", example="42")
+    @Schema(description = "die ID des Förderschwerpunktes", example="42")
     public long id;
     
 	/** Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird */
-	@Schema(required = true, description = "Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="SH")
+	@Schema(description = "Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="SH")
 	public String kuerzel;
 
 	/** Die textuelle Bezeichnung des Förderschwerpunktes. */
-	@Schema(required = true, description = "Die textuelle Bezeichnung des Förderschwerpunktes", example="Sehen (Sehbehinderte)")
+	@Schema(description = "Die textuelle Bezeichnung des Förderschwerpunktes", example="Sehen (Sehbehinderte)")
 	public String beschreibung;
 	
 }

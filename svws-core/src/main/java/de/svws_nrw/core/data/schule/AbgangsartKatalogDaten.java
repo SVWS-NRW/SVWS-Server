@@ -18,23 +18,23 @@ import jakarta.validation.constraints.NotNull;
 public class AbgangsartKatalogDaten {
 
 	/** Die ID des Eintrags. */
-	@Schema(required = true, description = "die ID des Eintrags", example="4711")
+	@Schema(description = "die ID des Eintrags", example="4711")
 	public long id = -1;
 
 	/** Die Beschreibung der Abgangsart. */
-	@Schema(required = true, description = "die Beschreibung der Abgangsart", example="Ohne Abschluss")
+	@Schema(description = "die Beschreibung der Abgangsart", example="Ohne Abschluss")
 	public @NotNull String beschreibung = "";
 	
 	/** Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist. */
-	@Schema(required = true, description = "die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist")
+	@Schema(description = "die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist")
 	public @NotNull List<@NotNull SchulformGliederungJahrgaenge> zulaessig = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 	
 }

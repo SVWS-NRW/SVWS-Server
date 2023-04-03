@@ -20,39 +20,39 @@ import jakarta.validation.constraints.NotNull;
 public class AllgemeineMerkmaleKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id = -1;
 
 	/** Das Kürzel des allgemeinen Merkmals */
-	@Schema(required = true, description = "das Kürzel des allgemeinen Merkmals", example="GANZTAG")
+	@Schema(description = "das Kürzel des allgemeinen Merkmals", example="GANZTAG")
 	public @NotNull String kuerzel = "";
 
 	/** Eine kurze Bezeichnung für das allgemeine Merkmal. */
-	@Schema(required = true, description = "eine kurze Bezeichnung für das allgemeine Merkmal", example="Ganztagsschule")
+	@Schema(description = "eine kurze Bezeichnung für das allgemeine Merkmal", example="Ganztagsschule")
 	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, das das Merkmal bei der Schule gesetzt werden kann. */
-	@Schema(required = true, description = "gibt an, das das Merkmal bei der Schule gesetzt werden kann", example="false")
+	@Schema(description = "gibt an, das das Merkmal bei der Schule gesetzt werden kann", example="false")
 	public boolean beiSchule = false;
 	
 	/** Gibt an, das das Merkmal bei einem Schüler gesetzt werden kann. */
-	@Schema(required = true, description = "gibt an, das das Merkmal bei einem Schüler gesetzt werden kann", example="false")
+	@Schema(description = "gibt an, das das Merkmal bei einem Schüler gesetzt werden kann", example="false")
 	public boolean beiSchueler = false;
 	
 	/** Ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird. */
-	@Schema(required = true, description = "ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="X")
+	@Schema(description = "ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="X")
 	public String kuerzelASD = "";
 
 	/** Die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann. */
-	@Schema(required = true, description = "die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann")
+	@Schema(description = "die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

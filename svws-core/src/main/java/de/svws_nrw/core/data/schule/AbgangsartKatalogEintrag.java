@@ -18,11 +18,11 @@ import jakarta.validation.constraints.NotNull;
 public class AbgangsartKatalogEintrag {
 
 	/** Das eindeutige Kürzel des Katalog-Eintrags. */
-	@Schema(required = true, description = "das eindeutige Kürzel des Katalog-Eintrags", example="0A")
+	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example="0A")
 	public @NotNull String kuerzel = "";
 
 	/** Die Historie des Katalog-Eintrags. */
-	@Schema(required = true, description = "die Historie des Katalog-Eintrags")
+	@Schema(description = "die Historie des Katalog-Eintrags")
 	public @NotNull List<@NotNull AbgangsartKatalogDaten> historie = new Vector<>();
 
 }

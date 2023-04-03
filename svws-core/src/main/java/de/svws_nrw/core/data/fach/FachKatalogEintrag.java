@@ -25,71 +25,71 @@ import jakarta.validation.constraints.NotNull;
 public class FachKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id = -1;
 
 	/** Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik */
-	@Schema(required = true, description = "das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik", example="S0")
+	@Schema(description = "das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik", example="S0")
 	public @NotNull String kuerzelASD = "";
 	
 	/** Die texttuelle Beschreibung des Faches */
-	@Schema(required = true, description = "die texttuelle Beschreibung des Faches", example="Fach Spanisch, regulärer Beginn in der Einführungsphase")
+	@Schema(description = "die texttuelle Beschreibung des Faches", example="Fach Spanisch, regulärer Beginn in der Einführungsphase")
 	public @NotNull String bezeichnung = "";
 	
 	/** Das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik */
-	@Schema(required = true, description = "das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik", example="S")
+	@Schema(description = "das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik", example="S")
 	public @NotNull String kuerzel = "";
 	
 	/** Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3) */
-	@Schema(required = true, description = "das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)", example="1")
+	@Schema(description = "das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)", example="1")
 	public Integer aufgabenfeld = -1;
 	
 	/** Das Kürzel der zugeordneten Fachgruppe */
-	@Schema(required = true, description = "das Kürzel der zugeordneten Fachgruppe", example="FS")
+	@Schema(description = "das Kürzel der zugeordneten Fachgruppe", example="FS")
 	public String fachgruppe = "";
 	
 	/** Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) */
-	@Schema(required = true, description = "der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) - Teil des Kürzels für die amtliche Schulstatistik", example="EF")
+	@Schema(description = "der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) - Teil des Kürzels für die amtliche Schulstatistik", example="EF")
 	public String abJahrgang = "";
 	
 	/** Gibt an, ob es sich um eine Fremdsprache handelt */
-	@Schema(required = true, description = "gibt an, ob es sich um eine Fremdsprache handelt", example="true")
+	@Schema(description = "gibt an, ob es sich um eine Fremdsprache handelt", example="true")
 	public boolean istFremdsprache = false; 
 	
 	/** Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
-	@Schema(required = true, description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)", example="false")
+	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)", example="false")
 	public boolean istHKFS = false;
 	
 	/** Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird. */
-	@Schema(required = true, description = "gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird", example="false")
+	@Schema(description = "gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird", example="false")
 	public boolean istAusRegUFach = false;
 	
 	/** Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) */
-	@Schema(required = true, description = "gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS)", example="false")
+	@Schema(description = "gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS)", example="false")
 	public boolean istErsatzPflichtFS = false; 
 	
 	/** Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik */
-	@Schema(required = true, description = "gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik", example="false")
+	@Schema(description = "gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik", example="false")
 	public boolean istKonfKoop = false; 
 	
 	/** Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird. */
-	@Schema(required = true, description = "gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird", example="true")
+	@Schema(description = "gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird", example="true")
 	public boolean nurSII = false;
 	
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht", example="true")
 	public boolean exportASD = false;
 
 	/** Die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist. */
-	@Schema(required = true, description = "die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.")
+	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

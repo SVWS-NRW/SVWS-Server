@@ -15,23 +15,23 @@ import jakarta.validation.constraints.NotNull;
 public class LehrerKatalogMinderleistungsartEintrag {
 
 	/** Die ID der Mindeleistungsart. */
-	@Schema(required = true, description = "die ID der Mindeleistungsart", example="4711")
+	@Schema(description = "die ID der Mindeleistungsart", example="4711")
 	public long id;
 
 	/** Das Kürzel für die Mindeleistungsart, welches für die amtliche Schulstatistik verwendet wird. */
-	@Schema(required = true, description = "das Kürzel für die Mindeleistungsart", example="200")
+	@Schema(description = "das Kürzel für die Mindeleistungsart", example="200")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext der Mindeleistungsart. */
-	@Schema(required = true, description = "die textuelle Beschreibung der Mindeleistungsart", example="Pflichtstundenermäßigung aus Altersgründen")
+	@Schema(description = "die textuelle Beschreibung der Mindeleistungsart", example="Pflichtstundenermäßigung aus Altersgründen")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Mindeleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr die Mindeleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Mindeleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Mindeleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr die Mindeleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mindeleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 	
 

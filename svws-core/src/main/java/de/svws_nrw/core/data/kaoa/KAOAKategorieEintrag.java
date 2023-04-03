@@ -20,27 +20,27 @@ import jakarta.validation.constraints.NotNull;
 public class KAOAKategorieEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="1")
+	@Schema(description = "die ID des Katalog-Eintrags", example="1")
 	public long id;
 
 	/** Das Kürzel der Kategorie. */
-	@Schema(required = true, description = "das Kürzel der Kategorie", example="SBO 2")
+	@Schema(description = "das Kürzel der Kategorie", example="SBO 2")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung der Kategorie. */
-	@Schema(required = true, description = "die Beschreibung der Kategorie", example="Formen der Orientierung und Beratung")
+	@Schema(description = "die Beschreibung der Kategorie", example="Formen der Orientierung und Beratung")
 	public @NotNull String beschreibung = "";
 
     /** Jahrgangsstufen in denen der Eintrag gemacht werden darf */
-    @Schema(required = true, description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")  
+    @Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")  
     public @NotNull List<@NotNull String> jahrgaenge = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

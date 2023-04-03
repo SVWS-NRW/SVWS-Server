@@ -18,11 +18,11 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerLernabschnittNachpruefungsdaten {
 
 	/** Die Kürzel der möglichen Nachprüfungsfächer. */
-	@ArraySchema(schema = @Schema(required = true, implementation = String.class, description = "Ein Array mit den Kürzeln der möglichen Nachprüfungsfächer."))
+	@ArraySchema(schema = @Schema(implementation = String.class, description = "Ein Array mit den Kürzeln der möglichen Nachprüfungsfächer."))
 	public @NotNull Vector<@NotNull String> moegliche = new Vector<>();
 
 	/** Die angesetzten bzw. durchgeführten Nachprüfungen */
-	@ArraySchema(schema = @Schema(required = true, implementation = SchuelerLernabschnittNachpruefung.class, description = "Die angesetzten bzw. durchgeführten Nachprüfungen."))
+	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittNachpruefung.class, description = "Die angesetzten bzw. durchgeführten Nachprüfungen."))
 	public @NotNull Vector<@NotNull SchuelerLernabschnittNachpruefung> pruefungen = new Vector<>();
 
 }

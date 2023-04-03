@@ -14,23 +14,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SprachpruefungsniveauKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public int id = -1;
 
 	/** Das Kürzel des Sprachprüfungsniveaus */
-	@Schema(required = true, description = "das Kürzel des Sprachprüfungsniveaus", example="NIVEAU_HA9")
+	@Schema(description = "das Kürzel des Sprachprüfungsniveaus", example="NIVEAU_HA9")
 	public @NotNull String kuerzel = "";
 	
     /** Die Beschreibung des Sprachprüfungsniveaus */
-    @Schema(required = true, description = "die Beschreibung des Sprachprüfungsniveaus", example="Hauptschulabschluss nach Klasse 9")
+    @Schema(description = "die Beschreibung des Sprachprüfungsniveaus", example="Hauptschulabschluss nach Klasse 9")
     public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

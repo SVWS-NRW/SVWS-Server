@@ -14,11 +14,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class DBSchemaListeEintrag {
 
 	/** Der Name des Datenbank-Schemas. */
-	@Schema(required = true, description = "der Name des Datenbank-Schemas", example="svwsdb")
+	@Schema(description = "der Name des Datenbank-Schemas", example="svwsdb")
 	public String name;
 	
 	/** Gibt an, ob es sich um das Default-Schema in der Konfiguration handelt. */
-	@Schema(required = true, description = "gibt an, ob es sich um das Default-Schema in der Konfiguration handelt", example="false")
+	@Schema(description = "gibt an, ob es sich um das Default-Schema in der Konfiguration handelt", example="false")
 	public boolean isDefault;
 
 }

@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotNull;
 public class KindergartenbesuchKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4")
 	public long id = -1;
 
 	/** Das Kürzel des Eintrags */
-	@Schema(required = true, description = "das Kürzel des Eintrags", example="3")
+	@Schema(description = "das Kürzel des Eintrags", example="3")
 	public long kuerzel = -1;
 
 	/** Die textuelle Beschreibung. */
-	@Schema(required = true, description = "die textuelle Beschreibung", example="2 bis unter 3 Jahre")
+	@Schema(description = "die textuelle Beschreibung", example="2 bis unter 3 Jahre")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

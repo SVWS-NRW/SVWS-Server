@@ -20,70 +20,70 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Der Nachname des Kontakts. */
-	@Schema(required = true, description = "der Nachname", example = "Mustermann")
+	@Schema(description = "der Nachname", example = "Mustermann")
 	public @NotNull String nachname = "";
 
 	/** Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. */
-	@Schema(required = true, description = "ggf. ein Zusatz zum Nachnamen", example = "von")
+	@Schema(description = "ggf. ein Zusatz zum Nachnamen", example = "von")
 	public @NotNull String zusatzNachname = "";
 
 	/** Der Vorname des Schülerdatensatzes. */
-	@Schema(required = true, description = "der Vorname", example = "Max")
+	@Schema(description = "der Vorname", example = "Max")
 	public @NotNull String vorname = "";
 
 	/** Der Straßenname des Kontakts. */
-	@Schema(required = false, description = "der Straßenname des Kontakts.", example = "Musterweg")
+	@Schema(description = "der Straßenname des Kontakts.", example = "Musterweg")
 	public String strassenname;
 
 	/** Die Hausnummer des Kontakts. */
-	@Schema(required = false, description = "Ggf. die Hausnummer des Kontakts.", example = "4711")
+	@Schema(description = "Ggf. die Hausnummer des Kontakts.", example = "4711")
 	public String hausnummer;
 
 	/** Ggf. der Hausnummerzusatz des Kontakts. */
-	@Schema(required = false, description = "Ggf. der Hausnummerzusatz des Kontakts.", example = "a-d")
+	@Schema(description = "Ggf. der Hausnummerzusatz des Kontakts.", example = "a-d")
 	public String hausnummerZusatz;
 
 	/** Die Postleitzahl des Kontakts. */
-	@Schema(required = false, description = "die Postleitzahl des Kontakts", example = "42287")
+	@Schema(description = "die Postleitzahl des Kontakts", example = "42287")
 	public String plz;
 
 	/** Der Ort des Kontakts. */
-	@Schema(required = false, description = "der Ort des Kontakts", example = "Düsseldorf")
+	@Schema(description = "der Ort des Kontakts", example = "Düsseldorf")
 	public String ort;
 
 	/** Die Telefonnummern des Kontakts. */
-	@ArraySchema(schema = @Schema(required = true, description = "Die Telefonnummern des Kontakts. ", example = "..."))
+	@ArraySchema(schema = @Schema(description = "Die Telefonnummern des Kontakts. ", example = "..."))
 	public @NotNull List<@NotNull Telefonnummer> telefonnummern = new Vector<>();
 
 	/** Die Mailadresse des Kontakts. */
-	@Schema(required = false, description = "die Mailadresse des Kontakts", example = "info@schule.de")
+	@Schema(description = "die Mailadresse des Kontakts", example = "info@schule.de")
 	public String email;
 
 	/** Die Webadresse des Kontakts */
-	@Schema(required = false, description = "die Adresse der Homepage des Kontakts", example = "www.schule.de")
+	@Schema(description = "die Adresse der Homepage des Kontakts", example = "www.schule.de")
 	public String webAdresse = "";
 
 	/** Die Kategorien dieses Kontakts */
-	@ArraySchema(schema = @Schema(required = true, description = "Die Kategorien dieses Kontakts", example = "..."))
+	@ArraySchema(schema = @Schema(description = "Die Kategorien dieses Kontakts", example = "..."))
 	public List<String> kategorien = new Vector<>();
 
 	/**
 	 * Die Organisation dieses Kontakts 
 	 */
-	@Schema(required = false, description = "die Organisation des Kontakts", example = "Sophie-Scholl-Gymnasium")
+	@Schema(description = "die Organisation des Kontakts", example = "Sophie-Scholl-Gymnasium")
 	public String organisation;
 	
 	/**
 	 * Die Rolle innerhalb der Organisation dieses Kontakts 
 	 */
-	@Schema(required = false, description = "Die Rolle innerhalb der Organisation des Kontakts", example = "Schüler")
+	@Schema(description = "Die Rolle innerhalb der Organisation des Kontakts", example = "Schüler")
 	public String rolle;
 
 	/** Die ID des Adressbuchkontakts des Kinds */
-	@Schema(required = false, description = "Die ID des Adressbuchkontakts des Kinds", example = "Schueler_1234")
+	@Schema(description = "Die ID des Adressbuchkontakts des Kinds", example = "Schueler_1234")
 	public String idKind;
 	
 	/** Die ID des Adressbuchkontakts der Eltern */
-	@Schema(required = false, description = "Die ID des Adressbuchkontakts der Eltern", example = "Erzieher_1234")
+	@Schema(description = "Die ID des Adressbuchkontakts der Eltern", example = "Erzieher_1234")
 	public String idEltern;
 }

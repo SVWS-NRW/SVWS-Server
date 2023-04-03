@@ -20,47 +20,47 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class FachgruppenKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="10")
+	@Schema(description = "die ID des Katalog-Eintrags", example="10")
 	public long id = -1;
 
     /** Die Nummer für den Fachbereich, sofern festgelegt, ansonsten null. */
-    @Schema(required = false, description = "die Nummer für den Fachbereich, sofern festgelegt, ansonsten null", example="8")
+    @Schema(description = "die Nummer für den Fachbereich, sofern festgelegt, ansonsten null", example="8")
     public Integer nummer = null;
 
     /** Die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde. */
-    @Schema(required = false, description = "die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde", example="200")
+    @Schema(description = "die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde", example="200")
     public Integer idSchild = null;
 
 	/** Die Bezeichnung der Fachgruppe */
-	@Schema(required = true, description = "die Bezeichnung der Fachgruppe", example="Naturwissenschaften")
+	@Schema(description = "die Bezeichnung der Fachgruppe", example="Naturwissenschaften")
 	public @NotNull String bezeichnung = "";
 	
 	/** Das Kürzel der Fachgruppe */
-	@Schema(required = true, description = "das Kürzel der Fachgruppe", example="NW")
+	@Schema(description = "das Kürzel der Fachgruppe", example="NW")
 	public @NotNull String kuerzel = "";
 	
     /** Die Farbe, welche der Fachgruppe zugeordnet wurde */
-    @Schema(required = true, description = "die Farbe, welche der Fachgruppe zugeordnet wurde.", example="{ \"red\": 141, \"green\": 180, \"blue\": 227 }")
+    @Schema(description = "die Farbe, welche der Fachgruppe zugeordnet wurde.", example="{ \"red\": 141, \"green\": 180, \"blue\": 227 }")
     public @NotNull RGBFarbe farbe = new RGBFarbe();
 
     /** Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt. */
-    @Schema(required = true, description = "die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt")
+    @Schema(description = "die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt")
     public @NotNull List<@NotNull String> schulformen = new Vector<>();
 
     /** Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x). */
-    @Schema(required = false, description = "ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x)", example="10")
+    @Schema(description = "ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x)", example="10")
     public @NotNull Integer sortierung = 0;
 
 	/** Gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht */
-	@Schema(required = true, description = "gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht", example="true")
+	@Schema(description = "gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht", example="true")
 	public boolean fuerZeugnis = false; 
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

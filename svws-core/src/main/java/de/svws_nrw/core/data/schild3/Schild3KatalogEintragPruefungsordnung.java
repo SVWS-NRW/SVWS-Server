@@ -13,39 +13,39 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Schild3KatalogEintragPruefungsordnung {
 
     /** Zulässige Schulformen der Prüfungsordnungen */
-    @Schema(required = false, description = "Zulässige Schulformen der Prüfungsordnungen")
+    @Schema(description = "Zulässige Schulformen der Prüfungsordnungen")
     public String PO_Schulform;
 
     /** Erstes Kürzel */
-    @Schema(required = false, description = "Erstes Kürzel")
+    @Schema(description = "Erstes Kürzel")
     public String PO_Krz;
 
     /** Zweites Kürzel */
-    @Schema(required = false, description = "Zweites Kürzel")
+    @Schema(description = "Zweites Kürzel")
     public String PO_Name;
 
     /** Zulässige Gliederungen */
-    @Schema(required = false, description = "Zulässige Gliederungen")
+    @Schema(description = "Zulässige Gliederungen")
     public String PO_SGL;
 
     /** Deprecated  */
-    @Schema(required = false, description = "Deprecated")
+    @Schema(description = "Deprecated")
     public Integer PO_MinJahrgang;
 
     /** Deprecated */
-    @Schema(required = false, description = "Deprecated")
+    @Schema(description = "Deprecated")
     public Integer PO_MaxJahrgang;
 
     /** Zulässige Jahrgänge */
-    @Schema(required = false, description = "Zulässige Jahrgänge")
+    @Schema(description = "Zulässige Jahrgänge")
     public String PO_Jahrgaenge;
 
     /** Gültig ab Schuljahr */
-    @Schema(required = false, description = "Gültig ab Schuljahr")
+    @Schema(description = "Gültig ab Schuljahr")
     public Integer gueltigVon;
 
     /** Gültig bis Schuljahr */
-    @Schema(required = false, description = "Gültig bis Schuljahr")
+    @Schema(description = "Gültig bis Schuljahr")
     public Integer gueltigBis;
 
 }

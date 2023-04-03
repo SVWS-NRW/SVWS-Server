@@ -12,11 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class BKAnlageAFach {
 
 	/** Das Kürzel des Faches. */
-	@Schema(required = true, description = "Das Kürzel des Faches.", example = "D")
+	@Schema(description = "Das Kürzel des Faches.", example = "D")
 	public String kuerzel = null;
 
 	/** Die Note in dem Fach. */
-	@Schema(required = true, description = "Die Note in dem Fach.", example = "2")
+	@Schema(description = "Die Note in dem Fach.", example = "2")
 	public int note = -1;
 
 }

@@ -16,23 +16,23 @@ import jakarta.validation.constraints.NotNull;
 public class GostStatistikFachwahl {
 	
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
-	@Schema(required = true, description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example="2042")
+	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example="2042")
 	public int abiturjahr;
 
 	/** Die ID des Faches, für welches die Fachwahldaten ermittelt wurden. */
-	@Schema(required = true, description = "die ID des Faches", example="42")
+	@Schema(description = "die ID des Faches", example="42")
 	public long id;
 
 	/** Das eindeutige Kürzel des Faches */
-	@Schema(required = true, description = "das eindeutige Kürzel des Faches", example="M")
+	@Schema(description = "das eindeutige Kürzel des Faches", example="M")
 	public String kuerzel;
 	
 	/** Die Bezeichnung des Faches */
-	@Schema(required = true, description = "die Bezeichnung des Faches ", example="Mathematik")
+	@Schema(description = "die Bezeichnung des Faches ", example="Mathematik")
 	public String bezeichnung;
 	
 	/** Das Statistik-Kürzel des Faches */
-	@Schema(required = true, description = "das Statistik-Kürzel des Faches ", example="M")
+	@Schema(description = "das Statistik-Kürzel des Faches ", example="M")
 	public String kuerzelStatistik;
 	
 	/** Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe */

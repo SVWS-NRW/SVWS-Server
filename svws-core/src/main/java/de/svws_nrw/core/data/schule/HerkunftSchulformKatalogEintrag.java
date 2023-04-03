@@ -19,31 +19,31 @@ import jakarta.validation.constraints.NotNull;
 public class HerkunftSchulformKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id = -1;
 
 	/** Das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird */
-	@Schema(required = true, description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird", example="SK")
+	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Schulform verwendet wird", example="SK")
 	public @NotNull String kuerzel = "";
 
 	/** Das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird */
-	@Schema(required = true, description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird", example="SE")
+	@Schema(description = "das Kürzel der möglichen Herkunftsschulform, welches im Rahmen der amtlichen Schulstatistik für die Herkunftsschulform verwendet wird", example="SE")
 	public @NotNull String kuerzelStatistik = "";
 
 	/** Die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann. */
-	@Schema(required = true, description = "die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann")
+	@Schema(description = "die Kürzel der Schulformen, bei welchen die Herkunftsschulform vorkommen kann")
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 	
 	/** Die textuelle Beschreibung der Herkunftsschulform. */
-	@Schema(required = true, description = "die textuelle Beschreibung der Herkunftsschulform", example="Sekundarschule")
+	@Schema(description = "die textuelle Beschreibung der Herkunftsschulform", example="Sekundarschule")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

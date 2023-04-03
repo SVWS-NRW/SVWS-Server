@@ -20,21 +20,21 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 public class ENMFloskelgruppe {
 	
 	/** Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV. */
-	@Schema(required = true, description = "Das Kürzel der Floskelgruppe.", example="AL1")
+	@Schema(description = "Das Kürzel der Floskelgruppe.", example="AL1")
 	public String kuerzel;
 
 	/** Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten. */
-	@Schema(required = true, description = "Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln "
+	@Schema(description = "Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln "
 			+ "oder Floskeln zum Arbeits- und Sozialverhalten.", example="Allgemeine Floskeln")
 	public String bezeichnung;
 	
 	/** Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten und fasst diese ggf. nochmals zusammen (z.B. ALLG) */
-	@Schema(required = true, description = "Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten "
+	@Schema(description = "Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten "
 			+ "und fasst diese ggf. nochmals zusammen.", example="ALLG")
 	public String hauptgruppe;
 	
 	/** Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. */
-	@ArraySchema(schema = @Schema(required = true, implementation = ENMFloskel.class, description = "Ein Array mit den Informationen "
+	@ArraySchema(schema = @Schema(implementation = ENMFloskel.class, description = "Ein Array mit den Informationen "
 			+ "der Floskeln, die dieser Floskelgruppe zugeordnet sind."))
 	public final @NotNull Vector<@NotNull ENMFloskel> floskeln = new Vector<>();
 

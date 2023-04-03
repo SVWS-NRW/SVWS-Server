@@ -17,11 +17,11 @@ import jakarta.validation.constraints.NotNull;
 public class JahrgangsKatalogEintragBezeichnung {
 
 	/** Das Kürzel der Schulform */
-	@Schema(required = true, description = "das Kürzel der Schulform", example="GY")
+	@Schema(description = "das Kürzel der Schulform", example="GY")
 	public @NotNull String schulform = "";
 	
 	/** Die Bezeichnung des Jahrgangs */
-	@Schema(required = true, description = "die Bezeichnung des Jahrgangs", example="Einführungsphase")
+	@Schema(description = "die Bezeichnung des Jahrgangs", example="Einführungsphase")
 	public @NotNull String bezeichnung = "";
 
 

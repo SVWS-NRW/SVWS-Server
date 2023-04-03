@@ -19,35 +19,35 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class KatalogEintragOrtsteile {
 
 	/** Katalog von IT.NRW PLZ Ortsteile: die ID des Katalog-Eintrags */
-	@Schema(required = true, description = "der ID des Katalog-Eintrags", example="44012")
+	@Schema(description = "der ID des Katalog-Eintrags", example="44012")
 	public long ID = -1;
 
 	/** Katalog von IT.NRW PLZ Ortsteile: die Postleitzahl */
-	@Schema(required = true, description = "die Postleitzahl", example="32001")
+	@Schema(description = "die Postleitzahl", example="32001")
 	public @NotNull String PLZ = "";
 
     /** Katalog von IT.NRW PLZ Ortsteile: der Regionalschlüssel */
-    @Schema(required = true, description = "der Regionalschlüssel", example="05758012")
+    @Schema(description = "der Regionalschlüssel", example="05758012")
     public @NotNull String RegSchl = "";
 
 	/** Katalog von IT.NRW PLZ Ortsteile: die Ortsbezeichnung */
-	@Schema(required = true, description = "die Ortsbezeichnung", example="Herford")
+	@Schema(description = "die Ortsbezeichnung", example="Herford")
 	public @NotNull String Ort = "";
 
 	/** Katalog von IT.NRW PLZ Ortsteile: die Bezeichnung des Ortsteils */
-	@Schema(required = true, description = "die Bezeichnung des Ortsteils", example="Unterherford")
+	@Schema(description = "die Bezeichnung des Ortsteils", example="Unterherford")
 	public @NotNull String Ortsteil = "";
 
     /** Katalog von IT.NRW PLZ Ortsteile: der Stand des Katalog-Eintrags */
-    @Schema(required = true, description = "der Stand des Katalog-Eintrags", example="29.03.2022")
+    @Schema(description = "der Stand des Katalog-Eintrags", example="29.03.2022")
     public @NotNull String Stand = "";
 
     /** Katalog von IT.NRW PLZ Ortsteile: Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(required = false, description = "gibt die Gültigkeit ab welchem Schuljahr an", example="null")
+    @Schema(description = "gibt die Gültigkeit ab welchem Schuljahr an", example="null")
     public Integer gueltigVon = null;
 
     /** Katalog von IT.NRW PLZ Ortsteile: Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(required = false, description = "gibt die Gültigkeit bis zu welchem Schuljahr an", example="null")
+    @Schema(description = "gibt die Gültigkeit bis zu welchem Schuljahr an", example="null")
     public Integer gueltigBis = null;
 
 }

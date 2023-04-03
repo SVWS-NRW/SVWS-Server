@@ -20,27 +20,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class KlassenDaten {
 
 	/** Die ID der Klasse. */
-	@Schema(required = true, description = "die ID der Klasse", example="4711")
+	@Schema(description = "die ID der Klasse", example="4711")
 	public long id;
 	
 	/** Das Kürzel der Klasse. */
-	@Schema(required = true, description = "das Kürzel der Klasse", example="06b")
+	@Schema(description = "das Kürzel der Klasse", example="06b")
 	public String kuerzel;
 
 	/** Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist */
-	@Schema(required = false, description = "die ID des zugeordneten Jahrgangs", example="815")
+	@Schema(description = "die ID des zugeordneten Jahrgangs", example="815")
 	public Long idJahrgang;
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
-	@Schema(required = true, description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example="B")
+	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example="B")
 	public String parallelitaet; 
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
-	@Schema(required = true, description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example="1")
+	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example="1")
 	public int sortierung;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
 	public boolean istSichtbar;
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */

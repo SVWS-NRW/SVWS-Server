@@ -19,15 +19,15 @@ import jakarta.validation.constraints.NotNull;
 public class GostBelegpruefungErgebnis {
 
 	/** gibt an, ob die Belegprüfung erfolgreich abgeschlossen wurde */
-	@Schema(required = true, description = "gibt an, ob die Belegprüfung erfolgreich abgeschlossen wurde.", example = "true")
+	@Schema(description = "gibt an, ob die Belegprüfung erfolgreich abgeschlossen wurde.", example = "true")
 	public boolean erfolgreich;
 
 	/** eine Liste der Belegungsfehler und Hinweise zur Belegung */
-	@ArraySchema(schema = @Schema(required = true, implementation = GostBelegpruefungErgebnisFehler.class, description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
+	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class, description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
 	public @NotNull Vector<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new Vector<>();
 
 	/** Ein Log, der den Ablauf der Belegprüfung verdeutlicht */
-	@ArraySchema(schema = @Schema(required = false, description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))
+	@ArraySchema(schema = @Schema(description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))
 	public @NotNull List<@NotNull String> log = new Vector<>();
 
 }

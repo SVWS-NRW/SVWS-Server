@@ -19,11 +19,11 @@ import jakarta.validation.constraints.NotNull;
 public class BerufskollegFachklassenKatalog {
 
 	/** Die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht. */
-	@Schema(required = true, description = "die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht", example="37")
+	@Schema(description = "die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht", example="37")
 	public long version = 0;
 
 	/** Die Teilkataloge in Abhängigkeit vom Index der Fachklassen. */
-	@Schema(required = true, description = "die Teilkataloge in Abhängigkeit vom Index der Fachklassen")
+	@Schema(description = "die Teilkataloge in Abhängigkeit vom Index der Fachklassen")
 	public @NotNull List<@NotNull BerufskollegFachklassenKatalogIndex> indizes = new Vector<>();
 
 }

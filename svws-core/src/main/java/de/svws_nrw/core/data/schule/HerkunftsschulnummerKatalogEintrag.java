@@ -22,27 +22,27 @@ import jakarta.validation.constraints.NotNull;
 public class HerkunftsschulnummerKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id = -1;
 
 	/** Die Herkunfts-Schulnummer */
-	@Schema(required = true, description = "die Herkunfts-Schulnummer", example="999000")
+	@Schema(description = "die Herkunfts-Schulnummer", example="999000")
 	public int schulnummer = -1;
 	
 	/** Die Bezeichnung der Herkunfts-Schulnummer */
-	@Schema(required = true, description = "die Bezeichnung der Herkunfts-Schulnummer", example="Schule aus dem sonstigen Ausland")
+	@Schema(description = "die Bezeichnung der Herkunfts-Schulnummer", example="Schule aus dem sonstigen Ausland")
 	public @NotNull String bezeichnung = "";
 	
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist. */
-	@Schema(required = true, description = "die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.")
+	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Herkunfts-Schulnummer gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem die Herkunfts-Schulnummer gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Herkunfts-Schulnummer gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

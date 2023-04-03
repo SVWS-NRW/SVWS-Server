@@ -17,19 +17,19 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostFachwahl {
 
 	/** Die ID des Faches */
-	@Schema(required = true, description = "Die ID des Faches.", example="4711")
+	@Schema(description = "Die ID des Faches.", example="4711")
 	public long fachID = -1;
 	
 	/** Die ID des Schülers */
-	@Schema(required = true, description = "Die ID des Schülers.", example="4712")
+	@Schema(description = "Die ID des Schülers.", example="4712")
 	public long schuelerID = -1;
 
 	/** Die ID der Kursart */
-	@Schema(required = true, description = "Die ID der Kursart.", example="4713")
+	@Schema(description = "Die ID der Kursart.", example="4713")
 	public int kursartID = -1; 
 	
 	/** Gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht */
-	@Schema(required = true, description = "gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht", example="true")
+	@Schema(description = "gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht", example="true")
 	public boolean istSchriftlich = false;
 
 }

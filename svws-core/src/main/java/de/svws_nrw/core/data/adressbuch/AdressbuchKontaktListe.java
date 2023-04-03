@@ -14,6 +14,6 @@ import java.util.Vector;
  */
 public class AdressbuchKontaktListe extends AdressbuchEintrag {
 	/** Die Kategorien dieses Kontakts */
-	@ArraySchema(schema = @Schema(required = true, description = "Die Kategorien dieses Kontakts", example = "..."))
+	@ArraySchema(schema = @Schema(description = "Die Kategorien dieses Kontakts", example = "..."))
 	public List<AdressbuchKontakt> kontakte = new Vector<>();
 }

@@ -13,43 +13,43 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Schild3KatalogEintragSchuelerImportExport {
 
     /** Tabelle mit den Daten für den Import-Export */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String Tabelle;
 
     /** Anzeigename */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String TabellenAnzeige;
 
     /** Master-Tabelle */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String MasterTable;
 
     /** SQL-Befehl für dem Export */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String ExpCmd;
 
     /** SQL-Befehl zum Ermitteln der Feldnamen */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String SrcGetFieldsSQL;
 
     /** SQL-Befehl zum Enternen der Daten */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String DeleteSQL;
 
     /** SQL-Befehl zum Ermitteln der IDs */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String DstGetIDSQL;
 
     /** Hauptfeld */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String HauptFeld;
 
     /** Detail-Feld */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public String DetailFeld;
 
     /** Reihenfolge */
-    @Schema(required = false, description = "TMP")
+    @Schema(description = "TMP")
     public Integer Reihenfolge;
 
 }

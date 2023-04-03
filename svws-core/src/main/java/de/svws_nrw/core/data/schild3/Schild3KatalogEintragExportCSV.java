@@ -13,39 +13,39 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Schild3KatalogEintragExportCSV {
 
     /** Die Datenart */
-    @Schema(required = false, description = "Die Datenart")
+    @Schema(description = "Die Datenart")
     public String DatenartKrz;
 
     /** Der Name des Feldes mit der ID */
-    @Schema(required = false, description = "Der Name des Feldes mit der ID")
+    @Schema(description = "Der Name des Feldes mit der ID")
     public String Feldname;
 
     /** Der Text für die Anzeige */
-    @Schema(required = false, description = "Der Text für die Anzeige")
+    @Schema(description = "Der Text für die Anzeige")
     public String AnzeigeText;
 
     /** Der Feldtyp */
-    @Schema(required = false, description = "Der Feldtyp")
+    @Schema(description = "Der Feldtyp")
     public String Feldtyp;
 
     /** Feldwerte */
-    @Schema(required = false, description = "Feldwerte")
+    @Schema(description = "Feldwerte")
     public String Feldwerte;
 
     /** Ergebniswerte */
-    @Schema(required = false, description = "Ergebniswerte")
+    @Schema(description = "Ergebniswerte")
     public String ErgebnisWerte;
 
     /** Der Name des Lookup-Feldes */
-    @Schema(required = false, description = "Der Name des Lookup-Feldes")
+    @Schema(description = "Der Name des Lookup-Feldes")
     public String LookupFeldname;
 
     /** Der SQL-Befehl zum Bestimmen des Loopup-Feldwertes */
-    @Schema(required = false, description = "Der SQL-Befehl zum Bestimmen des Loopup-Feldwertes")
+    @Schema(description = "Der SQL-Befehl zum Bestimmen des Loopup-Feldwertes")
     public String LookupSQLText;
 
     /** Die unterstützen Datenbank-Formate */
-    @Schema(required = false, description = "Die unterstützen Datenbank-Formate")
+    @Schema(description = "Die unterstützen Datenbank-Formate")
     public String DBFormat;
 
 }

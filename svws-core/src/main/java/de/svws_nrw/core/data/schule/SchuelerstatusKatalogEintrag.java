@@ -13,15 +13,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchuelerstatusKatalogEintrag {
 
     /** Die numerische ID des Schüler-Status. */
-    @Schema(required = false, description = "Die numerische ID des Schüler-Status")
+    @Schema(description = "Die numerische ID des Schüler-Status")
     public Integer StatusNr;
 
     /** Klartext des Schülerstatus */
-    @Schema(required = false, description = "Klartext des Schülerstatus")
+    @Schema(description = "Klartext des Schülerstatus")
     public String Bezeichnung;
 
     /** Sortierung des Schülerstatus */
-    @Schema(required = false, description = "Sortierung des Schülerstatus")
+    @Schema(description = "Sortierung des Schülerstatus")
     public Integer Sortierung;
 
 }

@@ -16,19 +16,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class GostBeratungslehrer {
 
 	/** Die ID des Lehrers. */
-	@Schema(required = true, description = "die ID des Lehrers", example="4711")
+	@Schema(description = "die ID des Lehrers", example="4711")
 	public long id;
 
 	/** Das Kürzel des Lehrers. */
-	@Schema(required = true, description = "das Kürzel des Lehrers", example="MUS")
+	@Schema(description = "das Kürzel des Lehrers", example="MUS")
 	public String kuerzel;
 
 	/** Der Nachname des Lehrers. */
-	@Schema(required = true, description = "der Nachname des Lehrers", example="Mustermann")
+	@Schema(description = "der Nachname des Lehrers", example="Mustermann")
 	public String nachname;
 
 	/** Der Vorname des Lehrers. */
-	@Schema(required = true, description = "der Vorname des Lehrers", example="Max")
+	@Schema(description = "der Vorname des Lehrers", example="Max")
 	public String vorname;
 
 }

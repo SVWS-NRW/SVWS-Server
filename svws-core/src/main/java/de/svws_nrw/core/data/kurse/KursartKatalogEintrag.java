@@ -23,47 +23,47 @@ import jakarta.validation.constraints.NotNull;
 public class KursartKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id = -1;
 
 	/** Das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik */
-	@Schema(required = true, description = "das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example="AB3")
+	@Schema(description = "das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example="AB3")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik */
-	@Schema(required = true, description = "die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example="71")
+	@Schema(description = "die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik", example="71")
 	public @NotNull String nummer = "";
 
 	/** Die Bezeichnung der Kursart */
-	@Schema(required = true, description = "die Bezeichnung der Kursart", example="3. Abiturfach")
+	@Schema(description = "die Bezeichnung der Kursart", example="3. Abiturfach")
 	public @NotNull String bezeichnung = "";
 	
 	/** Ergänzende Bemerkungen zu der Kursart */
-	@Schema(required = true, description = "ergänzende Bemerkungen zu der Kursart", example="gemäß § 9 Abs. 2, 3  SchulG")
+	@Schema(description = "ergänzende Bemerkungen zu der Kursart", example="gemäß § 9 Abs. 2, 3  SchulG")
 	public String bemerkungen = null;
 	
 	/** Das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist */
-	@Schema(required = true, description = "das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist", example="GK")
+	@Schema(description = "das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist", example="GK")
 	public String kuerzelAllg = null;
 	
 	/** Die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist */
-	@Schema(required = true, description = "die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist", example="Grundkurs")
+	@Schema(description = "die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist", example="Grundkurs")
 	public String bezeichnungAllg = null;
 	
 	/** Gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist */
-	@Schema(required = true, description = "gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist", example="true")
+	@Schema(description = "gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist", example="true")
 	public boolean erlaubtGOSt = false;
 	
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist. */
-	@Schema(required = true, description = "die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.")
+	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist.")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

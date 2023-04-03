@@ -15,15 +15,15 @@ import jakarta.validation.constraints.NotNull;
 public class BenutzergruppeListeEintrag {
 
 	/** Die ID der Benutzergruppe. */
-	@Schema(required = true, description = "die ID der Benutzergruppe", example="4711")
+	@Schema(description = "die ID der Benutzergruppe", example="4711")
 	public long id = -1;
 
 	/** Die Bezeichnung der Benutzergruppe. */
-	@Schema(required = true, description = "die Bezeichnung der Benutzergruppe", example="Administrator")
+	@Schema(description = "die Bezeichnung der Benutzergruppe", example="Administrator")
 	public @NotNull String bezeichnung = "";
 	
 	/** Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. */
-	@Schema(required = true, description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example="true")
+	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example="true")
 	public @NotNull boolean istAdmin = false;
 	
 }

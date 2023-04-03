@@ -18,51 +18,51 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerStundenplan {
 
 	/** Die ID des Stundenplans. */
-	@Schema(required = true, description = "die ID des Stundenplans", example="815")
+	@Schema(description = "die ID des Stundenplans", example="815")
 	public long idStundenplan = -1;
 
 	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(required = false, description = "die textuelle Beschreibung des Stundenplans", example="Stundenplan zum Schuljahresanfang")
+	@Schema(description = "die textuelle Beschreibung des Stundenplans", example="Stundenplan zum Schuljahresanfang")
 	public @NotNull String bezeichnungStundenplan = "";
 	
 	/** Die ID des Schuljahresabschnitts des Stundenplans. */
-	@Schema(required = true, description = "die ID des Schuljahresabschnitts des Stundenplans", example="7")
+	@Schema(description = "die ID des Schuljahresabschnitts des Stundenplans", example="7")
 	public long idSchuljahresabschnitt = -1;
 
 	/** Das Zeitraster des Stundenplans. */
-	@Schema(required = true, description = "das Zeitraster des Stundenplans")
+	@Schema(description = "das Zeitraster des Stundenplans")
 	public @NotNull List<@NotNull StundenplanZeitraster> zeitraster = new Vector<>();
 
 	/** Das Datum, ab dem der Stundenpland gültig ist. */
-	@Schema(required = false, description = "das Datum, ab dem der Stundenpland gültig ist", example="1.1.1899")
+	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example="1.1.1899")
 	public @NotNull String gueltigAb = "";
 
 	/** Das Datum, bis wann der Stundenplan gültig ist. */
-	@Schema(required = false, description = "das Datum, bis wann der Stundenplan gültig ist", example="31.7.3218")
+	@Schema(description = "das Datum, bis wann der Stundenplan gültig ist", example="31.7.3218")
 	public @NotNull String gueltigBis = "";
 	
 	/** Die ID des Schülers. */
-	@Schema(required = true, description = "die ID des Schülers", example="4711")
+	@Schema(description = "die ID des Schülers", example="4711")
 	public long idSchueler = -1;
 	
 	/** Der Nachname des Schülers. */
-	@Schema(required = false, description = "der Nachname des Schülers", example="Mustermann")
+	@Schema(description = "der Nachname des Schülers", example="Mustermann")
 	public @NotNull String nachname = "";
 	
 	/** Der Vorname des Schülers. */
-	@Schema(required = false, description = "der Vorname des Schülers", example="Max")
+	@Schema(description = "der Vorname des Schülers", example="Max")
 	public @NotNull String vorname = "";
 
 	/** Die ID der Klasse des Schülers. */
-	@Schema(required = true, description = "die ID der Klasse des Schülers", example="42")
+	@Schema(description = "die ID der Klasse des Schülers", example="42")
 	public long idKlasse = -1;
 
 	/** Der Statistik-Jahrgang des Schülers. */
-	@Schema(required = true, description = "der Statistik-Jahrgang des Schülers", example="EF")
+	@Schema(description = "der Statistik-Jahrgang des Schülers", example="EF")
 	public @NotNull String jahrgang = "";
 
 	/** Der Unterricht des Schülers. */
-	@Schema(required = true, description = "der Unterricht des Schülers")
+	@Schema(description = "der Unterricht des Schülers")
 	public @NotNull List<@NotNull SchuelerStundenplanUnterricht> unterricht = new Vector<>();
 
 }

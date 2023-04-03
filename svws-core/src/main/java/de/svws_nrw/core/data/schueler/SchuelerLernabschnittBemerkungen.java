@@ -15,31 +15,31 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerLernabschnittBemerkungen {
 
 	/** Der Text für allgemeine Zeugnisbemerkungen. */
-	@Schema(required = true, description = "der Text für allgemeine Zeugnisbemerkungen", example="")	
+	@Schema(description = "der Text für allgemeine Zeugnisbemerkungen", example="")	
 	public @NotNull String zeugnisAllgemein = ""; 
 
 	/** Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten. */
-	@Schema(required = true, description = "der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten", example="")	
+	@Schema(description = "der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten", example="")	
 	public @NotNull String zeugnisASV = ""; 
 	
 	/** Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen. */
-	@Schema(required = true, description = "der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen", example="")	
+	@Schema(description = "der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen", example="")	
 	public @NotNull String zeugnisLELS = ""; 
 
 	/** Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement. */
-	@Schema(required = true, description = "der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement", example="")	
+	@Schema(description = "der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement", example="")	
 	public @NotNull String zeugnisAUE = ""; 
 
 	/** Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I. */
-	@Schema(required = true, description = "der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I", example="")	
+	@Schema(description = "der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I", example="")	
 	public @NotNull String uebergangESF = ""; 
 
 	/** Eine Bemerkung zum Förderschwerpunkt. */
-	@Schema(required = true, description = "eine Bemerkung zum Förderschwerpunkt", example="")	
+	@Schema(description = "eine Bemerkung zum Förderschwerpunkt", example="")	
 	public @NotNull String foerderschwerpunkt = ""; 
 
 	/** Eine Bemerkung zur Versetzungsentscheidung. */
-	@Schema(required = true, description = "eine Bemerkung zur Versetzungsentscheidung", example="")	
+	@Schema(description = "eine Bemerkung zur Versetzungsentscheidung", example="")	
 	public @NotNull String versetzungsentscheidung = ""; 
 
 }

@@ -13,23 +13,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Schild3KatalogEintragLaender {
 
     /** Bundesländer/Nachbarländer Kurztext */
-    @Schema(required = false, description = "Bundesländer/Nachbarländer Kurztext")
+    @Schema(description = "Bundesländer/Nachbarländer Kurztext")
     public String Kurztext;
 
     /** Bundesländer/Nachbarländer Langtext */
-    @Schema(required = false, description = "Bundesländer/Nachbarländer Langtext")
+    @Schema(description = "Bundesländer/Nachbarländer Langtext")
     public String Langtext;
 
     /** Bundesländer/Nachbarländer Sortierung */
-    @Schema(required = false, description = "Bundesländer/Nachbarländer Sortierung")
+    @Schema(description = "Bundesländer/Nachbarländer Sortierung")
     public Integer Sortierung;
 
     /** Gültig ab Schuljahr */
-    @Schema(required = false, description = "Gültig ab Schuljahr")
+    @Schema(description = "Gültig ab Schuljahr")
     public Integer gueltigVon;
 
     /** Gültig bis Schuljahr */
-    @Schema(required = false, description = "Gültig bis Schuljahr")
+    @Schema(description = "Gültig bis Schuljahr")
     public Integer gueltigBis;
 
 }

@@ -18,11 +18,11 @@ import jakarta.validation.constraints.NotNull;
 public class AbgangsartKatalog {
 
 	/** Die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht. */
-	@Schema(required = true, description = "die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht", example="3")
+	@Schema(description = "die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht", example="3")
 	public long version = -1;
 
 	/** Die Einträge des Katalogs. */
-	@Schema(required = true, description = "die Einträge des Katalogs")
+	@Schema(description = "die Einträge des Katalogs")
 	public @NotNull List<@NotNull AbgangsartKatalogEintrag> eintraege = new Vector<>();
 
 }

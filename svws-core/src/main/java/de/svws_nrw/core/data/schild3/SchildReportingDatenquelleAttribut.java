@@ -16,15 +16,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class SchildReportingDatenquelleAttribut {
 
     /** Der Name des Attributs */
-    @Schema(required = true, description = "der Name des Attributs", example ="Vorname")
+    @Schema(description = "der Name des Attributs", example ="Vorname")
     public @NotNull String name = "";
 
     /** Der Typ des Attributs */
-    @Schema(required = true, description = "der Typ des Attributs", example = "string")
+    @Schema(description = "der Typ des Attributs", example = "string")
     public @NotNull String typ = "";
 
     /** Die Beschreibung des Attributs */
-    @Schema(required = true, description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
+    @Schema(description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
     public @NotNull String beschreibung = "";
 
 }

@@ -16,27 +16,27 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class KAOAEbene4Eintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="1")
+	@Schema(description = "die ID des Katalog-Eintrags", example="1")
 	public long id;
 
 	/** Das Kürzel des Eintrags für die SBO Ebene 4. */
-	@Schema(required = true, description = "das Kürzel des Eintrags für die SBO Ebene 4", example="SBO 6.5.1.1")
+	@Schema(description = "das Kürzel des Eintrags für die SBO Ebene 4", example="SBO 6.5.1.1")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung des Eintrags für die SBO Ebene 4. */
-	@Schema(required = true, description = "die Beschreibung des Eintrags für die SBO Ebene 4", example="Langzeitpraktikum 1-tägig")
+	@Schema(description = "die Beschreibung des Eintrags für die SBO Ebene 4", example="Langzeitpraktikum 1-tägig")
 	public @NotNull String beschreibung = "";
 
     /** Das Zusatzmerkmal, welcher der Eintrag zugeordnet ist. */
-    @Schema(required = true, description = "das Zusatzmerkmal, welcher der Eintrag zugeordnet ist", example="SBO 6.5.1")
+    @Schema(description = "das Zusatzmerkmal, welcher der Eintrag zugeordnet ist", example="SBO 6.5.1")
     public @NotNull String zusatzmerkmal = "";
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigBis = null;
 
 

@@ -18,15 +18,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class BerufskollegFachklassenKatalogEintrag {
 
 	/** Der Fachklassenschlüssel. */
-	@Schema(required = true, description = "der Fachklassenschlüssel - Teil 1", example="620")
+	@Schema(description = "der Fachklassenschlüssel - Teil 1", example="620")
 	public @NotNull String schluessel = "";
 
 	/** Der Fachklassenschlüssel - Teil 2. */
-	@Schema(required = true, description = "der Fachklassenschlüssel - Teil 2", example="00")
+	@Schema(description = "der Fachklassenschlüssel - Teil 2", example="00")
 	public @NotNull String schluessel2 = "";
 
 	/** Die Historie des Katalog-Eintrags. */
-	@Schema(required = true, description = "die Historie des Katalog-Eintrags")
+	@Schema(description = "die Historie des Katalog-Eintrags")
 	public @NotNull List<@NotNull BerufskollegFachklassenKatalogDaten> historie = new Vector<>();
 
 }

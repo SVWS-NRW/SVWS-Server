@@ -14,35 +14,35 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class JahrgangsListeEintrag {
 
 	/** Die ID des Jahrgangs. */
-	@Schema(required = true, description = "die ID des Jahrgangs", example="4711")
+	@Schema(description = "die ID des Jahrgangs", example="4711")
 	public long id;
 	
 	/** Das Kürzel des Jahrgangs. */
-	@Schema(required = true, description = "das Kürzel des Jahrgangs", example="EF")
+	@Schema(description = "das Kürzel des Jahrgangs", example="EF")
 	public String kuerzel;
 
 	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
-	@Schema(required = true, description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example="EF")
+	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example="EF")
 	public String kuerzelStatistik;
 	
 	/** Der Name / die Bezeichnung des Jahrgangs. */
-	@Schema(required = true, description = "der Name / die Bezeichnung des Jahrgangs", example="Einführungsphase")
+	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example="Einführungsphase")
 	public String bezeichnung;
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
-	@Schema(required = true, description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example="1")
+	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example="1")
 	public int sortierung;
 
 	/** Die ID der Schulgliederung, der der Eintrag zugeordnet ist. */
-	@Schema(required = true, description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example="***")
+	@Schema(description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example="***")
 	public String idSchulgliederung;
 	
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
-	@Schema(required = false, description = "die ID des Folgejahrgangs, sofern einer definiert ist", example="4712")
+	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example="4712")
 	public Long idFolgejahrgang;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
 	public boolean istSichtbar;
 		
 }

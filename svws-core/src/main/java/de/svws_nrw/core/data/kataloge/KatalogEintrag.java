@@ -14,23 +14,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class KatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel des Eintrags. */
-	@Schema(required = true, description = "das Kürzel des Eintrags", example="XY")
+	@Schema(description = "das Kürzel des Eintrags", example="XY")
 	public String kuerzel;
 	
 	/** Die textuelle Beschreibung des Katalog-Eintrags. */
-	@Schema(required = true, description = "die textuelle Beschreibung des Katalog-Eintrags", example="Hier steht eine textuelle Beschreibung des Katalog-Eintrags")
+	@Schema(description = "die textuelle Beschreibung des Katalog-Eintrags", example="Hier steht eine textuelle Beschreibung des Katalog-Eintrags")
 	public String text;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
 	public boolean istSichtbar;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
-	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example="true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example="true")
 	public boolean istAenderbar;
 	
 }

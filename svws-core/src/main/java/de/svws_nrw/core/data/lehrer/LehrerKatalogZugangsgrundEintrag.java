@@ -15,27 +15,27 @@ import jakarta.validation.constraints.NotNull;
 public class LehrerKatalogZugangsgrundEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
 	public long id;
 
 	/** Das Kürzel für den Zugangsgrund. */
-	@Schema(required = true, description = "das Kürzel für den Zugangsgrund", example="WIEDER")
+	@Schema(description = "das Kürzel für den Zugangsgrund", example="WIEDER")
 	public @NotNull String kuerzel = "";
 	
 	/** Kartext des Zugangsgrunds. */
-	@Schema(required = true, description = "der Zugangsgrund", example="Wiedereintritt in den Schuldienst")
+	@Schema(description = "der Zugangsgrund", example="Wiedereintritt in den Schuldienst")
 	public @NotNull String text = "";
 
 	/** Der Schlüssel für die ASD-Schulstatistik. */
-	@Schema(required = true, description = "der Schlüssel für die ASD-Schulstatistik", example="05")
+	@Schema(description = "der Schlüssel für die ASD-Schulstatistik", example="05")
 	public @NotNull String schluessel = "";
 
 	/** Gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 	

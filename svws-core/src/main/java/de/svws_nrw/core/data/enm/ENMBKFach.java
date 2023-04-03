@@ -15,47 +15,47 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class ENMBKFach {
 
 	/** Die ID des Faches der zentralen Prüfungen. */
-	@Schema(required = true, description = "Die ID des Faches der zentralen Prüfungen.", example="42")
+	@Schema(description = "Die ID des Faches der zentralen Prüfungen.", example="42")
 	public long fachID;
 
 	/** Die ID des Lehrers, der das Prüfungsfach unterrichtet. */
-	@Schema(required = true, description = "Die ID des Lehrers, der das Prüfungsfach unterrichtet.", example="42")
+	@Schema(description = "Die ID des Lehrers, der das Prüfungsfach unterrichtet.", example="42")
 	public long lehrerID;
 
 	/** Gibt an, ob das Fach schriftlich ist. */
-	@Schema(required = true, description = "Gibt an, ob das Fach schriftlich ist. ", example="false")
+	@Schema(description = "Gibt an, ob das Fach schriftlich ist. ", example="false")
 	public boolean istSchriftlich;
 
 	/** Das Notenkürzel der Vornote für dieses Fach. */
-	@Schema(required = true, description = "Das Notenkürzel der Vornote für dieses Fach.", example="4+")
+	@Schema(description = "Das Notenkürzel der Vornote für dieses Fach.", example="4+")
 	public String vornote;
 
 	/** Das Notenkürzel der Note, die bei der schriftlichen Prüfung erreicht wurde. */
-	@Schema(required = true, description = "Das Notenkürzel der Note, die bei der schriftlichen Prüfung erreicht wurde.", example="3-")
+	@Schema(description = "Das Notenkürzel der Note, die bei der schriftlichen Prüfung erreicht wurde.", example="3-")
 	public String noteSchriftlichePruefung;
 
 	/** Gibt an, ob eine mündliche Prüfung stattfinden muss. */
-	@Schema(required = true, description = "Gibt an, ob eine mündliche Prüfung stattfinden muss.", example="false")
+	@Schema(description = "Gibt an, ob eine mündliche Prüfung stattfinden muss.", example="false")
 	public boolean muendlichePruefung;
 
 	/** Gibt an, ob eine freiwillige mündliche Prüfung stattfindet. */
-	@Schema(required = true, description = "Gibt an, ob eine freiwillige mündliche Prüfung stattfindet.", example="true")
+	@Schema(description = "Gibt an, ob eine freiwillige mündliche Prüfung stattfindet.", example="true")
 	public boolean muendlichePruefungFreiwillig;
 
 	/** Das Notenkürzel der Note, die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet. */
-	@Schema(required = true, description = "Das Notenkürzel der Note, die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet.", example="3+")
+	@Schema(description = "Das Notenkürzel der Note, die bei der mündlichen Prüfung erreicht wurde, sofern eine stattfindet.", example="3+")
 	public String noteMuendlichePruefung;
 
 	/** Gibt an, ob das Fach in Bezug auf den Berufsabschluss schriftlich ist. */
-	@Schema(required = true, description = "Gibt an, ob das Fach in Bezug auf den Berufsabschluss schriftlich ist.", example="true")
+	@Schema(description = "Gibt an, ob das Fach in Bezug auf den Berufsabschluss schriftlich ist.", example="true")
 	public boolean istSchriftlichBerufsabschluss;
 
 	/** Die Note in Bezug auf den Berufsabschluss. */
-	@Schema(required = true, description = "Die Note in Bezug auf den Berufsabschluss.", example="3+")
+	@Schema(description = "Die Note in Bezug auf den Berufsabschluss.", example="3+")
 	public String noteBerufsabschluss;
 
 	/** Das Notenkürzel der Abschlussnote nach der Prüfung. */
-	@Schema(required = true, description = "Das Notenkürzel der Abschlussnote nach der Prüfung.", example="2-")
+	@Schema(description = "Das Notenkürzel der Abschlussnote nach der Prüfung.", example="2-")
 	public String abschlussnote;
 
 }
