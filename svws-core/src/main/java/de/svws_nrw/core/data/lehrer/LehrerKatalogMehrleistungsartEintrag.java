@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gütligen Statistikwerte für den Katalog der Mehrleistungsarten für Lehrer.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Mehrleistungsarten für Lehrer.")
+@Schema(description = "ein Eintrag in dem Katalog der Mehrleistungsarten für Lehrer.")
 @TranspilerDTO
 public class LehrerKatalogMehrleistungsartEintrag {
 
 	/** Die ID der Mehrleistungsart. */
-	@Schema(description = "die ID der Mehrleistungsart", example="4711")
+	@Schema(description = "die ID der Mehrleistungsart", example = "4711")
 	public long id;
 
 	/** Das Kürzel für die Mehrleistungsart, welches für die amtliche Schulstatistik verwendet wird. */
-	@Schema(description = "das Kürzel für die Mehrleistungsart", example="110")
+	@Schema(description = "das Kürzel für die Mehrleistungsart", example = "110")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext der Mehrleistungsart. */
-	@Schema(description = "die textuelle Beschreibung der Mehrleistungsart", example="Mehrarbeit (angeordnet und regelmäßig)")
+	@Schema(description = "die textuelle Beschreibung der Mehrleistungsart", example = "Mehrarbeit (angeordnet und regelmäßig)")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Mehrleistungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Mehrleistungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 

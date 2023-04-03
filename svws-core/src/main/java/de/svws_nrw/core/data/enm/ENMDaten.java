@@ -14,56 +14,56 @@ import jakarta.validation.constraints.NotNull;
  * Externe-Noten-Modul ENM.   
  */
 @XmlRootElement
-@Schema(description="Spezifiziert die grundlegende Struktur von JSON-Daten für das Externe-Noten-Modul ENM.")
+@Schema(description = "Spezifiziert die grundlegende Struktur von JSON-Daten für das Externe-Noten-Modul ENM.")
 @TranspilerDTO
 public class ENMDaten {
 
 	/** Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1 */
-	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1.", example="1")
+	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1.", example = "1")
 	public int enmRevision = -1;
 	
 	/** Die Schulnummer, für welche die ENM-Daten generiert wurden. */
-	@Schema(description = "Die Schulnummer, für welche die ENM-Daten generiert wurden.", example="100815")
+	@Schema(description = "Die Schulnummer, für welche die ENM-Daten generiert wurden.", example = "100815")
 	public int schulnummer;
 	
 	/** Das Schuljahr, für welches die ENM-Daten generiert wurden. */
-	@Schema(description = "Das Schuljahr, für welches die ENM-Daten generiert wurden.", example="2021")
+	@Schema(description = "Das Schuljahr, für welches die ENM-Daten generiert wurden.", example = "2021")
 	public int schuljahr;
 
 	/** Die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus) */
-	@Schema(description = "Die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus)", example="2")
+	@Schema(description = "Die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus)", example = "2")
 	public int anzahlAbschnitte;
 
 	/** Gibt an, für welchen Abschnitt innerhalb des Schuljahres die ENM-Daten generiert wurden. */
-	@Schema(description = "Gibt an, für welchen Abschnitt innerhalb des Schuljahres die ENM-Daten generiert wurden.", example="2")
+	@Schema(description = "Gibt an, für welchen Abschnitt innerhalb des Schuljahres die ENM-Daten generiert wurden.", example = "2")
 	public int aktuellerAbschnitt;
 
 	/** Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll. */
-	@Schema(description = "Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.", example="")
+	@Schema(description = "Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.", example = "")
 	public String publicKey;
 	
 	/** Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten. */
-	@Schema(description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.", example="42")
+	@Schema(description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.", example = "42")
 	public Long lehrerID;
 
 	/** Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. */
-	@Schema(description = "Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. ", example="true")
+	@Schema(description = "Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. ", example = "true")
 	public boolean fehlstundenEingabe;
 
 	/** Gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen werden oder nicht. */
-	@Schema(description = "Gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen werden oder nicht.", example="false")
+	@Schema(description = "Gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen werden oder nicht.", example = "false")
 	public boolean fehlstundenSIFachbezogen;
 
 	/** Gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen werden oder nicht. */
-	@Schema(description = "Gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen werden oder nicht.", example="true")
+	@Schema(description = "Gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen werden oder nicht.", example = "true")
 	public boolean fehlstundenSIIFachbezogen;
 
 	/** Gibt das Kürzel der Schulform der Schule an. */
-	@Schema(description = "Gibt das Kürzel der Schulform der Schule an.", example="GY")
+	@Schema(description = "Gibt das Kürzel der Schulform der Schule an.", example = "GY")
 	public String schulform;
 
 	/** Gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de). */
-	@Schema(description = "Gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll.", example="mail@schule.nrw.de")
+	@Schema(description = "Gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll.", example = "mail@schule.nrw.de")
 	public String mailadresse;
 
 	/** Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool) */

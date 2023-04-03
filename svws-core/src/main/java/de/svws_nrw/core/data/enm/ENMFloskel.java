@@ -9,32 +9,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * für das Externe-Noten-Modul ENM. 
  */
 @XmlRootElement
-@Schema(description="Spezifiziert Struktur von JSON-Daten zu den Floskeln für das Externe-Noten-Modul ENM.")
+@Schema(description = "Spezifiziert Struktur von JSON-Daten zu den Floskeln für das Externe-Noten-Modul ENM.")
 @TranspilerDTO
 public class ENMFloskel {
 
 	/** Das Kürzel der Floskel. */
-	@Schema(description = "Das Kürzel der Floskel.", example="#D001")
+	@Schema(description = "Das Kürzel der Floskel.", example = "#D001")
 	public String kuerzel;
 
 	/** Der Text der Floskel. */
-	@Schema(description = "Der Text der Floskel.", example="Vorname hat gut gelernt.")
+	@Schema(description = "Der Text der Floskel.", example = "Vorname hat gut gelernt.")
 	public String text;
 	
 	/** Die ID des Faches, dem die Floskel zugeordnet ist, sofern die Floskel einem Fach 
 	 * zugeordnet wurde, ansonsten null. */
 	@Schema(description = "Die ID des Faches, dem die Floskel zugeordnet ist, sofern die Floskel einem Fach zugeordnet "
-			+ "wurde, ansonsten null.", example="12")
+			+ "wurde, ansonsten null.", example = "12")
 	public Long fachID;
 
 	/** Eine den Notenstufen ähnliche Kategorisierung */
-	@Schema(description = "Eine den Notenstufen ähnliche Kategorisierung.", example="3")
+	@Schema(description = "Eine den Notenstufen ähnliche Kategorisierung.", example = "3")
 	public Long niveau;
 
 	/** Die ID des Jahrganges, dem die Floskel zugeordnet ist, falls die Floskel einem Fach 
 	 * zugeordnet wurde, ansonsten null, falls sie für alle Jahrgänge gilt. */
 	@Schema(description = "Die ID des Jahrganges, dem die Floskel zugeordnet ist, falls die Floskel einem Fach "
-			+ "zugeordnet wurde, ansonsten null, falls sie für alle Jahrgänge gilt.", example="4")
+			+ "zugeordnet wurde, ansonsten null, falls sie für alle Jahrgänge gilt.", example = "4")
 	public Long jahrgangID;
 	
 }

@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse repräsentiert einen Kurs in einer Blockung der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einem Kurs der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einem Kurs der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostBlockungKursLehrer {
 	

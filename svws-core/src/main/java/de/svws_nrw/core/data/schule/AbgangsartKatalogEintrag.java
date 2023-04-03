@@ -13,12 +13,12 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert einen Eintrag im Katalog der Abgangsarten.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag im Katalog der Abgangsarten.")
+@Schema(description = "ein Eintrag im Katalog der Abgangsarten.")
 @TranspilerDTO
 public class AbgangsartKatalogEintrag {
 
 	/** Das eindeutige Kürzel des Katalog-Eintrags. */
-	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example="0A")
+	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example = "0A")
 	public @NotNull String kuerzel = "";
 
 	/** Die Historie des Katalog-Eintrags. */

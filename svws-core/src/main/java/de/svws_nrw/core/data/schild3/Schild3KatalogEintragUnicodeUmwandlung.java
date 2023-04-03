@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Unicode-Umwandlung.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog Unicode-Umwandlung")
+@Schema(description = "Schild3-Katalog Unicode-Umwandlung")
 @TranspilerDTO
 public class Schild3KatalogEintragUnicodeUmwandlung {
 

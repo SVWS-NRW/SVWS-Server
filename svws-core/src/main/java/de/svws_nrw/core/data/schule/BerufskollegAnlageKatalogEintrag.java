@@ -10,29 +10,29 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Daten für den Katalog der Anlagen beim Berufskolleg.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Anlagen beim Berufskolleg.")
+@Schema(description = "ein Eintrag in dem Katalog der Anlagen beim Berufskolleg.")
 @TranspilerDTO
 public class BerufskollegAnlageKatalogEintrag {
 
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel der Anlage */
-	@Schema(description = "das Kürzel der Anlage", example="A")
+	@Schema(description = "das Kürzel der Anlage", example = "A")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung der Anlage. */
-	@Schema(description = "die Bezeichnung der Anlage", example="Fachklassen duales System und Ausbildungsvorbereitung")
+	@Schema(description = "die Bezeichnung der Anlage", example = "Fachklassen duales System und Ausbildungsvorbereitung")
 	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Anlage einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Anlage gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

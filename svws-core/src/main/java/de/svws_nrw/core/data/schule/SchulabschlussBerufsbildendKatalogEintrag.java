@@ -10,33 +10,33 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gültigen Statistikwerte für den Katalog der Arten von berufsbildenden Schulabschlüsse.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Arten von berufsbildenden Schulabschlüsse.")
+@Schema(description = "ein Eintrag in dem Katalog der Arten von berufsbildenden Schulabschlüsse.")
 @TranspilerDTO
 public class SchulabschlussBerufsbildendKatalogEintrag {
 
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel der Abschlussart */
-	@Schema(description = "das Kürzel der Abschlussart", example="MSA")
+	@Schema(description = "das Kürzel der Abschlussart", example = "MSA")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung der Abschlussart. */
-	@Schema(description = "die Bezeichnung der Abschlussart", example="Mittlerer Schulabschluss")
+	@Schema(description = "die Bezeichnung der Abschlussart", example = "Mittlerer Schulabschluss")
 	public @NotNull String bezeichnung = "";
 
 	/** Das Kürzel der Abschlussart für die amtliche Schulstatistik */
-	@Schema(description = "das Kürzel der Abschlussart für die amtliche Schulstatistik", example="D")
+	@Schema(description = "das Kürzel der Abschlussart für die amtliche Schulstatistik", example = "D")
 	public @NotNull String kuerzelStatistik = "";
 	
 	/** Gibt an, in welchem Schuljahr die Abschlussart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Abschlussart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Abschlussart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Abschlussart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Abschlussart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Abschlussart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

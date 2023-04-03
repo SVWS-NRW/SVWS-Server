@@ -16,28 +16,28 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * gültigen Merkmalen.   
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der KAoA-Merkmale.")
+@Schema(description = "ein Eintrag in dem Katalog der KAoA-Merkmale.")
 @TranspilerDTO
 public class KAOAMerkmalEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="1")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "1")
 	public long id;
 
 	/** Das Kürzel des Merkmals. */
-	@Schema(description = "das Kürzel des Merkmals", example="SBO 2")
+	@Schema(description = "das Kürzel des Merkmals", example = "SBO 2")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung des Merkmals. */
-	@Schema(description = "die Beschreibung des Merkmals", example="Formen der Orientierung und Beratung")
+	@Schema(description = "die Beschreibung des Merkmals", example = "Formen der Orientierung und Beratung")
 	public @NotNull String beschreibung = "";
 
     /** Die Kategorie, welcher das Merkmal zugeordnet ist. */
-    @Schema(description = "die Kategorie, welcher das Merkmal zugeordnet ist", example="Formen der Orientierung und Beratung")
+    @Schema(description = "die Kategorie, welcher das Merkmal zugeordnet ist", example = "Formen der Orientierung und Beratung")
     public @NotNull String kategorie = "";
 	
     /** Die Optionsart des Merkmals. */
-    @Schema(description = "die Optionsart des Merkmals", example="Formen der Orientierung und Beratung")
+    @Schema(description = "die Optionsart des Merkmals", example = "Formen der Orientierung und Beratung")
     public String optionsart = null;
 	
     /** Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf */
@@ -45,11 +45,11 @@ public class KAOAMerkmalEintrag {
     public @NotNull List<@NotNull String> bkAnlagen = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

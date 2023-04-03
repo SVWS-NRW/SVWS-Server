@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * die Fachwahlen in den Leistungsdaten für die Abiturberechnung zur Verfügung.
  */
 @XmlRootElement
-@Schema(description="Informationen zu den Leistungsdaten in einem Fach von einem Schüler der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu den Leistungsdaten in einem Fach von einem Schüler der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLeistungenFachwahl {
 

@@ -11,28 +11,28 @@ import jakarta.validation.constraints.NotNull;
  * ein Lehramt.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Anerkennungsgründe für Lehrämter.")
+@Schema(description = "ein Eintrag in dem Katalog der Anerkennungsgründe für Lehrämter.")
 @TranspilerDTO
 public class LehrerKatalogLehramtAnerkennungEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für den Anerkennungsgrund eines Lehramts. */
-	@Schema(description = "das Kürzel für den Anerkennungsgrund eines Lehramts", example="AP")
+	@Schema(description = "das Kürzel für den Anerkennungsgrund eines Lehramts", example = "AP")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext des Anerkennungsgrundes eines Lehramts. */
-	@Schema(description = "der Anerkennungsgrund eines Lehramts", example="Anerkennung geeignete Prüfung")
+	@Schema(description = "der Anerkennungsgrund eines Lehramts", example = "Anerkennung geeignete Prüfung")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 	

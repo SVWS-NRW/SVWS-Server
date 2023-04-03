@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Katalog Schüler-Status.
  */
 @XmlRootElement
-@Schema(description="Katalog Schüler-Status")
+@Schema(description = "Katalog Schüler-Status")
 @TranspilerDTO
 public class SchuelerstatusKatalogEintrag {
 

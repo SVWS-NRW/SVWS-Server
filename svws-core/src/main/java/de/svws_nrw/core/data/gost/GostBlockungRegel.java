@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse repräsentiert eine Regel einer Blockung der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einer Regel einer Blockung der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einer Regel einer Blockung der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "typ", "parameter" })
 @TranspilerDTO
 public class GostBlockungRegel {

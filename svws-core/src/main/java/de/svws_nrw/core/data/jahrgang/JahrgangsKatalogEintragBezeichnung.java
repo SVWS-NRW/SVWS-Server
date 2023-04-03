@@ -12,16 +12,16 @@ import jakarta.validation.constraints.NotNull;
  * der zulässigen Jahrgänge.
  */
 @XmlRootElement
-@Schema(description="eine Zuordnung einer Jahrgangsbezeichung zu einer Schulform.")
+@Schema(description = "eine Zuordnung einer Jahrgangsbezeichung zu einer Schulform.")
 @TranspilerDTO
 public class JahrgangsKatalogEintragBezeichnung {
 
 	/** Das Kürzel der Schulform */
-	@Schema(description = "das Kürzel der Schulform", example="GY")
+	@Schema(description = "das Kürzel der Schulform", example = "GY")
 	public @NotNull String schulform = "";
 	
 	/** Die Bezeichnung des Jahrgangs */
-	@Schema(description = "die Bezeichnung des Jahrgangs", example="Einführungsphase")
+	@Schema(description = "die Bezeichnung des Jahrgangs", example = "Einführungsphase")
 	public @NotNull String bezeichnung = "";
 
 

@@ -10,12 +10,12 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Die Klasse liefert die KAOA Daten eines Lernabschnitts eines Schülers zurück.
  */
 @XmlRootElement
-@Schema(description="Die KAOA Daten eines Lernabschnitts eines Schülers.")
+@Schema(description = "Die KAOA Daten eines Lernabschnitts eines Schülers.")
 @TranspilerDTO
 public class SchuelerKAoADaten {
 
 	/** Die ID der KAOA Daten in der Datenbank. */
-	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example="126784")
+	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example = "126784")
 	public Long id = -1L;
 
 	/** Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören. */

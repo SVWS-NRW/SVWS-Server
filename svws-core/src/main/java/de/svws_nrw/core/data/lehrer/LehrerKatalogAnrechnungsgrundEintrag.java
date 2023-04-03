@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerAnrechnungsgründe.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Lehrer-Anrechnungsgründe.")
+@Schema(description = "ein Eintrag in dem Katalog der Lehrer-Anrechnungsgründe.")
 @TranspilerDTO
 public class LehrerKatalogAnrechnungsgrundEintrag {
 
 	/** Die ID des Anrechnungsgrundes. */
-	@Schema(description = "die ID des Anrechnungsgrundes", example="4711")
+	@Schema(description = "die ID des Anrechnungsgrundes", example = "4711")
 	public long id;
 
 	/** Das Kürzel für den Anrechnungsgrund, welches für die amtliche Schulstatistik verwendet wird. */
-	@Schema(description = "das Kürzel für den Anrechnungsgrund", example="755")
+	@Schema(description = "das Kürzel für den Anrechnungsgrund", example = "755")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext des Anrechnungsgrundes. */
-	@Schema(description = "die textuelle Beschreibung des Anrechnungsgrundes", example="Schulleitungspauschale")
+	@Schema(description = "die textuelle Beschreibung des Anrechnungsgrundes", example = "Schulleitungspauschale")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr der Anrechnungsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Anrechnungsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Anrechnungsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Anrechnungsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anrechnungsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anrechnungsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 

@@ -17,20 +17,20 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gültigen Statistikwerte für den Katalog der Schulformen.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Schulformen.")
+@Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
 @TranspilerDTO
 public class SchulgliederungKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id = -1;
 
 	/** Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
-	@Schema(description = "das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="A01")
+	@Schema(description = "das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "A01")
 	public @NotNull String kuerzel = "";
 
 	/** Gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt", example="true")
+	@Schema(description = "gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt", example = "true")
 	public boolean istBK = false;
 	
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
@@ -38,47 +38,47 @@ public class SchulgliederungKatalogEintrag {
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 	
 	/** Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. */
-	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example="false")
+	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example = "false")
 	public boolean istAuslaufend = false;
 
 	/** Gibt an, ob es sich um eine ausgelaufene Schulgliederung oder einen ausgelaufenen Bildungsgang handelt. */
-	@Schema(description = "gibt an, ob es sich um eine ausgelaufene Schulgliederung oder einen ausgelaufenen Bildungsgang handelt", example="false")
+	@Schema(description = "gibt an, ob es sich um eine ausgelaufene Schulgliederung oder einen ausgelaufenen Bildungsgang handelt", example = "false")
 	public boolean istAusgelaufen = false;
 
 	/** Die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges. */
-	@Schema(description = "die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges", example="Fachklassen (BS; TZ)")
+	@Schema(description = "die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges", example = "Fachklassen (BS; TZ)")
 	public @NotNull String beschreibung = "";
 
 	/** Die Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "die Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example="A")
+	@Schema(description = "die Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "A")
 	public String bkAnlage = null;
 
 	/** Der Typ der Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "der Typ der Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example="01")
+	@Schema(description = "der Typ der Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "01")
 	public String bkTyp = null;
 
 	/** Der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein. */
-	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.", example="10")
+	@Schema(description = "der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein.", example = "10")
 	public Integer bkIndex = null;
 
 	/** Gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht */
-	@Schema(description = "gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht.", example="false")
+	@Schema(description = "gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht.", example = "false")
 	public boolean istVZ = false;
 
 	/** Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example="BS")
+	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "BS")
 	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new Vector<>(); 
 
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
-	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example="HA9")
+	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
 	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem die Schulgliederung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Schulgliederung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

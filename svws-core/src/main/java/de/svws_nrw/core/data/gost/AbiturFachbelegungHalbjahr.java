@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse enthält Informationen zu der Halbjahres-Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="enthält die Informationen zu der Halbjahres-Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
+@Schema(description = "enthält die Informationen zu der Halbjahres-Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "halbjahrKuerzel", "kursartKuerzel", "schriftlich", "biliSprache", "lehrerKuerzel", "wochenstunden",
                      "fehlstundenGesamt", "fehlstundenUnentschuldigt", "notenkuerzel", "block1gewertet", "block1kursAufZeugnis" })
 @TranspilerDTO

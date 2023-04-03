@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse ist die Core-DTO für eine Schiene eines Ergebnisses einer Kursblockung
  */
 @XmlRootElement
-@Schema(description="Informationen zu einer Schiene eines Ergebnisses einer Blockung der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einer Schiene eines Ergebnisses einer Blockung der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "kurse" })
 @TranspilerDTO
 public class GostBlockungsergebnisSchiene {

@@ -13,16 +13,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert einen Eintrag für den Katalog der Fachklassen beim Berufskolleg.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Fachklassen beim Berufskolleg.")
+@Schema(description = "ein Eintrag in dem Katalog der Fachklassen beim Berufskolleg.")
 @TranspilerDTO
 public class BerufskollegFachklassenKatalogEintrag {
 
 	/** Der Fachklassenschlüssel. */
-	@Schema(description = "der Fachklassenschlüssel - Teil 1", example="620")
+	@Schema(description = "der Fachklassenschlüssel - Teil 1", example = "620")
 	public @NotNull String schluessel = "";
 
 	/** Der Fachklassenschlüssel - Teil 2. */
-	@Schema(description = "der Fachklassenschlüssel - Teil 2", example="00")
+	@Schema(description = "der Fachklassenschlüssel - Teil 2", example = "00")
 	public @NotNull String schluessel2 = "";
 
 	/** Die Historie des Katalog-Eintrags. */

@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerEinsatzstati.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog des Lehrer-Einsatzstatus.")
+@Schema(description = "ein Eintrag in dem Katalog des Lehrer-Einsatzstatus.")
 @TranspilerDTO
 public class LehrerKatalogEinsatzstatusEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für den Einsatzstatus. */
-	@Schema(description = "das Kürzel für den Einsatzstatus", example="A")
+	@Schema(description = "das Kürzel für den Einsatzstatus", example = "A")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext des Einsatzstatus.*/
-	@Schema(description = "der Einsatzstatus", example="Stammschule, ganz oder teilweise auch an anderen Schulen tätig")
+	@Schema(description = "der Einsatzstatus", example = "Stammschule, ganz oder teilweise auch an anderen Schulen tätig")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr der Einsatzstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Einsatzstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Einsatzstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Beschäftigungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Einsatzstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Einsatzstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

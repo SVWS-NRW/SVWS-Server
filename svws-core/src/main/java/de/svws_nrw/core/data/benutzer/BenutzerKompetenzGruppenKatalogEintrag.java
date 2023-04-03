@@ -10,24 +10,24 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt den Katalog der Benutzerkompetenz-Gruppen.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag im Katalog der Benutzerkompetenz-Gruppen.")
+@Schema(description = "ein Eintrag im Katalog der Benutzerkompetenz-Gruppen.")
 @TranspilerDTO
 public class BenutzerKompetenzGruppenKatalogEintrag {
 
 	/** Die ID der Kompetenzgruppe. */
-	@Schema(description = "die ID der Kompetenzgruppe", example="100")
+	@Schema(description = "die ID der Kompetenzgruppe", example = "100")
 	public long id = -1;
 	
 	/** Die Bezeichnung der Kompetenzgruppe. */
-	@Schema(description = "die Bezeichnung der Kompetenzgruppe", example="Schüler-Individualdaten")
+	@Schema(description = "die Bezeichnung der Kompetenzgruppe", example = "Schüler-Individualdaten")
 	public @NotNull String bezeichnung = "";
 	
 	/** Die Spalte bei der Darstellung der Benutzerverwaltung in Schild. */
-	@Schema(description = "die Spalte bei der Darstellung der Benutzerverwaltung in Schild", example="1")
+	@Schema(description = "die Spalte bei der Darstellung der Benutzerverwaltung in Schild", example = "1")
 	public int spalte = -1;
 	
 	/** Die Zeile bei der Darstellung der Benutzerverwaltung in Schild. */
-	@Schema(description = "die Zeile bei der Darstellung der Benutzerverwaltung in Schild", example="1")
+	@Schema(description = "die Zeile bei der Darstellung der Benutzerverwaltung in Schild", example = "1")
 	public int zeile = -1;
 
 	

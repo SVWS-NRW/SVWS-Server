@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Die Klasse beschreibt die Daten eines Eintrages im Katalog der Schulträger.
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Schulträger.")
+@Schema(description = "ein Eintrag in dem Katalog der Schulträger.")
 @TranspilerDTO
 public class SchultraegerKatalogEintrag {
 

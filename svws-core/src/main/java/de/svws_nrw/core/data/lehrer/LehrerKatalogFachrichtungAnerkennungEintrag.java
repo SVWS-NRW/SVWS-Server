@@ -11,28 +11,28 @@ import jakarta.validation.constraints.NotNull;
  * Fachrichtungen von Lehrern.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Anerkennungsgründe von Fachrichtungen von Lehrern.")
+@Schema(description = "ein Eintrag in dem Katalog der Anerkennungsgründe von Fachrichtungen von Lehrern.")
 @TranspilerDTO
 public class LehrerKatalogFachrichtungAnerkennungEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers. */
-	@Schema(description = "das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers", example="2")
+	@Schema(description = "das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers", example = "2")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext des Anerkennungsgrundes einer Fachrichtungen eines Lehrers. */
-	@Schema(description = "der Anerkennungsgrund einer Fachrichtungen eines Lehrers", example="Unterrichtserlaubnis (z. B. Zertifikatskurs)")
+	@Schema(description = "der Anerkennungsgrund einer Fachrichtungen eines Lehrers", example = "Unterrichtserlaubnis (z. B. Zertifikatskurs)")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 	

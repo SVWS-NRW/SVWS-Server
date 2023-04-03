@@ -13,16 +13,16 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Daten für den Katalog der Herkunftsarten.
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Herkunftsarten.")
+@Schema(description = "ein Eintrag in dem Katalog der Herkunftsarten.")
 @TranspilerDTO
 public class HerkunftsartKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="99000")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "99000")
 	public long id;
 
 	/** Das 2-stellige Kürzel der Herkunftsart */
-	@Schema(description = "das 2-stellige Kürzel der Herkunftsart", example="99")
+	@Schema(description = "das 2-stellige Kürzel der Herkunftsart", example = "99")
 	public @NotNull String kuerzel = "";
 
 	/** Die Bezeichnungen bei den jeweils zulässigen Schulformen. */
@@ -30,11 +30,11 @@ public class HerkunftsartKatalogEintrag {
 	public @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Herkunftsart verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Herkunftsart verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Herkunftsart verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

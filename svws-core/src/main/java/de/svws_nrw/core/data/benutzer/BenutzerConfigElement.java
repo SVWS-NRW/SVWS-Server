@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie beschreibt ein Element der Konfiguration eines Benutzers  
  */
 @XmlRootElement
-@Schema(description="Ein Konfigurationselement.")
+@Schema(description = "Ein Konfigurationselement.")
 @TranspilerDTO
 public class BenutzerConfigElement {
 

@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie enthält die Definition eines Attributs und dessen Typs. 
  */
 @XmlRootElement
-@Schema(description="Das Attribut und dessen Typ für die Schema-Definition der Datenquelle für das Schild-Reporting")
+@Schema(description = "Das Attribut und dessen Typ für die Schema-Definition der Datenquelle für das Schild-Reporting")
 @TranspilerDTO
 public class SchildReportingDatenquelleAttribut {
 

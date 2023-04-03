@@ -11,28 +11,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Fachwahlinformationen eines Faches in einem Jahrgang der gymnasialen Oberstufe.  
  */
 @XmlRootElement
-@Schema(description="Die Statistik zu den Fachwahlen eines Jahrgangs zu einem Fach der gymnasialen Oberstufe.")
+@Schema(description = "Die Statistik zu den Fachwahlen eines Jahrgangs zu einem Fach der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostStatistikFachwahl {
 	
 	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
-	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example="2042")
+	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2042")
 	public int abiturjahr;
 
 	/** Die ID des Faches, für welches die Fachwahldaten ermittelt wurden. */
-	@Schema(description = "die ID des Faches", example="42")
+	@Schema(description = "die ID des Faches", example = "42")
 	public long id;
 
 	/** Das eindeutige Kürzel des Faches */
-	@Schema(description = "das eindeutige Kürzel des Faches", example="M")
+	@Schema(description = "das eindeutige Kürzel des Faches", example = "M")
 	public String kuerzel;
 	
 	/** Die Bezeichnung des Faches */
-	@Schema(description = "die Bezeichnung des Faches ", example="Mathematik")
+	@Schema(description = "die Bezeichnung des Faches ", example = "Mathematik")
 	public String bezeichnung;
 	
 	/** Das Statistik-Kürzel des Faches */
-	@Schema(description = "das Statistik-Kürzel des Faches ", example="M")
+	@Schema(description = "das Statistik-Kürzel des Faches ", example = "M")
 	public String kuerzelStatistik;
 	
 	/** Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe */

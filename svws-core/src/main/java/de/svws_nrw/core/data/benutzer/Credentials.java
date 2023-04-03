@@ -10,17 +10,17 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Daten eines internen Account-Credentials mit der angegebenen ID.  
  */
 @XmlRootElement
-@Schema(description="Die Daten eines Account-Credentials.")
+@Schema(description = "Die Daten eines Account-Credentials.")
 @TranspilerDTO
 public class Credentials {
 
     
     /** Benutzername des Account-Credentials*/
-    @Schema(description = "Benutzername des Account-Credentials", example="Max")
+    @Schema(description = "Benutzername des Account-Credentials", example = "Max")
     public @NotNull String benutzername = "";
     
     /** Passwort des Account-Credentials*/
-    @Schema(description = "Benutzername des Account-Credentials", example="Max")
+    @Schema(description = "Benutzername des Account-Credentials", example = "Max")
     public @NotNull String password = "";
    
 

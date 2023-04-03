@@ -13,36 +13,36 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @JsonPropertyOrder({"ID","PLZ","RegSchl","Ort","Sortierung","gueltigVon","gueltigBis"})
 @XmlRootElement
-@Schema(description="ein Eintrag in dem IT.NRW-Katalog der Orte.")
+@Schema(description = "ein Eintrag in dem IT.NRW-Katalog der Orte.")
 @TranspilerDTO
 public class KatalogEintragOrte {
 
 	/** Katalog von IT.NRW PLZ Ort: die ID des Katalog-Eintrags */
-	@Schema(description = "der ID des Katalog-Eintrags", example="44012")
+	@Schema(description = "der ID des Katalog-Eintrags", example = "44012")
 	public Long ID;
 
 	/** Katalog von IT.NRW PLZ Ort: die Postleitzahl */
-	@Schema(description = "die Postleitzahl", example="32001")
+	@Schema(description = "die Postleitzahl", example = "32001")
 	public String PLZ;
 
     /** Katalog von IT.NRW PLZ Ort: der Regionalschlüssel */
-    @Schema(description = "der Regionalschlüssel", example="05758012")
+    @Schema(description = "der Regionalschlüssel", example = "05758012")
     public String RegSchl;
 
 	/** Katalog von IT.NRW PLZ Ort: die Ortsbezeichnung */
-	@Schema(description = "die Ortsbezeichnung", example="Herford")
+	@Schema(description = "die Ortsbezeichnung", example = "Herford")
 	public String Ort;
 
     /** Katalog von IT.NRW PLZ Ort: eine Nummer für die Sortierreihenfolge der Katalog-Einträge */
-    @Schema(description = "eine Nummer für die Sortierreihenfolge der Katalog-Einträge", example="1")
+    @Schema(description = "eine Nummer für die Sortierreihenfolge der Katalog-Einträge", example = "1")
     public Integer Sortierung;
 
     /** Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit ab welchem Schuljahr an */
-    @Schema(description = "gibt die Gültigkeit ab welchem Schuljahr an", example="null")
+    @Schema(description = "gibt die Gültigkeit ab welchem Schuljahr an", example = "null")
     public Integer gueltigVon;
 
     /** Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit bis zu welchem Schuljahr an */
-    @Schema(description = "gibt die Gültigkeit bis zu welchem Schuljahr an", example="null")
+    @Schema(description = "gibt die Gültigkeit bis zu welchem Schuljahr an", example = "null")
     public Integer gueltigBis;
 
 }

@@ -13,16 +13,16 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Daten für den Katalog der zulässigen Jahrgänge.
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der zulässigen Jahrgänge.")
+@Schema(description = "ein Eintrag in dem Katalog der zulässigen Jahrgänge.")
 @TranspilerDTO
 public class JahrgangsKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="276000")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "276000")
 	public long id;
 
 	/** Das 2-stellige Jahrgangskürzel */
-	@Schema(description = "das 2-stellige Jahrgangskürzel", example="EF")
+	@Schema(description = "das 2-stellige Jahrgangskürzel", example = "EF")
 	public @NotNull String kuerzel = "";
 
 	/** Die Jahrgangsbezeichungen bei den zulässigen Schulformen. */
@@ -30,11 +30,11 @@ public class JahrgangsKatalogEintrag {
 	public @NotNull List<@NotNull JahrgangsKatalogEintragBezeichnung> bezeichnungen = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Jahrgang verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Jahrgang verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Jahrgang verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * als auch für die OpenAPI-Schnittstelle.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einem Fach der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einem Fach der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "kuerzel", "kuerzelAnzeige", "bezeichnung", "sortierung", "istFremdsprache",
 	"istFremdSpracheNeuEinsetzendMoeglich", "biliSprache",  // TODO istFremdSpracheNeuEinsetzendMoeglich --> kein Attribut 
 	"istMoeglichEF1", "istMoeglichEF2", "istMoeglichQ11", "istMoeglichQ12", 

@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Filter Feldliste.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog Filter Feldliste")
+@Schema(description = "Schild3-Katalog Filter Feldliste")
 @TranspilerDTO
 public class Schild3KatalogEintragFilterFeldListe {
 

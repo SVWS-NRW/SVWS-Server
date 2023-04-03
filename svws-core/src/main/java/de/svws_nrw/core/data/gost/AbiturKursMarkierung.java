@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * für die Abiturberechnung zur Verfügung.
  */
 @XmlRootElement
-@Schema(description="Enthält Informationen zu Markierungen eines Kurses für das Abitur.")
+@Schema(description = "Enthält Informationen zu Markierungen eines Kurses für das Abitur.")
 @TranspilerDTO
 public class AbiturKursMarkierung {
 

@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * als auch für die OpenAPI-Schnittstelle.
  */
 @XmlRootElement
-@Schema(description="Informationen zu den Fachbelegungen innerhalb der Leistungsdaten von einem Schüler der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu den Fachbelegungen innerhalb der Leistungsdaten von einem Schüler der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLeistungenFachbelegung {
 

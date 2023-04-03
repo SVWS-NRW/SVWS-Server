@@ -11,32 +11,32 @@ import jakarta.validation.constraints.NotNull;
  * 5. Klasse der Sekundarstufe I  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Übergangsempfehlungen.")
+@Schema(description = "ein Eintrag in dem Katalog der Übergangsempfehlungen.")
 @TranspilerDTO
 public class UebergangsempfehlungKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id = -1;
 
 	/** Das Kürzel der Empfehlung */
-	@Schema(description = "das Kürzel der Empfehlung", example="R")
+	@Schema(description = "das Kürzel der Empfehlung", example = "R")
 	public @NotNull String kuerzel = "";
 
 	/** Die Bezeichnung der Übergangsempfehlung. */
-	@Schema(description = "die Bezeichnung der Übergangsempfehlung", example="Realschule")
+	@Schema(description = "die Bezeichnung der Übergangsempfehlung", example = "Realschule")
 	public @NotNull String bezeichnung = "";
 
     /** Der Statistikschlüssel der Übergangsempfehlung */
-    @Schema(description = "der Statistikschlüssel der Übergangsempfehlung", example="10XX")
+    @Schema(description = "der Statistikschlüssel der Übergangsempfehlung", example = "10XX")
     public @NotNull String schluessel = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

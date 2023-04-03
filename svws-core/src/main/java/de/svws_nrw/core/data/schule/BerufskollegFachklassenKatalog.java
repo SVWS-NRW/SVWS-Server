@@ -14,12 +14,12 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert den gesamten Katalog der Fachklassen beim Berufskolleg.  
  */
 @XmlRootElement
-@Schema(description="der gesamte Katalog der Fachklassen beim Berufskolleg.")
+@Schema(description = "der gesamte Katalog der Fachklassen beim Berufskolleg.")
 @TranspilerDTO
 public class BerufskollegFachklassenKatalog {
 
 	/** Die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht. */
-	@Schema(description = "die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht", example="37")
+	@Schema(description = "die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht", example = "37")
 	public long version = 0;
 
 	/** Die Teilkataloge in Abhängigkeit vom Index der Fachklassen. */

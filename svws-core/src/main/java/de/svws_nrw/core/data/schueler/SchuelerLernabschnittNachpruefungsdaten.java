@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * Siehe auch {@link SchuelerLernabschnittsdaten}.  
  */
 @XmlRootElement
-@Schema(description="Die Informationen zu Nachprüfungen bei eines Lernabschnitts eines Schülers.")
+@Schema(description = "Die Informationen zu Nachprüfungen bei eines Lernabschnitts eines Schülers.")
 @TranspilerDTO
 public class SchuelerLernabschnittNachpruefungsdaten {
 

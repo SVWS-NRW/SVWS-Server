@@ -13,28 +13,28 @@ import jakarta.validation.constraints.NotNull;
  * Schüler für das Externe-Noten-Modul ENM. 
  */
 @XmlRootElement
-@Schema(description="Spezifiziert die Struktur von JSON-Daten zu den Klassen der Schüler für das Externe-Noten-Modul ENM.")
+@Schema(description = "Spezifiziert die Struktur von JSON-Daten zu den Klassen der Schüler für das Externe-Noten-Modul ENM.")
 @TranspilerDTO
 public class ENMKlasse {
 
 	/** Die ID der Klasse aus der SVWS-DB (z.B. 16) */
-	@Schema(description = "Die ID der Klasse aus der SVWS-DB.", example="12")
+	@Schema(description = "Die ID der Klasse aus der SVWS-DB.", example = "12")
 	public long id;
 
 	/** Das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF) */
-	@Schema(description = "Das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird.", example="EFA")
+	@Schema(description = "Das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird.", example = "EFA")
 	public String kuerzel;
 
 	/** Das Kürzel ser Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) */
-	@Schema(description = "Das Kürzel der Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll.", example="EF")
+	@Schema(description = "Das Kürzel der Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll.", example = "EF")
 	public String kuerzelAnzeige;
 	
 	/** Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört (z.B. 11) oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt */
-    @Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.", example="11")
+    @Schema(description = "Die ID des Jahrgangs aus der SVWS-DB zu der die Klasse gehört oder null, falls es sich um eine jahrgangsübergreifende Klasse handelt.", example = "11")
     public Long idJahrgang;
 
 	/** Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8) */
-	@Schema(description = "Die Reihenfolge der Klasse bei der Sortierung der Klasse.", example="20")
+	@Schema(description = "Die Reihenfolge der Klasse bei der Sortierung der Klasse.", example = "20")
 	public int sortierung;
 
 	/** Die IDs der zugeordneten Klassenlehrer. */

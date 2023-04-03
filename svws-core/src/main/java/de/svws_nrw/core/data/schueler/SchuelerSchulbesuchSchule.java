@@ -10,44 +10,44 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Schubesuchsdaten zu einer bisher besuchten Schule.  
  */
 @XmlRootElement
-@Schema(description="Ein Eintrag in der Liste der bisher besuchtn Schulen.")
+@Schema(description = "Ein Eintrag in der Liste der bisher besuchtn Schulen.")
 @TranspilerDTO
 public class SchuelerSchulbesuchSchule {
 
 	/** Die Schulnummer der Schule. */
-	@Schema(description = "die Schulnummer der Schule", example="178947")
+	@Schema(description = "die Schulnummer der Schule", example = "178947")
 	public @NotNull String schulnummer = "";
 
 	/** Die ID des Bildungsganges/Schulgliederung an der Schule. */
-	@Schema(description = "die ID des Bildungsganges/Schulgliederung an der Schule", example="***")
+	@Schema(description = "die ID des Bildungsganges/Schulgliederung an der Schule", example = "***")
 	public String schulgliederung;
 	
 	/** Die ID des Grundes für die Entlassung von der Schule. */
-	@Schema(description = "die ID des Grundes für die Entlassung von der Schule", example="2")
+	@Schema(description = "die ID des Grundes für die Entlassung von der Schule", example = "2")
 	public Long entlassgrundID;
 	
 	/** Die ID des Abschlusses, welcher an der Schule erworben wurde. */
-	@Schema(description = "die ID des Abschlusses, welcher an der Schule erworben wurde", example="OA")
+	@Schema(description = "die ID des Abschlusses, welcher an der Schule erworben wurde", example = "OA")
 	public String abschlussartID;
 	
 	/** Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht). */
-	@Schema(description = "die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht)", example="1")
+	@Schema(description = "die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht)", example = "1")
 	public String organisationsFormID;
 
 	/** Das Datum, ab dem die Schule besucht wurde. */
-	@Schema(description = "das Datum, ab dem die Schule besucht wurde", example="1907-12-01")
+	@Schema(description = "das Datum, ab dem die Schule besucht wurde", example = "1907-12-01")
 	public String datumVon;
 
 	/** Das Datum, bis wann die Schule besucht wurde. */
-	@Schema(description = "das Datum, bis wann die Schule besucht wurde", example="1908-12-01")
+	@Schema(description = "das Datum, bis wann die Schule besucht wurde", example = "1908-12-01")
 	public String datumBis;
 
 	/** Der Jahrgang, ab dem die Schule besucht wurde. */
-	@Schema(description = "der Jahrgang, ab dem die Schule besucht wurde", example="07")
+	@Schema(description = "der Jahrgang, ab dem die Schule besucht wurde", example = "07")
 	public String jahrgangVon;
 
 	/** Der Jahrgang, bis zu dem die Schule besucht wurde. */
-	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example="07")
+	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example = "07")
 	public String jahrgangBis;
 	
 }

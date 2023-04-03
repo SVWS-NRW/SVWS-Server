@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gültigen Statistikwerte für den Katalog der LehrerFachrichtung.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Fachrichtungen von Lehrern.")
+@Schema(description = "ein Eintrag in dem Katalog der Fachrichtungen von Lehrern.")
 @TranspilerDTO
 public class LehrerKatalogFachrichtungEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für die Fachrichtung. */
-	@Schema(description = "das Kürzel für die Fachrichtung", example="03")
+	@Schema(description = "das Kürzel für die Fachrichtung", example = "03")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext die Fachrichtung. */
-	@Schema(description = "die Fachrichtung", example="Kraftfahrzeugtechnik")
+	@Schema(description = "die Fachrichtung", example = "Kraftfahrzeugtechnik")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Fachrichtung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Fachrichtung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Fachrichtung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Fachrichtung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 	

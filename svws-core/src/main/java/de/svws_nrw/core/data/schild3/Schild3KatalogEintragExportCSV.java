@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog zur Konfiguration des CSV-Exportes von Schild.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog zur Konfiguration des CSV-Exportes von Schild")
+@Schema(description = "Schild3-Katalog zur Konfiguration des CSV-Exportes von Schild")
 @TranspilerDTO
 public class Schild3KatalogEintragExportCSV {
 

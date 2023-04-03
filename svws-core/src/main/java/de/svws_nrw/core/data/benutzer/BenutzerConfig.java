@@ -9,10 +9,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Konfiguration eines Benutzers  
+ * Sie beschreibt die Konfiguration eines Benutzers.
  */
 @XmlRootElement
-@Schema(description="Die Konfiguration eines Benutzers.")
+@Schema(description = "Die Konfiguration eines Benutzers.")
 @TranspilerDTO
 public class BenutzerConfig {
 
@@ -23,5 +23,5 @@ public class BenutzerConfig {
 	/** Die globale Konfiguration, die auch für den Benutzer gilt. */
 	@Schema(description = "die globale Konfiguration, die auch für den Benutzer gilt")
 	public @NotNull Vector<@NotNull BenutzerConfigElement> global = new Vector<>();
-	
+
 }

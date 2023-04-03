@@ -9,20 +9,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * für das Externe-Noten-Modul ENM.   
  */
 @XmlRootElement
-@Schema(description="Spezifiziert die Struktur von JSON-Daten in Bezug auf den Förderschwerpunkt-Katalog für das Externe-Noten-Modul ENM")
+@Schema(description = "Spezifiziert die Struktur von JSON-Daten in Bezug auf den Förderschwerpunkt-Katalog für das Externe-Noten-Modul ENM")
 @TranspilerDTO
 public class ENMFoerderschwerpunkt {
 
     /** Die ID des Förderschwerpunktes. */
-    @Schema(description = "die ID des Förderschwerpunktes", example="42")
+    @Schema(description = "die ID des Förderschwerpunktes", example = "42")
     public long id;
     
 	/** Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird */
-	@Schema(description = "Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="SH")
+	@Schema(description = "Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example = "SH")
 	public String kuerzel;
 
 	/** Die textuelle Bezeichnung des Förderschwerpunktes. */
-	@Schema(description = "Die textuelle Bezeichnung des Förderschwerpunktes", example="Sehen (Sehbehinderte)")
+	@Schema(description = "Die textuelle Bezeichnung des Förderschwerpunktes", example = "Sehen (Sehbehinderte)")
 	public String beschreibung;
 	
 }

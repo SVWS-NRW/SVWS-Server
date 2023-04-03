@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse repräsentiert einen Kurs in einer Blockung der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einem Kurs der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einem Kurs der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" }) // TODO Soll hier "suffix" stehen statt "bezeichnung" ? 
 @TranspilerDTO
 public class GostBlockungKurs {

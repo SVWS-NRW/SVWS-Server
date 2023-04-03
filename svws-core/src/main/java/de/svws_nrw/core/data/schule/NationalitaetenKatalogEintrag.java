@@ -10,52 +10,52 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Daten für den Katalog der Nationalitäten.
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Nationalitäten.")
+@Schema(description = "ein Eintrag in dem Katalog der Nationalitäten.")
 @TranspilerDTO
 public class NationalitaetenKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="276000")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "276000")
 	public long id;
 
 	/** Das 3-stellige Kürzel des ISO-Standards 3166-1 */
-	@Schema(description = "das 3-stellige Kürzel des ISO-Standards 3166-1", example="DEU")
+	@Schema(description = "das 3-stellige Kürzel des ISO-Standards 3166-1", example = "DEU")
 	public @NotNull String iso3 = "";
 
 	/** Das 2-stellige Kürzel des ISO-Standards 3166-1 */
-	@Schema(description = "das 2-stellige Kürzel des ISO-Standards 3166-1", example="de")
+	@Schema(description = "das 2-stellige Kürzel des ISO-Standards 3166-1", example = "de")
 	public @NotNull String iso2 = "";
 	
 	/** Die 3-stellige Nummer des ISO-Standards 3166-1 */
-	@Schema(description = "die 3-stellige Nummer des ISO-Standards 3166-1", example="276")
+	@Schema(description = "die 3-stellige Nummer des ISO-Standards 3166-1", example = "276")
 	public String isoNumerisch = null;
 	
 	/** Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de) */
-	@Schema(description = "die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de)", example="000")
+	@Schema(description = "die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de)", example = "000")
 	public @NotNull String codeDEStatis = "";
 	
 	/** Die Bezeichnung für eine Suche */
-	@Schema(description = "die Bezeichnung für eine Suche", example="Deutschland")
+	@Schema(description = "die Bezeichnung für eine Suche", example = "Deutschland")
 	public @NotNull String bezeichnungSuche = "";
 
 	/** Die kurze Bezeichnung */
-	@Schema(description = "die kurze Bezeichnung", example="Deutschland")
+	@Schema(description = "die kurze Bezeichnung", example = "Deutschland")
 	public @NotNull String bezeichnung = "";
 
 	/** Die Bezeichnung für eine Suche */
-	@Schema(description = "die lange Bezeichnung", example="die Bundesrepublik Deutschland")
+	@Schema(description = "die lange Bezeichnung", example = "die Bundesrepublik Deutschland")
 	public @NotNull String bezeichnungLang = "";
 
 	/** Die Bezeichnung der Staatsangehörigkeit */
-	@Schema(description = "die Bezeichnung der Staatsangehörigkeit", example="deutsch")
+	@Schema(description = "die Bezeichnung der Staatsangehörigkeit", example = "deutsch")
 	public @NotNull String staatsangehoerigkeit = "";
 	
 	/** Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

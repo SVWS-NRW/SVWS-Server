@@ -12,20 +12,20 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Daten eines Benutzer eines Schülers mit der angegebenen ID.  
  */
 @XmlRootElement
-@Schema(description="Die Stammdaten eines Schüler-Eintrags.")
+@Schema(description = "Die Stammdaten eines Schüler-Eintrags.")
 @TranspilerDTO
 public class BenutzergruppeDaten {
 
 	/** Die ID der Benutzergruppe. */
-	@Schema(description = "die ID der Benutzergruppe", example="4711")
+	@Schema(description = "die ID der Benutzergruppe", example = "4711")
 	public @NotNull long  id = -1;
 
 	/** Die Bezeichnung der Benutzergruppe. */
-	@Schema(description = "die Bezeichnung der Benutzergruppe", example="Administrator")
+	@Schema(description = "die Bezeichnung der Benutzergruppe", example = "Administrator")
 	public @NotNull String bezeichnung = "";
 	
 	/** Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. */
-	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example="true")
+	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example = "true")
 	public @NotNull boolean istAdmin = false;
 
 	/** Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind. */

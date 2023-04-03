@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist die Core-DTO für die Bewertung eines Ergebnisses einer Kursblockung
  */
 @XmlRootElement
-@Schema(description="Bewertung eines Ergebnis einer Blockung der gymnasialen Oberstufe.")
+@Schema(description = "Bewertung eines Ergebnis einer Blockung der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "regelVerletzungen", "anzahlNichtZugeordnet", "anzahlKollisionen", "anzahlSchienenMitKollisionen",
 	"kursdifferenzen", "anzahlKurseMitGleicherFachartProSchiene" })
 @TranspilerDTO

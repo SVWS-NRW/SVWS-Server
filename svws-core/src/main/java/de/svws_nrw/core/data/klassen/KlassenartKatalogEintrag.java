@@ -18,20 +18,20 @@ import jakarta.validation.constraints.NotNull;
  * diese zulässig sind.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Klassenarten.")
+@Schema(description = "ein Eintrag in dem Katalog der Klassenarten.")
 @TranspilerDTO
 public class KlassenartKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id = -1;
 
 	/** Das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik */
-	@Schema(description = "das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik", example="RK")
+	@Schema(description = "das eindeutige Kürzel der Klassenart entsprechend der Vorgaben der amtlichen Schulstatistik", example = "RK")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung der Klassenart */
-	@Schema(description = "die Bezeichnung der Klassenart", example="Regelklasse")
+	@Schema(description = "die Bezeichnung der Klassenart", example = "Regelklasse")
 	public @NotNull String bezeichnung = "";
 	
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist. */
@@ -39,11 +39,11 @@ public class KlassenartKatalogEintrag {
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Klassenart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem die Klassenart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem die Klassenart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

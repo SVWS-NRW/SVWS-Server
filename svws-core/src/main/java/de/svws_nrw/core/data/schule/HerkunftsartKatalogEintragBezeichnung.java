@@ -12,20 +12,20 @@ import jakarta.validation.constraints.NotNull;
  * der Herkunftsarten.
  */
 @XmlRootElement
-@Schema(description="eine Zuordnung einer Bezeichung zu einer Herkunftsart.")
+@Schema(description = "eine Zuordnung einer Bezeichung zu einer Herkunftsart.")
 @TranspilerDTO
 public class HerkunftsartKatalogEintragBezeichnung {
 
 	/** Das Kürzel der Schulform */
-	@Schema(description = "das Kürzel der Schulform", example="GY")
+	@Schema(description = "das Kürzel der Schulform", example = "GY")
 	public @NotNull String schulform = "";
 
 	/** Die Kurz-Bezeichnung der Herkunftsart */
-	@Schema(description = "die Kurz-Bezeichnung der Herkunftsart", example="Nichtversetzung")
+	@Schema(description = "die Kurz-Bezeichnung der Herkunftsart", example = "Nichtversetzung")
 	public @NotNull String kurzBezeichnung = "";
 	
 	/** Die Bezeichnung der Herkunftsart */
-	@Schema(description = "die Bezeichnung der Herkunftsart", example="Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
+	@Schema(description = "die Bezeichnung der Herkunftsart", example = "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
 	public @NotNull String bezeichnung = "";
 
 

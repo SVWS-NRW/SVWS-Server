@@ -10,32 +10,32 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerZugangsgründe.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Lehrer-Zugangsgründe.")
+@Schema(description = "ein Eintrag in dem Katalog der Lehrer-Zugangsgründe.")
 @TranspilerDTO
 public class LehrerKatalogZugangsgrundEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für den Zugangsgrund. */
-	@Schema(description = "das Kürzel für den Zugangsgrund", example="WIEDER")
+	@Schema(description = "das Kürzel für den Zugangsgrund", example = "WIEDER")
 	public @NotNull String kuerzel = "";
 	
 	/** Kartext des Zugangsgrunds. */
-	@Schema(description = "der Zugangsgrund", example="Wiedereintritt in den Schuldienst")
+	@Schema(description = "der Zugangsgrund", example = "Wiedereintritt in den Schuldienst")
 	public @NotNull String text = "";
 
 	/** Der Schlüssel für die ASD-Schulstatistik. */
-	@Schema(description = "der Schlüssel für die ASD-Schulstatistik", example="05")
+	@Schema(description = "der Schlüssel für die ASD-Schulstatistik", example = "05")
 	public @NotNull String schluessel = "";
 
 	/** Gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 	

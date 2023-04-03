@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt die Daten, die für eine Belegprüfung in der gymnasialen Oberstufe benötigt werden.
  */
 @XmlRootElement
-@Schema(description="Die Daten für eine Belegprüfung in der gymnasialen Oberstufe.")
+@Schema(description = "Die Daten für eine Belegprüfung in der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostBelegpruefungsdaten {
 

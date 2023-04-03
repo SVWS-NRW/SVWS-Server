@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert ID, Nachname, Vorname und Geschlecht des Schülers mit der angegebenen ID.  
  */
 @XmlRootElement
-@Schema(description="Ein Schüler-Eintrag mit der ID, Nachname, Vorname und Geschlecht.")
+@Schema(description = "Ein Schüler-Eintrag mit der ID, Nachname, Vorname und Geschlecht.")
 @TranspilerDTO
 public class Schueler {
 
 	/** Die ID des Schülerdatensatzes. */
-	@Schema(description = "die ID", example="4711")
+	@Schema(description = "die ID", example = "4711")
 	public long id;
 	
 	/** Der Nachname des Schülerdatensatzes. */
-	@Schema(description = "der Nachname", example="Mustermann")
+	@Schema(description = "der Nachname", example = "Mustermann")
 	public @NotNull String nachname = "";
 	
 	/** Der Vorname des Schülerdatensatzes. */
-	@Schema(description = "der Vorname", example="Max")
+	@Schema(description = "der Vorname", example = "Max")
 	public @NotNull String vorname = "";
 	
 	/** Der Status des Schülerdatensatzes. */
-	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example="8")
+	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example = "8")
 	public int status;
 	
 	/** Die ID des Geschlechtes */
-	@Schema(description = "die ID des Geschlechtes", example="3")
+	@Schema(description = "die ID des Geschlechtes", example = "3")
 	public int geschlecht;
 	
 }

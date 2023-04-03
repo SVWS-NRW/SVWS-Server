@@ -14,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Schild-Reporting
  */
 @XmlRootElement
-@Schema(description="Datenquellendefinition für das Schild-Reporting")
+@Schema(description = "Datenquellendefinition für das Schild-Reporting")
 @TranspilerDTO
 public class SchildReportingDatenquelle {
 

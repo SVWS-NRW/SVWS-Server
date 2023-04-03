@@ -14,24 +14,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @JsonPropertyOrder({"Ort","RegSchl","Strasse","Stand"})
 @XmlRootElement
-@Schema(description="ein Eintrag in einem standardisierten Katalog.")
+@Schema(description = "ein Eintrag in einem standardisierten Katalog.")
 @TranspilerDTO
 public class KatalogEintragStrassen {
 
 	/** Katalog von ITNRW Straßen: zugehörige Ort */
-	@Schema(description = "der zugehörige Ort des Katalog-Eintrags", example="Düsseldorf")
+	@Schema(description = "der zugehörige Ort des Katalog-Eintrags", example = "Düsseldorf")
 	public String Ort;
 
 	/** Katalog von ITNRW Straßen: zugehöriger Regionalschlüssel */
-	@Schema(description = "der zugehörige Regionalschlüssel des Katalog-Eintrags", example="05111000")
+	@Schema(description = "der zugehörige Regionalschlüssel des Katalog-Eintrags", example = "05111000")
 	public String RegSchl;
 
 	/** Katalog von ITNRW Straßen: Straßenname */
-	@Schema(description = "der Straßenname des Katalog-Eintrags", example="Aachener Platz")
+	@Schema(description = "der Straßenname des Katalog-Eintrags", example = "Aachener Platz")
 	public String Strasse;
 
 	/** Katalog von ITNRW Straßen: aktueller Stand */
-	@Schema(description = "der Stand des Katalog-Eintrags", example="09.04.2020")
+	@Schema(description = "der Stand des Katalog-Eintrags", example = "09.04.2020")
 	public String Stand;
 
 }

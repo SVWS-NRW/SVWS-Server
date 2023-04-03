@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Die Klasse enthält die Informationen zu einer Fachbelegung bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Enthält die Informationen zu einer Fachbelegung bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
+@Schema(description = "Enthält die Informationen zu einer Fachbelegung bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLaufbahnplanungDatenFachbelegung {
 

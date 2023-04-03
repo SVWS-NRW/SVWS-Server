@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog AbiturInfos.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog AbiturInfos")
+@Schema(description = "Schild3-Katalog AbiturInfos")
 @TranspilerDTO
 public class Schild3KatalogEintragAbiturInfos {
 

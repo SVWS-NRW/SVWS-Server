@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse repräsentiert eine Schiene in einer Blockung der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einer Schiene der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu einer Schiene der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" })
 @TranspilerDTO
 public class GostBlockungSchiene {

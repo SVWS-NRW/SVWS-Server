@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gültigen Statistikwerte für den Katalog der Lehrbefähigungen.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Lehrbefähigungen.")
+@Schema(description = "ein Eintrag in dem Katalog der Lehrbefähigungen.")
 @TranspilerDTO
 public class LehrerKatalogLehrbefaehigungEintrag {
 
 	/** Die ID des Katalog-Eintrags.*/
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für die Lehrbefähigung. */
-	@Schema(description = "das Kürzel für die Lehrbefähigung", example="AL")
+	@Schema(description = "das Kürzel für die Lehrbefähigung", example = "AL")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext die Lehrbefähigung. */
-	@Schema(description = "die Lehrbefähigung", example="Arbeitslehre")
+	@Schema(description = "die Lehrbefähigung", example = "Arbeitslehre")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Lehrbefähigung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Lehrbefähigung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 	
 	

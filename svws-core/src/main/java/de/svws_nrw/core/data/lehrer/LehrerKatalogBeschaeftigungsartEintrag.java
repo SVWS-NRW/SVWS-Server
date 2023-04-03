@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerBeschäftigungsarten.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Lehrer-Beschäftigungsart.")
+@Schema(description = "ein Eintrag in dem Katalog der Lehrer-Beschäftigungsart.")
 @TranspilerDTO
 public class LehrerKatalogBeschaeftigungsartEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel für die Beschäftigungsart. */
-	@Schema(description = "das Kürzel für die Beschäftigungsart", example="V")
+	@Schema(description = "das Kürzel für die Beschäftigungsart", example = "V")
 	public @NotNull String kuerzel = "";
 	
 	/** Der Klartext der Beschäftigungsart. */
-	@Schema(description = "die Beschäftigungsart", example="Vollzeit")
+	@Schema(description = "die Beschäftigungsart", example = "Vollzeit")
 	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Beschäftigungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Beschäftigungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Beschäftigungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Beschäftigungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Beschäftigungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Beschäftigungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 	/**

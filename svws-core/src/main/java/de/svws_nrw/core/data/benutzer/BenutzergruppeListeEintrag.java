@@ -10,20 +10,20 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt einen Listeneintrag einer Benutzergruppe.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag einer Benutzergruppe in der Benutzerliste.")
+@Schema(description = "ein Eintrag einer Benutzergruppe in der Benutzerliste.")
 @TranspilerDTO
 public class BenutzergruppeListeEintrag {
 
 	/** Die ID der Benutzergruppe. */
-	@Schema(description = "die ID der Benutzergruppe", example="4711")
+	@Schema(description = "die ID der Benutzergruppe", example = "4711")
 	public long id = -1;
 
 	/** Die Bezeichnung der Benutzergruppe. */
-	@Schema(description = "die Bezeichnung der Benutzergruppe", example="Administrator")
+	@Schema(description = "die Bezeichnung der Benutzergruppe", example = "Administrator")
 	public @NotNull String bezeichnung = "";
 	
 	/** Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. */
-	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example="true")
+	@Schema(description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example = "true")
 	public @NotNull boolean istAdmin = false;
 	
 }

@@ -15,20 +15,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * gültigen Anschlussoptionen.   
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der KAoA-Anschlussoptionen.")
+@Schema(description = "ein Eintrag in dem Katalog der KAoA-Anschlussoptionen.")
 @TranspilerDTO
 public class KAOAAnschlussoptionEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="1")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "1")
 	public long id;
 
 	/** Das Kürzel der Anschlussoption. */
-	@Schema(description = "das Kürzel der Anschlussoption", example="STUD")
+	@Schema(description = "das Kürzel der Anschlussoption", example = "STUD")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Beschreibung der Anschlussoption. */
-	@Schema(description = "die Beschreibung der Anschlussoption", example="Hochschulstudium")
+	@Schema(description = "die Beschreibung der Anschlussoption", example = "Hochschulstudium")
 	public @NotNull String beschreibung = "";
 
 	/** Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII) */
@@ -40,11 +40,11 @@ public class KAOAAnschlussoptionEintrag {
     public @NotNull List<@NotNull String> anzeigeZusatzmerkmal = new Vector<>();
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
+	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

@@ -12,49 +12,49 @@ import jakarta.validation.constraints.NotNull;
  * die zur Kompatibilität mit Schild-NRW nötig ist..  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Ausbildungs- und/oder Prüfungsordnungen.")
+@Schema(description = "ein Eintrag in dem Katalog der Ausbildungs- und/oder Prüfungsordnungen.")
 @TranspilerDTO
 public class PruefungsordnungKatalogEintrag {
 
 
 	/** Die ID des Eintrags. */
-	@Schema(description = "die ID des Eintrags", example="4711")
+	@Schema(description = "die ID des Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel der Ausbildungs und/oder Prüfungsordnung */
-	@Schema(description = "das Kürzel der Verordnung", example="APO-GOSt")
+	@Schema(description = "das Kürzel der Verordnung", example = "APO-GOSt")
 	public @NotNull String kuerzel = "";
 	
 	/** Das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird */
-	@Schema(description = "das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird", example="APO-GOSt(B)10")
+	@Schema(description = "das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird", example = "APO-GOSt(B)10")
 	public String kuerzelSchild = "";
 	
 	/** Die Bezeichnung der Verordnung. */
-	@Schema(description = "die Bezeichnung der Verordnung", example="Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
+	@Schema(description = "die Bezeichnung der Verordnung", example = "Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
 	public @NotNull String bezeichnung = "";
 
 	/** Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde */
-	@Schema(description = "Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde", example="1998")
+	@Schema(description = "Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde", example = "1998")
 	public Integer gvJahr = null;
 	
 	/** Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung */
-	@Schema(description = "Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung", example="43")
+	@Schema(description = "Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung", example = "43")
 	public @NotNull String gvNr = "";
 
 	/** Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung */
-	@Schema(description = "Gesetz- und Verordnungsblatt: ggf. die Seitennummer im Jahr der Veröffentlichung", example="593-608")
+	@Schema(description = "Gesetz- und Verordnungsblatt: ggf. die Seitennummer im Jahr der Veröffentlichung", example = "593-608")
 	public @NotNull String gvSeiten = "";
 	
 	/** ggf. ein Link zu einer Version der Verordnung */
-	@Schema(description = "ggf. ein Link zu einer Version der Verordnung", example="https://bass.schul-welt.de/9607.htm")
+	@Schema(description = "ggf. ein Link zu einer Version der Verordnung", example = "https://bass.schul-welt.de/9607.htm")
 	public @NotNull String link = "";	
 
 	/** Gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="1999")
+	@Schema(description = "gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "1999")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

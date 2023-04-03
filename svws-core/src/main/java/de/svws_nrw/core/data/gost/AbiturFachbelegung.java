@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="enthält die Informationen zu der Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
+@Schema(description = "enthält die Informationen zu der Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "fachID", "letzteKursart", "abiturFach", "istFSNeu", "block1PunktSumme", "block1NotenpunkteDurchschnitt",
     "block2NotenKuerzelPruefung", "block2PunkteZwischenstand", "block2MuendlichePruefungAbweichung", "block2MuendlichePruefungBestehen",
     "block2MuendlichePruefungFreiwillig", "block2MuendlichePruefungReihenfolge", "block2MuendlichePruefungNotenKuerzel", "block2Punkte",

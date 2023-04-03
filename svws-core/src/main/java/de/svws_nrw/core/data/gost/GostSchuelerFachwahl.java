@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * in seinem Abiturjahrgang in Bezug auf ein Fach der gymnasialen Oberstufe.
  */
 @XmlRootElement()
-@Schema(description="Die Fachwahl eines Schüler zu einem Fach der gymnasialen Oberstufe.")
+@Schema(description = "Die Fachwahl eines Schüler zu einem Fach der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostSchuelerFachwahl {
 
@@ -20,7 +20,7 @@ public class GostSchuelerFachwahl {
 	public @NotNull String[] halbjahre = new String[6];
 
 	/** Die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null */
-	@Schema(description = "die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null", example="3")
+	@Schema(description = "die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null", example = "3")
 	public Integer abiturFach;	
 	
 }

@@ -14,20 +14,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * den Raformpädagogik-Katalog.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Reformpädagogik Katalog.")
+@Schema(description = "ein Eintrag in dem Reformpädagogik Katalog.")
 @TranspilerDTO
 public class ReformpaedagogikKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Das Kürzel. */
-	@Schema(description = "das Kürzel", example="M")
+	@Schema(description = "das Kürzel", example = "M")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung. */
-	@Schema(description = "die Bezeichnung", example="Montessori")
+	@Schema(description = "die Bezeichnung", example = "Montessori")
 	public @NotNull String bezeichnung = "";
 
     /** Die Kürzel der Schulformen, bei welchen der Eintrag vorkommen darf. */
@@ -35,11 +35,11 @@ public class ReformpaedagogikKatalogEintrag {
     public @NotNull List<@NotNull String> schulformen = new Vector<>();
 
     /** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-    @Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+    @Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
     public Integer gueltigVon = null;
 
     /** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. */
-    @Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+    @Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
     public Integer gueltigBis = null;
 
 

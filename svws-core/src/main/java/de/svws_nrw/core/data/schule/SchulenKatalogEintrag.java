@@ -9,12 +9,12 @@ import jakarta.validation.constraints.NotNull;
  * Die Klasse beschreibt die Daten eines Eintrages im Katalog der Schulen.
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Schulen.")
+@Schema(description = "ein Eintrag in dem Katalog der Schulen.")
 @TranspilerDTO
 public class SchulenKatalogEintrag {
 
 	/** Die Schulnummer. */
-	@Schema(description = "die Schulnummer", example="100001")
+	@Schema(description = "die Schulnummer", example = "100001")
 	public @NotNull String SchulNr = "";
 	
     /** Regionalschlüssel der Schule */

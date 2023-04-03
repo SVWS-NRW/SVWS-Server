@@ -10,32 +10,32 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Daten für den Katalog der Berufsebenen beim Berufskolleg.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Berufsebenen beim Berufskolleg.")
+@Schema(description = "ein Eintrag in dem Katalog der Berufsebenen beim Berufskolleg.")
 @TranspilerDTO
 public class BerufskollegBerufsebeneKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
 	/** Die Berufsebene. */
-	@Schema(description = "die Berufsebene", example="1")
+	@Schema(description = "die Berufsebene", example = "1")
 	public int ebene;
 	
 	/** Das Kürzel der Berufsebene */
-	@Schema(description = "das Kürzel der Berufsebene", example="IF")
+	@Schema(description = "das Kürzel der Berufsebene", example = "IF")
 	public @NotNull String kuerzel = "";
 	
 	/** Die Bezeichnung der Berufsebene. */
-	@Schema(description = "die Bezeichnung der Berufsebene", example="Informatik")
+	@Schema(description = "die Bezeichnung der Berufsebene", example = "Informatik")
 	public @NotNull String bezeichnung = "";
 
 	/** Gibt an, in welchem Schuljahr die Berufsebene einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Berufsebene einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem Schuljahr die Berufsebene einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr die Berufsebene gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Berufsebene gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr die Berufsebene gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigBis = null;
 
 

@@ -9,24 +9,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Sie beschreibt die grundlegenden Daten eines Faches.  
  */
 @XmlRootElement
-@Schema(description="Die Daten eines Faches.")
+@Schema(description = "Die Daten eines Faches.")
 @TranspilerDTO
 public class FachDaten {
 
 	/** Die ID des Faches. */
-	@Schema(description = "die ID des Faches", example="42")
+	@Schema(description = "die ID des Faches", example = "42")
 	public long id;
 
 	/** Das eindeutige Kürzel des Faches */
-	@Schema(description = "das eindeutige Kürzel des Faches", example="M")
+	@Schema(description = "das eindeutige Kürzel des Faches", example = "M")
 	public String kuerzel;
 	
 	/** Die Bezeichnung des Faches */
-	@Schema(description = "die Bezeichnung des Faches ", example="Mathematik")
+	@Schema(description = "die Bezeichnung des Faches ", example = "Mathematik")
 	public String bezeichnung;
 	
 	/** Das Statistik-Kürzel des Faches */
-	@Schema(description = "das Statistik-Kürzel des Faches ", example="M")
+	@Schema(description = "das Statistik-Kürzel des Faches ", example = "M")
 	public String kuerzelStatistik;
 	
 	

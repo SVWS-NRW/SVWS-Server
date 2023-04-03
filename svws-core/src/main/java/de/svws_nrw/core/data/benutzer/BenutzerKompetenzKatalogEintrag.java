@@ -11,20 +11,20 @@ import jakarta.validation.constraints.NotNull;
  * Sie beschreibt den Katalog der Benutzerkompetenzen.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag im Katalog der Benutzerkompetenzen.")
+@Schema(description = "ein Eintrag im Katalog der Benutzerkompetenzen.")
 @TranspilerDTO
 public class BenutzerKompetenzKatalogEintrag {
 
 	/** Die ID der Benutzerkompetenz. */
-	@Schema(description = "die ID der Benutzerkompetenz", example="11")
+	@Schema(description = "die ID der Benutzerkompetenz", example = "11")
 	public long id = -1;
 	
 	/** Die ID der zugehörigen Benutzerkompetenzgruppe. */
-	@Schema(description = "die ID der zugehörigen Benutzerkompetenzgruppe", example="100")
+	@Schema(description = "die ID der zugehörigen Benutzerkompetenzgruppe", example = "100")
 	public @NotNull long gruppe_id = -1;
 	
 	/** Die Bezeichnung der Benutzerkompetenz. */
-	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example="Ansehen")
+	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example = "Ansehen")
 	public @NotNull String bezeichnung = "";
 	
 

@@ -18,16 +18,16 @@ import jakarta.validation.constraints.NotNull;
  * beim Wechsel zu einem Weiterbildungskolleg.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Herkünfte aus Typen von Bildungsgängen an Berufskollegs oder Weiterbildungskollegs.")
+@Schema(description = "ein Eintrag in dem Katalog der Herkünfte aus Typen von Bildungsgängen an Berufskollegs oder Weiterbildungskollegs.")
 @TranspilerDTO
 public class HerkunftBildungsgangTypKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example="4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id = -1;
 
 	/** Das Kürzel des Bildungsgangestyps, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
-	@Schema(description = "das Kürzel des Bildungsgangestyps, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example="AG")
+	@Schema(description = "das Kürzel des Bildungsgangestyps, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "AG")
 	public @NotNull String kuerzel = "";
 
 	/** Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB). */
@@ -35,15 +35,15 @@ public class HerkunftBildungsgangTypKatalogEintrag {
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 	
 	/** Die textuelle Beschreibung des Bildungsgangtyps. */
-	@Schema(description = "die textuelle Beschreibung des Bildungsgangtyps", example="Weiterbildungskolleg: Abendgymnasium")
+	@Schema(description = "die textuelle Beschreibung des Bildungsgangtyps", example = "Weiterbildungskolleg: Abendgymnasium")
 	public @NotNull String beschreibung = "";
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
 

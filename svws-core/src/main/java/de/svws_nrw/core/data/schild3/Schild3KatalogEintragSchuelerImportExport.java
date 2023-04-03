@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Import und Export von Schülerdaten.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog Import und Export von Schülerdaten")
+@Schema(description = "Schild3-Katalog Import und Export von Schülerdaten")
 @TranspilerDTO
 public class Schild3KatalogEintragSchuelerImportExport {
 

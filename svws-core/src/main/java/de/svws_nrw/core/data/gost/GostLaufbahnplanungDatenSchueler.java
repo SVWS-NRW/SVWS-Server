@@ -15,28 +15,28 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Die Klasse enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
+@Schema(description = "Enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLaufbahnplanungDatenSchueler {
 	
 	/** Die eindeutige ID des Schülers */
-	@Schema(description = "Die eindeutige ID des Schülers.", example="4711")
+	@Schema(description = "Die eindeutige ID des Schülers.", example = "4711")
 	public long id;
 
 	/** Der Vorname des Schülers */
-	@Schema(description = "Der Vorname des Schülers.", example="Max")
+	@Schema(description = "Der Vorname des Schülers.", example = "Max")
 	public @NotNull String vorname = "";
 
 	/** Der Nachname des Schülers */
-	@Schema(description = "Der Nachname des Schülers.", example="Mustermann")
+	@Schema(description = "Der Nachname des Schülers.", example = "Mustermann")
 	public @NotNull String nachname = "";
 
 	/** Das Geschlecht des Schülers */
-	@Schema(description = "Das Geschlecht des Schülers.", example="w")
+	@Schema(description = "Das Geschlecht des Schülers.", example = "w")
 	public @NotNull String geschlecht = "";
 
     /** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
-	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example="E")
+	@Schema(description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example = "E")
 	public String bilingualeSprache = null;
 
 	/** Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. */

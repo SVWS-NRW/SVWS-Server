@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * Gymnasiale Oberstufe.
  */
 @XmlRootElement
-@Schema(description="Informationen zu den Leistungsdaten von einem Schüler der gymnasialen Oberstufe.")
+@Schema(description = "Informationen zu den Leistungsdaten von einem Schüler der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostLeistungen {
 

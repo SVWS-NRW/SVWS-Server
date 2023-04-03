@@ -9,16 +9,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert die Informationen zu dem Stundenplan eines Schülers.  
  */
 @XmlRootElement
-@Schema(description="der Stundenplan eines Schülers.")
+@Schema(description = "der Stundenplan eines Schülers.")
 @TranspilerDTO
 public class Schuelerklausur {
 
 	/** Die ID des Stundenplans. */
-	@Schema(description = "die ID des Stundenplans", example="815")
+	@Schema(description = "die ID des Stundenplans", example = "815")
 	public long idSchuelerklausur = -1;
 
 	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(description = "die textuelle Beschreibung des Stundenplans", example="Stundenplan zum Schuljahresanfang")
+	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
 	public long idKursklausur = -1;
 	
 	/** Das Zeitraster des Stundenplans. */
@@ -30,7 +30,7 @@ public class Schuelerklausur {
 	public long idSchueler = -1;
 	
 	/** Das Datum, ab dem der Stundenpland gültig ist. */
-	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example="1.1.1899")
+	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example = "1.1.1899")
 	public String startzeit = null;
 
 }

@@ -13,12 +13,12 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert den Katalog der Abgangsarten.  
  */
 @XmlRootElement
-@Schema(description="der Katalog der Abgangsarten.")
+@Schema(description = "der Katalog der Abgangsarten.")
 @TranspilerDTO
 public class AbgangsartKatalog {
 
 	/** Die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht. */
-	@Schema(description = "die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht", example="3")
+	@Schema(description = "die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht", example = "3")
 	public long version = -1;
 
 	/** Die Einträge des Katalogs. */

@@ -11,24 +11,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * als auch für die OpenAPI-Schnittstelle.
  */
 @XmlRootElement
-@Schema(description="Informationen zu einem Beratungslehrer.")
+@Schema(description = "Informationen zu einem Beratungslehrer.")
 @TranspilerDTO
 public class GostBeratungslehrer {
 
 	/** Die ID des Lehrers. */
-	@Schema(description = "die ID des Lehrers", example="4711")
+	@Schema(description = "die ID des Lehrers", example = "4711")
 	public long id;
 
 	/** Das Kürzel des Lehrers. */
-	@Schema(description = "das Kürzel des Lehrers", example="MUS")
+	@Schema(description = "das Kürzel des Lehrers", example = "MUS")
 	public String kuerzel;
 
 	/** Der Nachname des Lehrers. */
-	@Schema(description = "der Nachname des Lehrers", example="Mustermann")
+	@Schema(description = "der Nachname des Lehrers", example = "Mustermann")
 	public String nachname;
 
 	/** Der Vorname des Lehrers. */
-	@Schema(description = "der Vorname des Lehrers", example="Max")
+	@Schema(description = "der Vorname des Lehrers", example = "Max")
 	public String vorname;
 
 }

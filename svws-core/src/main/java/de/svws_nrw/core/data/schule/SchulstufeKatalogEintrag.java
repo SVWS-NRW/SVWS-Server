@@ -14,20 +14,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Katalog der Schulstufen.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag im Katalog der Schulstufen.")
+@Schema(description = "ein Eintrag im Katalog der Schulstufen.")
 @TranspilerDTO
 public class SchulstufeKatalogEintrag {
 
     /** Die ID des Katalog-Eintrags. */
-    @Schema(description = "die ID des Katalog-Eintrags", example="4711")
+    @Schema(description = "die ID des Katalog-Eintrags", example = "4711")
     public long id = -1;
 
 	/** Das eindeutige Kürzel des Katalog-Eintrags. */
-	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example="SI")
+	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example = "SI")
 	public @NotNull String kuerzel = "";
 
     /** Die Bezeichnung des Katalog-Eintrags. */
-    @Schema(description = "die Bezeichnung des Katalog-Eintrags", example="Sekundarstufe I")
+    @Schema(description = "die Bezeichnung des Katalog-Eintrags", example = "Sekundarstufe I")
     public @NotNull String bezeichnung = "";
 
     /** Die Kürzel der Schulformen die bei der Schulstufe vorkommen. */
@@ -35,11 +35,11 @@ public class SchulstufeKatalogEintrag {
     public @NotNull List<@NotNull String> schulformen = new Vector<>();
     
     /** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-    @Schema(description = "gibt an, in welchem schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+    @Schema(description = "gibt an, in welchem schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
     public Integer gueltigVon = null;
 
     /** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-    @Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+    @Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
     public Integer gueltigBis = null;
 
 
