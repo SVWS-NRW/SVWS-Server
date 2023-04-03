@@ -14,10 +14,10 @@ import jakarta.validation.constraints.NotNull;
  * und wandelt zuletzt {@link KursblockungDynDaten} in die Ausgabedaten {@link GostBlockungsergebnisManager} um. Der
  * Service überschreitet dabei nicht die Zeit, die in {@link GostBlockungsdatenManager#getMaxTimeMillis()} festgelegt
  * wurde.
- * 
+ *
  * @author Benjamin A. Bartsch */
 public class KursblockungAlgorithmus
-		extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
+extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
 
 	@Override
 	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
@@ -38,26 +38,26 @@ public class KursblockungAlgorithmus
 		final @NotNull Vector<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new Vector<>();
 
 		final @NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
-				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
-				new KursblockungAlgorithmusKSchnellW(random, logger, dynDaten),
-				new KursblockungAlgorithmusKFachwahlmatrix(random, logger, dynDaten),
-				new KursblockungAlgorithmusKMatching(random, logger, dynDaten),
-				new KursblockungAlgorithmusKSchuelervorschlag(random, logger, dynDaten),
-				new KursblockungAlgorithmusKOptimiereBest(random, logger, dynDaten),
-				// ... Ende der K-Algorithmen.
+			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
+			new KursblockungAlgorithmusKSchnellW(random, logger, dynDaten),
+			new KursblockungAlgorithmusKFachwahlmatrix(random, logger, dynDaten),
+			new KursblockungAlgorithmusKMatching(random, logger, dynDaten),
+			new KursblockungAlgorithmusKSchuelervorschlag(random, logger, dynDaten),
+			new KursblockungAlgorithmusKOptimiereBest(random, logger, dynDaten),
+			// ... Ende der K-Algorithmen.
 		};
 
 		final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS = new KursblockungAlgorithmusS @NotNull [] {
-				// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
-				new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten),
-				new KursblockungAlgorithmusSZufaellig(random, logger, dynDaten),
-				new KursblockungAlgorithmusSMatching(random, logger, dynDaten),
-				new KursblockungAlgorithmusSMatchingW(random, logger, dynDaten),
-				// ... Ende der S-Algorithmen.
+			// Alle Algorithmen zur Verteilung von SuS auf ihre Kurse ...
+			new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten),
+			new KursblockungAlgorithmusSZufaellig(random, logger, dynDaten),
+			new KursblockungAlgorithmusSMatching(random, logger, dynDaten),
+			new KursblockungAlgorithmusSMatchingW(random, logger, dynDaten),
+			// ... Ende der S-Algorithmen.
 		};
 
 		// Hauptschleife: Jeder Algorithmus-K erhält stetig mehr Zeit.
-		long zeitProK = 100l; // weniger als 100 führt zu unnützen Ergebnissen
+		long zeitProK = 100L; // weniger als 100 führt zu unnützen Ergebnissen
 		do {
 			// Jeder Algorithmus-K wird ausprobiert.
 			for (int iK = 0; iK < algorithmenK.length; iK++) {

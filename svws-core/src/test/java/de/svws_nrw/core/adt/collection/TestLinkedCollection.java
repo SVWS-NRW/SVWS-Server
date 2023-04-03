@@ -1,29 +1,29 @@
 /*
  * Copyright 2022 Marina Bachran
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- * 
- * 1. Redistributions of source code must retain the above copyright 
+ *
+ * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holder nor the names of its 
- *    contributors may be used to endorse or promote products derived from 
- *    this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.svws_nrw.core.adt.collection;
@@ -36,8 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -47,49 +45,49 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Testet die Klasse {@link LinkedCollection} 
- * 
+ * Testet die Klasse {@link LinkedCollection}
+ *
  * @author Marina Bachran
  */
 class TestLinkedCollection {
 
-	static private LinkedCollection<Integer> coll;
-	static private LinkedCollection<Integer> coll2;
-	static private Vector<Integer> v2;
-	static private Vector<Integer> v3;
-	static private Vector<Integer> v4;
-	
-	static private LinkedCollection<Integer> empty;
+	private static LinkedCollection<Integer> coll;
+	private static LinkedCollection<Integer> coll2;
+	private static Vector<Integer> v2;
+	private static Vector<Integer> v3;
+	private static Vector<Integer> v4;
 
-	static private final Integer[] data = { 5, 5, 4, 3, 2, 7, 1 };
-	static private final Integer[] data2 = { 3, 42, 0, 7, 8, 9 };
-	static private final Integer[] data3 = { 8, 9, 22, 42 };
-	static private final Integer[] data4 = { 3, 42, 0, 7, 8, 9, 21 };
-	static private final Integer[] dataRemovedData2 = { 5, 5, 4, 2, 1 };
-	static private final Integer[] dataRetainedData2 = { 3, 7 };
-	
-	
+	private static LinkedCollection<Integer> empty;
+
+	private static final Integer[] data = { 5, 5, 4, 3, 2, 7, 1 };
+	private static final Integer[] data2 = { 3, 42, 0, 7, 8, 9 };
+	private static final Integer[] data3 = { 8, 9, 22, 42 };
+	private static final Integer[] data4 = { 3, 42, 0, 7, 8, 9, 21 };
+	private static final Integer[] dataRemovedData2 = { 5, 5, 4, 2, 1 };
+	private static final Integer[] dataRetainedData2 = { 3, 7 };
+
+
 	/**
 	 * Bereitet mehrere Datenstrukturen für die einzelnen Testmethoden vor.
 	 */
 	@BeforeEach
 	void setUp() {
 		coll = new LinkedCollection<>();
-		for (Integer value : data)
+		for (final Integer value : data)
 			coll.add(value);
 		coll2 = new LinkedCollection<>();
-		for (Integer value : data2)
+		for (final Integer value : data2)
 			coll2.add(value);
 		v2 = new Vector<>();
-		for (Integer value : data2)
+		for (final Integer value : data2)
 			v2.add(value);
 		v3 = new Vector<>();
-		for (Integer value : data3)
+		for (final Integer value : data3)
 			v3.add(value);
 		v4 = new Vector<>();
-		for (Integer value : data4)
+		for (final Integer value : data4)
 			v4.add(value);
-    	empty = new LinkedCollection<>();
+		empty = new LinkedCollection<>();
 	}
 
 	/**
@@ -108,7 +106,7 @@ class TestLinkedCollection {
 	@SuppressWarnings("static-method")
 	@Test
 	final void testLinkedCollection() {
-		LinkedCollection<Integer> result = new LinkedCollection<>();
+		final LinkedCollection<Integer> result = new LinkedCollection<>();
 		assertNotNull(result);
 		assertEquals(0, result.size());
 	}
@@ -119,7 +117,7 @@ class TestLinkedCollection {
 	@SuppressWarnings("static-method")
 	@Test
 	final void testLinkedCollectionLinkedCollectionOfQextendsE() {
-		LinkedCollection<Integer> result = new LinkedCollection<>(coll);
+		final LinkedCollection<Integer> result = new LinkedCollection<>(coll);
 		assertNotNull(result);
 		assertEquals(coll.size(), result.size());
 	}
@@ -165,7 +163,7 @@ class TestLinkedCollection {
 	@SuppressWarnings("static-method")
 	@Test
 	final void testIterator() {
-		Iterator<Integer> iter = coll.iterator();
+		final Iterator<Integer> iter = coll.iterator();
 		assertTrue(iter.hasNext());
 		assertEquals(5, iter.next());
 		assertTrue(iter.hasNext());
@@ -182,7 +180,7 @@ class TestLinkedCollection {
 		assertEquals(1, iter.next());
 		assertFalse(iter.hasNext());
 		assertThrows(NoSuchElementException.class, () -> { iter.next(); });
-		Iterator<Integer> iter2 = coll.iterator();
+		final Iterator<Integer> iter2 = coll.iterator();
 		coll.add(11);
 		assertThrows(ConcurrentModificationException.class, () -> { iter2.next(); });
 	}
@@ -207,11 +205,11 @@ class TestLinkedCollection {
 	@SuppressWarnings({ "static-method" })
 	@Test
 	final void testToArrayTArray() {
-		Integer[] big = new Integer[10];
-		Integer[] small = new Integer[4];
+		final Integer[] big = new Integer[10];
+		final Integer[] small = new Integer[4];
 		Integer[] a = coll.toArray(big);
 		assertEquals(10, a.length);
-		Integer[] cmp = new Integer[10];
+		final Integer[] cmp = new Integer[10];
 		System.arraycopy(data, 0, cmp, 0, data.length);
 		assertArrayEquals(cmp, a);
 		a = coll.toArray(small);
@@ -277,14 +275,14 @@ class TestLinkedCollection {
 	@SuppressWarnings("static-method")
 	@Test
 	final void testAddAll() {
-		LinkedCollection<Integer> cloneColl = new LinkedCollection<>(coll);  
-		Integer[] both = coll.toArray(new Integer[coll.size() + coll2.size()]);
-		Integer[] second = coll2.toArray(new Integer[0]);
+		final LinkedCollection<Integer> cloneColl = new LinkedCollection<>(coll);
+		final Integer[] both = coll.toArray(new Integer[coll.size() + coll2.size()]);
+		final Integer[] second = coll2.toArray(new Integer[0]);
 		System.arraycopy(second, 0, both, coll.size(), coll2.size());
 		coll.addAll(coll2);
 		assertEquals(both.length, coll.size());
 		assertArrayEquals(both, coll.toArray());
-		
+
 		assertFalse(coll.addAll(empty));
 
 		empty.addAll(coll2);
@@ -306,10 +304,10 @@ class TestLinkedCollection {
 		assertTrue(coll.removeAll(v2));
 		assertEquals(dataRemovedData2.length, coll.size());
 		assertArrayEquals(dataRemovedData2, coll.toArray());
-		
+
 		assertTrue(coll2.removeAll(coll2));
 		assertEquals(0, coll2.size());
-		
+
 		assertFalse(empty.removeAll(empty));
 		assertEquals(0, empty.size());
 	}
@@ -377,7 +375,7 @@ class TestLinkedCollection {
 	@SuppressWarnings("static-method")
 	@Test
 	final void testSort() {
-		Integer[] sorted = { 1, 2, 3, 4, 5, 5, 7 };
+		final Integer[] sorted = { 1, 2, 3, 4, 5, 5, 7 };
 		assertTrue(coll.sort((a, b) -> Integer.compare(a, b)));
 		assertArrayEquals(sorted, coll.toArray());
 		assertTrue(empty.sort((a, b) -> Integer.compare(a, b)));

@@ -59,18 +59,18 @@ export class SprachBelegungSekI extends JavaObject {
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *
-	 * @param ASDJahrgang der Jahrgang in welchem mit der Sprache begonnen wurde
+	 * @param kuerzel   der Statistik-Jahrgang in welchem mit der Sprache begonnen wurde
 	 *
 	 * @return die Sprachbelegung in der Sek I
 	 */
-	public static getByASDJahrgang(ASDJahrgang : string | null) : SprachBelegungSekI {
-		if (ASDJahrgang === null)
+	public static getByASDJahrgang(kuerzel : string | null) : SprachBelegungSekI {
+		if (kuerzel === null)
 			return SprachBelegungSekI.NICHT_BELEGT;
-		if (JavaString.compareTo(ASDJahrgang, "05") <= 0)
+		if (JavaString.compareTo(kuerzel, "05") <= 0)
 			return SprachBelegungSekI.AB_JAHRGANG_5;
-		if (JavaString.compareTo(ASDJahrgang, "07") <= 0)
+		if (JavaString.compareTo(kuerzel, "07") <= 0)
 			return SprachBelegungSekI.MIND_4_JAHRE;
-		if (JavaString.compareTo(ASDJahrgang, "09") <= 0)
+		if (JavaString.compareTo(kuerzel, "09") <= 0)
 			return SprachBelegungSekI.MIND_2_JAHRE;
 		return SprachBelegungSekI.NICHT_BELEGT;
 	}

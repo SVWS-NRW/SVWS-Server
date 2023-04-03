@@ -14,21 +14,21 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Testet die Klasse {@link LinkedCollection}.
- * 
+ *
  * @author Benjamin A. Bartsch
  */
 public class TestDequeRandom {
 
-	private final int MAX_VALUE = 100;
-	private final int ROUNDS = 100000;
-	private final Random RND = new Random(1l);
+	private final int _MAX_VALUE = 100;
+	private final int _ROUNDS = 100000;
+	private final Random random = new Random(1L);
 	private final Deque<Integer> d1 = new LinkedCollection<>();
 	private final Deque<Integer> d2 = new LinkedList<>();
 
 	/**
 	 * Folgende Methoden werden zufällig getestet. <br>
-	 * 
-	 * 
+	 *
+	 *
 	 * ----- interface Deque<E> ----- void <br>
 	 * addFirst(E e); <br>
 	 * void addLast(E e); <br>
@@ -47,8 +47,8 @@ public class TestDequeRandom {
 	 * void push(E e); <br>
 	 * E pop(); <br>
 	 * TODO iterator.remove() fails on {@link LinkedCollection} <br>
-	 * 
-	 * 
+	 *
+	 *
 	 * ----- interface Queue<E> ----- <br>
 	 * E remove(); <br>
 	 * E poll(); <br>
@@ -56,8 +56,8 @@ public class TestDequeRandom {
 	 * E peek(); <br>
 	 * Iterator<E> descendingIterator(); <br>
 	 * boolean offer(E e); <br>
-	 * 
-	 * 
+	 *
+	 *
 	 * ----- interface Collection<E> ----- <br>
 	 * int size(); <br>
 	 * boolean isEmpty(); <br>
@@ -73,15 +73,15 @@ public class TestDequeRandom {
 	 * clear(); <br>
 	 * boolean equals(Object o); <br>
 	 * public String toString(); <br>
-	 * 
+	 *
 	 */
 	@Test
 	@DisplayName("Testet grundlegende Funktionen der {@link LinkedCollection}.")
 	void testeAlles() {
-		for (int i = 0; i < ROUNDS; i++) {
-			int type = RND.nextInt(3);
+		for (int i = 0; i < _ROUNDS; i++) {
+			final int type = random.nextInt(3);
 			if (type == 0) { // Adding
-				switch (RND.nextInt(9)) {
+				switch (random.nextInt(9)) {
 					case 0 -> testAddFirst();
 					case 1 -> testAddFirst();
 					case 2 -> testAddLast();
@@ -95,7 +95,7 @@ public class TestDequeRandom {
 				}
 			}
 			if (type == 1) { // Removing
-				switch (RND.nextInt(15)) {
+				switch (random.nextInt(15)) {
 					case 0 -> testRemoveFirst();
 					case 1 -> testRemoveLast();
 					case 2 -> testPollFirst();
@@ -115,7 +115,7 @@ public class TestDequeRandom {
 				}
 			}
 			if (type == 2) { // Misc
-				switch (RND.nextInt(19)) {
+				switch (random.nextInt(19)) {
 					case 0 -> testSize();
 					case 1 -> testGetFirst();
 					case 2 -> testGetLast();
@@ -143,50 +143,50 @@ public class TestDequeRandom {
 
 	private void testHashCode() {
 		if (d1.hashCode() != d2.hashCode())
-			fail("d1.hashCode() != d2.hashCode() --> "+d1.hashCode()+" != "+d2.hashCode());
+			fail("d1.hashCode() != d2.hashCode() --> " + d1.hashCode() + " != " + d2.hashCode());
 	}
 
 	private void testToString() {
-		if (d1.toString().equals(d2.toString()) == false)
-			fail("d1.toString().equals(d2.toString()) == false");
+		if (d1.toString().equals(d2.toString()))
+			fail("d1.toString().equals(d2.toString())");
 	}
 
 	private void testRemoveToElement() {
 		if (d1.size() != d2.size())
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
 		if (d1.size() != 0) {
-			Integer i1 = d1.remove();
-			Integer i2 = d2.remove();
+			final Integer i1 = d1.remove();
+			final Integer i2 = d2.remove();
 			if (i1 != i2)
 				fail("d1.remove() != d2.remove() --> " + i1 + "!=" + i2);
 		} else {
 			try {
 				d1.remove();
 				fail("d1.remove() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.remove();
 				fail("d2.remove() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
 	}
 
 	private void testSpecialSort() {
-		LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
+		final LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
 
 		temp1.sort(new Comparator<Integer>() {
 			@Override
-			public int compare(Integer o1, Integer o2) {
+			public int compare(final Integer o1, final Integer o2) {
 				return o1.compareTo(o2);
 			}
 		});
 
 		Integer old = null;
-		for (Integer value : temp1) {
+		for (final Integer value : temp1) {
 			if (old != null)
 				if (old.compareTo(value) > 0)
 					fail("old.compareTo(value) > 0 --> LinkedCollection IST NICHT SORTIERT");
@@ -199,30 +199,30 @@ public class TestDequeRandom {
 		if (d1.isEmpty())
 			return;
 
-		LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
-		int index = RND.nextInt(d1.size());
-		int value2 = RND.nextInt(MAX_VALUE);
+		final LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
+		final int index = random.nextInt(d1.size());
+		final int value2 = random.nextInt(_MAX_VALUE);
 		temp1.set(index, value2);
-		Integer value3 = temp1.get(index);
+		final Integer value3 = temp1.get(index);
 
 		if (value2 != value3)
 			fail("value2 != value3 --> " + value2 + " != " + value3);
 	}
 
 	private void testRetainAllSelfOrNull() {
-		if (RND.nextBoolean()) {
+		if (random.nextBoolean()) {
 			d1.clear();
 			d2.clear();
 		}
 
-		if (RND.nextBoolean()) {
-			boolean b1 = d1.retainAll(d1);
-			boolean b2 = d2.retainAll(d2);
+		if (random.nextBoolean()) {
+			final boolean b1 = d1.retainAll(d1);
+			final boolean b2 = d2.retainAll(d2);
 			if (b1 != b2)
 				fail("d1.retainAll(d1) != d2.retainAll(d2) --> " + b1 + " != " + b2);
 		} else {
-			boolean b1 = d1.retainAll(null);
-			boolean b2 = d2.retainAll(new LinkedList<>());
+			final boolean b1 = d1.retainAll(null);
+			final boolean b2 = d2.retainAll(new LinkedList<>());
 			if (b1 != b2)
 				fail("d1.retainAll(null) != d2.retainAll(null) --> " + b1 + " != " + b2);
 		}
@@ -231,13 +231,13 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveAllSelf() {
-		if (RND.nextBoolean()) {
+		if (random.nextBoolean()) {
 			d1.clear();
 			d2.clear();
 		}
 
-		boolean b1 = d1.removeAll(d1);
-		boolean b2 = d2.removeAll(d2);
+		final boolean b1 = d1.removeAll(d1);
+		final boolean b2 = d2.removeAll(d2);
 
 		if (b1 != b2)
 			fail("d1.removeAll(d1) != d2.removeAll(d2) --> " + b1 + " != " + b2);
@@ -246,20 +246,20 @@ public class TestDequeRandom {
 	}
 
 	private void testEquals() {
-		if (d1.equals(d2) == false)
-			fail("d1.equals(d2) == false");
+		if (d1.equals(d2))
+			fail("d1.equals(d2)");
 		// Das klappt nicht, weil d2=LinkedList testet, ob d1 vom Typ List ist.
-		// if (d2.equals(d1) == false)
-		// fail("d2.equals(d1) == false");
+		// if (d2.equals(d1))
+		// fail("d2.equals(d1)");
 	}
 
 	private void testRetainAll() {
-		LinkedList<Integer> temp = new LinkedList<>();
+		final LinkedList<Integer> temp = new LinkedList<>();
 		for (int i = 0; i < d1.size() / 4; i++)
-			temp.addLast(RND.nextInt(MAX_VALUE));
+			temp.addLast(random.nextInt(_MAX_VALUE));
 
-		boolean b1 = d1.retainAll(temp);
-		boolean b2 = d2.retainAll(temp);
+		final boolean b1 = d1.retainAll(temp);
+		final boolean b2 = d2.retainAll(temp);
 
 		if (b1 != b2)
 			fail("d1.retainAll(temp) != d2.retainAll(temp) --> " + b1 + " != " + b2);
@@ -268,10 +268,10 @@ public class TestDequeRandom {
 	}
 
 	private void testRemoveAll() {
-		LinkedList<Integer> temp = getListWithSomeElementsInCommon();
+		final LinkedList<Integer> temp = getListWithSomeElementsInCommon();
 
-		boolean b1 = d1.removeAll(temp);
-		boolean b2 = d2.removeAll(temp);
+		final boolean b1 = d1.removeAll(temp);
+		final boolean b2 = d2.removeAll(temp);
 
 		if (b1 != b2)
 			fail("d1.removeAll(temp) != d2.removeAll(temp) --> " + b1 + " != " + b2);
@@ -280,81 +280,81 @@ public class TestDequeRandom {
 	}
 
 	private void testContainsAll() {
-		LinkedList<Integer> temp = getListWithSomeElementsInCommon();
+		final LinkedList<Integer> temp = getListWithSomeElementsInCommon();
 
-		boolean b1 = d1.containsAll(temp);
-		boolean b2 = d2.containsAll(temp);
+		final boolean b1 = d1.containsAll(temp);
+		final boolean b2 = d2.containsAll(temp);
 
 		if (b1 != b2)
 			fail("d1.containsAll(temp) != d2.containsAll(temp) --> " + b1 + " != " + b2);
 	}
 
 	private LinkedList<Integer> getListWithSomeElementsInCommon() {
-		LinkedList<Integer> temp = new LinkedList<>();
-		for (Integer value : d1)
-			if (RND.nextBoolean())
+		final LinkedList<Integer> temp = new LinkedList<>();
+		for (final Integer value : d1)
+			if (random.nextBoolean())
 				temp.addLast(value);
-		Integer value = RND.nextInt(MAX_VALUE);
+		final Integer value = random.nextInt(_MAX_VALUE);
 		temp.addLast(value);
 		return temp;
 	}
 
 	private void testToArrayWithType() {
-		Integer[] o1 = d1.toArray(new Integer[0]);
-		Integer[] o2 = d2.toArray(new Integer[0]);
+		final Integer[] o1 = d1.toArray(new Integer[0]);
+		final Integer[] o2 = d2.toArray(new Integer[0]);
 
 		if (o1.length != o2.length)
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
 
 		for (int i = 0; i < o1.length; i++)
-			if (o1[i].equals(o2[i]) == false)
-				fail("o1[i].equals(o2[i]) == false --> " + o1[i] + " != " + o2[i]);
+			if (o1[i].equals(o2[i]))
+				fail("o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
-		Iterator<Integer> i1 = d1.iterator();
+		final Iterator<Integer> i1 = d1.iterator();
 		for (int i = 0; i < o1.length; i++) {
-			Integer value = i1.next();
-			if (o1[i].equals(value) == false)
-				fail("o1[i].equals(value) == false --> " + o1[i] + " != " + value);
+			final Integer value = i1.next();
+			if (o1[i].equals(value))
+				fail("o1[i].equals(value) --> " + o1[i] + " != " + value);
 		}
 
-		Iterator<Integer> i2 = d2.iterator();
+		final Iterator<Integer> i2 = d2.iterator();
 		for (int i = 0; i < o2.length; i++) {
-			Integer value = i2.next();
-			if (o2[i].equals(value) == false)
-				fail("o2[i].equals(value) == false --> " + o2[i] + " != " + value);
+			final Integer value = i2.next();
+			if (o2[i].equals(value))
+				fail("o2[i].equals(value) --> " + o2[i] + " != " + value);
 		}
 
 	}
 
 	private void testToArray() {
-		Object[] o1 = d1.toArray();
-		Object[] o2 = d2.toArray();
+		final Object[] o1 = d1.toArray();
+		final Object[] o2 = d2.toArray();
 
 		if (o1.length != o2.length)
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
 
 		for (int i = 0; i < o1.length; i++)
-			if (o1[i].equals(o2[i]) == false)
-				fail("o1[i].equals(o2[i]) == false --> " + o1[i] + " != " + o2[i]);
+			if (o1[i].equals(o2[i]))
+				fail("o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
 
-		Iterator<Integer> i1 = d1.iterator();
+		final Iterator<Integer> i1 = d1.iterator();
 		for (int i = 0; i < o1.length; i++) {
-			Integer value = i1.next();
-			if (o1[i].equals(value) == false)
-				fail("o1[i].equals(value) == false --> " + o1[i] + " != " + value);
+			final Integer value = i1.next();
+			if (o1[i].equals(value))
+				fail("o1[i].equals(value) --> " + o1[i] + " != " + value);
 		}
 
-		Iterator<Integer> i2 = d2.iterator();
+		final Iterator<Integer> i2 = d2.iterator();
 		for (int i = 0; i < o2.length; i++) {
-			Integer value = i2.next();
-			if (o2[i].equals(value) == false)
-				fail("o2[i].equals(value) == false --> " + o2[i] + " != " + value);
+			final Integer value = i2.next();
+			if (o2[i].equals(value))
+				fail("o2[i].equals(value) --> " + o2[i] + " != " + value);
 		}
 	}
 
 	private void testIsEmpty() {
-		boolean b1 = d1.isEmpty();
-		boolean b2 = d2.isEmpty();
+		final boolean b1 = d1.isEmpty();
+		final boolean b2 = d2.isEmpty();
 		if (b1 != b2)
 			fail("d1.isEmpty() != d2.isEmpty() --> " + b1 + "!=" + b2);
 	}
@@ -367,14 +367,14 @@ public class TestDequeRandom {
 	}
 
 	private void testDescendingIterator() {
-		Iterator<Integer> i1 = d1.descendingIterator();
-		Iterator<Integer> i2 = d2.descendingIterator();
+		final Iterator<Integer> i1 = d1.descendingIterator();
+		final Iterator<Integer> i2 = d2.descendingIterator();
 
 		while (i1.hasNext() || i2.hasNext()) {
 			if (i1.hasNext() != i2.hasNext())
 				testPrintLists(true);
-			int v1 = i1.next();
-			int v2 = i2.next();
+			final int v1 = i1.next();
+			final int v2 = i2.next();
 			if (v1 != v2)
 				testPrintLists(true);
 		}
@@ -382,17 +382,17 @@ public class TestDequeRandom {
 	}
 
 	private void testContains() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.contains(obj);
-		boolean b2 = d2.contains(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.contains(obj);
+		final boolean b2 = d2.contains(obj);
 		if (b1 != b2)
 			fail("d1.contains(temp1) != d2.contains(temp2) --> " + b1 + "!=" + b2);
 	}
 
 	private void testRemoveObject() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.remove(obj);
-		boolean b2 = d2.remove(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.remove(obj);
+		final boolean b2 = d2.remove(obj);
 		if (b1 != b2)
 			fail("d1.remove(temp1) != d2.remove(temp2) --> " + b1 + "!=" + b2);
 	}
@@ -401,28 +401,28 @@ public class TestDequeRandom {
 		if (d1.size() != d2.size())
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
 		if (d1.size() != 0) {
-			Integer i1 = d1.pop();
-			Integer i2 = d2.pop();
+			final Integer i1 = d1.pop();
+			final Integer i2 = d2.pop();
 			if (i1 != i2)
 				fail("d1.pop() != d2.pop() --> " + i1 + "!=" + i2);
 		} else {
 			try {
 				d1.pop();
 				fail("d1.pop() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.pop();
 				fail("d2.pop() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
 	}
 
 	private void testPush() {
-		Integer obj = RND.nextInt(MAX_VALUE);
+		final Integer obj = random.nextInt(_MAX_VALUE);
 		d1.push(obj);
 		d2.push(obj);
 		testEquality();
@@ -431,9 +431,9 @@ public class TestDequeRandom {
 	private void testAddAll() {
 		Deque<Integer> temp1 = new LinkedList<>();
 		Deque<Integer> temp2 = new LinkedList<>();
-		if (RND.nextBoolean()) {
+		if (random.nextBoolean()) {
 			for (int i = 0; i < 10; i++) {
-				int value = RND.nextInt(MAX_VALUE);
+				final int value = random.nextInt(_MAX_VALUE);
 				temp1.addLast(value);
 				temp2.addLast(value);
 			}
@@ -442,8 +442,8 @@ public class TestDequeRandom {
 			temp2 = d2;
 		}
 
-		boolean b1 = d1.addAll(temp1);
-		boolean b2 = d2.addAll(temp2);
+		final boolean b1 = d1.addAll(temp1);
+		final boolean b2 = d2.addAll(temp2);
 
 		if (b1 != b2)
 			fail("d1.addAll(temp1) != d2.addAll(temp2) --> " + b1 + "!=" + b2);
@@ -452,8 +452,8 @@ public class TestDequeRandom {
 	}
 
 	private void testPeek() {
-		Integer i1 = d1.peek();
-		Integer i2 = d2.peek();
+		final Integer i1 = d1.peek();
+		final Integer i2 = d2.peek();
 		if (i1 != i2)
 			fail("d1.peek() != d2.peek() --> " + i1 + "!=" + i2);
 	}
@@ -462,72 +462,72 @@ public class TestDequeRandom {
 		if (d1.size() != d2.size())
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
 		if (d1.size() != 0) {
-			Integer i1 = d1.element();
-			Integer i2 = d1.element();
+			final Integer i1 = d1.element();
+			final Integer i2 = d1.element();
 			if (i1 != i2)
 				fail("d1.element() != d2.element() --> " + i1 + "!=" + i2);
 		} else {
 			try {
 				d1.element();
 				fail("d1.element() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.element();
 				fail("d2.element() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
 	}
 
 	private void testPoll() {
-		Integer i1 = d1.poll();
-		Integer i2 = d2.poll();
+		final Integer i1 = d1.poll();
+		final Integer i2 = d2.poll();
 		if (i1 != i2)
 			fail("d1.poll() != d2.poll() --> " + i1 + "!=" + i2);
 	}
 
 	private void testRemoveToBoolean() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.remove(obj);
-		boolean b2 = d2.remove(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.remove(obj);
+		final boolean b2 = d2.remove(obj);
 		if (b1 != b2)
 			fail("d1.remove(" + obj + ") != d2.remove(" + obj + ") --> " + b1 + "!=" + b2);
 	}
 
 	private void testOffer() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.offer(obj);
-		boolean b2 = d2.offer(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.offer(obj);
+		final boolean b2 = d2.offer(obj);
 		if (b1 != b2)
 			fail("d1.offer(" + obj + ") != d2.offer(" + obj + ") --> " + b1 + "!=" + b2);
 
 	}
 
 	private void testAdd() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.add(obj);
-		boolean b2 = d2.add(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.add(obj);
+		final boolean b2 = d2.add(obj);
 		if (b1 != b2)
 			fail("d1.add(" + obj + ") != d2.add(" + obj + ") --> " + b1 + "!=" + b2);
 
 	}
 
 	private void testRemoveFirstOccurrence() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.removeFirstOccurrence(obj);
-		boolean b2 = d2.removeFirstOccurrence(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.removeFirstOccurrence(obj);
+		final boolean b2 = d2.removeFirstOccurrence(obj);
 		if (b1 != b2)
 			fail("d1.removeFirstOccurrence(" + obj + ") != d2.removeFirstOccurrence(" + obj + ") --> " + b1 + "!="
 					+ b2);
 	}
 
 	private void testRemoveLastOccurrence() {
-		Integer obj = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.removeLastOccurrence(obj);
-		boolean b2 = d2.removeLastOccurrence(obj);
+		final Integer obj = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.removeLastOccurrence(obj);
+		final boolean b2 = d2.removeLastOccurrence(obj);
 		if (b1 != b2)
 			fail("d1.removeLastOccurrence(" + obj + ") != d2.removeLastOccurrence(" + obj + ") --> " + b1 + "!=" + b2);
 	}
@@ -552,13 +552,13 @@ public class TestDequeRandom {
 			try {
 				d1.getFirst();
 				fail("d1.getFirst() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.getFirst();
 				fail("d2.getFirst() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
@@ -574,13 +574,13 @@ public class TestDequeRandom {
 			try {
 				d1.getLast();
 				fail("d1.getLast() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.getLast();
 				fail("d2.getLast() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
@@ -624,13 +624,13 @@ public class TestDequeRandom {
 			try {
 				d1.removeFirst();
 				fail("d1.removeFirst() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.removeFirst();
 				fail("d2.removeFirst() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
@@ -646,13 +646,13 @@ public class TestDequeRandom {
 			try {
 				d1.removeLast();
 				fail("d1.removeLast() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 			try {
 				d2.removeLast();
 				fail("d2.removeLast() != NoSuchElementException");
-			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 				// success
 			}
 		}
@@ -664,52 +664,52 @@ public class TestDequeRandom {
 	}
 
 	private void testOfferFirst() {
-		int num = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.offerFirst(num);
-		boolean b2 = d2.offerFirst(num);
+		final int num = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.offerFirst(num);
+		final boolean b2 = d2.offerFirst(num);
 		if (b1 != b2)
 			fail("d1.offerFirst(num) != d2.offerFirst(num) --> " + b1 + "!=" + b2);
 		testEquality();
 	}
 
 	private void testOfferLast() {
-		int num = RND.nextInt(MAX_VALUE);
-		boolean b1 = d1.offerLast(num);
-		boolean b2 = d2.offerLast(num);
+		final int num = random.nextInt(_MAX_VALUE);
+		final boolean b1 = d1.offerLast(num);
+		final boolean b2 = d2.offerLast(num);
 		if (b1 != b2)
 			fail("d1.offerLast(num) != d2.offerLast(num) --> " + b1 + "!=" + b2);
 		testEquality();
 	}
 
 	private void testAddFirst() {
-		int num = RND.nextInt(MAX_VALUE);
+		final int num = random.nextInt(_MAX_VALUE);
 		d1.addFirst(num);
 		d2.addFirst(num);
 		testEquality();
 	}
 
 	private void testAddLast() {
-		int num = RND.nextInt(MAX_VALUE);
+		final int num = random.nextInt(_MAX_VALUE);
 		d1.addLast(num);
 		d2.addLast(num);
 		testEquality();
 	}
 
 	private void testEquality() {
-		Iterator<Integer> i1 = d1.iterator();
-		Iterator<Integer> i2 = d2.iterator();
+		final Iterator<Integer> i1 = d1.iterator();
+		final Iterator<Integer> i2 = d2.iterator();
 
 		while (i1.hasNext() || i2.hasNext()) {
 			if (i1.hasNext() != i2.hasNext())
 				testPrintLists(true);
-			int v1 = i1.next();
-			int v2 = i2.next();
+			final int v1 = i1.next();
+			final int v2 = i2.next();
 			if (v1 != v2)
 				testPrintLists(true);
 		}
 	}
 
-	private void testPrintLists(boolean fail) {
+	private void testPrintLists(final boolean fail) {
 		System.out.println("d1 = " + d1);
 		System.out.println("d2 = " + d2);
 		if (fail)
