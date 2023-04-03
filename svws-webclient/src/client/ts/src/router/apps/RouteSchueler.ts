@@ -16,6 +16,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { RouteDataSchueler } from "./schueler/RouteDataSchueler";
+import { routeSchuelerKAoA } from "./schueler/RouteSchuelerKAoA";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
@@ -34,6 +35,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			routeSchuelerSchulbesuch,
 			routeSchuelerAbschnitt,
 			routeSchuelerLeistungen,
+			routeSchuelerKAoA,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan
 		];
