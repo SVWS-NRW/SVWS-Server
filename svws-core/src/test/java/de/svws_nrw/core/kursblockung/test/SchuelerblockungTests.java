@@ -37,47 +37,47 @@ public class SchuelerblockungTests {
 	@Test
 	@DisplayName("Testet den Schülerblockungs-Algorithmus mit randomisierten Daten.")
 	void testeSchuelerblockungAlgorithmusZufaellig() {
-		Random lRandom = new Random(_SEED);
+		final Random lRandom = new Random(_SEED);
 		for (int i = 0; i < _ANZAHL_AN_ZUFALLSTESTS; i++)
 			testeSchuelerblockAlgorithmusZufaelligEinMal(lRandom);
 	}
 
-	private static void testeSchuelerblockAlgorithmusZufaelligEinMal(Random pRandom) {
+	private static void testeSchuelerblockAlgorithmusZufaelligEinMal(final Random pRandom) {
 
 		// Der Kursblockungsalgorithmus ist ein Service.
-		SchuelerblockungAlgorithmus alg = new SchuelerblockungAlgorithmus();
+		final SchuelerblockungAlgorithmus alg = new SchuelerblockungAlgorithmus();
 
 		// Logger vom Service übernehmen
-		Logger log = alg.getLogger();
+		final Logger log = alg.getLogger();
 
 		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
-			public void accept(LogData t) {
+			public void accept(final LogData t) {
 				if (t.getLevel().compareTo(LogLevel.APP) != 0)
 					fail(t.getText());
 			}
 		});
 
 		// Erzeugen von zufälligen Eingabedaten
-		SchuelerblockungInput in = new SchuelerblockungInput();
+		final SchuelerblockungInput in = new SchuelerblockungInput();
 		// in.schuelerID = pRunde; // irrelevant
 
-		int nFachwahlen = 1 + pRandom.nextInt(15); // 1 bis 15 Fachwahlen
+		final int nFachwahlen = 1 + pRandom.nextInt(15); // 1 bis 15 Fachwahlen
 		int nFachwahlenDavonMulti = pRandom.nextInt(4); // 0 bis 4 Multikurse
 		if (nFachwahlenDavonMulti > nFachwahlen)
 			nFachwahlenDavonMulti = pRandom.nextInt(nFachwahlen);
 		int nKurse = 0; // Zähler für die Kurse.
-		int nSchienen = nFachwahlen + nFachwahlenDavonMulti;
+		final int nSchienen = nFachwahlen + nFachwahlenDavonMulti;
 		in.schienen = nSchienen;
-		AVLSet<String> setFachart = new AVLSet<>();
+		final AVLSet<String> setFachart = new AVLSet<>();
 		// System.out.println("nFachwahlen = " + nFachwahlen);
 		// System.out.println("nFachwahlenDavonMulti = " + nFachwahlenDavonMulti);
 
 		// Erzeuge Fachwahlen.
 		int startSchiene = 1;
 		for (int i = 0; i < nFachwahlen; i++) {
-			GostFachwahl fachwahl = new GostFachwahl();
+			final GostFachwahl fachwahl = new GostFachwahl();
 			fachwahl.schuelerID = 1; // Fake-ID
 			fachwahl.fachID = pRandom.nextLong(30); // Es gibt ca. 30 verschiedene Fächer.
 			fachwahl.kursartID = pRandom.nextInt(5); // Es gibt ca. 5 verschiedene Kursarten.
@@ -92,9 +92,9 @@ public class SchuelerblockungTests {
 			}
 
 			// Erzeuge die zugehörigen Kurse der Fachwahl.
-			int nKurseDieserFachwahl = pRandom.nextInt(6) + 1; // 1 bis 6 Kurse erzeugen.
+			final int nKurseDieserFachwahl = pRandom.nextInt(6) + 1; // 1 bis 6 Kurse erzeugen.
 			for (int j = 0; j < nKurseDieserFachwahl; j++) {
-				SchuelerblockungInputKurs kurs = new SchuelerblockungInputKurs();
+				final SchuelerblockungInputKurs kurs = new SchuelerblockungInputKurs();
 				kurs.id = nKurse;
 				kurs.anzahlSuS = pRandom.nextInt(35); // Bis zu 34 SuS pro Kurs.
 				kurs.fach = fachwahl.fachID; // Fach gehört zur obigen Fachwahl.
@@ -108,7 +108,7 @@ public class SchuelerblockungTests {
 						startSchiene += 1;
 					}
 				} else {
-					int s1 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
+					final int s1 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
 					if (i < nFachwahlenDavonMulti) {
 						int s2 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
 						while (s1 == s2)
@@ -126,12 +126,12 @@ public class SchuelerblockungTests {
 		// ##################################################
 		// ##################################################
 		// Algorithmus berechnet und liefert genau ein Ergebnis.
-		SchuelerblockungOutput out = alg.handle(in);
+		final SchuelerblockungOutput out = alg.handle(in);
 		// ##################################################
 		// ##################################################
 
 		// Überprüfung potentieller Fehler.
-		for (LogData t : alg.getLog().getLogData())
+		for (final LogData t : alg.getLog().getLogData())
 			if (t.getLevel().compareTo(LogLevel.APP) != 0)
 				fail(t.getText());
 
@@ -142,7 +142,8 @@ public class SchuelerblockungTests {
 		}
 
 		// Keine Fachwahlen vorhanden?
-		@NotNull Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
+		@NotNull
+		final Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
 		if (fachwahlen == null) {
 			fail("SchuelerblockungOutput.fachwahlenZuKurs == null");
 			return;
@@ -156,7 +157,8 @@ public class SchuelerblockungTests {
 
 		// Wurde wirklich jeder Fachwahl etwas zugeordnet?
 		for (int i = 0; i < fachwahlen.size(); i++) {
-			@NotNull SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs = fachwahlen.get(i);
+			@NotNull
+			final SchuelerblockungOutputFachwahlZuKurs fachwahlZuKurs = fachwahlen.get(i);
 			if (fachwahlZuKurs == null) {
 				fail("fachwahl == null");
 				return;

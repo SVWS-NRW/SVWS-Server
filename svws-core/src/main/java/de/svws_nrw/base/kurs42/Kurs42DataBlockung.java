@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Thomas Bachran
  */
-public class Kurs42DataBlockung {
+public final class Kurs42DataBlockung {
 
 	/** Der Jahrgang, für welchen die Blockung entworfen wurde. */
 	public String Jahrgang;

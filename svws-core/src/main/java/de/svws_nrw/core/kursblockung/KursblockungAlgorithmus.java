@@ -16,8 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * wurde.
  *
  * @author Benjamin A. Bartsch */
-public class KursblockungAlgorithmus
-extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
+public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
 
 	@Override
 	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {

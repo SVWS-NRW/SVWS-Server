@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> Der Typ der Schlüssel-Werte.
  * @param <V> Der Typ der zugeordneten Werte.
  */
-public class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@NotNull V> {
+public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collection<@NotNull V> {
 
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.

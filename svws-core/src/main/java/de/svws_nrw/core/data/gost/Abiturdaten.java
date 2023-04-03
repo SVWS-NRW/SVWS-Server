@@ -59,28 +59,28 @@ public class Abiturdaten {
 	public String bilingualeSprache = null;
 
 	/** Gibt an, ob das große Latinum erworben wurde. */
-	@Schema(defaultValue ="false", description = "Gibt an, ob das große Latinum erworben wurde.", example = "true")
+	@Schema(defaultValue = "false", description = "Gibt an, ob das große Latinum erworben wurde.", example = "true")
 	public boolean latinum = false;
 
 	/** Gibt an, ob das kleine Latinum erworben wurde. */
-	@Schema(defaultValue ="false", description = "Gibt an, ob das kleine Latinum erworben wurde.", example = "true")
+	@Schema(defaultValue = "false", description = "Gibt an, ob das kleine Latinum erworben wurde.", example = "true")
 	public boolean kleinesLatinum = false;
 
 	/** Gibt an, ob das Graecum erworben wurde. */
-	@Schema(defaultValue ="false", description = "Gibt an, ob das Graecum erworben wurde.", example = "true")
+	@Schema(defaultValue = "false", description = "Gibt an, ob das Graecum erworben wurde.", example = "true")
 	public boolean graecum = false;
 
 	/** Gibt an, ob das Hebraicum erworben wurde. */
-	@Schema(defaultValue ="false", description = "Gibt an, ob das Hebraicum erworben wurde.", example = "true")
+	@Schema(defaultValue = "false", description = "Gibt an, ob das Hebraicum erworben wurde.", example = "true")
 	public boolean hebraicum = false;
 
 
 	/** Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase. */
-	@Schema(defaultValue ="0", description = "Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase.", example = "0")
+	@Schema(defaultValue = "0", description = "Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase.", example = "0")
 	public long block1FehlstundenGesamt = 0;
 
 	/** Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase. */
-	@Schema(defaultValue ="0", description = "Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase.", example = "0")
+	@Schema(defaultValue = "0", description = "Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase.", example = "0")
 	public long block1FehlstundenUnentschuldigt = 0;
 
 
@@ -98,7 +98,7 @@ public class Abiturdaten {
 
 
 	/** Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern). */
-	@Schema(defaultValue ="K", description = "Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern).", example = "K")
+	@Schema(defaultValue = "K", description = "Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern).", example = "K")
 	public String besondereLernleistung = GostBesondereLernleistung.KEINE.kuerzel;
 
 	/** Gibt ggf. die Note einer externen besonderen Lernleistung an. */

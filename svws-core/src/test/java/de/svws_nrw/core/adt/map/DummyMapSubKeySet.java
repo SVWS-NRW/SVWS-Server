@@ -11,14 +11,14 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author Benjamin A. Bartsch
  */
-public class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
+public final class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 
 	private final @NotNull DummyMapSub _sub;
 
 	/**
 	 * @param sub Die Sup-Map auf der operiert wird.
 	 */
-	public DummyMapSubKeySet(DummyMapSub sub) {
+	public DummyMapSubKeySet(final DummyMapSub sub) {
 		_sub = sub;
 	}
 
@@ -53,7 +53,7 @@ public class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return _sub.containsKey(o);
 	}
 
@@ -63,37 +63,37 @@ public class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public <T> T[] toArray(T[] a) {
+	public <T> T[] toArray(final T[] a) {
 		return _sub.bcGetArrayListOfKeys().toArray(a);
 	}
 
 	@Override
-	public boolean add(@NotNull Integer e) {
+	public boolean add(@NotNull final Integer e) {
 		return _sub.bcAddKey(e);
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return _sub.remove(o) != null;
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		return _sub.bcContainsAllKeys(c);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends @NotNull Integer> c) {
+	public boolean addAll(final Collection<? extends @NotNull Integer> c) {
 		return _sub.bcAddAllKeys(c);
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		return _sub.bcRetainAllKeys(c);
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(@NotNull final Collection<?> c) {
 		return _sub.bcRemoveAllKeysReturnBool(c);
 	}
 
@@ -103,22 +103,22 @@ public class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public @NotNull Integer lower(@NotNull Integer e) {
+	public @NotNull Integer lower(@NotNull final Integer e) {
 		return _sub.lowerKey(e);
 	}
 
 	@Override
-	public @NotNull Integer floor(@NotNull Integer e) {
+	public @NotNull Integer floor(@NotNull final Integer e) {
 		return _sub.floorKey(e);
 	}
 
 	@Override
-	public @NotNull Integer ceiling(@NotNull Integer e) {
+	public @NotNull Integer ceiling(@NotNull final Integer e) {
 		return _sub.ceilingKey(e);
 	}
 
 	@Override
-	public @NotNull Integer higher(@NotNull Integer e) {
+	public @NotNull Integer higher(@NotNull final Integer e) {
 		return _sub.higherKey(e);
 	}
 
@@ -148,33 +148,33 @@ public class DummyMapSubKeySet implements NavigableSet<@NotNull Integer> {
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> subSet(@NotNull Integer fromElement, boolean fromInclusive,
-			@NotNull Integer toElement, boolean toInclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, final boolean fromInclusive,
+			@NotNull final Integer toElement, final boolean toInclusive) {
 		return _sub.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull Integer toElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> headSet(@NotNull final Integer toElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyHeadSet(toElement, inclusive);
 	}
 
 	@Override
-	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull Integer fromElement, boolean inclusive) {
+	public @NotNull NavigableSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement, final boolean inclusive) {
 		return _sub.bcGetSubKeyTailSet(fromElement, inclusive);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull Integer fromElement, @NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> subSet(@NotNull final Integer fromElement, @NotNull final Integer toElement) {
 		return _sub.bcGetSubKeySet(fromElement, toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull Integer toElement) {
+	public @NotNull SortedSet<@NotNull Integer> headSet(@NotNull final Integer toElement) {
 		return _sub.bcGetSubKeyHeadSet(toElement);
 	}
 
 	@Override
-	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull Integer fromElement) {
+	public @NotNull SortedSet<@NotNull Integer> tailSet(@NotNull final Integer fromElement) {
 		return _sub.bcGetSubKeyTailSet(fromElement);
 	}
 

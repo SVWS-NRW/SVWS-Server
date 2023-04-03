@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Katalog wird in den Java-Resourcen unter "daten/csv/Strassen.csv"
  * erwartet.
  */
-@JsonPropertyOrder({"Ort","RegSchl","Strasse","Stand"})
+@JsonPropertyOrder({"Ort", "RegSchl", "Strasse", "Stand"})
 @XmlRootElement
 @Schema(description = "ein Eintrag in einem standardisierten Katalog.")
 @TranspilerDTO

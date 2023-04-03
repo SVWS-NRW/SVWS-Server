@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Katalog wird in den Java-Resourcen unter "daten/csv/Orte.csv"
  * erwartet.
  */
-@JsonPropertyOrder({"ID","PLZ","RegSchl","Ort","Sortierung","gueltigVon","gueltigBis"})
+@JsonPropertyOrder({"ID", "PLZ", "RegSchl", "Ort", "Sortierung", "gueltigVon", "gueltigBis"})
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem IT.NRW-Katalog der Orte.")
 @TranspilerDTO
