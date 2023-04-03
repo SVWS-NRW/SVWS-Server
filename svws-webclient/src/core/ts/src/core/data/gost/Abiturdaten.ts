@@ -72,7 +72,7 @@ export class Abiturdaten extends JavaObject {
 	public block1FehlstundenUnentschuldigt : number = 0;
 
 	/**
-	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.", example="Das Abitur IN NRW im Wandel der Zeit.
+	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.
 	 */
 	public projektKursThema : string | null = null;
 
