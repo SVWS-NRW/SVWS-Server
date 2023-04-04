@@ -37,12 +37,16 @@
 
 <template>
 	<div class="relative" :class="{'is-capturing': isCapturing}">
-		<div class="avatar--edit" v-if="capture || upload" tabindex="0">
+		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
 			<span class="avatar--edit-trigger w-5 h-5 p-0.5 rounded-full bg-light mt-auto ml-auto -mr-1">
 				<i-ri-camera-line class="w-full h-full opacity-50" />
 			</span>
 
-			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage" tabindex="0"
+			<svws-ui-button type="icon" @click="toggleUpload" v-if="src && src.split('data:image/png;base64, /').length > 1" tabindex="0"
+							title="Bild löschen">
+				<i-ri-delete-bin-line />
+			</svws-ui-button>
+			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage && src.split('data:image/png;base64, /').length < 2" tabindex="0"
 				title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onSelectFile">
 				<i-ri-upload-2-line />

@@ -31,7 +31,7 @@
 
 <template>
 	<TransitionRoot appear :show="isOpen">
-		<Dialog class="modal--wrapper" @close="closeModal">
+		<Dialog class="modal--wrapper" @close="closeModal" @keyup.esc="closeModal">
 			<div class="modal--pageWrapper"
 				:class="{
 					'modal--pageWrapper--help': size === 'help',
@@ -43,8 +43,9 @@
 					leave="ease-in duration-100"
 					leave-from="opacity-100"
 					leave-to="opacity-0"
-					v-if="size !== 'help'" />
-				<div class="modal--overlay" />
+					v-if="size !== 'help'">
+					<div class="modal--overlay" @click="closeModal" />
+				</TransitionChild>
 				<TransitionChild as="div"
 					enter="ease-out duration-200"
 					enter-from="opacity-0 scale-95"
@@ -94,7 +95,7 @@
 .modal--pageWrapper {
 	@apply flex items-center justify-center;
 	@apply h-screen;
-	@apply p-8;
+	@apply p-4;
 	@apply pointer-events-auto;
 }
 
@@ -191,7 +192,7 @@
 }
 
 .modal--overlay {
-	@apply bg-dark-20 bg-opacity-80;
+	@apply bg-light/75;
 	@apply absolute top-0 left-0;
 	@apply h-full w-full;
 	@apply z-50;
