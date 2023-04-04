@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 	import { computed } from 'vue';
+	import {formatDate} from "@vueuse/core";
 
 	const props = withDefaults(defineProps<{
 		name?: string;
@@ -10,6 +11,7 @@
 		icon?: boolean;
 		iconType?: string;
 		modelValue?: string;
+		forceChecked?: boolean;
 	}>(), {
 		name: '',
 		label: '',
@@ -19,6 +21,7 @@
 		icon: true,
 		iconType: 'default',
 		modelValue: '',
+		forceChecked: false,
 	});
 
 	const emit = defineEmits<{
@@ -39,7 +42,7 @@
 	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics,
-		'radio--label--checked': modelValue === value,
+		'radio--label--checked': forceChecked || modelValue === value,
 		'radio--label--no-icon': !icon,
 		'radio--icon-type-view': iconType === 'view'
 	}">
@@ -102,7 +105,8 @@
 	}
 }
 
-.radio--indicator:checked ~ .radio--label--text {
+.radio--indicator:checked ~ .radio--label--text,
+.radio--label--checked .radio--label--text {
 	@apply bg-primary bg-opacity-5 text-primary;
 }
 
@@ -120,15 +124,15 @@
 	}
 }
 
-.radio--indicator:not(:checked) ~ .radio--indicator-icon .radio--indicator-icon--checked {
+.radio--label:not(.radio--label--checked) .radio--indicator-icon .radio--indicator-icon--checked {
 	@apply hidden;
 }
 
-.radio--indicator:checked ~ .radio--indicator-icon {
+.radio--label--checked .radio--indicator-icon {
 	@apply opacity-100 text-primary;
 }
 
-.radio--indicator:checked ~ .radio--indicator-icon .radio--indicator-icon--blank {
+.radio--label--checked .radio--indicator-icon .radio--indicator-icon--blank {
 	@apply hidden;
 }
 

@@ -2,18 +2,29 @@
 	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
 		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10" />
 		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline">{{ blockungsname }}</h3>
+			<h3 class="text-headline cursor-auto">
+				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
+					{{ blockungsname }}
+					<template #icon>
+						<i-ri-error-warning-line v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="ml-1 w-6 h-6"/>
+						<i-ri-pushpin-line v-if="blockungsergebnis_aktiv" class="ml-1 w-6 h-6"/>
+						<span v-else/>
+					</template>
+					<template #content>
+						<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
+						<div v-if="blockung_aktiv && !blockungsergebnis_aktiv">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
+					</template>
+				</svws-ui-tooltip>
+			</h3>
 			<div class="flex items-center gap-2">
 				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="openModal()">Aktivieren</svws-ui-button>
+					<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="secondary" @click="openModal()">Aktivieren</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-aktivieren-modal>
 				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 					<svws-ui-button type="primary" @click="openModal()">Hochschreiben</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 			</div>
 		</div>
-		<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
-		<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
 		<div class="v-table--container">
 			<table class="v-table--complex table--highlight-rows table-auto w-full">
 				<thead>

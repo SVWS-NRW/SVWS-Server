@@ -126,11 +126,18 @@
 <style lang="postcss">
 .tooltip-trigger {
 	.icon--indicator {
-		@apply w-4 h-4 text-black;
+		@apply text-black;
+		width: 1em;
+		height: 1em;
+		margin-left: 0.1em;
 	}
 
 	.cursor-pointer & {
 		cursor: pointer;
+	}
+	
+	.cursor-auto & {
+		cursor: auto;
 	}
 
 	&--triggered {

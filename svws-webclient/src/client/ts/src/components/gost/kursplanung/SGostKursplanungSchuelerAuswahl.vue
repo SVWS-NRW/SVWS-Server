@@ -3,36 +3,46 @@
 		<svws-ui-data-table v-model="schuelerFilter.filtered"
 							v-model:clicked="selected"
 							clickable
+							:items="undefined"
 							:filter="true"
-							:filter-open="true">
+							:filter-open="true"
+							:filter-reverse="true"
+							:filter-hide="false"
+							:no-data="schuelerFilter.filtered.value.size <= 0"
+							no-data-html="Keine Schüler zu diesem Filter gefunden."
+		>
 			<template #search>
 				<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
 			</template>
 			<template #filter>
-				<div class="flex justify-between items-center">
-					<svws-ui-checkbox v-model="kurs_filter_toggle" class="">Kursfilter<span v-if="kurs_filter_toggle">:</span></svws-ui-checkbox>
-					<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()" headless
-										  :item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" class="w-48" />
+				<svws-ui-radio-group class="radio--row">
+					<svws-ui-radio-option v-model="kurs_filter_toggle" :value="!kurs_filter_toggle" name="Filter" label="Kursfilter" :force-checked="kurs_filter_toggle ?? false">
+						<i-ri-filter-line/>
+					</svws-ui-radio-option>
+					<svws-ui-radio-option v-model="fach_filter_toggle" :value="!fach_filter_toggle" name="FilterFa" label="Fachfilter" :force-checked="fach_filter_toggle ?? false">
+						<i-ri-filter-line/>
+					</svws-ui-radio-option>
+				</svws-ui-radio-group>
+				<div class="input-wrapper-1-col" v-if="kurs_filter_toggle">
+					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
+										  :item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''"/>
 				</div>
-				<div class="flex justify-between items-center mb-3">
-					<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
-					<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach" :items="faecherManager.toVector()" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
-					<svws-ui-multi-select v-if="fach_filter_toggle" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
+				<div class="input-wrapper" v-if="fach_filter_toggle">
+					<svws-ui-multi-select v-model="fach" :items="faecherManager.toVector()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
+					<svws-ui-multi-select v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</div>
-				<div class="mb-3">
-					<svws-ui-radio-group class="radio--row">
-						<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
-						<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
-							<i-ri-alert-line />
-						</svws-ui-radio-option>
-						<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtverteilt">
-							<i-ri-forbid-2-line />
-						</svws-ui-radio-option>
-						<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
-							<i-ri-alert-fill />
-						</svws-ui-radio-option>
-					</svws-ui-radio-group>
-				</div>
+				<svws-ui-radio-group class="radio--row mt-4">
+					<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
+					<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
+						<i-ri-alert-line />
+					</svws-ui-radio-option>
+					<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtverteilt">
+						<i-ri-forbid-2-line />
+					</svws-ui-radio-option>
+					<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
+						<i-ri-alert-fill />
+					</svws-ui-radio-option>
+				</svws-ui-radio-group>
 			</template>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
@@ -49,14 +59,13 @@
 			<template #body>
 				<div role="row"
 					 class="data-table__tr data-table__tbody__tr"
+					 :class="{'data-table__tr--clicked': selected === s}"
 					 v-for="(s, index) in schuelerFilter.filtered.value.values()"
+					 @click="selected = s"
 					 :key="index">
-					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s" @click="selected = s"
+					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s"
 											  :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
 				</div>
-				<tr v-if="!schuelerFilter.filtered.value.size">
-					<td class="opacity-50 text-sm">Keine Schüler zu diesem Filter gefunden.</td>
-				</tr>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>

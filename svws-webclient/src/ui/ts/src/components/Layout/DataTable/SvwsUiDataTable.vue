@@ -18,7 +18,7 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="$slots.filter && filterOpen" class="data-table__filter__fields">
+			<div v-if="$slots.filter && filterOpen" class="data-table__filter__fields" :class="{'-order-1': filterReverse}">
 				<slot name="filter"/>
 				<template v-if="filtered && filterReset">
 					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen"
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		 :class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible}"
+		 :class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible}"
 		 v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
 			<slot name="header"
@@ -209,7 +209,7 @@ import type {
 const props = withDefaults(
 	defineProps<{
 		columns?: DataTableColumnSource[];
-		items?: Iterable<DataTableItem>;
+		items?: Iterable<DataTableItem> | 'custom';
 		modelValue?: DataTableItem[];
 		sortingOrder?: DataTableSortingOrder | undefined;
 		sortBy?: string | undefined;
@@ -230,8 +230,10 @@ const props = withDefaults(
 		filterHide?: boolean;
 		filtered?: boolean;
 		filterReset?: () => void;
+		filterReverse?: boolean;
 		disableFooter?: boolean;
 		collapsible?: boolean;
+		noData?: boolean;
 	}>(),
 	{
 		columns: () => [],
@@ -254,8 +256,10 @@ const props = withDefaults(
 		filtered: false,
 		filterReset: () => {
 		},
+		filterReverse: false,
 		disableFooter: false,
 		collapsible: false,
+		noData: undefined,
 	}
 );
 
@@ -745,6 +749,10 @@ const computedTableAttributes = computed(() => ({
 			@apply w-full grid gap-3;
 			@apply pt-5 pb-2;
 			grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+
+			&.-order-1 {
+				@apply pt-0;
+			}
 		}
 	}
 

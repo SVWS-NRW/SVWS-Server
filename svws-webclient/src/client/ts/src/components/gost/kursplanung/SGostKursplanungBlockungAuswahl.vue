@@ -17,7 +17,7 @@
 						<svws-ui-tooltip v-if="row.istAktiv" position="right">
 							<i-ri-pushpin-line />
 							<template #content>
-								Aktives Ergebnis in dieser Blockung
+								Aktivierte Blockung
 							</template>
 						</svws-ui-tooltip>
 					</div>
