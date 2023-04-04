@@ -10,9 +10,9 @@
 		<slot />
 		<template v-if="(indicator && indicator !== 'underline') || $slots.icon">
 			<slot name="icon">
-				<i-ri-information-fill v-if="indicator === 'info'" />
-				<i-ri-alert-fill v-else-if="indicator === 'danger'" />
-				<i-ri-question-fill v-else />
+				<i-ri-information-fill class="icon--indicator" v-if="indicator === 'info'" />
+				<i-ri-alert-fill class="icon--indicator" v-else-if="indicator === 'danger'" />
+				<i-ri-question-fill class="icon--indicator" v-else />
 			</slot>
 		</template>
 	</span>
@@ -125,8 +125,12 @@
 
 <style lang="postcss">
 .tooltip-trigger {
-	svg {
+	.icon--indicator {
 		@apply w-4 h-4 text-black;
+	}
+
+	.cursor-pointer & {
+		cursor: pointer;
 	}
 
 	&--triggered {

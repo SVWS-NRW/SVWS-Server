@@ -2,26 +2,30 @@
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
-				<div v-if="row === auswahlBlockung" class="flex justify-between w-full">
-					<div class="flex">
-						<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
-							{{ row.name }}
-						</span>
-						<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
-							@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), (row as unknown as GostBlockungListeneintrag).id)" />
+				<div class="flex justify-between w-full">
+					<div class="flex items-center gap-1">
+						<div class="flex" v-if="row === auswahlBlockung">
+							<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
+								{{ row.name }}
+							</span>
+							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
+								@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), (row as unknown as GostBlockungListeneintrag).id)" />
+						</div>
+						<div v-else>
+							<span>{{ row.name }}</span>
+						</div>
+						<svws-ui-tooltip v-if="row.istAktiv" position="right">
+							<i-ri-pushpin-line />
+							<template #content>
+								Aktives Ergebnis in dieser Blockung
+							</template>
+						</svws-ui-tooltip>
 					</div>
-					<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
-					<div v-if="allow_add_blockung(props.halbjahr)" class="flex gap-1">
+					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="flex gap-1">
 						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
 						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
 							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
 						</s-gost-kursplanung-remove-blockung-modal>
-					</div>
-				</div>
-				<div v-else>
-					<div class="flex justify-between w-full">
-						<span>{{ row.name }}</span>
-						<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 					</div>
 				</div>
 			</template>

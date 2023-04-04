@@ -1,62 +1,78 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse.toArray()" footer>
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse.toArray()" :count="selected_ergebnisse.length !== rows_ergebnisse.size()">
 			<template #header(bewertung)>
 				<div style="flex-grow: 10;">
-					<div class="z-50">
-						<svws-ui-popover placement="top">
-							<template #trigger>
-								<span class="inline-flex items-center cursor-pointer">
-									Bewertungen
-									<svws-ui-icon class="ml-1">
-										<i-ri-question-line />
-									</svws-ui-icon>
-								</span>
-							</template>
-							<template #content>
-								<div class="normal-case text-base rich-text">
-									<div class="my-1">Anzahl von Problemen durch:</div>
-									<ul class="font-bold">
-										<li>Regelverletzungen</li>
-										<li>Wahlkonflikte</li>
-										<li>max. Kursdifferenz</li>
-										<li>Fächerparallelität</li>
-									</ul>
-								</div>
-							</template>
-						</svws-ui-popover>
-					</div>
+					<svws-ui-tooltip indicator="help" position="top">
+						Bewertungen
+						<template #content>
+							<div class="normal-case text-base rich-text">
+								<div class="my-1">Anzahl von Problemen durch:</div>
+								<ul class="font-bold mb-1">
+									<li>Regelverletzungen</li>
+									<li>Wahlkonflikte</li>
+									<li>max. Kursdifferenz</li>
+									<li>Fächerparallelität</li>
+								</ul>
+							</div>
+						</template>
+					</svws-ui-tooltip>
 				</div>
 			</template>
 			<template #cell(bewertung)="{ rowData: row }">
-				<span class="flex gap-1 cell--bewertung items-center text-sm">
-					<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
-					<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
-					<span :style="{'background-color': color3(row)}">{{ getDatenmanager().getOfBewertung3Wert(row.id) }}</span>
-					<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
+				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer">
+					<svws-ui-tooltip position="right">
+						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
+						<template #content>
+							<span class="inline-flex items-center gap-1">
+								{{ getDatenmanager().getOfBewertung1Wert(row.id) }} Regelverletzungen
+								<span v-if="getDatenmanager().getOfBewertung1Wert(row.id) === 0">
+									<i-ri-check-line class="opacity-25"/>
+								</span>
+							</span>
+						</template>
+					</svws-ui-tooltip>
+					<svws-ui-tooltip position="right">
+						<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
+						<template #content>
+							{{ getDatenmanager().getOfBewertung2Wert(row.id) }} Wahlkonflikte
+						</template>
+					</svws-ui-tooltip>
+					<svws-ui-tooltip position="right">
+						<span :style="{'background-color': color3(row)}">{{ getDatenmanager().getOfBewertung3Wert(row.id) }}</span>
+						<template #content>
+							max. Kursdifferenz: {{ getDatenmanager().getOfBewertung3Wert(row.id) }}
+						</template>
+					</svws-ui-tooltip>
+					<svws-ui-tooltip position="right">
+						<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
+						<template #content>
+							{{ getDatenmanager().getOfBewertung4Wert(row.id) }} Fächerparallelität
+						</template>
+					</svws-ui-tooltip>
 				</span>
-				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
+				<span class="ml-auto">
+					<svws-ui-tooltip v-if="row.istVorlage" position="right">
+						<i-ri-pushpin-line />
+						<template #content>
+							Aktiviertes Ergebnis
+						</template>
+					</svws-ui-tooltip>
+				</span>
 				<div v-if="(row.id === auswahlErgebnis?.id && !blockung_aktiv)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen."> Ableiten </svws-ui-button>
 					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending" title="Ergebnis löschen" />
 				</div>
 			</template>
-			<template #footer>
-				<span v-if="selected_ergebnisse.length > 0" class="text-sm normal-case mr-auto">
-					<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Es muss mindestens ein Ergebnis behalten werden.</span>
-					<span v-else>{{ selected_ergebnisse.length }}/{{ rows_ergebnisse.size() }} ausgewählt</span>
+			<template #footerActions>
+				<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()" class="text-sm normal-case mr-auto inline-flex items-center gap-0.5">
+					<i-ri-alert-fill class="text-error" />
+					<span>Es muss mindestens ein Ergebnis behalten werden.</span>
 				</span>
-				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="overflow-hidden flex items-center justify-end pr-1 h-full">
-					<svws-ui-popover class="popper--danger" :open-delay="200">
-						<template #trigger>
-							<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
-								:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
-						</template>
-						<template #content>
-							Auswahl löschen
-						</template>
-					</svws-ui-popover>
+				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="flex items-center justify-end pr-1 h-full">
+					<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
+									:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
 				</div>
 			</template>
 		</svws-ui-data-table>
