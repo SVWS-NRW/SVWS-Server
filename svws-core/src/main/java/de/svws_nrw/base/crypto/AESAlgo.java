@@ -6,7 +6,7 @@ package de.svws_nrw.base.crypto;
 public enum AESAlgo {
 
 	/** Cipher Block Chaining (CBC) mit PKCS #5-Padding */
-	CBC_PKCS5Padding("AES/CBC/PKCS5Padding");
+	CBC_PKCS5PADDING("AES/CBC/PKCS5Padding");
 
 	/** die Bezeichnung des Verfahrens in der Java-Crypto-Bilbilthek */
 	private String value;

@@ -388,7 +388,7 @@ public class AbiturdatenManager {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public boolean pruefeBelegungExistiertMitKursart(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart, final @NotNull GostHalbjahr... halbjahre) {
-		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return true;
@@ -577,7 +577,7 @@ public class AbiturdatenManager {
 	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public boolean pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostSchriftlichkeit schriftlichkeit, final @NotNull GostHalbjahr... halbjahre) {
-		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre == null) || (halbjahre.length == 0))
 			return false;
@@ -614,7 +614,7 @@ public class AbiturdatenManager {
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty()))
 				continue;
 			boolean hatBelegung = true;
 			for (final GostHalbjahr halbjahr : halbjahre) {
@@ -658,7 +658,7 @@ public class AbiturdatenManager {
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty()))
 				continue;
 			for (final AbiturFachbelegung aktFachbelegung : alleBelegungen)
 				if (aktFachbelegung.belegungen[halbjahr.id] != null)
@@ -689,7 +689,7 @@ public class AbiturdatenManager {
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty()))
 				continue;
 			boolean hatBelegung = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
@@ -933,7 +933,7 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull List<@NotNull AbiturFachbelegung> filterBelegungKursartExistiert(final List<@NotNull AbiturFachbelegung> fachbelegungen, final @NotNull GostKursart kursart) {
 		final @NotNull Vector<@NotNull AbiturFachbelegung> result = new Vector<>();
-		if ((fachbelegungen == null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return result;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (pruefeAufKursart(fachbelegung, kursart))
@@ -980,7 +980,7 @@ public class AbiturdatenManager {
 			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen == null) || (alleBelegungen.size() == 0))
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty()))
 				continue;
 			boolean hatBelegung = true;
 			// Beachte zur Fortsetzung alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
@@ -1411,7 +1411,7 @@ public class AbiturdatenManager {
 	 */
 	public AbiturFachbelegung getFachbelegung(final @NotNull GostFachbereich fachbereich) {
 		final Vector<AbiturFachbelegung> faecher = mapFachbereiche.get(fachbereich);
-		if ((faecher == null) || (faecher.size() == 0))
+		if ((faecher == null) || (faecher.isEmpty()))
 			return null;
 		return faecher.get(0);
 	}

@@ -491,7 +491,9 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 			return false;
 		const e : JavaMapEntry<K, V> = cast_java_util_Map_Entry(o);
 		const node : AVLMapNode<K, V> | null = this._nodeGetOrNull(e.getKey(), iv);
-		return (node === null) ? false : this._valEquals(node._val, e.getValue());
+		if (node === null)
+			return false;
+		return this._valEquals(node._val, e.getValue());
 	}
 
 	/**
@@ -923,9 +925,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		const cmpT : number = this._compare(key, iv.to);
 		if (cmpT > 0)
 			return true;
-		if ((cmpT === 0) && (!iv.toInc) && (inc))
-			return true;
-		return false;
+		return ((cmpT === 0) && (!iv.toInc) && (inc));
 	}
 
 	private _keyOrNull(node : AVLMapNode<K, V> | null) : K | null {
@@ -955,9 +955,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		if ((cmpKeyFrom < 0) || (cmpKeyFrom === 0) && (!iv.fromInc))
 			return true;
 		const cmpKeyTo : number = this._compare(key, iv.to);
-		if ((cmpKeyTo > 0) || (cmpKeyTo === 0) && (!iv.toInc))
-			return true;
-		return false;
+		return ((cmpKeyTo > 0) || (cmpKeyTo === 0) && (!iv.toInc));
 	}
 
 	private _nodeFirstOrNull(iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {

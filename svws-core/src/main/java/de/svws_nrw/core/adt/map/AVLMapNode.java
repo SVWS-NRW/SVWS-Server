@@ -100,9 +100,6 @@ public final class AVLMapNode<@NotNull K, @NotNull V> implements Entry<@NotNull 
 	@Override
 	public @NotNull V setValue(final @NotNull V value) {
 		throw new UnsupportedOperationException(); // Kann sonst den Zustand zerstören.
-		// V old = _val;
-		// _val = value;
-		// return old;
 	}
 
 }

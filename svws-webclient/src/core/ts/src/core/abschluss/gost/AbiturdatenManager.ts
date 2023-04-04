@@ -378,7 +378,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitKursart(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart, ...halbjahre : Array<GostHalbjahr>) : boolean {
-		if ((fachbelegungen === null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return true;
@@ -550,7 +550,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(fachbelegungen : List<AbiturFachbelegung> | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
-		if ((fachbelegungen === null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
 			return false;
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return false;
@@ -583,7 +583,7 @@ export class AbiturdatenManager extends JavaObject {
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.size() === 0))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
 				continue;
 			let hatBelegung : boolean = true;
 			for (const halbjahr of halbjahre) {
@@ -625,7 +625,7 @@ export class AbiturdatenManager extends JavaObject {
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.size() === 0))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
 				continue;
 			for (const aktFachbelegung of alleBelegungen)
 				if (aktFachbelegung.belegungen[halbjahr.id] !== null)
@@ -654,7 +654,7 @@ export class AbiturdatenManager extends JavaObject {
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.size() === 0))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
 				continue;
 			let hatBelegung : boolean = true;
 			for (const halbjahr of GostHalbjahr.values()) {
@@ -882,7 +882,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public filterBelegungKursartExistiert(fachbelegungen : List<AbiturFachbelegung> | null, kursart : GostKursart) : List<AbiturFachbelegung> {
 		const result : Vector<AbiturFachbelegung> = new Vector();
-		if ((fachbelegungen === null) || (fachbelegungen.size() <= 0))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
 			return result;
 		for (const fachbelegung of fachbelegungen) {
 			if (this.pruefeAufKursart(fachbelegung, kursart))
@@ -927,7 +927,7 @@ export class AbiturdatenManager extends JavaObject {
 			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.size() === 0))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
 				continue;
 			let hatBelegung : boolean = true;
 			const halbjahre : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22];
@@ -1331,7 +1331,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getFachbelegung(fachbereich : GostFachbereich) : AbiturFachbelegung | null {
 		const faecher : Vector<AbiturFachbelegung | null> | null = this.mapFachbereiche.get(fachbereich);
-		if ((faecher === null) || (faecher.size() === 0))
+		if ((faecher === null) || (faecher.isEmpty()))
 			return null;
 		return faecher.get(0);
 	}

@@ -519,7 +519,9 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		final @NotNull
 		Entry<@NotNull K, @NotNull V> e = (@NotNull Entry<@NotNull K, @NotNull V>) o;
 		final AVLMapNode<@NotNull K, @NotNull V> node = _nodeGetOrNull(e.getKey(), iv);
-		return (node == null) ? false : _valEquals(node._val, e.getValue());
+		if (node == null)
+			return false;
+		return _valEquals(node._val, e.getValue());
 	}
 
 	/**
@@ -973,10 +975,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if (cmpT > 0)
 			return true;
 		// Fall: Gleich "to", aber Intervall nicht inklusive und Schlüssel inklusive --> außerhalb
-		if ((cmpT == 0) && (!iv.toInc) && (inc))
-			return true;
-
-		return false;
+		return ((cmpT == 0) && (!iv.toInc) && (inc));
 	}
 
 	// ##########################################################
@@ -1010,9 +1009,7 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 		if ((cmpKeyFrom < 0) || (cmpKeyFrom == 0) && (!iv.fromInc))
 			return true;
 		final int cmpKeyTo = _compare(key, iv.to);
-		if ((cmpKeyTo > 0) || (cmpKeyTo == 0) && (!iv.toInc))
-			return true;
-		return false;
+		return ((cmpKeyTo > 0) || (cmpKeyTo == 0) && (!iv.toInc));
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeFirstOrNull(final @NotNull AVLMapIntervall<@NotNull K> iv) {
