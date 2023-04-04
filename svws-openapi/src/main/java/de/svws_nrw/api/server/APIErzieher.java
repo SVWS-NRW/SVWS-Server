@@ -37,15 +37,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Path("/db/{schema}/erzieher")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIErzieher {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieher.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Erziehern
      */
     @GET
@@ -60,7 +60,7 @@ public class APIErzieher {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ErzieherListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
-    public Response getErzieher(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getErzieher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataErzieherliste(conn)).getAll();
     	}
@@ -68,23 +68,23 @@ public class APIErzieher {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieherarten.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Erzieherarten
      */
     @GET
     @Path("/arten")
     @Operation(summary = "Gibt eine Übersicht von allen Erzieherarten zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, " 
+               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieherarten unter Angabe der ID, der Beschreibung, "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Erzieherarten",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Erzieherart.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
-    public Response getErzieherArten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataErzieherarten(conn)).getList();
     	}
@@ -95,11 +95,11 @@ public class APIErzieher {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Erziehers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param tmpid        die Datenbank-ID zur Identifikation des Erziehers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Stammdaten des Erziehers
      */
     @GET
@@ -113,8 +113,8 @@ public class APIErzieher {
                  schema = @Schema(implementation = ErzieherStammdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
-    public Response getErzieherStammdaten(@PathParam("schema") String schema, @PathParam("id") long tmpid, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getErzieherStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
+    		                                    @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataErzieherStammdaten(conn)).get(tmpid);
     	}
@@ -123,12 +123,12 @@ public class APIErzieher {
 
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Erziehers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param tmpid        die Datenbank-ID zur Identifikation des Erziehers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -144,14 +144,13 @@ public class APIErzieher {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchErzieherStammdaten(
-    		@PathParam("schema") String schema, 
-    		@PathParam("id") long tmpid, 
-    		@RequestBody(description = "Der Patch für die Erzieher-Stammdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErzieherStammdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {   
+    		@PathParam("schema") final String schema,
+    		@PathParam("id") final long tmpid,
+    		@RequestBody(description = "Der Patch für die Erzieher-Stammdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-        	return (new DataErzieherStammdaten(conn)).patch(tmpid, is); 
+        	return (new DataErzieherStammdaten(conn)).patch(tmpid, is);
         }
     }
 

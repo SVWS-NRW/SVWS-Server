@@ -60,15 +60,15 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/schueler")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APISchueler {
-	
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Schülern
      */
     @GET
@@ -83,21 +83,21 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
-    public Response getSchuelerAktuell(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getSchuelerAktuell(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerliste(conn, null).getAll());
     	}
     }
 
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abschnitt   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen 
+     * @param abschnitt   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Schülern
      */
     @GET
@@ -112,23 +112,23 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
-    public Response getSchuelerFuerAbschnitt(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, @Context HttpServletRequest request) {
+    public Response getSchuelerFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerliste(conn, abschnitt).getAll());
     	}
     }
-    
-    
 
-    
-    
+
+
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Schülers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Stammdaten des Schülers
      */
     @GET
@@ -142,23 +142,23 @@ public class APISchueler {
                  schema = @Schema(implementation = SchuelerStammdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Response getSchuelerStammdaten(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                        @Context HttpServletRequest request) {
+    public Response getSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                        @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerStammdaten(conn).get(id));
     	}
     }
 
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -174,31 +174,30 @@ public class APISchueler {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchSchuelerStammdaten(
-    		@PathParam("schema") String schema, 
-    		@PathParam("id") long id, 
-    		@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
     		return (new DataSchuelerStammdaten(conn).patch(id, is));
     	}
     }
-    
-    
-  
 
 
 
- 
-    
+
+
+
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Schulbesuchsdaten eines Schülers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Schulbesuchsdaten des Schülers
      */
     @GET
@@ -212,22 +211,22 @@ public class APISchueler {
                  schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Response getSchuelerSchulbesuch(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                                      @Context HttpServletRequest request) {
+    public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                                      @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerSchulbesuchsdaten(conn).get(id));
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -243,26 +242,25 @@ public class APISchueler {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchSchuelerSchulbesuch(
-    		@PathParam("schema") String schema, 
-    		@PathParam("id") long id, 
-    		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
     		return (new DataSchuelerSchulbesuchsdaten(conn).patch(id, is));
     	}
     }
-    
-    
-    
+
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste von Lernabschnitten eines Schülers.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die Datenbank-ID zur Identifikation des Schülers
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Lernabschnittsdaten des Schülers
      */
     @GET
@@ -273,25 +271,25 @@ public class APISchueler {
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Lernabschnitt-Listeneinträgen",
-    			 content = @Content(mediaType = "application/json", 
-    			 array = @ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittListeEintrag.class))))    
+    			 content = @Content(mediaType = "application/json",
+    			 array = @ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Response getSchuelerLernabschnittsliste(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getSchuelerLernabschnittsliste(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerLernabschnittsliste(conn).get(id));
     	}
     }
-    
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die Datenbank-ID zur Identifikation des Schülers
-     * @param abschnitt  der Schuljahresabschnitt des auszulesenden Lernabschnitts  
+     * @param abschnitt  der Schuljahresabschnitt des auszulesenden Lernabschnitts
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Lernabschnittsdaten des Schülers
      */
     @GET
@@ -306,21 +304,21 @@ public class APISchueler {
                  schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Response getSchuelerLernabschnittsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @PathParam("abschnitt") long abschnitt, 
-    		                                        @Context HttpServletRequest request) {
+    public Response getSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("abschnitt") final long abschnitt,
+    		                                        @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerLernabschnittsdaten(conn).get(id, abschnitt));
     	}
     }
-    
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abschnitt  die id des Schülerlernabschnitts  
+     * @param abschnitt  die id des Schülerlernabschnitts
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Lernabschnittsdaten des Schülers
      */
     @GET
@@ -335,20 +333,20 @@ public class APISchueler {
                  schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
-    public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, 
-    		                                        @Context HttpServletRequest request) {
+    public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
+    		                                        @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerLernabschnittsdaten(conn).get(abschnitt));
     	}
     }
-    
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fahrschülerarten.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit dem Katalog der Fahrschülerarten
      */
     @GET
@@ -360,7 +358,7 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
-    public Response getSchuelerFahrschuelerarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getSchuelerFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKatalogSchuelerFahrschuelerarten(conn).getList());
     	}
@@ -369,7 +367,7 @@ public class APISchueler {
 
 	/**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieher.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * @param id		die ID des Schülers, dessen Erzieher zurückegeben werden.
@@ -378,25 +376,25 @@ public class APISchueler {
     @GET
     @Path("/{id : \\d+}/erzieher")
     @Operation(summary = "Gibt die Stammdaten der Erzieher zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-ID" 
+               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-ID"
                		       + "des Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung "
                		       + "sichtbar bzw. änderbar sein sollen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Erzieherdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Erzieherstammdaten",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation =ErzieherStammdaten.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ErzieherStammdaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
-    public Response getSchuelerErzieher(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataErzieherStammdaten(conn)).getListFromSchueler(id);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * @param id		die ID des Schülers, dessen Betriebe zurückegeben werden.
@@ -405,16 +403,16 @@ public class APISchueler {
     @GET
     @Path("/{id : \\d+}/betriebe")
     @Operation(summary = "Gibt die Betriebe eines Schülers zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der Schüler-ID" 
+               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der Schüler-ID"
                		       + "des Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung "
                		       + "sichtbar bzw. änderbar sein sollen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Schülerbetrieben",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation =SchuelerBetriebsdaten.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerBetriebsdaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
-    public Response getSchuelerBetriebe(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getSchuelerBetriebe(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerBetriebsdaten(conn)).getListFromSchueler(id);
         }
@@ -423,7 +421,7 @@ public class APISchueler {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebsstammdaten eines Schülers.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * @param id        die ID des Schülers
@@ -441,20 +439,20 @@ public class APISchueler {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebStammdaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
-    public Response getSchuelerBetriebsstammdaten(@PathParam("schema") String schema,  @PathParam("id") long id, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)){
+    public Response getSchuelerBetriebsstammdaten(@PathParam("schema") final String schema,  @PathParam("id") final long id, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataBetriebsStammdaten(conn)).getSchuelerBetriebe(id);
-        }        
+        }
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für die Abfrage des Katalogs der Übergangsempfehlungen der 
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der Übergangsempfehlungen der
      * Grundschule für die Sekundarstufe I.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit dem Katalog der Übergangsempfehlungen der Grundschule für die Sekundarstufe I.
      */
     @GET
@@ -466,7 +464,7 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UebergangsempfehlungKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogUebergangsempfehlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogUebergangsempfehlung(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogUebergangsempfehlung()).getList();
         }
@@ -474,10 +472,10 @@ public class APISchueler {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der Herkünfte von Schülern.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit dem Katalog der Herkünfte von Schülern.
      */
     @GET
@@ -489,7 +487,7 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = HerkunftKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogHerkuenfte(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogHerkuenfte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogHerkuenfte()).getList();
         }
@@ -497,10 +495,10 @@ public class APISchueler {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der Herkunftsarten bei Schülern.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit dem Katalog der Herkunftsarten bei Schülern.
      */
     @GET
@@ -512,12 +510,12 @@ public class APISchueler {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = HerkunftsartKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogHerkunftsarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogHerkunftsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogHerkunftsarten()).getList();
         }
     }
- 
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der KAOADaten eines Schülers.
@@ -538,8 +536,8 @@ public class APISchueler {
 	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerKAoADaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response getKAOAdaten(@PathParam("schema") String schema, @PathParam("id") long id,
-			@Context HttpServletRequest request) {
+	public Response getKAOAdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
 			return (new DataSchuelerKAoADaten(conn).getBySchuelerIDAsResponse(id));
@@ -570,11 +568,11 @@ public class APISchueler {
 	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerKAoADaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response createKAOAdaten(@PathParam("schema") String schema,
-			@PathParam("id") long schuelerid,
-			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) SchuelerKAoADaten daten,
+	public Response createKAOAdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long schuelerid,
+			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) final SchuelerKAoADaten daten,
 
-			@Context HttpServletRequest request) {
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
 			return (new DataSchuelerKAoADaten(conn).createBySchuelerIDAsResponse(schuelerid, daten));
@@ -606,12 +604,12 @@ public class APISchueler {
 	@ApiResponse(responseCode = "400", description = "Fehler bei der Datenvalidierung")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response putKAOAdaten(@PathParam("schema") String schema,
-			@PathParam("id") long schuelerID,
-			@PathParam("skid") long schuelerKAoAID,
-			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) SchuelerKAoADaten daten,
+	public Response putKAOAdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long schuelerID,
+			@PathParam("skid") final long schuelerKAoAID,
+			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) final SchuelerKAoADaten daten,
 
-			@Context HttpServletRequest request) {
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
 			return (new DataSchuelerKAoADaten(conn).putBySchuelerIDAsResponse(schuelerID, daten, schuelerKAoAID));
@@ -639,10 +637,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "204", description = "Die KAOADaten des Schülers wurden gelöscht")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response deleteKAOAdaten(@PathParam("schema") String schema,
-			@PathParam("id") long schuelerID,
-			@PathParam("skid") long schuelerKAoAID,
-			@Context HttpServletRequest request) {
+	public Response deleteKAOAdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long schuelerID,
+			@PathParam("skid") final long schuelerKAoAID,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
 			return (new DataSchuelerKAoADaten(conn).deleteBySchuelerKAoAIDAsResponse(schuelerKAoAID));

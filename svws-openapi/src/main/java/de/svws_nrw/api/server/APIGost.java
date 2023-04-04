@@ -89,13 +89,13 @@ public class APIGost {
 
 	/**
 	 * Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.
-	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen 
+	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen
 	 * besitzt.
-	 * 
+	 *
 	 * @param schema   das Schema aus dem die Leistungsdaten des Schüler kommen sollen
-	 * 
+	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
-	 * 
+	 *
 	 * @return eine Liste der Abiturjahrgänge
 	 */
 	@GET
@@ -104,25 +104,25 @@ public class APIGost {
 	           description = "Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind."
 	           		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen "
 	           		       + "besitzt.")
-    @ApiResponse(responseCode = "200", 
+    @ApiResponse(responseCode = "200",
     			 description = "Die Liste der Abiturjahrgänge.",
     			 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgang.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Abiturjahrgänge auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-	public Response getGostAbiturjahrgaenge(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+	public Response getGostAbiturjahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataGostJahrgangsliste(conn)).getAll();
     	}
 	}
 
-	
+
     /**
      * Die OpenAPI-Methode für das Erstellen eines neuen Abiturjahrgangs der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
-     * @param jahrgangID   die ID des Jahrgangs, für welchen der Abitur-Jahrgang erstellt werden soll 
+     * @param jahrgangID   die ID des Jahrgangs, für welchen der Abitur-Jahrgang erstellt werden soll
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem neu angelegten Abiturjahr
      */
     @POST
@@ -138,21 +138,21 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Daten beim angegebenen Jahrgang gefunden, um einen Abiturjahrgang anzulegen")
     @ApiResponse(responseCode = "409", description = "Der Abiturjahrgang existiert bereits")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response createGostAbiturjahrgang(@PathParam("schema") String schema, @PathParam("jahrgangid") long jahrgangID, @Context HttpServletRequest request) {
+    public Response createGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("jahrgangid") final long jahrgangID, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostJahrgangsliste(conn)).create(jahrgangID);
     	}
     }
-    	
-	
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr  das Jahr, in welchem der Jahrgang Abitur machen wird
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Daten des Jahrganges
      */
     @GET
@@ -167,8 +167,8 @@ public class APIGost {
                  schema = @Schema(implementation = GostJahrgangsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Grunddaten der Gymnasialen Oberstufe anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Jahrgang der gymnasialen Oberstufe mit dem angegebenen Abiturjahr gefunden")
-    public Response getGostAbiturjahrgang(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		                                    @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataGostJahrgangsdaten(conn)).get(abiturjahr);
@@ -179,12 +179,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Daten eines Jahrgangs der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param abiturjahr  das Jahr, in welchem der Jahrgang Abitur machen wird
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -201,25 +201,24 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostAbiturjahrgang(
-    		@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr,
-    		@RequestBody(description = "Der Patch für die Abiturjahrgangsdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@RequestBody(description = "Der Patch für die Abiturjahrgangsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataGostJahrgangsdaten(conn)).patch(abiturjahr, is);
     	}
     }
-    
+
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Schüler der gymnasialen Oberstufe 
+     * Die OpenAPI-Methode für die Abfrage der Liste der Schüler der gymnasialen Oberstufe
      * im angegebenen Schema für den angegebenen Abitur-Jahrgang.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr    der Abitur-Jahrgang
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Schüler - allerdings ohne Informationen zu Kursen
      */
     @GET
@@ -232,23 +231,23 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangSchueler(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangSchueler(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
     		return (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getList();
     	}
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Fächer der gymnasialen Oberstufe 
+     * Die OpenAPI-Methode für die Abfrage der Liste der Fächer der gymnasialen Oberstufe
      * im angegebenen Schema für den angegebenen Abitur-Jahrgang.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abiturjahr    der Abitur-Jahrgang 
+     * @param abiturjahr    der Abitur-Jahrgang
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Fächer der gymnasialen Oberstufe mit der ID des Faches
      */
     @GET
@@ -262,22 +261,22 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostFach.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangFaecher(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFaecher(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataGostFaecher(conn, abiturjahr)).getList();
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Faches in Bezug auf die Gymnasiale Oberstufe
      * und in Bezug auf einen Abiturjahrgang.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abiturjahr  der Abitur-Jahrgang 
+     * @param abiturjahr  der Abitur-Jahrgang
      * @param id          die ID des Faches
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Abiturjahrgangs-spezifischen Daten des Faches der gymnasialen Oberstufe
      */
     @GET
@@ -291,7 +290,7 @@ public class APIGost {
                  schema = @Schema(implementation = GostFach.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachinformationen der Gymnasialen Oberstufe anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für das Fach der gymnasialen Oberstufe mit der angegebenen ID gefunden")
-    public Response getGostAbiturjahrgangFach(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFach(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung einer neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataGostFaecher(conn, abiturjahr)).get(id);
@@ -299,17 +298,17 @@ public class APIGost {
     }
 
 
-    
+
     /**
-     * Die OpenAPI-Methode für das Anpassen der Daten eines Faches in Bezug auf den 
+     * Die OpenAPI-Methode für das Anpassen der Daten eines Faches in Bezug auf den
      * Abiturjahrgang der Gymnasiale Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param abiturjahr   der Abitur-Jahrgang 
+     * @param abiturjahr   der Abitur-Jahrgang
      * @param id           die ID des Faches
-     * @param is           der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is           der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -325,11 +324,10 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostAbiturjahrgangFach(
-    		@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("id") long id,
-    		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostFach.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostFach.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataGostFaecher(conn, abiturjahr)).patch(id, is);
     	}
@@ -338,13 +336,13 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Fachwahlstatistik für den angegebenen Abitur-Jahrgang der 
+     * Die OpenAPI-Methode für die Abfrage der Fachwahlstatistik für den angegebenen Abitur-Jahrgang der
      * gymnasialen Oberstufe im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abiturjahr    der Abitur-Jahrgang 
+     * @param abiturjahr    der Abitur-Jahrgang
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Fachwahlstatistik
      */
     @GET
@@ -358,7 +356,7 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostStatistikFachwahl.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
@@ -369,14 +367,14 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Fachwahlen für den angegebenen Abitur-Jahrgang der 
+     * Die OpenAPI-Methode für die Abfrage der Fachwahlen für den angegebenen Abitur-Jahrgang der
      * gymnasialen Oberstufe im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abiturjahr    der Abitur-Jahrgang 
+     * @param abiturjahr    der Abitur-Jahrgang
      * @param halbjahr      das Halbjahr, für welches die Fachwahlen ermittelt werden sollen.
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Fachwahlen der gymnasialen Oberstufe
      */
     @GET
@@ -390,8 +388,8 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostFachwahl.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, 
-            @PathParam("halbjahr") int halbjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+            @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
@@ -403,11 +401,11 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id          die ID des Schülers zu dem die Laufbahnplanungsdaten ausgelesen werden
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Laufbahnplanungsdaten des Schülers
      */
     @GET
@@ -422,7 +420,7 @@ public class APIGost {
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).get(id);
@@ -432,11 +430,11 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Beratungsdaten für die Laufbahnplanung der Gymnasialen Oberstufe eines Schülers.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id          die ID des Schülers zu dem die Beratungsdaten ausgelesen werden
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Beratungsdaten zum dem Schüler
      */
     @GET
@@ -451,7 +449,7 @@ public class APIGost {
                  schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten der Gymnasialen Oberstufe eines Schülers auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Beratungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerLaufbahnplanungBeratungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getGostSchuelerLaufbahnplanungBeratungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).get(id);
@@ -459,14 +457,14 @@ public class APIGost {
     }
 
     /**
-     * Die OpenAPI-Methode für das Anpassen der Beratungsdaten für die Laufbahnplanung der 
+     * Die OpenAPI-Methode für das Anpassen der Beratungsdaten für die Laufbahnplanung der
      * Gymnasialen Oberstufe eines Schülers.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
-     * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -482,23 +480,22 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostSchuelerLaufbahnplanungBeratungsdaten(
-    		@PathParam("schema") String schema, @PathParam("schuelerid") long schueler_id,
-    		@RequestBody(description = "Der Patch für die Beratungsdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+    		@RequestBody(description = "Der Patch für die Beratungsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).patch(schueler_id, is);
     	}
     }
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage des PDF-Wahlbogens für die Gymnasiale Oberstufe eines Schülers.
-     *  
+     *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id          die ID des Schülers zu dem der Wahlbigen erstellt werden soll
      * @param request     die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der PDF-Wahlbogen des Schülers
      */
     @GET
@@ -513,7 +510,7 @@ public class APIGost {
                  schema = @Schema(type = "string", format = "binary", description = "PDF-Wahlbogen")))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return PDFGostWahlbogen.query(conn, id);
@@ -523,13 +520,13 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage einer Fachwahl der Gymnasialen Oberstufe eines Schülers.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
      * @param fach_id       die ID des Faches
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Fachwahlen des Schülers zu dem Fach 
+     *
+     * @return die Fachwahlen des Schülers zu dem Fach
      */
     @GET
     @Path("/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}")
@@ -542,24 +539,24 @@ public class APIGost {
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerFachwahl(@PathParam("schema") String schema, @PathParam("schuelerid") long schueler_id, @PathParam("fachid") long fach_id, @Context HttpServletRequest request) {
+    public Response getGostSchuelerFachwahl(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id, @PathParam("fachid") final long fach_id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).getFachwahl(schueler_id, fach_id);
     	}
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Anpassen der Fachwahlen eines Schülers 
+     * Die OpenAPI-Methode für das Anpassen der Fachwahlen eines Schülers
      * zu einem Fach der Gymnasiale Oberstufe.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
      * @param fach_id       die ID des Faches
-     * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -575,11 +572,10 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostSchuelerFachwahl(
-    		@PathParam("schema") String schema, @PathParam("schuelerid") long schueler_id, @PathParam("fachid") long fach_id,
-    		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerFachwahl.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id, @PathParam("fachid") final long fach_id,
+    		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerFachwahl.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataGostSchuelerLaufbahnplanung(conn)).patchFachwahl(schueler_id, fach_id, is);
     	}
@@ -590,12 +586,12 @@ public class APIGost {
 	/**
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 * 
+	 *
 	 * @param schema   das Schema aus dem die Leistungsdaten des Schüler kommen sollen
 	 * @param id       die ID des Schülers zu dem die Leistungsdaten geliefert werden sollen
-	 * 
+	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
-	 * 
+	 *
 	 * @return die Leistungsdaten in der gymnasialen Oberstufe für den Schüler mit der
 	 *         angegebenen ID und die Berechtigung des Datenbank Users
 	 */
@@ -611,24 +607,24 @@ public class APIGost {
                  schema = @Schema(implementation = GostLeistungen.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public GostLeistungen getGostSchuelerLeistungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                            @Context HttpServletRequest request) {
+    public GostLeistungen getGostSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                            @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
 	    	return GostSchueler.getLeistungsdaten(conn, id);
     	}
     }
 
-    
-    
+
+
 	/**
 	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 * 
+	 *
 	 * @param schema   das Schema aus dem die Abiturdaten des Schüler kommen sollen
 	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
-	 * 
+	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
-	 * 
+	 *
 	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
 	 *         angegebenen ID und die Berechtigung des Datenbank Users
 	 */
@@ -644,24 +640,24 @@ public class APIGost {
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Abiturdaten getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                                       @Context HttpServletRequest request) {
+    public Abiturdaten getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                                       @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return GostSchuelerAbitur.getAbiturdatenAusLeistungsdaten(conn, id);
     	}
     }
 
-    
-    
+
+
 	/**
 	 * Liest die Abiturdaten aus den Abiturtabellen des Schülers mit der angegebene ID und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
-	 * 
+	 *
 	 * @param schema   das Schema aus dem die Abiturdaten des Schüler kommen sollen
 	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
-	 * 
+	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
-	 * 
+	 *
 	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
 	 *         angegebenen ID und die Berechtigung des Datenbank Users
 	 */
@@ -676,21 +672,21 @@ public class APIGost {
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-    public Abiturdaten getGostSchuelerAbiturdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Abiturdaten getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
 	    	return GostSchuelerAbitur.getAbiturdaten(conn, id);
     	}
     }
-    
-    
-    
+
+
+
     /**
      * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.
-     *  
+     *
      * @param schema        das Schema aus dem die Fächerdaten kommen sollen
      * @param abidaten      zu übergebende Fächerdaten für die Prüfung der Belegung im Abitur
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              das Ergebis der Prüfung der Belegprüfung der Abiturdaten
      */
     @POST
@@ -699,15 +695,15 @@ public class APIGost {
                description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "
                		+ "Belegungsfehler und Hinweise zur Belegung zurückgegeben.")
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern",
-                 content = @Content(mediaType = "application/json", 
+                 content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostBelegpruefungErgebnis.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Belegprüfung durchzuführen.")
     @ApiResponse(responseCode = "404", description = "Es wurden keine Fächerdaten zur gymnasialen Oberstufe gefunden")
-    public GostBelegpruefungErgebnis getGostAbiturBelegpruefungGesamt(@PathParam("schema") String schema, 
-    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true, 
-    					 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-    					 schema = @Schema(implementation = Abiturdaten.class))) Abiturdaten abidaten, 
-    		@Context HttpServletRequest request) {
+    public GostBelegpruefungErgebnis getGostAbiturBelegpruefungGesamt(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true,
+    					 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+    					 schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
+    		@Context final HttpServletRequest request) {
     	// TODO Benutzerkompetenz
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
 	    	if (!Schule.queryCached(conn).getSchulform().daten.hatGymOb)
@@ -716,19 +712,19 @@ public class APIGost {
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
-			AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.GESAMT);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.GESAMT);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
-	
+
 
     /**
      * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten nur für die EF_1.
-     *  
+     *
 	 * @param schema        das Schema aus dem die Fächerdaten kommen sollen
      * @param abidaten      zu übergebende Fächerdaten für die Prüfung der Belegung nur für die EF_1
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              das Ergebis der Prüfung der Belegprüfung nur für die EF_1
      */
     @POST
@@ -737,15 +733,15 @@ public class APIGost {
                description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "
                		+ "Belegungsfehler und Hinweise zur Belegung zurückgegeben.")
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern",
-                 content = @Content(mediaType = "application/json", 
+                 content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostBelegpruefungErgebnis.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Belegprüfung durchzuführen.")
     @ApiResponse(responseCode = "404", description = "Es wurden keine Fächerdaten zur gymnasialen Oberstufe gefunden")
-    public GostBelegpruefungErgebnis getGostAbiturBelegpruefungEF1(@PathParam("schema") String schema, 
-    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true, 
-    		             content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-					     schema = @Schema(implementation = Abiturdaten.class))) Abiturdaten abidaten, 
-    		@Context HttpServletRequest request) {
+    public GostBelegpruefungErgebnis getGostAbiturBelegpruefungEF1(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true,
+    		             content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					     schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
+    		@Context final HttpServletRequest request) {
     	// TODO Benutzerkompetenz
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
 	    	if (!Schule.queryCached(conn).getSchulform().daten.hatGymOb)
@@ -754,20 +750,20 @@ public class APIGost {
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
-			AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.EF1);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.EF1);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
-      
+
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Blockungen der gymnasialen Oberstufe 
+     * Die OpenAPI-Methode für die Abfrage der Liste der Blockungen der gymnasialen Oberstufe
      * im angegebenen Schema für den angegebenen Abitur-Jahrgang und das angebene Halbjahr.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abiturjahr    der Abitur-Jahrgang 
+     * @param abiturjahr    der Abitur-Jahrgang
      * @param halbjahr      das Halbjahr der gymnasialen Oberstufe
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Blockungen der gymnasialen Oberstufe
      */
     @GET
@@ -781,21 +777,21 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungListeneintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockungs-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangBlockungsliste(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("halbjahr") int halbjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangBlockungsliste(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataGostBlockungsliste(conn, abiturjahr)).get(halbjahr);
     	}
-    } 
+    }
 
 
     /**
      * Die OpenAPI-Methode für das Erstellen einer neuen Blockung der Gymnasiale Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
-     * @param abiturjahr   der Abitur-Jahrgang 
+     * @param abiturjahr   der Abitur-Jahrgang
      * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit der neuen Blockung
      */
     @POST
@@ -812,22 +808,22 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Das Abitujahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createGostAbiturjahrgangBlockung(
-    		@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, 
-    		@PathParam("halbjahr") int halbjahr,     		
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@PathParam("halbjahr") final int halbjahr,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataGostBlockungsdaten(conn)).create(abiturjahr, halbjahr);
     	}
     }
-    
+
 
     /**
      * Die OpenAPI-Methode für das Löschen von Blockungsdaten der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return eine Response mit dem Status-Code und der ID der gelöschten Blockung
      */
     @DELETE
@@ -837,25 +833,25 @@ public class APIGost {
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Blockungsdaten "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue für die angegebene ID wurden erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu löschen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
-    public Response deleteGostBlockung(@PathParam("schema") String schema, @PathParam("blockungsid") long id, @Context HttpServletRequest request) {
+    public Response deleteGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).delete(id);
     	}
     }
-    
-    
+
+
    /**
      * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Blockungsdaten 
+     *
+     * @return die Blockungsdaten
      */
     @GET
     @Path("/blockungen/{blockungsid : \\d+}")
@@ -868,24 +864,24 @@ public class APIGost {
                  schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
-    public Response getGostBlockung(@PathParam("schema") String schema, @PathParam("blockungsid") long id, @Context HttpServletRequest request) {
+    public Response getGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).get(id);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Rechnen einer Blockung mit den in der DB gespeicherten Blockungsdaten.
      * Die Zwischenergebnisse werden in der Datenbank gespeichert.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Blockung
      * @param zeit       die Zeit in ms, welche der Blockungsalgorithmus maximal zum Rechnen verwenden soll.
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Antwort mit einer Liste von IDs der Zwischenergebnisse 
+     *
+     * @return die HTTP-Antwort mit einer Liste von IDs der Zwischenergebnisse
      */
     @POST
     @Path("/blockungen/{blockungsid : \\d+}/rechne/{zeit : \\d+}")
@@ -898,7 +894,7 @@ public class APIGost {
                 		 array = @ArraySchema(schema = @Schema(implementation = Long.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
-    public Response rechneGostBlockung(@PathParam("schema") String schema, @PathParam("blockungsid") long id, @PathParam("zeit") long zeit, @Context HttpServletRequest request) {
+    public Response rechneGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @PathParam("zeit") final long zeit, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).berechne(id, zeit);
@@ -908,12 +904,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Blockungsdaten der Gymnasiale Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Blockung
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -929,10 +925,10 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockung(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long id,
-    		@RequestBody(description = "Der Patch für die Blockungsdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long id,
+    		@RequestBody(description = "Der Patch für die Blockungsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).patch(id, is);
@@ -943,13 +939,13 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Hinzufügen eines weiteren Kurses zu einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem der Kurs der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param idFach       die ID des Faches
      * @param idKursart    die ID der Kursart
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Kurs der Blockung der gymnasialen Oberstufe
      */
     @POST
@@ -964,9 +960,9 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addGostBlockungKurs(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-            @PathParam("fachid") long idFach, @PathParam("kursartid") int idKursart,
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+            @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKurs(conn)).addKurs(idBlockung, idFach, idKursart);
@@ -977,13 +973,13 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Entfernen eines weiteren Kurses zu einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem der Kurs der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param idFach       die ID des Faches
      * @param idKursart    die ID der Kursart
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Kurs
      */
     @DELETE
@@ -992,15 +988,15 @@ public class APIGost {
     description = "Entfernt einen Kurs bei einer Blockung der Gymnasialen Oberstufe."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen eines Kurses hat.")
     @ApiResponse(responseCode = "200", description = "Der Kurs wurde wurde erfolgreich entfernt.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKurs.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKurs.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Kurs zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteGostBlockungKurs(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-            @PathParam("fachid") long idFach, @PathParam("kursartid") int idKursart,
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+            @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKurs(conn)).deleteKurs(idBlockung, idFach, idKursart);
@@ -1010,12 +1006,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage eines Kurses einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Kurses der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zum Kurs der Blockung 
+     *
+     * @return die Informationen zum Kurs der Blockung
      */
     @GET
     @Path("/blockungen/kurse/{kursid : \\d+}")
@@ -1028,22 +1024,22 @@ public class APIGost {
                  schema = @Schema(implementation = GostBlockungKurs.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Kurs einer Blockung mit der angebenen ID gefunden.")
-    public Response getGostBlockungKurs(@PathParam("schema") String schema, @PathParam("kursid") long id, @Context HttpServletRequest request) {
+    public Response getGostBlockungKurs(@PathParam("schema") final String schema, @PathParam("kursid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKurs(conn)).get(id);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Anpassen eines Kurses einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID des Kurses der Blockung
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -1059,25 +1055,25 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockungKurs(
-    		@PathParam("schema") String schema, @PathParam("kursid") long id,
-    		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKurs.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("kursid") final long id,
+    		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKurs.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKurs(conn)).patch(id, is);
     	}
     }
 
-    
+
     /**
-     * Die OpenAPI-Methode für das Löschen eines Kurses bei einer 
+     * Die OpenAPI-Methode für das Löschen eines Kurses bei einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs       die ID des Kurses
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Kurs
      */
     @DELETE
@@ -1086,28 +1082,28 @@ public class APIGost {
                description = "Entfernt einen Kurs einer Blockung der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Kurs wurde wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKurs.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKurs.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Kurs zu löschen.")
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden.")
-    public Response deleteGostBlockungKursByID(@PathParam("schema") String schema, @PathParam("kursid") long idKurs, 
-    		                                   @Context HttpServletRequest request) {
+    public Response deleteGostBlockungKursByID(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKurs(conn)).delete(idKurs);
     	}
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für die Abfrage der Daten eines Kurs-Lehrers eines Kurses einer Blockung 
+     * Die OpenAPI-Methode für die Abfrage der Daten eines Kurs-Lehrers eines Kurses einer Blockung
      * der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
      * @param idLehrer   die ID des Lehrers
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     *
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung
      */
     @GET
     @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
@@ -1115,11 +1111,11 @@ public class APIGost {
                description = "Liest einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Daten zu dem Kurs-Lehrer.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurslehrer auszulesen.")
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
-    public Response getGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
-    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    public Response getGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).get(idLehrer);
@@ -1128,16 +1124,16 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen der Daten eines Kurs-Lehrers eines Kurses einer Blockung 
+     * Die OpenAPI-Methode für das Anpassen der Daten eines Kurs-Lehrers eines Kurses einer Blockung
      * der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
      * @param idLehrer   die ID des Lehrers
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     *
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung
      */
     @PATCH
     @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
@@ -1147,11 +1143,11 @@ public class APIGost {
     @ApiResponse(responseCode = "204", description = "Die Daten wurden erfolgreich angepasst.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zum Kurslehrer anzupassen.")
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
-    public Response patchGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
-    		@PathParam("lehrerid") long idLehrer, 
-    		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content = 
-				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKursLehrer.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    public Response patchGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		@PathParam("lehrerid") final long idLehrer,
+    		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKursLehrer.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).patch(idLehrer, is);
@@ -1160,15 +1156,15 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Hinzufügen eines Kurs-Lehrers zu einem Kurs einer Blockung 
+     * Die OpenAPI-Methode für das Hinzufügen eines Kurs-Lehrers zu einem Kurs einer Blockung
      * der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
      * @param idLehrer   die ID des Lehrers
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     *
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung
      */
     @POST
     @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}/add")
@@ -1176,11 +1172,11 @@ public class APIGost {
                description = "Fügt einen Kurs-Lehrer zu einem Kurs einer Blockung der Gymnasialen Oberstufe hinzu. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Daten zu dem hinzugefügten Kurs-Lehrer.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurslehrer hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
-    public Response addGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
-    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    public Response addGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).addKurslehrer(idLehrer);
@@ -1189,15 +1185,15 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Entfernen eines Kurs-Lehrers eines Kurs einer Blockung 
+     * Die OpenAPI-Methode für das Entfernen eines Kurs-Lehrers eines Kurs einer Blockung
      * der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
      * @param idLehrer   die ID des Lehrers
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Response 
+     *
+     * @return die HTTP-Response
      */
     @DELETE
     @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
@@ -1207,8 +1203,8 @@ public class APIGost {
     @ApiResponse(responseCode = "204", description = "Die Daten wurden erfolgreich entfernt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurslehrer zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht bei dem Kurs.")
-    public Response deleteGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
-    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    public Response deleteGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).deleteKurslehrer(idLehrer);
@@ -1219,11 +1215,11 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer weiteren Schiene zu einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Schiene der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit der Schiene der Blockung der gymnasialen Oberstufe
      */
     @POST
@@ -1238,8 +1234,8 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addGostBlockungSchiene(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungSchiene(conn)).addSchiene(idBlockung);
@@ -1250,11 +1246,11 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Entfernen einer Schiene bei einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Schiene der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return eine Response mit dem Status-Code und ggf. der gelöschten Schiene
      */
     @DELETE
@@ -1263,14 +1259,14 @@ public class APIGost {
     description = "Entfernt eine Schiene bei einer Blockung der Gymnasialen Oberstufe."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen einer Schiene hat.")
     @ApiResponse(responseCode = "200", description = "Die Schiene wurde wurde erfolgreich entfernt.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Schiene zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteGostBlockungSchiene(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungSchiene(conn)).deleteSchiene(idBlockung);
@@ -1280,12 +1276,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage einer Schiene einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Schiener der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zur Schiene der Blockung 
+     *
+     * @return die Informationen zur Schiene der Blockung
      */
     @GET
     @Path("/blockungen/schiene/{schienenid : \\d+}")
@@ -1298,22 +1294,22 @@ public class APIGost {
                  schema = @Schema(implementation = GostBlockungSchiene.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Schiene einer Blockung mit der angebenen ID gefunden.")
-    public Response getGostBlockungSchiene(@PathParam("schema") String schema, @PathParam("schienenid") long id, @Context HttpServletRequest request) {
+    public Response getGostBlockungSchiene(@PathParam("schema") final String schema, @PathParam("schienenid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungSchiene(conn)).get(id);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Anpassen einer Schiene einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Schiene der Blockung
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -1329,25 +1325,25 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockungSchiene(
-    		@PathParam("schema") String schema, @PathParam("schienenid") long id,
-    		@RequestBody(description = "Der Patch für die Schiene der Blockung", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungSchiene.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("schienenid") final long id,
+    		@RequestBody(description = "Der Patch für die Schiene der Blockung", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungSchiene.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungSchiene(conn)).patch(id, is);
     	}
     }
 
-    
+
     /**
-     * Die OpenAPI-Methode für das Löschen einer Schiene bei einer 
+     * Die OpenAPI-Methode für das Löschen einer Schiene bei einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idSchiene    die ID der Schiene
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Schiene
      */
     @DELETE
@@ -1356,28 +1352,28 @@ public class APIGost {
                description = "Entfernt eine Schiene einer Blockung der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Schiene wurde wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schiene zu löschen.")
     @ApiResponse(responseCode = "404", description = "Die Schiene wurde nicht bei einer Blockung gefunden.")
-    public Response deleteGostBlockungSchieneByID(@PathParam("schema") String schema, @PathParam("schienenid") long idSchiene, 
-    		                                   @Context HttpServletRequest request) {
+    public Response deleteGostBlockungSchieneByID(@PathParam("schema") final String schema, @PathParam("schienenid") final long idSchiene,
+    		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungSchiene(conn)).delete(idSchiene);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer Regel zu einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Regel der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param typRegel     der Regel-Typ
      * @param regelParameter  die Parameter der Regel oder null, falls Default-Parameter verwendet werden sollen
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit der Regel der Blockung der gymnasialen Oberstufe
      */
     @POST
@@ -1392,11 +1388,11 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addGostBlockungRegel(
-    		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-    		@PathParam("regeltyp") int typRegel, 
-            @RequestBody(description = "Die Regel-Parameter", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> regelParameter,
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+    		@PathParam("regeltyp") final int typRegel,
+            @RequestBody(description = "Die Regel-Parameter", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> regelParameter,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel, regelParameter);
@@ -1406,12 +1402,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage einer Regel einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Schiener der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Informationen zur Regel der Blockung 
+     *
+     * @return die Informationen zur Regel der Blockung
      */
     @GET
     @Path("/blockungen/regeln/{regelid : \\d+}")
@@ -1424,22 +1420,22 @@ public class APIGost {
                  schema = @Schema(implementation = GostBlockungRegel.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Regel einer Blockung mit der angebenen ID gefunden.")
-    public Response getGostBlockungRegel(@PathParam("schema") String schema, @PathParam("regelid") long id, @Context HttpServletRequest request) {
+    public Response getGostBlockungRegel(@PathParam("schema") final String schema, @PathParam("regelid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungRegel(conn)).get(id);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für das Anpassen einer Regel einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Regel der Blockung
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -1455,25 +1451,25 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockungRegel(
-    		@PathParam("schema") String schema, @PathParam("regelid") long id,
-    		@RequestBody(description = "Der Patch für die Regel der Blockung", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungRegel.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("regelid") final long id,
+    		@RequestBody(description = "Der Patch für die Regel der Blockung", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungRegel.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungRegel(conn)).patch(id, is);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Löschen einer Regel bei einer 
+     * Die OpenAPI-Methode für das Löschen einer Regel bei einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idRegel   die ID der Regel
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Regel
      */
     @DELETE
@@ -1482,11 +1478,11 @@ public class APIGost {
                description = "Entfernt eine Regel einer Blockung der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Regel wurde wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungRegel.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungRegel.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Regel zu löschen.")
     @ApiResponse(responseCode = "404", description = "Die Regel wurde nicht bei einer Blockung gefunden.")
-    public Response deleteGostBlockungRegelByID(@PathParam("schema") String schema, @PathParam("regelid") long idRegel, 
-    		                                   @Context HttpServletRequest request) {
+    public Response deleteGostBlockungRegelByID(@PathParam("schema") final String schema, @PathParam("regelid") final long idRegel,
+    		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungRegel(conn)).delete(idRegel);
@@ -1496,12 +1492,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage von Blockungsergebnissen zu Blockungen der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Blockungsergebnisses
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Daten des Blockungsergebnisses 
+     *
+     * @return die Daten des Blockungsergebnisses
      */
     @GET
     @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}")
@@ -1514,7 +1510,7 @@ public class APIGost {
                  schema = @Schema(implementation = GostBlockungsergebnis.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsergebnisse einer Blockung der Gymnasialen Oberstufe auszulesen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
-    public Response getGostBlockungsergebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    public Response getGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsergebnisse(conn)).get(id);
@@ -1525,11 +1521,11 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Aktivieren bzw. Persistieren eines Blockungsergebnisses
      * der Gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
-     *  
+     *
      * @param schema       das Datenbankschema
-     * @param id           die ID des zu aktivierenden Blockungsergebnisses 
+     * @param id           die ID des zu aktivierenden Blockungsergebnisses
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @POST
@@ -1545,7 +1541,7 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu aktiveren")
     @ApiResponse(responseCode = "409", description = "Es wurde bereits eine Blockung aktiviert")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response activateGostBlockungsergebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    public Response activateGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsergebnisse(conn)).aktiviere(id);
@@ -1555,11 +1551,11 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen von Blockungsergebnissen einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Blockungsergebnisses
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return eine Response mit dem Status-Code und ggf. der ID des gelöschten Zwischenergebnisses
      */
     @DELETE
@@ -1569,28 +1565,28 @@ public class APIGost {
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Zwischenergebnisses "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Das Zwischenergebnis einer Blockung der gymnasialen Oberstfue für die angegebene ID wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Zwischenergebnis einer Blockung der Gymnasialen Oberstufe zu löschen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
-    public Response deleteGostBlockungsergebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    public Response deleteGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsergebnisse(conn)).delete(id);
     	}
     }
-    
+
 
     /**
-     * Die OpenAPI-Methode für das Duplizieren der Definition einer Blockung mit den in der DB 
-     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis. 
-     * Dieses Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat 
+     * Die OpenAPI-Methode für das Duplizieren der Definition einer Blockung mit den in der DB
+     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis.
+     * Dieses Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat
      * als Vorlage für die Definition von Regeln.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Zwischenergebnisses
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Antwort mit der Duplizierten Blockung 
+     *
+     * @return die HTTP-Antwort mit der Duplizierten Blockung
      */
     @GET
     @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere")
@@ -1604,26 +1600,26 @@ public class APIGost {
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
-    public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).dupliziere(id);
     	}
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Hochschreiben der Definition einer Blockung mit den in der DB 
-     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis in das nächste Halbjahr. 
-     * Dieses Zwischenergebnis wird mit hochgeschrieben und dient bei der hochgeschriebenen Blockung 
+     * Die OpenAPI-Methode für das Hochschreiben der Definition einer Blockung mit den in der DB
+     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis in das nächste Halbjahr.
+     * Dieses Zwischenergebnis wird mit hochgeschrieben und dient bei der hochgeschriebenen Blockung
      * auch als Vorlage für die Definition von Regeln. Nicht mehr vorhandene Fachwahlen werden
      * ggf. automatisch entfernt. Es werden aber keine neuen Kurse oder Zuordnung neu generiert.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Zwischenergebnisses
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Antwort mit der hochgeschriebenen Blockung 
+     *
+     * @return die HTTP-Antwort mit der hochgeschriebenen Blockung
      */
     @GET
     @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/hochschreiben")
@@ -1638,24 +1634,24 @@ public class APIGost {
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockung der Gymnasialen Oberstufe hochzuschreiben.")
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
-    public Response schreibeGostBlockungsErgebnisHoch(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    public Response schreibeGostBlockungsErgebnisHoch(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).hochschreiben(id);
     	}
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer 
+     * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
      * @param idSchueler   die ID der Schiene der Blockung
      * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @POST
@@ -1670,27 +1666,27 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createGostBlockungsergebnisKursSchuelerZuordnung(
-    		@PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-            @PathParam("schuelerid") long idSchueler, @PathParam("kursid") long idKurs,
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+            @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsergebnisse(conn)).createKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
     	}
     }
 
-    
+
     /**
-     * Die OpenAPI-Methode für das Verschieben eines Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer 
+     * Die OpenAPI-Methode für das Verschieben eines Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
      * @param idSchueler   die ID der Schiene der Blockung
      * @param idKursAlt    die ID des Kurses der Blockung in Bezug auf die alte Zuordnung
      * @param idKursNeu    die ID des Kurses der Blockung in Bezug auf die neue Zuordnung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @POST
@@ -1704,26 +1700,26 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response updateGostBlockungsergebnisKursSchuelerZuordnung(
-            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-            @PathParam("schuelerid") long idSchueler, @PathParam("kursid") long idKursAlt, @PathParam("kursidneu") long idKursNeu,
-            @Context HttpServletRequest request) {
+            @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+            @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKursAlt, @PathParam("kursidneu") final long idKursNeu,
+            @Context final HttpServletRequest request) {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
             return (new DataGostBlockungsergebnisse(conn)).updateKursSchuelerZuordnung(idErgebnis, idSchueler, idKursAlt, idKursNeu);
         }
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer 
+     * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idErgebnis   die ID des Blockungsergebnisses
      * @param idSchueler   die ID der Schiene der Blockung
      * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return eine Response mit dem Status-Code
      */
     @DELETE
@@ -1734,9 +1730,9 @@ public class APIGost {
     @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich gelöscht.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnung zu löschen.")
     @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, der Schüler oder der Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
-    public Response deleteGostBlockungsergebnisKursSchuelerZuordnung(@PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-    		                                    @PathParam("schuelerid") long idSchueler, @PathParam("kursid") long idKurs, 
-    		                                    @Context HttpServletRequest request) {
+    public Response deleteGostBlockungsergebnisKursSchuelerZuordnung(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+    		                                    @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
+    		                                    @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsergebnisse(conn)).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
@@ -1745,15 +1741,15 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer 
+     * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
      * @param idSchiene    die ID der Schiene der Blockung
      * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @POST
@@ -1768,27 +1764,27 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createGostBlockungsergebnisKursSchieneZuordnung(
-            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-            @PathParam("schienenid") long idSchiene, @PathParam("kursid") long idKurs,
-            @Context HttpServletRequest request) {
+            @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+            @PathParam("schienenid") final long idSchiene, @PathParam("kursid") final long idKurs,
+            @Context final HttpServletRequest request) {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
             return (new DataGostBlockungsergebnisse(conn)).createKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
         }
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Verschieben eines Kurse von einer Schiene zu einer anderen Schiene 
+     * Die OpenAPI-Methode für das Verschieben eines Kurse von einer Schiene zu einer anderen Schiene
      * bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema         das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis     die ID des Blockungsergebnisses
      * @param idSchieneAlt   die ID der Schiene der Blockung in Bezug auf die alten Zuordnung
      * @param idKurs         die ID des Kurses der Blockung
      * @param idSchieneNeu   die ID der Schiene der Blockung in Bezug auf die neue Zuordnung
      * @param request        die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @POST
@@ -1802,26 +1798,26 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response updateGostBlockungsergebnisKursSchieneZuordnung(
-            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-            @PathParam("schienenid") long idSchieneAlt, @PathParam("kursid") long idKurs, @PathParam("schienenidneu") long idSchieneNeu, 
-            @Context HttpServletRequest request) {
+            @PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+            @PathParam("schienenid") final long idSchieneAlt, @PathParam("kursid") final long idKurs, @PathParam("schienenidneu") final long idSchieneNeu,
+            @Context final HttpServletRequest request) {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
             return (new DataGostBlockungsergebnisse(conn)).updateKursSchieneZuordnung(idErgebnis, idKurs, idSchieneAlt, idSchieneNeu);
         }
     }
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer 
+     * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idErgebnis   die ID des Blockungsergebnisses
      * @param idSchiene    die ID der Schiene der Blockung
      * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return eine Response mit dem Status-Code
      */
     @DELETE
@@ -1832,9 +1828,9 @@ public class APIGost {
     @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich gelöscht.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnung zu löschen.")
     @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, der Schiene oder der Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
-    public Response deleteGostBlockungsergebnisKursSchieneZuordnung(@PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
-                                                @PathParam("schienenid") long idSchiene, @PathParam("kursid") long idKurs, 
-                                                @Context HttpServletRequest request) {
+    public Response deleteGostBlockungsergebnisKursSchieneZuordnung(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long idErgebnis,
+                                                @PathParam("schienenid") final long idSchiene, @PathParam("kursid") final long idKurs,
+                                                @Context final HttpServletRequest request) {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
             return (new DataGostBlockungsergebnisse(conn)).deleteKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
@@ -1845,11 +1841,11 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Fachkombinationen für die Laufbahnplanung
      * der gymnasialen Oberstufe für den angegebenen Abitur-Jahrgang.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr    der Abitur-Jahrgang
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Fachkombinationen
      */
     @GET
@@ -1861,7 +1857,7 @@ public class APIGost {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangFachkombinationen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFachkombinationen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostJahrgangFachkombinationen(conn, abiturjahr)).getList();
@@ -1871,12 +1867,12 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen einer Fachkombination für Fächer der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Regel für die Fachkombination
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request    die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort
      */
     @PATCH
@@ -1892,25 +1888,25 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostFachkombination(
-    		@PathParam("schema") String schema, @PathParam("id") long id,
-    		@RequestBody(description = "Der Patch für die Fachkombination", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangFachkombination.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Fachkombination", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangFachkombination.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostJahrgangFachkombinationen(conn, -1 /*nicht relevant*/)).patch(id, is);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Löschen einer Regel zu einer Fchkombination 
+     * Die OpenAPI-Methode für das Löschen einer Regel zu einer Fchkombination
      * der Gymnasialen Oberstufe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID der Regel der Fachkombination
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Regel zur Fachkombination
      */
     @DELETE
@@ -1919,10 +1915,10 @@ public class APIGost {
                description = "Entfernt eine Regel zu einer Fachkombination in der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Regel wurde wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombination.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombination.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Regel zu der Fachkombination zu löschen.")
     @ApiResponse(responseCode = "404", description = "Die Regel zu der Fachkombination wurde nicht gefunden.")
-    public Response deleteGostFachkombination(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response deleteGostFachkombination(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostJahrgangFachkombinationen(conn, -1 /* nicht relevant */)).delete(id);
@@ -1933,12 +1929,12 @@ public class APIGost {
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer weiteren Fachkombination der Gymnasialen Oberstufe mit dem angegebenen Typ
      * bei dem angegebenen Abiturjahrgang.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem die Fachkombination erstellt wird
      * @param abiturjahr   der Abitur-Jahrgang
      * @param typ          der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die HTTP-Antwort mit der Schiene der Blockung der gymnasialen Oberstufe
      */
     @POST
@@ -1953,23 +1949,23 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addGostAbiturjahrgangFachkombination(
-    		@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @PathParam("typ") int typ, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("typ") final int typ,
+    		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostJahrgangFachkombinationen(conn, abiturjahr)).add(typ);
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
      * in Bezug auf den angegebenen Schüler als GZIP-Json.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Laufbahnplanungs-Daten
      */
     @GET
@@ -1984,7 +1980,7 @@ public class APIGost {
                  schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe")))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
-    public Response exportGostSchuelerLaufbahnplanung(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response exportGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
 	    	return (new DataGostSchuelerLaufbahnplanung(conn)).exportGZip(id);
     	}
@@ -1998,7 +1994,7 @@ public class APIGost {
      * @param id            die ID des Schülers
      * @param multipart     Die Laufbahnplanungsdatei als GZIP-komprimiertes JSON
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
      */
     @POST
@@ -2011,25 +2007,25 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
     			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
-    public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") String schema,
-    		@PathParam("id") long id,
-    		@RequestBody(description = "Die Laufbahnplanungs-Datei", required = true, content = 
-			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm SimpleBinaryMultipartBody multipart,
-    		@Context HttpServletRequest request) {
+    public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+    		@RequestBody(description = "Die Laufbahnplanungs-Datei", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
 	    	return (new DataGostSchuelerLaufbahnplanung(conn)).importGZip(id, multipart.data);
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
      * in Bezug auf den angegebenen Schüler.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Laufbahnplanungs-Daten
      */
     @GET
@@ -2043,7 +2039,7 @@ public class APIGost {
 			schema = @Schema(implementation = GostLaufbahnplanungDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
-    public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
 	    	return (new DataGostSchuelerLaufbahnplanung(conn)).exportJSON(id);
     	}
@@ -2057,7 +2053,7 @@ public class APIGost {
      * @param id            die ID des Schülers
      * @param daten         die Laufbahnplanungsdaten
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
      */
     @POST
@@ -2069,14 +2065,14 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
     			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
-    public Response importGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") String schema,
-    		@PathParam("id") long id,
-            @RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-            schema = @Schema(implementation = GostLaufbahnplanungDaten.class))) GostLaufbahnplanungDaten daten,
-    		@Context HttpServletRequest request) {
+    public Response importGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+            @RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = GostLaufbahnplanungDaten.class))) final GostLaufbahnplanungDaten daten,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
 	    	return (new DataGostSchuelerLaufbahnplanung(conn)).importJSON(id, daten);
     	}
     }
-    
+
 }

@@ -42,15 +42,15 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @Path("/db/{schema}/betriebe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIBetrieb {
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Betrieben
      */
     @GET
@@ -65,19 +65,19 @@ public class APIBetrieb {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
-    public Response getBetriebe(@PathParam("schema") String schema, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)){
+    public Response getBetriebe(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataBetriebsliste(conn)).getList();
-        }        
+        }
     }
-    
+
    /**
      * Die OpenAPI-Methode für die Abfrage der Stammdaten eines Betriebs.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Betriebs
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Stammdaten eines Betriebs
      */
 
@@ -92,20 +92,20 @@ public class APIBetrieb {
                  schema = @Schema(implementation = BetriebStammdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Betrieb-Eintrag mit der angegebenen ID gefunden")
-    public Response getBetriebStammdaten(@PathParam ("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)){
-            return (new DataBetriebsStammdaten(conn)).get(id);            
+    public Response getBetriebStammdaten(@PathParam ("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+            return (new DataBetriebsStammdaten(conn)).get(id);
         }
     }
 
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Betriebs.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Erziehers
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -120,19 +120,19 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "404", description = "Kein Betrieb-Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    
-    public Response patchBetriebStammdaten(@PathParam("schema") String schema, @PathParam("id") long id,
+
+    public Response patchBetriebStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
-                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema=@Schema(implementation = BetriebStammdaten.class)))
-                                        InputStream is, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
+                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebStammdaten.class))) final
+                                        InputStream is, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
             return (new DataBetriebsStammdaten(conn)).patch(id, is);
         }
     }
 
     /**
      * Die OpenAPI-Methode für das Erstellen eines neuen Schülerbetriebs.
-     *  
+     *
      * @param schema     		 	das Datenbankschema, in welchem der Schülerbetrieb erstellt wird
      * @param request      			die Informationen zur HTTP-Anfrage
      * @param schueler_id		    die Datanbenk_ID des Schülers des neuen Schülebetriebs
@@ -154,27 +154,27 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createSchuelerbetrieb(
-    		@PathParam("schema") String schema,
-    		@PathParam("schueler_id") long schueler_id,
-    		@PathParam("betrieb_id") long betrieb_id,
-    		@RequestBody(description = "Der Post für die Schülerbetrieb-Daten", required = true, content = 
-			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema,
+    		@PathParam("schueler_id") final long schueler_id,
+    		@PathParam("betrieb_id") final long betrieb_id,
+    		@RequestBody(description = "Der Post für die Schülerbetrieb-Daten", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
-    		return (new DataSchuelerBetriebsdaten(conn)).create(schueler_id, betrieb_id,is);
+    		return (new DataSchuelerBetriebsdaten(conn)).create(schueler_id, betrieb_id, is);
     	}
     }
-    
-    
-    
+
+
+
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülerbetriebs.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülerbetriebs
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -190,12 +190,11 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchSchuelerBetriebsdaten(
-    		@PathParam("schema") String schema, 
-    		@PathParam("id") long id, 
-    		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
           return (new DataSchuelerBetriebsdaten(conn)).patch(id, is);
     	}
@@ -203,7 +202,7 @@ public class APIBetrieb {
 
      /**
      * Die OpenAPI-Methode für die Abfrage eines Schülerbetriebs im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      * @param id        die Datenbank-ID zur Identifikation des Schülerbetriebs
@@ -219,18 +218,18 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerBetriebsdaten.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schülerbetrieb gefunden")
-    public Response getSchuelerBetriebsdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getSchuelerBetriebsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
 	    	return (new DataSchuelerBetriebsdaten(conn)).get(id);
 	    }
     }
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste mit den einzelnen Betrieben
      */
     @GET
@@ -245,15 +244,15 @@ public class APIBetrieb {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
-    public Response getBetriebAnsprechpartner(@PathParam("schema") String schema, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)){
+    public Response getBetriebAnsprechpartner(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataBetriebAnsprechpartner(conn)).getList();
-        }        
+        }
     }
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage eines Betriebanpsrechpartners im angegebenen Schema.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request      	die Informationen zur HTTP-Anfrage
      * @param id        			die Datenbank-ID zur Identifikation des Schülerbetriebs
@@ -269,20 +268,20 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebanpsrechpartner anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Betriebanpsrechpartner gefunden")
-    public Response getBetriebAnsprechpartnerdaten(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getBetriebAnsprechpartnerdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
 	    	return (new DataBetriebAnsprechpartner(conn)).get(id);
 	    }
     }
-    
+
     /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülerbetriebs.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Schülerbetriebs
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -298,22 +297,21 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchBetriebanpsrechpartnerdaten(
-    		@PathParam("schema") String schema, 
-    		@PathParam("id") long id, 
-    		@RequestBody(description = "Der Patch für die Betriebanpsrechpartner-Daten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
+    		@PathParam("schema") final String schema,
+    		@PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Betriebanpsrechpartner-Daten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
           return (new DataBetriebAnsprechpartner(conn)).patch(id, is);
     	}
     }
-    
+
     /**
      * Die OpenAPI-Methode für das Erstellen eines neuen Betriebansprechpartners.
-     *  
+     *
      * @param schema       das Datenbankschema, in welchem der Betriebsansprechpartner erstellt wird
-     * @param betrieb_id   des Betrieb 
+     * @param betrieb_id   des Betrieb
      * @param request      die Informationen zur HTTP-Anfrage
      * @param is           das JSON-Objekt
      * @return die HTTP-Antwort mit der neuen Blockung
@@ -332,22 +330,22 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createBetriebansprechpartner(
-    		@PathParam("schema") String schema, @PathParam("betrieb_id") long betrieb_id,     	
-    		@RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true, content = 
-			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) InputStream is, 
-    		@Context HttpServletRequest request) {
+    		@PathParam("schema") final String schema, @PathParam("betrieb_id") final long betrieb_id,
+    		@RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { // TODO Anpassung der Benutzerrechte
     		return (new DataBetriebAnsprechpartner(conn)).create(betrieb_id, is);
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Beschäftigungsarten im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
      */
     @GET
@@ -362,7 +360,7 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogBeschaeftigungsart(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogBeschaeftigungsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogBeschaeftigunsarten(conn)).getList();
         }
@@ -370,10 +368,10 @@ public class APIBetrieb {
 
     /**
      * Die OpenAPI-Methode für die Abfrage einer Beschäftigungsart im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * @param id            die Datenbank-ID zur Identifikation der Beschäftigungsart 
+     * @param id            die Datenbank-ID zur Identifikation der Beschäftigungsart
      * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
      */
     @GET
@@ -386,7 +384,7 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogBeschaeftigungsartmitID(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getKatalogBeschaeftigungsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogBeschaeftigunsarten(conn)).get(id);
         }
@@ -394,12 +392,12 @@ public class APIBetrieb {
 
      /**
      * Die OpenAPI-Methode für das Patchen einer Beschäftigungsart im angegebenen Schema
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation der Beschäftigungsart
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -414,22 +412,22 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    
-    public Response patchBeschaeftigungsart(@PathParam("schema") String schema, @PathParam("id") long id,
+
+    public Response patchBeschaeftigungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
-                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema=@Schema(implementation = KatalogEintrag.class)))
-                                        InputStream is, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
+                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final
+                                        InputStream is, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
             return (new DataKatalogBeschaeftigunsarten(conn)).patch(id, is);
         }
     }
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Beschäftigungsarten im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
      */
     @GET
@@ -444,18 +442,18 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogBetriebsart(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogBetriebsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogBetriebsarten(conn)).getList();
         }
     }
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage einer Betriebsart im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * @param id        die Datenbank-ID zur Identifikation der Betriebsart 
+     * @param id        die Datenbank-ID zur Identifikation der Betriebsart
      * @return              die Betriebsart mit ID des Datenbankschemas
      */
     @GET
@@ -468,7 +466,7 @@ public class APIBetrieb {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogBetriebsartmitID(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+    public Response getKatalogBetriebsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogBetriebsarten(conn)).get(id);
         }
@@ -476,12 +474,12 @@ public class APIBetrieb {
 
     /**
      * Die OpenAPI-Methode für das Patchen einer Betriebsart im angegebenen Schema
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation der Betriebsart
-     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return das Ergebnis der Patch-Operation
      */
     @PATCH
@@ -496,12 +494,12 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    
-    public Response patchBetriebsart(@PathParam("schema") String schema, @PathParam("id") long id,
+
+    public Response patchBetriebsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
-                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema=@Schema(implementation = KatalogEintrag.class)))
-                                        InputStream is, @Context HttpServletRequest request){
-        try(DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
+                                        content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final
+                                        InputStream is, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
             return (new DataKatalogBetriebsarten(conn)).patch(id, is);
         }
     }
