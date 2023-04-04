@@ -860,6 +860,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 			}
 
+			// TODO weitere Kurslehrer ermitteln
+
 			// Lese die Leistungsdaten zu den Kursen ein
 			final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryNamed(
 					"DTOSchuelerLeistungsdaten.kurs_id.multiple", mapKurse.keySet(), DTOSchuelerLeistungsdaten.class);
@@ -902,11 +904,28 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			for (final DTOKurs kurs : listKurse) {
 				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
 				mapKursIDs.put(kurs.ID, idKurs);
-				// TODO Kursnummer bestimmen
-				// TODO Koop-Kurs bestimmen
-				// TODO Schienenanzahl
+				final String[] strKursnummer = kurs.KurzBez.split("\\D+");
+				final int kursNummer = strKursnummer.length == 0 ? 1
+						: "".equals(strKursnummer[strKursnummer.length - 1]) ? 1
+						: Integer.parseInt(strKursnummer[strKursnummer.length - 1]);
+				final Vector<Long> schienen = new Vector<>();
+				if (kurs.Schienen != null) {
+					final String[] strSchienen = kurs.Schienen.split(",");
+					for (final String strSchiene : strSchienen) {
+						if ("".equals(strSchiene.trim()))
+							continue;
+						try {
+							final long schienenID = mapSchienen.get(Integer.parseInt(strSchiene.trim()));
+							schienen.add(schienenID);
+						} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+							// ignore exception
+						}
+					}
+				}
+				if (schienen.isEmpty())
+					schienen.add(mapSchienen.values().iterator().next());
 				final DTOGostBlockungKurs kursErstellt = new DTOGostBlockungKurs(idKurs, idBlockung, kurs.Fach_ID,
-						kursart, 42, false, 1, kurs.WochenStd == null ? 3 : kurs.WochenStd);
+						kursart, kursNummer, false, schienen.size(), kurs.WochenStd == null ? 3 : kurs.WochenStd);
 				kursErstellt.BezeichnungSuffix = "";
 				mapKurseErstellt.put(kursErstellt.ID, kursErstellt);
 				conn.transactionPersist(kursErstellt);
@@ -917,23 +936,14 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					conn.transactionPersist(kurslehrer);
 				}
 				// Füge die Kurs-Schienen-Zuordnung hinzu
-				if (kurs.Schienen != null) {
-					for (final String strSchiene : kurs.Schienen.split(",")) {
-						if ("".equals(strSchiene.trim()))
-							continue;
-						try {
-							final long schienenID = mapSchienen.get(Integer.parseInt(strSchiene.trim()));
-							final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchiene = new DTOGostBlockungZwischenergebnisKursSchiene(
-									idErgebnis, idKurs, schienenID);
-							conn.transactionPersist(zuordnungKursSchiene);
-						} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-							// ignore exception
-						}
-					}
+				for (final long schienenID : schienen) {
+					final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchiene = new DTOGostBlockungZwischenergebnisKursSchiene(
+							idErgebnis, idKurs, schienenID);
+					conn.transactionPersist(zuordnungKursSchiene);
 				}
+				// TODO Weitere Kurs-Lehrer ergänzen (s.o.)
 				idKurs++;
 			}
-			// TODO Weitere Kurs-Lehrer ermitteln und ergänzen
 
 			// Regeln sind keine bekannt, also werden auch keine erstellt.
 
