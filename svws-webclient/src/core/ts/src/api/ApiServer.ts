@@ -2568,6 +2568,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode restauriereGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{abiturjahr : \d+}/{halbjahr : \d+}/restore
+	 *
+	 * Restauriert die Blockung aus den Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.
+	 *   Code 404: Keine Daten für das Abiturjahr und das Halbjahr gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung
+	 */
+	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
+		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostBlockungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der DELETE-Methode deleteGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}
 	 *
 	 * Entfernt die angegebene Blockung der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Blockungsdaten besitzt.

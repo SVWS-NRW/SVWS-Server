@@ -44,8 +44,13 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -787,5 +792,176 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			throw exception;
 		}
 	}
+
+
+	/**
+	 * Versucht eine Blockung aus den Kursen und den Leistungsdaten wiederherzustellen,
+	 * wenn für den Abiturjahrgang in dem angegebenen Halbjahr bereits eine Blockung
+	 * aktiviert wurde.
+	 *
+	 * @param abiturjahr   das Abiturjahr
+	 * @param halbjahrID   die ID des Halbjahres der gymnasialen Oberstufe (siehe auch {@link GostHalbjahr})
+	 *
+	 * @return die Blockungsdaten der restaurierten Blockung
+	 */
+	public Response restore(final int abiturjahr, final int halbjahrID) {
+		try {
+			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
+
+			// Bestimme das Halbjahr der gymnasialen Oberstufe und das Schuljahr, wo der Abiturjahrgang in diesem Halbjahr war
+			final GostHalbjahr halbjahr = GostHalbjahr.fromID(halbjahrID);
+			if (halbjahr == null)
+				throw OperationError.BAD_REQUEST.exception();
+			final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
+
+			// Bestimme den zugehörigen Schuljahresabschnitt
+			final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn
+					.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
+							DTOSchuljahresabschnitte.class, schuljahr, halbjahr.halbjahr);
+			if (listSchuljahresabschnitte.size() != 1)
+				throw OperationError.NOT_FOUND.exception();
+			final DTOSchuljahresabschnitte schuljahresabschnitt = listSchuljahresabschnitte.get(0);
+
+			// Bestimme die ID des Jahrgangs
+			final List<DTOJahrgang> listJahrgaenge = conn
+					.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1",
+							DTOJahrgang.class, halbjahr.jahrgang);
+			if (listJahrgaenge.size() != 1)
+				throw OperationError.NOT_FOUND.exception();
+			final DTOJahrgang jahrgang = listJahrgaenge.get(0);
+
+			// TODO prüfe, ob bereits eine aktive Blockung vorhanden ist - wenn ja, dann restauriere die Blockung nicht, da es nicht zwei aktive Blockungen geben kann
+
+			// Lese die Kurse für den Schuljahresabschnitt und dem zugehörigen Jahrgang ein
+			final List<DTOKurs> listKurse = conn
+					.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID = ?2",
+							DTOKurs.class, schuljahresabschnitt.ID, jahrgang.ID);
+			if (listKurse.isEmpty())
+				throw OperationError.NOT_FOUND.exception();
+			// Bestimme die Schienen aus der Kurstabelle
+			final HashMap<Long, DTOKurs> mapKurse = new HashMap<>();
+			final HashSet<Integer> setSchienen = new HashSet<>();
+			for (final DTOKurs kurs : listKurse) {
+				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+				if (kursart == null)
+					continue;
+				mapKurse.put(kurs.ID, kurs);
+				if (kurs.Schienen == null)
+					continue;
+				for (final String strSchiene : kurs.Schienen.split(",")) {
+					if ("".equals(strSchiene.trim()))
+						continue;
+					try {
+						setSchienen.add(Integer.parseInt(strSchiene.trim()));
+					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+						// ignore exception
+					}
+				}
+			}
+
+			// Lese die Leistungsdaten zu den Kursen ein
+			final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryNamed(
+					"DTOSchuelerLeistungsdaten.kurs_id.multiple", mapKurse.keySet(), DTOSchuelerLeistungsdaten.class);
+			final List<Long> listLernabschnittIDs = listLeistungsdaten.stream().map(ld -> ld.Abschnitt_ID).toList();
+			final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = conn.queryNamed(
+					"DTOSchuelerLernabschnittsdaten.id.multiple", listLernabschnittIDs, DTOSchuelerLernabschnittsdaten.class)
+					.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
+
+			// Bestimme die ID für die hochgeschriebene Blockung
+			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
+			final Long idBlockung = lastID == null ? 1 : lastID.MaxID + 1;
+			// Bestimme die ID für das Vorlage-Ergebnis der hochgeschriebenen Blockung
+			final DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final long idErgebnis = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
+
+			// Erstelle die Blockung
+			final DTOGostBlockung blockung = new DTOGostBlockung(idBlockung, "Restaurierte Blockung", abiturjahr, halbjahr, true);
+			conn.transactionPersist(blockung);
+
+			// Erstelle das Zwischenergebnis
+			final DTOGostBlockungZwischenergebnis ergebnis = new DTOGostBlockungZwischenergebnis(idErgebnis, idBlockung, false, true);
+			conn.transactionPersist(ergebnis);
+
+			// Erstelle die Schienen
+			final DTODBAutoInkremente lastSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			long idSchiene = lastSchienenID == null ? 0 : lastSchienenID.MaxID + 1;
+			final HashMap<Integer, Long> mapSchienen = new HashMap<>();
+			for (final Integer schienenNr : setSchienen) {
+				final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(idSchiene, idBlockung, schienenNr, "Schiene " + schienenNr, 3);
+				mapSchienen.put(schienenNr, idSchiene);
+				conn.transactionPersist(schiene);
+				idSchiene++;
+			}
+
+			// Erstelle die Kurse
+			final DTODBAutoInkremente lastKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			long idKurs = lastKurseID == null ? 0 : lastKurseID.MaxID + 1;
+			final HashMap<Long, Long> mapKursIDs = new HashMap<>(); // Von der Originals-Kurs-ID auf die Blockungs-Kurs-ID
+			final HashMap<Long, DTOGostBlockungKurs> mapKurseErstellt = new HashMap<>();
+			for (final DTOKurs kurs : listKurse) {
+				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+				mapKursIDs.put(kurs.ID, idKurs);
+				// TODO Kursnummer bestimmen
+				// TODO Koop-Kurs bestimmen
+				// TODO Schienenanzahl
+				final DTOGostBlockungKurs kursErstellt = new DTOGostBlockungKurs(idKurs, idBlockung, kurs.Fach_ID,
+						kursart, 42, false, 1, kurs.WochenStd == null ? 3 : kurs.WochenStd);
+				kursErstellt.BezeichnungSuffix = "";
+				mapKurseErstellt.put(kursErstellt.ID, kursErstellt);
+				conn.transactionPersist(kursErstellt);
+				// Erstelle die Kurs-Lehrer
+				if (kurs.Lehrer_ID != null) {
+					final int wochenStunden = (int) (kurs.WochenstdKL == null ? Math.round(kurs.WochenStd) : Math.round(kurs.WochenstdKL));
+					final DTOGostBlockungKurslehrer kurslehrer = new DTOGostBlockungKurslehrer(idKurs, kurs.Lehrer_ID, 1, wochenStunden);
+					conn.transactionPersist(kurslehrer);
+				}
+				// Füge die Kurs-Schienen-Zuordnung hinzu
+				if (kurs.Schienen != null) {
+					for (final String strSchiene : kurs.Schienen.split(",")) {
+						if ("".equals(strSchiene.trim()))
+							continue;
+						try {
+							final long schienenID = mapSchienen.get(Integer.parseInt(strSchiene.trim()));
+							final DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchiene = new DTOGostBlockungZwischenergebnisKursSchiene(
+									idErgebnis, idKurs, schienenID);
+							conn.transactionPersist(zuordnungKursSchiene);
+						} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+							// ignore exception
+						}
+					}
+				}
+				idKurs++;
+			}
+			// TODO Weitere Kurs-Lehrer ermitteln und ergänzen
+
+			// Regeln sind keine bekannt, also werden auch keine erstellt.
+
+			// Ermittle die Fachwahlen des Abiturjahrgangs
+			final GostFachwahlManager managerFachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getFachwahlManager(blockung.Halbjahr);
+
+			// Erstelle die Kurs-Schüler-Zuordnungen
+			for (final DTOSchuelerLeistungsdaten ld : listLeistungsdaten) {
+				final long idSchueler = mapLernabschnitte.get(ld.Abschnitt_ID).Schueler_ID;
+				final GostKursart kursart = GostKursart.fromKuerzel(ld.KursartAllg);
+				if (managerFachwahlen.hatFachwahl(idSchueler, ld.Fach_ID, kursart)) {
+					final long kursID = mapKursIDs.get(ld.Kurs_ID);
+					final DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchueler = new DTOGostBlockungZwischenergebnisKursSchueler(
+						idErgebnis, kursID, idSchueler);
+					conn.transactionPersist(zuordnungKursSchueler);
+				}
+			}
+			conn.transactionCommit();
+			return get(idBlockung);
+		} catch (final Exception exception) {
+			conn.transactionRollback();
+			if (exception instanceof final IllegalArgumentException e)
+				throw OperationError.NOT_FOUND.exception();
+			if (exception instanceof final WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
 
 }

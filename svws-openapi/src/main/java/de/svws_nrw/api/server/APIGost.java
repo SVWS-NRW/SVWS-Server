@@ -1643,6 +1643,37 @@ public class APIGost {
 
 
     /**
+     * Die OpenAPI-Methode für das Restaurieren einer Blockung aus den in der DB
+     * Leistungsdaten als aktive Blockung.
+     *
+     * @param schema       das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll
+     * @param abiturjahr   das Abiturjahr
+     * @param halbjahr     das Halbjahr
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neu erstellten Blockung
+     */
+    @GET
+    @Path("/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore")
+    @Operation(summary = "Restauriert die Blockung aus den Leistungsdaten.",
+               description = "Restauriert die Blockung aus den Leistungsdaten. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung",
+    	content = @Content(mediaType = "application/json",
+    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.")
+    @ApiResponse(responseCode = "404", description = "Keine Daten für das Abiturjahr und das Halbjahr gefunden.")
+    public Response restauriereGostBlockung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungsdaten(conn)).restore(abiturjahr, halbjahr);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer
      * Blockung der Gymnasialen Oberstufe.
      *
