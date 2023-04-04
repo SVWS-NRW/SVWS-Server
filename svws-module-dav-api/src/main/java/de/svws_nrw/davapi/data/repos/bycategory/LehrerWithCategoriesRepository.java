@@ -31,26 +31,26 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
  * mit Kategorien ergänzt werden.
  *
  */
-public class LehrerWithCategoriesRepository implements IAdressbuchKontaktRepository {
+public final class LehrerWithCategoriesRepository implements IAdressbuchKontaktRepository {
 
 	/**
 	 * die Datenbankverbindung
 	 */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 	/**
 	 * der aktuelle Schuljahresabschnitt
 	 */
-	private DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt;
+	private final DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt;
 	/**
 	 * Utility zum Erzeugen von Adressbuchkategorien
 	 */
-	private AdressbuchKategorienUtil kategorienUtil;
+	private final AdressbuchKategorienUtil kategorienUtil;
 	/**
 	 * Name der eigenen Schule
 	 */
-	private String schulName;
+	private final String schulName;
 	/** der Benutzer, dessen Adressbuecher gesucht werden */
-	private Benutzer user;
+	private final Benutzer user;
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
@@ -63,8 +63,8 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	 * @param aktuellerSchuljahresabschnitt der aktuelle Schuljahresabschnitt für
 	 *                                      weitere Queries
 	 */
-	public LehrerWithCategoriesRepository(DBEntityManager conn, Benutzer user,
-			DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, AdressbuchKategorienUtil kategorienUtil) {
+	public LehrerWithCategoriesRepository(final DBEntityManager conn, final Benutzer user,
+			final DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, final AdressbuchKategorienUtil kategorienUtil) {
 		this.user = user;
 		this.conn = conn;
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
@@ -73,22 +73,22 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId,
-			CollectionRessourceQueryParameters params) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId,
+			final CollectionRessourceQueryParameters params) {
 		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
 			return new ArrayList<>();
 		}
-		List<DTOLehrer> dtoLehrerResult = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> dtoLehrerResult = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
 		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return dtoLehrerResult.stream().map(e -> {
-				AdressbuchEintrag a = new AdressbuchEintrag();
+				final AdressbuchEintrag a = new AdressbuchEintrag();
 				a.id = IAdressbuchKontaktRepository.createLehrerId(e.ID);
 				return a;
 			}).toList();
 		}
-		Map<Long, DTOLehrer> lehrerById = dtoLehrerResult.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
-		Map<Long, Set<String>> categoriesbyLehrerId = getCategoriesByLehrerId();
-		Map<Long, DTOOrt> orteByOrtIds = IAdressbuchKontaktRepository
+		final Map<Long, DTOLehrer> lehrerById = dtoLehrerResult.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, Set<String>> categoriesbyLehrerId = getCategoriesByLehrerId();
+		final Map<Long, DTOOrt> orteByOrtIds = IAdressbuchKontaktRepository
 				.queryOrteByOrtIds(dtoLehrerResult.stream().map(l -> l.Ort_ID).collect(Collectors.toSet()), conn);
 		return lehrerById.values().stream()
 				.map(l -> createKontaktFromlehrer(l, orteByOrtIds.get(l.Ort_ID), categoriesbyLehrerId.get(l.ID)))
@@ -103,8 +103,8 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	 * @param categories die Kategorien, die diesem Lehrer zugeordnet sind
 	 * @return den Adressbucheintrag, der den Lehrer repräsentiert
 	 */
-	private AdressbuchEintrag createKontaktFromlehrer(DTOLehrer l, DTOOrt ort, Set<String> categories) {
-		AdressbuchKontakt k = new AdressbuchKontakt();
+	private AdressbuchEintrag createKontaktFromlehrer(final DTOLehrer l, final DTOOrt ort, final Set<String> categories) {
+		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.id = IAdressbuchKontaktRepository.createLehrerId(l.ID);
 		if (l.eMailDienstlich != null) {
 			k.email = l.eMailDienstlich;
@@ -143,41 +143,41 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	 *         zugeordnet sind
 	 */
 	private Map<Long, Set<String>> getCategoriesByLehrerId() {
-		Map<Long, Set<String>> result = new HashMap<>();
+		final Map<Long, Set<String>> result = new HashMap<>();
 		// Klassenlehrer, Klassenlehrer Jahrgang, Klassenlehrer Klasse
 
-		List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
+		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
 				aktuellerSchuljahresabschnitt.ID, DTOKlassen.class);
-		Map<Long, DTOKlassen> klassenByKlassenId = dtoKlassenQueryResult.stream()
+		final Map<Long, DTOKlassen> klassenByKlassenId = dtoKlassenQueryResult.stream()
 				.collect(Collectors.toMap(k -> k.ID, k -> k));
-		List<DTOKlassenLeitung> dtoKlassenLeitungQueryResult = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple",
+		final List<DTOKlassenLeitung> dtoKlassenLeitungQueryResult = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple",
 				klassenByKlassenId.keySet(), DTOKlassenLeitung.class);
-		Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
+		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
 				.stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
 
-		for (DTOKlassenLeitung kl : dtoKlassenLeitungQueryResult) {
-			Set<String> categories = result.computeIfAbsent(kl.Lehrer_ID, s -> new HashSet<>());
-			DTOKlassen dtoKlassen = klassenByKlassenId.get(kl.Klassen_ID);
-			String klasse = dtoKlassen.Klasse;
-			String jahrgang = jahrgangKrzByJahrgangId.get(dtoKlassen.Jahrgang_ID);
+		for (final DTOKlassenLeitung kl : dtoKlassenLeitungQueryResult) {
+			final Set<String> categories = result.computeIfAbsent(kl.Lehrer_ID, s -> new HashSet<>());
+			final DTOKlassen dtoKlassen = klassenByKlassenId.get(kl.Klassen_ID);
+			final String klasse = dtoKlassen.Klasse;
+			final String jahrgang = jahrgangKrzByJahrgangId.get(dtoKlassen.Jahrgang_ID);
 			categories.add(kategorienUtil.formatKlassenlehrer(klasse));
 			categories.add(kategorienUtil.formatKlassenlehrerAlle());
 			categories.add(kategorienUtil.formatKlassenlehrerJahrgang(jahrgang));
 			categories.add(kategorienUtil.formatLehrerJahrgangsteam(jahrgang));
 		}
 
-		List<DTOKurs> dtoKursQueryResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
+		final List<DTOKurs> dtoKursQueryResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
 				aktuellerSchuljahresabschnitt.ID, DTOKurs.class);
-		for (DTOKurs k : dtoKursQueryResult) {
-			Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
-			String jahrgang = jahrgangKrzByJahrgangId.get(k.Jahrgang_ID);
+		for (final DTOKurs k : dtoKursQueryResult) {
+			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
+			final String jahrgang = jahrgangKrzByJahrgangId.get(k.Jahrgang_ID);
 			categories.add(kategorienUtil.formatLehrerJahrgangsteam(jahrgang));
 		}
 
-		List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn
+		final List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn
 				.queryNamed("DTOLehrerLehramtBefaehigung.all", DTOLehrerLehramtBefaehigung.class).getResultList();
-		for (DTOLehrerLehramtBefaehigung k : dtoLehrerLehramtBefaehigungQueryResult) {
-			Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
+		for (final DTOLehrerLehramtBefaehigung k : dtoLehrerLehramtBefaehigungQueryResult) {
+			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
 			categories.add(kategorienUtil.formatLehrerFachschaft(k.LehrbefKrz));
 		}
 		return result;

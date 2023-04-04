@@ -31,25 +31,25 @@ import jakarta.validation.constraints.NotNull;
  * {@link GenerierteKalenderRepository} zurück.
  *
  */
-public class KalenderRepository implements IKalenderRepository, IKalenderEintragRepository {
+public final class KalenderRepository implements IKalenderRepository, IKalenderEintragRepository {
 
 	/** das DavRepository für den Zugriff auf schreibbare Kalender */
-	private IDavRepository davRepository;
+	private final IDavRepository davRepository;
 	/** das Kalenderrepository für generierte Kalender */
-	private IKalenderRepository generierteKalenderRepository;
+	private final IKalenderRepository generierteKalenderRepository;
 	/** das KalenderEintragrepository für generierte Kalendereinträge */
-	private IKalenderEintragRepository generierteKalenderEintraegeRepository;
+	private final IKalenderEintragRepository generierteKalenderEintraegeRepository;
 	/** der angemeldete Benutzer */
-	private Benutzer user;
+	private final Benutzer user;
 
 	/**
 	 * Konstruktor für dieses Repository, erstellt eigenes {@link DavRepository},
 	 * {@link GenerierteKalenderEintragRepository} und
 	 * {@link GenerierteKalenderRepository}
-	 * 
+	 *
 	 * @param conn der {@link DBEntityManager} auf den zugegriffen werden soll
 	 */
-	public KalenderRepository(DBEntityManager conn) {
+	public KalenderRepository(final DBEntityManager conn) {
 		this.davRepository = new DavRepository(conn);
 		this.user = conn.getUser();
 		this.generierteKalenderRepository = new GenerierteKalenderRepository(conn);
@@ -57,7 +57,7 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 	}
 
 	@Override
-	public Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params) {
+	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
 		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
 			return Optional.empty();
 		}
@@ -65,11 +65,11 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 				&& KalenderIdUtil.isGenerated(kalenderId)) {
 			return generierteKalenderRepository.getKalenderById(kalenderId, params);
 		}
-		List<Long> ids = new ArrayList<>();
+		final List<Long> ids = new ArrayList<>();
 		ids.add(KalenderIdUtil.parseId(kalenderId));
-		Collection<DavRessourceCollection> davRessourceCollections = davRepository.getDavRessourceCollections(ids);
+		final Collection<DavRessourceCollection> davRessourceCollections = davRepository.getDavRessourceCollections(ids);
 		if (davRessourceCollections.size() == 1) {
-			Kalender k = mapDavRessourceCollectionToKalender(davRessourceCollections.iterator().next());
+			final Kalender k = mapDavRessourceCollectionToKalender(davRessourceCollections.iterator().next());
 			if (params.includeRessources) {
 				k.kalenderEintraege.addAll(davRepository.getDavRessources(ids, params).stream()
 						.map(this::mapDavRessourceToKalenderEintrag).toList());
@@ -80,22 +80,22 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 	}
 
 	@Override
-	public List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params) {
+	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
 		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
 			return new ArrayList<>();
 		}
 		createEigenenKalenderIfNotExists();
-		List<Kalender> result = new ArrayList<>();
+		final List<Kalender> result = new ArrayList<>();
 		result.addAll(generierteKalenderRepository.getAvailableKalender(params));
-		Map<Long, Kalender> kalenderById = davRepository
+		final Map<Long, Kalender> kalenderById = davRepository
 				.getDavRessourceCollections(DavRessourceCollectionTyp.KALENDER,
 						DavRessourceCollectionTyp.EIGENER_KALENDER)
 				.stream()
 				.collect(Collectors.toMap(collection -> collection.id, this::mapDavRessourceCollectionToKalender));
 		if (params.includeRessources) {
-			Collection<DavRessource> davRessources = davRepository.getDavRessources(kalenderById.keySet(), params);
-			for (DavRessource ressource : davRessources) {
-				Kalender k = kalenderById.get(ressource.ressourceCollectionId);
+			final Collection<DavRessource> davRessources = davRepository.getDavRessources(kalenderById.keySet(), params);
+			for (final DavRessource ressource : davRessources) {
+				final Kalender k = kalenderById.get(ressource.ressourceCollectionId);
 				k.kalenderEintraege.add(mapDavRessourceToKalenderEintrag(ressource));
 			}
 		}
@@ -114,12 +114,12 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 
 	/**
 	 * mappt eine DavRessource zu einem Kalendereintrag
-	 * 
+	 *
 	 * @param ressource die zu mappende ressource
 	 * @return der gemappte Kalendereintrag
 	 */
-	private @NotNull KalenderEintrag mapDavRessourceToKalenderEintrag(DavRessource ressource) {
-		KalenderEintrag e = new KalenderEintrag();
+	private @NotNull KalenderEintrag mapDavRessourceToKalenderEintrag(final DavRessource ressource) {
+		final KalenderEintrag e = new KalenderEintrag();
 		e.kalenderId = String.valueOf(ressource.ressourceCollectionId);
 		e.id = String.valueOf(ressource.id);
 		e.uid = ressource.uid;
@@ -137,12 +137,12 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 
 	/**
 	 * mappt eine gegebene DavRessourceCollection zu einem Kalender-Objekt
-	 * 
+	 *
 	 * @param collection die gegebene Collection die gemappt werden soll
 	 * @return der gemappte Kalender
 	 */
-	private Kalender mapDavRessourceCollectionToKalender(DavRessourceCollection collection) {
-		Kalender k = new Kalender();
+	private Kalender mapDavRessourceCollectionToKalender(final DavRessourceCollection collection) {
+		final Kalender k = new Kalender();
 		k.displayname = collection.anzeigename;
 		k.beschreibung = collection.beschreibung;
 		k.id = String.valueOf(collection.id);
@@ -155,8 +155,8 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 	}
 
 	@Override
-	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(String kalenderId, String kalenderEintragUID,
-			CollectionRessourceQueryParameters params) {
+	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragUID,
+			final CollectionRessourceQueryParameters params) {
 		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
 			return Optional.empty();
 		}
@@ -165,24 +165,24 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 			return generierteKalenderEintraegeRepository.getKalenderEintragByKalenderAndUID(kalenderId,
 					kalenderEintragUID, params);
 		}
-		List<Long> ids = new ArrayList<>();
+		final List<Long> ids = new ArrayList<>();
 		ids.add(KalenderIdUtil.parseId(kalenderId));
-		List<DavRessource> davRessources = davRepository.getDavRessources(ids, params).stream()
+		final List<DavRessource> davRessources = davRepository.getDavRessources(ids, params).stream()
 				.filter(r -> kalenderEintragUID.equals(r.uid)).toList();
 		if (davRessources.size() != 1) {
 			return Optional.empty();
 		}
-		KalenderEintrag k = mapDavRessourceToKalenderEintrag(davRessources.get(0));
+		final KalenderEintrag k = mapDavRessourceToKalenderEintrag(davRessources.get(0));
 		return Optional.of(k);
 	}
 
 	@Override
-	public KalenderEintrag saveKalenderEintrag(KalenderEintrag kalenderEintrag) throws DavException {
+	public KalenderEintrag saveKalenderEintrag(final KalenderEintrag kalenderEintrag) throws DavException {
 		if (KalenderIdUtil.isGenerated(kalenderEintrag.kalenderId)) {
 			// das repository verwaltet das speichern auf generierten kalendern
 			return generierteKalenderEintraegeRepository.saveKalenderEintrag(kalenderEintrag);
 		}
-		DavRessource davRessource = new DavRessource();
+		final DavRessource davRessource = new DavRessource();
 		if (kalenderEintrag.kalenderId != null) {
 			davRessource.ressourceCollectionId = KalenderIdUtil.parseId(kalenderEintrag.kalenderId);
 		}
@@ -194,7 +194,7 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 		if (kalenderEintrag.version != null && !kalenderEintrag.version.isBlank()) {
 			davRessource.syncToken = Long.parseLong(kalenderEintrag.version);
 		}
-		Optional<DavRessource> upsertDavRessource = davRepository.upsertDavRessource(davRessource);
+		final Optional<DavRessource> upsertDavRessource = davRepository.upsertDavRessource(davRessource);
 
 		if (upsertDavRessource.isEmpty()) {
 			throw new DavException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -203,7 +203,7 @@ public class KalenderRepository implements IKalenderRepository, IKalenderEintrag
 	}
 
 	@Override
-	public List<String> getDeletedResourceUIDsSince(String kalenderId, Long syncTokenMillis) {
+	public List<String> getDeletedResourceUIDsSince(final String kalenderId, final Long syncTokenMillis) {
 		return this.davRepository.getDeletedResourceUIDsSince(Long.valueOf(kalenderId), syncTokenMillis);
 	}
 }

@@ -57,63 +57,63 @@ public class AdressbuchKategorienUtil {
 	/**
 	 * String-Repr. des aktuellen Schuljahresabschnitts
 	 */
-	private String abschnitt;
+	private final String abschnitt;
 
 	/**
 	 * Konstruktor für den diese Utility mit dem Schuljahresabschnitt.
-	 * 
+	 *
 	 * @param abschnitt eine Stringrepräsentation des Schuljahresabschnitts, die
 	 *                  beim Formatieren genutzt werden soll
 	 */
-	public AdressbuchKategorienUtil(String abschnitt) {
+	public AdressbuchKategorienUtil(final String abschnitt) {
 		this.abschnitt = abschnitt;
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Lehrer der Fachschaft wieder
-	 * 
+	 *
 	 * @param fachschaft die Fachschaft
 	 * @return der formatierte String
 	 */
-	public String formatLehrerFachschaft(String fachschaft) {
+	public String formatLehrerFachschaft(final String fachschaft) {
 		return String.format(AdressbuchKategorienStrings.LEHRER_FACHSCHAFT, fachschaft);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Lehrer eines Jahrgangs wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatLehrerJahrgangsteam(String jahrgangKrz) {
+	public String formatLehrerJahrgangsteam(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.LEHRER_JAHRGANGSTEAM, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Klassenlehrer einer Klasse
 	 * wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatKlassenlehrer(String klasse) {
+	public String formatKlassenlehrer(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.LEHRER_KLASSENLEHRER, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Klassenlehrer eines Jahrgangs
 	 * wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatKlassenlehrerJahrgang(String jahrgangKrz) {
+	public String formatKlassenlehrerJahrgang(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.LEHRER_KLASSENLEHRER_JAHRGANG, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie alle Klassenlehrer wieder
-	 * 
+	 *
 	 * @return der formatierte String
 	 */
 	public String formatKlassenlehrerAlle() {
@@ -122,71 +122,71 @@ public class AdressbuchKategorienUtil {
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Lehrerteam einer Klasse wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatLehrerKlasseTeam(String klasse) {
+	public String formatLehrerKlasseTeam(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.LEHRER_KLASSE_TEAM, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Schueler einer Klasse wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatSchuelerKlasse(String klasse) {
+	public String formatSchuelerKlasse(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.SCHUELER_KLASSE, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Schueler eines Kurs wieder
-	 * 
+	 *
 	 * @param kurs        der Kurs
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatSchuelerKurs(String kurs, String jahrgangKrz) {
+	public String formatSchuelerKurs(final String kurs, final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.SCHUELER_KURS, kurs, jahrgangKrz, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Schueler eines Jahrgangs
 	 * wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatSchuelerJahrgang(String jahrgangKrz) {
+	public String formatSchuelerJahrgang(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.SCHUELER_JAHRGANG, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Neuaufnahmen einer Klasse
 	 * wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatSchuelerNeuaufnahmeKlasse(String klasse) {
+	public String formatSchuelerNeuaufnahmeKlasse(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.SCHUELER_NEUAUFNAHMEN_KLASSE, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Neuaufnahmen eines Jahrgangs
 	 * wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatSchuelerNeuaufnahmeJahrgang(String jahrgangKrz) {
+	public String formatSchuelerNeuaufnahmeJahrgang(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.SCHUELER_NEUAUFNAHMEN_JAHRGANG, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie alle Neuaufnahmen wieder
-	 * 
+	 *
 	 * @return der formatierte String
 	 */
 	public String formatSchuelerNeuaufnahmenAlle() {
@@ -195,39 +195,39 @@ public class AdressbuchKategorienUtil {
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Erzieher einer Klasse wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatErzieherKlasse(String klasse) {
+	public String formatErzieherKlasse(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.ERZIEHER_KLASSE, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Erzieher eines Jahrgangs
 	 * wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatErzieherJahrgang(String jahrgangKrz) {
+	public String formatErzieherJahrgang(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.ERZIEHER_JAHRGANG, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Erzieher eines Kurs wieder
-	 * 
+	 *
 	 * @param kurs        der Kurs
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatErzieherKurs(String kurs, String jahrgangKrz) {
+	public String formatErzieherKurs(final String kurs, final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.ERZIEHER_KURS, kurs, jahrgangKrz, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie alle Erzieher wieder
-	 * 
+	 *
 	 * @return der formatierte String
 	 */
 	public String formatErzieherAlle() {
@@ -237,29 +237,29 @@ public class AdressbuchKategorienUtil {
 	/**
 	 * Gibt den formatierten String für die Kategorie Erzieher der Neuaufnahmen
 	 * einer Klasse wieder
-	 * 
+	 *
 	 * @param klasse die Klasse
 	 * @return der formatierte String
 	 */
-	public String formatErzieherNeuaufnahmenKlasse(String klasse) {
+	public String formatErzieherNeuaufnahmenKlasse(final String klasse) {
 		return String.format(AdressbuchKategorienStrings.ERZIEHER_NEUAUFNAHMEN_KLASSE, klasse, abschnitt);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie Erzieher der Neuaufnahmen
 	 * eines Jahrgangs wieder
-	 * 
+	 *
 	 * @param jahrgangKrz der Jahrgang
 	 * @return der formatierte String
 	 */
-	public String formatErzieherNeuaufnahmenJahrgang(String jahrgangKrz) {
+	public String formatErzieherNeuaufnahmenJahrgang(final String jahrgangKrz) {
 		return String.format(AdressbuchKategorienStrings.ERZIEHER_NEUAUFNAHMEN_JAHRGANG, jahrgangKrz);
 	}
 
 	/**
 	 * Gibt den formatierten String für die Kategorie alle Erzieher von Neuaufnahmen
 	 * wieder
-	 * 
+	 *
 	 * @return der formatierte String
 	 */
 	public String formatErzieherNeuaufnahmenAlle() {

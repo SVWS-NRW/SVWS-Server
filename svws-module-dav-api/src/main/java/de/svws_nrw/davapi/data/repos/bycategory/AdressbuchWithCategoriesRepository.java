@@ -20,33 +20,33 @@ import de.svws_nrw.db.DBEntityManager;
  * mit Kategorien ergänzt und damit im Client sortier- und suchbar.
  *
  */
-public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository {
+public final class AdressbuchWithCategoriesRepository implements IAdressbuchRepository {
 
 	/**
 	 * Kontaktrepository zum Anreichern eines Adressbuchs um
 	 * {@link AdressbuchKontakt}e
 	 */
-	private IAdressbuchKontaktRepository adressbuchKontaktRepository;
-	
+	private final IAdressbuchKontaktRepository adressbuchKontaktRepository;
+
 	/**
 	 * Erstellt ein neues Repository mit der angegebenen Verbindung
 	 *
 	 * @param conn die Datenbank-Verbindung, welche vom Repository benutzt werden
 	 *             soll
 	 */
-	public AdressbuchWithCategoriesRepository(DBEntityManager conn) {
+	public AdressbuchWithCategoriesRepository(final DBEntityManager conn) {
 		this.adressbuchKontaktRepository = new AdressbuchEintragWithCategoriesRepository(conn);
 	}
 
 	@Override
-	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params) {
-		Optional<Adressbuch> adressbuchOpt = this.getAvailableAdressbuecher(params).stream()
+	public Optional<Adressbuch> getAdressbuchById(final String adressbuchId, final CollectionRessourceQueryParameters params) {
+		final Optional<Adressbuch> adressbuchOpt = this.getAvailableAdressbuecher(params).stream()
 				.filter(a -> a.id.equals(adressbuchId)).findFirst();
 		if (adressbuchOpt.isEmpty()) {
 			return adressbuchOpt;
 		}
 		if (params.includeRessources) {
-			List<AdressbuchEintrag> kontakteByAdressbuch = adressbuchKontaktRepository
+			final List<AdressbuchEintrag> kontakteByAdressbuch = adressbuchKontaktRepository
 					.getKontakteByAdressbuch(adressbuchId, params);
 			adressbuchOpt.get().adressbuchEintraege.addAll(kontakteByAdressbuch);
 		}
@@ -54,8 +54,8 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	}
 
 	@Override
-	public List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params) {
-		List<Adressbuch> result = new Vector<>();
+	public List<Adressbuch> getAvailableAdressbuecher(final CollectionRessourceQueryParameters params) {
+		final List<Adressbuch> result = new Vector<>();
 		result.add(createAdressbuch(AdressbuchContactTypes.SCHUELER));
 		result.add(createAdressbuch(AdressbuchContactTypes.LEHRER));
 		result.add(createAdressbuch(AdressbuchContactTypes.ERZIEHER));
@@ -75,7 +75,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	 *                               öffentlich ist
 	 * @return das erzeugte Adressbuch
 	 */
-	private static Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchContactTypes, AdressbuchTyp typ) {
+	private static Adressbuch createAdressbuch(final AdressbuchContactTypes adressbuchContactTypes, final AdressbuchTyp typ) {
 		return createAdressbuch(adressbuchContactTypes.toString().toLowerCase(), adressbuchContactTypes.anzeigeName,
 				adressbuchContactTypes.beschreibung);
 	}
@@ -86,7 +86,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	 * @param adressbuchType die Art des Adressbuchs
 	 * @return das erstellte Adressbuch
 	 */
-	private static Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchType) {
+	private static Adressbuch createAdressbuch(final AdressbuchContactTypes adressbuchType) {
 		return createAdressbuch(adressbuchType, AdressbuchTyp.GENERIERT);
 	}
 
@@ -98,8 +98,8 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	 * @param beschreibung die Beschreibung des Adressbuchs
 	 * @return das erstellte Adressbuch
 	 */
-	private static Adressbuch createAdressbuch(String id, String displayName, String beschreibung) {
-		Adressbuch a = new Adressbuch();
+	private static Adressbuch createAdressbuch(final String id, final String displayName, final String beschreibung) {
+		final Adressbuch a = new Adressbuch();
 		a.adressbuchTyp = AdressbuchTyp.GENERIERT.bezeichnung;
 		a.beschreibung = beschreibung;
 		a.displayname = displayName;
@@ -136,7 +136,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 		 * @param anzeigeName  der Anzeigename
 		 * @param beschreibung die Beschreibung
 		 */
-		private AdressbuchContactTypes(String anzeigeName, String beschreibung) {
+		AdressbuchContactTypes(final String anzeigeName, final String beschreibung) {
 			this.anzeigeName = anzeigeName;
 			this.beschreibung = beschreibung;
 		}

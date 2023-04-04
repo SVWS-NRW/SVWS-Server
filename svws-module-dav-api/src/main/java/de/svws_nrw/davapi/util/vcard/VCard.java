@@ -59,7 +59,7 @@ public class VCard {
 	/**
 	 * Die Liste der übrigen Properties dieser VCard
 	 */
-	private List<VCardProperty> properties = new Vector<>();
+	private final List<VCardProperty> properties = new Vector<>();
 
 	/**
 	 * der UID String für diese VCard
@@ -69,15 +69,15 @@ public class VCard {
 	/**
 	 * Member dieser VCard (bei Version 4.0 und KIND:GROUP)
 	 */
-	private List<String> members = new Vector<>();
+	private final List<String> members = new Vector<>();
 
 	/**
 	 * Konstruktor für eine VCard mit einem gegebenen Fullname Property Dies erfüllt
 	 * die Minimalen Anforderungen zum Serialisieren einer VCard
-	 * 
+	 *
 	 * @param fnProperty das Fullname Property der VCard
 	 */
-	public VCard(FullnameProperty fnProperty) {
+	public VCard(final FullnameProperty fnProperty) {
 		this.fnProperty = fnProperty;
 	}
 
@@ -87,7 +87,7 @@ public class VCard {
 	 *
 	 * @param nameProperty das nameProperty der VCard
 	 */
-	public VCard(NameProperty nameProperty) {
+	public VCard(final NameProperty nameProperty) {
 		this.fnProperty = nameProperty.toFullnameProperty();
 		addProperty(nameProperty);
 	}
@@ -96,12 +96,12 @@ public class VCard {
 	 * privater Konstruktor für eine VCard auf Basis eines
 	 * {@link AdressbuchKontakt}. Die dem Kontakt gegebenen Eigenschaften werden in
 	 * Properties übertragen. Das Fullname Property wird aus dem Kontakt erzeugt.
-	 * 
+	 *
 	 * @param kontakt der Kontakt, den diese VCard repräsentiert
 	 */
-	private VCard(AdressbuchKontakt kontakt) {
+	private VCard(final AdressbuchKontakt kontakt) {
 		this((AdressbuchEintrag) kontakt);
-		NameProperty np = new NameProperty();
+		final NameProperty np = new NameProperty();
 
 		np.setFamilyName(kontakt.nachname);
 		np.setGivenName(kontakt.vorname);
@@ -122,7 +122,7 @@ public class VCard {
 		if (kontakt.idKind != null) {
 			addProperty(new RelatedProperty(RelatedProperty.RelatedTypeValue.CHILD, stringToUUId(kontakt.idKind)));
 		}
-		AddressProperty ap = new AddressProperty();
+		final AddressProperty ap = new AddressProperty();
 		ap.setCity(kontakt.ort);
 		ap.setPostalCode(kontakt.plz);
 		ap.setStreet(kontakt.strassenname);
@@ -140,7 +140,7 @@ public class VCard {
 			categoriesProperty = new CategoriesProperty(kontakt.kategorien);
 			addProperty(categoriesProperty);
 		}
-		for (Telefonnummer t : kontakt.telefonnummern) {
+		for (final Telefonnummer t : kontakt.telefonnummern) {
 			addProperty(new PhoneProperty(t.type, t.number));
 		}
 	}
@@ -149,13 +149,13 @@ public class VCard {
 	 * privater Konstruktor für eine VCard auf Basis einer
 	 * {@link AdressbuchKontaktListe}. Die der Liste gegebenen Eigenschaften werden
 	 * in Properties übertragen. Das Fullname Property wird aus der ID erzeugt.
-	 * 
+	 *
 	 * @param kl die Liste, die diese VCard repräsentiert
 	 */
-	private VCard(AdressbuchKontaktListe kl) {
+	private VCard(final AdressbuchKontaktListe kl) {
 		this((AdressbuchEintrag) kl);
 		setKind(Kind.GROUP);
-		for (AdressbuchKontakt k : kl.kontakte) {
+		for (final AdressbuchKontakt k : kl.kontakte) {
 			this.addMember(stringToUUId(k.id));
 		}
 	}
@@ -163,10 +163,10 @@ public class VCard {
 	/**
 	 * privater Konstruktor für AdressbuchEinträge. setzt die UID und das
 	 * FullnameProperty auf Basis der {@link AdressbuchEintrag#id}
-	 * 
+	 *
 	 * @param e der Adressbucheintrag
 	 */
-	private VCard(AdressbuchEintrag e) {
+	private VCard(final AdressbuchEintrag e) {
 		setUID(stringToUUId(e.id));
 		this.fnProperty = new FullnameProperty(e.id);
 	}
@@ -174,34 +174,34 @@ public class VCard {
 	/**
 	 * Hilfsmethode um aus einem gegebenen String eine GUID zu erzeugen, dazu wird
 	 * {@linkplain UUID#nameUUIDFromBytes(byte[])} verwendet
-	 * 
+	 *
 	 * @param input der String, dessen GUID-HASH erzeugt werden soll
 	 * @return ein GUID-Hash der eingabe
 	 */
-	public static String stringToUUId(String input) {
+	public static String stringToUUId(final String input) {
 		return UUID.nameUUIDFromBytes(input.getBytes()).toString();
 	}
 
 	/**
 	 * Hilfsmethode zum hinzufügen von {@link SimpleProperty} zu dieser VCard
-	 * 
+	 *
 	 * @param type     der Type des {@link SimpleProperty}
 	 * @param property das Property des {@link SimpleProperty}
 	 */
-	private void addSimplePropertyIfNotNull(String type, String property) {
+	private void addSimplePropertyIfNotNull(final String type, final String property) {
 		if (property != null) {
-			SimpleProperty sp = new SimpleProperty(type, property);
+			final SimpleProperty sp = new SimpleProperty(type, property);
 			addProperty(sp);
 		}
 	}
 
 	/**
 	 * Methode zum Serialisieren dieser VCard
-	 * 
+	 *
 	 * @return die VCard als Zeichenkette
 	 */
 	public String serialize() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		serializeProperty(BEGIN_PROPERTY, sb);
 		sb.append(PROPERTY_SEPARATOR);
 		serializeProperty(version.property, sb);
@@ -212,7 +212,7 @@ public class VCard {
 		}
 		serializeProperty(fnProperty, sb);
 		sb.append(PROPERTY_SEPARATOR);
-		for (VCardProperty vCardProperty : properties) {
+		for (final VCardProperty vCardProperty : properties) {
 			serializeProperty(vCardProperty, sb);
 			sb.append(PROPERTY_SEPARATOR);
 		}
@@ -221,7 +221,7 @@ public class VCard {
 			sb.append(PROPERTY_SEPARATOR);
 		}
 		if (this.kind == Kind.GROUP) {
-			for (String memberUID : members) {
+			for (final String memberUID : members) {
 				serializeProperty(new SimpleProperty("MEMBER", String.format(URN_UUID_STR, memberUID)), sb);
 				sb.append(PROPERTY_SEPARATOR);
 			}
@@ -232,29 +232,29 @@ public class VCard {
 
 	/**
 	 * Methode zum hinzufügen eines {@link VCardProperty}
-	 * 
+	 *
 	 * @param property das zuzufügende Property
 	 */
-	public void addProperty(VCardProperty property) {
+	public void addProperty(final VCardProperty property) {
 		properties.add(property);
 	}
 
 	/**
 	 * Methode zum Lesen eines {@link VCardProperty}
-	 * 
+	 *
 	 * @param type der Type, der gesucht werden soll
 	 * @return das Property, wenn es bei dem gegebenen Typ bereits eines gibt
 	 */
-	public Optional<VCardProperty> getProperty(String type) {
+	public Optional<VCardProperty> getProperty(final String type) {
 		return properties.stream().filter(p -> p.getType().equalsIgnoreCase(type)).findFirst();
 	}
 
 	/**
 	 * setzt die Art der VCard, nur für VCard Version 4.0 nützlich
-	 * 
+	 *
 	 * @param k die Art der VCard
 	 */
-	public void setKind(@NotNull Kind k) {
+	public void setKind(@NotNull final Kind k) {
 		this.kind = k;
 	}
 
@@ -262,28 +262,28 @@ public class VCard {
 	 * setzt die UID der VCard. Nützlich aber nicht nötig, ist
 	 * {@link #stringToUUId(String)} aufzurufen, um den angegeben String vorher ins
 	 * GUID-Format zu bringen.
-	 * 
+	 *
 	 * @param uid die UID
 	 */
-	public void setUID(String uid) {
+	public void setUID(final String uid) {
 		this.uid = uid;
 	}
 
 	/**
 	 * fügt ein Mitglied zu dieser VCard hinzu
-	 * 
+	 *
 	 * @param uid die UID der VCard
 	 */
-	public void addMember(String uid) {
+	public void addMember(final String uid) {
 		this.members.add(uid);
 	}
 
 	/**
 	 * setzt die Version der VCard
-	 * 
+	 *
 	 * @param version die Version
 	 */
-	public void setVersion(@NotNull Version version) {
+	public void setVersion(@NotNull final Version version) {
 		this.version = version;
 	}
 
@@ -292,11 +292,11 @@ public class VCard {
 	 * {@link StringBuilder} bei der Serialisierung. Nutzt die Methoden
 	 * {@link VCardProperty#serializeType(StringBuilder)} und
 	 * {@link VCardProperty#serializeProperty(StringBuilder)}
-	 * 
+	 *
 	 * @param property
 	 * @param sb
 	 */
-	private void serializeProperty(VCardProperty property, StringBuilder sb) {
+	private void serializeProperty(final VCardProperty property, final StringBuilder sb) {
 		if (property instanceof RelatedProperty && this.version != Version.V4) {
 			return;
 		}
@@ -326,10 +326,10 @@ public class VCard {
 
 		/**
 		 * erstellt eine neue Version
-		 * 
+		 *
 		 * @param version die Version
 		 */
-		Version(String version) {
+		Version(final String version) {
 			this.property = new SimpleProperty(TYPE_STR, version);
 		}
 	}
@@ -363,10 +363,10 @@ public class VCard {
 
 		/**
 		 * erstellt eine neue Art für das KIND-Property der VCard
-		 * 
-		 * @param kind die Art 
+		 *
+		 * @param kind die Art
 		 */
-		private Kind(String kind) {
+		Kind(final String kind) {
 			this.property = new SimpleProperty(TYPE_STR, kind);
 		}
 	}
@@ -374,15 +374,15 @@ public class VCard {
 	/**
 	 * Statische Methode zum erstellen einer VCard auf Basis eines
 	 * AdressbuchEintrags.
-	 * 
+	 *
 	 * @param eintrag der AdressbuchEintrag
 	 * @return die VCard, die diesen Adressbucheintrag repräsentiert.
 	 */
-	public static VCard createVCard(AdressbuchEintrag eintrag) {
+	public static VCard createVCard(final AdressbuchEintrag eintrag) {
 		VCard result;
-		if (eintrag instanceof AdressbuchKontakt k) {
+		if (eintrag instanceof final AdressbuchKontakt k) {
 			result = new VCard(k);
-		} else if (eintrag instanceof AdressbuchKontaktListe kl) {
+		} else if (eintrag instanceof final AdressbuchKontaktListe kl) {
 			result = new VCard(kl);
 		} else {
 			result = new VCard(new FullnameProperty(eintrag.id));

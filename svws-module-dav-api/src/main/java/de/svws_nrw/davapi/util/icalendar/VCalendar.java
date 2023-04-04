@@ -48,7 +48,7 @@ public class VCalendar {
 	/** der maximale Endzeitpunkt aller Events in diesem VCalendar */
 	private Instant maxEnd;
 	/** die Liste der VEVENTS in diesem VCalendar */
-	private List<VEvent> events = new Vector<>();
+	private final List<VEvent> events = new Vector<>();
 	/**
 	 * der typ des VCalendars - RFC schreibt vor, dass es neben der VTIMEZONE
 	 * Definition nur einen Typ je VCALENDAR geben darf
@@ -57,10 +57,10 @@ public class VCalendar {
 
 	/**
 	 * Konstruktor auf basis eines Kalendereintrags
-	 * 
+	 *
 	 * @param eintrag der Kalendereintrag
 	 */
-	public VCalendar(KalenderEintrag eintrag) {
+	public VCalendar(final KalenderEintrag eintrag) {
 		this(eintrag.data);
 		typ = VCalendarTyp.valueOf(eintrag.kalenderTyp);
 	}
@@ -72,7 +72,7 @@ public class VCalendar {
 	 * @param eintrag der KalenderEintrag
 	 * @return die VCalendar, die diesen KalenderEintrag repräsentiert.
 	 */
-	public static VCalendar createVCalendar(KalenderEintrag eintrag) {
+	public static VCalendar createVCalendar(final KalenderEintrag eintrag) {
 		return new VCalendar(eintrag);
 	}
 
@@ -82,10 +82,10 @@ public class VCalendar {
 
 	/**
 	 * Konstruktor für .ics String
-	 * 
+	 *
 	 * @param data der .ics String
 	 */
-	public VCalendar(String data) {
+	public VCalendar(final String data) {
 		if (data != null) {
 			this.serialized = data;
 		}
@@ -93,7 +93,7 @@ public class VCalendar {
 
 	/**
 	 * getter für die Liste der Events in diesem VCalendar
-	 * 
+	 *
 	 * @return die Liste der Events
 	 */
 	public List<VEvent> getEvents() {
@@ -102,7 +102,7 @@ public class VCalendar {
 
 	/**
 	 * getter für den VTIMEZONE-Eintrag in diesem VCalendar
-	 * 
+	 *
 	 * @return das repräsentierende VTimezone-Objekt
 	 */
 	public VTimezone getTimezoneDefinition() {
@@ -111,16 +111,16 @@ public class VCalendar {
 
 	/**
 	 * setter für den VTIMEZONE-Eintrag in diesem VCalendar
-	 * 
+	 *
 	 * @param tz die Zeitzonendefinition
 	 */
-	public void setTimezoneDefinition(VTimezone tz) {
+	public void setTimezoneDefinition(final VTimezone tz) {
 		this.timezone = tz;
 	}
 
 	/**
 	 * getter für den Typ der Einträge dieses VCalendars
-	 * 
+	 *
 	 * @return den Typ der Einträge dieses VCalendars
 	 */
 	public VCalendarTyp getTyp() {
@@ -136,13 +136,13 @@ public class VCalendar {
 		if (this.serialized != null) {
 			return serialized;
 		}
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 		new Property(BEGIN_PROPERTY_KEY, VCALENDAR_VALUE).serialize(sb);
 		new Property("VERSION", "2.0").serialize(sb);
 		if (this.timezone != null) {
 			this.timezone.serialize(sb);
 		}
-		for (VEvent event : this.events) {
+		for (final VEvent event : this.events) {
 			event.serialize(sb);
 		}
 		new Property(END_PROPERTY_KEY, VCALENDAR_VALUE).serialize(sb);
@@ -151,38 +151,38 @@ public class VCalendar {
 
 	/**
 	 * Utility zum Parsen eines VCalendars aus einem gegebenen .ics String
-	 * 
+	 *
 	 * @param vCalendarString der serialisierte VCalendar als String
 	 * @return ein VCalendarobjekt, welches den gegebenen String geparst
 	 *         repräsentiert
 	 */
-	public static VCalendar parse(@NotNull String vCalendarString) {
-		VCalendar result = new VCalendar(vCalendarString);
+	public static VCalendar parse(@NotNull final String vCalendarString) {
+		final VCalendar result = new VCalendar(vCalendarString);
 		result.parse();
 		return result;
 	}
 
 	/**
 	 * Utility zum Parsen eines VCalendars aus einem gegebenen .ics String
-	 * 
+	 *
 	 */
 	private void parse() {
-		String vCalendarString = unfold(this.serialized);
-		String[] split = vCalendarString.split(LINEBREAK);
-		List<String> lines = Arrays.asList(split);
-		Iterator<String> linesIterator = lines.iterator();
+		final String vCalendarString = unfold(this.serialized);
+		final String[] split = vCalendarString.split(LINEBREAK);
+		final List<String> lines = Arrays.asList(split);
+		final Iterator<String> linesIterator = lines.iterator();
 		IProperty property;
 		while (linesIterator.hasNext()) {
 			property = IProperty.fromString(linesIterator.next());
 			if (IProperty.isProperty(property, BEGIN_PROPERTY_KEY, VTimezone.TIMEZONE_BEGIN_VALUE)) {
-				VTimezone tz = new VTimezone();
+				final VTimezone tz = new VTimezone();
 				this.setTimeZone(tz);
 				this.setTimeZone(VTimezone.parse(linesIterator));
 			} else if (BEGIN_PROPERTY_KEY.equals(property.getKey()) && !VCALENDAR_VALUE.equals(property.getValue())) {
 				this.typ = VCalendarTyp.valueOf(property.getValue());
 			}
 			if (IProperty.isProperty(property, BEGIN_PROPERTY_KEY, VEvent.VEVENT_VALUE)) {
-				VEvent event = VEvent.parse(linesIterator);
+				final VEvent event = VEvent.parse(linesIterator);
 				this.getEvents().add(event);
 				updateMinStartAndMaxEnd(event);
 			}
@@ -192,11 +192,11 @@ public class VCalendar {
 	/**
 	 * aktualisiert den kleinesten Start- und größten Endzeitpunkt für diesen
 	 * VCalendar anhand des gegebenen Events
-	 * 
+	 *
 	 * @param event das Event welches ggf. einen kleineren Start- oder größeren
 	 *              Endzeitpunkt enthält
 	 */
-	private void updateMinStartAndMaxEnd(VEvent event) {
+	private void updateMinStartAndMaxEnd(final VEvent event) {
 		if (this.maxEnd == null || event.getDTEnd().compareTo(this.maxEnd) > 0) {
 			this.maxEnd = event.getDTEnd();
 		}
@@ -209,27 +209,27 @@ public class VCalendar {
 	 * Unfolding für den VCalendar Payload. Laut RFC KANN ein Property umgebrochen
 	 * werden indem ein whitespace character nach einem Zeilenumbruch folgt. vgl.
 	 * https://datatracker.ietf.org/doc/html/rfc2445#section-4.1
-	 * 
+	 *
 	 * @param vCalendarString der VCalendar Payload
 	 * @return den VCalendarpayload in dem alle Zeilenumbrüche für Folding entfernt
 	 *         wurden
 	 */
-	private static @NotNull String unfold(@NotNull String vCalendarString) {
+	private static @NotNull String unfold(@NotNull final String vCalendarString) {
 		return vCalendarString.replace(FOLDING_SEPERATOR_SPACE, "").replace(FOLDING_SEPERATOR_HTAB, "");
 	}
 
 	/**
 	 * privater setter für das VTimezone Objekt
-	 * 
+	 *
 	 * @param tz das VTimezone Objekt
 	 */
-	private void setTimeZone(VTimezone tz) {
+	private void setTimeZone(final VTimezone tz) {
 		this.timezone = tz;
 	}
 
 	/**
 	 * getter für den minimalen Startzeitpunkt
-	 * 
+	 *
 	 * @return den minimalen Startzeitpunkt der Events dieses VCalendars
 	 */
 	public Instant getMinDTStart() {
@@ -238,7 +238,7 @@ public class VCalendar {
 
 	/**
 	 * getter für den maximalen Endzeitpunkt der Events dieses VCalendars
-	 * 
+	 *
 	 * @return den maximalen Endzeitpunkt der Events dieses VCalendars
 	 */
 	public Instant getMaxDTEnd() {

@@ -52,17 +52,17 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	/**
 	 * Die Datenbankverbindung
 	 */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 
 	/** der Benutzer, dessen Adressbuecher gesucht werden */
-	private Benutzer user;
+	private final Benutzer user;
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
 	 *
 	 * @param conn die Datenbankverbindung
 	 */
-	public AdressbuchEintragWithCategoriesRepository(DBEntityManager conn) {
+	AdressbuchEintragWithCategoriesRepository(final DBEntityManager conn) {
 		this.conn = conn;
 		this.user = conn.getUser();
 		querySchuljahresabschnitt(conn);
@@ -106,42 +106,38 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	 *
 	 * @param conn die Datenbankverbindung
 	 */
-	private void querySchuljahresabschnitt(DBEntityManager conn) {
-		DTOEigeneSchule dtoEigeneSchule = conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class)
+	private void querySchuljahresabschnitt(final DBEntityManager conn) {
+		final DTOEigeneSchule dtoEigeneSchule = conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class)
 				.getSingleResult();
-		List<DTOSchuljahresabschnitte> dtoSchuljahresAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id",
+		final List<DTOSchuljahresabschnitte> dtoSchuljahresAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id",
 				dtoEigeneSchule.Schuljahresabschnitts_ID, DTOSchuljahresabschnitte.class);
 		aktuellerSchuljahresabschnitt = dtoSchuljahresAbschnitte.get(0);
-		Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
+		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
 		abschnitt.abschnitt = aktuellerSchuljahresabschnitt.Abschnitt;
 		abschnitt.schuljahr = aktuellerSchuljahresabschnitt.Jahr;
 		abschnitt.id = aktuellerSchuljahresabschnitt.ID;
-		String schuljahresAbschnittAsString = SchuljahresAbschnittsManager.createSchuljahresAbschnittString(abschnitt,
+		final String schuljahresAbschnittAsString = SchuljahresAbschnittsManager.createSchuljahresAbschnittString(abschnitt,
 				dtoEigeneSchule.AnzahlAbschnitte);
 		kategorienUtil = new AdressbuchKategorienUtil(schuljahresAbschnittAsString);
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(@NotNull String adressbuchId,
-			CollectionRessourceQueryParameters params) {
-		AdressbuchContactTypes adressbuchEnum = AdressbuchContactTypes.valueOf(adressbuchId.toUpperCase());
-
-		List<AdressbuchEintrag> result = switch (adressbuchEnum) {
-		case SCHUELER: {
-			instantiateSchuelerRepository();
-			yield schuelerRepository.getKontakteByAdressbuch(adressbuchId, params);
-		}
-		case ERZIEHER: {
-			instantiateErzieherRepository();
-			yield erzieherRepository.getKontakteByAdressbuch(adressbuchId, params);
-		}
-		case LEHRER: {
-			instantiateLehrerRepository();
-			yield lehrerRepository.getKontakteByAdressbuch(adressbuchId, params);
-		}
-		default: {
-			throw new IllegalArgumentException("Unexpected value: " + adressbuchId);
-		}
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(@NotNull final String adressbuchId, final CollectionRessourceQueryParameters params) {
+		final AdressbuchContactTypes adressbuchEnum = AdressbuchContactTypes.valueOf(adressbuchId.toUpperCase());
+		final List<AdressbuchEintrag> result = switch (adressbuchEnum) {
+			case SCHUELER -> {
+				instantiateSchuelerRepository();
+				yield schuelerRepository.getKontakteByAdressbuch(adressbuchId, params);
+			}
+			case ERZIEHER -> {
+				instantiateErzieherRepository();
+				yield erzieherRepository.getKontakteByAdressbuch(adressbuchId, params);
+			}
+			case LEHRER -> {
+				instantiateLehrerRepository();
+				yield lehrerRepository.getKontakteByAdressbuch(adressbuchId, params);
+			}
+			default -> throw new IllegalArgumentException("Unexpected value: " + adressbuchId);
 		};
 		result.forEach(k -> k.adressbuchId = adressbuchId);
 		return result;

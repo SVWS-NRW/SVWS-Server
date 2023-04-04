@@ -36,7 +36,7 @@ import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
  */
 public class XmlUnmarshallingTest {
 
-	private final static String ADDRESSBOOK_MULTIGET = """
+	private static final String ADDRESSBOOK_MULTIGET = """
 			        <card:addressbook-multiget xmlns:card="urn:ietf:params:xml:ns:carddav" xmlns:cs="http://calendarserver.org/ns/" xmlns:d="DAV:">
 			  <d:prop>
 			    <d:getetag/>
@@ -72,11 +72,11 @@ public class XmlUnmarshallingTest {
 	 */
 	@Test
 	void testUnmarshallingAddressbookMultiget() {
-		Optional<AddressbookMultiget> tryUnmarshal = XmlUnmarshallingUtil.tryUnmarshal(ADDRESSBOOK_MULTIGET,
+		final Optional<AddressbookMultiget> tryUnmarshal = XmlUnmarshallingUtil.tryUnmarshal(ADDRESSBOOK_MULTIGET,
 				AddressbookMultiget.class);
 		// unmarshall war erfolgreich
 		assertTrue(tryUnmarshal.isPresent());
-		AddressbookMultiget addressbookMultiget = tryUnmarshal.get();
+		final AddressbookMultiget addressbookMultiget = tryUnmarshal.get();
 		// Listenelemente sind vollständig
 		assertEquals(10, addressbookMultiget.getHref().size());
 		assertTrue(addressbookMultiget.getHref().containsAll(HREF_VALUES));
@@ -89,16 +89,16 @@ public class XmlUnmarshallingTest {
 
 	/**
 	 * testet das Unmarshalling eines Multiget-Requests
-	 * 
+	 *
 	 * @throws JsonProcessingException beim Lesen und Schreiben von Werten über den
 	 *                                 {@link ObjectMapper}
 	 */
 	@Test
 	void testMarshallingUnmarshallingAddressbookMultiget() throws JsonProcessingException {
-		AddressbookMultiget mg = prepareCustomMultiget();
-		ObjectMapper mapper = getCustomMapper();
-		String xmlFromCustomMapper = mapper.writeValueAsString(mg);
-		AddressbookMultiget customMapperMultiget = mapper.readValue(xmlFromCustomMapper, AddressbookMultiget.class);
+		final AddressbookMultiget mg = prepareCustomMultiget();
+		final ObjectMapper mapper = getCustomMapper();
+		final String xmlFromCustomMapper = mapper.writeValueAsString(mg);
+		final AddressbookMultiget customMapperMultiget = mapper.readValue(xmlFromCustomMapper, AddressbookMultiget.class);
 
 		// vom custom mapper erzeugtes Multiget gleiche Liste an HRefs enthalten
 		assertEquals(mg.getHref().size(), customMapperMultiget.getHref().size());
@@ -107,10 +107,10 @@ public class XmlUnmarshallingTest {
 
 		// XmlUnmarshallingUtil unmarshalled Multiget soll vorhanden und gleiche HREFs
 		// enthalten
-		Optional<AddressbookMultiget> tryUnmarshal = XmlUnmarshallingUtil.tryUnmarshal(xmlFromCustomMapper,
+		final Optional<AddressbookMultiget> tryUnmarshal = XmlUnmarshallingUtil.tryUnmarshal(xmlFromCustomMapper,
 				AddressbookMultiget.class);
 		assertTrue(tryUnmarshal.isPresent());
-		AddressbookMultiget mgUnmarshalled = tryUnmarshal.get();
+		final AddressbookMultiget mgUnmarshalled = tryUnmarshal.get();
 
 		assertEquals(mg.getHref().size(), mgUnmarshalled.getHref().size());
 		assertTrue(mg.getHref().containsAll(mgUnmarshalled.getHref()));
@@ -119,16 +119,16 @@ public class XmlUnmarshallingTest {
 	}
 
 	private static ObjectMapper getCustomMapper() {
-		JacksonXmlModule module = new JacksonXmlModule();
+		final JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
-		ObjectMapper mapper = new XmlMapper(module);
+		final ObjectMapper mapper = new XmlMapper(module);
 		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		return mapper;
 	}
 
 	private static AddressbookMultiget prepareCustomMultiget() {
-		AddressbookMultiget mg = new AddressbookMultiget();
-		Prop prop = new Prop();
+		final AddressbookMultiget mg = new AddressbookMultiget();
+		final Prop prop = new Prop();
 		prop.setGetetag(new Getetag());
 		prop.setAddressData(new CardAddressData());
 		mg.setProp(prop);
@@ -138,7 +138,7 @@ public class XmlUnmarshallingTest {
 
 	/**
 	 * Test a bug: XmlUnmarshaller instantiiert Klassen, die nicht zum xml passen
-	 * 
+	 *
 	 * @throws IOException beim Einlesen des InputStreams
 	 */
 	@Test
@@ -207,7 +207,7 @@ public class XmlUnmarshallingTest {
 		assertFalse(syncCollection.isPresent());
 	}
 
-	private static InputStream stringToInputStream(String input) {
+	private static InputStream stringToInputStream(final String input) {
 		return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 	}
 }

@@ -13,32 +13,32 @@ import de.svws_nrw.db.DBEntityManager;
  * Diese Klasse stellt die Implementierung des {@link IKalenderRepository} für
  * generierte Kalender dar
  */
-public class GenerierteKalenderRepository implements IKalenderRepository {
+public final class GenerierteKalenderRepository implements IKalenderRepository {
 
 	/** der {@link DBEntityManager} auf den zugegriffen werden soll. */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 
 	/**
 	 * Konstruktor mit {@link DBEntityManager}
-	 * 
+	 *
 	 * @param conn der genutzte {@link DBEntityManager}
 	 */
-	public GenerierteKalenderRepository(DBEntityManager conn) {
+	public GenerierteKalenderRepository(final DBEntityManager conn) {
 		this.conn = conn;
 	}
 
 	@Override
-	public Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params) {
+	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
 		return Optional.empty();
 	}
 
 	@Override
-	public List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params) {
+	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<String> getDeletedResourceUIDsSince(String kalenderId, Long syncTokenMillis) {
+	public List<String> getDeletedResourceUIDsSince(final String kalenderId, final Long syncTokenMillis) {
 		return new ArrayList<>();
 	}
 

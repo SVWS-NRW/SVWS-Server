@@ -4,13 +4,13 @@ package de.svws_nrw.davapi.util.vcard;
  * VCard Property für Telefondaten.<br>
  * Beispiel: <br>
  * {@code TEL;TYPE=work,voice,pref,msg:+1-213-555-1234}
- * 
+ *
  * @see <a href=
  *      "https://datatracker.ietf.org/doc/html/rfc2426#section-3.3.1">RFC
  *      Dokumentation zum TEL Type</a>
  *
  */
-public class PhoneProperty implements VCardProperty {
+public final class PhoneProperty implements VCardProperty {
 
 	/**
 	 * Konstante für den Typ des VCard Properties
@@ -27,18 +27,18 @@ public class PhoneProperty implements VCardProperty {
 
 	/**
 	 * Defaultkonstrukotr mit Art der Telefonnummer und der Telefonnummer.
-	 * 
+	 *
 	 * @param phoneType die Art der Telefonnummer
 	 * @param number    die Telefonnummer
 	 */
-	public PhoneProperty(String phoneType, String number) {
+	public PhoneProperty(final String phoneType, final String number) {
 		this.phoneType = phoneType;
 		this.number = number;
 	}
 
 	/**
 	 * getter für die Telefonnummer
-	 * 
+	 *
 	 * @return die Telefonnummer
 	 */
 	public String getNumber() {
@@ -47,16 +47,16 @@ public class PhoneProperty implements VCardProperty {
 
 	/**
 	 * setter für die Telefonnummer
-	 * 
+	 *
 	 * @param number die Telefonnummer
 	 */
-	public void setNumber(String number) {
+	public void setNumber(final String number) {
 		this.number = number;
 	}
 
 	/**
 	 * getter für die Telefonart, bspw. 'pref,work'
-	 * 
+	 *
 	 * @return die Telefonart
 	 */
 	public String getPhoneType() {
@@ -65,10 +65,10 @@ public class PhoneProperty implements VCardProperty {
 
 	/**
 	 * setter für die Telefonart, bspw. 'pref,work'
-	 * 
+	 *
 	 * @param phoneType die Telefonart
 	 */
-	public void setPhoneType(String phoneType) {
+	public void setPhoneType(final String phoneType) {
 		this.phoneType = phoneType;
 	}
 
@@ -78,12 +78,12 @@ public class PhoneProperty implements VCardProperty {
 	}
 
 	@Override
-	public void serializeType(StringBuilder sb) {
+	public void serializeType(final StringBuilder sb) {
 		sb.append(getType());
 	}
 
 	@Override
-	public void serializeProperty(StringBuilder sb) {
+	public void serializeProperty(final StringBuilder sb) {
 		sb.append(number);
 	}
 }

@@ -35,7 +35,7 @@ class IPropertyTest {
 //				   decimal 22) character. The DOUBLE-QUOTE (US-ASCII decimal 22)
 //				   character is used as a delimiter for parameter values that contain
 //				   restricted characters or URI text.
-		IProperty property = IProperty.fromString(PROP_WITH_COLON_DELIMITER);
+		final IProperty property = IProperty.fromString(PROP_WITH_COLON_DELIMITER);
 		assertNotNull(property);
 	}
 
@@ -45,7 +45,7 @@ class IPropertyTest {
 	 */
 	@Test
 	void parsePropertyWithColonDelimiterDoesNotThrowException() {
-		assertThrows(ArrayIndexOutOfBoundsException.class, ()->IProperty.fromString(PROP_WITHOUT_MISSING_DOUBLEQUOTE));
+		assertThrows(ArrayIndexOutOfBoundsException.class, () -> IProperty.fromString(PROP_WITHOUT_MISSING_DOUBLEQUOTE));
 	}
 
 }

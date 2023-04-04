@@ -12,11 +12,11 @@ public class DavUriBuilderTest {
 
 	/**
 	 * Erstellt einen DavUriParameter zum Testen
-	 * 
+	 *
 	 * @return das gemockte DavURIParameter Objekt
 	 */
 	private static DavUriParameter createParameter() {
-		DavUriParameter parameter = new DavUriParameter();
+		final DavUriParameter parameter = new DavUriParameter();
 		parameter.setResourceCollectionId("AAA");
 		parameter.setBenutzerId("BBB");
 		parameter.setSchema("SSS");
@@ -29,7 +29,7 @@ public class DavUriBuilderTest {
 	 */
 	@Test
 	void getAddressbookUri_returnsExpectedUri() {
-		String result = DavUriBuilder.getAddressbookUri(createParameter());
+		final String result = DavUriBuilder.getAddressbookUri(createParameter());
 		assertEquals("/db/SSS/dav/adressbuecher/AAA", result);
 	}
 
@@ -39,7 +39,7 @@ public class DavUriBuilderTest {
 	 */
 	@Test
 	void getAddressbookCollectionUri_returnsExpectedUri() {
-		String result = DavUriBuilder.getAddressbookCollectionUri(createParameter());
+		final String result = DavUriBuilder.getAddressbookCollectionUri(createParameter());
 		assertEquals("/db/SSS/dav/adressbuecher", result);
 	}
 
@@ -48,7 +48,7 @@ public class DavUriBuilderTest {
 	 */
 	@Test
 	void getContactUri_returnsExpectedUri() {
-		String result = DavUriBuilder.getAddressEntryUri(createParameter());
+		final String result = DavUriBuilder.getAddressEntryUri(createParameter());
 		assertEquals("/db/SSS/dav/adressbuecher/AAA/KKK.vcf", result);
 	}
 
@@ -57,7 +57,7 @@ public class DavUriBuilderTest {
 	 */
 	@Test
 	void getPrincipalUri_returnsExpectedUri() {
-		String result = DavUriBuilder.getPrincipalUri(createParameter());
+		final String result = DavUriBuilder.getPrincipalUri(createParameter());
 		assertEquals("/db/SSS/dav/benutzer/BBB", result);
 	}
 

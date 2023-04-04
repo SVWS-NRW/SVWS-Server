@@ -19,7 +19,7 @@ import java.util.Objects;
       occurrence of a specific day within the MONTHLY or YEARLY "RRULE".
  * </code>
  */
-public class ByDay implements Comparable<ByDay> {
+public final class ByDay implements Comparable<ByDay> {
 
 	/**
 	 * das führende Integer. Wenn ungleich 0 gibt es den nten Tag innerhalb einer
@@ -36,21 +36,21 @@ public class ByDay implements Comparable<ByDay> {
 	/**
 	 * Konstruktor für das ByDay Property mit der Ordnung (vgl.
 	 * {@link #getOrdinal()} und dem Wochentag.
-	 * 
+	 *
 	 * @param ordinal der Filter für den Wochentag
 	 * @param weekDay der Wochentag
 	 */
-	public ByDay(int ordinal, WeekDay weekDay) {
+	public ByDay(final int ordinal, final WeekDay weekDay) {
 		this.ordinal = ordinal;
 		this.weekDay = weekDay;
 	}
 
 	/**
 	 * Konstruktor für den Wochentag ohne Filter
-	 * 
+	 *
 	 * @param weekDay der Wochentag
 	 */
-	public ByDay(WeekDay weekDay) {
+	public ByDay(final WeekDay weekDay) {
 		this.weekDay = weekDay;
 	}
 
@@ -60,7 +60,7 @@ public class ByDay implements Comparable<ByDay> {
 	 * {@link Frequency#YEARLY} an. Bei Negativem Wert wird der nt-letzte Tag, also
 	 * von hinten gezählt angegeben. So gibt -1MO den letzten Montag in einer Regel
 	 * wieder, '+3TU' den 3. Dienstag, etc.
-	 * 
+	 *
 	 * @return the ordinal
 	 */
 	public int getOrdinal() {
@@ -73,10 +73,10 @@ public class ByDay implements Comparable<ByDay> {
 	 * an. Bei Negativem Wert wird der nt-letzte Tag, also von hinten gezählt
 	 * angegeben. So gibt -1MO den letzten Montag in einer Regel wieder, '+3TU' den
 	 * 3. Dienstag, etc.
-	 * 
+	 *
 	 * @param ordinal the ordinal to set
 	 */
-	public void setOrdinal(int ordinal) {
+	public void setOrdinal(final int ordinal) {
 		this.ordinal = ordinal;
 	}
 
@@ -90,7 +90,7 @@ public class ByDay implements Comparable<ByDay> {
 	/**
 	 * @param weekDay the weekDay to set
 	 */
-	public void setWeekDay(WeekDay weekDay) {
+	public void setWeekDay(final WeekDay weekDay) {
 		this.weekDay = weekDay;
 	}
 
@@ -103,7 +103,7 @@ public class ByDay implements Comparable<ByDay> {
 	}
 
 	@Override
-	public int compareTo(ByDay o) {
+	public int compareTo(final ByDay o) {
 		int compare = this.weekDay.compareTo(o.weekDay);
 		if (compare == 0) {
 			compare = Integer.compare(this.ordinal, o.ordinal);
@@ -117,27 +117,27 @@ public class ByDay implements Comparable<ByDay> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ByDay other = (ByDay) obj;
+		final ByDay other = (ByDay) obj;
 		return ordinal == other.ordinal && weekDay == other.weekDay;
 	}
 
 	/**
 	 * Konvertiert einen String in ein ByDay Objekt
-	 * 
+	 *
 	 * @param s der String
 	 * @return das durch den String repräsentierte ByDay-Objekt
 	 */
-	public static ByDay fromString(String s) {
-		ByDay result = new ByDay(WeekDay.fromStringRep(s.substring(s.length() - 2)));
+	public static ByDay fromString(final String s) {
+		final ByDay result = new ByDay(WeekDay.fromStringRep(s.substring(s.length() - 2)));
 		if (s.length() > 2) {
-			int ordinal = Integer.parseInt(s.substring(0, s.length() - 2));
+			final int ordinal = Integer.parseInt(s.substring(0, s.length() - 2));
 			result.setOrdinal(ordinal);
 		}
 		return result;

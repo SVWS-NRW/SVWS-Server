@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  * Utility-Klasse zum Parsen und Konvertieren von Datums- und Zeitangaben im
  * Kontext von iCalendar-Einträgen.
  */
-public class DateTimeUtil {
+public final class DateTimeUtil {
 
 	/** Formatter für DateTime nach ISO wie es in .ics-Dateien verwendet wird */
 	private static final DateTimeFormatter DAV_ISO_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
@@ -48,12 +48,12 @@ public class DateTimeUtil {
 	/**
 	 * Utility-Methode zum parsen von CalDav-Zeitangaben im Format
 	 * <code>20221102T104500</code> oder <code>20221102T104500Z</code>
-	 * 
+	 *
 	 * @param input der Input-String aus einem .ics File
 	 * @param zone  die Zeitzone in die der String geparst werden soll
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull String input, @NotNull String zone) {
+	public static Instant parseCalDav(@NotNull final String input, @NotNull final String zone) {
 		ZoneId zoneId = null;
 		if (ZoneId.getAvailableZoneIds().contains(zone)) {
 			zoneId = ZoneId.of(zone);
@@ -72,14 +72,14 @@ public class DateTimeUtil {
 	 * wird versucht nach dem Format <code>20221102T104500Z</code> zu parsen, wenn
 	 * dies fehlschlägt, wird auf {@link #parseCalDav(String, String)}
 	 * zurückgegriffen und als Zeitzone {@value #TIMEZONE_DEFAULT} genutzt
-	 * 
+	 *
 	 * @param input der Input-String aus einem .ics File
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull String input) {
+	public static Instant parseCalDav(@NotNull final String input) {
 		try {
 			return ZonedDateTime.parse(input, DAV_ISO_FORMATTER_WITHZONE).toInstant();
-		} catch (DateTimeParseException dtpe) {
+		} catch (final DateTimeParseException dtpe) {
 			// Ausdruck konnte nicht geparst werden, daher mit default zeitzone parsen
 			return parseCalDav(input, TIMEZONE_DEFAULT);
 		}
@@ -89,16 +89,16 @@ public class DateTimeUtil {
 	 * Utility-Methode zum parsen eines Zeitpunkts aus einem Property. Ist die
 	 * Zeitzone im key gegeben, wird {@link #parseCalDav(String, String)} mit der
 	 * Zeitzone genutzt, ansonsten {@link #parseCalDav(String)}
-	 * 
+	 *
 	 * @param property das Property aus dem der Zeitpunkt genutzt werden soll
 	 * @return den geparsten Zeitpunkt
 	 */
-	public static Instant parseCalDav(@NotNull IProperty property) {
-		String[] split = property.getKey().split(";");
+	public static Instant parseCalDav(@NotNull final IProperty property) {
+		final String[] split = property.getKey().split(";");
 		String zone = null;
 		boolean isDate = false;
-		for (String s : split) {
-			int idx = s.indexOf("TZID=");
+		for (final String s : split) {
+			final int idx = s.indexOf("TZID=");
 			if (idx >= 0) {
 				zone = s.substring(idx + 5);
 			}
@@ -106,7 +106,7 @@ public class DateTimeUtil {
 				isDate = true;
 			}
 		}
-		String value = property.getValue() + (isDate ? "T000000" : "");
+		final String value = property.getValue() + (isDate ? "T000000" : "");
 		if (zone != null) {
 			return parseCalDav(value, zone);
 		}
@@ -116,11 +116,11 @@ public class DateTimeUtil {
 	/**
 	 * Konvertiert ein {@link Instant} zu einem SQL-Timestamp-String wie er am
 	 * {@link DTODavRessource#KalenderStart} verwendet wird
-	 * 
+	 *
 	 * @param instant das Instant
 	 * @return der String, der den Zeitpunkt repräsentiert
 	 */
-	public static String toSQLTimeStamp(@NotNull Instant instant) {
+	public static String toSQLTimeStamp(@NotNull final Instant instant) {
 		return DatumUhrzeitConverter.instance.convertToEntityAttribute(Timestamp.from(instant));
 	}
 
@@ -128,11 +128,11 @@ public class DateTimeUtil {
 	 * Konvertiert ein SQL-Timestamp String wie er an
 	 * {@link DTODavRessource#KalenderStart} verwendet wird in ein {@link Instant}<br>
 	 * <strong>Diese Methode nutzt die Systemzeitzone zum Parsen!</strong>
-	 * 
+	 *
 	 * @param sql der String für den SQL-Timestamp
 	 * @return den Zeitpunkt aus dem SQLTimestamp
 	 */
-	public static Instant fromSqlTimeStamp(@NotNull String sql) {
+	public static Instant fromSqlTimeStamp(@NotNull final String sql) {
 		return DatumUhrzeitConverter.instance.convertToDatabaseColumn(sql).toInstant();
 	}
 
@@ -147,24 +147,24 @@ public class DateTimeUtil {
 	 * @param pRangeEnd2   Endzeit des zweiten Zeitraums
 	 * @return true, wenn die Zeiträume überlappen
 	 */
-	public static boolean intersect(Instant pRangeStart1, Instant pRangeEnd1, Instant pRangeStart2,
-			Instant pRangeEnd2) {
+	public static boolean intersect(final Instant pRangeStart1, final Instant pRangeEnd1, final Instant pRangeStart2,
+			final Instant pRangeEnd2) {
 		Instant rangeStart1 = pRangeStart1;
 		Instant rangeStart2 = pRangeStart2;
 		Instant rangeEnd1 = pRangeEnd1;
 		Instant rangeEnd2 = pRangeEnd2;
 		if (rangeStart1.compareTo(rangeEnd1) > 0) {
-			Instant buf = rangeStart1;
+			final Instant buf = rangeStart1;
 			rangeStart1 = rangeEnd1;
 			rangeEnd1 = buf;
 		}
 		if (rangeStart2.compareTo(rangeEnd2) > 0) {
-			Instant buf = rangeStart2;
+			final Instant buf = rangeStart2;
 			rangeStart2 = rangeEnd2;
 			rangeEnd2 = buf;
 		}
-		boolean range1afterRange2 = rangeStart1.compareTo(rangeEnd2) > 0;
-		boolean range1beforeRange2 = rangeEnd1.compareTo(rangeStart2) < 0;
+		final boolean range1afterRange2 = rangeStart1.compareTo(rangeEnd2) > 0;
+		final boolean range1beforeRange2 = rangeEnd1.compareTo(rangeStart2) < 0;
 		return !range1afterRange2 && !range1beforeRange2;
 	}
 
@@ -179,12 +179,12 @@ public class DateTimeUtil {
 	 * @return true, wenn instant gleich oder größer als der Start und gleich oder
 	 *         kleiner als das Ende ist
 	 */
-	public static boolean between(Instant pRangeStart, Instant pRangeEnd, Instant instant) {
+	public static boolean between(final Instant pRangeStart, final Instant pRangeEnd, final Instant instant) {
 		Instant rangeStart = pRangeStart;
 		Instant rangeEnd = pRangeEnd;
 		if (rangeStart.compareTo(rangeEnd) >= 0) {
 			// Start und Endzeitpunkt vertauschen
-			Instant buf = rangeStart;
+			final Instant buf = rangeStart;
 			rangeStart = rangeEnd;
 			rangeEnd = buf;
 		}
@@ -194,44 +194,44 @@ public class DateTimeUtil {
 	/**
 	 * Gibt aus einem SQL-Timestamp-String die Millisekunden seit 1970 wieder, vgl.
 	 * {@link Timestamp#getTime()}
-	 * 
+	 *
 	 * @param time den SQL-Timestamp String wie er in
 	 *             {@link DTODavRessource#KalenderStart} verwendet wird
 	 * @return die Millisekunden
 	 */
-	public static long getTimeInMillis(String time) {
+	public static long getTimeInMillis(final String time) {
 		return DatumUhrzeitConverter.instance.convertToDatabaseColumn(time).getTime();
 	}
 
 	/**
 	 * Gibt einen CalDav String in Zulu-Timezone für den gegebenen Zeitpunkt wieder.
-	 * 
+	 *
 	 * @param t der gegebene Zeitpunkt
 	 * @return der CalDav String
 	 */
-	public static String toCalDavString(Instant t) {
+	public static String toCalDavString(final Instant t) {
 		return DAV_ISO_FORMATTER_WITHZONE.format(t.atZone(ZoneId.of("Z")));
 	}
 
 	/**
 	 * Erzeugt einen CalDav String ohne Zeitzonenangabe, Zeit wird in die gegebene
 	 * Zeitzone gerechnet
-	 * 
+	 *
 	 * @param t    der gegebene Zeitpunkt
 	 * @param tzid die Zeitzone, in die umgerechnet werden soll
 	 * @return das Datum als Zeichenkette für die Verwendung in CalDav
 	 */
-	public static String toCalDavString(Instant t, String tzid) {
+	public static String toCalDavString(final Instant t, final String tzid) {
 		return DAV_ISO_FORMATTER.format(t.atZone(ZoneId.of(tzid)));
 	}
 
 	/**
 	 * Erzeugt aus einem Localdate ein .ics DateString im Format YYYYMMDD
-	 * 
+	 *
 	 * @param d das Datum, welches umgewandelt werden soll
 	 * @return den DateString zur Verwendung in .ics Daten
 	 */
-	public static String toCalDavDateString(LocalDate d) {
+	public static String toCalDavDateString(final LocalDate d) {
 		return DAV_DATE_FORMATTER.format(d);
 	}
 }

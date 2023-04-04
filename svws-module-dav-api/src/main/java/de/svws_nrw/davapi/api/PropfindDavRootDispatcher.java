@@ -22,7 +22,7 @@ import jakarta.servlet.ServletInputStream;
 public class PropfindDavRootDispatcher extends DavDispatcher {
 
 	/** URI-Parameter zum Erzeugen von URIs für dieses Adressbuch */
-	private DavUriParameter uriParameter;
+	private final DavUriParameter uriParameter;
 
 	/**
 	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
@@ -30,22 +30,22 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 	 *
 	 * @param uriParameter die UriParameter zum Erstellen von URIs
 	 */
-	public PropfindDavRootDispatcher(DavUriParameter uriParameter) {
+	public PropfindDavRootDispatcher(final DavUriParameter uriParameter) {
 		this.uriParameter = uriParameter;
 	}
 
 	/**
 	 * Verarbeitet ein XML-Request aus dem gegebenen InputStream für die Sammlung
 	 * von Ressourcen
-	 * 
+	 *
 	 * @param inputStream der InputStream, welcher den XML-Request enthält
 	 * @return Das Objekt zur Repräsentation der XML-Antwort
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
-	public Object dispatchCollection(ServletInputStream inputStream) throws IOException {
-		Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
+	public Object dispatchCollection(final ServletInputStream inputStream) throws IOException {
+		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 
-		Multistatus ms = new Multistatus();
+		final Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.generateResponseRootLevel(propfind.getProp()));
 		ms.getResponse().add(this.generateResponseAddressbookCollectionLevel(propfind.getProp()));
 		if (propfind.getProp().getCalendarHomeSet() != null) {
@@ -57,16 +57,16 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 	/**
 	 * Erzeugt eine Antwort auf dem Root-Level unserer Dav-Schnittstelle abhängig
 	 * von den angefragten Properties
-	 * 
+	 *
 	 * @param propRequested die angefragten Properties
 	 * @return eine Response mit den gefundenen und nicht-gefundenen Properties
 	 */
-	private Response generateResponseRootLevel(Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseRootLevel(final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			resourcetype.setCollection(new Collection());
 			// auch wenn das root objekt eigentlich nur eine Sammlung mit den darunter
 			// liegenden Sammlungen für Kalender und Adressbücher ist, benötigt thunderbird
@@ -78,7 +78,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
-			CurrentUserPrincipal principal = new CurrentUserPrincipal();
+			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
 			principal.getHref().add(DavUriBuilder.getPrincipalUri(this.uriParameter));
 			prop200.setCurrentUserPrincipal(principal);
 		}
@@ -90,12 +90,12 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
 			// Kalenderanfragen auf unserer Wurzel benötigen den Link zur Kalendersammlung
 			// unter db/schema/dav/kalender
-			CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
+			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
 			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getCardDavRootUri(this.uriParameter));
 		return response;
 	}
@@ -103,23 +103,23 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 	/**
 	 * Erzeugt ein Antwortobjekt auf dem Level, welches die Adressbücher enthält,
 	 * abhängig von den angefragten Properties
-	 * 
+	 *
 	 * @param propRequested die angefragten Properties
 	 * @return ein Response-Objekt mit den gefundenen und nicht gefundenen
 	 *         Properties
 	 */
-	private Response generateResponseAddressbookCollectionLevel(Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseAddressbookCollectionLevel(final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			resourcetype.setCollection(new Collection());
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
-			CurrentUserPrincipal principal = new CurrentUserPrincipal();
+			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
 			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
 			prop200.setCurrentUserPrincipal(principal);
 		}
@@ -128,34 +128,34 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 			prop200.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getAddressbookCollectionUri(uriParameter));
 		return response;
 	}
 
 	/**
-	 * 
+	 *
 	 * Erzeugt ein Antwortobjekt auf dem Level, welches die Kalender enthält,
 	 * abhängig von den angefragten Properties
-	 * 
+	 *
 	 * @param propRequested die angefragten Properties
 	 * @return ein Response-Objekt mit den gefundenen und nicht gefundenen
 	 *         Properties
-	 * 
+	 *
 	 */
-	private Response generateResponseCalendarCollectionLevel(Prop propRequested) {
+	private Response generateResponseCalendarCollectionLevel(final Prop propRequested) {
 		// thunderbird interpretiert diesen teil der Antwort einfach mal nicht
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			resourcetype.setCollection(new Collection());
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
-			CurrentUserPrincipal principal = new CurrentUserPrincipal();
+			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
 			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
 			prop200.setCurrentUserPrincipal(principal);
 		}
@@ -165,12 +165,12 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
-			CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
+			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
 			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 		return response;
 	}

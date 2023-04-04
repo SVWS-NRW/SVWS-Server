@@ -35,7 +35,7 @@ public class DavUriParameter {
 	 *
 	 * @param schema der Parameter für 'schema'
 	 */
-	public void setSchema(String schema) {
+	public void setSchema(final String schema) {
 		this.schema = schema;
 	}
 
@@ -53,7 +53,7 @@ public class DavUriParameter {
 	 *
 	 * @param benutzerId der Parameter für 'benutzerId'
 	 */
-	public void setBenutzerId(String benutzerId) {
+	public void setBenutzerId(final String benutzerId) {
 		this.benutzerId = benutzerId;
 	}
 
@@ -71,7 +71,7 @@ public class DavUriParameter {
 	 *
 	 * @param resourceCollectionId der Parameter für 'adressbuchId'
 	 */
-	public void setResourceCollectionId(String resourceCollectionId) {
+	public void setResourceCollectionId(final String resourceCollectionId) {
 		this.resourceCollectionId = resourceCollectionId;
 	}
 
@@ -91,7 +91,7 @@ public class DavUriParameter {
 	 *
 	 * @param resourceId der Parameter für 'adressbuchEintragId'
 	 */
-	public void setResourceId(String resourceId) {
+	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
 	}
 
@@ -102,7 +102,7 @@ public class DavUriParameter {
 	 *         gemappt sind
 	 */
 	public Map<String, String> toMap() {
-		Map<String, String> parameters = new HashMap<>();
+		final Map<String, String> parameters = new HashMap<>();
 
 		if (this.schema != null && !this.schema.isBlank()) {
 			parameters.put("schema", this.schema);

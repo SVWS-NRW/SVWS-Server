@@ -15,7 +15,6 @@ import de.svws_nrw.davapi.util.icalendar.recurrence.WeekDay;
 
 /**
  * Testet das Erstellen, Serialisieren und Deserialisieren von RRules
- * 
  */
 class RRuleTest {
 
@@ -115,12 +114,12 @@ class RRuleTest {
 
 	/**
 	 * Serialisiert eine gegebene RRule zu einem String
-	 * 
+	 *
 	 * @param r die RRUle
 	 * @return die Stringrepräsentation der Regel
 	 */
-	private static String getSerializedRRule(RRule r) {
-		StringBuffer sb = new StringBuffer();
+	private static String getSerializedRRule(final RRule r) {
+		final StringBuffer sb = new StringBuffer();
 		r.serialize(sb);
 		return sb.toString();
 	}

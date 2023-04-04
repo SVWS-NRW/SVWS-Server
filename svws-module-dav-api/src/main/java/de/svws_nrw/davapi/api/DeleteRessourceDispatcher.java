@@ -15,9 +15,9 @@ import de.svws_nrw.davapi.model.dav.Response;
 public class DeleteRessourceDispatcher extends DavDispatcher {
 
 	/** das DavRepository */
-	private IDavRepository repository;
+	private final IDavRepository repository;
 	/** die URI-Parameter für die aktuelle Anfrage */
-	private DavUriParameter uriParameter;
+	private final DavUriParameter uriParameter;
 
 	/**
 	 * Konstruktor mit Repository für Datenbankzugriff und URI-Parametern zum
@@ -26,7 +26,7 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 	 * @param repository   das DavRepository
 	 * @param uriParameter die URI-Parameter
 	 */
-	public DeleteRessourceDispatcher(IDavRepository repository, DavUriParameter uriParameter) {
+	public DeleteRessourceDispatcher(final IDavRepository repository, final DavUriParameter uriParameter) {
 		this.repository = repository;
 		this.uriParameter = uriParameter;
 	}
@@ -43,19 +43,19 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 	 * @return ein Multistatus als Antwort auf die Anfrage, gefüllt mit
 	 *         Informationen, falls die Anfrage nicht erfolgreich war
 	 */
-	public Optional<Multistatus> dispatch(String ressourceCollectionId, String ressourceUID, String ifMatchToken) {
+	public Optional<Multistatus> dispatch(final String ressourceCollectionId, final String ressourceUID, final String ifMatchToken) {
 		uriParameter.setResourceCollectionId(ressourceCollectionId);
 		uriParameter.setResourceId(ressourceUID);
 		try {
 			if (repository.deleteRessourceIfUpToDate(Long.valueOf(ressourceCollectionId), ressourceUID,
 					Long.valueOf(adjustETags(ifMatchToken)))) {
 				return Optional.empty();
-			} 
+			}
 			return createMultiStatus(
 					createResourceNotFoundError("DavRessource<" + ressourceUID + "> in Collection<"
 							+ ressourceCollectionId + "> nicht gefunden."),
 					DavUriBuilder.getCalendarEntryUri(uriParameter));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return createMultiStatus(createResourceNotFoundError(e.getMessage()),
 					DavUriBuilder.getCalendarEntryUri(uriParameter));
 		}
@@ -71,9 +71,9 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 	 * @return ein Multistatus-Objekt mit Fehlermeldungen, falls das Löschen
 	 *         fehlgeschlagen ist.
 	 */
-	public Optional<Multistatus> dispatch(String ressourceCollectionID) {
+	public Optional<Multistatus> dispatch(final String ressourceCollectionID) {
 		// im Moment kein Löschen von RessourceCollections erlaubt
-		Error e = new Error();
+		final Error e = new Error();
 		e.setAny("Das Löschen von Ressourcensammlungen ist nicht erlaubt.");
 		return createMultiStatus(e, DavUriBuilder.getCalendarEntryUri(uriParameter));
 	}
@@ -86,9 +86,9 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 	 * @param href  die URI zur Anfrage, welche Fehlerhaft war
 	 * @return ein Multistatusobjekt, welches den Fehler und die URI enthält
 	 */
-	private static Optional<Multistatus> createMultiStatus(Error error, String href) {
-		Multistatus ms = new Multistatus();
-		Response response = new Response();
+	private static Optional<Multistatus> createMultiStatus(final Error error, final String href) {
+		final Multistatus ms = new Multistatus();
+		final Response response = new Response();
 		response.setError(error);
 		response.getHref().add(href);
 		ms.getResponse().add(response);

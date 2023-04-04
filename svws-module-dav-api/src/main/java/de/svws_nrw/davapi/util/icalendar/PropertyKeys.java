@@ -41,12 +41,12 @@ public enum PropertyKeys {
 	 * Formatiert dieses Property zusammen mit Argumenten. Dabei werden die
 	 * Argumente mit Semikolon getrennt und als kommagetrennte Liste angegebene<br>
 	 * <code>DTSTART;TZID=EUROPE/BERLIN</code>
-	 * 
+	 *
 	 * @param arguments eine Liste von zuzufügenden Argumenten
 	 * @return den Formattierten PropertyKey
-	 * 
+	 *
 	 */
-	public String toStringWithArguments(String... arguments) {
+	public String toStringWithArguments(final String... arguments) {
 		return name() + ";" + String.join(";", arguments);
 	}
 }

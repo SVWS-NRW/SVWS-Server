@@ -11,27 +11,28 @@ import de.svws_nrw.db.DBEntityManager;
  * Implementierung des {@link IKalenderEintragRepository} für generierte
  * Kalendereinträge
  */
-public class GenerierteKalenderEintragRepository implements IKalenderEintragRepository {
+public final class GenerierteKalenderEintragRepository implements IKalenderEintragRepository {
+
 	/** der {@link DBEntityManager} auf den zugegriffen werden soll. */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 
 	/**
 	 * Konstruktor mit zu nutzendem {@link DBEntityManager}
-	 * 
+	 *
 	 * @param conn der zu nutzende {@link DBEntityManager}
 	 */
-	public GenerierteKalenderEintragRepository(DBEntityManager conn) {
+	public GenerierteKalenderEintragRepository(final DBEntityManager conn) {
 		this.conn = conn;
 	}
 
 	@Override
-	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(String kalenderId, String kalenderEintragUID,
-			CollectionRessourceQueryParameters params) {
+	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragUID,
+			final CollectionRessourceQueryParameters params) {
 		return Optional.empty();
 	}
 
 	@Override
-	public KalenderEintrag saveKalenderEintrag(KalenderEintrag kalenderEintrag) {
+	public KalenderEintrag saveKalenderEintrag(final KalenderEintrag kalenderEintrag) {
 		throw new UnsupportedOperationException(
 				"Speichern von Kalendereinträgen für generierte Kalender nicht möglich.");
 	}

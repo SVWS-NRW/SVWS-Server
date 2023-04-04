@@ -27,7 +27,7 @@ public enum AdressbuchTyp {
 	 * @param id          die ID des Adressbuchtyps
 	 * @param bezeichnung die Bezeichnung des Adressbuchtyps
 	 */
-	private AdressbuchTyp(int id, String bezeichnung) {
+	AdressbuchTyp(final int id, final String bezeichnung) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 	}
@@ -39,7 +39,7 @@ public enum AdressbuchTyp {
 	 *
 	 * @return die Adressbuchtyp oder null, falls die ID fehlerhaft ist
 	 */
-	public static AdressbuchTyp getByID(int id) {
+	public static AdressbuchTyp getByID(final int id) {
 		switch (id) {
 			case 0:
 				return AdressbuchTyp.PERSOENLICH;

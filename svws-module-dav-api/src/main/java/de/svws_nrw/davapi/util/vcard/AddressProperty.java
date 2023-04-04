@@ -4,12 +4,12 @@ package de.svws_nrw.davapi.util.vcard;
  * VCard Property für Adressen.<br>
  * Beispiel:<br>
  * {@code ADR;TYPE=dom,home,postal,parcel:;;123 Main Street;Any Town;CA;91921-1234}
- * 
+ *
  * @see <a href=
  *      "https://datatracker.ietf.org/doc/html/rfc2426#section-3.2.1">RFC
  *      Dokumentation für ADR</a>
  */
-public class AddressProperty implements VCardProperty {
+public final class AddressProperty implements VCardProperty {
 	/**
 	 * Trennzeichen zwischen Straße und Hausnummer
 	 */
@@ -85,12 +85,12 @@ public class AddressProperty implements VCardProperty {
 	}
 
 	@Override
-	public void serializeType(StringBuilder sb) {
+	public void serializeType(final StringBuilder sb) {
 		sb.append(getType());
 	}
 
 	@Override
-	public void serializeProperty(StringBuilder sb) {
+	public void serializeProperty(final StringBuilder sb) {
 		addPropertySequenceElement(this.postOfficeBox, sb);
 		addPropertySequenceElement(this.extendedAdress, sb);
 		addStreetPropertyPart(this.street, this.houseNumber, this.houseNumberAddition, sb);
@@ -102,15 +102,15 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * Hilfsmethode zum Serialisieren des Straßenelements einer Adresse an einem
-	 * gegebenen StringBuilder 
-	 * 
+	 * gegebenen StringBuilder
+	 *
 	 * @param street
 	 * @param houseNumber
 	 * @param houseNumberAddition
 	 * @param sb
 	 */
-	private static void addStreetPropertyPart(String street, String houseNumber, String houseNumberAddition,
-			StringBuilder sb) {
+	private static void addStreetPropertyPart(final String street, final String houseNumber, final String houseNumberAddition,
+			final StringBuilder sb) {
 		if (street != null) {
 			sb.append(street);
 		}
@@ -129,18 +129,18 @@ public class AddressProperty implements VCardProperty {
 	 * Hilfsmethode zum Serialisieren eines Adress-Sequenz-Elements an einem
 	 * gegebenen StringBuilder. das Sequenz-Element wird mit Trailing
 	 * {@link VCardProperty#SEQUENCE_ELEMENT_SEPARATOR} zugefügt.
-	 * 
+	 *
 	 * @param propertySequenceElement
 	 * @param sb
 	 */
-	private static void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb) {
+	private static void addPropertySequenceElement(final String propertySequenceElement, final StringBuilder sb) {
 		addPropertySequenceElement(propertySequenceElement, sb, false);
 	}
 
 	/**
 	 * Hilfsmethode zum Serialisieren eines Adress-Sequenz-Elements an einem
 	 * gegebenen StringBuilder.
-	 * 
+	 *
 	 * @param propertySequenceElement
 	 * @param sb
 	 * @param isLast                  Angabe ob es das letzte Sequenz-Element ist,
@@ -148,7 +148,7 @@ public class AddressProperty implements VCardProperty {
 	 *                                {@link CardProperty#SEQUENCE_ELEMENT_SEPARATOR}
 	 *                                gesetzt wird
 	 */
-	private static void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb, boolean isLast) {
+	private static void addPropertySequenceElement(final String propertySequenceElement, final StringBuilder sb, final boolean isLast) {
 		if (propertySequenceElement != null) {
 			sb.append(propertySequenceElement);
 		}
@@ -159,7 +159,7 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * getter for postalCode
-	 * 
+	 *
 	 * @return the postalCode
 	 */
 	public String getPostalCode() {
@@ -168,16 +168,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for postalCode
-	 * 
+	 *
 	 * @param postalCode the postalCode to set
 	 */
-	public void setPostalCode(String postalCode) {
+	public void setPostalCode(final String postalCode) {
 		this.postalCode = postalCode;
 	}
 
 	/**
 	 * getter for postOfficeBox
-	 * 
+	 *
 	 * @return the postOfficeBox
 	 */
 	public String getPostOfficeBox() {
@@ -186,10 +186,10 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for postOfficeBox
-	 * 
+	 *
 	 * @param postOfficeBox the postOfficeBox to set
 	 */
-	public void setPostOfficeBox(String postOfficeBox) {
+	public void setPostOfficeBox(final String postOfficeBox) {
 		this.postOfficeBox = postOfficeBox;
 	}
 
@@ -206,16 +206,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for extendedAddress field
-	 * in vCard V 4.0 nicht mehr zu verwenden 
+	 * in vCard V 4.0 nicht mehr zu verwenden
 	 * @param extendedAdress the extendedAdress to set
 	 */
-	public void setExtendedAdress(String extendedAdress) {
+	public void setExtendedAdress(final String extendedAdress) {
 		this.extendedAdress = extendedAdress;
 	}
 
 	/**
 	 * getter for street
-	 * 
+	 *
 	 * @return the street
 	 */
 	public String getStreet() {
@@ -224,16 +224,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for street
-	 * 
+	 *
 	 * @param street the street to set
 	 */
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.street = street;
 	}
 
 	/**
 	 * getter for city
-	 * 
+	 *
 	 * @return the city
 	 */
 	public String getCity() {
@@ -242,16 +242,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for city
-	 * 
+	 *
 	 * @param city the city to set
 	 */
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.city = city;
 	}
 
 	/**
 	 * getter for region
-	 * 
+	 *
 	 * @return the region
 	 */
 	public String getRegion() {
@@ -260,16 +260,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for region
-	 * 
+	 *
 	 * @param region the region to set
 	 */
-	public void setRegion(String region) {
+	public void setRegion(final String region) {
 		this.region = region;
 	}
 
 	/**
 	 * getter for country
-	 * 
+	 *
 	 * @return the country
 	 */
 	public String getCountry() {
@@ -278,16 +278,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for country
-	 * 
+	 *
 	 * @param country the country to set
 	 */
-	public void setCountry(String country) {
+	public void setCountry(final String country) {
 		this.country = country;
 	}
 
 	/**
 	 * getter for house number
-	 * 
+	 *
 	 * @return the houseNumber
 	 */
 	public String getHouseNumber() {
@@ -296,16 +296,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for house number
-	 * 
+	 *
 	 * @param houseNumber the houseNumber to set
 	 */
-	public void setHouseNumber(String houseNumber) {
+	public void setHouseNumber(final String houseNumber) {
 		this.houseNumber = houseNumber;
 	}
 
 	/**
 	 * getter for houseNumber addition
-	 * 
+	 *
 	 * @return the houseNumberAddition
 	 */
 	public String getHouseNumberAddition() {
@@ -314,16 +314,16 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for house number addition
-	 * 
+	 *
 	 * @param houseNumberAddition the houseNumberAddition to set
 	 */
-	public void setHouseNumberAddition(String houseNumberAddition) {
+	public void setHouseNumberAddition(final String houseNumberAddition) {
 		this.houseNumberAddition = houseNumberAddition;
 	}
 
 	/**
 	 * getter for address type
-	 * 
+	 *
 	 * @return the addressType
 	 */
 	public String getAddressType() {
@@ -332,10 +332,10 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * setter for address type
-	 * 
+	 *
 	 * @param addressType the addressType to set
 	 */
-	public void setAddressType(String addressType) {
+	public void setAddressType(final String addressType) {
 		this.addressType = addressType;
 	}
 }

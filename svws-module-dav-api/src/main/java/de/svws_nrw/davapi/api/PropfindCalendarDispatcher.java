@@ -44,7 +44,7 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	/** Repository-Klasse zur Abfrage von Kalendern aus der SVWS-Datenbank */
 	private final IKalenderRepository repository;
 	/** URI-Parameter zum Erzeugen von URIs für Kalender */
-	private DavUriParameter uriParameter;
+	private final DavUriParameter uriParameter;
 
 	/**
 	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
@@ -53,7 +53,7 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 * @param repository   das Repository zum Zugriff auf Kalender der Datenbank
 	 * @param uriParameter die UriParameter zum Erstellen von URIs
 	 */
-	public PropfindCalendarDispatcher(IKalenderRepository repository, DavUriParameter uriParameter) {
+	public PropfindCalendarDispatcher(final IKalenderRepository repository, final DavUriParameter uriParameter) {
 		this.repository = repository;
 		this.uriParameter = uriParameter;
 	}
@@ -66,19 +66,19 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 * @return das Ergebnisobjekt für den Request
 	 * @throws IOException
 	 */
-	private Object dispatchCollection(Propfind propfind) {
-		List<Kalender> kalenderList = this.repository
+	private Object dispatchCollection(final Propfind propfind) {
+		final List<Kalender> kalenderList = this.repository
 				.getAvailableKalender(CollectionRessourceQueryParameters.EXCLUDE_RESSOURCES);
 		if (kalenderList.isEmpty()) {
 			return this.createResourceNotFoundError(
 					"Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
 		}
-		Multistatus ms = new Multistatus();
+		final Multistatus ms = new Multistatus();
 		// wichtig ist, dass dem Client die Collection selbst im Response beschrieben
 		// wird
-		Response response = generateResponseCalendarCollectionLevel(propfind.getProp());
+		final Response response = generateResponseCalendarCollectionLevel(propfind.getProp());
 		ms.getResponse().add(response);
-		for (Kalender kalender : kalenderList) {
+		for (final Kalender kalender : kalenderList) {
 			ms.getResponse().add(this.generateResponseCalendarLevel(kalender, propfind.getProp()));
 		}
 		return ms;
@@ -89,15 +89,15 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 * db/schema/dav/kalender Thunderbird erwartet den resourcetype collection. Dies
 	 * ist dem client als calendar-home-set bekannt und er wird versuchen hier
 	 * weitere kalender zu suchen.
-	 * 
+	 *
 	 * @param prop das Prop-Objekt mit angefragten Informationen
 	 * @return das Responseobjekt für die Kalendersammlung
 	 */
-	private Response generateResponseCalendarCollectionLevel(Prop prop) {
-		Prop prop200 = new Prop();
-		DynamicPropUtil propUtil = new DynamicPropUtil(prop);
+	private Response generateResponseCalendarCollectionLevel(final Prop prop) {
+		final Prop prop200 = new Prop();
+		final DynamicPropUtil propUtil = new DynamicPropUtil(prop);
 		if (propUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype r = new Resourcetype();
+			final Resourcetype r = new Resourcetype();
 			// Die Sammlung von Kalendern selbst ist kein Kalender, sondern nur eine
 			// Dav-Collection.
 			r.setCollection(new Collection());
@@ -107,11 +107,11 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 			// auf der Dav Collection darf derzeit nur gelesen, nicht geschrieben werden
 			// ggf muss das geändert werden, wenn eigene Kalender/Adressbücher oder
 			// DavCollections angelegt werden sollen.
-			CurrentUserPrivilegeSet privilegeSet = getPrivilegeSet(true, false);
+			final CurrentUserPrivilegeSet privilegeSet = getPrivilegeSet(true, false);
 			prop200.setCurrentUserPrivilegeSet(privilegeSet);
 		}
 
-		Response createResponse = createResponse(prop, prop200);
+		final Response createResponse = createResponse(prop, prop200);
 		createResponse.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 		return createResponse;
 	}
@@ -120,29 +120,29 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 * Verarbeitet einen Inputstream als PROPFIND-Anfrage auf einen gegebenen
 	 * Kalender, bei nicht gegebener Kalender-ID wird es die Anfrage auf eine
 	 * Sammlung von Kalendern übertragen
-	 * 
+	 *
 	 * @param inputStream der Inputstream des Requests
 	 * @param ressourceId die id der Ressourcensammlung, bei nicht gegebener ID wird
 	 *                    es die Anfrage auf eine Sammlung von Kalendern übertragen
 	 * @return das Multistatusobjekt für die Anfrage
 	 * @throws IOException bei Fehlern im Inputstream
 	 */
-	public Object dispatch(InputStream inputStream, String ressourceId) throws IOException {
-		Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
+	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
+		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 		if (ressourceId == null || ressourceId.isBlank()) {
 			// ohne Ressource ID wird die Liste der Kalender zurückgegeben
 			return dispatchCollection(propfind);
 		}
 
-		Optional<Kalender> kalender = this.repository.getKalenderById(ressourceId,
+		final Optional<Kalender> kalender = this.repository.getKalenderById(ressourceId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_EXCLUDE_PAYLOAD);
 		if (kalender.isEmpty()) {
 			return this.createResourceNotFoundError("Kalender mit der angegebenen Id wurde nicht gefunden!");
 		}
 
-		Multistatus ms = new Multistatus();
+		final Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.generateResponseCalendarLevel(kalender.get(), propfind.getProp()));
-		for (KalenderEintrag eintrag : kalender.get().kalenderEintraege) {
+		for (final KalenderEintrag eintrag : kalender.get().kalenderEintraege) {
 			eintrag.kalenderId = kalender.get().id;
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, propfind.getProp()));
 		}
@@ -158,26 +158,26 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen Adressbuch
 	 */
-	private Response generateResponseCalendarLevel(Kalender kalender, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseCalendarLevel(final Kalender kalender, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 		uriParameter.setResourceCollectionId(kalender.id);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			resourcetype.setCollection(new Collection());
 			resourcetype.setCalendar(new CalCalendar());
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Displayname.class)) {
-			Displayname displayname = new Displayname();
+			final Displayname displayname = new Displayname();
 			displayname.getContent().add(kalender.displayname);
 			prop200.setDisplayname(displayname);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
-			CurrentUserPrincipal principal = new CurrentUserPrincipal();
+			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
 			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
 			prop200.setCurrentUserPrincipal(principal);
 		}
@@ -187,67 +187,67 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getctag.class)) {
-			Getctag getctag = new Getctag();
+			final Getctag getctag = new Getctag();
 			getctag.getContent().add(String.valueOf(kalender.synctoken));
 			prop200.setGetctag(getctag);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(SyncToken.class)) {
-			SyncToken syncToken = new SyncToken();
+			final SyncToken syncToken = new SyncToken();
 			syncToken.getContent().add(String.valueOf(kalender.synctoken));
 			prop200.setSyncToken(syncToken);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(SupportedCalendarComponentSet.class)) {
-			SupportedCalendarComponentSet supportedCalendarComponentSet = new SupportedCalendarComponentSet();
-			CalendarComponent calendarComponent = new CalendarComponent();
+			final SupportedCalendarComponentSet supportedCalendarComponentSet = new SupportedCalendarComponentSet();
+			final CalendarComponent calendarComponent = new CalendarComponent();
 			calendarComponent.setName("VEVENT");
 			supportedCalendarComponentSet.getCalendarComponents().add(calendarComponent);
 			prop200.setSupportedCalendarComponentSet(supportedCalendarComponentSet);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(SupportedReportSet.class)) {
-			SupportedReport supportedReportCalendarMultiget = new SupportedReport();
-			Report reportCalendarMultiget = new Report();
+			final SupportedReport supportedReportCalendarMultiget = new SupportedReport();
+			final Report reportCalendarMultiget = new Report();
 			reportCalendarMultiget.setCalendarMultiget(new CalendarMultiget());
 			supportedReportCalendarMultiget.setReport(reportCalendarMultiget);
 
-			SupportedReport supportedReportCalendarQuery = new SupportedReport();
-			Report reportCalendarQuery = new Report();
+			final SupportedReport supportedReportCalendarQuery = new SupportedReport();
+			final Report reportCalendarQuery = new Report();
 			reportCalendarQuery.setCalendarQuery(new CalendarQuery());
 			supportedReportCalendarQuery.setReport(reportCalendarQuery);
 
-			SupportedReport supportedReportSyncCollection = new SupportedReport();
-			Report reportSyncCollection = new Report();
+			final SupportedReport supportedReportSyncCollection = new SupportedReport();
+			final Report reportSyncCollection = new Report();
 			reportSyncCollection.setSyncCollection(new SyncCollection());
 			supportedReportSyncCollection.setReport(reportSyncCollection);
 
-			SupportedReportSet supportedReportSet = new SupportedReportSet();
+			final SupportedReportSet supportedReportSet = new SupportedReportSet();
 			supportedReportSet.getSupportedReport().addAll(List.of(supportedReportCalendarMultiget,
 					supportedReportCalendarQuery, supportedReportSyncCollection));
 			prop200.setSupportedReportSet(supportedReportSet);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getcontenttype.class)) {
-			Getcontenttype getContentType = new Getcontenttype();
+			final Getcontenttype getContentType = new Getcontenttype();
 			getContentType.getContent().add("text/calendar");
 			prop200.setGetcontenttype(getContentType);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Owner.class)) {
 			uriParameter.setBenutzerId(Long.toString(kalender.besitzer));
-			Owner owner = new Owner();
+			final Owner owner = new Owner();
 			owner.setHref(DavUriBuilder.getPrincipalUri(uriParameter));
 			prop200.setOwner(owner);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
-			CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
+			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
 			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 			prop200.setCalendarHomeSet(calendarHomeSet);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getCalendarUri(uriParameter));
 		return response;
 	}
@@ -261,20 +261,20 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen KalenderEintrag
 	 */
-	private Response generateResponseEventLevel(KalenderEintrag eintrag, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseEventLevel(final KalenderEintrag eintrag, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 
 		uriParameter.setResourceCollectionId(eintrag.kalenderId);
 		uriParameter.setResourceId(eintrag.uid);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getetag.class)) {
-			Getetag getetag = new Getetag();
+			final Getetag getetag = new Getetag();
 			getetag.getContent().add(eintrag.version);
 			prop200.setGetetag(getetag);
 		}
@@ -283,7 +283,7 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 			prop200.setCurrentUserPrivilegeSet(getPrivilegeSet(eintrag.darfLesen, eintrag.darfSchreiben));
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getCalendarEntryUri(uriParameter));
 		return response;
 	}

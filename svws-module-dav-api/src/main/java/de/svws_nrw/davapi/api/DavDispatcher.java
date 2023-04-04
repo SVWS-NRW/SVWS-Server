@@ -28,7 +28,7 @@ abstract class DavDispatcher {
 	 * @param message Fehlermeldung
 	 * @return Error-Objekt
 	 */
-	protected Error createResourceNotFoundError(String message) {
+	protected Error createResourceNotFoundError(final String message) {
 		// korrektes Response für Fehler sieht wie folgt aus
 		//CalDav Beispiel:
 //		   <D:error>
@@ -60,17 +60,17 @@ abstract class DavDispatcher {
 	 * @param propResponded Gefundene/Ermittelte Properties zu einer Ressource
 	 * @return Response-Objekt
 	 */
-	protected static final Response createResponse(@NotNull Prop propRequested, @NotNull Prop propResponded) {
-		Response response = new Response();
-		Propstat propStat200 = new Propstat();
+	protected static final Response createResponse(@NotNull final Prop propRequested, @NotNull final Prop propResponded) {
+		final Response response = new Response();
+		final Propstat propStat200 = new Propstat();
 		propStat200.setStatus(Propstat.PROP_STATUS_200_OK);
 		propStat200.setProp(propResponded);
 		response.getPropstat().add(propStat200);
 
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop404 = dynamicPropUtil.getUnsupportedProps(propResponded);
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop404 = dynamicPropUtil.getUnsupportedProps(propResponded);
 		if (prop404 != null) {
-			Propstat propStat404 = new Propstat();
+			final Propstat propStat404 = new Propstat();
 			propStat404.setStatus(Propstat.PROP_STATUS_404_NOT_FOUND);
 			propStat404.setProp(prop404);
 			response.getPropstat().add(propStat404);
@@ -102,9 +102,9 @@ abstract class DavDispatcher {
 	 *
 	 * @return CurrentUserPrivilegeSet mit Privileges für einen lesenden Zugriff.
 	 */
-	protected static final CurrentUserPrivilegeSet getPrivilegeSet(boolean darfLesen, boolean darfSchreiben) {
-		CurrentUserPrivilegeSet privilegeSet = new CurrentUserPrivilegeSet();
-		Privilege privilegeAll = new Privilege();
+	protected static final CurrentUserPrivilegeSet getPrivilegeSet(final boolean darfLesen, final boolean darfSchreiben) {
+		final CurrentUserPrivilegeSet privilegeSet = new CurrentUserPrivilegeSet();
+		final Privilege privilegeAll = new Privilege();
 		privilegeAll.getContent().add(new All());
 
 		if (darfLesen) {
@@ -126,8 +126,8 @@ abstract class DavDispatcher {
 	 * @param set             die Rechtesammlung
 	 * @param simplePrivilege das zuzufügende Privilege
 	 */
-	private static void addPrivilege(CurrentUserPrivilegeSet set, SimplePrivilege simplePrivilege) {
-		Privilege privilege = new Privilege();
+	private static void addPrivilege(final CurrentUserPrivilegeSet set, final SimplePrivilege simplePrivilege) {
+		final Privilege privilege = new Privilege();
 		privilege.getContent().add(simplePrivilege);
 		set.getPrivilege().add(privilege);
 	}
@@ -144,7 +144,7 @@ abstract class DavDispatcher {
 	 * @param value String, kann Anführungszeichen enthalten
 	 * @return String, enthält keine Anführungszeichen mehr
 	 */
-	protected String adjustETags(String value){
+	protected String adjustETags(final String value) {
 		return value.replace("\"", "");
 	}
 }

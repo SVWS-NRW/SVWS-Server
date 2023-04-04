@@ -20,7 +20,7 @@ public enum DavExtendedHttpStatus implements Response.StatusType {
 
 	/**
 	 * Erstellt einen neuen DavExtendedHttpStatus
-	 * 
+	 *
 	 * @param statusCode   HTTP-Status-Code
 	 * @param reasonPhrase Beschreibung des HTTP-Response-Codes
 	 */

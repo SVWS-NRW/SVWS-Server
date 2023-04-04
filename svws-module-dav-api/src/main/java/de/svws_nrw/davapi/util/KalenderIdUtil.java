@@ -6,7 +6,7 @@ import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection;
  * Utility-Klasse für Verwalten und Unterscheiden von Kalender-IDs.
  *
  */
-public class KalenderIdUtil {
+public final class KalenderIdUtil {
 
 	/**
 	 * private default constructor for utility clas
@@ -18,16 +18,16 @@ public class KalenderIdUtil {
 	/**
 	 * Gibt wieder, ob eine gegebene KalenderID einen generierten kalender
 	 * repräsentiert oder eine {@link DTODavRessourceCollection}
-	 * 
+	 *
 	 * @param kalenderId die KalenderID
 	 * @return ob der Kalender mit dieser ID generiert wurde
 	 */
-	public static boolean isGenerated(String kalenderId) {
+	public static boolean isGenerated(final String kalenderId) {
 		// für generierte Kalender hier die ID Strings parsen
 		try {
 			Long.parseLong(kalenderId);
 			return false;
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			return false;
 		}
 	}
@@ -35,14 +35,14 @@ public class KalenderIdUtil {
 	/**
 	 * Versucht eine Kalender-ID zu parsen. Für generierte Kalender muss hier noch
 	 * weiter implementiert werden.
-	 * 
+	 *
 	 * @param kalenderId die gegebene Kalenderid als String
 	 * @return die geparste ID des Kalenders
 	 */
-	public static Long parseId(String kalenderId) {
+	public static Long parseId(final String kalenderId) {
 		try {
 			return Long.parseLong(kalenderId);
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			// für generierte Kalender hier parsen
 		}
 		throw new IllegalArgumentException("Kalender Id <" + kalenderId + "> konnte nicht geparst werden.");

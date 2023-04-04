@@ -36,7 +36,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	/** Repository-Klasse zur Abfrage von Adressbüchern aus der SVWS-Datenbank */
 	private final IAdressbuchRepository repository;
 	/** URI-Parameter zum Erzeugen von URIs für dieses Adressbuch */
-	private DavUriParameter uriParameter;
+	private final DavUriParameter uriParameter;
 
 	/**
 	 * Konstruktor für einen neuen Dispatcher mit Repository und den gegebenen
@@ -46,7 +46,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *                     Datenbank
 	 * @param uriParameter die UriParameter zum Erstellen von URIs
 	 */
-	public PropfindAddressbookDispatcher(IAdressbuchRepository repository, DavUriParameter uriParameter) {
+	public PropfindAddressbookDispatcher(final IAdressbuchRepository repository, final DavUriParameter uriParameter) {
 		this.repository = repository;
 		this.uriParameter = uriParameter;
 	}
@@ -59,15 +59,15 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 * @return das Ergebnisobjekt für den Request
 	 * @throws IOException
 	 */
-	private Object dispatchCollection(Propfind propfind) {
-		List<Adressbuch> adressbuecher = this.repository
+	private Object dispatchCollection(final Propfind propfind) {
+		final List<Adressbuch> adressbuecher = this.repository
 				.getAvailableAdressbuecher(CollectionRessourceQueryParameters.EXCLUDE_RESSOURCES);
 		if (adressbuecher.isEmpty()) {
 			return this.createResourceNotFoundError(
 					"Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!");
 		}
-		Multistatus ms = new Multistatus();
-		for (Adressbuch adressbuch : adressbuecher) {
+		final Multistatus ms = new Multistatus();
+		for (final Adressbuch adressbuch : adressbuecher) {
 			ms.getResponse().add(this.generateResponseAddressbookLevel(adressbuch, propfind.getProp()));
 		}
 		return ms;
@@ -76,7 +76,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	/**
 	 * Verarbeitung eines PropFind auf Adressbuchebene anhand des InputStreams und
 	 * der gegebenen Ressource
-	 * 
+	 *
 	 * @param inputStream der InputStream mit dem zu verarbeitenden XML-Request
 	 * @param ressourceId die Ressource für die dieser Request gilt
 	 * @return die entsprechend des Requests verarbeitete Datenstruktur, welche das
@@ -84,22 +84,22 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *         Zielobjekt vor der Verarbeitung nicht festgestellt wird
 	 * @throws IOException bei Fehlern in der Streambehandlung/dem XML-Unmarshalling
 	 */
-	public Object dispatch(ServletInputStream inputStream, String ressourceId) throws IOException {
-		Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
+	public Object dispatch(final ServletInputStream inputStream, final String ressourceId) throws IOException {
+		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 		if (ressourceId == null || ressourceId.isBlank()) {
 			// ohne Ressource ID wird die Liste der Adressbuecher zurückgegeben
 			return dispatchCollection(propfind);
 		}
 
-		Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId,
+		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_EXCLUDE_PAYLOAD);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
 		}
 
-		Multistatus ms = new Multistatus();
+		final Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.generateResponseAddressbookLevel(adressbuch.get(), propfind.getProp()));
-		for (AdressbuchEintrag eintrag : adressbuch.get().adressbuchEintraege) {
+		for (final AdressbuchEintrag eintrag : adressbuch.get().adressbuchEintraege) {
 			eintrag.adressbuchId = adressbuch.get().id;
 			ms.getResponse().add(this.generateResponseContactLevel(eintrag, propfind.getProp()));
 		}
@@ -115,26 +115,26 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen Adressbuch
 	 */
-	private Response generateResponseAddressbookLevel(Adressbuch adressbuch, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseAddressbookLevel(final Adressbuch adressbuch, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 		uriParameter.setResourceCollectionId(adressbuch.id);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			resourcetype.setCollection(new Collection());
 			resourcetype.setAddressbook(new CardAddressbook());
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Displayname.class)) {
-			Displayname displayname = new Displayname();
+			final Displayname displayname = new Displayname();
 			displayname.getContent().add(adressbuch.displayname);
 			prop200.setDisplayname(displayname);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(CurrentUserPrincipal.class)) {
-			CurrentUserPrincipal principal = new CurrentUserPrincipal();
+			final CurrentUserPrincipal principal = new CurrentUserPrincipal();
 			principal.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
 			prop200.setCurrentUserPrincipal(principal);
 		}
@@ -144,27 +144,27 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getctag.class)) {
-			Getctag getctag = new Getctag();
+			final Getctag getctag = new Getctag();
 			getctag.getContent().add(String.valueOf(adressbuch.synctoken));
 			prop200.setGetctag(getctag);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(SyncToken.class)) {
-			SyncToken syncToken = new SyncToken();
+			final SyncToken syncToken = new SyncToken();
 			syncToken.getContent().add(String.valueOf(adressbuch.synctoken));
 			prop200.setSyncToken(syncToken);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(SupportedAddressData.class)) {
-			SupportedAddressData supportedAddressData = new SupportedAddressData();
-			CardAddressDataType addressDataType = new CardAddressDataType();
+			final SupportedAddressData supportedAddressData = new SupportedAddressData();
+			final CardAddressDataType addressDataType = new CardAddressDataType();
 			addressDataType.setContentType("text/vcard");
 			addressDataType.setVersion("4.0");
 			supportedAddressData.getAddressDataTypes().add(addressDataType);
 			prop200.setSupportedAddressData(supportedAddressData);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getAddressbookUri(uriParameter));
 		return response;
 	}
@@ -178,20 +178,20 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen AdressbuchEintrag
 	 */
-	private Response generateResponseContactLevel(AdressbuchEintrag eintrag, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
-		Prop prop200 = new Prop();
+	private Response generateResponseContactLevel(final AdressbuchEintrag eintrag, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+		final Prop prop200 = new Prop();
 
 		uriParameter.setResourceCollectionId(eintrag.adressbuchId);
 		uriParameter.setResourceId(eintrag.id);
 
 		if (dynamicPropUtil.getIsFieldRequested(Resourcetype.class)) {
-			Resourcetype resourcetype = new Resourcetype();
+			final Resourcetype resourcetype = new Resourcetype();
 			prop200.setResourcetype(resourcetype);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getetag.class)) {
-			Getetag getetag = new Getetag();
+			final Getetag getetag = new Getetag();
 			/*
 			 * TODO: "Echten" Versions-E-Tag vergeben. Mit dem folgenden Code werden immer
 			 * alle Kontakte als "geändert" angesehen. Derzeit gibt es im SVWS-Datenmodell
@@ -199,7 +199,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 			 * geändert wurde oder nicht. Es ist ineffizient alle Kontakte immer als
 			 * "geändert" anzusehen.
 			 */
-			UUID uuid = UUID.randomUUID();
+			final UUID uuid = UUID.randomUUID();
 			getetag.getContent().add(uuid.toString());
 			prop200.setGetetag(getetag);
 		}
@@ -208,7 +208,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 			prop200.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getAddressEntryUri(uriParameter));
 		return response;
 	}

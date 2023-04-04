@@ -56,8 +56,8 @@ public class PutCalendarDispatcher extends DavDispatcher {
 	 * @return das aktuellste eTag des Servers nach aktualisieren (also die
 	 *         Versionsnummer) oder ein {@link Error}-Objekt im Fehlerfall
 	 */
-	public Object dispatchUpdate(InputStream inputStream, String ressourceCollectionId, String ressourceUID,
-			String eTag) {
+	public Object dispatchUpdate(final InputStream inputStream, final String ressourceCollectionId, final String ressourceUID,
+			final String eTag) {
 		return dispatchCreateOrUpdate(inputStream, ressourceCollectionId, ressourceUID, Optional.of(eTag));
 	}
 
@@ -72,7 +72,7 @@ public class PutCalendarDispatcher extends DavDispatcher {
 	 * @return das aktuellste eTag des Servers nach Erstellen (also die
 	 *         Versionsnummer) oder ein {@link Error}-Objekt im Fehlerfall
 	 */
-	public Object dispatchCreate(InputStream inputStream, String ressourceCollectionId, String ressourceUID) {
+	public Object dispatchCreate(final InputStream inputStream, final String ressourceCollectionId, final String ressourceUID) {
 		return dispatchCreateOrUpdate(inputStream, ressourceCollectionId, ressourceUID, Optional.empty());
 	}
 
@@ -92,21 +92,21 @@ public class PutCalendarDispatcher extends DavDispatcher {
 	 * @return das aktuellste eTag des Servers nach aktualisieren (also die
 	 *         Versionsnummer) oder ein {@link Error}-Objekt im Fehlerfall
 	 */
-	private Object dispatchCreateOrUpdate(InputStream inputStream, String ressourceCollectionId, String ressourceUID,
-			Optional<String> eTag) {
+	private Object dispatchCreateOrUpdate(final InputStream inputStream, final String ressourceCollectionId, final String ressourceUID,
+			final Optional<String> eTag) {
 		// iCalender Payload aus dem Request auslesen
 		// request content ist kein xml String, sondern direkt das .ics
 		uriParameter.setResourceCollectionId(ressourceCollectionId);
 		uriParameter.setResourceId(ressourceUID);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] buffer = new byte[2048];
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[2048];
 		try {
 			for (int length; (length = inputStream.read(buffer)) != -1;) {
 				bos.write(buffer, 0, length);
 			}
-			String vCalPayload = bos.toString(StandardCharsets.UTF_8);
-			VCalendar vCalendar = VCalendar.parse(vCalPayload);
-			KalenderEintrag updatedKalendereintrag = new KalenderEintrag();
+			final String vCalPayload = bos.toString(StandardCharsets.UTF_8);
+			final VCalendar vCalendar = VCalendar.parse(vCalPayload);
+			final KalenderEintrag updatedKalendereintrag = new KalenderEintrag();
 			updatedKalendereintrag.data = vCalPayload;
 			updatedKalendereintrag.kalenderId = ressourceCollectionId;
 			updatedKalendereintrag.uid = ressourceUID;
@@ -117,13 +117,13 @@ public class PutCalendarDispatcher extends DavDispatcher {
 			if (eTag.isPresent() && !eTag.get().isBlank()) {
 				updatedKalendereintrag.version = adjustETags(eTag.get());
 			}
-			KalenderEintrag saveKalenderEintrag = this.kalenderEintragRepository
+			final KalenderEintrag saveKalenderEintrag = this.kalenderEintragRepository
 					.saveKalenderEintrag(updatedKalendereintrag);
 			return new EntityTag(saveKalenderEintrag.version);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return ErrorCode.INTERNAL_SERVER_ERROR.getDavResponse(DavUriBuilder.getCalendarEntryUri(uriParameter))
 					.getError();
-		} catch (DavException e) {
+		} catch (final DavException e) {
 			// hier wird das ErrorObjekt zurückgegeben
 			return e.getDavResponse(DavUriBuilder.getCalendarEntryUri(uriParameter)).getError();
 		}

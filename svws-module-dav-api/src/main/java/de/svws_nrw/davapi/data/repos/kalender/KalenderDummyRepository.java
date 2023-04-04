@@ -13,9 +13,9 @@ import de.svws_nrw.davapi.data.IKalenderRepository;
 /**
  * Dummy Repository für prototypische Implementierung des
  * {@link IKalenderRepository}
- * 
+ *
  */
-public class KalenderDummyRepository implements IKalenderRepository {
+public final class KalenderDummyRepository implements IKalenderRepository {
 
 	private static final String DUMMY_KALENDER_ID = "dummy";
 
@@ -28,19 +28,19 @@ public class KalenderDummyRepository implements IKalenderRepository {
 	}
 
 	@Override
-	public Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params) {
-		Kalender dummyKalender = new Kalender();
+	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
+		final Kalender dummyKalender = new Kalender();
 		dummyKalender.kalenderTyp = "GENERIERT";
 		dummyKalender.beschreibung = "Ein Dummy-Kalender";
 		dummyKalender.id = DUMMY_KALENDER_ID;
 		dummyKalender.displayname = "Dummy-Kalender";
 
-		KalenderEintrag eintrag123 = new KalenderEintrag();
+		final KalenderEintrag eintrag123 = new KalenderEintrag();
 		eintrag123.uid = "123";
 		eintrag123.kalenderId = DUMMY_KALENDER_ID;
 		eintrag123.version = UUID.randomUUID().toString();
 
-		KalenderEintrag eintrag456 = new KalenderEintrag();
+		final KalenderEintrag eintrag456 = new KalenderEintrag();
 		eintrag456.uid = "456";
 		eintrag456.kalenderId = DUMMY_KALENDER_ID;
 		eintrag456.version = UUID.randomUUID().toString();
@@ -52,17 +52,17 @@ public class KalenderDummyRepository implements IKalenderRepository {
 	}
 
 	@Override
-	public List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params) {
-		Optional<Kalender> kalenderById = this.getKalenderById(DUMMY_KALENDER_ID, null);
+	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
+		final Optional<Kalender> kalenderById = this.getKalenderById(DUMMY_KALENDER_ID, null);
 		if (kalenderById.isPresent()) {
-			Kalender dummyKalender = kalenderById.get();
+			final Kalender dummyKalender = kalenderById.get();
 			return List.of(dummyKalender);
 		}
 		return List.of();
 	}
 
 	@Override
-	public List<String> getDeletedResourceUIDsSince(String kalenderId, Long syncTokenMillis) {
+	public List<String> getDeletedResourceUIDsSince(final String kalenderId, final Long syncTokenMillis) {
 		return new ArrayList<>();
 	}
 }

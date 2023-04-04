@@ -7,7 +7,7 @@ package de.svws_nrw.davapi.data;
  * Kombinationen aus Parametern genutzt werden.
  *
  */
-public class CollectionRessourceQueryParameters {
+public final class CollectionRessourceQueryParameters {
 
 	/**
 	 * Parameter bestimmt, ob die angefragten Adressbuecher die Adressbucheinträge
@@ -39,15 +39,15 @@ public class CollectionRessourceQueryParameters {
 
 	/**
 	 * Privater Konstruktor
-	 * 
-	 * @param includeEintraege
+	 *
+	 * @param includeRessources
 	 * @param includeEintragIDs
 	 * @param includeEintragUIDs
 	 * @param includeEintragPayload
 	 * @param includeVersion
 	 */
-	private CollectionRessourceQueryParameters(boolean includeRessources, boolean includeEintragIDs,
-			boolean includeEintragUIDs, boolean includeEintragPayload, boolean includeVersion) {
+	private CollectionRessourceQueryParameters(final boolean includeRessources, final boolean includeEintragIDs,
+			final boolean includeEintragUIDs, final boolean includeEintragPayload, final boolean includeVersion) {
 		super();
 		this.includeRessources = includeRessources;
 		this.includeEintragIDs = includeEintragIDs;

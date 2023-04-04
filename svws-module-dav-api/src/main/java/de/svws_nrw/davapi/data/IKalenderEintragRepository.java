@@ -7,7 +7,6 @@ import de.svws_nrw.davapi.data.repos.dav.DavException;
 
 /**
  * Interface Definition für Repositories von Kalendereinträgen.
- * 
  */
 public interface IKalenderEintragRepository {
 

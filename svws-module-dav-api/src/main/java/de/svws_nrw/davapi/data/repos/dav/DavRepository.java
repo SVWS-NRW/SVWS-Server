@@ -33,39 +33,39 @@ import jakarta.persistence.TypedQuery;
  * Datenbankverbindung für Ressourcensammlungen, Berechtigungen auf
  * Ressourcensammlungen und Ressourcen
  */
-public class DavRepository implements IDavRepository {
+public final class DavRepository implements IDavRepository {
 
 	/** der zu verwendende {@link DBEntityManager} */
-	private DBEntityManager conn;
-	private Benutzer user;
+	private final DBEntityManager conn;
+	private final Benutzer user;
 
 	/**
 	 * Konstruktor mit dem zu verwendenden {@link DBEntityManager}
-	 * 
+	 *
 	 * @param conn der {@link DBEntityManager}
 	 */
-	public DavRepository(DBEntityManager conn) {
+	public DavRepository(final DBEntityManager conn) {
 		this.conn = conn;
 		this.user = conn.getUser();
 	}
 
 	@Override
-	public Collection<DavRessourceCollection> getDavRessourceCollections(DavRessourceCollectionTyp... typen) {
+	public Collection<DavRessourceCollection> getDavRessourceCollections(final DavRessourceCollectionTyp... typen) {
 		return getReadableDavRessourceCollections().stream()
 				.filter(c -> Arrays.stream(typen).anyMatch(typ -> c.typ == typ)).toList();
 	}
 
 	@Override
-	public Collection<DavRessourceCollection> getDavRessourceCollections(Collection<Long> ressourceCollectionIds) {
+	public Collection<DavRessourceCollection> getDavRessourceCollections(final Collection<Long> ressourceCollectionIds) {
 		return getReadableDavRessourceCollections().stream().filter(dto -> ressourceCollectionIds.contains(dto.id))
 				.toList();
 	}
 
 	@Override
-	public Collection<DavRessource> getDavRessources(Collection<Long> ressourceCollectionIds,
-			CollectionRessourceQueryParameters parameters) {
+	public Collection<DavRessource> getDavRessources(final Collection<Long> ressourceCollectionIds,
+			final CollectionRessourceQueryParameters parameters) {
 		// filter für angefragte IDs nach denen, die gelesen werden dürfen
-		Map<Long, DavRessourceCollectionACLPermissions> readableCollectionACLPermissionsByCollectionId = getReadableCollectionPermissionsById()
+		final Map<Long, DavRessourceCollectionACLPermissions> readableCollectionACLPermissionsByCollectionId = getReadableCollectionPermissionsById()
 				.entrySet().stream().filter(e -> ressourceCollectionIds.contains(e.getKey()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		if (readableCollectionACLPermissionsByCollectionId.isEmpty()) {
@@ -80,7 +80,7 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public Optional<DavRessourceCollection> upsertDavRessourceCollection(DavRessourceCollection davRessourceCollection)
+	public Optional<DavRessourceCollection> upsertDavRessourceCollection(final DavRessourceCollection davRessourceCollection)
 			throws DavException {
 		if (allowUpsertCollection(davRessourceCollection)) {
 			// nur admins dürfen Sammlungen anlegen, besitzer dürfen vorhandene Sammlungen
@@ -88,11 +88,11 @@ public class DavRepository implements IDavRepository {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		DTODavRessourceCollection dtoCollection;
-		String currentSynctoken = getNewSyncTokenTimestampAsString();
+		final String currentSynctoken = getNewSyncTokenTimestampAsString();
 		conn.transactionBegin();
 		boolean aclEntryNeeded = false;
 		if (davRessourceCollection.id == null) {
-			Long id = getNextId("DavRessourceCollections");
+			final Long id = getNextId("DavRessourceCollections");
 			dtoCollection = new DTODavRessourceCollection(davRessourceCollection.besitzer, id,
 					davRessourceCollection.typ, davRessourceCollection.anzeigename, currentSynctoken);
 			dtoCollection.Beschreibung = davRessourceCollection.beschreibung;
@@ -123,14 +123,14 @@ public class DavRepository implements IDavRepository {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,
+		final DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,
 				dtoCollection.ID, davRessourceCollection.besitzer);
 		if (aclEntryNeeded) {
 			// für neuangelegte Collection wird ein initialer ACL-Eintrag für den besitzer
 			// benötigt
-			Long id = getNextId("DavRessourceCollectionsACL");
+			final Long id = getNextId("DavRessourceCollectionsACL");
 
-			DTODavRessourceCollectionsACL acl = new DTODavRessourceCollectionsACL(id, davRessourceCollection.besitzer,
+			final DTODavRessourceCollectionsACL acl = new DTODavRessourceCollectionsACL(id, davRessourceCollection.besitzer,
 					dtoCollection.ID, permissions.toPermissionString());
 			if (!conn.transactionPersist(acl)) {
 				conn.transactionRollback();
@@ -143,13 +143,13 @@ public class DavRepository implements IDavRepository {
 
 	/**
 	 * sucht die nächste id für den gegebenen Tabellennamen
-	 * 
+	 *
 	 * @param tableName der Tabellenname
 	 * @return 1, wenn die Tabelle in {@link DTODBAutoInkremente} noch nicht
 	 *         auftaucht, ansonsten die nächsthöhere ID
 	 */
-	private Long getNextId(String tableName) {
-		DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, tableName);
+	private Long getNextId(final String tableName) {
+		final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, tableName);
 		return lastID == null ? 1 : lastID.MaxID + 1;
 	}
 
@@ -158,11 +158,11 @@ public class DavRepository implements IDavRepository {
 	 * (aktualisieren oder einfügen) darf. Nutzer dürfen ihre eigene Sammlung
 	 * bearbeiten, sofern sie die {@link BenutzerKompetenz} für eigene Kalender
 	 * haben, Admins dürfen alle Kalender bearbeiten und neue anlegen
-	 * 
+	 *
 	 * @param davRessourceCollection die Sammlung
 	 * @return ob der Nutzer die Sammlung bearbeiten darf
 	 */
-	private boolean allowUpsertCollection(DavRessourceCollection davRessourceCollection) {
+	private boolean allowUpsertCollection(final DavRessourceCollection davRessourceCollection) {
 		return !user.istAdmin() && !(user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)
 				&& user.getId().equals(davRessourceCollection.besitzer) && davRessourceCollection.id != null);
 	}
@@ -170,25 +170,25 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * Erstellt ein neues Synctoken für den aktuellen Zeitpunkt als
 	 * SQL-Timestamp-String
-	 * 
+	 *
 	 * @return das aktuelle Synctoken
 	 */
 	public String getNewSyncTokenTimestampAsString() {
-		long now = Instant.now().toEpochMilli();
+		final long now = Instant.now().toEpochMilli();
 		return DatumUhrzeitConverter.instance.convertToEntityAttribute(new Timestamp(now));
 	}
 
 	@Override
-	public Optional<DavRessource> upsertDavRessource(DavRessource davRessource) throws DavException {
-		Optional<DavRessourceCollectionACLPermissions> optionalCollectionPermissions = isWritableCollection(
+	public Optional<DavRessource> upsertDavRessource(final DavRessource davRessource) throws DavException {
+		final Optional<DavRessourceCollectionACLPermissions> optionalCollectionPermissions = isWritableCollection(
 				davRessource.ressourceCollectionId);
 		if (optionalCollectionPermissions.isEmpty()) {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
-		String currentSynctoken = getNewSyncTokenTimestampAsString();
+		final String currentSynctoken = getNewSyncTokenTimestampAsString();
 		DTODavRessource dtoDavRessource;
 		conn.transactionBegin();
-		List<DTODavRessource> davRessourcesWithSameUID = conn
+		final List<DTODavRessource> davRessourcesWithSameUID = conn
 				.queryNamed("DTODavRessource.davressourcecollection_id", davRessource.ressourceCollectionId,
 						DTODavRessource.class)
 				.stream().filter(r -> r.geloeschtam == null && r.UID.equals(davRessource.uid)).toList();
@@ -196,7 +196,7 @@ public class DavRepository implements IDavRepository {
 			davRessource.id = davRessourcesWithSameUID.get(0).ID;
 		}
 		if (davRessource.id == null) {
-			Long id = getNextId("DavRessources");
+			final Long id = getNextId("DavRessources");
 
 			dtoDavRessource = new DTODavRessource(id, davRessource.ressourceCollectionId, davRessource.uid,
 					currentSynctoken, davRessource.kalenderTyp, davRessource.kalenderStart, davRessource.kalenderEnde,
@@ -228,16 +228,16 @@ public class DavRepository implements IDavRepository {
 
 	@Override
 	public Optional<DavRessourceCollectionACLPermissions> upsertDavRessourceCollectionACLPermissions(
-			DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions) throws DavException {
+			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions) throws DavException {
 		// user dürfen nur ACLs für eigene RessourceCollections ändern
 		conn.transactionBegin();
-		DTODavRessourceCollection dtoDavRessourceCollection = conn.queryByKey(DTODavRessourceCollection.class,
+		final DTODavRessourceCollection dtoDavRessourceCollection = conn.queryByKey(DTODavRessourceCollection.class,
 				davRessourceCollectionACLPermissions.getRessourceCollectionId());
 		if (!user.istAdmin() && !dtoDavRessourceCollection.Benutzer_ID.equals(user.getId())) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
-		List<DTODavRessourceCollectionsACL> dtoACLs = conn
+		final List<DTODavRessourceCollectionsACL> dtoACLs = conn
 				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", dtoDavRessourceCollection.ID,
 						DTODavRessourceCollectionsACL.class)
 				.stream().filter(dto -> dto.Benutzer_ID.equals(conn.getUser().getId())).toList();
@@ -247,8 +247,8 @@ public class DavRepository implements IDavRepository {
 			dtoACL.berechtigungen = davRessourceCollectionACLPermissions.toPermissionString();
 		} else {
 
-			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
-			Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
+			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 			dtoACL = new DTODavRessourceCollectionsACL(id, davRessourceCollectionACLPermissions.getBenutzerId(),
 					davRessourceCollectionACLPermissions.getRessourceCollectionId(),
@@ -263,9 +263,9 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public boolean deleteRessourceCollectionIfUpToDate(long id, long syncToken) throws DavException {
+	public boolean deleteRessourceCollectionIfUpToDate(final long id, final long syncToken) throws DavException {
 		conn.transactionBegin();
-		DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, id);
+		final DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, id);
 		if (queryByKey == null) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
@@ -279,7 +279,7 @@ public class DavRepository implements IDavRepository {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
-		String newSyncTokenTimestampAsString = getNewSyncTokenTimestampAsString();
+		final String newSyncTokenTimestampAsString = getNewSyncTokenTimestampAsString();
 		queryByKey.geloeschtam = newSyncTokenTimestampAsString;
 		queryByKey.SyncToken = newSyncTokenTimestampAsString;
 		if (!conn.transactionPersist(queryByKey)) {
@@ -291,25 +291,25 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public boolean deleteRessourceIfUpToDate(long collectionId, String ressourceUID, Long ifMatchToken)
+	public boolean deleteRessourceIfUpToDate(final long collectionId, final String ressourceUID, final Long ifMatchToken)
 			throws DavException {
 		if (!isWritableCollection(collectionId).isPresent()) {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		conn.transactionBegin();
-		List<DTODavRessource> listDavRessourcesSameUID = conn
+		final List<DTODavRessource> listDavRessourcesSameUID = conn
 				.queryNamed("DTODavRessource.davressourcecollection_id", collectionId, DTODavRessource.class).stream()
 				.filter(r -> r.UID.equals(ressourceUID)).toList();
 		if (listDavRessourcesSameUID.size() != 1 || listDavRessourcesSameUID.get(0).geloeschtam != null) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
 		}
-		DTODavRessource resourceToDelete = listDavRessourcesSameUID.get(0);
+		final DTODavRessource resourceToDelete = listDavRessourcesSameUID.get(0);
 		if (DateTimeUtil.getTimeInMillis(resourceToDelete.lastModified) != ifMatchToken) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.CONFLICT);
 		}
-		String newSyncTokenTimestampAsString = getNewSyncTokenTimestampAsString();
+		final String newSyncTokenTimestampAsString = getNewSyncTokenTimestampAsString();
 		resourceToDelete.geloeschtam = newSyncTokenTimestampAsString;
 		resourceToDelete.lastModified = newSyncTokenTimestampAsString;
 		if (!conn.transactionPersist(resourceToDelete)) {
@@ -320,25 +320,25 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public boolean deleteRessourceCollectionACL(long collectionId, long benutzerId) throws DavException {
+	public boolean deleteRessourceCollectionACL(final long collectionId, final long benutzerId) throws DavException {
 		if (!user.istAdmin() && !user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		conn.transactionBegin();
-		TypedQuery<DTODavRessourceCollection> queryRessourceCollection = conn.query(
+		final TypedQuery<DTODavRessourceCollection> queryRessourceCollection = conn.query(
 				"SELECT c FROM DTODavRessourceCollection c WHERE c.ID = :collectionID",
 				DTODavRessourceCollection.class);
-		List<DTODavRessourceCollection> ressourceCollections = queryRessourceCollection.getResultList();
+		final List<DTODavRessourceCollection> ressourceCollections = queryRessourceCollection.getResultList();
 		if (ressourceCollections.size() != 1) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
 		}
-		TypedQuery<DTODavRessourceCollectionsACL> queryACLs = conn.query(
+		final TypedQuery<DTODavRessourceCollectionsACL> queryACLs = conn.query(
 				"SELECT acl FROM DTODavRessourceCollectionACL acl WHERE acl.Benutzer_ID = :benutzerid AND acl.ressourcecollection_id = :ressourceCollectionID",
 				DTODavRessourceCollectionsACL.class);
 		queryACLs.setParameter("benutzerid", benutzerId);
 		queryACLs.setParameter("ressourceCollectionID", collectionId);
-		List<DTODavRessourceCollectionsACL> relevantACLEntries = queryACLs.getResultList();
+		final List<DTODavRessourceCollectionsACL> relevantACLEntries = queryACLs.getResultList();
 		if (relevantACLEntries.size() != 1) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.NOT_FOUND);
@@ -352,23 +352,23 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public void tryCreateOwnedCollectionIfNotExists(DavRessourceCollectionTyp typ) {
+	public void tryCreateOwnedCollectionIfNotExists(final DavRessourceCollectionTyp typ) {
 		// das prüfen auf vorhandensein und erstellen eines eigenen Kalenders muss in
 		// einer transaktion geschehen
 		conn.transactionBegin();
-		TypedQuery<DTODavRessourceCollection> query = conn.query(
+		final TypedQuery<DTODavRessourceCollection> query = conn.query(
 				"SELECT c FROM DTODavRessourceCollection c WHERE c.Benutzer_ID = :nutzer_id AND c.Typ = :typ AND c.geloeschtam IS NULL",
 				DTODavRessourceCollection.class);
 		query.setParameter("nutzer_id", user.getId());
 		query.setParameter("typ", typ);
-		List<DTODavRessourceCollection> resultList = query.getResultList();
+		final List<DTODavRessourceCollection> resultList = query.getResultList();
 		if (!resultList.isEmpty()) {
 			return;
 		}
 		// keine eigene Collection vom Typ vorhanden, also anlegen
 
-		DTODBAutoInkremente lastCollectionsID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollections");
-		DTODavRessourceCollection eigenerKalender = new DTODavRessourceCollection(user.getId(),
+		final DTODBAutoInkremente lastCollectionsID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollections");
+		final DTODavRessourceCollection eigenerKalender = new DTODavRessourceCollection(user.getId(),
 				lastCollectionsID == null ? 1 : lastCollectionsID.MaxID + 1, typ, "Eigener Kalender",
 				getNewSyncTokenTimestampAsString());
 		eigenerKalender.Beschreibung = "Ein eigener Kalender mit Lese- und Schreibrechten für Sie.";
@@ -377,12 +377,12 @@ public class DavRepository implements IDavRepository {
 			return;
 		}
 
-		DTODBAutoInkremente lastACLID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
-		Long newAclID = lastACLID == null ? 1 : lastACLID.MaxID + 1;
+		final DTODBAutoInkremente lastACLID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
+		final Long newAclID = lastACLID == null ? 1 : lastACLID.MaxID + 1;
 
-		DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,
+		final DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,
 				eigenerKalender.ID, user.getId());
-		DTODavRessourceCollectionsACL acl = new DTODavRessourceCollectionsACL(newAclID, user.getId(),
+		final DTODavRessourceCollectionsACL acl = new DTODavRessourceCollectionsACL(newAclID, user.getId(),
 				eigenerKalender.ID, permissions.toPermissionString());
 		if (!conn.transactionPersist(acl)) {
 			conn.transactionRollback();
@@ -393,7 +393,7 @@ public class DavRepository implements IDavRepository {
 	}
 
 	@Override
-	public List<String> getDeletedResourceUIDsSince(Long collectionId, Long syncTokenMillis) {
+	public List<String> getDeletedResourceUIDsSince(final Long collectionId, final Long syncTokenMillis) {
 		return conn.queryNamed("DTODavRessource.davressourcecollection_id", collectionId, DTODavRessource.class)
 				.stream()
 				.filter(dto -> dto.geloeschtam != null
@@ -404,7 +404,7 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * mappt eine gegebene Ressource aus dem Datenbankformat in eine vereinfachte
 	 * Repräsentation abhängig von gegebenen Query-Parametern
-	 * 
+	 *
 	 * @param dto         das Datenbankobjekt
 	 * @param parameters  die Parameter der Abfrage um unnötiges setzen von Daten zu
 	 *                    vermeiden
@@ -412,9 +412,9 @@ public class DavRepository implements IDavRepository {
 	 *                    Ressourec
 	 * @return die DavRessource ergänzt um Berechtigungen
 	 */
-	private static DavRessource mapDTODavRessource(DTODavRessource dto, CollectionRessourceQueryParameters parameters,
-			DavRessourceCollectionACLPermissions permissions) {
-		DavRessource r = new DavRessource();
+	private static DavRessource mapDTODavRessource(final DTODavRessource dto, final CollectionRessourceQueryParameters parameters,
+			final DavRessourceCollectionACLPermissions permissions) {
+		final DavRessource r = new DavRessource();
 
 		r.ressourceCollectionId = dto.DavRessourceCollection_ID;
 		r.id = dto.ID;
@@ -434,16 +434,16 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * mappt eine Ressourcensammlung aus dem Datenbankformat in eine vereinfachte
 	 * Repräsentation
-	 * 
+	 *
 	 * @param dto                                  das Datenbankobjekt
 	 * @param davRessourceCollectionACLPermissions die Berechtigungen des
 	 *                                             angemeldeten Nutzers
 	 * @return eine vereinfachte Repräsentation des Datenbankobjekts ergänzt um die
 	 *         Berechtigungen
 	 */
-	private static DavRessourceCollection mapDTODavRessourceCollection(DTODavRessourceCollection dto,
-			DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions) {
-		DavRessourceCollection c = new DavRessourceCollection();
+	private static DavRessourceCollection mapDTODavRessourceCollection(final DTODavRessourceCollection dto,
+			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions) {
+		final DavRessourceCollection c = new DavRessourceCollection();
 		c.anzeigename = dto.Anzeigename;
 		c.beschreibung = dto.Beschreibung;
 		c.id = dto.ID;
@@ -457,11 +457,11 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * liest die Ressourcensammlungen für die der Nutzer zumindest Leserecht hat aus
 	 * der Datenbank
-	 * 
+	 *
 	 * @return eine Liste der Ressourcensammlungen
 	 */
 	private Collection<DavRessourceCollection> getReadableDavRessourceCollections() {
-		Map<Long, DavRessourceCollectionACLPermissions> readableCollectionPermissionsById = getReadableCollectionPermissionsById();
+		final Map<Long, DavRessourceCollectionACLPermissions> readableCollectionPermissionsById = getReadableCollectionPermissionsById();
 		if (readableCollectionPermissionsById.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -474,17 +474,17 @@ public class DavRepository implements IDavRepository {
 
 	/**
 	 * Liest alle Leserechte des aktuellen Nutzers aus der Datenbank
-	 * 
+	 *
 	 * @return die Berechtigungen des aktuellen Nutzers gemappt auf die ID der
 	 *         Ressourcensammlung
 	 */
 	private Map<Long, DavRessourceCollectionACLPermissions> getReadableCollectionPermissionsById() {
 		// suche alle ACL-Einträge für den Benutzer
-		List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionsACLs = conn.queryNamed(
+		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionsACLs = conn.queryNamed(
 				"DTODavRessourceCollectionsACL.benutzer_id", user.getId(), DTODavRessourceCollectionsACL.class);
-		Map<Long, DavRessourceCollectionACLPermissions> readableCollectionPermissionsById = new HashMap<>();
-		for (DTODavRessourceCollectionsACL dtoCollectionsACL : dtoDavRessourceCollectionsACLs) {
-			DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(
+		final Map<Long, DavRessourceCollectionACLPermissions> readableCollectionPermissionsById = new HashMap<>();
+		for (final DTODavRessourceCollectionsACL dtoCollectionsACL : dtoDavRessourceCollectionsACLs) {
+			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(
 					dtoCollectionsACL.berechtigungen, dtoCollectionsACL.RessourceCollection_ID,
 					dtoCollectionsACL.Benutzer_ID);
 			if (davRessourceCollectionACLPermissions.darfLesen()) {
@@ -498,25 +498,25 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * prüft, ob der angemeldete Nutzer Schreibrecht auf der durch die ID gegebenen
 	 * Ressourcensammlung hat
-	 * 
+	 *
 	 * @param ressourceCollectionId die id der Ressourcensammlung
 	 * @return das Berechtigungsobjekt, sofern gefunden
 	 */
-	private Optional<DavRessourceCollectionACLPermissions> isWritableCollection(Long ressourceCollectionId) {
-		DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, ressourceCollectionId);
+	private Optional<DavRessourceCollectionACLPermissions> isWritableCollection(final Long ressourceCollectionId) {
+		final DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, ressourceCollectionId);
 		if (queryByKey != null && queryByKey.geloeschtam != null
 				&& (user.getId().equals(queryByKey.Benutzer_ID) || user.istAdmin())) {
 			// besitzer und admin dürfen schreiben
 			return Optional.of(new DavRessourceCollectionACLPermissions(true, true, ressourceCollectionId,
 					queryByKey.Benutzer_ID));
 		}
-		List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionACLs = conn
+		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionACLs = conn
 				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", ressourceCollectionId,
 						DTODavRessourceCollectionsACL.class)
 				.stream().filter(dto -> dto.Benutzer_ID.equals(conn.getUser().getId())).toList();
 		if (dtoDavRessourceCollectionACLs.size() == 1) {
-			DTODavRessourceCollectionsACL dtoDavRessourceCollectionsACL = dtoDavRessourceCollectionACLs.get(0);
-			DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(
+			final DTODavRessourceCollectionsACL dtoDavRessourceCollectionsACL = dtoDavRessourceCollectionACLs.get(0);
+			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(
 					dtoDavRessourceCollectionsACL.berechtigungen, dtoDavRessourceCollectionsACL.RessourceCollection_ID,
 					dtoDavRessourceCollectionsACL.Benutzer_ID);
 			if (davRessourceCollectionACLPermissions.darfLesen()
@@ -530,18 +530,18 @@ public class DavRepository implements IDavRepository {
 	/**
 	 * schließt eine Transaktion ab und aktualisiert das Synctoken an der
 	 * betroffenen Ressourcensammlung
-	 * 
+	 *
 	 * @param collectionId die Ressourcensammlung
 	 * @param syncToken    das Synctoken
 	 * @return true, falls die Transaktion erfolgreich abgeschlossen wurde
 	 * @throws DavException falls die Transaktion nicht erfolgreich abgeschlossen
 	 *                      wurde
 	 */
-	private boolean finishTransactionUpdateCollectionSynctoken(long collectionId, String syncToken)
+	private boolean finishTransactionUpdateCollectionSynctoken(final long collectionId, final String syncToken)
 			throws DavException {
-		DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, collectionId);
+		final DTODavRessourceCollection queryByKey = conn.queryByKey(DTODavRessourceCollection.class, collectionId);
 		queryByKey.SyncToken = syncToken;
-		boolean transactionPersist = conn.transactionPersist(queryByKey);
+		final boolean transactionPersist = conn.transactionPersist(queryByKey);
 		if (!transactionPersist) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.INTERNAL_SERVER_ERROR);

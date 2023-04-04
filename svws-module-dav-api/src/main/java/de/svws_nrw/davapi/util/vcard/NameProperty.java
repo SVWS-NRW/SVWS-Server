@@ -9,13 +9,13 @@ import java.util.Vector;
  * Beispiel:<br>
  * {@code N:Public;John;Quinlan;Mr.;Esq.} <br>
  * {@code N:Stevenson;John;Philip,Paul;Dr.;Jr.,M.D.,A.C.P.}
- * 
+ *
  * @see <a href=
  *      "https://datatracker.ietf.org/doc/html/rfc2426#section-3.1.2">RFC N Type
  *      Definition</a>
  *
  */
-public class NameProperty implements VCardProperty {
+public final class NameProperty implements VCardProperty {
 
 	/**
 	 * Default Konstruktor für ein NameProperty
@@ -48,15 +48,15 @@ public class NameProperty implements VCardProperty {
 	/**
 	 * Liste von Ehrentiteln/Namensprefixen, bspw. {'Dr.','Dipl.-Ing.'}
 	 */
-	private List<String> honorificPrefixes = new Vector<>();
+	private final List<String> honorificPrefixes = new Vector<>();
 	/**
 	 * Liste von Ehrentiteln/Namenssuffixen, bspw: 'MBA'
 	 */
-	private List<String> honorificSuffixes = new Vector<>();
+	private final List<String> honorificSuffixes = new Vector<>();
 	/**
 	 * Liste weiterer Vornamen
 	 */
-	private List<String> additionalNames = new Vector<>();
+	private final List<String> additionalNames = new Vector<>();
 
 	@Override
 	public String getType() {
@@ -64,12 +64,12 @@ public class NameProperty implements VCardProperty {
 	}
 
 	@Override
-	public void serializeType(StringBuilder sb) {
+	public void serializeType(final StringBuilder sb) {
 		sb.append(TYPE);
 	}
 
 	@Override
-	public void serializeProperty(StringBuilder sb) {
+	public void serializeProperty(final StringBuilder sb) {
 		sb.append(familyName);
 		sb.append(SEQUENCE_ELEMENT_SEPARATOR);
 		sb.append(givenName);
@@ -83,7 +83,7 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * getter für den Familienname
-	 * 
+	 *
 	 * @return der Familienname
 	 */
 	public String getFamilyName() {
@@ -92,16 +92,16 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * setter für den Familienname
-	 * 
+	 *
 	 * @param familyName der Familienname
 	 */
-	public void setFamilyName(String familyName) {
+	public void setFamilyName(final String familyName) {
 		this.familyName = familyName;
 	}
 
 	/**
 	 * Getter für den Rufname
-	 * 
+	 *
 	 * @return der Rufname
 	 */
 	public String getGivenName() {
@@ -110,16 +110,16 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * setter für den Rufname
-	 * 
+	 *
 	 * @param givenName der Rufname
 	 */
-	public void setGivenName(String givenName) {
+	public void setGivenName(final String givenName) {
 		this.givenName = givenName;
 	}
 
 	/**
 	 * getter für die Liste an Präfixtiteln (bspw Dr.)
-	 * 
+	 *
 	 * @return die Liste an Präfixtiteln
 	 */
 	public List<String> getHonorificPrefixes() {
@@ -128,7 +128,7 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * setter für die Liste an Suffixtiteln (bspw MBA)
-	 * 
+	 *
 	 * @return die Liste an Suffixtiteln
 	 */
 	public List<String> getHonorificSuffixes() {
@@ -137,7 +137,7 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * getter für die Liste mit zusätzlichen Vornamen
-	 * 
+	 *
 	 * @return die Liste mit zusätzlichen Vornamen
 	 */
 	public List<String> getAdditionalNames() {
@@ -146,9 +146,12 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * Hilfsmethode zum zufügen von Listen
+	 *
+	 * @param names
+	 * @param sb
 	 */
-	private static void appendMultiple(List<String> names, StringBuilder sb) {
-		Iterator<String> iter = names.iterator();
+	private static void appendMultiple(final List<String> names, final StringBuilder sb) {
+		final Iterator<String> iter = names.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
 			if (iter.hasNext()) {
@@ -159,12 +162,12 @@ public class NameProperty implements VCardProperty {
 
 	/**
 	 * Erzeugt den Fullname aus diesem Namen
-	 * 
+	 *
 	 * @return das Fullname Property passend zu diesem NameProperty
 	 */
 	public FullnameProperty toFullnameProperty() {
-		StringBuilder sb = new StringBuilder();
-		Iterator<String> iter = honorificPrefixes.iterator();
+		final StringBuilder sb = new StringBuilder();
+		final Iterator<String> iter = honorificPrefixes.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());
 			sb.append(PFX_SEQUENCE_SEPERATOR);
@@ -174,4 +177,5 @@ public class NameProperty implements VCardProperty {
 		sb.append(familyName);
 		return new FullnameProperty(sb.toString());
 	}
+
 }

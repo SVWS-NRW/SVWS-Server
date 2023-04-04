@@ -34,20 +34,20 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
  * mit Kategorien ergänzt werden.
  *
  */
-public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepository {
+public final class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepository {
 	/**
 	 * die Datenbankverbindung
 	 */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 	/**
 	 * der aktuelle Schuljahresabschnitt
 	 */
-	private DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt;
+	private final DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt;
 	/**
 	 * Utility zum Erzeugen von Adressbuchkategorien
 	 */
-	private AdressbuchKategorienUtil kategorienUtil;
-	
+	private final AdressbuchKategorienUtil kategorienUtil;
+
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
 	 *
@@ -57,33 +57,33 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * @param aktuellerSchuljahresabschnitt der aktuelle Schuljahresabschnitt für
 	 *                                      weitere Queries
 	 */
-	public ErzieherWithCategoriesRepository(DBEntityManager conn, 
-			DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, AdressbuchKategorienUtil kategorienUtil) {
+	public ErzieherWithCategoriesRepository(final DBEntityManager conn,
+			final DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, final AdressbuchKategorienUtil kategorienUtil) {
 		this.conn = conn;
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.kategorienUtil = kategorienUtil;
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, CollectionRessourceQueryParameters params) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId, final CollectionRessourceQueryParameters params) {
 		if (!params.includeRessources
 				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.ADRESSDATEN_ERZIEHER_ANSEHEN)) {
 			return new ArrayList<>();
 		}
 
-		List<DTOSchueler> filteredDtoSchuelers = conn.queryNamed("DTOSchueler.all", DTOSchueler.class).getResultStream()
+		final List<DTOSchueler> filteredDtoSchuelers = conn.queryNamed("DTOSchueler.all", DTOSchueler.class).getResultStream()
 				.filter(SCHUELER_FILTER).toList();
-		Map<Long, DTOSchueler> schuelerBySchuelerIds = filteredDtoSchuelers.stream()
+		final Map<Long, DTOSchueler> schuelerBySchuelerIds = filteredDtoSchuelers.stream()
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
-		List<DTOSchuelerErzieherAdresse> dtoSchuelerErzieherAdresseResult = conn.queryNamed(
+		final List<DTOSchuelerErzieherAdresse> dtoSchuelerErzieherAdresseResult = conn.queryNamed(
 				"DTOSchuelerErzieherAdresse.schueler_id.multiple",
 				filteredDtoSchuelers.stream().map(s -> s.ID).toList(), DTOSchuelerErzieherAdresse.class);
-		Map<Long, DTOSchuelerErzieherAdresse> erzieherBySchuelerID = new HashMap<>();
+		final Map<Long, DTOSchuelerErzieherAdresse> erzieherBySchuelerID = new HashMap<>();
 		for (DTOSchuelerErzieherAdresse schuelerErzAdresse : dtoSchuelerErzieherAdresseResult) {
 			// map schuelerErzAdressen zu ihren SchuelerIDs, jeweils nur der Eintrag mit der höchsten
 			// Sortierung
 			if (erzieherBySchuelerID.containsKey(schuelerErzAdresse.Schueler_ID)) {
-				DTOSchuelerErzieherAdresse dtoSchuelerErzieherAdresse = erzieherBySchuelerID
+				final DTOSchuelerErzieherAdresse dtoSchuelerErzieherAdresse = erzieherBySchuelerID
 						.get(schuelerErzAdresse.Schueler_ID);
 				if (schuelerErzAdresse.Sortierung < dtoSchuelerErzieherAdresse.Sortierung) {
 					schuelerErzAdresse = dtoSchuelerErzieherAdresse;
@@ -93,26 +93,26 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 		}
 		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return erzieherBySchuelerID.values().stream().map(e -> {
-				AdressbuchEintrag a = new AdressbuchEintrag();
+				final AdressbuchEintrag a = new AdressbuchEintrag();
 				a.id = IAdressbuchKontaktRepository.createErzieherId(e.ID);
 				return a;
 			}).toList();
 		}
 
 
-		Set<Long> ortIds = filteredDtoSchuelers.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
+		final Set<Long> ortIds = filteredDtoSchuelers.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
 		ortIds.addAll(erzieherBySchuelerID.values().stream().map(e -> e.ErzOrt_ID).collect(Collectors.toSet()));
 
-		Map<Long, DTOOrt> ortByOrtID = IAdressbuchKontaktRepository.queryOrteByOrtIds(ortIds, conn);
-		Map<Long, List<Telefonnummer>> telefonnummerBySchuelerId = SchuelerWithCategoriesRepository
+		final Map<Long, DTOOrt> ortByOrtID = IAdressbuchKontaktRepository.queryOrteByOrtIds(ortIds, conn);
+		final Map<Long, List<Telefonnummer>> telefonnummerBySchuelerId = SchuelerWithCategoriesRepository
 				.queryTelefonNummernBySchuelerIds(schuelerBySchuelerIds.keySet(), conn);
 
-		Map<Long, SchuelerStatus> schuelerStatusById = filteredDtoSchuelers.stream()
+		final Map<Long, SchuelerStatus> schuelerStatusById = filteredDtoSchuelers.stream()
 				.collect(Collectors.toMap(s -> s.ID, s -> s.Status));
-		Map<Long, Set<String>> categoriesBySchuelerId = getCategoriesBySchuelerId(schuelerStatusById);
+		final Map<Long, Set<String>> categoriesBySchuelerId = getCategoriesBySchuelerId(schuelerStatusById);
 
 		return erzieherBySchuelerID.entrySet().stream().map(entry -> {
-			Long schuelerID = entry.getValue().Schueler_ID;
+			final Long schuelerID = entry.getValue().Schueler_ID;
 			return mapDTOErzieherAdrToAdressbuchEintrag(entry.getValue(), ortByOrtID.get(entry.getValue().ErzOrt_ID),
 					categoriesBySchuelerId.get(schuelerID), schuelerBySchuelerIds.get(schuelerID),
 					telefonnummerBySchuelerId.get(schuelerID));
@@ -128,28 +128,28 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * @return eine Map ,in der jeder Erzieher-Id die entsprechenden Kategorien
 	 *         zugeordnet sind
 	 */
-	private Map<Long, Set<String>> getCategoriesBySchuelerId(Map<Long, SchuelerStatus> schuelerStatusByID) {
-		List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
+	private Map<Long, Set<String>> getCategoriesBySchuelerId(final Map<Long, SchuelerStatus> schuelerStatusByID) {
+		final List<DTOKlassen> dtoKlassenQueryResult = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id",
 				aktuellerSchuljahresabschnitt.ID, DTOKlassen.class);
-		Map<Long, DTOKlassen> klassenById = dtoKlassenQueryResult.stream()
+		final Map<Long, DTOKlassen> klassenById = dtoKlassenQueryResult.stream()
 				.collect(Collectors.toMap(s -> s.ID, Function.identity()));
-		List<DTOSchuelerLernabschnittsdaten> dtoSchuelerLernabschnittsdatenQueryResult = conn.queryNamed(
+		final List<DTOSchuelerLernabschnittsdaten> dtoSchuelerLernabschnittsdatenQueryResult = conn.queryNamed(
 				"DTOSchuelerLernabschnittsdaten.klassen_id.multiple", klassenById.keySet(),
 				DTOSchuelerLernabschnittsdaten.class);
-		Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
+		final Map<Long, String> jahrgangKrzByJahrgangId = conn.queryNamed("DTOJahrgang.sichtbar", true, DTOJahrgang.class)
 				.stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
 
-		Map<Long, Set<String>> result = new HashMap<>();
-		for (Entry<Long, SchuelerStatus> entry : schuelerStatusByID.entrySet()) {
+		final Map<Long, Set<String>> result = new HashMap<>();
+		for (final Entry<Long, SchuelerStatus> entry : schuelerStatusByID.entrySet()) {
 			if (SchuelerStatus.NEUAUFNAHME == entry.getValue()) {
-				Set<String> listForSchuelerId = result.computeIfAbsent(entry.getKey(), s -> new HashSet<>());
+				final Set<String> listForSchuelerId = result.computeIfAbsent(entry.getKey(), s -> new HashSet<>());
 				listForSchuelerId.add(kategorienUtil.formatErzieherNeuaufnahmenAlle());
 			}
 		}
-		for (DTOSchuelerLernabschnittsdaten dtoSLA : dtoSchuelerLernabschnittsdatenQueryResult) {
-			Set<String> listForSchuelerId = result.computeIfAbsent(dtoSLA.Schueler_ID, s -> new HashSet<>());
+		for (final DTOSchuelerLernabschnittsdaten dtoSLA : dtoSchuelerLernabschnittsdatenQueryResult) {
+			final Set<String> listForSchuelerId = result.computeIfAbsent(dtoSLA.Schueler_ID, s -> new HashSet<>());
 			if (klassenById.containsKey(dtoSLA.Klassen_ID)) {
-				DTOKlassen dtoKlassen = klassenById.get(dtoSLA.Klassen_ID);
+				final DTOKlassen dtoKlassen = klassenById.get(dtoSLA.Klassen_ID);
 				if (schuelerStatusByID.get(dtoSLA.Schueler_ID) == SchuelerStatus.NEUAUFNAHME) {
 					listForSchuelerId.add(kategorienUtil.formatErzieherNeuaufnahmenKlasse(dtoKlassen.Klasse));
 					listForSchuelerId.add(kategorienUtil
@@ -161,16 +161,16 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 						kategorienUtil.formatErzieherJahrgang(jahrgangKrzByJahrgangId.get(dtoKlassen.Jahrgang_ID)));
 			}
 		}
-		List<DTOKurs> dtoKursResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
+		final List<DTOKurs> dtoKursResult = conn.queryNamed("DTOKurs.schuljahresabschnitts_id",
 				aktuellerSchuljahresabschnitt.ID, DTOKurs.class);
-		Map<Long, DTOKurs> kursNameById = dtoKursResult.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-		List<DTOKursSchueler> dtoKursSchuelerQueryResult = conn.queryNamed("DTOKursSchueler.kurs_id.multiple",
+		final Map<Long, DTOKurs> kursNameById = dtoKursResult.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+		final List<DTOKursSchueler> dtoKursSchuelerQueryResult = conn.queryNamed("DTOKursSchueler.kurs_id.multiple",
 				kursNameById.keySet(), DTOKursSchueler.class);
-		for (DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
-			Set<String> listForSchuelerId = result.computeIfAbsent(dtoKursSchueler.Schueler_ID,
+		for (final DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
+			final Set<String> listForSchuelerId = result.computeIfAbsent(dtoKursSchueler.Schueler_ID,
 					s -> new HashSet<>());
 			if (kursNameById.containsKey(dtoKursSchueler.Kurs_ID)) {
-				DTOKurs dtoKurs = kursNameById.get(dtoKursSchueler.Kurs_ID);
+				final DTOKurs dtoKurs = kursNameById.get(dtoKursSchueler.Kurs_ID);
 				listForSchuelerId.add(kategorienUtil.formatErzieherKurs(dtoKurs.KurzBez,
 						jahrgangKrzByJahrgangId.get(dtoKurs.Jahrgang_ID)));
 			}
@@ -195,9 +195,9 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 *         repräsentierts
 	 */
 	private static AdressbuchEintrag mapDTOErzieherAdrToAdressbuchEintrag(
-			DTOSchuelerErzieherAdresse dtoSchuelerErzieherAdresse, DTOOrt ort, Set<String> categories,
-			DTOSchueler dtoSchueler, List<Telefonnummer> telefonnummern) {
-		AdressbuchKontakt k = new AdressbuchKontakt();
+			final DTOSchuelerErzieherAdresse dtoSchuelerErzieherAdresse, final DTOOrt ort, final Set<String> categories,
+			final DTOSchueler dtoSchueler, final List<Telefonnummer> telefonnummern) {
+		final AdressbuchKontakt k = new AdressbuchKontakt();
 
 		// TODO erzieher müssen eigentlich mehrere Kontakte sein, so erscheint immer nur
 		// der primäre Kontakt

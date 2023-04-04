@@ -24,10 +24,11 @@ import jakarta.validation.constraints.NotNull;
  *
  */
 public interface IAdressbuchKontaktRepository {
+
 	/**
 	 * Filter für SchuelerDTOs
 	 */
-	static final Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && (s.Status == SchuelerStatus.AKTIV
+	Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && (s.Status == SchuelerStatus.AKTIV
 			|| s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME);
 
 	/**
@@ -53,17 +54,15 @@ public interface IAdressbuchKontaktRepository {
 	 * @param schulName      der name der eigenen Schule
 	 * @return einen AdressbuchEintrag für den Schueler
 	 */
-	static AdressbuchEintrag mapDTOSchuelerToKontakt(DTOSchueler dtoSchueler, List<Telefonnummer> telefonnummern,
-			DTOOrt ort, @NotNull Set<String> categories, String schulName) {
-		AdressbuchKontakt k = new AdressbuchKontakt();
+	static AdressbuchEintrag mapDTOSchuelerToKontakt(final DTOSchueler dtoSchueler, final List<Telefonnummer> telefonnummern,
+			final DTOOrt ort, @NotNull final Set<String> categories, final String schulName) {
+		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.id = createSchuelerId(dtoSchueler.ID);
 		k.email = dtoSchueler.Email;
-		if (telefonnummern == null) {
-			telefonnummern = new Vector<>();
-		}
-		addStandardTelefonnummer(dtoSchueler.Fax, telefonnummern, "cell");
-		addStandardTelefonnummer(dtoSchueler.Telefon, telefonnummern, "voice");
-		k.telefonnummern.addAll(telefonnummern);
+		final List<Telefonnummer> nummern = (telefonnummern == null) ? new Vector<>() : telefonnummern;
+		addStandardTelefonnummer(dtoSchueler.Fax, nummern, "cell");
+		addStandardTelefonnummer(dtoSchueler.Telefon, nummern, "voice");
+		k.telefonnummern.addAll(nummern);
 
 		k.hausnummer = dtoSchueler.HausNr;
 		k.hausnummerZusatz = dtoSchueler.HausNrZusatz;
@@ -87,15 +86,15 @@ public interface IAdressbuchKontaktRepository {
 	 * @param telefonnummern        eine vorhandene Liste mit Telefonnummern
 	 * @param type                  der Typ der hinzuzufügenden Telefonnummer
 	 */
-	static void addStandardTelefonnummer(String standardTelefonnummer, List<Telefonnummer> telefonnummern,
-			String type) {
+	static void addStandardTelefonnummer(final String standardTelefonnummer, final List<Telefonnummer> telefonnummern,
+			final String type) {
 		// kommentiert als Fax oder Mobilnummer, laut Hr Bachran i.d.R. Mobilnummer
 		if (standardTelefonnummer == null || type == null)
 			return;
-		boolean duplicateNumber = telefonnummern.stream()
+		final boolean duplicateNumber = telefonnummern.stream()
 				.anyMatch(t -> t.number.replace("\\D+", "").equals(standardTelefonnummer.replace("\\D+", "")));
 		if (!duplicateNumber) {
-			Telefonnummer tel = new Telefonnummer();
+			final Telefonnummer tel = new Telefonnummer();
 			tel.number = standardTelefonnummer;
 			tel.type = type;
 			telefonnummern.add(tel);
@@ -110,8 +109,8 @@ public interface IAdressbuchKontaktRepository {
 	 * @param conn   die Datenbankverbindung
 	 * @return die gesuchten Orte gemappt auf ihre ID
 	 */
-	static Map<Long, DTOOrt> queryOrteByOrtIds(Set<Long> ortIds, DBEntityManager conn) {
-		List<DTOOrt> dtoOrtQueryResult = conn.queryNamed("DTOOrt.id.multiple", ortIds, DTOOrt.class);
+	static Map<Long, DTOOrt> queryOrteByOrtIds(final Set<Long> ortIds, final DBEntityManager conn) {
+		final List<DTOOrt> dtoOrtQueryResult = conn.queryNamed("DTOOrt.id.multiple", ortIds, DTOOrt.class);
 		return dtoOrtQueryResult.stream().collect(Collectors.toMap(o -> o.ID, Function.identity()));
 	}
 
@@ -121,7 +120,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @param k   der Kontakt
 	 * @param ort der zuzufügende Ort
 	 */
-	static void applyOrtToKontakt(AdressbuchKontakt k, DTOOrt ort) {
+	static void applyOrtToKontakt(final AdressbuchKontakt k, final DTOOrt ort) {
 		if (ort != null) {
 			k.ort = ort.Bezeichnung;
 			k.plz = ort.PLZ;
@@ -134,7 +133,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @param schuelerID die ID des Schuelers
 	 * @return eine Stringrepräsentation der SchuelerID
 	 */
-	static String createSchuelerId(Long schuelerID) {
+	static String createSchuelerId(final Long schuelerID) {
 		return "Schueler_" + schuelerID;
 	}
 
@@ -144,7 +143,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @param erzieherID die ID des Erziehers
 	 * @return eine Stringrepräsentation der ErzieherID
 	 */
-	static String createErzieherId(Long erzieherID) {
+	static String createErzieherId(final Long erzieherID) {
 		return "Erzieher_" + erzieherID;
 	}
 
@@ -154,7 +153,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @param lehrerID die ID des Lehrer
 	 * @return eine Stringrepräsentation der LehrerID
 	 */
-	static String createLehrerId(Long lehrerID) {
+	static String createLehrerId(final Long lehrerID) {
 		return "Lehrer_" + lehrerID;
 	}
 
@@ -164,7 +163,7 @@ public interface IAdressbuchKontaktRepository {
 	 * @param conn die Datenbankverbindung
 	 * @return der Name der eigenen Schule
 	 */
-	static String getSchulname(DBEntityManager conn) {
+	static String getSchulname(final DBEntityManager conn) {
 		return conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class).getResultList().get(0).Bezeichnung1;
 	}
 }

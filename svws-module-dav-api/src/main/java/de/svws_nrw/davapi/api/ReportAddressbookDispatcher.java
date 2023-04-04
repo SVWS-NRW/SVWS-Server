@@ -53,16 +53,16 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	/**
 	 * Verarbeitet einen InputStream mit XMl-Request für die gegebene Ressourcen-ID
 	 * des Adressbuchs
-	 * 
+	 *
 	 * @param inputStream der InputStream mit dem enthaltenen XML-Request
 	 * @param ressourceId die ID des Adressbuchs
 	 * @return die entsprechend des Requests verarbeitete Datenstruktur, welche das
 	 *         Antwort-XML repräsentiert.
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
-	public Object dispatch(ServletInputStream inputStream, String ressourceId) throws IOException {
-		CollectionRessourceQueryParameters queryParameters = CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD;
-		Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId, queryParameters);
+	public Object dispatch(final ServletInputStream inputStream, final String ressourceId) throws IOException {
+		final CollectionRessourceQueryParameters queryParameters = CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD;
+		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId, queryParameters);
 		if (adressbuch.isEmpty()) {
 			return this.createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!");
 		}
@@ -76,7 +76,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 		try (ByteArrayOutputStream inputStreamAsByteArray = new ByteArrayOutputStream()) {
 			inputStream.transferTo(inputStreamAsByteArray);
 			try (InputStream inputStreamClone1 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-				Optional<AddressbookMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
+				final Optional<AddressbookMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
 						AddressbookMultiget.class);
 				if (multiget.isPresent()) {
 					return this.handleAdressbookMultigetRequest(adressbuch.get(), multiget.get());
@@ -84,7 +84,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 			}
 
 			try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-				Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
+				final Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
 						SyncCollection.class);
 				if (syncCollection.isPresent()) {
 					return this.handleSyncCollectionRequest(adressbuch.get(), syncCollection.get());
@@ -108,11 +108,11 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                   sollen.
 	 * @return Multistatus-Objekt
 	 */
-	private Multistatus handleAdressbookMultigetRequest(Adressbuch adressbuch, AddressbookMultiget multiget) {
-		Multistatus ms = new Multistatus();
-		List<AdressbuchEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(adressbuch, multiget.getHref());
+	private Multistatus handleAdressbookMultigetRequest(final Adressbuch adressbuch, final AddressbookMultiget multiget) {
+		final Multistatus ms = new Multistatus();
+		final List<AdressbuchEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(adressbuch, multiget.getHref());
 		uriParameter.setResourceCollectionId(adressbuch.id);
-		for (AdressbuchEintrag eintrag : eintraegeByHrefs) {
+		for (final AdressbuchEintrag eintrag : eintraegeByHrefs) {
 			ms.getResponse().add(this.generateResponseContactLevel(eintrag, multiget.getProp()));
 		}
 		return ms;
@@ -129,10 +129,10 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                       zurückgeliefert werden sollen.
 	 * @return Multistatus-Objekt
 	 */
-	private Multistatus handleSyncCollectionRequest(Adressbuch adressbuch, SyncCollection syncCollection) {
-		Multistatus ms = new Multistatus();
+	private Multistatus handleSyncCollectionRequest(final Adressbuch adressbuch, final SyncCollection syncCollection) {
+		final Multistatus ms = new Multistatus();
 		uriParameter.setResourceCollectionId(adressbuch.id);
-		for (AdressbuchEintrag eintrag : this.getEintraegeBySyncToken(adressbuch.id, syncCollection.getSyncToken())) {
+		for (final AdressbuchEintrag eintrag : this.getEintraegeBySyncToken(adressbuch.id, syncCollection.getSyncToken())) {
 			ms.getResponse().add(this.generateResponseContactLevel(eintrag, syncCollection.getProp()));
 		}
 		ms.setSyncToken(Integer.toString(adressbuch.synctoken));
@@ -150,7 +150,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                     Adressbuch.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<AdressbuchEintrag> getEintraegeByHrefs(@NotNull Adressbuch adressbuch, List<String> eintragHrefs) {
+	private List<AdressbuchEintrag> getEintraegeByHrefs(@NotNull final Adressbuch adressbuch, final List<String> eintragHrefs) {
 		uriParameter.setResourceCollectionId(adressbuch.id);
 		adressbuch.adressbuchEintraege.forEach(this::modifyEintragUri);
 		return adressbuch.adressbuchEintraege.stream().filter(k -> eintragHrefs.contains(k.uri)).toList();
@@ -170,9 +170,9 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                     Differenzdaten.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<AdressbuchEintrag> getEintraegeBySyncToken(String adressbuchId, String syncToken) {
+	private List<AdressbuchEintrag> getEintraegeBySyncToken(final String adressbuchId, final String syncToken) {
 		// TODO: Filterung über Sync-Token ergänzen
-		Optional<Adressbuch> adressbuchById = this.repository.getAdressbuchById(adressbuchId,
+		final Optional<Adressbuch> adressbuchById = this.repository.getAdressbuchById(adressbuchId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
 		if (adressbuchById.isEmpty()) {
 			return Collections.emptyList();
@@ -186,7 +186,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 * @param eintrag Eintrag (ohne URI)
 	 * @return eintrag Eintrag mit URI
 	 */
-	private AdressbuchEintrag modifyEintragUri(AdressbuchEintrag eintrag) {
+	private AdressbuchEintrag modifyEintragUri(final AdressbuchEintrag eintrag) {
 		uriParameter.setResourceId(eintrag.id);
 		eintrag.uri = (DavUriBuilder.getAddressEntryUri(uriParameter));
 		return eintrag;
@@ -201,25 +201,25 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen AdressbuchEintrag
 	 */
-	private Response generateResponseContactLevel(AdressbuchEintrag eintrag, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+	private Response generateResponseContactLevel(final AdressbuchEintrag eintrag, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
 		uriParameter.setResourceId(eintrag.id);
 
-		Prop prop200 = new Prop();
+		final Prop prop200 = new Prop();
 		if (dynamicPropUtil.getIsFieldRequested(CardAddressData.class)) {
-			CardAddressData addressData = new CardAddressData();
-			VCard vCard = VCard.createVCard(eintrag);
+			final CardAddressData addressData = new CardAddressData();
+			final VCard vCard = VCard.createVCard(eintrag);
 			addressData.getContent().add(vCard.serialize());
 			prop200.setAddressData(addressData);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getetag.class)) {
-			Getetag getetag = new Getetag();
+			final Getetag getetag = new Getetag();
 			getetag.getContent().add(eintrag.version);
 			prop200.setGetetag(getetag);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getAddressEntryUri(uriParameter));
 		return response;
 	}

@@ -9,7 +9,7 @@ import java.util.Collections;
  * für wiederkehrende Ereignisse notwendig sind. Darüber hinaus bietet sie
  * Methoden zur Bestimmung des letzten Termins einer begrenzt wiederkehrenden
  * Regel
- * 
+ *
  *
  */
 public class RecurrenceSet {
@@ -40,7 +40,7 @@ public class RecurrenceSet {
 	/**
 	 * @param rrule the rrule to set
 	 */
-	public void setRrule(RRule rrule) {
+	public void setRrule(final RRule rrule) {
 		this.rrule = rrule;
 	}
 
@@ -61,13 +61,13 @@ public class RecurrenceSet {
 	/**
 	 * Berechnet aus dem gegebenen Werten Startzeitpunkt sowie den Regeln
 	 * und Daten dieses RecurrenceSets den maximalen Endzeitpunkt eines Ereignis
-	 * 
+	 *
 	 * @param dtStart der Startzeitpunkt des Ereignisses
 	 * @param tzid    die Zeitzone
 	 * @return das letzte Auftreten des Ereignisses gemäß dieses RecurrenceSets oder
 	 *         {@link Instant#MAX}, wenn das Ereignis unendlich oft auftritt
 	 */
-	public Instant getEndOfLastOccurence(Instant dtStart, String tzid) {
+	public Instant getEndOfLastOccurence(final Instant dtStart, final String tzid) {
 		if (this.rrule != null) {
 			return rrule.getMaxInstant(dtStart);
 		}

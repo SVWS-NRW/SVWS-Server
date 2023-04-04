@@ -59,14 +59,14 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 * Verarbeitet den gegebenen Inputstream als CalDav-Protokollanfrage und
 	 * versucht eine Anfrage als Multiget, SyncCollection oder CalendarQuery zu
 	 * interpretieren und entsprechende Antwortobjekte zu erstellen.
-	 * 
+	 *
 	 * @param inputStream           der Request-Inputstream
 	 * @param ressourceCollectionId die Ressourcensammlung-Id
 	 * @return ein Antwortobjekt für die Reportanfrage, abhängig vom Request
 	 * @throws IOException beim Verarbeiten des Inputstreams
 	 */
-	public Object dispatch(InputStream inputStream, String ressourceCollectionId) throws IOException {
-		Optional<Kalender> kalender = this.repository.getKalenderById(ressourceCollectionId,
+	public Object dispatch(final InputStream inputStream, final String ressourceCollectionId) throws IOException {
+		final Optional<Kalender> kalender = this.repository.getKalenderById(ressourceCollectionId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
 		if (kalender.isEmpty()) {
 			return this.createResourceNotFoundError("Kalender mit der angegebenen Id wurde nicht gefunden!");
@@ -78,10 +78,10 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 		 * gelesen werden. Daher erfolgt die Typ-Ermittlung nach dem try..error-Prinzip.
 		 * Dazu wird zunächst ein Klon des InputStreams erstellt
 		 */
-		ByteArrayOutputStream inputStreamAsByteArray = new ByteArrayOutputStream();
+		final ByteArrayOutputStream inputStreamAsByteArray = new ByteArrayOutputStream();
 		inputStream.transferTo(inputStreamAsByteArray);
 		try (InputStream inputStreamClone1 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			Optional<CalendarMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
+			final Optional<CalendarMultiget> multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone1,
 					CalendarMultiget.class);
 			if (multiget.isPresent()) {
 				inputStreamAsByteArray.close();
@@ -90,7 +90,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 		}
 
 		try (InputStream inputStreamClone2 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
+			final Optional<SyncCollection> syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone2,
 					SyncCollection.class);
 			if (syncCollection.isPresent()) {
 				inputStreamAsByteArray.close();
@@ -98,7 +98,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 			}
 		}
 		try (InputStream inputStreamClone3 = new ByteArrayInputStream(inputStreamAsByteArray.toByteArray())) {
-			Optional<CalendarQuery> calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone3,
+			final Optional<CalendarQuery> calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputStreamClone3,
 					CalendarQuery.class);
 			if (calendarQuery.isPresent()) {
 				inputStreamAsByteArray.close();
@@ -118,11 +118,11 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                 im Einzelnen zu der Ressource zurückgeliefert werden sollen.
 	 * @return Multistatus-Objekt
 	 */
-	private Multistatus handleCalendarMultigetRequest(Kalender kalender, CalendarMultiget multiget) {
-		Multistatus ms = new Multistatus();
-		List<KalenderEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(kalender, multiget.getHref());
+	private Multistatus handleCalendarMultigetRequest(final Kalender kalender, final CalendarMultiget multiget) {
+		final Multistatus ms = new Multistatus();
+		final List<KalenderEintrag> eintraegeByHrefs = this.getEintraegeByHrefs(kalender, multiget.getHref());
 		uriParameter.setResourceCollectionId(kalender.id);
-		for (KalenderEintrag eintrag : eintraegeByHrefs) {
+		for (final KalenderEintrag eintrag : eintraegeByHrefs) {
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, multiget.getProp()));
 		}
 		return ms;
@@ -139,24 +139,24 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                       zurückgeliefert werden sollen.
 	 * @return Multistatus-Objekt
 	 */
-	private Multistatus handleSyncCollectionRequest(Kalender kalender, SyncCollection syncCollection) {
-		Multistatus ms = new Multistatus();
+	private Multistatus handleSyncCollectionRequest(final Kalender kalender, final SyncCollection syncCollection) {
+		final Multistatus ms = new Multistatus();
 		uriParameter.setResourceCollectionId(kalender.id);
-		Long syncTokenMillis = syncCollection.getSyncToken().isBlank() ? 0
+		final Long syncTokenMillis = syncCollection.getSyncToken().isBlank() ? 0
 				: Long.valueOf(syncCollection.getSyncToken());
-		for (KalenderEintrag eintrag : this.getEintraegeBySyncToken(kalender.id, syncTokenMillis)) {
+		for (final KalenderEintrag eintrag : this.getEintraegeBySyncToken(kalender.id, syncTokenMillis)) {
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, syncCollection.getProp()));
 		}
-		List<String> deletedResourceUIDsSince = repository.getDeletedResourceUIDsSince(kalender.id, syncTokenMillis);
-		for (String deletedResourceUID : deletedResourceUIDsSince) {
+		final List<String> deletedResourceUIDsSince = repository.getDeletedResourceUIDsSince(kalender.id, syncTokenMillis);
+		for (final String deletedResourceUID : deletedResourceUIDsSince) {
 			ms.getResponse().add(this.generateResponseResourceNotFound(deletedResourceUID));
 		}
 		ms.setSyncToken(Long.toString(kalender.synctoken));
 		return ms;
 	}
 
-	private Response generateResponseResourceNotFound(String deletedResourceUID) {
-		Response r = new Response();
+	private Response generateResponseResourceNotFound(final String deletedResourceUID) {
+		final Response r = new Response();
 		r.setStatus(Propstat.PROP_STATUS_404_NOT_FOUND);
 		uriParameter.setResourceId(deletedResourceUID);
 		r.getHref().add(DavUriBuilder.getCalendarEntryUri(uriParameter));
@@ -174,10 +174,10 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                      zurückgeliefert werden sollen.
 	 * @return Multistatus-Objekt
 	 */
-	private Multistatus handleCalendarQueryRequest(Kalender kalender, CalendarQuery calendarQuery) {
-		Multistatus ms = new Multistatus();
+	private Multistatus handleCalendarQueryRequest(final Kalender kalender, final CalendarQuery calendarQuery) {
+		final Multistatus ms = new Multistatus();
 		uriParameter.setResourceCollectionId(kalender.id);
-		for (KalenderEintrag eintrag : this.getEintraegeByFilter(kalender.id, calendarQuery)) {
+		for (final KalenderEintrag eintrag : this.getEintraegeByFilter(kalender.id, calendarQuery)) {
 			ms.getResponse().add(this.generateResponseEventLevel(eintrag, calendarQuery.getProp()));
 		}
 		return ms;
@@ -194,7 +194,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                     Kalender.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<KalenderEintrag> getEintraegeByHrefs(@NotNull Kalender kalender, List<String> eintragHrefs) {
+	private List<KalenderEintrag> getEintraegeByHrefs(@NotNull final Kalender kalender, final List<String> eintragHrefs) {
 		uriParameter.setResourceCollectionId(kalender.id);
 		return kalender.kalenderEintraege.stream().filter(k -> {
 			uriParameter.setResourceId(k.uid);
@@ -215,8 +215,8 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                   Differenzdaten.
 	 * @return Liste von Eintraegen.
 	 */
-	private List<KalenderEintrag> getEintraegeBySyncToken(String kalenderId, Long syncToken) {
-		Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
+	private List<KalenderEintrag> getEintraegeBySyncToken(final String kalenderId, final Long syncToken) {
+		final Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
 		if (kalenderById.isEmpty()) {
 			return Collections.emptyList();
@@ -235,26 +235,26 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                      Zeitintervalls)
 	 * @return Liste von Einträgen.
 	 */
-	private List<KalenderEintrag> getEintraegeByFilter(String kalenderId, CalendarQuery calendarQuery) {
-		Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
+	private List<KalenderEintrag> getEintraegeByFilter(final String kalenderId, final CalendarQuery calendarQuery) {
+		final Optional<Kalender> kalenderById = this.repository.getKalenderById(kalenderId,
 				CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD);
 		if (kalenderById.isEmpty()) {
 			return Collections.emptyList();
 		}
-		Predicate<? super @NotNull KalenderEintrag> eintragFilter = getEintragFilter(calendarQuery);
+		final Predicate<? super @NotNull KalenderEintrag> eintragFilter = getEintragFilter(calendarQuery);
 		return kalenderById.get().kalenderEintraege.stream().filter(eintragFilter).toList();
 	}
 
 	/**
 	 * gibt das Filterprädikat für die gegebene Kalenderquery zurück. vgl.
 	 * https://datatracker.ietf.org/doc/html/rfc4791#section-9.7.1
-	 * 
+	 *
 	 * @param calendarQuery das CalendarQuery, für das der Filter erstellt werden
 	 *                      soll
 	 * @return ein Prädikat zum Filtern von Kalendereinträgen auf Basis des
 	 *         CalendarQuery
 	 */
-	private static Predicate<? super @NotNull KalenderEintrag> getEintragFilter(CalendarQuery calendarQuery) {
+	private static Predicate<? super @NotNull KalenderEintrag> getEintragFilter(final CalendarQuery calendarQuery) {
 		Predicate<KalenderEintrag> ressourceTypePredicate = e -> true;
 		Predicate<KalenderEintrag> componentTypePredicate = e -> true;
 		Predicate<KalenderEintrag> timeRangePredicate = e -> true;
@@ -278,7 +278,7 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 				}
 				if (filter.getTimeRange() != null && filter.getTimeRange().getStart() != null
 						&& filter.getTimeRange().getEnd() != null) {
-					TimeRange timeRange = filter.getTimeRange();
+					final TimeRange timeRange = filter.getTimeRange();
 					final Instant timeRangeMin = DateTimeUtil.parseCalDav(timeRange.getStart());
 					final Instant timeRangeMax = DateTimeUtil.parseCalDav(timeRange.getEnd());
 					timeRangePredicate = e -> DateTimeUtil.intersect(timeRangeMin, timeRangeMax,
@@ -299,30 +299,30 @@ public class ReportCalendarDispatcher extends DavDispatcher {
 	 *                      zur Ressource zurückgeliefert werden sollen.
 	 * @return Response-Objekt zum angegebenen KalenderEintrag
 	 */
-	private Response generateResponseEventLevel(KalenderEintrag eintrag, Prop propRequested) {
-		DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
+	private Response generateResponseEventLevel(final KalenderEintrag eintrag, final Prop propRequested) {
+		final DynamicPropUtil dynamicPropUtil = new DynamicPropUtil(propRequested);
 		uriParameter.setResourceId(eintrag.uid);
 
-		Prop prop200 = new Prop();
+		final Prop prop200 = new Prop();
 		if (dynamicPropUtil.getIsFieldRequested(CalendarData.class)) {
-			CalendarData calendarData = new CalendarData();
-			VCalendar vCalendar = VCalendar.createVCalendar(eintrag);
+			final CalendarData calendarData = new CalendarData();
+			final VCalendar vCalendar = VCalendar.createVCalendar(eintrag);
 			calendarData.getContent().add(vCalendar.serialize());
 			prop200.setCalendarData(calendarData);
 		}
 
 		if (dynamicPropUtil.getIsFieldRequested(Getetag.class)) {
-			Getetag getetag = new Getetag();
+			final Getetag getetag = new Getetag();
 			getetag.getContent().add(eintrag.version);
 			prop200.setGetetag(getetag);
 		}
 		if (dynamicPropUtil.getIsFieldRequested(Getcontenttype.class)) {
-			Getcontenttype getcontenttype = new Getcontenttype();
+			final Getcontenttype getcontenttype = new Getcontenttype();
 			getcontenttype.getContent().add("text/calendar");
 			prop200.setGetcontenttype(getcontenttype);
 		}
 
-		Response response = createResponse(propRequested, prop200);
+		final Response response = createResponse(propRequested, prop200);
 		response.getHref().add(DavUriBuilder.getCalendarEntryUri(uriParameter));
 		return response;
 	}

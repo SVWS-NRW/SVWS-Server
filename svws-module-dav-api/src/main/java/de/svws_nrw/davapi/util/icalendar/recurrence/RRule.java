@@ -213,7 +213,7 @@ significant when a WEEKLY "RRULE" has an interval greater than 1,<br>
                special expand for YEARLY.<br>
  * </code>
  */
-public class RRule implements IProperty {
+public final class RRule implements IProperty {
 
 	/** Property Keyword für BYDAY */
 	private static final String BYDAY_KEY = "BYDAY";
@@ -232,50 +232,50 @@ public class RRule implements IProperty {
 	 */
 	private int interval = 1;
 	/** Die Liste der Sekunden, zu denen ein Ereignis auftreten soll */
-	private Set<Integer> bySeconds = new HashSet<>();
+	private final Set<Integer> bySeconds = new HashSet<>();
 	/** Die Liste der Minuten, zu denen ein Ereignis auftreten soll */
-	private Set<Integer> byMinutes = new HashSet<>();
+	private final Set<Integer> byMinutes = new HashSet<>();
 	/** Die Liste der Stunden, zu denen ein Ereignis auftreten soll */
-	private Set<Integer> byHours = new HashSet<>();
+	private final Set<Integer> byHours = new HashSet<>();
 	/** Die Liste der Wochentage, zu denen ein Ereignis auftreten soll */
-	private Set<ByDay> byDays = new HashSet<>();
+	private final Set<ByDay> byDays = new HashSet<>();
 	/**
 	 * Die Liste der Tage eines Monats, zu denen ein Ereignis auftreten soll.
 	 * Negative Integer geben den nt-letzten Tag des Monats an
 	 */
-	private Set<Integer> byMonthDays = new HashSet<>();
+	private final Set<Integer> byMonthDays = new HashSet<>();
 	/**
 	 * Die Liste der Tage eines Jahres, zu denen ein Ereignis auftreten soll.
 	 * Negative Integer geben den nt-letzten Tag des Jahres an.
 	 */
-	private Set<Integer> byYearDays = new HashSet<>();
+	private final Set<Integer> byYearDays = new HashSet<>();
 	/**
 	 * Die Liste der Wochen eines Jahres, zu denen ein Ereignis auftreten soll.
 	 * Negative Integer geben die nt-letzte Woche des Jahres an.
 	 */
-	private Set<Integer> byWeekNumbers = new HashSet<>();
+	private final Set<Integer> byWeekNumbers = new HashSet<>();
 	/**
 	 * Die Liste der Monate eines Jahres, zu denen ein Ereignis auftreten soll.
 	 * Negative Integer geben den nt-letzte Monat des Jahres an.
 	 */
-	private Set<Integer> byMonths = new HashSet<>();
+	private final Set<Integer> byMonths = new HashSet<>();
 	/** Die Liste der Positionen innerhalb einer angegebenen Frequenz. */
-	private Set<Integer> bySetPos = new HashSet<>();
+	private final Set<Integer> bySetPos = new HashSet<>();
 	/** Der Wochentag mit dem die Woche starten soll */
 	private WeekDay weekStart = WeekDay.MONDAY;
 
 	/**
 	 * Öffentlicher Konstruktor für die Recurrence Rule mit gegebener Frequenz.
-	 * 
+	 *
 	 * @param freq Die Frequenz, mit der das wiederkehrende Ereignis auftritt
 	 */
-	public RRule(Frequency freq) {
+	public RRule(final Frequency freq) {
 		this.freq = freq;
 	}
 
 	/**
 	 * getter für die Frequenz, mit der das wiederkehrende Ereignis auftritt
-	 * 
+	 *
 	 * @return Die Frequenz, mit der das wiederkehrende Ereignis auftritt
 	 */
 	public Frequency getFreq() {
@@ -284,16 +284,16 @@ public class RRule implements IProperty {
 
 	/**
 	 * setter für die Frequenz, mit der das wiederkehrende Ereignis auftritt
-	 * 
+	 *
 	 * @param freq Die Frequenz, mit der das wiederkehrende Ereignis auftritt
 	 */
-	public void setFreq(Frequency freq) {
+	public void setFreq(final Frequency freq) {
 		this.freq = freq;
 	}
 
 	/**
 	 * getter für das Limit für Wiederholungen
-	 * 
+	 *
 	 * @return das Limit für Wiederholungen
 	 */
 	public RecurrencyLimit getLimit() {
@@ -302,17 +302,17 @@ public class RRule implements IProperty {
 
 	/**
 	 * setter für das Limit für Wiederholungen
-	 * 
+	 *
 	 * @param limit das Limit für Wiederholungen
 	 */
-	public void setLimit(RecurrencyLimit limit) {
+	public void setLimit(final RecurrencyLimit limit) {
 		this.limit = limit;
 	}
 
 	/**
 	 * getter für das Intervall mit dem die Wiederholungen innerhalb der gegebenen
 	 * Frequenz auftreten
-	 * 
+	 *
 	 * @return das Intervall mit dem die Wiederholungen innerhalb der gegebenen
 	 *         Frequenz auftreten
 	 */
@@ -323,17 +323,17 @@ public class RRule implements IProperty {
 	/**
 	 * setter für das Intervall mit dem die Wiederholungen innerhalb der gegebenen
 	 * Frequenz auftreten
-	 * 
+	 *
 	 * @param interval das Intervall mit dem die Wiederholungen innerhalb der
 	 *                 gegebenen Frequenz auftreten
 	 */
-	public void setInterval(int interval) {
+	public void setInterval(final int interval) {
 		this.interval = interval;
 	}
 
 	/**
 	 * getter für den Wochentag, mit dem die Woche starten soll
-	 * 
+	 *
 	 * @return der Wochentag, mit dem die Woche starten soll
 	 */
 	public WeekDay getWeekStart() {
@@ -342,17 +342,17 @@ public class RRule implements IProperty {
 
 	/**
 	 * setter für den Wochentag mit dem die Woche starten soll
-	 * 
+	 *
 	 * @param weekStart der Wochentag mit dem die Woche starten soll
 	 */
-	public void setWeekStart(WeekDay weekStart) {
+	public void setWeekStart(final WeekDay weekStart) {
 		this.weekStart = weekStart;
 	}
 
 	/**
 	 * getter für die Liste der Sekunden, zu denen ein Ereignis stattfinden soll.
 	 * Valide Werte sind von 0 bis 59.
-	 * 
+	 *
 	 * @return die Liste der Sekunden, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<Integer> getBySeconds() {
@@ -362,7 +362,7 @@ public class RRule implements IProperty {
 	/**
 	 * getter für die Liste der Minuten, zu denen ein Ereignis stattfinden soll.
 	 * Valide Werte sind von 0 bis 59.
-	 * 
+	 *
 	 * @return die Liste der Minuten, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<Integer> getByMinutes() {
@@ -372,7 +372,7 @@ public class RRule implements IProperty {
 	/**
 	 * getter für die Liste der Stunden, zu denen ein Ereignis stattfinden soll.
 	 * Valide Werte sind von 0 bis 23.
-	 * 
+	 *
 	 * @return die Liste der Stunden, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<Integer> getByHours() {
@@ -381,7 +381,7 @@ public class RRule implements IProperty {
 
 	/**
 	 * getter für die Liste der Wochentage, zu denen ein Ereignis stattfinden soll
-	 * 
+	 *
 	 * @return die Liste der Wochentage, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<ByDay> getByDays() {
@@ -392,7 +392,7 @@ public class RRule implements IProperty {
 	 * getter für die Liste der Tage im Monat, zu denen ein Ereignis stattfinden
 	 * soll. Valide Werte sind zwischen -31 und -1 sowie zwischen 1 und 31. Negative
 	 * Werte geben den nt-letzten Wert des Monats an.
-	 * 
+	 *
 	 * @return die Liste der Tage im Monat, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<Integer> getByMonthDays() {
@@ -403,7 +403,7 @@ public class RRule implements IProperty {
 	 * getter für die Liste der Tage im Jahr, zu denen ein Ereignis stattfinden
 	 * soll. Valide Werte sind zwischen -366 und -1 sowie 1 und 366. Negative Werte
 	 * geben den nt-letzten Tag des Jahres an.
-	 * 
+	 *
 	 * @return die Liste der Tage im Jahr, zu denen ein Ereignis stattfinden soll
 	 */
 	public Set<Integer> getByYearDays() {
@@ -416,7 +416,7 @@ public class RRule implements IProperty {
 	 * The BYWEEKNO rule part specifies a COMMA-separated list of<br>
 	 * ordinals specifying weeks of the year. Valid values are 1 to 53<br>
 	 * or -53 to -1.
-	 * 
+	 *
 	 * @return die Liste der Wochen eines Jahres, in denen ein Ereignis stattfinden
 	 *         soll.
 	 */
@@ -427,7 +427,7 @@ public class RRule implements IProperty {
 	/**
 	 * getter für die Liste der Monate, in denen ein Ereignis stattfinden soll.
 	 * Valid values are 1 to 12.
-	 * 
+	 *
 	 * @return die Liste der Monate, in denen ein Ereignis stattfinden soll.
 	 */
 	public Set<Integer> getByMonths() {
@@ -444,7 +444,7 @@ public class RRule implements IProperty {
 	 * Beispiel: <code>FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1</code> als
 	 * Regel gibt monatlich wiederholende Termine an Werktagen an. Durch BYSETPOS
 	 * werden diese Termine auf den letzten Werktag eines Monats eingeschränkt.
-	 * 
+	 *
 	 * @return die Liste der Einschränkungen der Vorkommen innerhalb einer
 	 *         angegebenen Frequenz.
 	 */
@@ -459,7 +459,7 @@ public class RRule implements IProperty {
 
 	@Override
 	public String getValue() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		append(sb, "FREQ", this.freq.toString());
 		if (this.interval != 1) {
 			sb.append(";");
@@ -494,13 +494,13 @@ public class RRule implements IProperty {
 	 * <code>;KEY=LIST</code>. Greift dazu auf
 	 * {@link #append(StringBuilder, String, Stream)} zurück. Ist das gegebene Set
 	 * nicht leer, wird ein führendes Semikolon zugefügt.
-	 * 
+	 *
 	 * @param sb   der Stringbuilder
 	 * @param key  der Schlüsselwert des Key-Value-Paars
 	 * @param ints das Set mit Integern, welches den Value des Key-Value-Paars
 	 *             darstellen
 	 */
-	private static void append(StringBuilder sb, String key, Set<Integer> ints) {
+	private static void append(final StringBuilder sb, final String key, final Set<Integer> ints) {
 		if (!ints.isEmpty()) {
 			sb.append(";");
 			append(sb, key, ints.stream().sorted().map(String::valueOf));
@@ -511,31 +511,31 @@ public class RRule implements IProperty {
 	 * Hilfsmethode: Fügt einem StringBuilder den Key und die kommagetrennten Werte
 	 * des Streams nach dem Muster <code>KEY=VALUE1,VALUE2...</code> hinzu. Greift
 	 * auf {@link #append(StringBuilder, String, String)} zurück
-	 * 
+	 *
 	 * @param sb     der StringBuilder
 	 * @param key    der Schlüsselwert des Key-Value-Paars
 	 * @param stream ein Stream mit den Werten des Key-Value-Paars
 	 */
-	private static void append(StringBuilder sb, String key, Stream<String> stream) {
+	private static void append(final StringBuilder sb, final String key, final Stream<String> stream) {
 		append(sb, key, stream.collect(Collectors.joining(",")));
 	}
 
 	/**
 	 * Hilfsmethode: Fügt einem StringBuilder den Key und den Value nach dem Muster
 	 * <code>KEY=VALUE</code> hinzu.
-	 * 
+	 *
 	 * @param sb
 	 * @param key
 	 * @param value
 	 */
-	private static void append(StringBuilder sb, String key, String value) {
+	private static void append(final StringBuilder sb, final String key, final String value) {
 		sb.append(key);
 		sb.append("=");
 		sb.append(value);
 	}
 
 	@Override
-	public void serialize(StringBuffer sb) {
+	public void serialize(final StringBuffer sb) {
 		sb.append(getKey());
 		sb.append(COLON_CHAR);
 		sb.append(getValue());
@@ -545,27 +545,27 @@ public class RRule implements IProperty {
 	/**
 	 * Erstellt ein RRule aus einem gegebenen PropertyString wie er in einem .ics
 	 * geschrieben steht
-	 * 
+	 *
 	 * @param pProp das Property als String
 	 * @return das geparste RRule Objekt welches diesen String repräsentiert
 	 */
-	public static RRule fromString(String pProp) {
+	public static RRule fromString(final String pProp) {
 		String prop = pProp;
 		if (prop.endsWith(VCalendar.LINEBREAK)) {
 			prop = pProp.replace(VCalendar.LINEBREAK, "");
 		}
-		String rule = prop.substring(prop.indexOf(COLON_CHAR) + 1);
-		String[] rules = rule.split(";");
+		final String rule = prop.substring(prop.indexOf(COLON_CHAR) + 1);
+		final String[] rules = rule.split(";");
 		int idxOfComp = -1;
-		Map<String, String> keyValueMap = new HashMap<>();
-		for (String s : rules) {
+		final Map<String, String> keyValueMap = new HashMap<>();
+		for (final String s : rules) {
 			idxOfComp = s.indexOf('=');
 			if (idxOfComp != -1) {
 				keyValueMap.put(s.substring(0, idxOfComp), s.substring(idxOfComp + 1));
 			}
 		}
-		Frequency frequency = Frequency.valueOf(keyValueMap.get("FREQ"));
-		RRule r = new RRule(frequency);
+		final Frequency frequency = Frequency.valueOf(keyValueMap.get("FREQ"));
+		final RRule r = new RRule(frequency);
 		if (keyValueMap.containsKey(INTERVAL_KEY)) {
 			r.setInterval(Integer.valueOf(keyValueMap.get(INTERVAL_KEY)));
 		}
@@ -579,7 +579,7 @@ public class RRule implements IProperty {
 		addIntegersToSetIfKeyContained("BYMINUTE", keyValueMap, r.getByMinutes());
 		addIntegersToSetIfKeyContained("BYHOUR", keyValueMap, r.getByHours());
 		if (keyValueMap.containsKey(BYDAY_KEY)) {
-			String[] values = keyValueMap.get(BYDAY_KEY).split(",");
+			final String[] values = keyValueMap.get(BYDAY_KEY).split(",");
 			r.getByDays().addAll(Arrays.asList(values).stream().map(ByDay::fromString).toList());
 		}
 
@@ -598,16 +598,16 @@ public class RRule implements IProperty {
 	 * Hilfsmethode, welche die den zum Key passenden Value der KeyValueMap zu einem
 	 * Set zufügt. Erwartet wird eine kommagetrennte Liste von Integern. Prüft ob
 	 * die Map den Key enthält
-	 * 
+	 *
 	 * @param key         der Key für die KeyValueMap
 	 * @param keyValueMap die KeyValueMap, welche dem Key zugeordnete Zeichenkette
 	 *                    mit kommagetrennten Integern enthält
 	 * @param set         das set, dem die Integer zugefügt werden sollen
 	 */
-	private static void addIntegersToSetIfKeyContained(String key, Map<String, String> keyValueMap, Set<Integer> set) {
+	private static void addIntegersToSetIfKeyContained(final String key, final Map<String, String> keyValueMap, final Set<Integer> set) {
 		if (keyValueMap.containsKey(key)) {
-			String valueStr = keyValueMap.get(key);
-			String[] values = valueStr.split(",");
+			final String valueStr = keyValueMap.get(key);
+			final String[] values = valueStr.split(",");
 			set.addAll(Arrays.asList(values).stream().map(Integer::valueOf).toList());
 		}
 	}
@@ -615,13 +615,13 @@ public class RRule implements IProperty {
 	/**
 	 * Gibt das Maximale Datum wieder, wenn dieser Regelsatz mit dem gegebenen
 	 * Startpunkt berechnet wird.
-	 * 
+	 *
 	 * @param dtStart der Startzeitpunkt
 	 * @return das maximale Datum entsprechend der hier definierten Regeln.
 	 */
-	public Instant getMaxInstant(Instant dtStart) {
+	public Instant getMaxInstant(final Instant dtStart) {
 		if (this.limit == null || this.limit.getUntil() != null) {
-			return Instant.MAX;// cutoff, Recurrence Rules auswerten nicht funktional.
+			return Instant.MAX; // cutoff, Recurrence Rules auswerten nicht funktional.
 		}
 		return this.limit.getUntil();
 	}

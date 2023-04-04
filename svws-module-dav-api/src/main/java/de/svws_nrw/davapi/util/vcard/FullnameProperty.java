@@ -2,19 +2,19 @@ package de.svws_nrw.davapi.util.vcard;
 
 /**
  * Das Fullname Property einer VCard.<br>
- * 
+ *
  * Type special notes: This type is based on the semantics of the X.520 Common
  * Name attribute. <b>The property MUST be present in the vCard object.</b> <br>
  * Beispiel<br>
  * {@code FN:Mr. John Q. Public\, Esq.}
- * 
+ *
  * @see <a href=
  *      "https://datatracker.ietf.org/doc/html/rfc2426#section-3.1.1">RFC FN
  *      TYPE DEFINITION</a>
- * 
+ *
  *
  */
-public class FullnameProperty implements VCardProperty {
+public final class FullnameProperty implements VCardProperty {
 
 	/**
 	 * Konstante für den Typ des VCard Properties
@@ -23,14 +23,14 @@ public class FullnameProperty implements VCardProperty {
 	/**
 	 * Fullname dieser VCard
 	 */
-	private String fullname;
+	private final String fullname;
 
 	/**
 	 * erstellt ein FullnameProperty für eine VCard mit dem Namen als Parameter
-	 * 
+	 *
 	 * @param fullname der Name einer VCard
 	 */
-	public FullnameProperty(String fullname) {
+	public FullnameProperty(final String fullname) {
 		this.fullname = fullname;
 	}
 
@@ -40,12 +40,12 @@ public class FullnameProperty implements VCardProperty {
 	}
 
 	@Override
-	public void serializeType(StringBuilder sb) {
+	public void serializeType(final StringBuilder sb) {
 		sb.append(FN);
 	}
 
 	@Override
-	public void serializeProperty(StringBuilder sb) {
+	public void serializeProperty(final StringBuilder sb) {
 		sb.append(fullname);
 	}
 

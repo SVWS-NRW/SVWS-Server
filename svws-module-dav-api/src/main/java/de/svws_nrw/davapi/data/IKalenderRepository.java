@@ -22,7 +22,7 @@ public interface IKalenderRepository {
 	 * @return Optional eines Kalenders oder Optional.empty(), falls kein Kalender
 	 *         mit der angegebenen Id gefunden werden konnte.
 	 */
-	public Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params);
+	Optional<Kalender> getKalenderById(String kalenderId, CollectionRessourceQueryParameters params);
 
 	/**
 	 * Ermittelt eine Liste aller für den angemeldeten Benutzer verfügbaren
@@ -31,12 +31,12 @@ public interface IKalenderRepository {
 	 * @param params QueryParameter zum Filtern des Inhalts der Adressbuecher
 	 * @return Liste verfügbarer Adressbücher.
 	 */
-	public @NotNull List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params);
+	@NotNull List<Kalender> getAvailableKalender(CollectionRessourceQueryParameters params);
 
 	/**
 	 * Sucht die gelöschten Ressourcen-UIDs einer Ressourcensammlung seit einem
 	 * bestimmten Zeitpunkt
-	 * 
+	 *
 	 * @param id              die ID der Ressourcensammlung
 	 * @param syncTokenMillis der Zeitpunkt als Millisekunden seit 1970,
 	 *                        {@link Timestamp#getTime()}

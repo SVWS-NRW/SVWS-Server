@@ -20,7 +20,7 @@ public interface IAdressbuchRepository {
 	 * @return Optional eines Adressbuchs oder Optional.empty(), falls kein
 	 *         Adressbuch mit der angegebenen Id gefunden werden konnte.
 	 */
-	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params);
+	Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params);
 
 	/**
 	 * Ermittelt eine Liste aller für den angemeldeten Benutzer verfügbaren
@@ -29,6 +29,6 @@ public interface IAdressbuchRepository {
 	 * @param params QueryParameter zum Filtern des Inhalts der Adressbuecher
 	 * @return Liste verfügbarer Adressbücher.
 	 */
-	public List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params);
+	List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params);
 
 }

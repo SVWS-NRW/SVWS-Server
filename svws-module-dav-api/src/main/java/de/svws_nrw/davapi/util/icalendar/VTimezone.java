@@ -8,7 +8,7 @@ import java.util.Vector;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * Diese Klasse repräsentiert ein VTIMEZONE-Eintrag innerhalb eines VCALENDAR
  */
 public class VTimezone {
@@ -26,7 +26,7 @@ public class VTimezone {
 	/** TZID für EUROPE/BERLIN */
 	public static final String DEFAULT_TZ_BERLIN_EUROPE_STR = "Europe/Berlin";
 	/** Liste der Properties dieses VTIMEZONE-Eintrags */
-	private List<IProperty> properties = new Vector<>();
+	private final List<IProperty> properties = new Vector<>();
 
 	/**
 	 * public default constructor
@@ -38,7 +38,7 @@ public class VTimezone {
 	/**
 	 * erstellt ein VTimezone-Objekt für die Zeitzone Europe/Berlin zur Verwendung
 	 * beim serialisieren von Kalendern.
-	 * 
+	 *
 	 * @return ein vordefiniertes VTimezone Objekt für die Zeitzone Europe/Berlin
 	 */
 	private static VTimezone getBerlinEuropeTimezone() {
@@ -47,22 +47,22 @@ public class VTimezone {
 
 	/**
 	 * fügt der Liste der Properties ein neues Property hinzu
-	 * 
+	 *
 	 * @param property das zuzufügende Property
 	 */
-	public void addProperty(IProperty property) {
+	public void addProperty(final IProperty property) {
 		this.properties.add(property);
 	}
 
 	/**
 	 * parst die Properties aus dem gegebenen linesIterator zu einem
 	 * VTimezone-Objekt
-	 * 
+	 *
 	 * @param linesIterator der iterator über die liste der Property-Strings
 	 * @return das geparste VTimezone-Objekt
 	 */
-	static VTimezone parse(Iterator<String> linesIterator) {
-		VTimezone tz = new VTimezone();
+	static VTimezone parse(final Iterator<String> linesIterator) {
+		final VTimezone tz = new VTimezone();
 		IProperty property = IProperty.fromString(linesIterator.next());
 		while (!IProperty.isProperty(property, VCalendar.END_PROPERTY_KEY, VTimezone.TIMEZONE_BEGIN_VALUE)) {
 			tz.addProperty(property);
@@ -73,12 +73,12 @@ public class VTimezone {
 
 	/**
 	 * serialisiert diese VTimezone am gegebenen Stringbuffer
-	 * 
+	 *
 	 * @param sb der Stringbuffer
 	 */
-	public void serialize(StringBuffer sb) {
+	public void serialize(final StringBuffer sb) {
 		new Property(VCalendar.BEGIN_PROPERTY_KEY, TIMEZONE_BEGIN_VALUE).serialize(sb);
-		for (IProperty p : this.properties) {
+		for (final IProperty p : this.properties) {
 			p.serialize(sb);
 		}
 		new Property(VCalendar.END_PROPERTY_KEY, TIMEZONE_BEGIN_VALUE).serialize(sb);

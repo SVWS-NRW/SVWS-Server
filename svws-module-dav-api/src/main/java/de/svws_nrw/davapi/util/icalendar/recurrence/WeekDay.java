@@ -31,7 +31,7 @@ public enum WeekDay {
 
 	private final String stringRep;
 
-	WeekDay(String stringRep) {
+	WeekDay(final String stringRep) {
 		this.stringRep = stringRep;
 	}
 
@@ -40,7 +40,7 @@ public enum WeekDay {
 	 * SU indicates Sunday; MO indicates Monday; TU indicates
 	Tuesday; WE indicates Wednesday; TH indicates Thursday; FR
 	indicates Friday; and SA indicates Saturday.</code>
-	 * 
+	 *
 	 * @return das Kürzel des Wochentags
 	 */
 	public String getStringRep() {
@@ -51,12 +51,12 @@ public enum WeekDay {
 	 * Gibt den Wochentag anhand der gegebenen Stringrepräsentation wieder. Zunächst
 	 * wird versucht über das Kürzel (SU,MO,TU,WE,TH,FR,SA) den Wochentag zu finden,
 	 * ansonsten wird auf {@link #valueOf(String)} zurückgegriffen.
-	 * 
+	 *
 	 * @param string die Zeichenkette für die der Wochentag gesucht werden soll.
 	 * @return den Wochentag anhand der Zeichenkette
-	 * 
+	 *
 	 */
-	public static WeekDay fromStringRep(String string) {
+	public static WeekDay fromStringRep(final String string) {
 		switch (string) {
 		case "SU":
 			return SUNDAY;

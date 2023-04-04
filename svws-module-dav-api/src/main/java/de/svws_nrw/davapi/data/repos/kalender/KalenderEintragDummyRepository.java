@@ -12,7 +12,7 @@ import de.svws_nrw.davapi.data.IKalenderEintragRepository;
  * {@link IKalenderEintragRepository}
  *
  */
-public class KalenderEintragDummyRepository implements IKalenderEintragRepository {
+public final class KalenderEintragDummyRepository implements IKalenderEintragRepository {
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories
@@ -23,14 +23,14 @@ public class KalenderEintragDummyRepository implements IKalenderEintragRepositor
 	}
 
 	@Override
-	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(String kalenderId, String kalenderEintragId,
-			CollectionRessourceQueryParameters params) {
-		KalenderEintrag eintrag123 = new KalenderEintrag();
+	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragId,
+			final CollectionRessourceQueryParameters params) {
+		final KalenderEintrag eintrag123 = new KalenderEintrag();
 		eintrag123.id = "123";
 		eintrag123.kalenderId = "dummy";
 		eintrag123.version = UUID.randomUUID().toString();
 
-		KalenderEintrag eintrag456 = new KalenderEintrag();
+		final KalenderEintrag eintrag456 = new KalenderEintrag();
 		eintrag456.id = "456";
 		eintrag456.kalenderId = "dummy";
 		eintrag456.version = UUID.randomUUID().toString();
@@ -39,7 +39,7 @@ public class KalenderEintragDummyRepository implements IKalenderEintragRepositor
 	}
 
 	@Override
-	public KalenderEintrag saveKalenderEintrag(KalenderEintrag kalenderEintrag) {
+	public KalenderEintrag saveKalenderEintrag(final KalenderEintrag kalenderEintrag) {
 		return null;
 	}
 }

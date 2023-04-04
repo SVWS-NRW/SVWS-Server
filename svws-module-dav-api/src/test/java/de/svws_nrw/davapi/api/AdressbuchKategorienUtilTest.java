@@ -22,7 +22,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatLehrerFachschaft() {
-		String format = adressbuchKategorienUtil.formatLehrerFachschaft(FACHSCHAFT);
+		final String format = adressbuchKategorienUtil.formatLehrerFachschaft(FACHSCHAFT);
 		assertEquals("Fachschaft Chemie", format);
 	}
 
@@ -31,7 +31,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatLehrerJahrgangsteam() {
-		String format = adressbuchKategorienUtil.formatLehrerJahrgangsteam(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatLehrerJahrgangsteam(JAHRGANG);
 		assertEquals("Team JG 09", format);
 	}
 
@@ -41,7 +41,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatKlassenlehrer() {
-		String format = adressbuchKategorienUtil.formatKlassenlehrer(KLASSE);
+		final String format = adressbuchKategorienUtil.formatKlassenlehrer(KLASSE);
 		assertEquals("KL 9c S2 2022", format);
 	}
 
@@ -52,7 +52,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatKlassenlehrerJahrgang() {
-		String format = adressbuchKategorienUtil.formatKlassenlehrerJahrgang(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatKlassenlehrerJahrgang(JAHRGANG);
 		assertEquals("KL JG 09", format);
 	}
 
@@ -61,7 +61,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatKlassenlehrerAlle() {
-		String format = adressbuchKategorienUtil.formatKlassenlehrerAlle();
+		final String format = adressbuchKategorienUtil.formatKlassenlehrerAlle();
 		assertEquals("Klassenlehrer", format);
 	}
 
@@ -70,7 +70,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatLehrerKlasseTeam() {
-		String format = adressbuchKategorienUtil.formatLehrerKlasseTeam(KLASSE);
+		final String format = adressbuchKategorienUtil.formatLehrerKlasseTeam(KLASSE);
 		assertEquals("Team 9c S2 2022", format);
 	}
 
@@ -79,7 +79,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerKlasse() {
-		String format = adressbuchKategorienUtil.formatSchuelerKlasse(KLASSE);
+		final String format = adressbuchKategorienUtil.formatSchuelerKlasse(KLASSE);
 		assertEquals("Klasse 9c S2 2022", format);
 	}
 
@@ -88,7 +88,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerKurs() {
-		String format = adressbuchKategorienUtil.formatSchuelerKurs(KURS, JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatSchuelerKurs(KURS, JAHRGANG);
 		assertEquals("Kurs CH-GK1 09 S2 2022", format);
 	}
 
@@ -98,7 +98,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerJahrgang() {
-		String format = adressbuchKategorienUtil.formatSchuelerJahrgang(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatSchuelerJahrgang(JAHRGANG);
 		assertEquals("JG 09", format);
 	}
 
@@ -108,7 +108,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerNeuaufnahmeKlasse() {
-		String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmeKlasse(KLASSE);
+		final String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmeKlasse(KLASSE);
 		assertEquals("Neuaufnahmen 9c S2 2022", format);
 	}
 
@@ -118,7 +118,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerNeuaufnahmeJahrgang() {
-		String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmeJahrgang(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmeJahrgang(JAHRGANG);
 		assertEquals("Neuaufnahmen JG 09", format);
 	}
 
@@ -127,7 +127,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatSchuelerNeuaufnahmenAlle() {
-		String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmenAlle();
+		final String format = adressbuchKategorienUtil.formatSchuelerNeuaufnahmenAlle();
 		assertEquals("Neuaufnahmen", format);
 	}
 
@@ -136,7 +136,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatErzieherKlasse() {
-		String format = adressbuchKategorienUtil.formatErzieherKlasse(KLASSE);
+		final String format = adressbuchKategorienUtil.formatErzieherKlasse(KLASSE);
 		assertEquals("Eltern 9c S2 2022", format);
 	}
 
@@ -146,7 +146,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatErzieherJahrgang() {
-		String format = adressbuchKategorienUtil.formatErzieherJahrgang(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatErzieherJahrgang(JAHRGANG);
 		assertEquals("Eltern JG 09", format);
 	}
 
@@ -155,28 +155,28 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatErzieherKurs() {
-		String format = adressbuchKategorienUtil.formatErzieherKurs(KURS, JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatErzieherKurs(KURS, JAHRGANG);
 		assertEquals("Eltern CH-GK1 09 S2 2022", format);
 	}
 
 	/**
 	 * Testet den formatierten String für die Kategorie alle Erzieher
-	 * 
+	 *
 	 */
 	@Test
 	void testFormatErzieherAlle() {
-		String format = adressbuchKategorienUtil.formatErzieherAlle();
+		final String format = adressbuchKategorienUtil.formatErzieherAlle();
 		assertEquals("Eltern", format);
 	}
 
 	/**
 	 * Testet den formatierten String für die Kategorie Erzieher der Neuaufnahmen
 	 * einer Klasse
-	 * 
+	 *
 	 */
 	@Test
 	void testFormatErzieherNeuaufnahmenKlasse() {
-		String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenKlasse(KLASSE);
+		final String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenKlasse(KLASSE);
 		assertEquals("Eltern Neuaufnahmen 9c S2 2022", format);
 	}
 
@@ -186,7 +186,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatErzieherNeuaufnahmenJahrgang() {
-		String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenJahrgang(JAHRGANG);
+		final String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenJahrgang(JAHRGANG);
 		assertEquals("Eltern Neuaufnahmen JG 09", format);
 	}
 
@@ -197,7 +197,7 @@ public class AdressbuchKategorienUtilTest {
 	 */
 	@Test
 	void testFormatErzieherNeuaufnahmenAlle() {
-		String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenAlle();
+		final String format = adressbuchKategorienUtil.formatErzieherNeuaufnahmenAlle();
 		assertEquals("Eltern Neuaufnahmen", format);
 	}
 }

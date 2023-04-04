@@ -17,22 +17,22 @@ import de.svws_nrw.davapi.util.icalendar.VCalendar;
  * Diese Klasse repräsentiert ein ICalendar Property für eine Datumsliste (bspw. EXDATE oder RDATE)
  *
  */
-public class DateListProperty implements IProperty {
+public final class DateListProperty implements IProperty {
 
 	/** Der Key für dieses Property */
-	private PropertyKeys key;
+	private final PropertyKeys key;
 
 	/** Liste der Daten */
-	private List<LocalDate> dateList = new Vector<>();
+	private final List<LocalDate> dateList = new Vector<>();
 
 	/**
 	 * Property für eine Liste von Daten, genutzt mit den Keys
 	 * {@link PropertyKeys#EXDATE} und {@link PropertyKeys#RDATE}
-	 * 
+	 *
 	 * @param key der Key für dieses Property, {@link PropertyKeys#EXDATE} oder
 	 *            {@link PropertyKeys#RDATE}
 	 */
-	public DateListProperty(PropertyKeys key) {
+	public DateListProperty(final PropertyKeys key) {
 		this.key = key;
 	}
 
@@ -47,7 +47,7 @@ public class DateListProperty implements IProperty {
 	}
 
 	@Override
-	public void serialize(StringBuffer sb) {
+	public void serialize(final StringBuffer sb) {
 		sb.append(this.getKey());
 		sb.append(COLON_CHAR);
 		sb.append(this.getValue());
@@ -56,7 +56,7 @@ public class DateListProperty implements IProperty {
 
 	/**
 	 * getter für die Datumsliste
-	 * 
+	 *
 	 * @return die Datumsliste
 	 */
 	public List<LocalDate> getDateList() {
@@ -65,32 +65,32 @@ public class DateListProperty implements IProperty {
 
 	/**
 	 * fügt ein Datum zu dieser Liste der Daten hinzu
-	 * 
+	 *
 	 * @param d das Datum
 	 */
-	public void addDate(LocalDate d) {
+	public void addDate(final LocalDate d) {
 		this.dateList.add(d);
 	}
 
 	/**
 	 * Fügt eine Sammlung von Datumswerten zu dieser Datumsliste hinzu
-	 * 
+	 *
 	 * @param dates die Datumswerte
 	 */
-	public void addAll(Collection<LocalDate> dates) {
+	public void addAll(final Collection<LocalDate> dates) {
 		this.dateList.addAll(dates);
 	}
 
 	/**
 	 * Fügt eine alle Datumswerte von einem Start- bis zu einem Enddatum zu dieser
 	 * Liste hinzu. Startdatum ist inklusiv, Enddatum exklusiv
-	 * 
+	 *
 	 * @param from Startdatum
 	 * @param to   Enddatum
 	 */
 	public void addAllBetween(final LocalDate from, final LocalDate to) {
-		long numOfDaysBetween = ChronoUnit.DAYS.between(from, to);
-		List<LocalDate> list = IntStream.iterate(0, i -> i + 1).limit(numOfDaysBetween).mapToObj(from::plusDays).toList();
+		final long numOfDaysBetween = ChronoUnit.DAYS.between(from, to);
+		final List<LocalDate> list = IntStream.iterate(0, i -> i + 1).limit(numOfDaysBetween).mapToObj(from::plusDays).toList();
 		this.addAll(list);
 	}
 }

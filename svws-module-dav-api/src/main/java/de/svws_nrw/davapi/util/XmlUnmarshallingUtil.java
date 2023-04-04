@@ -27,7 +27,7 @@ import de.svws_nrw.core.logger.Logger;
  * ({@link de.svws_nrw.davapi.model.dav.Prop}) besser behandeln zu
  * können.
  */
-public class XmlUnmarshallingUtil {
+public final class XmlUnmarshallingUtil {
 
 	/**
 	 * Logger für diese Klasse
@@ -54,11 +54,11 @@ public class XmlUnmarshallingUtil {
 	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
 	 *                     dieser Methode zu einer IOException
 	 */
-	public static <T> T unmarshal(InputStream inputstream, Class<T> typeClass) throws IOException {
+	public static <T> T unmarshal(final InputStream inputstream, final Class<T> typeClass) throws IOException {
 		if (typeClass == String.class) {
 			return typeClass.cast(unmarshalToString(inputstream));
 		}
-		ObjectMapper mapper = getMapper();
+		final ObjectMapper mapper = getMapper();
 		return mapper.readValue(inputstream, typeClass);
 	}
 
@@ -76,10 +76,10 @@ public class XmlUnmarshallingUtil {
 	 * @return Optional der angegebenen Typ-Klasse. Falls die Deserialisierung nicht
 	 *         erfolgreich war, wird das Optional.empty() zurückgegeben.
 	 */
-	public static <T> Optional<T> tryUnmarshal(InputStream inputstream, Class<T> typeClass) {
+	public static <T> Optional<T> tryUnmarshal(final InputStream inputstream, final Class<T> typeClass) {
 		try {
 			return Optional.of(unmarshal(inputstream, typeClass));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			logger.log("Error beim Unmarshalling des Inputstreams: " + e.getMessage());
 			return Optional.empty();
 		}
@@ -99,13 +99,13 @@ public class XmlUnmarshallingUtil {
 	 * @return Optional der angegebenen Typ-Klasse. Falls die Deserialisierung nicht
 	 *         erfolgreich war, wird das Optional.empty() zurückgegeben.
 	 */
-	public static <T> Optional<T> tryUnmarshal(String input, Class<T> typeClass) {
+	public static <T> Optional<T> tryUnmarshal(final String input, final Class<T> typeClass) {
 		try {
-			T unmarshal = unmarshal(input, typeClass);
+			final T unmarshal = unmarshal(input, typeClass);
 			return Optional.of(unmarshal);
-		} catch (IOException e) {
-			StringWriter out = new StringWriter();
-			PrintWriter pw = new PrintWriter(out);
+		} catch (final IOException e) {
+			final StringWriter out = new StringWriter();
+			final PrintWriter pw = new PrintWriter(out);
 			e.printStackTrace(pw);
 			// info level log, weil hier Fehler regelmäßig zu erwarten sind (bspw. weil
 			// bewusst verschiedene typeClass geprüft werden)
@@ -127,8 +127,8 @@ public class XmlUnmarshallingUtil {
 	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
 	 *                     dieser Methode zu einer IOException
 	 */
-	public static <T> T unmarshal(String input, Class<T> typeClass) throws IOException {
-		ObjectMapper mapper = getMapper();
+	public static <T> T unmarshal(final String input, final Class<T> typeClass) throws IOException {
+		final ObjectMapper mapper = getMapper();
 		return mapper.readValue(input, typeClass);
 	}
 
@@ -140,17 +140,19 @@ public class XmlUnmarshallingUtil {
 	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
 	 *                     dieser Methode zu einer IOException
 	 */
-	private static String unmarshalToString(InputStream inputstream) {
+	private static String unmarshalToString(final InputStream inputstream) {
 		return new BufferedReader(new InputStreamReader(inputstream)).lines().collect(Collectors.joining("\n"));
 	}
 
 	/**
 	 * Erstellt einen neuen ObjectMapper zum (de-)serialisieren von Xmls
+	 *
+	 * @return der ObjectMapper
 	 */
 	private static ObjectMapper getMapper() {
-		JacksonXmlModule module = new JacksonXmlModule();
+		final JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
-		ObjectMapper mapper = new XmlMapper(module);
+		final ObjectMapper mapper = new XmlMapper(module);
 		mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
 		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
@@ -158,7 +160,7 @@ public class XmlUnmarshallingUtil {
 	}
 
 	private static Logger createLogger() {
-		Logger logger = new Logger();
+		final Logger logger = new Logger();
 		logger.addConsumer(new LogConsumerConsole(true, false));
 		return logger;
 	}

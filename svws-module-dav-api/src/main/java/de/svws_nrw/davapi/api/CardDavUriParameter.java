@@ -22,7 +22,7 @@ public class CardDavUriParameter {
 	/**
 	 * getter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an
 	 * das API ausgeführt werden
-	 * 
+	 *
 	 * @return der Parameter für 'schema'
 	 */
 	public String getSchema() {
@@ -32,16 +32,16 @@ public class CardDavUriParameter {
 	/**
 	 * setter für den Parameter 'schema', das Datenbankschema, gegen das Anfragen an
 	 * das API ausgeführt werden
-	 * 
+	 *
 	 * @param schema der Parameter für 'schema'
 	 */
-	public void setSchema(String schema) {
+	public void setSchema(final String schema) {
 		this.schema = schema;
 	}
 
 	/**
 	 * getter für den Parameter 'benutzerId', die Id der Ressource Benutzer
-	 * 
+	 *
 	 * @return der Parameter für 'benutzerId'
 	 */
 	public String getBenutzerId() {
@@ -50,16 +50,16 @@ public class CardDavUriParameter {
 
 	/**
 	 * setter für den Parameter 'benutzerId', die Id der Ressource Benutzer
-	 * 
+	 *
 	 * @param benutzerId der Parameter für 'benutzerId'
 	 */
-	public void setBenutzerId(String benutzerId) {
+	public void setBenutzerId(final String benutzerId) {
 		this.benutzerId = benutzerId;
 	}
 
 	/**
 	 * getter für den Parameter 'adressbuchId', die Id der Ressource Adressbuch
-	 * 
+	 *
 	 * @return der Parameter für 'adressbuchId'
 	 */
 	public String getAdressbuchId() {
@@ -68,17 +68,17 @@ public class CardDavUriParameter {
 
 	/**
 	 * setter für den Parameter 'adressbuchId', die Id der Ressource Adressbuch
-	 * 
+	 *
 	 * @param adressbuchId der Parameter für 'adressbuchId'
 	 */
-	public void setAdressbuchId(String adressbuchId) {
+	public void setAdressbuchId(final String adressbuchId) {
 		this.adressbuchId = adressbuchId;
 	}
 
 	/**
 	 * getter für den Parameter 'adressbuchEintragId', die Id der Ressource
 	 * AdressbuchEintrag
-	 * 
+	 *
 	 * @return der Parameter für 'adressbuchEintragId'
 	 */
 	public String getAdressbuchEintragId() {
@@ -88,21 +88,21 @@ public class CardDavUriParameter {
 	/**
 	 * setter für den Parameter 'adressbuchEintragId', die Id der Ressource
 	 * AdressbuchEintrag
-	 * 
+	 *
 	 * @param adressbuchEintragId der Parameter für 'adressbuchEintragId'
 	 */
-	public void setAdressbuchEintragId(String adressbuchEintragId) {
+	public void setAdressbuchEintragId(final String adressbuchEintragId) {
 		this.adressbuchEintragId = adressbuchEintragId;
 	}
 
 	/**
 	 * generiert eine Map aus diesen URI-Parametern zur weiteren Verwendung
-	 * 
+	 *
 	 * @return eine Map, bei denen die URIParameter zu ihren Parameterbezeichnungen
 	 *         gemappt sind
 	 */
 	public Map<String, String> toMap() {
-		Map<String, String> parameters = new HashMap<>();
+		final Map<String, String> parameters = new HashMap<>();
 
 		if (this.schema != null && !this.schema.isBlank()) {
 			parameters.put("schema", this.schema);

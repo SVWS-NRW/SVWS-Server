@@ -20,7 +20,7 @@ public class VEvent {
 	/** der Endzeitpunkt des Events */
 	private Instant dtEnd;
 	/** die Properties dieses Events */
-	private List<IProperty> properties = new Vector<>();
+	private final List<IProperty> properties = new Vector<>();
 
 	/**
 	 * empty default constructor
@@ -31,7 +31,7 @@ public class VEvent {
 
 	/**
 	 * getter für den Startzeitpunk
-	 * 
+	 *
 	 * @return den Startzeitpunkt des Events
 	 */
 	public Instant getDTStart() {
@@ -40,7 +40,7 @@ public class VEvent {
 
 	/**
 	 * getter für den Endzeitpunkt des Events
-	 * 
+	 *
 	 * @return den Endzeitpunkt
 	 */
 	public Instant getDTEnd() {
@@ -50,29 +50,29 @@ public class VEvent {
 	/**
 	 * Fügt ein Property zu diesem Event hinzu und parst dieses gegebenenfalls in
 	 * Start- und Endzeitpunkt.
-	 * 
+	 *
 	 * @param property das zuzufügende Property
 	 */
-	public void addProperty(IProperty property) {
+	public void addProperty(final IProperty property) {
 		if (property.getKey().startsWith(DTSTART_KEY)) {
 			this.dtStart = DateTimeUtil.parseCalDav(property);
 		} else if (property.getKey().startsWith(DTEND_KEY)) {
 			this.dtEnd = DateTimeUtil.parseCalDav(property);
-		} 
+		}
 		this.properties.add(property);
 	}
 
 	/**
 	 * parst ein VEvent aus dem gegebenen Iterator über die Zeilen eines
 	 * serialisierten VCalendars
-	 * 
+	 *
 	 * @param linesIterator der iterator über die Zeilen des serialisierten
 	 *                      VCalendars
 	 * @return das VEvent mit den geparsten Properties
 	 */
-	static VEvent parse(Iterator<String> linesIterator) {
+	static VEvent parse(final Iterator<String> linesIterator) {
 		IProperty property = IProperty.fromString(linesIterator.next());
-		VEvent event = new VEvent();
+		final VEvent event = new VEvent();
 		while (!IProperty.isProperty(property, VCalendar.END_PROPERTY_KEY, VEvent.VEVENT_VALUE)) {
 			event.addProperty(property);
 			property = IProperty.fromString(linesIterator.next());
@@ -82,12 +82,12 @@ public class VEvent {
 
 	/**
 	 * Serialisiert dieses VEvent im gegebenen Strinbuilder
-	 * 
+	 *
 	 * @param sb der StringBuilder
 	 */
-	public void serialize(StringBuffer sb) {
+	public void serialize(final StringBuffer sb) {
 		new Property(VCalendar.BEGIN_PROPERTY_KEY, VEVENT_VALUE).serialize(sb);
-		for (IProperty p : properties) {
+		for (final IProperty p : properties) {
 			p.serialize(sb);
 		}
 		new Property(VCalendar.END_PROPERTY_KEY, VEVENT_VALUE).serialize(sb);
@@ -98,14 +98,14 @@ public class VEvent {
 	 * Beschreibung. Greift auf
 	 * {@link #createSimpleEvent(Instant, Instant, String, String)} zurück und setzt
 	 * als TimeZone die {@link DateTimeUtil#TIMEZONE_DEFAULT}
-	 * 
+	 *
 	 * @param start       startzeitpunkt
 	 * @param end         endzeitpunkt
 	 * @param title       Titel des Ereignis
 	 * @param description Beschreibung des Ereignis
 	 * @return VEvent mit gegebenen Parametern
 	 */
-	public static VEvent createSimpleEvent(Instant start, Instant end, String title, String description) {
+	public static VEvent createSimpleEvent(final Instant start, final Instant end, final String title, final String description) {
 		return createSimpleEvent(start, end, title, description, DateTimeUtil.TIMEZONE_DEFAULT);
 	}
 
@@ -114,7 +114,7 @@ public class VEvent {
 	 * Beschreibung. Greift auf
 	 * {@link #createSimpleEvent(Instant, Instant, String, String)} zurück und setzt
 	 * als TimeZone die {@link DateTimeUtil#TIMEZONE_DEFAULT}
-	 * 
+	 *
 	 * @param start       startzeitpunkt
 	 * @param end         endzeitpunkt
 	 * @param title       Titel des Ereignis
@@ -122,8 +122,8 @@ public class VEvent {
 	 * @param tzid        die Zeitzone für den Start- und Endzeitpunk
 	 * @return VEvent mit gegebenen Parametern
 	 */
-	public static VEvent createSimpleEvent(Instant start, Instant end, String title, String description, String tzid) {
-		VEvent e = new VEvent();
+	public static VEvent createSimpleEvent(final Instant start, final Instant end, final String title, final String description, final String tzid) {
+		final VEvent e = new VEvent();
 		e.addProperty(new Property(PropertyKeys.DTSTART.toStringWithArguments("TZID=" + tzid),
 				DateTimeUtil.toCalDavString(start, tzid)));
 		e.addProperty(new Property(PropertyKeys.DTEND.toStringWithArguments("TZID=" + tzid),
