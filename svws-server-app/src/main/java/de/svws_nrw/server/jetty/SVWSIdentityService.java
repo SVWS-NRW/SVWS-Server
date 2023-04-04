@@ -14,41 +14,41 @@ import de.svws_nrw.api.OpenAPIPrincipal;
 
 /**
  * Dies Klasse implmentiert die Schnittstelle {@link IdentityService}
- * des Jetty-Server und wird für die Klasse {@link HttpServer} 
- * und dem Umgang mit einer {@link SVWSUserIdentity} benötigt. 
+ * des Jetty-Server und wird für die Klasse {@link HttpServer}
+ * und dem Umgang mit einer {@link SVWSUserIdentity} benötigt.
  */
-public class SVWSIdentityService implements IdentityService {
-	
+public final class SVWSIdentityService implements IdentityService {
+
 	@Override
-	public Object associate(UserIdentity user) {
+	public Object associate(final UserIdentity user) {
 		return null;
 	}
 
 	@Override
-	public void disassociate(Object previous) {
+	public void disassociate(final Object previous) {
 		//
 	}
 
 	@Override
-	public Object setRunAs(UserIdentity user, RunAsToken token) {
+	public Object setRunAs(final UserIdentity user, final RunAsToken token) {
 		return token;
 	}
 
 	@Override
-	public void unsetRunAs(Object token) {
+	public void unsetRunAs(final Object token) {
 		//
 	}
 
-	
+
 	@Override
-	public UserIdentity newUserIdentity(Subject subject, Principal userPrincipal, String[] roles) {
+	public UserIdentity newUserIdentity(final Subject subject, final Principal userPrincipal, final String[] roles) {
 		if (userPrincipal instanceof OpenAPIPrincipal)
 			return new SVWSUserIdentity(subject, userPrincipal);
 		return UserIdentity.UNAUTHENTICATED_IDENTITY;
 	}
 
 	@Override
-	public RunAsToken newRunAsToken(String runAsName) {
+	public RunAsToken newRunAsToken(final String runAsName) {
 		return new RoleRunAsToken(runAsName);
 	}
 
