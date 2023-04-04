@@ -32,15 +32,15 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/jahrgaenge")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIJahrgaenge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Jahrgänge im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Jahrgänge mit ID des Datenbankschemas
      */
     @GET
@@ -56,21 +56,21 @@ public class APIJahrgaenge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
-    public Response getJahrgaenge(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataJahrgangsliste(conn)).getList();
     	}
     }
-    
 
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Jahrgangs
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Daten des Jahrgangs
      */
     @GET
@@ -84,20 +84,20 @@ public class APIJahrgaenge {
                  schema = @Schema(implementation = JahrgangsDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Jahrgangs-Eintrag mit der angegebenen ID gefunden")
-    public Response getJahrgang(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                    @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataJahrgangsdaten(conn)).get(id);
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der in den einzelnen Schulformen gültigen Jahrgänge.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              der Katalog der in den einzelnen Schulformen gültigen Jahrgänge
      */
     @GET
@@ -109,9 +109,9 @@ public class APIJahrgaenge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
-    public Response getKatalogJahrgaenge(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKatalogJahrgaenge()).getAll();
-    }  
+    }
 
 }

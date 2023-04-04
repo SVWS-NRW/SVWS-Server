@@ -21,24 +21,24 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Die Klasse spezifiziert die OpenAPI-Schnittstelle für die Arbeit mit den 
+ * Die Klasse spezifiziert die OpenAPI-Schnittstelle für die Arbeit mit den
  * grundlegenden Daten des Externen Notenmoduls (ENM).
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/enm/...
  */
 @Path("/db/{schema}/enm")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIENM {
 
-	
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer
      * des aktuellen Schuljahresabschnitts der Schule.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die ENM-Daten
      */
     @GET
@@ -52,20 +52,20 @@ public class APIENM {
                  schema = @Schema(implementation = ENMDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
-    public Response getENMDaten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getENMDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
 	    	return (new DataENMDaten(conn)).getAll();
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer
      * des aktuellen Schuljahresabschnitts der Schule als GZIP-Json.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die ENM-Daten
      */
     @GET
@@ -80,21 +80,21 @@ public class APIENM {
                  schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierte ENM-JSON-Datei")))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
-    public Response getENMDatenGZip(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getENMDatenGZip(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
 	    	return (new DataENMDaten(conn)).getAllGZip();
     	}
     }
-    
+
 
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf einen Lehrer.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Lehrers
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Daten für das ENM des Lehrers
      */
     @GET
@@ -108,11 +108,11 @@ public class APIENM {
                  schema = @Schema(implementation = ENMDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    public Response getLehrerENMDaten(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getLehrerENMDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                    @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
 	    	return (new DataENMDaten(conn)).get(id);
     	}
     }
-	
+
 }

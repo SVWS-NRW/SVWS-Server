@@ -32,16 +32,16 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/klassen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIKlassen {
-	
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abschnitt     die ID des Schuljahresabschnitts
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Klassen mit ID des Datenbankschemas
      */
     @GET
@@ -56,20 +56,20 @@ public class APIKlassen {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
-    public Response getKlassenFuerAbschnitt(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, @Context HttpServletRequest request) {
+    public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKlassenlisten(conn, abschnitt)).getList();
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten einer Klasse.
-     *  
+     *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id           die Datenbank-ID zur Identifikation der Klasse
      * @param request      die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Daten der Klasse
      */
     @GET
@@ -83,20 +83,20 @@ public class APIKlassen {
                  schema = @Schema(implementation = KlassenDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
-    public Response getKlasse(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                    @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKlassendaten(conn)).get(id);
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Klassenarten.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              der Katalog der gültigen Klassenarten
      */
     @GET
@@ -108,9 +108,9 @@ public class APIKlassen {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenartKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassenart-Katalog-Einträge gefunden")
-    public Response getKatalogKlassenarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKlassenarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKatalogKlassenarten()).getAll();
     }
-    
+
 }

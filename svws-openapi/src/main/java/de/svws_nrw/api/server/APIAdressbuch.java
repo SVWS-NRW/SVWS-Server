@@ -39,7 +39,7 @@ public class APIAdressbuch {
 
 	/**
 	 * Die CardDAV-API Methode zur Abfrage von Eigenschaften der Root-Ressource.
-	 * 
+	 *
 	 * @param schema  Das Datenbankschema, auf welches die Abfrage ausgeführt werden
 	 *                soll
 	 * @param request Die Informationen zur HTTP-Anfrage
@@ -49,13 +49,13 @@ public class APIAdressbuch {
 	@PROPFIND
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnRoot(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+	public Response propfindOnRoot(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			PropfindDavRootDispatcher dispatcher = createPropfindDavRootDispatcher(conn);
-			Object result = dispatcher.dispatchCollection(inputStream);
+			final PropfindDavRootDispatcher dispatcher = createPropfindDavRootDispatcher(conn);
+			final Object result = dispatcher.dispatchCollection(inputStream);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -77,14 +77,14 @@ public class APIAdressbuch {
 	@Path(DavUriBuilder.DAV_REL_URI_PATTERN_PRINCIPAL)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnPrincipal(@PathParam("schema") String schema, @PathParam("benutzerId") String benutzerId,
-			@Context HttpServletRequest request) {
+	public Response propfindOnPrincipal(@PathParam("schema") final String schema, @PathParam("benutzerId") final String benutzerId,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			PropfindPrincipalDispatcher dispatcher = createPropfindPrincipalDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, benutzerId);
+			final PropfindPrincipalDispatcher dispatcher = createPropfindPrincipalDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, benutzerId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -104,13 +104,13 @@ public class APIAdressbuch {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK_COLLECTION)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnAddressbooks(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+	public Response propfindOnAddressbooks(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, "");
+			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, "");
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -132,14 +132,14 @@ public class APIAdressbuch {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnAddressbook(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String adressbuchId, @Context HttpServletRequest request) {
+	public Response propfindOnAddressbook(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, adressbuchId);
+			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -161,14 +161,14 @@ public class APIAdressbuch {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESSBOOK)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response reportOnAddressbook(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String adressbuchId, @Context HttpServletRequest request) {
+	public Response reportOnAddressbook(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, adressbuchId);
+			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -190,15 +190,15 @@ public class APIAdressbuch {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_ADDRESS_ENTRY)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response reportOnContact(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String adressbuchId, @PathParam("resourceId") String kontaktId,
-			@Context HttpServletRequest request) {
+	public Response reportOnContact(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String adressbuchId, @PathParam("resourceId") final String kontaktId,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
-			ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, adressbuchId);
+			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -214,7 +214,7 @@ public class APIAdressbuch {
 	 *               generiert.
 	 * @return Response Objekt
 	 */
-	private static Response buildResponse(Object result) {
+	private static Response buildResponse(final Object result) {
 		if (result instanceof Multistatus) {
 			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(result).build();
 		} else if (result instanceof Error) {
@@ -229,9 +229,10 @@ public class APIAdressbuch {
 	 * ErrorMessage
 	 *
 	 * @param e the Exception
-	 * @return
+	 *
+	 * @return die HTTP-Response
 	 */
-	private static Response buildBadRequest(IOException e) {
+	private static Response buildBadRequest(final IOException e) {
 		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
 	}
 
@@ -242,8 +243,8 @@ public class APIAdressbuch {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static PropfindDavRootDispatcher createPropfindDavRootDispatcher(DBEntityManager conn) {
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static PropfindDavRootDispatcher createPropfindDavRootDispatcher(final DBEntityManager conn) {
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new PropfindDavRootDispatcher(uriParameter);
@@ -256,9 +257,9 @@ public class APIAdressbuch {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static ReportAddressbookDispatcher createReportAddressbookDispatcher(DBEntityManager conn) {
-		IAdressbuchRepository adressbuchRepository = createAdressbuchRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static ReportAddressbookDispatcher createReportAddressbookDispatcher(final DBEntityManager conn) {
+		final IAdressbuchRepository adressbuchRepository = createAdressbuchRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new ReportAddressbookDispatcher(adressbuchRepository, uriParameter);
@@ -271,9 +272,9 @@ public class APIAdressbuch {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static PropfindAddressbookDispatcher createPropfindAddressbookDispatcher(DBEntityManager conn) {
-		IAdressbuchRepository repository = createAdressbuchRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static PropfindAddressbookDispatcher createPropfindAddressbookDispatcher(final DBEntityManager conn) {
+		final IAdressbuchRepository repository = createAdressbuchRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new PropfindAddressbookDispatcher(repository, uriParameter);
@@ -286,8 +287,8 @@ public class APIAdressbuch {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static PropfindPrincipalDispatcher createPropfindPrincipalDispatcher(DBEntityManager conn) {
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static PropfindPrincipalDispatcher createPropfindPrincipalDispatcher(final DBEntityManager conn) {
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new PropfindPrincipalDispatcher(uriParameter);
@@ -301,7 +302,7 @@ public class APIAdressbuch {
 	 * @return eine Implementierung von {@link IAdressbuchRepository} für den
 	 *         Zugriff auf Adressbuecher.
 	 */
-	private static IAdressbuchRepository createAdressbuchRepository(DBEntityManager conn) {
+	private static IAdressbuchRepository createAdressbuchRepository(final DBEntityManager conn) {
 		return new AdressbuchWithCategoriesRepository(conn);
 	}
 }

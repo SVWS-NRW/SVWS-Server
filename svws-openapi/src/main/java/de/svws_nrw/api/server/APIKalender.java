@@ -71,16 +71,16 @@ public class APIKalender {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_COLLECTION)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnCalendarCollection(@PathParam("schema") String schema,
-			@Context HttpServletRequest request) {
+	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
-			PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, "");
+			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, "");
 			return buildResponse(result);
-		} catch (IOException e) {
-			StringWriter out = new StringWriter();
-			PrintWriter pw = new PrintWriter(out);
+		} catch (final IOException e) {
+			final StringWriter out = new StringWriter();
+			final PrintWriter pw = new PrintWriter(out);
 			e.printStackTrace(pw);
 			logger.log(LogLevel.ERROR, "Bei der Anfrage ist folgende IOException aufgetreten:" + pw.toString());
 			return buildBadRequest(e);
@@ -100,14 +100,14 @@ public class APIKalender {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response propfindOnCalendar(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String kalenderId, @Context HttpServletRequest request) {
+	public Response propfindOnCalendar(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
-			PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, kalenderId);
+			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -127,14 +127,14 @@ public class APIKalender {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response reportOnCalendar(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String kalenderId, @Context HttpServletRequest request) {
+	public Response reportOnCalendar(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
-			ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
-			Object result = dispatcher.dispatch(inputStream, kalenderId);
+			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
+			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -160,20 +160,20 @@ public class APIKalender {
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY)
 	@Consumes({ "Text/Calendar", MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
-	public Response putOnCalendar(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String kalenderId, @PathParam("resourceId") String kalenderEintragUId,
-			@HeaderParam("If-None-Match") String ifNonMatchHeader, @HeaderParam("If-Match") String ifMatchHeader,
-			@Context HttpServletRequest request) {
+	public Response putOnCalendar(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUId,
+			@HeaderParam("If-None-Match") final String ifNonMatchHeader, @HeaderParam("If-Match") final String ifMatchHeader,
+			@Context final HttpServletRequest request) {
 
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
-			PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
+			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
 
 			if (ifNonMatchHeader != null && "*".equals(ifNonMatchHeader)) {
 				// Es soll ein neuer Termin erstellt werden,
 				// also nicht etwa (versehentlich) ein Termin mit der angegebenen Id
 				// überschrieben werden.
-				Object eTagResult = dispatcher.dispatchCreate(inputStream, kalenderId, kalenderEintragUId);
+				final Object eTagResult = dispatcher.dispatchCreate(inputStream, kalenderId, kalenderEintragUId);
 				if (eTagResult instanceof Error) {
 					return buildResponse(eTagResult);
 				}
@@ -185,7 +185,7 @@ public class APIKalender {
 
 			if (ifMatchHeader != null && !ifMatchHeader.isBlank()) {
 				// Update des Kalendereintrags durchführen
-				Object eTagResult = dispatcher.dispatchUpdate(inputStream, kalenderId, kalenderEintragUId,
+				final Object eTagResult = dispatcher.dispatchUpdate(inputStream, kalenderId, kalenderEintragUId,
 						ifMatchHeader);
 				if (eTagResult instanceof Error) {
 					return buildResponse(eTagResult);
@@ -198,7 +198,7 @@ public class APIKalender {
 
 			return buildBadRequest(new BadRequestException("Ungültige Anfrage"));
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return buildBadRequest(e);
 		}
@@ -206,7 +206,7 @@ public class APIKalender {
 
 	/**
 	 * API-Methode für Löschen von Kalendereinträgen
-	 * 
+	 *
 	 * @param schema             das Schema der Datenbank
 	 * @param kalenderId         die ID des Kalenders
 	 * @param kalenderEintragUID die UID der zu löschenden Ressource
@@ -219,21 +219,21 @@ public class APIKalender {
 	@DELETE
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR_ENTRY)
 	@Produces(MediaType.TEXT_XML)
-	public Response deleteOnCalendar(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String kalenderId, @PathParam("resourceId") String kalenderEintragUID,
-			@HeaderParam("If-Match") String ifMatchHeader, @Context HttpServletRequest request) {
+	public Response deleteOnCalendar(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUID,
+			@HeaderParam("If-Match") final String ifMatchHeader, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
-			DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
-			Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId, kalenderEintragUID, ifMatchHeader);
+			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
+			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId, kalenderEintragUID, ifMatchHeader);
 			if (dispatched.isPresent()) {
 				// ein Ergebnis zeigt an, dass der Request nicht erfolgreich war, warum steht im
 				// Multistatus
 				return buildResponse(dispatched);
-			} 
+			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
@@ -242,7 +242,7 @@ public class APIKalender {
 
 	/**
 	 * API-Methode zum Löschen einer Kalender-Ressourcensammlung
-	 * 
+	 *
 	 * @param schema     das Schema der Datenbank
 	 * @param kalenderId die ID des zu löschenden Kalenders
 	 * @param request    Informationen zum HTTP-Request
@@ -252,12 +252,12 @@ public class APIKalender {
 	@DELETE
 	@Path(DavUriBuilder.CARD_DAV_REL_URI_PATTERN_CALENDAR)
 	@Produces(MediaType.TEXT_XML)
-	public Response deleteOnCalendar(@PathParam("schema") String schema,
-			@PathParam("resourceCollectionId") String kalenderId, @Context HttpServletRequest request) {
+	public Response deleteOnCalendar(@PathParam("schema") final String schema,
+			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
-			DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
-			Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId);
+			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
+			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId);
 			if (dispatched.isPresent()) {
 				// ein Ergebnis zeigt an, dass der Request nicht erfolgreich war, warum steht im
 				// Multistatus
@@ -265,7 +265,7 @@ public class APIKalender {
 			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
 		}
@@ -273,14 +273,14 @@ public class APIKalender {
 
 	/**
 	 * erstellt einen Delete-Dispatcher für die Connection
-	 * 
+	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param schema das Schema für die URI-Parameter
 	 * @return den Delete Dispatcher
 	 */
-	private static DeleteRessourceDispatcher createDeleteOnDavRessourceDispatcher(DBEntityManager conn, String schema) {
-		IDavRepository davRepository = new DavRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static DeleteRessourceDispatcher createDeleteOnDavRessourceDispatcher(final DBEntityManager conn, final String schema) {
+		final IDavRepository davRepository = new DavRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(schema);
 		return new DeleteRessourceDispatcher(davRepository, uriParameter);
 	}
@@ -295,7 +295,7 @@ public class APIKalender {
 	 *               generiert.
 	 * @return Response Objekt
 	 */
-	private static Response buildResponse(Object result) {
+	private static Response buildResponse(final Object result) {
 		if (result instanceof Multistatus) {
 			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(result).build();
 		} else if (result instanceof Error) {
@@ -312,7 +312,7 @@ public class APIKalender {
 	 * @param eTag Objektklasse für das eTag({@link EntityTag}
 	 * @return Response Objekt
 	 */
-	private static Response buildCreatedResponse(EntityTag eTag) {
+	private static Response buildCreatedResponse(final EntityTag eTag) {
 		return Response.status(Response.Status.CREATED).header("ETag", eTag.getValue()).build();
 	}
 
@@ -323,7 +323,7 @@ public class APIKalender {
 	 * @param eTag Objektklasse für das eTag({@link EntityTag}
 	 * @return Response Objekt
 	 */
-	private static Response buildNoContentResponse(EntityTag eTag) {
+	private static Response buildNoContentResponse(final EntityTag eTag) {
 		return Response.status(Response.Status.NO_CONTENT).header("ETag", eTag.getValue()).build();
 	}
 
@@ -334,7 +334,7 @@ public class APIKalender {
 	 * @param e the Exception
 	 * @return Response Objekt
 	 */
-	private static Response buildBadRequest(Exception e) {
+	private static Response buildBadRequest(final Exception e) {
 		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
 	}
 
@@ -345,9 +345,9 @@ public class APIKalender {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static PropfindCalendarDispatcher createPropfindCalendarDispatcher(DBEntityManager conn) {
-		IKalenderRepository repository = createKalenderRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static PropfindCalendarDispatcher createPropfindCalendarDispatcher(final DBEntityManager conn) {
+		final IKalenderRepository repository = createKalenderRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new PropfindCalendarDispatcher(repository, uriParameter);
@@ -359,9 +359,9 @@ public class APIKalender {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static ReportCalendarDispatcher createReportCalendarDispatcher(DBEntityManager conn) {
-		IKalenderRepository repository = createKalenderRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static ReportCalendarDispatcher createReportCalendarDispatcher(final DBEntityManager conn) {
+		final IKalenderRepository repository = createKalenderRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new ReportCalendarDispatcher(repository, uriParameter);
@@ -373,9 +373,9 @@ public class APIKalender {
 	 * @param conn die Datenbankverbindung
 	 * @return ein parametrierter Dispatcher
 	 */
-	private static PutCalendarDispatcher createPutCalendarDispatcher(DBEntityManager conn) {
-		IKalenderEintragRepository eintragRepository = createKalenderEintragRepository(conn);
-		DavUriParameter uriParameter = new DavUriParameter();
+	private static PutCalendarDispatcher createPutCalendarDispatcher(final DBEntityManager conn) {
+		final IKalenderEintragRepository eintragRepository = createKalenderEintragRepository(conn);
+		final DavUriParameter uriParameter = new DavUriParameter();
 		uriParameter.setSchema(conn.getDBSchema());
 		uriParameter.setBenutzerId(String.valueOf(conn.getUser().getId()));
 		return new PutCalendarDispatcher(eintragRepository, uriParameter);
@@ -390,7 +390,7 @@ public class APIKalender {
 	 *         {@link de.svws_nrw.davapi.data.IKalenderRepository} für den
 	 *         Zugriff auf Kalender.
 	 */
-	private static IKalenderRepository createKalenderRepository(DBEntityManager conn) {
+	private static IKalenderRepository createKalenderRepository(final DBEntityManager conn) {
 		return new KalenderRepository(conn);
 	}
 
@@ -404,7 +404,7 @@ public class APIKalender {
 	 *         {@link de.svws_nrw.davapi.data.IKalenderEintragRepository} für
 	 *         den Zugriff auf Kalender.
 	 */
-	private static IKalenderEintragRepository createKalenderEintragRepository(DBEntityManager conn) {
+	private static IKalenderEintragRepository createKalenderEintragRepository(final DBEntityManager conn) {
 		return new KalenderRepository(conn);
 	}
 
@@ -416,15 +416,15 @@ public class APIKalender {
 	/**
 	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie
 	 * Inputstream des Requests
-	 * 
+	 *
 	 * @param request der request
 	 * @return ein ungelesener Inputstream des Requests
 	 * @throws IOException
 	 */
-	private static InputStream getInputStream(HttpServletRequest request) throws IOException {
+	private static InputStream getInputStream(final HttpServletRequest request) throws IOException {
 		InputStream result = request.getInputStream();
 		if (LOG_INPUTSTREAM) {
-			String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
+			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
 			logger.log(LogLevel.WARNING, request.toString());
 			logger.log(LogLevel.WARNING, input);
 			result = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
@@ -433,7 +433,7 @@ public class APIKalender {
 	}
 
 	private static Logger createLogger() {
-		Logger logger = new Logger();
+		final Logger logger = new Logger();
 		logger.addConsumer(new LogConsumerConsole(true, false));
 		return logger;
 	}

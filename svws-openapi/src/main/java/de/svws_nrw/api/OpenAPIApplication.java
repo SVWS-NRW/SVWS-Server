@@ -63,33 +63,33 @@ import jakarta.ws.rs.core.Context;
 
 /**
  * Diese Klasse dient als Grundlage für einen OpenAPI-Server und dient der Initialisierung
- * der OpenAPI-Schnittstelle auf Basis der zugeordneten OpenAPI-Klassen. Zunächst können 
+ * der OpenAPI-Schnittstelle auf Basis der zugeordneten OpenAPI-Klassen. Zunächst können
  * OpenAPI-Klassen über die Methode addAPI hinzugefügt werden, bevor das
  * Servlet später mit dem zugehörigen Init-Parameter (jakarta.ws.rs.Application)
  * und dieser Klasse initialisiert wird.
  */
 @ApplicationPath("/")
-public class OpenAPIApplication extends Application {
+public final class OpenAPIApplication extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
-    private Set<Class<?>> classes = new HashSet<>();
-    
-    
+    private final Set<Class<?>> classes = new HashSet<>();
+
+
     /**
      * Erstellt die OpenAPI-Definition für den server und levered diese zurück.
-     * 
+     *
      * @return die OpenAPI-Spezifikation ohne die Definition der Schnittstellen-Klassen.
      */
     public static OpenAPI getBasicOpenAPI() {
-    	String adminEmail= "admin@localhost";   // TODO Servlet-Config 
-    	String baseUrl = "https://localhost";   // TODO automatisch bestimmen
-    	
-        OpenAPI oas = new OpenAPI();
-        Info info = new Info()
+    	final String adminEmail = "admin@localhost";   // TODO Servlet-Config
+    	final String baseUrl = "https://localhost";   // TODO automatisch bestimmen
+
+        final OpenAPI oas = new OpenAPI();
+        final Info info = new Info()
                 .title("SVWSOpenAPI")
                 .version("1.0.0")
-                .description("Ein Server für die Bereitstellung der Open-API eines SVWS-Servers und Anwendungen zum Zugriff auf die Daten dieses Servers " +
-                        "auf [" + baseUrl + "](" + baseUrl + ").")
+                .description("Ein Server für die Bereitstellung der Open-API eines SVWS-Servers und Anwendungen zum Zugriff auf die Daten dieses Servers "
+                		+ "auf [" + baseUrl + "](" + baseUrl + ").")
                 .termsOfService(baseUrl + "/terms/")
                 .contact(new Contact()
                         .email(adminEmail))
@@ -105,21 +105,21 @@ public class OpenAPIApplication extends Application {
         oas.addServersItem(new Server().url("https://localhost").description("Lokaler Server"));
         return oas;
     }
-    
-    
+
+
 	/**
      * Erstellt eine neue OpenAPI-Applikation anhand der zuvor spezifizierten API-Klassen
-     * (@see addAPI). 
-	 * 
+     * (@see addAPI).
+	 *
 	 * @param servletConfig die Konfiguration für das Servlet
 	 */
 	@SuppressWarnings("rawtypes")
-	public OpenAPIApplication(@Context ServletConfig servletConfig) {
+	public OpenAPIApplication(@Context final ServletConfig servletConfig) {
 		super();
 
-		OpenAPI oas = getBasicOpenAPI();
+		final OpenAPI oas = getBasicOpenAPI();
 
-        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+        final SwaggerConfiguration oasConfig = new SwaggerConfiguration()
                 .openAPI(oas)
                 .prettyPrint(true)
 				.resourcePackages(Stream.of("de.svws_nrw.openapi").collect(Collectors.toSet()));
@@ -130,7 +130,7 @@ public class OpenAPIApplication extends Application {
                     .application(this)
                     .openApiConfiguration(oasConfig)
                     .buildContext(true);
-		} catch (OpenApiConfigurationException e) {
+		} catch (final OpenApiConfigurationException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 
@@ -177,18 +177,18 @@ public class OpenAPIApplication extends Application {
 
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests.
-	 * 
+	 *
 	 * @param request das HTTP-Request-Objekt
-	 * 
+	 *
 	 * @return der aktuelle SVWS-Benutzer
 	 */
-	private static Benutzer getSVWSUser(HttpServletRequest request) {
-		Principal principal = request.getUserPrincipal();
+	private static Benutzer getSVWSUser(final HttpServletRequest request) {
+		final Principal principal = request.getUserPrincipal();
 		if (principal instanceof OpenAPIPrincipal) {
-			Benutzer user = ((OpenAPIPrincipal) principal).getUser();
+			final Benutzer user = ((OpenAPIPrincipal) principal).getUser();
 			if (user == null)
 				return null;
-			DBConfig config = user.connectionManager.getConfig();
+			final DBConfig config = user.connectionManager.getConfig();
 			if ((config == null) || (config.getDBSchema() == null))
 				return user;
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
@@ -200,18 +200,18 @@ public class OpenAPIApplication extends Application {
 
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
-	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt.  
-	 * 
+	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt.
+	 *
 	 * @param request   das HTTP-Request-Objekt
 	 * @param kompetenz die zu prüfende Kompetenz
-	 * 
+	 *
 	 * @return der aktuelle SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
-	 * 
+	 *
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUser(HttpServletRequest request, BenutzerKompetenz kompetenz) throws WebApplicationException {
-		Benutzer user = getSVWSUser(request);
+	public static Benutzer getSVWSUser(final HttpServletRequest request, final BenutzerKompetenz kompetenz) throws WebApplicationException {
+		final Benutzer user = getSVWSUser(request);
 		if ((user == null) || (kompetenz != BenutzerKompetenz.KEINE) && (!user.pruefeKompetenz(kompetenz)))
 			throw OperationError.FORBIDDEN.exception();
 		return user;
@@ -219,61 +219,61 @@ public class OpenAPIApplication extends Application {
 
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
-	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Erlaubt wird auch der Zugriff von 
-	 * dem Benutzer mit der übergebenen Benutzer-ID.  
-	 * 
+	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Erlaubt wird auch der Zugriff von
+	 * dem Benutzer mit der übergebenen Benutzer-ID.
+	 *
 	 * @param request     das HTTP-Request-Objekt
 	 * @param kompetenz   die zu prüfende Kompetenz
 	 * @param user_id     die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
-	 * 
+	 *
 	 * @return der aktuelle SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
-	 * 
+	 *
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUserAllowSelf(HttpServletRequest request, BenutzerKompetenz kompetenz, long user_id) throws WebApplicationException {
-		Benutzer user = getSVWSUser(request);
+	public static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final BenutzerKompetenz kompetenz, final long user_id) throws WebApplicationException {
+		final Benutzer user = getSVWSUser(request);
 		if ((user == null) || (kompetenz != BenutzerKompetenz.KEINE) && (!user.pruefeKompetenz(kompetenz)) && (user.getId() != user_id))
 			throw OperationError.FORBIDDEN.exception();
 		return user;
 	}
 
-	
+
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
 	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Anschließend wird eine
 	 * {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
-	 * 
+	 *
 	 * @param request   das HTTP-Request-Objekt
 	 * @param kompetenz die zu prüfende Kompetenz
-	 * 
+	 *
 	 * @return die Datenbankverbindung für den aktuellen SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
-	 * 
+	 *
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnection(HttpServletRequest request, BenutzerKompetenz kompetenz) throws WebApplicationException {
+	public static DBEntityManager getDBConnection(final HttpServletRequest request, final BenutzerKompetenz kompetenz) throws WebApplicationException {
 		return getSVWSUser(request, kompetenz).getEntityManager();
 	}
 
 
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
-	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Erlaubt wird auch der Zugriff von 
-	 * dem Benutzer mit der übergebenen Benutzer-ID.  
+	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Erlaubt wird auch der Zugriff von
+	 * dem Benutzer mit der übergebenen Benutzer-ID.
 	 * Anschließend wird eine {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
-	 * 
+	 *
 	 * @param request     das HTTP-Request-Objekt
 	 * @param kompetenz   die zu prüfende Kompetenz
 	 * @param user_id     die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
-	 * 
+	 *
 	 * @return die Datenbankverbindung für den aktuellen SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
-	 * 
+	 *
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnectionAllowSelf(HttpServletRequest request, BenutzerKompetenz kompetenz, long user_id) throws WebApplicationException {
+	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final BenutzerKompetenz kompetenz, final long user_id) throws WebApplicationException {
 		return getSVWSUserAllowSelf(request, kompetenz, user_id).getEntityManager();
 	}
-	
+
 }

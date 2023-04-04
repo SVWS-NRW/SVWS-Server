@@ -32,18 +32,18 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/kurse")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIKurse {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Kurse aller Schuljahresabschniite 
+     * Die OpenAPI-Methode für die Abfrage der Liste der Kurse aller Schuljahresabschniite
      * im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Liste der Kurse aller Schuljahresabschniite 
+     *
+     * @return die Liste der Kurse aller Schuljahresabschniite
      */
     @GET
     @Path("/")
@@ -57,20 +57,20 @@ public class APIKurse {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursListeEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
-    public Response getKurse(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKursliste(conn, null)).getList();
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Kurse im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abschnitt     die ID des Schuljahresabschnitts
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Kurse mit der jeweiligen ID im Datenbankschema
      */
     @GET
@@ -85,20 +85,20 @@ public class APIKurse {
 	      content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
-    public Response getKurseFuerAbschnitt(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, @Context HttpServletRequest request) {
+    public Response getKurseFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKursliste(conn, abschnitt)).getList();
     	}
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Kurses.
-     *  
+     *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die Datenbank-ID zur Identifikation des Kurses
      * @param request   die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Daten des Kurses
      */
     @GET
@@ -112,20 +112,20 @@ public class APIKurse {
                  schema = @Schema(implementation = KursDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Kurs-Eintrag mit der angegebenen ID gefunden")
-    public Response getKurs(@PathParam("schema") String schema, @PathParam("id") long id, 
-    		                                    @Context HttpServletRequest request) {
+    public Response getKurs(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		                                    @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKursdaten(conn)).get(id);
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Kursarten.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              der Katalog der gültigen Kursarten
      */
     @GET
@@ -137,9 +137,9 @@ public class APIKurse {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursartKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kursart-Katalog-Einträge gefunden")
-    public Response getKatalogKursarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKursarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKatalogKursarten()).getAll();
-    }  
+    }
 
 }

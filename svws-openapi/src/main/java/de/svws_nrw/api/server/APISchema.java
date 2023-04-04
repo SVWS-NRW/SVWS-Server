@@ -39,17 +39,17 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/db/{schema}/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Schema")	
+@Tag(name = "Schema")
 public class APISchema {
-    
-	
+
+
     /**
      * Die OpenAPI-Methode für den Export einer SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
      * administrative Rechte.
-     *  
+     *
      * @param schemaname    Name des Schemas, in das hinein migriert werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return Die SQLite-Datenbank
      */
     @GET
@@ -58,11 +58,11 @@ public class APISchema {
     @Operation(summary = "Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank.",
                description = "Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert "
                		       + "administrative Rechte.")
-    @ApiResponse(responseCode = "200", description = "Der Export der SQLite-Datenbank", 
+    @ApiResponse(responseCode = "200", description = "Der Export der SQLite-Datenbank",
     			 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
     			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
-    public Response exportSQLite(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
+    public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return DataSQLite.exportSQLite(OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN), schemaname);
     }
 
@@ -70,11 +70,11 @@ public class APISchema {
 
     /**
      * Die OpenAPI-Methode um ein Datenbankschema auf eine bestimmte Revision upzudaten.
-     *  
+     *
      * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param revision      die Revision, auf die angehoben werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return Logmeldung über den Updatevorgang
      */
     @POST
@@ -86,11 +86,11 @@ public class APISchema {
     		     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
-    public List<String> updateSchema(@PathParam("schema") String schemaname, @PathParam("revision") long revision, @Context HttpServletRequest request) {
+    public List<String> updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
-    	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN);
+    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN);
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-		long max_revision = SchemaRevisionen.maxRevision.revision;
+		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = revision;
 		if (rev < 0)
 			rev = max_revision;
@@ -98,40 +98,40 @@ public class APISchema {
 			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
 
 		// Erzeuge einen Logger für das Update
-		Logger logger = new Logger();
-		LogConsumerVector log = new LogConsumerVector();
+		final Logger logger = new Logger();
+		final LogConsumerVector log = new LogConsumerVector();
 		logger.addConsumer(log);
-		
+
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
-		DBSchemaManager manager = DBSchemaManager.create(user, true, logger); 
+		final DBSchemaManager manager = DBSchemaManager.create(user, true, logger);
 		if (manager == null)
 			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
 
 		// Prüfe, ob das Schema aktuell ist
 		if (manager.updater.isUptodate(rev, false))
 			return log.getStrings();
-		
+
 		// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
 		if (!manager.updater.isUpdatable(rev, false))
 			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
 
-		// Führe die Aktualisierung durch 
-		boolean success = manager.updater.update(rev, false, true);
+		// Führe die Aktualisierung durch
+		final boolean success = manager.updater.update(rev, false, true);
 		if (!success)
 			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		
+
 		// return log from logger
 		return log.getStrings();
     }
 
-    
-    
+
+
     /**
      * Die OpenAPI-Methode um ein Datenbankschema auf die neueste Revision upzudaten.
-     *  
+     *
      * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return Logmeldung über den Updatevorgang
      */
     @POST
@@ -142,18 +142,18 @@ public class APISchema {
     			 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
     @ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
     @ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
-    public List<String> updateSchemaToCurrent(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
+    public List<String> updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return updateSchema(schemaname, -1, request);
     }
-    
 
-  
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Revision des Datenbankschemas.
-     *  
+     *
      * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Revisionsnummer des Datenbankschemas
      */
     @GET
@@ -164,25 +164,25 @@ public class APISchema {
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
-    public Long revision(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
+    public Long revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
-	    	DTODBVersion version = conn.querySingle(DTODBVersion.class);
+	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
 	    	if ((version == null) || (version.Revision == null))
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return version.Revision;
     	}
     }
 
-    
+
     /**
      * Die OpenAPI-Methode für die Abfrage ob es sich bei dem Datenbankschemas um
      * ein "verdorbenes" Schema handelt. Eine Schema wird als "verdorben" bezeichnet,
      * wenn es ggf. fehlerhaft ist, weil es mithilfe einer Entwicklerversion
      * des SVWS-Servers aktualisiert wurde.
-     *  
+     *
      * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return true, falls es sich um ein "verdorbenes" Schema handelt und ansonsten false
      */
     @GET
@@ -195,9 +195,9 @@ public class APISchema {
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = Boolean.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
-    public boolean isTainted(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
+    public boolean isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
-	    	DTODBVersion version = conn.querySingle(DTODBVersion.class);
+	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
 	    	if ((version == null) || (version.Revision == null))
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return version.IsTainted;

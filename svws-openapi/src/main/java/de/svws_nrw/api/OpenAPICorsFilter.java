@@ -10,12 +10,12 @@ import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
- * Implementiert einen Filter, um HTTP-Requests zu prüfen und HTTP-Responses zu erweitern. 
+ * Implementiert einen Filter, um HTTP-Requests zu prüfen und HTTP-Responses zu erweitern.
  */
-public class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequestFilter  {
+public final class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequestFilter  {
 
 	@Override
-	public void filter(ContainerRequestContext requestContext) throws IOException {
+	public void filter(final ContainerRequestContext requestContext) throws IOException {
 //		MultivaluedMap<String, String> headers = requestContext.getHeaders();
 //		System.out.println("INCOMING: " + requestContext.getUriInfo().getPath());
 //		headers.add("Access-Control-Request-Method", null);
@@ -24,16 +24,16 @@ public class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequ
 	}
 
 	@Override
-	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+	public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext)
 			throws IOException {
 		if (SVWSKonfiguration.get().useCORSHeader()) {
-			final int ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
-	        MultivaluedMap<String, Object> headers = responseContext.getHeaders();
+			final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
+	        final MultivaluedMap<String, Object> headers = responseContext.getHeaders();
 	        headers.add("Access-Control-Allow-Origin", "*");
 	        headers.add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
 	        headers.add("Access-Control-Allow-Credentials", "true");
 	        headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
-	        headers.add("Access-Control-Max-Age", ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
+	        headers.add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
 		}
 	}
 

@@ -36,15 +36,15 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/kaoa")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIKAOA {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Kategorien.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -56,17 +56,17 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAKategorieEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoAKategorien(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoAKategorien(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
 		return (new DataKAoAKategorien()).getAll();
     }
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Merkmale.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -78,7 +78,7 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAMerkmalEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoAMerkmale(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoAMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKAoAMerkmale()).getAll();
     }
@@ -86,10 +86,10 @@ public class APIKAOA {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Zusatzmerkmale.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -101,17 +101,17 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAZusatzmerkmalEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoAZusatzmerkmale(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoAZusatzmerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKAoAZusatzmerkmale()).getAll();
     }
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Einträge der SBO Ebene 4.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -123,17 +123,17 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAEbene4Eintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoAEbene4(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoAEbene4(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKAoAEbene4()).getAll();
     }
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Anschlussoptionen.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -145,17 +145,17 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAAnschlussoptionEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoAAnschlussoptionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoAAnschlussoptionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKAoAAnschlussoptionen()).getAll();
     }
 
     /**
      * Die OpenAPI-Methode für die Abfrage des KAoA-Kataloges Berufsfelder.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -167,9 +167,9 @@ public class APIKAOA {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOABerufsfeldEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogKAoABerufsfelder(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogKAoABerufsfelder(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKAoABerufsfelder()).getAll();
     }
-    
+
 }

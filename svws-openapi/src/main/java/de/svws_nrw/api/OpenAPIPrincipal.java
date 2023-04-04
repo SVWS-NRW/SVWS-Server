@@ -18,7 +18,7 @@ import de.svws_nrw.db.utils.OperationError;
  * gewählten HTTP-Server-Implementierung. Eine solche HTTP-Server-Implementierung wird ggf.
  * für den internen Gebrauch weitere {@link Principal}-Objekte anlegen.
  */
-public class OpenAPIPrincipal implements Principal, Serializable {
+public final class OpenAPIPrincipal implements Principal, Serializable {
 
 	private static final long serialVersionUID = -6227920753748399662L;
 
@@ -97,13 +97,13 @@ public class OpenAPIPrincipal implements Principal, Serializable {
 
 		boolean isAnonymous = (path.matches("/debug/.*") || "/openapi.json".equals(path));
 		// Prüfe, ob aufgrund der Konfiguration ein anonymer Zugriff auf den SVWS-Client ermöglicht werden soll
-		if ((!SVWSKonfiguration.get().isEnableClientProtection()) &&
-				(path.matches("/") || path.matches("/.*\\.html") ||
-				 path.matches("/.*\\.js") || path.matches("/.*\\.js.map") || path.matches("/js/.*") ||
-				 path.matches("/.*\\.css") || path.matches("/.*\\.css.map") || path.matches("/css/.*") ||
-				 path.matches("/fonts/.*") ||
-				 path.matches("/.*\\.ico") || path.matches("/.*\\.png") ||
-				 path.matches("/assets/.*"))) {
+		if ((!SVWSKonfiguration.get().isEnableClientProtection())
+				&& (path.matches("/") || path.matches("/.*\\.html")
+					|| path.matches("/.*\\.js") || path.matches("/.*\\.js.map") || path.matches("/js/.*")
+					|| path.matches("/.*\\.css") || path.matches("/.*\\.css.map") || path.matches("/css/.*")
+					|| path.matches("/fonts/.*")
+					|| path.matches("/.*\\.ico") || path.matches("/.*\\.png")
+					|| path.matches("/assets/.*"))) {
 			isAnonymous = true;
 		}
 

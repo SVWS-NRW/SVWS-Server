@@ -25,16 +25,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Path("/api/gost")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "ServerAlgorithmen")	
+@Tag(name = "ServerAlgorithmen")
 public class APIAlgoGostAbschluss {
-	
-	
+
+
     /**
      * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.
-     *  
+     *
      * @param daten         die Abiturdaten eines Schülers und die Fächerdaten für die Belegprüfung
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              das Ergebis der Prüfung der Belegprüfung der Abiturdaten
      */
     @POST
@@ -43,25 +43,25 @@ public class APIAlgoGostAbschluss {
                description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "
                		+ "Belegungsfehler und Hinweise zur Belegung zurückgegeben.")
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern",
-                 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = GostBelegpruefungErgebnis.class)))
     public GostBelegpruefungErgebnis getGostBelegpruefungGesamt(
-    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true, 
-    					 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-    					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) GostBelegpruefungsdaten daten, 
-    		@Context HttpServletRequest request) {
+    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true,
+    					 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+    					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
+    		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.GESAMT);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.GESAMT);
 		return manager.getBelegpruefungErgebnis();
     }
-	
+
 
     /**
      * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten nur für die EF_1.
-     *  
+     *
      * @param daten         die Abiturdaten eines Schülers und die Fächerdaten für die Belegprüfung
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              das Ergebis der Prüfung der Belegprüfung nur für die EF_1
      */
     @POST
@@ -70,17 +70,16 @@ public class APIAlgoGostAbschluss {
                description = "Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch "
                		+ "Belegungsfehler und Hinweise zur Belegung zurückgegeben.")
     @ApiResponse(responseCode = "200", description = "Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern",
-                 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = GostBelegpruefungErgebnis.class)))
     public GostBelegpruefungErgebnis getGostBelegpruefungEF1(
-    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true, 
-    					 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
-    					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) GostBelegpruefungsdaten daten, 
-    		@Context HttpServletRequest request) {
+    		@RequestBody(description = "Die Abiturdaten für die Belegprüfung", required = true,
+    					 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+    					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
+    		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.EF1);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.EF1);
 		return manager.getBelegpruefungErgebnis();
     }
-	
 
 }

@@ -38,16 +38,16 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIKataloge {
 
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Strassen-Kataloges.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Liste der Strassen
      */
     @GET
@@ -59,7 +59,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintragStrassen.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Straßen-Katalog-Einträge gefunden")
-    public Response getKatalogStrassen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogStrassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     	return (new DataStrassen()).getAll();
     }
@@ -67,10 +67,10 @@ public class APIKataloge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Orts-Kataloges von IT.NRW.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die die Orts-Katalog-Einträge
      */
     @GET
@@ -82,7 +82,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintragOrte.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Orts-Katalog-Einträge gefunden")
-    public Response getKatalogOrte(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKatalogOrte()).getAll();
     }
@@ -90,10 +90,10 @@ public class APIKataloge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Orte im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Orte mit ID des Datenbankschemas
      */
     @GET
@@ -108,7 +108,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrtKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ort-Katalog-Einträge gefunden")
-    public Response getOrte(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
         	return (new DataOrte(conn)).getAll();
     	}
@@ -117,10 +117,10 @@ public class APIKataloge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Ortsteil-Kataloges von IT.NRW.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die die Ortsteil-Katalog-Einträge
      */
     @GET
@@ -132,7 +132,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintragOrtsteile.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
-    public Response getKatalogOrtsteile(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataKatalogOrtsteile()).getAll();
     }
@@ -140,10 +140,10 @@ public class APIKataloge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Ortsteile im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Ortsteile mit ID des Datenbankschemas
      */
     @GET
@@ -158,7 +158,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrtsteilKatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
-    public Response getOrtsteile(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
         	return (new DataOrtsteile(conn)).getAll();
     	}
@@ -167,10 +167,10 @@ public class APIKataloge {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Haltestellen im angegebenen Schema.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return              die Liste der Haltestellen mit ID des Datenbankschemas
      */
     @GET
@@ -185,7 +185,7 @@ public class APIKataloge {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getHaltestellen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataHaltestellen(conn)).getList();
     	}

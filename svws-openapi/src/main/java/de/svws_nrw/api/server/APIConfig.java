@@ -24,38 +24,38 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Konfiguration 
+ * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Konfiguration
  * des SVWS-Servers.
- * Die Config-API stellt neben einer Schnittstelle zum Prüfen, ob ein SVWS-Server vorhanden 
- * ist (alive), weitere Konfigurationsmöglichkteiten zur Verfügung.   
+ * Die Config-API stellt neben einer Schnittstelle zum Prüfen, ob ein SVWS-Server vorhanden
+ * ist (alive), weitere Konfigurationsmöglichkteiten zur Verfügung.
  */
 @Path("")
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.TEXT_PLAIN)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APIConfig {
 
-	
+
 	/**
 	 * Diese Methode kann genutzt werden, um die Verfügbarkeit des SVWS-Server zu testen.
-	 * 
+	 *
 	 * @return die HTTP-Response
 	 */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/status/alive")
-    @Operation(summary = "Eine Test-Methode zum Prüfen, ob der Server erreichbar ist.", 
+    @Operation(summary = "Eine Test-Methode zum Prüfen, ob der Server erreichbar ist.",
     	       description = "Eine Test-Methode zum Prüfen, ob der Server erreichbar ist.")
     @ApiResponse(responseCode = "200", description = "Der Server ist erreichbar!",
     		     content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
     public Response isAlive() {
     	return Response.ok("SVWS-Server erreichbar").build();
     }
-    
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Version des SVWS-Servers.
-     *  
+     *
      * @return die Version des SVWS-Servers
      */
     @GET
@@ -64,10 +64,10 @@ public class APIConfig {
     @Operation(summary = "Gibt die Version des SVWS-Servers zurück.",
                description = "Gibt die Version des SVWS-Servers zurück.")
     @ApiResponse(responseCode = "200", description = "Die SVWS-Server-Version",
-                 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  schema = @Schema(implementation = String.class)))
     public Response getServerVersion() {
-        String version = SVWSVersion.version();
+        final String version = SVWSVersion.version();
         if (version == null)
             return OperationError.NOT_FOUND.getResponse();
         return JSONMapper.fromString(version);
@@ -77,13 +77,13 @@ public class APIConfig {
 
     /**
      * Diese Methode liefert den öffentlichen Schlüssel des Servers in Base64-Kodierung
-     * 
+     *
      * @return der öffentlichen Schlüssel des Servers in Base64-Kodierung
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/config/publickey_base64")
-    @Operation(summary = "Gibt den öffentlichen Schlüssel des Server in Base64-Kodierung zurück.", 
+    @Operation(summary = "Gibt den öffentlichen Schlüssel des Server in Base64-Kodierung zurück.",
                description = "Gibt den öffentlichen Schlüssel des Server in Base64-Kodierung zurück.")
 	@ApiResponse(responseCode = "200", description = "Der Base-64-kodierte, öffentliche Schlüssel des Servers",
 			     content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
@@ -91,7 +91,7 @@ public class APIConfig {
     public Response getConfigPublicKeyBase64() {
         try {
 			return Response.ok(SVWSKonfiguration.getPublicKeyBase64()).build();
-		} catch (KeyStoreException e) {
+		} catch (final KeyStoreException e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -100,13 +100,13 @@ public class APIConfig {
 
     /**
      * Diese Methode liefert das Zertifikat des Servers in Base64-Kodierung
-     * 
+     *
      * @return das Zertifikat des Servers in Base64-Kodierung
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/config/certificate_base64")
-    @Operation(summary = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.", 
+    @Operation(summary = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.",
                description = "Gibt das Zertifikat des Server in Base64-Kodierung zurück.")
 	@ApiResponse(responseCode = "200", description = "Das Base-64-kodierte Zertifikat des Servers",
 			     content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
@@ -114,41 +114,41 @@ public class APIConfig {
     public Response getConfigCertificateBase64() {
         try {
 			return Response.ok(SVWSKonfiguration.getCertificateBase64()).build();
-		} catch (KeyStoreException e) {
+		} catch (final KeyStoreException e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
     }
-	
-    
+
+
     /**
      * Diese Methode liefert das Zertifikat des Servers
-     * 
+     *
      * @return das Zertifikat des Servers
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/config/certificate")
-    @Operation(summary = "Gibt das Zertifikat des Server zurück.", 
+    @Operation(summary = "Gibt das Zertifikat des Server zurück.",
                description = "Gibt das Zertifikat des Server zurück.")
-	@ApiResponse(responseCode = "200", description = "Das Zertifikat des Servers", 
+	@ApiResponse(responseCode = "200", description = "Das Zertifikat des Servers",
 				 content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
 	@ApiResponse(responseCode = "500", description = "Das Zertifikat wurde nicht gefunden")
     public Response getConfigCertificate() {
         try {
-        	Certificate cert = SVWSKonfiguration.getCertificate();
+        	final Certificate cert = SVWSKonfiguration.getCertificate();
 			return Response.ok(cert.toString()).build();
-		} catch (KeyStoreException e) {
+		} catch (final KeyStoreException e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
     }
-	
 
-    
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller konfigurierten DB-Schemata.
-     *  
+     *
      * @return die Liste mit den einzelnen DB-Schemata
      */
     @GET
@@ -157,10 +157,10 @@ public class APIConfig {
     @Operation(summary = "Gibt eine sortierte Übersicht von allen konfigurierten DB-Schemata zurück.",
                description = "Gibt eine sortierte Übersicht von allen konfigurierten DB-Schemata zurück.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von DB-Schema-Listen-Einträgen",
-                 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
                  array = @ArraySchema(schema = @Schema(implementation = DBSchemaListeEintrag.class))))
     public List<DBSchemaListeEintrag> getConfigDBSchemata() {
     	return SVWSKonfiguration.get().getSchemaList();
     }
-    
+
 }

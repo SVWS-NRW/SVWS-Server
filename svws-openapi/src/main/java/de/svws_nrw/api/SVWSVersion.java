@@ -9,26 +9,26 @@ import java.util.Properties;
 import de.svws_nrw.base.ResourceUtils;
 
 /**
- * Diese Klasse stellt Hilfs-Methoden rund um die SVWS-Version zur Verfügung. 
+ * Diese Klasse stellt Hilfs-Methoden rund um die SVWS-Version zur Verfügung.
  */
 public class SVWSVersion {
-    
+
     /** Die Version des SVWS-Servers aus der version.properties (cache-Wert)*/
     private static String _version = null;
-    
+
     /**
      * Ermittelt die Version des SVWS-Servers anhand der version.properties.
-     * 
-     * @return die Version des SVWS-Servers 
+     *
+     * @return die Version des SVWS-Servers
      */
     public static String version() {
         if (_version == null) {
-            Properties versionProperties = new Properties();
-            Path path = ResourceUtils.getFile("config/version.properties");
+            final Properties versionProperties = new Properties();
+            final Path path = ResourceUtils.getFile("config/version.properties");
             try (InputStream is = Files.newInputStream(path)) {
                 versionProperties.load(is);
                 _version = versionProperties.getProperty("svws.version");
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }

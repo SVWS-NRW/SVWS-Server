@@ -50,15 +50,15 @@ import jakarta.ws.rs.core.Response;
 @Path("/db/{schema}/schild3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Server")	
+@Tag(name = "Server")
 public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges AbiturInfos.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -70,7 +70,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragAbiturInfos.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3AbiturInfos(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3AbiturInfos(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     	return (new DataSchildAbiturInfos()).getAll();
     }
@@ -78,10 +78,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Datenarten.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -93,7 +93,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragDatenart.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3Datenarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3Datenarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildDatenart()).getAll();
     }
@@ -104,7 +104,7 @@ public class APISchild {
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -116,7 +116,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragDQRNiveaus.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildDQRNiveaus()).getAll();
     }
@@ -127,7 +127,7 @@ public class APISchild {
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -139,7 +139,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragExportCSV.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3ExportCSV(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3ExportCSV(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildExportCSV()).getAll();
     }
@@ -147,10 +147,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Filter Fehlende Einträge.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -162,7 +162,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragFilterFehlendeEintraege.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3FilterFehlendeEintraege(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3FilterFehlendeEintraege(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildFilterFehlendeEintraege()).getAll();
     }
@@ -170,10 +170,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Bundesländer/Nachbarländer.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -185,7 +185,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragLaender.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3Laender(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3Laender(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildLaender()).getAll();
     }
@@ -193,10 +193,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Bundesländer/Nachbarländer.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -208,7 +208,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragPruefungsordnung.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3Pruefungsordnungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3Pruefungsordnungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildPruefungsordnung()).getAll();
     }
@@ -216,10 +216,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Prüfungsordnung-Optionen.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -231,7 +231,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragPruefungsordnungOption.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3PruefungsordnungOptionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3PruefungsordnungOptionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildPruefungsordnungOptionen()).getAll();
     }
@@ -239,10 +239,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges für die Unicode-Umwandlung.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -254,7 +254,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragUnicodeUmwandlung.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3UnicodeUmwandlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3UnicodeUmwandlung(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildUnicodeUmwandlung()).getAll();
     }
@@ -262,10 +262,10 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Versetzungsvermerke / PrfSemAbschl.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return der Katalog
      */
     @GET
@@ -277,20 +277,20 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragVersetzungsvermerke.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-    public Response getKatalogSchild3Versetzungsvermerke(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getKatalogSchild3Versetzungsvermerke(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
         return (new DataSchildVersetzungsvermerke()).getAll();
     }
 
-    
-    
+
+
     /**
-     * Die OpenAPI-Methode für die Abfrage der im SVWS-Server definierten Schild3-Datenquellen 
+     * Die OpenAPI-Methode für die Abfrage der im SVWS-Server definierten Schild3-Datenquellen
      * für das Reporting.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Definitionen der Schild3-Report-Datenquellen
      */
     @GET
@@ -302,7 +302,7 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragVersetzungsvermerke.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf das Reporting zuzigreifen.")
     @ApiResponse(responseCode = "404", description = "Keine Datenquellen gefunden")
-    public Response getSchild3ReportingDatenquellen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    public Response getSchild3ReportingDatenquellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
             return DataSchildReportingDatenquelle.getDatenquellen(conn);
         }
@@ -310,16 +310,16 @@ public class APISchild {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Daten einer im SVWS-Server 
+     * Die OpenAPI-Methode für die Abfrage der Daten einer im SVWS-Server
      * definierten Schild3-Datenquelle des Reportings.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param datenquelle   der Name der Datenquelle
-     * @param params        die Parameter der Datenquelle, d.h. die Werte für das Attribut der 
-     *                      Master-Datenquelle, welche bei dieser Datenquelle berücksichtigt 
+     * @param params        die Parameter der Datenquelle, d.h. die Werte für das Attribut der
+     *                      Master-Datenquelle, welche bei dieser Datenquelle berücksichtigt
      *                      werden sollen
      * @param request       die Informationen zur HTTP-Anfrage
-     * 
+     *
      * @return die Definitionen der Schild3-Report-Datenquellen
      */
     @POST
@@ -331,11 +331,11 @@ public class APISchild {
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Object.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf die Datenquelle zuzugreifen.")
     @ApiResponse(responseCode = "404", description = "Es wurden keine Daten gefunden oder die Datenquelle wurde nicht gefunden.")
-    public Response getSchild3ReportingDaten(@PathParam("schema") String schema,
-            @PathParam("datenquelle") String datenquelle,
-            @RequestBody(description = "Eine Liste der Attribute der Masterdatenquelle. Wurde keine Masterdatenquelle angegeben, so muss die Liste leer sein.", required = true, content = 
-                    @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Object.class)))) List<Object> params,
-            @Context HttpServletRequest request) {
+    public Response getSchild3ReportingDaten(@PathParam("schema") final String schema,
+            @PathParam("datenquelle") final String datenquelle,
+            @RequestBody(description = "Eine Liste der Attribute der Masterdatenquelle. Wurde keine Masterdatenquelle angegeben, so muss die Liste leer sein.", required = true, content =
+                    @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Object.class)))) final List<Object> params,
+            @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
             return DataSchildReportingDatenquelle.getDaten(conn, datenquelle, params);
         }
