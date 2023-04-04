@@ -8,42 +8,42 @@ import de.svws_nrw.transpiler.TranspilerException;
 
 /**
  * Diese Aufzählung beinhaltet alle HTTP-Methoden, die von diesem Transpiler-Plugin
- * unterstützt werden.  
+ * unterstützt werden.
  */
 public enum ApiHttpMethod {
 
 	/** HTTP-GET */
 	GET,
-	
+
 	/** HTTP-PATCH */
 	PATCH,
-	
+
 	/** HTTP-POST */
 	POST,
-	
+
 	/** HTTP-PUT */
 	PUT,
-	
+
 	/** HTTP-DELETE */
 	DELETE;
 
 	/**
 	 * Ermittelt anhand der Annotationen der übergebenen Methode die verwendete
 	 * HTTP-Methode und gibt das zugehörige Element dieser Aufzählung zurück.
-	 * 
+	 *
 	 * @param transpiler   der zu verwendende Transpiler
 	 * @param method       die Methode, dessen HTTP-Methode-Typ ermittel wird
-	 * 
+	 *
 	 * @return der Typ der HTTP-Methode
-	 * 
-	 * @throws TranspilerException falls die HTTP-Methode nicht bestimmt werden kann  
+	 *
+	 * @throws TranspilerException falls die HTTP-Methode nicht bestimmt werden kann
 	 */
-	public static ApiHttpMethod get(Transpiler transpiler, MethodTree method) throws TranspilerException {
-		AnnotationTree annotationGET = transpiler.getAnnotation("jakarta.ws.rs.GET", method);
-		AnnotationTree annotationPATCH = transpiler.getAnnotation("jakarta.ws.rs.PATCH", method);
-		AnnotationTree annotationPOST = transpiler.getAnnotation("jakarta.ws.rs.POST", method);
-		AnnotationTree annotationPUT = transpiler.getAnnotation("jakarta.ws.rs.PUT", method);
-		AnnotationTree annotationDELETE = transpiler.getAnnotation("jakarta.ws.rs.DELETE", method);
+	public static ApiHttpMethod get(final Transpiler transpiler, final MethodTree method) throws TranspilerException {
+		final AnnotationTree annotationGET = transpiler.getAnnotation("jakarta.ws.rs.GET", method);
+		final AnnotationTree annotationPATCH = transpiler.getAnnotation("jakarta.ws.rs.PATCH", method);
+		final AnnotationTree annotationPOST = transpiler.getAnnotation("jakarta.ws.rs.POST", method);
+		final AnnotationTree annotationPUT = transpiler.getAnnotation("jakarta.ws.rs.PUT", method);
+		final AnnotationTree annotationDELETE = transpiler.getAnnotation("jakarta.ws.rs.DELETE", method);
 		ApiHttpMethod result = null;
 		if (annotationGET != null)
 			result = GET;
@@ -71,11 +71,11 @@ public enum ApiHttpMethod {
 			throw new TranspilerException("Transpiler Error: No supported HTTP method specified.");
 		return result;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		return this.name();
-	}	 
+	}
 
 }

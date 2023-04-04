@@ -68,101 +68,101 @@ import com.sun.source.util.TreePathScanner;
 /**
  * This class implements the class {@link TreePathScanner} for scanning the
  * java compilers abstract syntax tree and gather some information to be
- * used in the transpiling process. 
+ * used in the transpiling process.
  */
-public class TranspilerJavaScanner extends TreePathScanner<Object, Transpiler> {
+public final class TranspilerJavaScanner extends TreePathScanner<Object, Transpiler> {
 
 	@Override
-	public Object visitCompilationUnit(CompilationUnitTree node, Transpiler transpiler) {
+	public Object visitCompilationUnit(final CompilationUnitTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitCompilationUnit(node, transpiler);
 	}
 
 	@Override
-	public Object visitPackage(PackageTree node, Transpiler transpiler) {
+	public Object visitPackage(final PackageTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitPackage(node, transpiler);
 	}
 
 	@Override
-	public Object visitImport(ImportTree node, Transpiler transpiler) {
+	public Object visitImport(final ImportTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitImport(node, transpiler);
 	}
 
 	@Override
-	public Object visitClass(ClassTree node, Transpiler transpiler) {
+	public Object visitClass(final ClassTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitClassTree(getCurrentPath(), node);
 		return super.visitClass(node, transpiler);
 	}
 
 	@Override
-	public Object visitMethod(MethodTree node, Transpiler transpiler) {
+	public Object visitMethod(final MethodTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitMethodTree(getCurrentPath(), node);
 		return super.visitMethod(node, transpiler);
 	}
 
 	@Override
-	public Object visitVariable(VariableTree node, Transpiler transpiler) {
+	public Object visitVariable(final VariableTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitVariableTree(getCurrentPath(), node);
 		return super.visitVariable(node, transpiler);
 	}
 
 	@Override
-	public Object visitEmptyStatement(EmptyStatementTree node, Transpiler transpiler) {
+	public Object visitEmptyStatement(final EmptyStatementTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitEmptyStatement(node, transpiler);
 	}
 
 	@Override
-	public Object visitBlock(BlockTree node, Transpiler transpiler) {
+	public Object visitBlock(final BlockTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitBlock(node, transpiler);
 	}
 
 	@Override
-	public Object visitDoWhileLoop(DoWhileLoopTree node, Transpiler transpiler) {
+	public Object visitDoWhileLoop(final DoWhileLoopTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitDoWhileLoop(node, transpiler);
 	}
 
 	@Override
-	public Object visitWhileLoop(WhileLoopTree node, Transpiler transpiler) {
+	public Object visitWhileLoop(final WhileLoopTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitWhileLoop(node, transpiler);
 	}
 
 	@Override
-	public Object visitForLoop(ForLoopTree node, Transpiler transpiler) {
+	public Object visitForLoop(final ForLoopTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitForLoop(node, transpiler);
 	}
 
 	@Override
-	public Object visitEnhancedForLoop(EnhancedForLoopTree node, Transpiler transpiler) {
+	public Object visitEnhancedForLoop(final EnhancedForLoopTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitEnhancedForLoop(node, transpiler);
 	}
 
 	@Override
-	public Object visitLabeledStatement(LabeledStatementTree node, Transpiler transpiler) {
+	public Object visitLabeledStatement(final LabeledStatementTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitLabeledStatement(node, transpiler);
 	}
 
 	@Override
-	public Object visitSwitch(SwitchTree node, Transpiler transpiler) {
+	public Object visitSwitch(final SwitchTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitSwitch(node, transpiler);
 	}
 
 	@Override
-	public Object visitSwitchExpression(SwitchExpressionTree node, Transpiler transpiler) {
+	public Object visitSwitchExpression(final SwitchExpressionTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitSwitchExpression(node, transpiler);
 	}
 
@@ -186,249 +186,249 @@ public class TranspilerJavaScanner extends TreePathScanner<Object, Transpiler> {
 //	}
 
 	@Override
-	public Object visitCase(CaseTree node, Transpiler transpiler) {
+	public Object visitCase(final CaseTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitCase(node, transpiler);
 	}
 
 	@Override
-	public Object visitSynchronized(SynchronizedTree node, Transpiler transpiler) {
+	public Object visitSynchronized(final SynchronizedTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitSynchronized(node, transpiler);
 	}
 
 	@Override
-	public Object visitTry(TryTree node, Transpiler transpiler) {
+	public Object visitTry(final TryTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitTry(node, transpiler);
 	}
 
 	@Override
-	public Object visitCatch(CatchTree node, Transpiler transpiler) {
+	public Object visitCatch(final CatchTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitCatch(node, transpiler);
 	}
 
 	@Override
-	public Object visitConditionalExpression(ConditionalExpressionTree node, Transpiler transpiler) {
+	public Object visitConditionalExpression(final ConditionalExpressionTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitConditionalExpression(node, transpiler);
 	}
 
 	@Override
-	public Object visitIf(IfTree node, Transpiler transpiler) {
+	public Object visitIf(final IfTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitIf(node, transpiler);
 	}
 
 	@Override
-	public Object visitExpressionStatement(ExpressionStatementTree node, Transpiler transpiler) {
+	public Object visitExpressionStatement(final ExpressionStatementTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitExpressionStatement(node, transpiler);
 	}
 
 	@Override
-	public Object visitBreak(BreakTree node, Transpiler transpiler) {
+	public Object visitBreak(final BreakTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitBreak(node, transpiler);
 	}
 
 	@Override
-	public Object visitContinue(ContinueTree node, Transpiler transpiler) {
+	public Object visitContinue(final ContinueTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitContinue(node, transpiler);
 	}
 
 	@Override
-	public Object visitReturn(ReturnTree node, Transpiler transpiler) {
+	public Object visitReturn(final ReturnTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitReturn(node, transpiler);
 	}
 
 	@Override
-	public Object visitThrow(ThrowTree node, Transpiler transpiler) {
+	public Object visitThrow(final ThrowTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitThrow(node, transpiler);
 	}
 
 	@Override
-	public Object visitAssert(AssertTree node, Transpiler transpiler) {
+	public Object visitAssert(final AssertTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitAssert(node, transpiler);
 	}
 
 	@Override
-	public Object visitMethodInvocation(MethodInvocationTree node, Transpiler transpiler) {
+	public Object visitMethodInvocation(final MethodInvocationTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitMethodInvocation(node, transpiler);
 	}
 
 	@Override
-	public Object visitNewClass(NewClassTree node, Transpiler transpiler) {
+	public Object visitNewClass(final NewClassTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitNewClass(node, transpiler);
 	}
 
 	@Override
-	public Object visitNewArray(NewArrayTree node, Transpiler transpiler) {
+	public Object visitNewArray(final NewArrayTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitNewArray(node, transpiler);
 	}
 
 	@Override
-	public Object visitLambdaExpression(LambdaExpressionTree node, Transpiler transpiler) {
+	public Object visitLambdaExpression(final LambdaExpressionTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitLambdaExpression(node, transpiler);
 	}
 
 	@Override
-	public Object visitParenthesized(ParenthesizedTree node, Transpiler transpiler) {
+	public Object visitParenthesized(final ParenthesizedTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitParenthesized(node, transpiler);
 	}
 
 	@Override
-	public Object visitAssignment(AssignmentTree node, Transpiler transpiler) {
+	public Object visitAssignment(final AssignmentTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitAssignment(node, transpiler);
 	}
 
 	@Override
-	public Object visitCompoundAssignment(CompoundAssignmentTree node, Transpiler transpiler) {
+	public Object visitCompoundAssignment(final CompoundAssignmentTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitCompoundAssignment(node, transpiler);
 	}
 
 	@Override
-	public Object visitUnary(UnaryTree node, Transpiler transpiler) {
+	public Object visitUnary(final UnaryTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitUnary(node, transpiler);
 	}
 
 	@Override
-	public Object visitBinary(BinaryTree node, Transpiler transpiler) {
+	public Object visitBinary(final BinaryTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitBinary(node, transpiler);
 	}
 
 	@Override
-	public Object visitTypeCast(TypeCastTree node, Transpiler transpiler) {
+	public Object visitTypeCast(final TypeCastTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitTypeCast(node, transpiler);
 	}
 
 	@Override
-	public Object visitInstanceOf(InstanceOfTree node, Transpiler transpiler) {
+	public Object visitInstanceOf(final InstanceOfTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitInstanceOf(node, transpiler);
 	}
 
 	@Override
-	public Object visitBindingPattern(BindingPatternTree node, Transpiler transpiler) {
+	public Object visitBindingPattern(final BindingPatternTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitBindingPattern(node, transpiler);
 	}
 
 	@Override
-	public Object visitArrayAccess(ArrayAccessTree node, Transpiler transpiler) {
+	public Object visitArrayAccess(final ArrayAccessTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitArrayAccess(node, transpiler);
 	}
 
 	@Override
-	public Object visitMemberSelect(MemberSelectTree node, Transpiler transpiler) {
+	public Object visitMemberSelect(final MemberSelectTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitMemberSelect(node, transpiler);
 	}
 
 	@Override
-	public Object visitMemberReference(MemberReferenceTree node, Transpiler transpiler) {
+	public Object visitMemberReference(final MemberReferenceTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitMemberReference(node, transpiler);
 	}
 
 	@Override
-	public Object visitIdentifier(IdentifierTree node, Transpiler transpiler) {
+	public Object visitIdentifier(final IdentifierTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitIdentifierTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitIdentifier(node, transpiler);
 	}
 
 	@Override
-	public Object visitLiteral(LiteralTree node, Transpiler transpiler) {
+	public Object visitLiteral(final LiteralTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitLiteral(node, transpiler);
 	}
 
 	@Override
-	public Object visitPrimitiveType(PrimitiveTypeTree node, Transpiler transpiler) {
+	public Object visitPrimitiveType(final PrimitiveTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitPrimitiveType(node, transpiler);
 	}
 
 	@Override
-	public Object visitArrayType(ArrayTypeTree node, Transpiler transpiler) {
+	public Object visitArrayType(final ArrayTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitArrayType(node, transpiler);
 	}
 
 	@Override
-	public Object visitParameterizedType(ParameterizedTypeTree node, Transpiler transpiler) {
+	public Object visitParameterizedType(final ParameterizedTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitParameterizedType(node, transpiler);
 	}
 
 	@Override
-	public Object visitUnionType(UnionTypeTree node, Transpiler transpiler) {
+	public Object visitUnionType(final UnionTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitUnionType(node, transpiler);
 	}
 
 	@Override
-	public Object visitIntersectionType(IntersectionTypeTree node, Transpiler transpiler) {
+	public Object visitIntersectionType(final IntersectionTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitIntersectionType(node, transpiler);
 	}
 
 	@Override
-	public Object visitTypeParameter(TypeParameterTree node, Transpiler transpiler) {
+	public Object visitTypeParameter(final TypeParameterTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitTypeParameter(getCurrentPath(), node);
 		return super.visitTypeParameter(node, transpiler);
 	}
 
 	@Override
-	public Object visitWildcard(WildcardTree node, Transpiler transpiler) {
+	public Object visitWildcard(final WildcardTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitWildcard(node, transpiler);
 	}
 
 	@Override
-	public Object visitModifiers(ModifiersTree node, Transpiler transpiler) {
+	public Object visitModifiers(final ModifiersTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitModifierTree(getCurrentPath(), node);
 		return super.visitModifiers(node, transpiler);
 	}
 
 	@Override
-	public Object visitAnnotation(AnnotationTree node, Transpiler transpiler) {
+	public Object visitAnnotation(final AnnotationTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		transpiler.visitExpressionTree(getCurrentPath(), node);
 		transpiler.visitAnnotation(getCurrentPath(), node);
@@ -436,65 +436,65 @@ public class TranspilerJavaScanner extends TreePathScanner<Object, Transpiler> {
 	}
 
 	@Override
-	public Object visitAnnotatedType(AnnotatedTypeTree node, Transpiler transpiler) {
+	public Object visitAnnotatedType(final AnnotatedTypeTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitAnnotatedType(node, transpiler);
 	}
 
 	@Override
-	public Object visitModule(ModuleTree node, Transpiler transpiler) {
+	public Object visitModule(final ModuleTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitModule(node, transpiler);
 	}
 
 	@Override
-	public Object visitExports(ExportsTree node, Transpiler transpiler) {
+	public Object visitExports(final ExportsTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitExports(node, transpiler);
 	}
 
 	@Override
-	public Object visitOpens(OpensTree node, Transpiler transpiler) {
+	public Object visitOpens(final OpensTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitOpens(node, transpiler);
 	}
 
 	@Override
-	public Object visitProvides(ProvidesTree node, Transpiler transpiler) {
+	public Object visitProvides(final ProvidesTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitProvides(node, transpiler);
 	}
 
 	@Override
-	public Object visitRequires(RequiresTree node, Transpiler transpiler) {
+	public Object visitRequires(final RequiresTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitRequires(node, transpiler);
 	}
 
 	@Override
-	public Object visitUses(UsesTree node, Transpiler transpiler) {
+	public Object visitUses(final UsesTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitUses(node, transpiler);
 	}
 
 	@Override
-	public Object visitOther(Tree node, Transpiler transpiler) {
+	public Object visitOther(final Tree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitOther(node, transpiler);
 	}
 
 	@Override
-	public Object visitErroneous(ErroneousTree node, Transpiler transpiler) {
+	public Object visitErroneous(final ErroneousTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
-		transpiler.visitExpressionTree(getCurrentPath(), node);		
+		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitErroneous(node, transpiler);
 	}
 
 	@Override
-	public Object visitYield(YieldTree node, Transpiler transpiler) {
+	public Object visitYield(final YieldTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
 		return super.visitYield(node, transpiler);
 	}
-	
+
 }

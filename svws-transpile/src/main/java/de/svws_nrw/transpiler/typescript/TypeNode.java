@@ -25,162 +25,162 @@ public class TypeNode {
 
 	/** the {@link TranspilerTypeScriptPlugin} used */
 	private final TranspilerTypeScriptPlugin plugin;
-	
+
 	/** the {@link Tree} object of the java compiler */
-	private final Tree node;	
+	private final Tree node;
 
 	/** specifies whether the type is used during type declaration */
 	private final boolean decl;
-	
+
 	/** true if the declaration has a not null annotation */
 	private final boolean notNull;
-	
+
 	/** indicates whether this is a type for variable arguments */
 	private boolean isVarArg;
 
 	/**
 	 * Creates a new variable with transpiled variable information.
-	 * 
+	 *
 	 * @param plugin    the {@link TranspilerTypeScriptPlugin} used
-	 * @param node      the {@link Tree} object of the java compiler 
+	 * @param node      the {@link Tree} object of the java compiler
 	 * @param decl      specifies whether the type is used during type declaration
-	 * @param notNull   true if the declaration has a not null annotation 
+	 * @param notNull   true if the declaration has a not null annotation
 	 */
 	public TypeNode(final TranspilerTypeScriptPlugin plugin, final Tree node, final boolean decl, final boolean notNull) {
 		this.plugin = plugin;
 		this.node = node;
 		this.decl = decl;
 		// Korrigiere ggf. die Information zur NotNull-Annotation, falls der Base-Type des parametrisierten Typs eine NotNull-Annotation hat
-		if ((node instanceof ParameterizedTypeTree p) && (p.getType() != null) && (p.getType() instanceof AnnotatedTypeTree att))
+		if ((node instanceof final ParameterizedTypeTree p) && (p.getType() != null) && (p.getType() instanceof final AnnotatedTypeTree att))
 			this.notNull = plugin.getTranspiler().hasNotNullAnnotation(att);
-		else if (node instanceof AnnotatedTypeTree att)
+		else if (node instanceof final AnnotatedTypeTree att)
 			this.notNull = plugin.getTranspiler().hasNotNullAnnotation(att);
 		else
 			this.notNull = notNull;
 		this.isVarArg = false;
 	}
-	
-	
+
+
 	/**
 	 * Returns a copy of this type without the flag that indicates that this type is used during declaration
-	 *  
+	 *
 	 * @return a copy of this type without the flag that indicates that this type is used during declaration
 	 */
 	public TypeNode getNoDeclarationType() {
 		return  new TypeNode(this.plugin, this.node, false, this.notNull);
 	}
-	
-	
-	/** 
+
+
+	/**
 	 * Sets the internal flag that this type is used as a type for variable arguments.
 	 */
 	public void setIsVarArg() {
 		this.isVarArg = true;
 	}
-	
+
 
 	/**
 	 * Returns whether this type node has a not null annotation or not.
-	 * 
+	 *
 	 * @return true if the node has a not null annotation or not.
 	 */
 	public boolean isNotNull() {
 		return notNull;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether this type is a primitive type or not
-	 * 
+	 *
 	 * @return true if this is a primitive type
 	 */
 	public boolean isPrimitive() {
 		return (node instanceof PrimitiveTypeTree);
 	}
-	
-	
+
+
 	/**
 	 * Returns whether this type is a primitive integer type or not
-	 * 
+	 *
 	 * @return true if this is a primitive integer type
 	 */
 	public boolean isPrimitveInteger() {
-		if (node instanceof PrimitiveTypeTree ptt) {
+		if (node instanceof final PrimitiveTypeTree ptt) {
 			return switch (ptt.getPrimitiveTypeKind()) {
-				case BYTE, SHORT, INT, LONG -> true; 
+				case BYTE, SHORT, INT, LONG -> true;
 				default -> false;
 			};
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether this type is a primitive floating point number type or not
-	 * 
+	 *
 	 * @return true if this is a primitive floating point number type
 	 */
 	public boolean isPrimitveFloat() {
-		if (node instanceof PrimitiveTypeTree ptt) {
+		if (node instanceof final PrimitiveTypeTree ptt) {
 			return switch (ptt.getPrimitiveTypeKind()) {
-				case FLOAT, DOUBLE -> true; 
+				case FLOAT, DOUBLE -> true;
 				default -> false;
 			};
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether this type is a primitive boolean type or not
-	 * 
+	 *
 	 * @return true if this is a primitive boolean type
 	 */
 	public boolean isPrimitveBoolean() {
-		if (node instanceof PrimitiveTypeTree ptt) {
+		if (node instanceof final PrimitiveTypeTree ptt) {
 			return switch (ptt.getPrimitiveTypeKind()) {
-				case BOOLEAN -> true; 
+				case BOOLEAN -> true;
 				default -> false;
 			};
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether this type is a primitive char type or not
-	 * 
+	 *
 	 * @return true if this is a primitive char type
 	 */
 	public boolean isPrimitveChar() {
-		if (node instanceof PrimitiveTypeTree ptt) {
+		if (node instanceof final PrimitiveTypeTree ptt) {
 			return switch (ptt.getPrimitiveTypeKind()) {
-				case CHAR -> true; 
+				case CHAR -> true;
 				default -> false;
 			};
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether the type is java.lang.String.
-	 * 
+	 *
 	 * @return true if the type is java.lang.String
 	 */
 	public boolean isString() {
-		if (node instanceof IdentifierTree ident) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+		if (node instanceof final IdentifierTree ident) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
-		} else if (node instanceof AnnotatedTypeTree att) {
+			return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
+		} else if (node instanceof final AnnotatedTypeTree att) {
 			if (att.getUnderlyingType() instanceof ArrayTypeTree)
 				return false;
-			ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
-			return ((type instanceof ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
+			return ((type instanceof final ExpressionClassType classType) && ("java.lang.String".equals(classType.getFullQualifiedName())));
 		}
 		return false;
 	}
@@ -188,22 +188,22 @@ public class TypeNode {
 
 	/**
 	 * Returns whether the type is java.lang.Boolean.
-	 * 
+	 *
 	 * @return true if the type is java.lang.Boolean
 	 */
 	public boolean isBoolean() {
-		if (node instanceof IdentifierTree ident) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+		if (node instanceof final IdentifierTree ident) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
-		} else if (node instanceof AnnotatedTypeTree att) {
+			return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
+		} else if (node instanceof final AnnotatedTypeTree att) {
 			if (att.getUnderlyingType() instanceof ArrayTypeTree)
 				return false;
-			ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information from annotated type " + att.toString());
-			return ((type instanceof ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
+			return ((type instanceof final ExpressionClassType classType) && ("java.lang.Boolean".equals(classType.getFullQualifiedName())));
 		}
 		return false;
 	}
@@ -211,224 +211,224 @@ public class TypeNode {
 
 	/**
 	 * Returns whether the type is a number class type (e.g. java.lang.Long).
-	 * 
+	 *
 	 * @return true if the type is a number class type
 	 */
 	public boolean isNumberClass() {
-		if (node instanceof IdentifierTree ident) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+		if (node instanceof final IdentifierTree ident) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-			return ((type instanceof ExpressionClassType classType) && 
-					(("java.lang.Number".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Byte".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Short".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Integer".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Long".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Float".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Double".equals(classType.getFullQualifiedName()))));
-		} else if (node instanceof AnnotatedTypeTree att) {
+			return ((type instanceof final ExpressionClassType classType)
+					&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
+		} else if (node instanceof final AnnotatedTypeTree att) {
 			if (att.getUnderlyingType() instanceof ArrayTypeTree)
 				return false;
-			ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(att.getUnderlyingType());
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the annotated type " + att.toString());
-			return ((type instanceof ExpressionClassType classType) && 
-					(("java.lang.Number".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Byte".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Short".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Integer".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Long".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Float".equals(classType.getFullQualifiedName())) ||
-					 ("java.lang.Double".equals(classType.getFullQualifiedName()))));			
+			return ((type instanceof final ExpressionClassType classType)
+					&& (("java.lang.Number".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Byte".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Short".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Integer".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Long".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Float".equals(classType.getFullQualifiedName()))
+						|| ("java.lang.Double".equals(classType.getFullQualifiedName()))));
 		}
 		if (node instanceof MemberSelectTree)
 			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isNumberClass()");
 		return false;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns whether the type is a Java collection type (e.g. java.util.Vector).
-	 * 
+	 *
 	 * @return true if the type is a Java collection type
 	 */
 	public boolean isCollectionType() {
-		if (node instanceof IdentifierTree ident) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+		if (node instanceof final IdentifierTree ident) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
 			return plugin.getTranspiler().checkForSuperclass(type, ExpressionClassType.getExpressionInterfaceType("Collection", "java.util")) >= 0;
 		}
-		if (node instanceof ParameterizedTypeTree ptt)
-			return getParameterizedTypeBaseTypeNode(ptt).isCollectionType(); 
+		if (node instanceof final ParameterizedTypeTree ptt)
+			return getParameterizedTypeBaseTypeNode(ptt).isCollectionType();
 		if (node instanceof MemberSelectTree)
 			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isCollectionType()");
 		return false;
 	}
 
-	
+
 	/**
 	 * Returns the type of the i-th type parameter.
-	 *  
+	 *
 	 * @param i      the number of the type parameter
 	 * @param decl   specifies whether the type is used during type declaration
-	 * 
-	 * @return the type of the i-th type parameter or null if this type no parameterized type or i is invalid 
+	 *
+	 * @return the type of the i-th type parameter or null if this type no parameterized type or i is invalid
 	 */
-	public TypeNode getParameterType(int i, boolean decl) {
-		if (node instanceof ParameterizedTypeTree ptt) {
-			List<? extends Tree> typeArgs = ptt.getTypeArguments();
+	public TypeNode getParameterType(final int i, final boolean decl) {
+		if (node instanceof final ParameterizedTypeTree ptt) {
+			final List<? extends Tree> typeArgs = ptt.getTypeArguments();
 			if ((typeArgs == null) || (i < 0) || (i >= typeArgs.size()))
-				return null;				
+				return null;
 			return new TypeNode(plugin, typeArgs.get(i), decl, false);
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Returns whether the type is a Java array type
-	 * 
+	 *
 	 * @return true if the type is a Java array type
 	 */
 	public boolean isArrayType() {
-		if (node instanceof IdentifierTree ident) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
+		if (node instanceof final IdentifierTree ident) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(ident);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
 			return (type instanceof ExpressionArrayType);
 		}
 		if (node instanceof MemberSelectTree)
 			throw new TranspilerException("Transpiler Error: MemberSelectTree nodes not yet supported in Method isArrayType()");
-		if ((node instanceof ArrayTypeTree) || ((node instanceof AnnotatedTypeTree att) && (att.getUnderlyingType() instanceof ArrayTypeTree)))
+		if ((node instanceof ArrayTypeTree) || ((node instanceof final AnnotatedTypeTree att) && (att.getUnderlyingType() instanceof ArrayTypeTree)))
 			return true;
 		throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method isArrayType()");
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns a type node for the array content type
-	 * 
-	 * @param transpiler   the transpiler used for checking the annotation 
-	 * 
+	 *
+	 * @param transpiler   the transpiler used for checking the annotation
+	 *
 	 * @return the type node for the array content type
 	 */
-	public TypeNode getArrayContentType(Transpiler transpiler) {
-		if (node instanceof ArrayTypeTree att) 
+	public TypeNode getArrayContentType(final Transpiler transpiler) {
+		if (node instanceof final ArrayTypeTree att)
 			return new TypeNode(plugin, att.getType(), true, isVarArg && this.notNull);
-		if ((node instanceof AnnotatedTypeTree ann) && (ann.getUnderlyingType() instanceof ArrayTypeTree att)) {
-			boolean notNullAnnotated = transpiler.hasNotNullAnnotation(ann);
+		if ((node instanceof final AnnotatedTypeTree ann) && (ann.getUnderlyingType() instanceof final ArrayTypeTree att)) {
+			final boolean notNullAnnotated = transpiler.hasNotNullAnnotation(ann);
 			return new TypeNode(plugin, att.getType(), true, (isVarArg && this.notNull) || notNullAnnotated);
 		}
 		throw new TranspilerException("Transpiler Error: Nodes of kind " + this.node.getKind() + " not yet supported in Method getArrayContentType()");
 	}
 
 
-	
-	private static String transpilePrimitiveType(PrimitiveTypeTree node) {
+
+	private static String transpilePrimitiveType(final PrimitiveTypeTree node) {
 		return switch (node.getPrimitiveTypeKind()) {
 			case VOID -> "void";
 			case BOOLEAN -> "boolean";
 			case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> "number";
 			case CHAR -> "string";
 			default -> throw new TranspilerException("Transpiler Error: " + node.getPrimitiveTypeKind() + " is not supported as a primitive type.");
-		};		
+		};
 	}
-	
-	
-	private String transpileArrayType(ArrayTypeTree node, boolean noTypeArgs, boolean parentNotNull, boolean contentNotNull) {
-		TypeNode arrayTypeNode = new TypeNode(plugin, node.getType(), true, contentNotNull);
+
+
+	private String transpileArrayType(final ArrayTypeTree node, final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull) {
+		final TypeNode arrayTypeNode = new TypeNode(plugin, node.getType(), true, contentNotNull);
 		return "Array<%s>%s".formatted(arrayTypeNode.transpile(noTypeArgs), (decl && !parentNotNull) ? " | null" : "");
 	}
 
-	
-	private TypeNode getParameterizedTypeBaseTypeNode(ParameterizedTypeTree node) {
+
+	private TypeNode getParameterizedTypeBaseTypeNode(final ParameterizedTypeTree node) {
 		Tree baseType = node.getType();
-		if (baseType instanceof AnnotatedTypeTree att)
+		if (baseType instanceof final AnnotatedTypeTree att)
 			baseType = att.getUnderlyingType();
-		return new TypeNode(plugin, baseType, false, false);		
+		return new TypeNode(plugin, baseType, false, false);
 	}
-	
-	
-	private String transpileParameterizedType(ParameterizedTypeTree node, boolean noTypeArgs) {
-		TypeNode paramTypeNode = getParameterizedTypeBaseTypeNode(node);
+
+
+	private String transpileParameterizedType(final ParameterizedTypeTree node, final boolean noTypeArgs) {
+		final TypeNode paramTypeNode = getParameterizedTypeBaseTypeNode(node);
 		String typeString = paramTypeNode.transpile(true);
-		List<? extends Tree> typeArgs = node.getTypeArguments();
+		final List<? extends Tree> typeArgs = node.getTypeArguments();
 		if (noTypeArgs || (typeArgs == null) || (typeArgs.size() == 0))
 			return typeString + ((decl && !notNull) ? " | null" : "");
 		typeString += "<";
 		boolean first = true;
-		for (Tree t : typeArgs) {
+		for (final Tree t : typeArgs) {
 			if (!first)
 				typeString += ", ";
 			first = false;
-			TypeNode typeArgNode = new TypeNode(plugin, t, true, false); 
+			final TypeNode typeArgNode = new TypeNode(plugin, t, true, false);
 			typeString += typeArgNode.transpile(false);
 		}
 		typeString += ">" + ((decl && !notNull) ? " | null" : "");
 		return typeString;
 	}
-	
 
-	private String transpileIdentifier(IdentifierTree node) {
+
+	private String transpileIdentifier(final IdentifierTree node) {
 		// TODO check it the identifier is valid, ...
-		return plugin.convertIdentifier(node) + ((decl && !notNull) ? " | null" : "");		
+		return plugin.convertIdentifier(node) + ((decl && !notNull) ? " | null" : "");
 	}
 
 
-	private String transpileMemberSelect(MemberSelectTree node) {
-		String classname = node.getIdentifier().toString();
-		String packagename = node.getExpression().toString();
-		ExpressionType type = plugin.getTranspiler().getExpressionType(node.getExpression());
-		if (type instanceof ExpressionClassType ect) // for nested classes and interfaces
+	private String transpileMemberSelect(final MemberSelectTree node) {
+		final String classname = node.getIdentifier().toString();
+		final String packagename = node.getExpression().toString();
+		final ExpressionType type = plugin.getTranspiler().getExpressionType(node.getExpression());
+		if (type instanceof final ExpressionClassType ect) // for nested classes and interfaces
 			return TranspilerTypeScriptPlugin.getImportName(classname, ect.getFullQualifiedName()) + ((decl && !notNull) ? " | null" : "");
 		if ("Object".equals(classname) && "java.lang".equals(packagename))
 			return "object" + ((decl && !notNull) ? " | null" : "");
 		return TranspilerTypeScriptPlugin.getImportName(classname, packagename) + ((decl && !notNull) ? " | null" : "");
 	}
 
-	
-	private String transpileAnnotatedType(AnnotatedTypeTree node, boolean noTypeArgs, boolean parentNotNull) {
-		boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
-		TypeNode underlyingTypeNode = new TypeNode(plugin, node.getUnderlyingType(), decl, hasNotNull);
+
+	private String transpileAnnotatedType(final AnnotatedTypeTree node, final boolean noTypeArgs, final boolean parentNotNull) {
+		final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(node);
+		final TypeNode underlyingTypeNode = new TypeNode(plugin, node.getUnderlyingType(), decl, hasNotNull);
 		return underlyingTypeNode.transpileInternal(noTypeArgs, parentNotNull, hasNotNull);
 	}
 
-	private String transpileWildcard(WildcardTree node) {
-		return switch(node.getKind()) {
+	private String transpileWildcard(final WildcardTree node) {
+		return switch (node.getKind()) {
 			case UNBOUNDED_WILDCARD -> "unknown";
 			case SUPER_WILDCARD -> {
-				TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
+				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
 				// TODO Partial is not really correct - try to find a better solution
 				yield "Partial<" + boundNode.transpile(false) + ">";
 			}
 			case EXTENDS_WILDCARD -> {
-				TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
+				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
 				yield boundNode.transpile(false);
 			}
-			default -> throw new TranspilerException("Transpiler Error: " + node.getKind() + " is not supported as a wildcard type."); 
-		};		
+			default -> throw new TranspilerException("Transpiler Error: " + node.getKind() + " is not supported as a wildcard type.");
+		};
 	}
-	
-	private String transpileInternal(boolean noTypeArgs, boolean parentNotNull, boolean contentNotNull) {
+
+	private String transpileInternal(final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull) {
 		if (node == null)
 			return "void";
-		if (node instanceof PrimitiveTypeTree p)
+		if (node instanceof final PrimitiveTypeTree p)
 			return TypeNode.transpilePrimitiveType(p);
-		if (node instanceof ArrayTypeTree a)
+		if (node instanceof final ArrayTypeTree a)
 			return this.transpileArrayType(a, noTypeArgs, parentNotNull, contentNotNull);
-		if (node instanceof ParameterizedTypeTree p)
+		if (node instanceof final ParameterizedTypeTree p)
 			return this.transpileParameterizedType(p, noTypeArgs);
-		if (node instanceof IdentifierTree i)
+		if (node instanceof final IdentifierTree i)
 			return this.transpileIdentifier(i);
-		if (node instanceof MemberSelectTree mst)
+		if (node instanceof final MemberSelectTree mst)
 			return this.transpileMemberSelect(mst);
-		if (node instanceof AnnotatedTypeTree att)
+		if (node instanceof final AnnotatedTypeTree att)
 			return this.transpileAnnotatedType(att, noTypeArgs, parentNotNull);
-		if (node instanceof WildcardTree wt)
+		if (node instanceof final WildcardTree wt)
 			return this.transpileWildcard(wt);
 		throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
 	}
@@ -436,50 +436,50 @@ public class TypeNode {
 
 	/**
 	 * Returns the transpiled code of this node.
-	 * 
-	 * @param noTypeArgs   if set to true the type arguments of parameterized types are 
+	 *
+	 * @param noTypeArgs   if set to true the type arguments of parameterized types are
 	 *                     not transpiled. This feature is used e.g. for the instanceof
 	 *                     operator.
 	 *
 	 * @return the transpiled code
 	 */
-	public String transpile(boolean noTypeArgs) {
+	public String transpile(final boolean noTypeArgs) {
 		return transpileInternal(noTypeArgs, this.notNull, isVarArg && this.notNull);
 	}
 
-	
+
 	/**
-	 * Returns the transpiled code for checking whether the specified object is an 
+	 * Returns the transpiled code for checking whether the specified object is an
 	 * instance of this type.
-	 * 
+	 *
 	 * @param obj   the object to be checked
-	 * 
-	 * @return the transpiled instanceof code 
+	 *
+	 * @return the transpiled instanceof code
 	 */
-	public String getInstanceOf(String obj) {
-		if (node instanceof IdentifierTree i) {
+	public String getInstanceOf(final String obj) {
+		if (node instanceof final IdentifierTree i) {
 			ExpressionType type = plugin.getTranspiler().getExpressionType(i);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + i.getName().toString());
-			if (type instanceof ExpressionTypeVar tvType) {
+			if (type instanceof final ExpressionTypeVar tvType) {
 				if (tvType.getExtendsBound() == null)
-					return "(typeof " + obj + " !== \"undefined\")"; 
+					return "(typeof " + obj + " !== \"undefined\")";
 				type = tvType.getExtendsBound();
 			}
-			if (type instanceof ExpressionClassType classType) {
+			if (type instanceof final ExpressionClassType classType) {
 				if ("java.lang.String".equals(classType.getFullQualifiedName()))
 					return "(typeof " + obj + " === \"string\")";
-				if ("java.lang.Byte".equals(classType.getFullQualifiedName()) ||
-					"java.lang.Short".equals(classType.getFullQualifiedName()) ||
-					"java.lang.Integer".equals(classType.getFullQualifiedName()) ||
-					"java.lang.Long".equals(classType.getFullQualifiedName()) ||
-					"java.lang.Float".equals(classType.getFullQualifiedName()) ||
-					"java.lang.Double".equals(classType.getFullQualifiedName()))
+				if ("java.lang.Byte".equals(classType.getFullQualifiedName())
+						|| "java.lang.Short".equals(classType.getFullQualifiedName())
+						|| "java.lang.Integer".equals(classType.getFullQualifiedName())
+						|| "java.lang.Long".equals(classType.getFullQualifiedName())
+						|| "java.lang.Float".equals(classType.getFullQualifiedName())
+						|| "java.lang.Double".equals(classType.getFullQualifiedName()))
 					return "(typeof " + obj + " === \"number\")";
 				if ("java.lang.Boolean".equals(classType.getFullQualifiedName()))
 					return "(typeof " + obj + " === \"boolean\")";
 				// Check whether we check for a functional interface - then we need only an object with the function...
-				String functionalInterfaceMethodName = plugin.getTranspiler().getFunctionInterfaceMethodName(classType.getFullQualifiedName()); 
+				final String functionalInterfaceMethodName = plugin.getTranspiler().getFunctionInterfaceMethodName(classType.getFullQualifiedName());
 				if (functionalInterfaceMethodName != null)
 					return "((typeof " + obj + " !== 'undefined') && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName + "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
 				// Check for java.lang.Object - in this case we must also check for Numbers
@@ -491,90 +491,90 @@ public class TypeNode {
 			}
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());
 		}
-		if (node instanceof ParameterizedTypeTree p)
-			return getParameterizedTypeBaseTypeNode(p).getInstanceOf(obj);			
+		if (node instanceof final ParameterizedTypeTree p)
+			return getParameterizedTypeBaseTypeNode(p).getInstanceOf(obj);
 		throw new TranspilerException("Transpiler Error: instanceof for type nodes of kind " + node.getKind() + " not yet supported by the transpiler.");
 	}
 
-	
-	
+
+
 	/**
 	 * Returns transpiled code to check whether the specified identifier matches
 	 * this primitive type.
-	 * 
-	 * @param node         the primitive type node 
-	 * @param identifier   the identifier to be checked 
-	 *  
-	 * @return the type check code 
+	 *
+	 * @param node         the primitive type node
+	 * @param identifier   the identifier to be checked
+	 *
+	 * @return the type check code
 	 */
-	private static String checkPrimitiveType(String identifier, PrimitiveTypeTree node) {		
+	private static String checkPrimitiveType(final String identifier, final PrimitiveTypeTree node) {
 		return switch (node.getPrimitiveTypeKind()) {
 			case BOOLEAN -> "typeof " + identifier + " === \"boolean\"";
 			case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE -> "typeof " + identifier + " === \"number\"";
 			case CHAR -> "typeof " + identifier + " === \"string\"";
 			default -> throw new TranspilerException("Transpiler Error: " + node.getPrimitiveTypeKind() + " is not supported as a primitive type.");
-		};		
+		};
 	}
-	
-	
+
+
 	/**
 	 * Returns transpiled code to check whether the specified identifier matches
 	 * this type.
-	 * 
-	 * @param identifier   the identifier to be checked 
-	 *  
-	 * @return the type check code 
+	 *
+	 * @param identifier   the identifier to be checked
+	 *
+	 * @return the type check code
 	 */
-	public String getTypeCheck(String identifier) {
-		if (node instanceof PrimitiveTypeTree p)
+	public String getTypeCheck(final String identifier) {
+		if (node instanceof final PrimitiveTypeTree p)
 			return checkPrimitiveType(identifier, p);
-		if (node instanceof IdentifierTree i)
+		if (node instanceof final IdentifierTree i)
 			return getInstanceOf(identifier) + (notNull ? "" : (" || (" + identifier + " === null)"));
-		if (node instanceof ParameterizedTypeTree p)
+		if (node instanceof final ParameterizedTypeTree p)
 			return getParameterizedTypeBaseTypeNode(p).getTypeCheck(identifier);
-		if (node instanceof ArrayTypeTree a)
+		if (node instanceof final ArrayTypeTree a)
 			return "Array.isArray(" + identifier + ")";
-		if (node instanceof AnnotatedTypeTree a) {
-			boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(a);
-			TypeNode underlyingTypeNode = new TypeNode(plugin, a.getUnderlyingType(), decl, hasNotNull);
+		if (node instanceof final AnnotatedTypeTree a) {
+			final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(a);
+			final TypeNode underlyingTypeNode = new TypeNode(plugin, a.getUnderlyingType(), decl, hasNotNull);
 			return underlyingTypeNode.getTypeCheck(identifier);
 		}
 		throw new TranspilerException("Transpiler Error: type check for type nodes of kind " + node.getKind() + " not yet supported by the transpiler.");
 	}
 
-	
+
 	/**
 	 * Returns transpiled code for casting the specified identifier
-	 * to this type. Casting is only used for Java object types.  
-	 * 
+	 * to this type. Casting is only used for Java object types.
+	 *
 	 * @param identifier   the identifier
-	 * 
+	 *
 	 * @return the transpiled code
 	 */
-	public String getTypeCast(String identifier) {
-		if (node instanceof PrimitiveTypeTree p)
+	public String getTypeCast(final String identifier) {
+		if (node instanceof final PrimitiveTypeTree p)
 			return identifier + " as " + transpile(false);
-		if (node instanceof IdentifierTree i) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(i);
+		if (node instanceof final IdentifierTree i) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(i);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + i.getName().toString());
-			if (type instanceof ExpressionClassType classType) {
+			if (type instanceof final ExpressionClassType classType) {
 				return switch (classType.getFullQualifiedName()) {
-					case "java.lang.String", "java.lang.Boolean", "java.lang.Byte", "java.lang.Short", 
+					case "java.lang.String", "java.lang.Boolean", "java.lang.Byte", "java.lang.Short",
 						"java.lang.Integer", "java.lang.Long", "java.lang.Float", "java.lang.Double" -> identifier;
 					case "java.lang.Object" -> "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
-					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")"; 
+					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 				};
 			}
-			if (type instanceof ExpressionTypeVar typeVar)
+			if (type instanceof final ExpressionTypeVar typeVar)
 				return identifier + " as unknown as " + type.toString();
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());
 		}
-		if (node instanceof MemberSelectTree mst) {
-			ExpressionType type = plugin.getTranspiler().getExpressionType(mst);
+		if (node instanceof final MemberSelectTree mst) {
+			final ExpressionType type = plugin.getTranspiler().getExpressionType(mst);
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the member select " + mst.toString());
-			if (type instanceof ExpressionClassType classType) {
+			if (type instanceof final ExpressionClassType classType) {
 				if ("java.lang.String".equals(classType.getFullQualifiedName()))
 					return identifier;
 				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
@@ -582,20 +582,20 @@ public class TypeNode {
 				}
 				return "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 			}
-			if (type instanceof ExpressionTypeVar typeVar)
+			if (type instanceof final ExpressionTypeVar typeVar)
 				return identifier + " as unknown as " + type.toString();
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the member select " + mst.toString());
 		}
-		if (node instanceof ParameterizedTypeTree p)
+		if (node instanceof final ParameterizedTypeTree p)
 			return getParameterizedTypeBaseTypeNode(p).getTypeCast(identifier);
-		if (node instanceof ArrayTypeTree a)
+		if (node instanceof final ArrayTypeTree a)
 			return identifier;
-		if (node instanceof AnnotatedTypeTree att) {
-			boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(att);
-			TypeNode underlyingTypeNode = new TypeNode(plugin, att.getUnderlyingType(), decl, hasNotNull);
+		if (node instanceof final AnnotatedTypeTree att) {
+			final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(att);
+			final TypeNode underlyingTypeNode = new TypeNode(plugin, att.getUnderlyingType(), decl, hasNotNull);
 			return underlyingTypeNode.getTypeCast(identifier);
 		}
 		throw new TranspilerException("Transpiler Error: type casting for type nodes of kind " + node.getKind() + " not yet supported by the transpiler.");
 	}
-	
+
 }

@@ -6,7 +6,7 @@ package de.svws_nrw.transpiler;
 public final class ExpressionTypeNull extends ExpressionType {
 
 	/**
-	 * Create the no type instance that represents an unspecfied 
+	 * Create the no type instance that represents an unspecfied
 	 * type for null literals.
 	 */
 	protected ExpressionTypeNull() {
@@ -21,7 +21,7 @@ public final class ExpressionTypeNull extends ExpressionType {
 
 
 	@Override
-	public int isAssignable(Transpiler transpiler, ExpressionType other) {
+	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
 		if (other instanceof ExpressionClassType)
 			return 1;
 		if (other instanceof ExpressionArrayType)
@@ -39,15 +39,15 @@ public final class ExpressionTypeNull extends ExpressionType {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		ExpressionTypeNull other = (ExpressionTypeNull) obj;
+		final ExpressionTypeNull other = (ExpressionTypeNull) obj;
 		if (getKind() != other.getKind())
 			return false;
 		return true;
-	}	
-	
+	}
+
 }

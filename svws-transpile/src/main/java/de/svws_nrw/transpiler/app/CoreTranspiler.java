@@ -30,10 +30,10 @@ public class CoreTranspiler {
 
 	/**
 	 * Starts the transpiler with the above configured input files and output directories
-	 * 
+	 *
 	 * @param args   the command line arguments
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		File[] coreJavaSources = null;
 		File[] apiJavaSources = null;
 		String tmpDir = null;
@@ -55,19 +55,19 @@ public class CoreTranspiler {
 			String[] tmpApiFiles = cmdLine.getValue("a", "").split(",");
 			if ((tmpJavaFiles == null) || (tmpJavaFiles.length == 0) || ((tmpJavaFiles.length == 1) && (tmpJavaFiles[0].trim().equals("")))) {
 				try {
-					String fileNameJavaFiles = cmdLine.getValue("jf", "");
-					String data = Files.readString(Paths.get(fileNameJavaFiles));
+					final String fileNameJavaFiles = cmdLine.getValue("jf", "");
+					final String data = Files.readString(Paths.get(fileNameJavaFiles));
 					tmpJavaFiles = data.split(",");
-				} catch (@SuppressWarnings("unused") IOException e) {
+				} catch (@SuppressWarnings("unused") final IOException e) {
 					tmpJavaFiles = null;
 				}
 			}
 			if ((tmpApiFiles == null) || (tmpApiFiles.length == 0) || ((tmpApiFiles.length == 1) && (tmpApiFiles[0].trim().equals("")))) {
 				try {
-					String fileNameAPIFiles = cmdLine.getValue("af", "");
-					String data = Files.readString(Paths.get(fileNameAPIFiles));
+					final String fileNameAPIFiles = cmdLine.getValue("af", "");
+					final String data = Files.readString(Paths.get(fileNameAPIFiles));
 					tmpApiFiles = data.split(",");
-				} catch (@SuppressWarnings("unused") IOException e) {
+				} catch (@SuppressWarnings("unused") final IOException e) {
 					tmpApiFiles = null;
 				}
 			}
@@ -81,52 +81,52 @@ public class CoreTranspiler {
 			}
 			coreJavaSources = new File[tmpJavaFiles.length];
 			for (int i = 0; i < tmpJavaFiles.length; i++) {
-				Path p = Paths.get(tmpJavaFiles[i].trim());
+				final Path p = Paths.get(tmpJavaFiles[i].trim());
 				coreJavaSources[i] = p.toFile();
 			}
 			apiJavaSources = new File[tmpApiFiles.length];
 			for (int i = 0; i < tmpApiFiles.length; i++) {
-				Path p = Paths.get(tmpApiFiles[i].trim());
+				final Path p = Paths.get(tmpApiFiles[i].trim());
 				apiJavaSources[i] = p.toFile();
 			}
-		} catch (CommandLineException e) {
+		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}
 
     	// Create a transpiler object with the associated core java source files and use the TS Transpiler Plugin
-		Transpiler transpiler = new Transpiler(tmpDir, coreJavaSources);
-		
-		TranspilerTypeScriptPlugin typescriptPlugin = new TranspilerTypeScriptPlugin(transpiler, typeScriptOutputDir);
+		final Transpiler transpiler = new Transpiler(tmpDir, coreJavaSources);
+
+		final TranspilerTypeScriptPlugin typescriptPlugin = new TranspilerTypeScriptPlugin(transpiler, typeScriptOutputDir);
 		typescriptPlugin.setIgnoreJavaPackagePrefix(typeScriptIgnorePackagePrefix);
-		
+
 		transpiler.printSourceFiles();
 		transpiler.transpile();
-		
+
     	// Create a transpiler object with the associated api java source files and use the TS API Generator Plugin
-// TODO Finish implementing the OpenApi-Plugin after reducing code in Server-API-Classes		
-		Transpiler apiTranspiler = new Transpiler(tmpDir, apiJavaSources);
-		
-		ApiTranspilerTypeScriptPlugin apiGeneratorPlugin = new ApiTranspilerTypeScriptPlugin(apiTranspiler, typeScriptOutputDir);
+// TODO Finish implementing the OpenApi-Plugin after reducing code in Server-API-Classes
+		final Transpiler apiTranspiler = new Transpiler(tmpDir, apiJavaSources);
+
+		final ApiTranspilerTypeScriptPlugin apiGeneratorPlugin = new ApiTranspilerTypeScriptPlugin(apiTranspiler, typeScriptOutputDir);
 		apiGeneratorPlugin.setIgnoreJavaPackagePrefix(typeScriptIgnorePackagePrefix);
-		
+
 		apiTranspiler.printSourceFiles();
 		apiTranspiler.transpile();
 
-		Vector<String> outputs = new Vector<>();
+		final Vector<String> outputs = new Vector<>();
 		outputs.addAll(typescriptPlugin.getOutputFiles());
 		outputs.addAll(apiGeneratorPlugin.getOutputFiles());
-		String strExports = outputs.stream().sorted()
+		final String strExports = outputs.stream().sorted()
 				.map(filename -> {
-					String importName = filename.replace(".ts", ""); 
-					String classname = importName.replaceFirst(".*/", "");
+					final String importName = filename.replace(".ts", "");
+					final String classname = importName.replaceFirst(".*/", "");
 					return "export { " + classname + " } from './" + importName + "';";
 				})
 				.collect(Collectors.joining("\n", "", "\n"));
 		try {
 			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), strExports, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			throw new TranspilerException("Transpiler Error: Cannot generated index.ts file.");
 		}
 	}
-	
+
 }

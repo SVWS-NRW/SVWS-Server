@@ -19,21 +19,19 @@ import com.sun.source.tree.VariableTree;
 /**
  * The specialized {@link ExpressionType} if the type is a class type.
  */
-public class ExpressionTypeLambda extends ExpressionType {
+public final class ExpressionTypeLambda extends ExpressionType {
 
 	/** the lambda expression used to generate this type information */
 	LambdaExpressionTree tree = null;
-	
+
 	/** the result type of the lambda expression */
 	private ExpressionType resultType = null;
-	
+
 	/** a list of the lambda expression parameters type. */
 	private final List<ExpressionType> paramTypes = new Vector<>();
-		
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeElement}
-	 * 
-	 * @param elem   the type element
 	 */
 	private ExpressionTypeLambda() {
 		super(Kind.LAMBDA_EXPRESSION);
@@ -42,93 +40,93 @@ public class ExpressionTypeLambda extends ExpressionType {
 
 	/**
 	 * Creates a new lambda expression type instance from the specified {@link LambdaExpressionTree}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param tree         the lambda expression tree node
-	 * 
+	 *
 	 * @return the new lambda expression type instance
 	 */
-	public static ExpressionTypeLambda getExpressionTypeLambda(Transpiler transpiler, LambdaExpressionTree tree) {
-		ExpressionTypeLambda result = new ExpressionTypeLambda();
+	public static ExpressionTypeLambda getExpressionTypeLambda(final Transpiler transpiler, final LambdaExpressionTree tree) {
+		final ExpressionTypeLambda result = new ExpressionTypeLambda();
 		result.tree = tree;
-		for (VariableTree varTree : tree.getParameters())
+		for (final VariableTree varTree : tree.getParameters())
 			result.paramTypes.add(ExpressionType.getExpressionType(transpiler, varTree.getType()));
-		if (tree.getBody() instanceof ExpressionTree body)
+		if (tree.getBody() instanceof final ExpressionTree body)
 			result.resultType = transpiler.getExpressionType(body);
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Returns the resulting type of this lambda expression type
-	 * 
+	 *
 	 * @return the resulting type of this lambda expression type
 	 */
 	public ExpressionType getResultType() {
 		return resultType;
 	}
 
-	
+
 	/**
 	 * Returns the parameter types of this lambda expression type
-	 * 
+	 *
 	 * @return the parameter types
 	 */
 	public List<? extends ExpressionType> getParamTypes() {
 		return paramTypes;
 	}
-	
-	
+
+
 	/**
-	 * Returns the name of the functional interface that is implemented with this 
+	 * Returns the name of the functional interface that is implemented with this
 	 * lambda expression.
-	 * 
+	 *
 	 * @param transpiler   the transpiler used for getting further information about the functional interface
-	 *  
+	 *
 	 * @return the name of the functional interface
 	 */
-	public String getFunctionalInterfaceName(Transpiler transpiler) {
-		Tree parent = transpiler.getParent(tree);
-		if (parent instanceof VariableTree vt) {
-			Tree varType = vt.getType();
-			if (varType instanceof ParameterizedTypeTree ptt) {
+	public String getFunctionalInterfaceName(final Transpiler transpiler) {
+		final Tree parent = transpiler.getParent(tree);
+		if (parent instanceof final VariableTree vt) {
+			final Tree varType = vt.getType();
+			if (varType instanceof final ParameterizedTypeTree ptt) {
 				Tree baseType = ptt.getType();
-				if (baseType instanceof AnnotatedTypeTree att)
+				if (baseType instanceof final AnnotatedTypeTree att)
 					baseType = att.getUnderlyingType();
-				if (baseType instanceof IdentifierTree ident) {
-					ExpressionType type = transpiler.getExpressionType(ident);
+				if (baseType instanceof final IdentifierTree ident) {
+					final ExpressionType type = transpiler.getExpressionType(ident);
 					if (type == null)
 						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
-					if (type instanceof ExpressionClassType classType)
+					if (type instanceof final ExpressionClassType classType)
 						// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
 						return classType.getFullQualifiedName();
 				}
-			} 
-			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces");				
-		} 
-		if (parent instanceof MethodInvocationTree mit) {
+			}
+			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces");
+		}
+		if (parent instanceof final MethodInvocationTree mit) {
 			// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
 		}
 		// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
 		return "java.util.function.Consumer";
 	}
-	
+
 	/**
-	 * Returns the name of the abstract method of the functional interface that 
+	 * Returns the name of the abstract method of the functional interface that
 	 * is implemented with this lambda expression.
-	 *  
+	 *
 	 * @param transpiler   the transpiler used for getting further information about the functional interface
-	 * 
-	 * @return the name of the abstract method of the functional interface that 
+	 *
+	 * @return the name of the abstract method of the functional interface that
 	 * is implemented with this lambda expression
 	 */
-	public String getFunctionalInterfaceMethodName(Transpiler transpiler) {
+	public String getFunctionalInterfaceMethodName(final Transpiler transpiler) {
 		return transpiler.getFunctionInterfaceMethodName(this.getFunctionalInterfaceName(transpiler));
 	}
 
 
 	@Override
-	public int isAssignable(Transpiler transpiler, ExpressionType other) {
+	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
 		throw new TranspilerException("Transpiler Error: Assignments with lambda expressions currently not supported.");
 	}
 
@@ -137,7 +135,7 @@ public class ExpressionTypeLambda extends ExpressionType {
 	public boolean isPrimitiveOrBoxedPrimitive() {
 		return false;
 	}
-	
+
 
 	@Override
 	public String toString() {
@@ -156,12 +154,12 @@ public class ExpressionTypeLambda extends ExpressionType {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		ExpressionTypeLambda other = (ExpressionTypeLambda) obj;
+		final ExpressionTypeLambda other = (ExpressionTypeLambda) obj;
 		if (getKind() != other.getKind())
 			return false;
 		if (paramTypes == null) {

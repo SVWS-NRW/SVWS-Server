@@ -23,11 +23,11 @@ import com.sun.source.tree.Tree;
 /**
  * The specialized {@link ExpressionType} if the type is a class type.
  */
-public class ExpressionClassType extends ExpressionType {
+public final class ExpressionClassType extends ExpressionType {
 
 	/** the package name of the class */
 	private final String packageName;
-	
+
 	/** the simple class name */
 	private final String className;
 
@@ -36,15 +36,17 @@ public class ExpressionClassType extends ExpressionType {
 	private final List<ExpressionType> typeArguments = new ArrayList<>();
 
 	/** the type variables if the class is a parameterized type */
-	private final List<ExpressionTypeVar> typeVariables = new ArrayList<>(); 
+	private final List<ExpressionTypeVar> typeVariables = new ArrayList<>();
 
-	
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeElement}
-	 * 
-	 * @param elem   the type element
+	 *
+	 * @param kind          the kind of the class expression type
+	 * @param className     the class name
+	 * @param packageName   the package name
 	 */
-	private ExpressionClassType(Kind kind, String className, String packageName) {
+	private ExpressionClassType(final Kind kind, final String className, final String packageName) {
 		super(kind);
 		this.className = className;
 		this.packageName = packageName;
@@ -53,35 +55,35 @@ public class ExpressionClassType extends ExpressionType {
 
 	/**
 	 * Creates a new expression interface type instance from the specified paramaters.
-	 *  
+	 *
 	 * @param name          the interface name
 	 * @param packageName   the packagename of the interface
-	 * 
-	 * @return the new expression class type instance 
+	 *
+	 * @return the new expression class type instance
 	 */
-	public static ExpressionClassType getExpressionInterfaceType(String name, String packageName) {
+	public static ExpressionClassType getExpressionInterfaceType(final String name, final String packageName) {
 		return new ExpressionClassType(Kind.INTERFACE, name, packageName);
 	}
-	
-	
+
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeMirror}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param type   the type mirror
-	 * 
+	 *
 	 * @return the new expression class type instance
-	 * 
-	 * @throws TranspilerException   an exception if analyzing the type arguments fails 
+	 *
+	 * @throws TranspilerException   an exception if analyzing the type arguments fails
 	 */
-	public static ExpressionClassType getExpressionClassType(Transpiler transpiler, TypeMirror type) throws TranspilerException {
-		if (type instanceof DeclaredType dt) {
-			ExpressionClassType result = new ExpressionClassType(
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
+		if (type instanceof final DeclaredType dt) {
+			final ExpressionClassType result = new ExpressionClassType(
 				dt.getTypeArguments().size() == 0 ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
 				getClassName(dt.toString()),
 				getPackageName(dt.toString())
 			);
-			for (TypeMirror typeArg : dt.getTypeArguments()) {
+			for (final TypeMirror typeArg : dt.getTypeArguments()) {
 				if (typeArg instanceof DeclaredType) {
 					result.typeArguments.add(getExpressionClassType(transpiler, typeArg));
 					continue;
@@ -90,13 +92,13 @@ public class ExpressionClassType extends ExpressionType {
 					result.typeArguments.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, typeArg));
 					continue;
 				}
-				if (typeArg instanceof PrimitiveType pt)
+				if (typeArg instanceof final PrimitiveType pt)
 					throw new TranspilerException("Transpiler Error: Primitive Types cannot be used as type argument");
-				if (typeArg instanceof ArrayType at) {
+				if (typeArg instanceof final ArrayType at) {
 					int dim = 1;
 					TypeMirror elemType = at.getComponentType();
-					// iterate to retrieve the element type and the dimension 
-					while (elemType instanceof ArrayType ate) {
+					// iterate to retrieve the element type and the dimension
+					while (elemType instanceof final ArrayType ate) {
 						elemType = ate.getComponentType();
 						dim++;
 					}
@@ -104,7 +106,7 @@ public class ExpressionClassType extends ExpressionType {
 						result.typeArguments.add(new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, elemType), dim));
 						continue;
 					}
-					if (elemType instanceof TypeVariable tv) {
+					if (elemType instanceof final TypeVariable tv) {
 						result.typeVariables.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, tv));
 						continue;
 					}
@@ -119,46 +121,46 @@ public class ExpressionClassType extends ExpressionType {
 			getPackageName(type.toString())
 		);
 	}
-	
-	
+
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeElement}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param elem         the type element
-	 * 
+	 *
 	 * @return the new expression class type instance
 	 */
-	public static ExpressionClassType getExpressionClassType(Transpiler transpiler, TypeElement elem) {
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeElement elem) {
 		if ((transpiler == null) || (elem == null))
 			throw new NullPointerException();
-		ExpressionClassType result = new ExpressionClassType(
+		final ExpressionClassType result = new ExpressionClassType(
 			elem.getTypeParameters().size() == 0 ? (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS) : Kind.PARAMETERIZED_TYPE,
 			elem.getSimpleName().toString(),
 			getPackageName(elem.getQualifiedName().toString())
 		);
-		for (TypeParameterElement tpe : elem.getTypeParameters())
+		for (final TypeParameterElement tpe : elem.getTypeParameters())
 			result.typeArguments.add(ExpressionType.getExpressionType(transpiler, tpe.asType()));
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link ParameterizedTypeTree}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param tree         the parameterized type tree node
-	 * 
+	 *
 	 * @return the new expression class type instance
 	 */
-	public static ExpressionClassType getExpressionClassType(Transpiler transpiler, ParameterizedTypeTree tree) {
-		ExpressionClassType temp = (ExpressionClassType)getExpressionType(transpiler, tree.getType());
-		ExpressionClassType result = new ExpressionClassType(
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final ParameterizedTypeTree tree) {
+		final ExpressionClassType temp = (ExpressionClassType) getExpressionType(transpiler, tree.getType());
+		final ExpressionClassType result = new ExpressionClassType(
 			Kind.PARAMETERIZED_TYPE,
 			temp.toString(),
 			temp.getPackageName()
 		);
-		for (Tree typeArgument : tree.getTypeArguments())
+		for (final Tree typeArgument : tree.getTypeArguments())
 			result.typeArguments.add(getExpressionType(transpiler, typeArgument));
 		return result;
 	}
@@ -166,18 +168,18 @@ public class ExpressionClassType extends ExpressionType {
 
 	/**
 	 * Creates a new expression class type instance from the specified {@link MemberSelectTree}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param tree         the member select type tree node
-	 * 
+	 *
 	 * @return the new expression class type instance
 	 */
-	public static ExpressionClassType getExpressionClassType(Transpiler transpiler, MemberSelectTree tree) {
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final MemberSelectTree tree) {
 		// TODO improve type checks
-		if (tree.getExpression() instanceof IdentifierTree ident) {
-			ExpressionType et = ExpressionType.getExpressionType(transpiler, ident);
-			if (et instanceof ExpressionClassType ect) {
-				// TODO incorrect class type are generated - check with: System.err.println(ect.getFullQualifiedName() + "   " + tree.getExpression().toString() + "   " + tree.getIdentifier().toString());	
+		if (tree.getExpression() instanceof final IdentifierTree ident) {
+			final ExpressionType et = ExpressionType.getExpressionType(transpiler, ident);
+			if (et instanceof final ExpressionClassType ect) {
+				// TODO incorrect class type are generated - check with: System.err.println(ect.getFullQualifiedName() + "   " + tree.getExpression().toString() + "   " + tree.getIdentifier().toString());
 				return new ExpressionClassType(
 					Kind.PARAMETERIZED_TYPE,
 					tree.getIdentifier().toString(),
@@ -195,15 +197,15 @@ public class ExpressionClassType extends ExpressionType {
 
 	/**
 	 * Creates a new parameterized expression class type instance for java.lang.Class with
-	 * the specified parameter class type. 
-	 * 
-	 * @param transpiler    the transpiler used for determining the expression type 
+	 * the specified parameter class type.
+	 *
+	 * @param transpiler    the transpiler used for determining the expression type
 	 * @param clParamType   the parameter class type
-	 * 
+	 *
 	 * @return the new expression class type instance
 	 */
-	public static ExpressionClassType getExpressionClassType(Transpiler transpiler, ExpressionClassType clParamType) {
-		ExpressionClassType result = new ExpressionClassType(
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final ExpressionClassType clParamType) {
+		final ExpressionClassType result = new ExpressionClassType(
 			Kind.PARAMETERIZED_TYPE,
 			"Class",
 			"java.lang"
@@ -215,88 +217,88 @@ public class ExpressionClassType extends ExpressionType {
 
 	/**
 	 * Returns the class name part of the specified class type string
-	 * 
+	 *
 	 * @param classType   the class type string
-	 * 
+	 *
 	 * @return the simple class name
 	 */
-	private static String getClassName(String classType) {
+	private static String getClassName(final String classType) {
 		// remove type parameters
-		String className = classType.replaceAll("<.*>", "");
+		final String className = classType.replaceAll("<.*>", "");
 		// determine the last dot...
-		int lastDot = className.lastIndexOf('.');
+		final int lastDot = className.lastIndexOf('.');
 		// ...and remove all before the simple class name, which is at the end
-		return (lastDot < 0) ? className : className.substring(lastDot + 1);		
+		return (lastDot < 0) ? className : className.substring(lastDot + 1);
 	}
-	
-	
+
+
 	/**
 	 * Returns the package part of the specified class type string
-	 * 
+	 *
 	 * @param classType   the class type string
-	 * 
-	 * @return the package name extracted from the specified class type string, if the class 
+	 *
+	 * @return the package name extracted from the specified class type string, if the class
 	 * type string was a qualified class type string and null otherwise
 	 */
-	private static String getPackageName(String classType) {
+	private static String getPackageName(final String classType) {
 		// remove annotations
-		String classTypeWithoutAnnotations = classType.replaceAll("@\\S+\\s", "");
+		final String classTypeWithoutAnnotations = classType.replaceAll("@\\S+\\s", "");
 		// remove type parameters
-		String className = classTypeWithoutAnnotations.replaceAll("<.*>", "");
+		final String className = classTypeWithoutAnnotations.replaceAll("<.*>", "");
 		// determine the last dot...
-		int lastDot = className.lastIndexOf('.');
+		final int lastDot = className.lastIndexOf('.');
 		// ...and remove the simple class name at the end
 		return (lastDot < 0) ? null : className.substring(0, lastDot);
 	}
 
-	
+
 	/**
 	 * Returns the package name.
-	 * 
+	 *
 	 * @return the package name
 	 */
 	public String getPackageName() {
 		return this.packageName;
 	}
-	
+
 
 	/**
 	 * Returns the full qualified name of the class, i.e. without the list
 	 * of type parameters if type parameters exist
-	 * 
-	 * @return the full qualified name of the class 
+	 *
+	 * @return the full qualified name of the class
 	 */
 	public String getFullQualifiedName() {
 		return this.packageName + "." + this.className;
 	}
 
-	
+
 	/**
 	 * Returns the number of type arguments/variables of this class
 	 * type.
-	 * 
+	 *
 	 * @return the number of type arguments/variables
 	 */
 	public int getTypeArgumentCount() {
 		return Math.max(this.typeArguments.size(), this.typeVariables.size());
 	}
 
-	
+
 	/**
 	 * Resolves the type variables using the specified map and writes the
 	 * expression type into the typeArguments list.
-	 *  
+	 *
 	 * @param knownTypeVars   the mapping of type variables to the type arguments
-	 * 
-	 * @return true on success and false if not all type variables could be resolved 
+	 *
+	 * @return true on success and false if not all type variables could be resolved
 	 */
-	public boolean resolveTypeVariables(HashMap<String, ExpressionType> knownTypeVars) {
-		// TODO improvement: allow mixed generic parameters with type variables and fixed types 
+	public boolean resolveTypeVariables(final HashMap<String, ExpressionType> knownTypeVars) {
+		// TODO improvement: allow mixed generic parameters with type variables and fixed types
 		// TODO improvement: replace type variables recursively - see comment in Transpiler
 		if (typeArguments.size() > 0)
 			return true;
 		for (int i = 0; i < typeVariables.size(); i++) {
-			ExpressionType t = knownTypeVars.get(typeVariables.get(i).getName());
+			final ExpressionType t = knownTypeVars.get(typeVariables.get(i).getName());
 			if (t == null) {
 				typeArguments.clear();
 				return false;
@@ -305,23 +307,23 @@ public class ExpressionClassType extends ExpressionType {
 		}
 		return true;
 	}
-	
+
 
 	/**
 	 * Returns the list of type arguments of this class. If no
 	 * type arguments are available an empty list is returned.
-	 * 
+	 *
 	 * @return the list of type arguments
 	 */
 	public List<ExpressionType> getTypeArguments() {
 		return this.typeArguments;
 	}
-	
-	
+
+
 	/**
 	 * Returns the list of type variables of this class. If no
 	 * type variables are available an empty list is returned.
-	 * 
+	 *
 	 * @return the list of type variables
 	 */
 	public List<ExpressionTypeVar> getTypeVariables() {
@@ -333,8 +335,8 @@ public class ExpressionClassType extends ExpressionType {
 	public boolean isPrimitiveOrBoxedPrimitive() {
 		return ExpressionPrimitiveType.getUnboxed(this) != null;
 	}
-	
-	
+
+
 	@Override
 	public boolean isNumberType() {
 		if (!"java.lang".equals(packageName))
@@ -345,8 +347,8 @@ public class ExpressionClassType extends ExpressionType {
 			default -> false;
 		};
 	}
-	
-	
+
+
 	@Override
 	public boolean isIntegerType() {
 		if (!"java.lang".equals(packageName))
@@ -359,23 +361,23 @@ public class ExpressionClassType extends ExpressionType {
 
 
 	@Override
-	public int isAssignable(Transpiler transpiler, ExpressionType other) {
-		if (other instanceof ExpressionPrimitiveType otherPrimitive) {
+	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
+		if (other instanceof final ExpressionPrimitiveType otherPrimitive) {
 			if ("Object".equals(this.className) && "java.lang".equals(this.packageName))
 				return 2;  // unboxed and assigned to a super type
-			ExpressionPrimitiveType thisPrimitive = ExpressionPrimitiveType.getUnboxed(this);
+			final ExpressionPrimitiveType thisPrimitive = ExpressionPrimitiveType.getUnboxed(this);
 			if (thisPrimitive == null)
 				return -1;
 			return thisPrimitive.isAssignable(transpiler, otherPrimitive) == -1 ? -1 : 1; // if it is assignable increase by one
 		}
-		if (other instanceof ExpressionClassType otherClass) {
+		if (other instanceof final ExpressionClassType otherClass) {
 			return transpiler.checkForSuperclass(otherClass, this);
 		}
-		if ((other instanceof ExpressionArrayType otherArray) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName)))
+		if ((other instanceof final ExpressionArrayType otherArray) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName)))
 			return 1;
-		if (other instanceof ExpressionTypeLambda otherLambda) {
-			List<? extends ExpressionType> paramTypes = otherLambda.getParamTypes();
-			ExpressionType resultType = otherLambda.getResultType();
+		if (other instanceof final ExpressionTypeLambda otherLambda) {
+			final List<? extends ExpressionType> paramTypes = otherLambda.getParamTypes();
+			final ExpressionType resultType = otherLambda.getResultType();
 			return switch (getFullQualifiedName()) {
 				case "java.util.function.Consumer" -> ((resultType == null) && (paramTypes.size() == 1)) ? 1 : -1;
 				case "java.util.Comparator" -> {
@@ -438,12 +440,12 @@ public class ExpressionClassType extends ExpressionType {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		ExpressionClassType other = (ExpressionClassType) obj;
+		final ExpressionClassType other = (ExpressionClassType) obj;
 		if (getKind() != other.getKind())
 			return false;
 		if (className == null) {
@@ -468,5 +470,5 @@ public class ExpressionClassType extends ExpressionType {
 			return false;
 		return true;
 	}
-	
+
 }

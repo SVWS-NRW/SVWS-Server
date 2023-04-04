@@ -8,20 +8,20 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.WildcardTree;
 
 /**
- * The specialized {@link ExpressionType} if the type is a type 
+ * The specialized {@link ExpressionType} if the type is a type
  * variable, e.g. the type variable "T" used in the type "Comparable T".
  */
-public class ExpressionTypeVar extends ExpressionType {
+public final class ExpressionTypeVar extends ExpressionType {
 
 	/** the name of the type variable or null for the wildcard ? */
 	private final String name;
-	
+
     /** the extends bound of the type variable if it is a wildcard type (? extends T) */
     private ExpressionType extendsBound;
 
     /** the super bound of the type variable if it is a wildcard type (? super T) */
     private ExpressionType superBound;
-    
+
 
 
 	@Override
@@ -31,8 +31,8 @@ public class ExpressionTypeVar extends ExpressionType {
 
 
 	@Override
-	public int isAssignable(Transpiler transpiler, ExpressionType other) {
-		if (other instanceof ExpressionTypeVar otherETV) {
+	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
+		if (other instanceof final ExpressionTypeVar otherETV) {
 			if ("?".equals(otherETV.name) && (otherETV.extendsBound != null))
 				return isAssignable(transpiler, otherETV.extendsBound);
 			if (this.name.equals("?"))
@@ -41,7 +41,7 @@ public class ExpressionTypeVar extends ExpressionType {
 			if (this.name.equals(otherETV.name))
 				return 1;
 		}
-		if (other instanceof ExpressionTypeNull otherNull) {
+		if (other instanceof final ExpressionTypeNull otherNull) {
 			// TODO check not null annotations
 			return 2;
 		}
@@ -51,28 +51,28 @@ public class ExpressionTypeVar extends ExpressionType {
 
 	/**
 	 * Creates a new type variable
-	 * 
+	 *
 	 * @param tv   the type variable
 	 */
-	private ExpressionTypeVar(TypeVariable tv) {
+	private ExpressionTypeVar(final TypeVariable tv) {
 		super(Kind.TYPE_PARAMETER);
 		this.name = (tv == null) ? "?" : tv.asElement().getSimpleName().toString();
 	}
-	
-	
+
+
 	/**
 	 * Creates a new type variable expression type instance from the specified {@link Tree}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param type         the type tree node
-	 * 
+	 *
 	 * @return the new type variable expression type instance
-	 * 
-	 * @throws TranspilerException   an exception if analyzing the type arguments fails 
+	 *
+	 * @throws TranspilerException   an exception if analyzing the type arguments fails
 	 */
-	public static ExpressionTypeVar getExpressionTypeVariable(Transpiler transpiler, Tree type) throws TranspilerException {
-		if (type instanceof WildcardTree wt) {
-			ExpressionTypeVar result = new ExpressionTypeVar(null);
+	public static ExpressionTypeVar getExpressionTypeVariable(final Transpiler transpiler, final Tree type) throws TranspilerException {
+		if (type instanceof final WildcardTree wt) {
+			final ExpressionTypeVar result = new ExpressionTypeVar(null);
 			switch (wt.getKind()) {
 				case UNBOUNDED_WILDCARD -> { /**/ }
 				case EXTENDS_WILDCARD -> result.extendsBound = ExpressionType.getExpressionType(transpiler, wt.getBound());
@@ -84,58 +84,58 @@ public class ExpressionTypeVar extends ExpressionType {
 		}
 		throw new TranspilerException("Transpiler Error: Unexpected expression type " + type.toString() + " of kind " + type.getKind() + ".");
 	}
-	
-	
+
+
 	/**
 	 * Creates a new type variable expression type instance from the specified {@link TypeMirror}
-	 * 
-	 * @param transpiler   the transpiler used for determining the expression type 
+	 *
+	 * @param transpiler   the transpiler used for determining the expression type
 	 * @param type         the type mirror
-	 * 
+	 *
 	 * @return the new type variable expression type instance
-	 * 
-	 * @throws TranspilerException   an exception if analyzing the type arguments fails 
+	 *
+	 * @throws TranspilerException   an exception if analyzing the type arguments fails
 	 */
-	public static ExpressionTypeVar getExpressionTypeVariable(Transpiler transpiler, TypeMirror type) throws TranspilerException {
-		if (type instanceof TypeVariable tv)
+	public static ExpressionTypeVar getExpressionTypeVariable(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
+		if (type instanceof final TypeVariable tv)
 			return new ExpressionTypeVar(tv);
-		if (type instanceof WildcardType wt) {
-			ExpressionTypeVar result = new ExpressionTypeVar(null);
+		if (type instanceof final WildcardType wt) {
+			final ExpressionTypeVar result = new ExpressionTypeVar(null);
 			if (wt.getSuperBound() != null)
 				result.superBound = ExpressionType.getExpressionType(transpiler, wt.getSuperBound());
 			if (wt.getExtendsBound() != null)
 				result.extendsBound = ExpressionType.getExpressionType(transpiler, wt.getExtendsBound());
 			return result;
-		}		
+		}
 		throw new TranspilerException("Transpiler Error: Type Variable of kind " + type.getKind() + " not supported.");
 	}
-	
-	
+
+
 	/**
 	 * Returns true if this type variable is a wildcard type with or without
 	 * bounds (extends or super).
-	 * 
+	 *
 	 * @return true if this type varirable ist a wildcard type variable and false otherwise
 	 */
 	public boolean isWildcard() {
 		return "?".equals(name);
 	}
-	
-	
+
+
 	/**
 	 * Returns the name of the type variable
-	 * 
+	 *
 	 * @return the name of the type variable
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 
 	/**
-	 * Returns the extends bound expression type if this type variable is 
+	 * Returns the extends bound expression type if this type variable is
 	 * a wildcard type of kind '? extends T'.
-	 * 
+	 *
 	 * @return the extends bound
 	 */
 	public ExpressionType getExtendsBound() {
@@ -144,9 +144,9 @@ public class ExpressionTypeVar extends ExpressionType {
 
 
 	/**
-	 * Returns the super bound expression type if this type variable is a 
+	 * Returns the super bound expression type if this type variable is a
 	 * wildcard type of kind '? super T'.
-	 * 
+	 *
 	 * @return the super bound expression type
 	 */
 	public ExpressionType getSuperBound() {
@@ -172,12 +172,12 @@ public class ExpressionTypeVar extends ExpressionType {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		ExpressionTypeVar other = (ExpressionTypeVar) obj;
+		final ExpressionTypeVar other = (ExpressionTypeVar) obj;
 		if (getKind() != other.getKind())
 			return false;
 		if (extendsBound == null) {
