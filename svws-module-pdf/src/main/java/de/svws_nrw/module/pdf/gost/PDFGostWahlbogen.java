@@ -44,9 +44,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
  * für die Laufbahnplanung der gymnasialen Oberstufe.
  */
-public class PDFGostWahlbogen extends PDFCreator {
+public final class PDFGostWahlbogen extends PDFCreator {
 
-	private final static String html =
+	private static final String html =
 		"""
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -145,7 +145,7 @@ public class PDFGostWahlbogen extends PDFCreator {
 		</div>
 		""";
 
-	private final static String css =
+	private static final String css =
 		"""
 		table.faecher thead {
 			background-color: #E0E0E0;
@@ -172,13 +172,13 @@ public class PDFGostWahlbogen extends PDFCreator {
 
 
 	/** Die Laufbahndaten des Schülers */
-	private Abiturdaten abidaten;
+	private final Abiturdaten abidaten;
 
 	/** Die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers */
-	private GostFaecherManager gostFaecher;
+	private final GostFaecherManager gostFaecher;
 
 	/** Der Abiturdaten-Manager */
-	private AbiturdatenManager manager;
+	private final AbiturdatenManager manager;
 
 
 	/**
@@ -194,9 +194,9 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
-	private PDFGostWahlbogen(String schuelerName, Geschlecht geschlecht, String klasse, String[] schulbezeichnung, Abiturdaten abidaten,
-			                 GostFaecherManager gostFaecher, GostHalbjahr planungsHalbjahr, String bemerkungJahrgang,
-			                 String datumBeratung) {
+	private PDFGostWahlbogen(final String schuelerName, final Geschlecht geschlecht, final String klasse, final String[] schulbezeichnung, final Abiturdaten abidaten,
+			                 final GostFaecherManager gostFaecher, final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang,
+			                 final String datumBeratung) {
 		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
@@ -232,8 +232,8 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 * die Wochenstunden und die durchschnittlichen Jahresstunden.
 	 */
 	private void getKurseUndWochenstunden() {
-		int[] kurse = manager.getAnrechenbareKurse();
-		int[] wstd = manager.getWochenstunden();
+		final int[] kurse = manager.getAnrechenbareKurse();
+		final int[] wstd = manager.getWochenstunden();
 		bodyData.put("KURSE_EF1", "" + kurse[0]);
 		bodyData.put("KURSE_EF2", "" + kurse[1]);
 		bodyData.put("KURSE_Q11", "" + kurse[2]);
@@ -256,17 +256,17 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 */
 	private void getErgebnisse() {
 		// Berechne das Ergebnis des Belegprüfung für die Abiturdaten
-		GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
+		final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 		if (ergebnis.fehlercodes.size() <= 0) {
 			bodyData.put("BELEGUNGSFEHLER", "");
 			bodyData.put("BELEGUNGSHINWEISE", "");
 			return;
 		}
 		// Unterscheide zwischen Fehler und Informationen
-		Vector<String> fehler = new Vector<>();
-		Vector<String> infos = new Vector<>();
-		for (GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
-			GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
+		final Vector<String> fehler = new Vector<>();
+		final Vector<String> infos = new Vector<>();
+		for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
+			final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 			if (art == GostBelegungsfehlerArt.HINWEIS) {
 				infos.add(f.beschreibung);
 			} else {
@@ -292,23 +292,23 @@ public class PDFGostWahlbogen extends PDFCreator {
 
 	private String getRows() {
 		// Erzeuge eine Map Fach-ID -> AbiturFachbelegung aus den AbiturDaten
-		Map<Long, AbiturFachbelegung> belegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
+		final Map<Long, AbiturFachbelegung> belegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
 		// Erzeuge eine Map Einstelliges Sprachkürzel -> Sprachbelegung aus den AbiturDaten
-		Map<String, Sprachbelegung> sprachbelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
+		final Map<String, Sprachbelegung> sprachbelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		// Erzeuge eine Map Einstelliges Sprachkürzel -> Sprachpruefung aus den AbiturDaten
-		Map<String, Sprachpruefung> sprachpruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
+		final Map<String, Sprachpruefung> sprachpruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		// Erzeuge für jedes Fach eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
-		StringBuilder rows = new StringBuilder();
-		for (GostFach fach : gostFaecher.faecher()) {
-			AbiturFachbelegung belegung = belegungen.get(fach.id);
-			ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		final StringBuilder rows = new StringBuilder();
+		for (final GostFach fach : gostFaecher.faecher()) {
+			final AbiturFachbelegung belegung = belegungen.get(fach.id);
+			final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			rows.append("<tr>");
 			rows.append("<th>").append(fach.bezeichnung).append("</th>");
 			if (fach.istFremdsprache) {
-				Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-				Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+				final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
+				final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
 				if (sprachbelegung != null) {
-					if((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
+					if ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
 						// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
 						if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty() || (zfach.daten.abJahrgang.compareToIgnoreCase(sprachbelegung.belegungVonJahrgang) <= 0))
 							rows.append("<td>").append(sprachbelegung.reihenfolge).append(" (ab Jg. ").append(sprachbelegung.belegungVonJahrgang).append(")").append("</td>");
@@ -363,7 +363,7 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 * @param sb           der {@link StringBuilder}, in welchen die Tabellenzelle geschrieben wird.
 	 * @param belegungHj   die Halbjahresbelegung
 	 */
-	private static void getBelegung(StringBuilder sb, AbiturFachbelegungHalbjahr belegungHj) {
+	private static void getBelegung(final StringBuilder sb, final AbiturFachbelegungHalbjahr belegungHj) {
 		if (belegungHj == null) {
 			sb.append("<td></td>");
 			return;
@@ -372,7 +372,7 @@ public class PDFGostWahlbogen extends PDFCreator {
 			sb.append("<td>AT</td>");
 			return;
 		}
-		GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
+		final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
 		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF) || ((kursart == GostKursart.GK) && ((belegungHj.schriftlich == null) || (!belegungHj.schriftlich)))) {
 			sb.append("<td>M</td>");
 			return;
@@ -399,45 +399,45 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 *
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
-	public static Response query(DBEntityManager conn, Long schueler_id) {
+	public static Response query(final DBEntityManager conn, final Long schueler_id) {
 		// Lese die Laufbahndaten aus der DB
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
-		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
-    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();
-		DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
 		if (gostSchueler == null)
     		return OperationError.NOT_FOUND.getResponse();
-		DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
+		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
 		if (abschnitt == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
-    	DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
+    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+    	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
     			.setParameter("schueler_id", schueler_id)
     			.setParameter("abschnitt_id", abschnitt.ID)
     			.getResultList().stream().findFirst().orElse(null);
     	if (aktAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, aktAbschnitt.Klassen_ID);
+    	final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, aktAbschnitt.Klassen_ID);
 		if (klasse == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
+    	final Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
 		if (daten == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	DTOGostJahrgangsdaten jahrgangsDaten = conn.queryByKey(DTOGostJahrgangsdaten.class, daten.abiturjahr);
+    	final DTOGostJahrgangsdaten jahrgangsDaten = conn.queryByKey(DTOGostJahrgangsdaten.class, daten.abiturjahr);
 		if (jahrgangsDaten == null)
     		return OperationError.NOT_FOUND.getResponse();
     	// TODO Bei Schulen mit Quartalen fehlt die Bestimmung des Halbjahres anstatt abschnitt.Abschnitt...
-    	GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
+    	final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	if (planungsHalbjahr == null)
     		planungsHalbjahr = (halbjahr == null) ? GostHalbjahr.EF1 : GostHalbjahr.Q22;
-    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
+    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
     	if (gostFaecher.isEmpty())
     		return OperationError.NOT_FOUND.getResponse();
-    	PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(
+    	final PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(
     		schueler.Vorname + " " + schueler.Nachname,
     		schueler.Geschlecht,
     		klasse.Klasse,
@@ -448,7 +448,7 @@ public class PDFGostWahlbogen extends PDFCreator {
     		jahrgangsDaten.TextBeratungsbogen,
     		gostSchueler.DatumBeratung
     	);
-		byte[] data = wahlbogen.toByteArray();
+		final byte[] data = wahlbogen.toByteArray();
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		return Response.status(Status.OK).type("application/pdf")
