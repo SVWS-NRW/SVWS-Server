@@ -3,27 +3,27 @@
 		<div class="data-table__filter" :class="{'data-table__filter-open': $slots.filter && filterOpen}">
 			<div class="flex w-full gap-2">
 				<div class="flex-grow" v-if="$slots.search">
-					<slot name="search"/>
+					<slot name="search" />
 				</div>
 				<div v-if="$slots.filterSimple">
-					<slot name="filterSimple"/>
+					<slot name="filterSimple" />
 				</div>
 				<div v-if="$slots.filter && filterHide" class="ml-auto flex flex-shrink-0">
 					<div :class="{'opacity-40 hover:opacity-100': filterOpen}" class="toggle--filter" v-if="filterHide">
 						<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full">
-							<i-ri-filter-line v-if="!filterOpen"/>
-							<i-ri-eye-off-line v-else/>
+							<i-ri-filter-line v-if="!filterOpen" />
+							<i-ri-eye-off-line v-else />
 							<span class="max-sm:hidden">Filter</span>
 						</svws-ui-button>
 					</div>
 				</div>
 			</div>
 			<div v-if="$slots.filter && filterOpen" class="data-table__filter__fields" :class="{'-order-1': filterReverse}">
-				<slot name="filter"/>
+				<slot name="filter" />
 				<template v-if="filtered && filterReset">
 					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen"
-									class="justify-center">
-						<i-ri-filter-off-line/>
+						class="justify-center">
+						<i-ri-filter-off-line />
 						Zurücksetzen
 					</svws-ui-button>
 				</template>
@@ -31,52 +31,52 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		 :class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible}"
-		 v-bind="computedTableAttributes">
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible}"
+		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
 			<slot name="header"
-				  :all-rows-selected="allRowsSelected"
-				  :toggle-all-rows="toggleBulkSelection"
-				  :columns="columnsComputed">
+				:all-rows-selected="allRowsSelected"
+				:toggle-all-rows="toggleBulkSelection"
+				:columns="columnsComputed">
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="checkbox" aria-label="Alle auswählen" v-if="selectable"
-						 class="data-table__th data-table__thead__th data-table__cell-select">
+						class="data-table__th data-table__thead__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
-										  :model-value="someNotAllRowsSelected ? null : allRowsSelected"
-										  @update:model-value="toggleBulkSelection"/>
+							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
+							@update:model-value="toggleBulkSelection" />
 					</div>
 					<div role="columnheader"
-						 v-for="column in columnsComputed"
-						 :key="column.key"
-						 class="data-table__th data-table__thead__th"
-						 :class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
-						 @click.exact="column.sortable && toggleSorting(column)">
+						v-for="column in columnsComputed"
+						:key="column.key"
+						class="data-table__th data-table__thead__th"
+						:class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
+						@click.exact="column.sortable && toggleSorting(column)">
 						<div class="data-table__th-wrapper"
-							 :class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}"
-							 :title="column.label">
+							:class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}"
+							:title="column.label">
 							<span class="data-table__th-title">
 								<slot :name="`header(${column.key})`"
-									  :column="column">
+									:column="column">
 									{{ column.label }}
 								</slot>
 							</span>
 							<span v-if="column.sortable" :role=" column.sortable ? 'button' : undefined"
-								  class="data-table__th-sorting"
-								  :tabindex="column.sortable ? 0 : -1">
+								class="data-table__th-sorting"
+								:tabindex="column.sortable ? 0 : -1">
 								<span class="sorting-arrows"
-									  :class="{'sorting-arrows__column': sortBy === column.name && sortingOrder}">
+									:class="{'sorting-arrows__column': sortBy === column.name && sortingOrder}">
 									<i-ri-arrow-up-down-line class="sorting-arrows__up"
-															 :class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'asc'}"/>
+										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'asc'}" />
 									<i-ri-arrow-up-down-line class="sorting-arrows__down"
-															 :class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'desc'}"/>
+										:class="{'sorting-arrows__active': sortBy === column.name && sortingOrder === 'desc'}" />
 								</span>
 							</span>
 						</div>
 					</div>
 					<div v-if="rowActions"
-						 class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions"
-						 role="none" title="Aktionen">
-						<i-ri-settings3-line/>
+						class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions"
+						role="none" title="Aktionen">
+						<i-ri-settings3-line />
 					</div>
 				</div>
 			</slot>
@@ -85,38 +85,38 @@
 			<slot name="body" :rows="sortedRows">
 				<div role="row" v-if="showNoDataHtml" key="showNoDataHtml">
 					<div role="cell" class="no-data data-table__td data-table__tbody__td"
-						 :colspan="columnsComputed.length + (selectable ? 1 : 0)"
-						 v-html="noDataHtml"/>
+						:colspan="columnsComputed.length + (selectable ? 1 : 0)"
+						v-html="noDataHtml" />
 				</div>
 				<div role="row" v-for="(row, index) in sortedRows"
-					 :key="`table-row_${row}_${index}`"
-					 class="data-table__tr data-table__tbody__tr"
-					 :class="[
+					:key="`table-row_${row}_${index}`"
+					class="data-table__tr data-table__tbody__tr"
+					:class="[
 						{ 'data-table__tr--selected': isRowSelected(row) },
 						{ 'data-table__tr--clicked': isRowClicked(row) },
 					]"
-					 @click="toggleRowClick(row)">
+					@click="toggleRowClick(row)">
 					<div role="cell" v-if="selectable"
-						 class="data-table__td data-table__cell-select"
-						 :key="`selectable__${row}_${index}`">
+						class="data-table__td data-table__cell-select"
+						:key="`selectable__${row}_${index}`">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
-										  :model-value="isRowSelected(row)"
-										  @update:model-value="toggleRowSelection(row)"
-										  @click.stop/>
+							:model-value="isRowSelected(row)"
+							@update:model-value="toggleRowSelection(row)"
+							@click.stop />
 					</div>
 					<div role="cell" v-for="cell in row.cells"
-						 :key="`table-cell_${cell.column.key + cell.rowIndex}`"
-						 class="data-table__td"
-						 :class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
+						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
+						class="data-table__td"
+						:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
 						<slot v-if="`cell(${cell.column.key})` in $slots"
-							  :name="`cell(${cell.column.key})`"
-							  v-bind="cell"/>
+							:name="`cell(${cell.column.key})`"
+							v-bind="cell" />
 						<slot v-else name="cell" v-bind="cell">
 							<svws-ui-text-input v-if="row.isEditing"
-												v-model="cell.value"
-												:headless="true"
-												@update:value="(value: string) => cell.value = value"
-												@click.stop="setClickedRow(row) "/>
+								v-model="cell.value"
+								:headless="true"
+								@update:value="(value: string) => cell.value = value"
+								@click.stop="setClickedRow(row) " />
 							<span v-else class="data-table__td-content" :title="cell.value">
 								{{ cell.value }}
 							</span>
@@ -124,27 +124,27 @@
 					</div>
 					<div v-if="rowActions" class="data-table__row-actions data-table__td">
 						<svws-ui-popover :hover="false"
-										 :disable-click-away="false"
-										 :show-delay="0"
-										 placement="auto-start"
-										 :arrow="false"
-										 class="data-table__row-actions__popover"
-										 :context="true"
-										 @click.stop>
+							:disable-click-away="false"
+							:show-delay="0"
+							placement="auto-start"
+							:arrow="false"
+							class="data-table__row-actions__popover"
+							:context="true"
+							@click.stop>
 							<template #trigger>
 								<svws-ui-button type="icon" size="small" class="cursor-context-menu">
 									<svws-ui-icon>
-										<i-ri-more2-fill/>
+										<i-ri-more2-fill />
 									</svws-ui-icon>
 								</svws-ui-button>
 							</template>
 							<template #content>
 								<div v-for="action in rowActions"
-									 :key="action.action">
+									:key="action.action">
 									<svws-ui-button class="action-item"
-													type="transparent"
-													size="small"
-													@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
+										type="transparent"
+										size="small"
+										@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
 										{{ action.label }}
 									</svws-ui-button>
 								</div>
@@ -155,29 +155,29 @@
 			</slot>
 		</div>
 		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot"
-			 v-if="!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)">
+			v-if="!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)">
 			<slot name="footer"
-				  :all-rows-selected="allRowsSelected"
-				  :toggle-all-rows="toggleBulkSelection"
-				  :rows="sortedRows">
+				:all-rows-selected="allRowsSelected"
+				:toggle-all-rows="toggleBulkSelection"
+				:rows="sortedRows">
 				<div role="row" class="data-table__tr data-table__tfoot__tr">
 					<div role="checkbox" v-if="selectable"
-						 class="data-table__th data-table__tfoot__th data-table__cell-select">
+						class="data-table__th data-table__tfoot__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
-										  :model-value="someNotAllRowsSelected ? null : allRowsSelected"
-										  @update:model-value="toggleBulkSelection"/>
+							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
+							@update:model-value="toggleBulkSelection" />
 					</div>
 					<div v-if="count && modelValue" role="cell"
-						 class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
+						class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
 						<span v-if="someNotAllRowsSelected || allRowsSelected"
-							  class="font-bold opacity-50">{{ modelValue.length }}/{{
+							class="font-bold opacity-50">{{ modelValue.length }}/{{
 								sortedRows.length
 							}} ausgewählt</span>
 						<span v-else class="opacity-50">{{ sortedRows.length }} Einträge</span>
 					</div>
 					<div role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-actions"
-						 v-if="$slots.footerActions">
-						<slot name="footerActions"/>
+						v-if="$slots.footerActions">
+						<slot name="footerActions" />
 					</div>
 				</div>
 			</slot>
@@ -186,135 +186,135 @@
 </template>
 
 <script lang="ts">
-export default defineComponent({
-	inheritAttrs: false,
-});
+	export default defineComponent({
+		inheritAttrs: false,
+	});
 </script>
 
 <script lang="ts" setup>
-import {defineComponent, computed, TableHTMLAttributes, ref, useAttrs} from "vue";
+	import {defineComponent, computed, TableHTMLAttributes, ref, useAttrs} from "vue";
 
-import useColumns from "./hooks/useColumns";
-import useRows from "./hooks/useRows";
-import useSortable from "./hooks/useSortable";
-import useSelectable from "./hooks/useSelectable";
-import useClickable from "./hooks/useClickable";
+	import useColumns from "./hooks/useColumns";
+	import useRows from "./hooks/useRows";
+	import useSortable from "./hooks/useSortable";
+	import useSelectable from "./hooks/useSelectable";
+	import useClickable from "./hooks/useClickable";
 
-import type {
-	DataTableColumnSource,
-	DataTableItem,
-	DataTableSortingOrder,
-} from "./types";
+	import type {
+		DataTableColumnSource,
+		DataTableItem,
+		DataTableSortingOrder,
+	} from "./types";
 
-const props = withDefaults(
-	defineProps<{
-		columns?: DataTableColumnSource[];
-		items?: Iterable<DataTableItem> | 'custom';
-		modelValue?: DataTableItem[];
-		sortingOrder?: DataTableSortingOrder | undefined;
-		sortBy?: string | undefined;
-		selectable?: boolean;
-		clicked?: DataTableItem | undefined;
-		clickable?: boolean;
-		allowUnclick?: boolean;
-		noDataHtml?: string;
-		uniqueKey?: string;
-		count?: boolean;
-		rowActions?: Array<{
-			label: string;
-			action: string;
-		}>;
-		rowExecute?: (action: string, row: DataTableItem) => void;
-		manualRowActions?: boolean;
-		filterOpen?: boolean;
-		filterHide?: boolean;
-		filtered?: boolean;
-		filterReset?: () => void;
-		filterReverse?: boolean;
-		disableFooter?: boolean;
-		collapsible?: boolean;
-		noData?: boolean;
-	}>(),
-	{
-		columns: () => [],
-		items: () => [],
-		modelValue: undefined,
-		sortingOrder: undefined,
-		sortBy: undefined,
-		clicked: undefined,
-		clickable: false,
-		allowUnclick: false,
-		selectable: false,
-		noDataHtml: "Keine Einträge vorhanden",
-		uniqueKey: undefined,
-		count: false,
-		rowActions: undefined,
-		rowExecute: undefined,
-		manualRowActions: false,
-		filterOpen: false,
-		filterHide: true,
-		filtered: false,
-		filterReset: () => {
-		},
-		filterReverse: false,
-		disableFooter: false,
-		collapsible: false,
-		noData: undefined,
+	const props = withDefaults(
+		defineProps<{
+			columns?: DataTableColumnSource[];
+			items?: Iterable<DataTableItem>;
+			modelValue?: DataTableItem[];
+			sortingOrder?: DataTableSortingOrder | undefined;
+			sortBy?: string | undefined;
+			selectable?: boolean;
+			clicked?: DataTableItem | undefined;
+			clickable?: boolean;
+			allowUnclick?: boolean;
+			noDataHtml?: string;
+			uniqueKey?: string;
+			count?: boolean;
+			rowActions?: Array<{
+				label: string;
+				action: string;
+			}>;
+			rowExecute?: (action: string, row: DataTableItem) => void;
+			manualRowActions?: boolean;
+			filterOpen?: boolean;
+			filterHide?: boolean;
+			filtered?: boolean;
+			filterReset?: () => void;
+			filterReverse?: boolean;
+			disableFooter?: boolean;
+			collapsible?: boolean;
+			noData?: boolean;
+		}>(),
+		{
+			columns: () => [],
+			items: () => [],
+			modelValue: undefined,
+			sortingOrder: undefined,
+			sortBy: undefined,
+			clicked: undefined,
+			clickable: false,
+			allowUnclick: false,
+			selectable: false,
+			noDataHtml: "Keine Einträge vorhanden",
+			uniqueKey: undefined,
+			count: false,
+			rowActions: undefined,
+			rowExecute: undefined,
+			manualRowActions: false,
+			filterOpen: false,
+			filterHide: true,
+			filtered: false,
+			filterReset: () => {
+			},
+			filterReverse: false,
+			disableFooter: false,
+			collapsible: false,
+			noData: undefined,
+		}
+	);
+
+	const emit = defineEmits<{
+		(e: "update:modelValue", items: any[]): void;
+		(e: "update:sortBy", sortBy: string): void;
+		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
+		(e: "update:clicked", items: any | null): void;
+	}>();
+
+	const attrs = useAttrs();
+
+	const {columnsComputed, gridTemplateColumns} = useColumns(props);
+
+	const gridTemplateColumnsComputed = ref(gridTemplateColumns.value || 'repeat(auto-fit, minmax(8rem, 1fr))')
+
+	const {rowsComputed} = useRows(columnsComputed, props);
+
+	const {sortBy, sortingOrder, toggleSorting, sortedRows} = useSortable(
+		columnsComputed,
+		rowsComputed,
+		props
+	);
+
+	const filterOpen = ref(props.filterOpen);
+
+	const toggleFilterOpen = () => {
+		filterOpen.value = !filterOpen.value;
 	}
-);
 
-const emit = defineEmits<{
-	(e: "update:modelValue", items: any[]): void;
-	(e: "update:sortBy", sortBy: string): void;
-	(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
-	(e: "update:clicked", items: any | null): void;
-}>();
+	const {
+		toggleBulkSelection,
+		isRowSelected,
+		allRowsSelected,
+		someNotAllRowsSelected,
+		toggleRowSelection
+	} = useSelectable({
+		isActive: () => props.selectable,
+		sortedRows,
+		selectedItems: () => props.modelValue,
+		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
+	});
 
-const attrs = useAttrs();
+	const {isRowClicked, toggleRowClick, setClickedRow} = useClickable({
+		isActive: () => props.clickable,
+		canReset: () => props.allowUnclick,
+		clickedItem: () => props.clicked,
+		emit: (v: DataTableItem | null) => emit('update:clicked', v),
+	});
 
-const {columnsComputed, gridTemplateColumns} = useColumns(props);
+	const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
 
-const gridTemplateColumnsComputed = ref(gridTemplateColumns.value || 'repeat(auto-fit, minmax(8rem, 1fr))')
-
-const {rowsComputed} = useRows(columnsComputed, props);
-
-const {sortBy, sortingOrder, toggleSorting, sortedRows} = useSortable(
-	columnsComputed,
-	rowsComputed,
-	props
-);
-
-const filterOpen = ref(props.filterOpen);
-
-const toggleFilterOpen = () => {
-	filterOpen.value = !filterOpen.value;
-}
-
-const {
-	toggleBulkSelection,
-	isRowSelected,
-	allRowsSelected,
-	someNotAllRowsSelected,
-	toggleRowSelection
-} = useSelectable({
-	isActive: () => props.selectable,
-	sortedRows,
-	selectedItems: () => props.modelValue,
-	emit: (v: DataTableItem[]) => emit('update:modelValue', v),
-});
-
-const {isRowClicked, toggleRowClick, setClickedRow} = useClickable({
-	isActive: () => props.clickable,
-	canReset: () => props.allowUnclick,
-	clickedItem: () => props.clicked,
-	emit: (v: DataTableItem | null) => emit('update:clicked', v),
-});
-
-const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
-
-const computedTableAttributes = computed(() => ({
-	...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
-} as TableHTMLAttributes));
+	const computedTableAttributes = computed(() => ({
+		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
+	} as TableHTMLAttributes));
 
 </script>
 
