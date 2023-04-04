@@ -43,45 +43,45 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link GostJahrgang}.
  */
-public class DataGostJahrgangsliste extends DataManager<Integer> {
+public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link GostJahrgang}.
-	 * 
+	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataGostJahrgangsliste(DBEntityManager conn) {
+	public DataGostJahrgangsliste(final DBEntityManager conn) {
 		super(conn);
 	}
 
 	@Override
 	public Response getAll() {
-		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
 			return OperationError.NOT_FOUND.getResponse();
 
 		// Bestimme die Jahrgaenge der Schule
-		List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
+		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.size() <= 0))
 			return OperationError.NOT_FOUND.getResponse();
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
-		Vector<GostJahrgang> daten = new Vector<>();
+		final Vector<GostJahrgang> daten = new Vector<>();
 		List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
 		if (dtos != null) {
 			dtos = dtos.stream().sorted((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).collect(Collectors.toList());
-			for (DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
+			for (final DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
 				if (jahrgangsdaten.Abi_Jahrgang < 0)
 					continue;
-				GostJahrgang eintrag = new GostJahrgang();
+				final GostJahrgang eintrag = new GostJahrgang();
 				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
-				int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
-				for (DTOJahrgang jahrgang : dtosJahrgaenge) {
-					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+				final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
+				for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
+					final Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
 					if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
 						eintrag.jahrgang = jahrgang.ASDJahrgang;
 						if (Jahrgaenge.JG_EF.daten.kuerzel.equals(jahrgang.ASDJahrgang) || Jahrgaenge.JG_Q1.daten.kuerzel.equals(jahrgang.ASDJahrgang)
@@ -97,7 +97,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 
 		// Füge einen Eintrag ein, der für keinen Abiturjahrgang steht - also für
 		// allgemeine Informationen zu Abiturjahrgängen
-		GostJahrgang eintrag = new GostJahrgang();
+		final GostJahrgang eintrag = new GostJahrgang();
 		eintrag.abiturjahr = -1;
 		eintrag.jahrgang = null;
 		eintrag.bezeichnung = "Allgemein / Vorlage";
@@ -112,12 +112,12 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 	}
 
 	@Override
-	public Response get(Integer id) {
+	public Response get(final Integer id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Integer id, InputStream is) {
+	public Response patch(final Integer id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,23 +125,23 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 	 * Erstellt einen neuen Abiturjahrgang für die gymnasiale Oberstufe. Dabei
 	 * werden die Daten des Jahrgangs mit der übergebenen ID als Grundlage
 	 * verwendet.
-	 * 
+	 *
 	 * @param jahrgang_id die ID des Jahrgangs
-	 * 
+	 *
 	 * @return die HTTP-Response, im Erfolgsfall mit dem Abiturjahrgang
 	 */
-	public Response create(long jahrgang_id) {
+	public Response create(final long jahrgang_id) {
 		// Prüfe die Schuldaten
-		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
-		DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
 			return OperationError.NOT_FOUND.getResponse();
 
 		// Ermittle die Jahrgangsdaten und bestimme das Abiturjahr
-		DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
+		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
 		if (jahrgang == null)
 			return OperationError.NOT_FOUND.getResponse();
-		Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, jahrgang.Gliederung, aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
+		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, jahrgang.Gliederung, aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
 		if (abiturjahr == null)
 			return OperationError.NOT_FOUND.getResponse();
 
@@ -151,7 +151,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 			return OperationError.CONFLICT.getResponse();
 
 		// Lade die Vorlage für den neuen Abiturjahrgang
-		DTOGostJahrgangsdaten jahrgangsdatenVorlage = DataGostJahrgangsdaten.getVorlage(conn);
+		final DTOGostJahrgangsdaten jahrgangsdatenVorlage = DataGostJahrgangsdaten.getVorlage(conn);
 
 		// Erstelle die Jahrgangsdaten mit Default-Werten, Beratungslehrer sind zunächst
 		// nicht zugeordnet
@@ -165,14 +165,14 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		if (!conn.persist(jahrgangsdaten))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Fächer der Gymnasialen Oberstufe aus der allgemeinen Vorlage
-		List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
+		final List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
 		if (faecher == null)
 			throw new NullPointerException();
-		Vector<DTOGostJahrgangFaecher> gostFaecher = new Vector<>();
-		for (DTOFach fach : faecher) {
+		final Vector<DTOGostJahrgangFaecher> gostFaecher = new Vector<>();
+		for (final DTOFach fach : faecher) {
 			if ((fach.Sichtbar == null) || (!fach.Sichtbar))
 				continue;
-			DTOGostJahrgangFaecher gostFach = new DTOGostJahrgangFaecher(abiturjahr, fach.ID, fach.IstMoeglichEF1, fach.IstMoeglichEF2, fach.IstMoeglichQ11, fach.IstMoeglichQ12, fach.IstMoeglichQ21,
+			final DTOGostJahrgangFaecher gostFach = new DTOGostJahrgangFaecher(abiturjahr, fach.ID, fach.IstMoeglichEF1, fach.IstMoeglichEF2, fach.IstMoeglichQ11, fach.IstMoeglichQ12, fach.IstMoeglichQ21,
 					fach.IstMoeglichQ22, fach.IstMoeglichAbiGK, fach.IstMoeglichAbiLK);
 			gostFach.WochenstundenQPhase = fach.WochenstundenQualifikationsphase;
 			gostFaecher.add(gostFach);
@@ -181,16 +181,16 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Informationen zu nicht möglichen und geforderten
 		// Fachkombinationen aus der Vorlage
-		List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
+		final List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
 		if (faecherKombis == null)
 			throw new NullPointerException();
 		if (faecherKombis.size() > 0) {
-			Vector<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new Vector<>();
+			final Vector<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new Vector<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
+			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
-			for (DTOGostJahrgangFachkombinationen kombi : faecherKombis) {
-				DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, abiturjahr, kombi.Fach1_ID, kombi.Fach2_ID, kombi.EF1, kombi.EF2, kombi.Q11, kombi.Q12, kombi.Q21,
+			for (final DTOGostJahrgangFachkombinationen kombi : faecherKombis) {
+				final DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, abiturjahr, kombi.Fach1_ID, kombi.Fach2_ID, kombi.EF1, kombi.EF2, kombi.Q11, kombi.Q12, kombi.Q21,
 						kombi.Q22, kombi.Typ, kombi.Hinweistext);
 				k.Abi_Jahrgang = abiturjahr;
 				k.Kursart1 = kombi.Kursart1;
@@ -201,45 +201,45 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		}
 		// Bestimme die Fachwahlen aus ggf. schon bestehenden Lernabschnitten
-		Jahrgaenge jg = Jahrgaenge.getByKuerzel(jahrgang.ASDJahrgang);
+		final Jahrgaenge jg = Jahrgaenge.getByKuerzel(jahrgang.ASDJahrgang);
 		if ((jg == Jahrgaenge.JG_EF) || (jg == Jahrgaenge.JG_Q1) || (jg == Jahrgaenge.JG_Q2)) {
 			// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
-			Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-			List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
+			final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
 			if ((schueler != null) && (schueler.size() > 0)) {
-				List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-				List<Integer> abschnitte = schule.AnzahlAbschnitte == 4 ? Arrays.asList(2, 4) : Arrays.asList(1, 2);
-				List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
-				List<Long> schuljahresabschnittIDs = schuljahresabschnitte.stream().map(a -> a.ID).toList();
-				Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-				List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+				final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
+				final List<Integer> abschnitte = schule.AnzahlAbschnitte == 4 ? Arrays.asList(2, 4) : Arrays.asList(1, 2);
+				final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
+				final List<Long> schuljahresabschnittIDs = schuljahresabschnitte.stream().map(a -> a.ID).toList();
+				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+				final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 						"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr IS NULL AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2') AND e.Schuljahresabschnitts_ID IN ?2 AND e.SemesterWertung = true",
 						DTOSchuelerLernabschnittsdaten.class, schuelerIDs, schuljahresabschnittIDs);
-				List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
-				Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapLernabschnitte = lernabschnitte.stream().collect(Collectors.groupingBy(l -> l.Schueler_ID));
-				List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
-				Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
+				final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
+				final Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapLernabschnitte = lernabschnitte.stream().collect(Collectors.groupingBy(l -> l.Schueler_ID));
+				final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
+				final Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
 
-				for (long schueler_id : schuelerIDs) {
-					List<DTOSchuelerLernabschnittsdaten> slas = mapLernabschnitte.get(schueler_id);
+				for (final long schueler_id : schuelerIDs) {
+					final List<DTOSchuelerLernabschnittsdaten> slas = mapLernabschnitte.get(schueler_id);
 					if ((slas == null) || (slas.size() == 0))
 						continue;
-					HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
-					DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[4];
-					GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[4];
-					for (DTOSchuelerLernabschnittsdaten sla : slas) {
-						List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
+					final HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
+					final DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[4];
+					final GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[4];
+					for (final DTOSchuelerLernabschnittsdaten sla : slas) {
+						final List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
 						if ((slds == null) || (slds.size() == 0))
 							continue;
-						DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
+						final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
 						if (schuljahresabschnitt == null)
 							continue;
-						GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang,
+						final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang,
 								schule.AnzahlAbschnitte == 4 ? schuljahresabschnitt.Abschnitt / 2 : schuljahresabschnitt.Abschnitt);
 						if (halbjahr == null)
 							continue;
-						for (DTOSchuelerLeistungsdaten sld : slds) {
-							DTOFach fach = mapFaecher.get(sld.Fach_ID);
+						for (final DTOSchuelerLeistungsdaten sld : slds) {
+							final DTOFach fach = mapFaecher.get(sld.Fach_ID);
 							if ((fach == null) || (!fach.IstOberstufenFach))
 								continue;
 							DTOGostSchuelerFachbelegungen fachbelegung = fachbelegungen.get(fach.ID);
@@ -250,14 +250,14 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 							// Prüfe, ob das Abiturfach in dem Halbjahr gesetzt wurde. Nehme den jeweils
 							// letzten Eintrag in den Halbjahren
 							try {
-								int abifachNr = Integer.parseInt(sld.AbiFach);
+								final int abifachNr = Integer.parseInt(sld.AbiFach);
 								if ((abifachNr > 0) && (abifachNr < 5)) {
 									if ((abifachHalbjahr[abifachNr - 1] == null) || (abifachHalbjahr[abifachNr - 1].id < halbjahr.id)) {
 										abifach[abifachNr - 1] = fachbelegung;
 										abifachHalbjahr[abifachNr - 1] = halbjahr;
 									}
 								}
-							} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
+							} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 								// kein gültiges Abbiturfach bei dem Lernabschnitt angegeben
 							}
 							// Setze Fachwahl für das Halbjahr
@@ -295,7 +295,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 					conn.transactionBegin();
 					if (!conn.transactionPersist(new DTOGostSchueler(schueler_id, false)))
 						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-					for (long fach_id : fachbelegungen.keySet()) {
+					for (final long fach_id : fachbelegungen.keySet()) {
 						if (!conn.transactionPersist(fachbelegungen.get(fach_id)))
 							return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 					}
@@ -304,16 +304,16 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				}
 			}
 		}
-		
+
 		// Kopiere die Informationen zu Gost-Klausurvorgaben aus der Vorlage
-		DataGostKlausurenVorgabe vorgaben = new DataGostKlausurenVorgabe(conn, abiturjahr);
+		final DataGostKlausurenVorgabe vorgaben = new DataGostKlausurenVorgabe(conn, abiturjahr);
 		if (!vorgaben.copyVorgabenToJahrgang())
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}
 
-	private Function<Note, String> funcGetNotenpunkte = (Note note) -> {
+	private final Function<Note, String> funcGetNotenpunkte = (final Note note) -> {
 		if (note == null)
 			return null;
 		if (note.istNote())
@@ -324,9 +324,9 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		};
 	};
 
-	private BiFunction<DTOSchuelerLeistungsdaten, GostHalbjahr, String> funcGetKursart = (DTOSchuelerLeistungsdaten sld, GostHalbjahr halbjahr) -> {
-		GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
-		ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(sld.Kursart);
+	private final BiFunction<DTOSchuelerLeistungsdaten, GostHalbjahr, String> funcGetKursart = (final DTOSchuelerLeistungsdaten sld, final GostHalbjahr halbjahr) -> {
+		final GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
+		final ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(sld.Kursart);
 		if ((kursart == null) || (zulkursart == null))
 			return null;
 		if (((kursart == GostKursart.LK) || kursart == GostKursart.GK) && (sld.NotenKrz == Note.ATTEST))

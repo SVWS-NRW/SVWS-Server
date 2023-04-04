@@ -9,68 +9,68 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 
 
 /**
- * Diese Klasse stellt allgemeine Methoden bezüglich eines Datenbank-Benutzer zur Verfügung. 
+ * Diese Klasse stellt allgemeine Methoden bezüglich eines Datenbank-Benutzer zur Verfügung.
  */
 public class BenutzerUtils {
-	
-	
+
+
 	/**
 	 * Diese Methode liest die Kompetenzen des Benutzers ein und speichert diese Information
-	 * bei dem übergebenen Benutzer-Objekt. 
-	 * Anmerkung: Diese Methode benutzt dabei die DTO-Klasse DTOUsers, weshalb sie nicht in 
-	 * die Klasse Benutzer integriert werden kann. 
-	 * 
+	 * bei dem übergebenen Benutzer-Objekt.
+	 * Anmerkung: Diese Methode benutzt dabei die DTO-Klasse DTOUsers, weshalb sie nicht in
+	 * die Klasse Benutzer integriert werden kann.
+	 *
 	 * @param user   der Benutzer dessen Kompetenzen eingelesen werden sollen
 	 */
-	public static void leseKompetenzen(Benutzer user) {
+	public static void leseKompetenzen(final Benutzer user) {
 		user.getKompetenzen().clear();
 		try (DBEntityManager conn = user.getEntityManager()) {
-			DTOViewBenutzer dbBenutzer = conn.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream().findFirst().orElse(null);
+			final DTOViewBenutzer dbBenutzer = conn.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream().findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return;
 			if (dbBenutzer.IstAdmin)
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
 			conn.queryNamed("DTOViewBenutzerKompetenz.benutzer_id", dbBenutzer.ID, DTOViewBenutzerKompetenz.class).stream()
-				.map(komp -> BenutzerKompetenz.getByID((int)(long)komp.Kompetenz_ID))
+				.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
 				.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
 				.forEach(komp -> user.getKompetenzen().add(komp));
 		}
 	}
-	
-	
+
+
 	/**
-	 * Prüft, ob das übergebene Passwort bei dem übergebenen Benutzer gültig ist.  
-	 *  
-	 * Anmerkung: Diese Methode benutzt dabei die DTO-Klasse DTOUsers, weshalb sie nicht in 
+	 * Prüft, ob das übergebene Passwort bei dem übergebenen Benutzer gültig ist.
+	 *
+	 * Anmerkung: Diese Methode benutzt dabei die DTO-Klasse DTOUsers, weshalb sie nicht in
 	 * die Klasse Benutzer integriert werden kann.
-	 *  
+	 *
 	 * @param user        der Benutzer, bei dem das Kennwort geprüft werden soll
 	 * @param password    das zu prüfende Kennwort
-	 * 
-	 * @return true, falls das Kennwort gültig ist, und ansonsten false 
+	 *
+	 * @return true, falls das Kennwort gültig ist, und ansonsten false
 	 */
-	public static boolean pruefePasswort(Benutzer user, String password) {
+	public static boolean pruefePasswort(final Benutzer user, final String password) {
 		if (user.getUsername() == null)
 			return false;
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn.useDBLogin())
 				return true;
-			DTOViewBenutzer dbBenutzer = conn
+			final DTOViewBenutzer dbBenutzer = conn
 					.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream()
 					.findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return false;
-			String PasswordHash = dbBenutzer.PasswordHash;
+			final String pwHash = dbBenutzer.PasswordHash;
 			user.setId(dbBenutzer.ID);
 			if ((password == null) || ("".equals(password))) {
-				return (PasswordHash == null) || ("".equals(PasswordHash));
+				return (pwHash == null) || ("".equals(pwHash));
 			}
-			if ((PasswordHash == null) || ("".equals(PasswordHash))) {
+			if ((pwHash == null) || ("".equals(pwHash))) {
 				return false;
 			}
-			return BCrypt.checkpw(password, PasswordHash);
+			return BCrypt.checkpw(password, pwHash);
 		}
 	}
-	
+
 
 }

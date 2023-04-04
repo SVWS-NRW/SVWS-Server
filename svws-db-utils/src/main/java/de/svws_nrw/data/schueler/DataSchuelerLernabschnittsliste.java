@@ -24,17 +24,17 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerLernabschnittListeEintrag}.
  */
-public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
+public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerLernabschnittListeEintrag}.
-	 * 
+	 *
 	 * @param conn    die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataSchuelerLernabschnittsliste(DBEntityManager conn) {
+	public DataSchuelerLernabschnittsliste(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -47,10 +47,10 @@ public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuelerLernabschnittsdaten} in einen Core-DTO {@link SchuelerLernabschnittListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuelerLernabschnittsdaten} in einen Core-DTO {@link SchuelerLernabschnittListeEintrag}.
 	 */
-	private Function<DTOSchuelerLernabschnittsdaten, SchuelerLernabschnittListeEintrag> dtoMapper = (DTOSchuelerLernabschnittsdaten dto) -> {
-		SchuelerLernabschnittListeEintrag daten = new SchuelerLernabschnittListeEintrag();
+	private final Function<DTOSchuelerLernabschnittsdaten, SchuelerLernabschnittListeEintrag> dtoMapper = (final DTOSchuelerLernabschnittsdaten dto) -> {
+		final SchuelerLernabschnittListeEintrag daten = new SchuelerLernabschnittListeEintrag();
 		daten.id = dto.ID;
     	daten.schuelerID = dto.Schueler_ID;
     	daten.schuljahresabschnitt = dto.Schuljahresabschnitts_ID;
@@ -63,45 +63,45 @@ public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	daten.jahrgang = dto.ASDJahrgang;
 		return daten;
 	};
-	
-	
+
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		// Prüfe, ob der Schüler mit der ID existiert
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
     	if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse();
     	// Bestimme die Lernabschnitte
-    	List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class);
+    	final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class);
     	if (abschnitte == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     	// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
-    	List<Long> klassenIDs = abschnitte.stream().map(a -> a.Klassen_ID).collect(Collectors.toList());
-    	List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
-    	Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+    	final List<Long> klassenIDs = abschnitte.stream().map(a -> a.Klassen_ID).collect(Collectors.toList());
+    	final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
+    	final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
     	// Bestimme die Schuljahres-Abschnitte
-    	List<Long> schuljahresabschnittIDs = abschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).collect(Collectors.toList());
-    	List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnittIDs, DTOSchuljahresabschnitte.class);
-    	Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+    	final List<Long> schuljahresabschnittIDs = abschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).collect(Collectors.toList());
+    	final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnittIDs, DTOSchuljahresabschnitte.class);
+    	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Konvertiere die Lenabschnitte, ergänze sie um die Klassen- und Schuljahresabschnittsinformationen und füge sie zur Liste hinzu
-    	Vector<SchuelerLernabschnittListeEintrag> daten = new Vector<>();
-    	for (DTOSchuelerLernabschnittsdaten l : abschnitte) {
-    		SchuelerLernabschnittListeEintrag e = dtoMapper.apply(l);
-    		DTOKlassen klasse = mapKlassen.get(e.klassenID);
+    	final Vector<SchuelerLernabschnittListeEintrag> daten = new Vector<>();
+    	for (final DTOSchuelerLernabschnittsdaten l : abschnitte) {
+    		final SchuelerLernabschnittListeEintrag e = dtoMapper.apply(l);
+    		final DTOKlassen klasse = mapKlassen.get(e.klassenID);
     		if (klasse == null)
     			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		e.klasse = klasse.Klasse;
     		e.klasseStatistik = klasse.ASDKlasse;
-    		DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
+    		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
     		if (schuljahresabschnitt == null)
     			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		e.schuljahr = schuljahresabschnitt.Jahr;
     		e.abschnitt = schuljahresabschnitt.Abschnitt;
     		daten.add(e);
     	}
-    	daten.sort((SchuelerLernabschnittListeEintrag a, SchuelerLernabschnittListeEintrag b) -> {
+    	daten.sort((final SchuelerLernabschnittListeEintrag a, final SchuelerLernabschnittListeEintrag b) -> {
     		int tmp = Integer.compare(a.schuljahr, b.schuljahr);
     		if (tmp != 0)
     			return tmp;
@@ -118,7 +118,7 @@ public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

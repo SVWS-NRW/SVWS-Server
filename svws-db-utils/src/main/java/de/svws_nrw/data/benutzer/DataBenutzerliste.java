@@ -24,15 +24,15 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link BenutzerListeEintrag}.
  */
-public class DataBenutzerliste extends DataManager<Long> {
+public final class DataBenutzerliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link BenutzerListeEintrag}.
-	 * 
+	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataBenutzerliste(DBEntityManager conn) {
+	public DataBenutzerliste(final DBEntityManager conn) {
 		super(conn);
 	}
 
@@ -43,11 +43,11 @@ public class DataBenutzerliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		List<DTOViewBenutzerdetails> benutzer = conn.queryAll(DTOViewBenutzerdetails.class);
+		final List<DTOViewBenutzerdetails> benutzer = conn.queryAll(DTOViewBenutzerdetails.class);
 		if (benutzer == null)
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle die Benutzerliste und sortiere sie
-		List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
+		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
 				.collect(Collectors.toList());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -56,33 +56,33 @@ public class DataBenutzerliste extends DataManager<Long> {
 	 * @param id ID der Benutzergruppe
 	 * @return Benutzer, die in der Benutzergruppe sind.
 	 */
-	public Response getListMitGruppenID(Long id) {
+	public Response getListMitGruppenID(final Long id) {
 		// Bestimme die IDs der Benutzer in der Benutzergruppe mit id
-		DTOBenutzergruppe benutzergruppe = conn.queryByKey(DTOBenutzergruppe.class, id);
+		final DTOBenutzergruppe benutzergruppe = conn.queryByKey(DTOBenutzergruppe.class, id);
 		if (benutzergruppe == null)
 			throw OperationError.NOT_FOUND.exception();
-		List<Long> benutzerIDs = conn
+		final List<Long> benutzerIDs = conn
 				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
-		List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.size() == 0) 
+		final List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.size() == 0)
 		        ? Collections.emptyList()
 		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
 		if (benutzer == null)
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle die Benutzerliste und sortiere sie
-		List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
+		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
 				.collect(Collectors.toList());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
-	
-	
+
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -91,8 +91,8 @@ public class DataBenutzerliste extends DataManager<Long> {
 	 * {@link DTOViewBenutzerdetails} in einen Core-DTO
 	 * {@link BenutzerListeEintrag}.
 	 */
-	private Function<DTOViewBenutzerdetails, BenutzerListeEintrag> dtoMapper = (DTOViewBenutzerdetails b) -> {
-		BenutzerListeEintrag daten = new BenutzerListeEintrag();
+	private final Function<DTOViewBenutzerdetails, BenutzerListeEintrag> dtoMapper = (final DTOViewBenutzerdetails b) -> {
+		final BenutzerListeEintrag daten = new BenutzerListeEintrag();
 		daten.id = b.ID;
 		daten.typ = b.Typ.id;
 		daten.typID = b.TypID;
@@ -107,8 +107,8 @@ public class DataBenutzerliste extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs
 	 * {@link BenutzerListeEintrag}.
 	 */
-	private Comparator<BenutzerListeEintrag> dataComparator = (a, b) -> {
-		Collator collator = Collator.getInstance(Locale.GERMAN);
+	private final Comparator<BenutzerListeEintrag> dataComparator = (a, b) -> {
+		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		if ((a.anzeigename == null) && (b.anzeigename != null))
 			return -1;
 		else if ((a.anzeigename != null) && (b.anzeigename == null))

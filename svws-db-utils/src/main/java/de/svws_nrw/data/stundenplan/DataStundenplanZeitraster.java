@@ -19,27 +19,27 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link StundenplanZeitraster}.
  */
-public class DataStundenplanZeitraster extends DataManager<Long> {
+public final class DataStundenplanZeitraster extends DataManager<Long> {
 
 	private final Long stundenplanID;
-	
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanZeitraster}.
-	 * 
+	 *
 	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param stundenplanID   die ID des Stundenplans, dessen Zeitraster abgefragt wird
 	 */
-	public DataStundenplanZeitraster(DBEntityManager conn, Long stundenplanID) {
+	public DataStundenplanZeitraster(final DBEntityManager conn, final Long stundenplanID) {
 		super(conn);
 		this.stundenplanID = stundenplanID;
 	}
-	
-	
+
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOEigeneSchule} in einen Core-DTO {@link SchuleStammdaten}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOEigeneSchule} in einen Core-DTO {@link SchuleStammdaten}.
 	 */
-	private Function<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (DTOStundenplanZeitraster z) -> {
-		StundenplanZeitraster daten = new StundenplanZeitraster();
+	private final Function<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (final DTOStundenplanZeitraster z) -> {
+		final StundenplanZeitraster daten = new StundenplanZeitraster();
 		daten.id = z.ID;
 		daten.wochentag = z.Tag;
 		daten.unterrichtstunde = z.Stunde;
@@ -48,7 +48,7 @@ public class DataStundenplanZeitraster extends DataManager<Long> {
 		return daten;
 	};
 
-	
+
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -56,13 +56,13 @@ public class DataStundenplanZeitraster extends DataManager<Long> {
 
 	/**
 	 * Gibt das Zeitraster des Stundenplans zurück.
-	 * 
+	 *
 	 * @return das Zeitraster
 	 */
 	public Vector<StundenplanZeitraster> getZeitraster() {
-		List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", this.stundenplanID, DTOStundenplanZeitraster.class); 
-		Vector<StundenplanZeitraster> daten = new Vector<>();
-		for (DTOStundenplanZeitraster z : zeitraster)
+		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", this.stundenplanID, DTOStundenplanZeitraster.class);
+		final Vector<StundenplanZeitraster> daten = new Vector<>();
+		for (final DTOStundenplanZeitraster z : zeitraster)
 			daten.add(dtoMapper.apply(z));
 		return daten;
 	}
@@ -73,14 +73,14 @@ public class DataStundenplanZeitraster extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 
-		
+
 }

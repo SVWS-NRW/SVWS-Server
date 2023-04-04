@@ -26,35 +26,35 @@ import de.svws_nrw.db.utils.gost.FaecherGost;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link GostFach}.
  */
-public class DataGostFaecher extends DataManager<Long> {
+public final class DataGostFaecher extends DataManager<Long> {
 
-	private int abijahr;
-	
+	private final int abijahr;
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link GostFach}.
-	 * 
+	 *
 	 * @param conn      die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abijahr   der Abi-Jahrgang, für welchen die Gost-Fächer verwaltet werden sollen,
-	 *                  null für die allgemeinen Jahrgangsübergreifenden Gost-Fachinformationen 
+	 *                  null für die allgemeinen Jahrgangsübergreifenden Gost-Fachinformationen
 	 */
-	public DataGostFaecher(DBEntityManager conn, int abijahr) {
+	public DataGostFaecher(final DBEntityManager conn, final int abijahr) {
 		super(conn);
 		this.abijahr = abijahr;
 	}
 
 	/**
-	 * Bestimmt die Liste der Fächer der gymnasialen Oberstufe für den 
+	 * Bestimmt die Liste der Fächer der gymnasialen Oberstufe für den
 	 * spezifizierten Abiturjahrgang.
-	 * 
+	 *
 	 * @return der Manager für die Liste der Fächer der gymnasialen Oberstufe
 	 */
 	public GostFaecherManager getListInternal() {
-		Schulform schulform = Schule.queryCached(conn).getSchulform();
+		final Schulform schulform = Schule.queryCached(conn).getSchulform();
     	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
     		return null;
     	return FaecherGost.getFaecherListeGost(conn, abijahr);
 	}
-	
+
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -62,19 +62,19 @@ public class DataGostFaecher extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		Collection<GostFach> daten = getListInternal().faecher();
+		final Collection<GostFach> daten = getListInternal().faecher();
     	if (daten == null)
     		return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		GostUtils.pruefeSchuleMitGOSt(conn);
-    	Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+    	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	if (faecher == null)
     		return OperationError.NOT_FOUND.getResponse();
-		DTOFach fach = faecher.get(id); 
+		final DTOFach fach = faecher.get(id);
     	if (fach == null)
     		return OperationError.NOT_FOUND.getResponse();
 		GostFach daten = null;
@@ -82,7 +82,7 @@ public class DataGostFaecher extends DataManager<Long> {
 	    	daten = FaecherGost.mapFromDTOFach(fach, faecher);
 		} else {
 	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
-	    	DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
+	    	final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
 	    	if (jf == null)
 	    		return OperationError.NOT_FOUND.getResponse();
 	    	daten = FaecherGost.mapFromDTOGostJahrgangFaecher(jf, faecher);
@@ -91,36 +91,36 @@ public class DataGostFaecher extends DataManager<Long> {
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
-    	Map<String, Object> map = JSONMapper.toMap(is);
+	public Response patch(final Long id, final InputStream is) {
+    	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
     			GostUtils.pruefeSchuleMitGOSt(conn);
-    	    	Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+    	    	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	    	if (faecher == null)
     	    		return OperationError.NOT_FOUND.getResponse();
-    			DTOFach fach = faecher.get(id);
+    			final DTOFach fach = faecher.get(id);
 		    	if (fach == null)
     	    		return OperationError.NOT_FOUND.getResponse();
     			if (abijahr == -1) {
-			    	for (Entry<String, Object> entry : map.entrySet()) {
-			    		String key = entry.getKey();
-			    		Object value = entry.getValue();
+			    	for (final Entry<String, Object> entry : map.entrySet()) {
+			    		final String key = entry.getKey();
+			    		final Object value = entry.getValue();
 			    		switch (key) {
 							case "id" -> {
-								Long patch_id = JSONMapper.convertToLong(value, true);
+								final Long patch_id = JSONMapper.convertToLong(value, true);
 								if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 									throw OperationError.BAD_REQUEST.exception();
 							}
 			    			// Änderungen von allgemeinen Fachinformationen sind hier nicht erlaubt, nur GOSt-spezifische
 			    			case "kuerzel" -> throw OperationError.BAD_REQUEST.exception();
-			    			case "kuerzelAnzeige" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "sortierung" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "istFremdsprache" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "istFremdSpracheNeuEinsetzend" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "biliSprache" -> throw OperationError.BAD_REQUEST.exception();  
+			    			case "kuerzelAnzeige" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "sortierung" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "istFremdsprache" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "istFremdSpracheNeuEinsetzend" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "biliSprache" -> throw OperationError.BAD_REQUEST.exception();
 			    			case "istMoeglichAbiLK" -> fach.IstMoeglichAbiLK = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichAbiGK" -> fach.IstMoeglichAbiGK = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichEF1" -> fach.IstMoeglichEF1 = JSONMapper.convertToBoolean(value, false);
@@ -132,51 +132,51 @@ public class DataGostFaecher extends DataManager<Long> {
 			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
 			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
 			    			case "wochenstundenQualifikationsphase" -> {
-			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();  
+			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();
 			    				fach.WochenstundenQualifikationsphase = JSONMapper.convertToInteger(value, false);
 			    			}
 			    			case "projektKursLeitfach1ID" -> {
 			    				fach.ProjektKursLeitfach1_ID = JSONMapper.convertToLong(value, true);
 			    		    	if ((fach.ProjektKursLeitfach1_ID != null) && (fach.ProjektKursLeitfach1_ID < 0))
-			    		    		throw OperationError.CONFLICT.exception();   
+			    		    		throw OperationError.CONFLICT.exception();
 		    			    	if ((fach.ProjektKursLeitfach1_ID != null) && (faecher.get(fach.ProjektKursLeitfach1_ID) == null))
 		    			    		throw OperationError.NOT_FOUND.exception();
 			    			}
 			    			case "projektKursLeitfach2ID" -> {
 			    				fach.ProjektKursLeitfach2_ID = JSONMapper.convertToLong(value, true);
 			    		    	if ((fach.ProjektKursLeitfach2_ID != null) && (fach.ProjektKursLeitfach2_ID < 0))
-			    		    		throw OperationError.CONFLICT.exception();    	
+			    		    		throw OperationError.CONFLICT.exception();
 		    			    	if ((fach.ProjektKursLeitfach2_ID != null) && (faecher.get(fach.ProjektKursLeitfach2_ID) == null))
 		    			    		throw OperationError.NOT_FOUND.exception();
 			    			}
-			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "projektKursLeitfach2Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  
+			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "projektKursLeitfach2Kuerzel" -> throw OperationError.BAD_REQUEST.exception();
 			    			default -> throw OperationError.BAD_REQUEST.exception();
 			    		}
 			    	}
 			    	conn.transactionPersist(fach);
 		    	} else {
 	    	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
-	    	    	DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
+	    	    	final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
 	    	    	if (jf == null)
 	    	    		throw OperationError.NOT_FOUND.exception();
-			    	for (Entry<String, Object> entry : map.entrySet()) {
-			    		String key = entry.getKey();
-			    		Object value = entry.getValue();
+			    	for (final Entry<String, Object> entry : map.entrySet()) {
+			    		final String key = entry.getKey();
+			    		final Object value = entry.getValue();
 			    		switch (key) {
 							case "id" -> {
-								Long patch_id = JSONMapper.convertToLong(value, true);
+								final Long patch_id = JSONMapper.convertToLong(value, true);
 								if ((patch_id == null) || (patch_id != id))
 									throw OperationError.BAD_REQUEST.exception();
 							}
 			    			// Änderungen von allgemeinen Fachinformationen sind hier nicht erlaubt, nur GOSt-spezifische
 			    			case "kuerzel" -> throw OperationError.BAD_REQUEST.exception();
-			    			case "kuerzelAnzeige" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "sortierung" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "istFremdsprache" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "istFremdSpracheNeuEinsetzend" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "biliSprache" -> throw OperationError.BAD_REQUEST.exception();  
+			    			case "kuerzelAnzeige" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "sortierung" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "istFremdsprache" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "istFremdSpracheNeuEinsetzend" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "biliSprache" -> throw OperationError.BAD_REQUEST.exception();
 			    			case "istMoeglichAbiLK" -> jf.WaehlbarAbiLK = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichAbiGK" -> jf.WaehlbarAbiGK = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichEF1" -> jf.WaehlbarEF1 = JSONMapper.convertToBoolean(value, false);
@@ -188,21 +188,21 @@ public class DataGostFaecher extends DataManager<Long> {
 			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
 			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
 			    			case "wochenstundenQualifikationsphase" -> {
-			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();  
+			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();
 			    				jf.WochenstundenQPhase = JSONMapper.convertToInteger(value, false);
 			    			}
 			    			case "projektKursLeitfach1ID" -> throw OperationError.BAD_REQUEST.exception();
 			    			case "projektKursLeitfach2ID" -> throw OperationError.BAD_REQUEST.exception();
-			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  
-			    			case "projektKursLeitfach2Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  
+			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();
+			    			case "projektKursLeitfach2Kuerzel" -> throw OperationError.BAD_REQUEST.exception();
 			    			default -> throw OperationError.BAD_REQUEST.exception();
 			    		}
 			    	}
 			    	conn.transactionPersist(jf);
-		    	}			
+		    	}
 		    	conn.transactionCommit();
-			} catch (Exception e) {
-				if (e instanceof WebApplicationException webAppException)
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webAppException)
 					return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 			} finally {

@@ -13,30 +13,30 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFehlermeldungen aus 
- * einer LuPO-Datenbank im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFehlermeldungen aus
+ * einer LuPO-Datenbank im Access-Format genutzt.
  */
-public class ABPSchuelerFehlermeldungen {
+public final class ABPSchuelerFehlermeldungen {
 
 	/** Die ID des Schülers in der LuPO-DB */
 	public int Schueler_ID = -1;
-	
+
 	/** Der Fehlercode */
 	public String Fehlercode = null;
-	
+
 	/** Der ausführliche Fehlertext */
 	public String Fehlertext = null;
-	
-	/** 
-	 * Die Gruppe, zu der der Fehlercode gehört: 
-	 *   BV: Belegungsverpflichtung;  
-	 *   KV: Klausurverpflichtung; 
-	 *   KA: Kursanzahl; 
-	 *   AB: Abitur; 
-	 *   SP: Spezielle Meldungen 
+
+	/**
+	 * Die Gruppe, zu der der Fehlercode gehört:
+	 *   BV: Belegungsverpflichtung;
+	 *   KV: Klausurverpflichtung;
+	 *   KA: Kursanzahl;
+	 *   AB: Abitur;
+	 *   SP: Spezielle Meldungen
 	 */
 	public String Fehlergruppe = null;
-	
+
 	/** Die Sortierung der Fehlermeldung */
 	public Integer Sortierung = 32000;
 
@@ -44,17 +44,17 @@ public class ABPSchuelerFehlermeldungen {
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schueler" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchuelerFehlermeldungen> read(Database db) {
+	public static List<ABPSchuelerFehlermeldungen> read(final Database db) {
 		try {
-			List<ABPSchuelerFehlermeldungen> liste = new Vector<>();
-			Table table = db.getTable("ABP_SchuelerFehlermeldungen");
-			for (Row r : table) {
-				ABPSchuelerFehlermeldungen fehler = new ABPSchuelerFehlermeldungen(); 
+			final List<ABPSchuelerFehlermeldungen> liste = new Vector<>();
+			final Table table = db.getTable("ABP_SchuelerFehlermeldungen");
+			for (final Row r : table) {
+				final ABPSchuelerFehlermeldungen fehler = new ABPSchuelerFehlermeldungen();
 				fehler.Schueler_ID = r.getInt("Schueler_ID");
 				fehler.Fehlercode = r.getString("Fehlercode");
 				fehler.Fehlertext = r.getString("Fehlertext");
@@ -63,7 +63,7 @@ public class ABPSchuelerFehlermeldungen {
 				liste.add(fehler);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -71,13 +71,13 @@ public class ABPSchuelerFehlermeldungen {
 
 	/**
 	 * Schreibt die angegebenen Schüler in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler
 	 */
-	public static void write(Database db, List<ABPSchuelerFehlermeldungen> list) {
+	public static void write(final Database db, final List<ABPSchuelerFehlermeldungen> list) {
 		try {
-			Table table = new TableBuilder("ABP_SchuelerFehlermeldungen")
+			final Table table = new TableBuilder("ABP_SchuelerFehlermeldungen")
 			     .addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
 			     .addColumn(new ColumnBuilder("Fehlercode", DataType.TEXT).setLengthInUnits(20))
 			     .addColumn(new ColumnBuilder("Fehlertext", DataType.MEMO).setLengthInUnits(16777216))
@@ -86,16 +86,16 @@ public class ABPSchuelerFehlermeldungen {
 			     .toTable(db);
 			if (list == null)
 				return;
-			for (ABPSchuelerFehlermeldungen schueler: list) {
+			for (final ABPSchuelerFehlermeldungen schueler: list) {
 				table.addRow(
 					schueler.Schueler_ID,
 					schueler.Fehlercode,
 					schueler.Fehlertext,
 					schueler.Fehlergruppe,
 					schueler.Sortierung
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -103,11 +103,11 @@ public class ABPSchuelerFehlermeldungen {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuelerFehlermeldungen zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFehlermeldungen
 	 */
 	public static List<ABPSchuelerFehlermeldungen> getDefault() {
-		List<ABPSchuelerFehlermeldungen> fehlermeldungen = new Vector<>();
+		final List<ABPSchuelerFehlermeldungen> fehlermeldungen = new Vector<>();
 		return fehlermeldungen;
 	}
 

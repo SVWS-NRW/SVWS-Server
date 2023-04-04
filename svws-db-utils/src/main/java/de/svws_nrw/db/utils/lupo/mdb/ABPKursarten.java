@@ -15,10 +15,10 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_Kursarten aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_Kursarten aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPKursarten {
+public final class ABPKursarten {
 
 	/** Gibt die Art des Kurses an z.B. GKM oder GKS oder LK */
 	@JsonProperty public String Kursart = null;
@@ -31,7 +31,7 @@ public class ABPKursarten {
 
 	/** Gibt an, ob der Kurs im zweiten Halbjahr der EF belegt wurde. */
 	@JsonProperty public boolean E2 = false;
-	
+
 	/** Gibt an, ob der Kurs im ersten Halbjahr der Q-Phase belegt wurde. */
 	@JsonProperty public boolean Q1 = false;
 
@@ -43,24 +43,24 @@ public class ABPKursarten {
 
 	/** Gibt an, ob der Kurs im vierten Halbjahr der Q-Phase belegt wurde. */
 	@JsonProperty public boolean Q4 = false;
-	
+
 	/** Die Sortierung der Kursart */
 	@JsonProperty public int Sortierung = 32000;
 
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Kursarten" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Kursarten aus der LuPO-Datei
 	 */
-	public static List<ABPKursarten> read(Database db) {
+	public static List<ABPKursarten> read(final Database db) {
 		try {
-			List<ABPKursarten> liste = new Vector<>();
-			Table table = db.getTable("ABP_Kursarten");
-			for (Row r : table) {
-				ABPKursarten zuordnung = new ABPKursarten();
+			final List<ABPKursarten> liste = new Vector<>();
+			final Table table = db.getTable("ABP_Kursarten");
+			for (final Row r : table) {
+				final ABPKursarten zuordnung = new ABPKursarten();
 				zuordnung.Kursart = r.getString("Kursart");
 				zuordnung.Klartext = r.getString("Klartext");
 				zuordnung.E1 = "J".equals(r.getString("E1"));
@@ -73,7 +73,7 @@ public class ABPKursarten {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -81,13 +81,13 @@ public class ABPKursarten {
 
 	/**
 	 * Schreibt die angegebenen Kursarten in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Kursarten
 	 */
-	public static void write(Database db, List<ABPKursarten> list) {
+	public static void write(final Database db, final List<ABPKursarten> list) {
 		try {
-			Table table = new TableBuilder("ABP_Kursarten")
+			final Table table = new TableBuilder("ABP_Kursarten")
 				.addColumn(new ColumnBuilder("Kursart", DataType.TEXT).setLengthInUnits(5))
 				.addColumn(new ColumnBuilder("Klartext", DataType.TEXT).setLengthInUnits(50))
 				.addColumn(new ColumnBuilder("E1", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
@@ -98,7 +98,7 @@ public class ABPKursarten {
 				.addColumn(new ColumnBuilder("Q4", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
 				.addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
 			    .toTable(db);
-			for (ABPKursarten zuordnung: list) {
+			for (final ABPKursarten zuordnung: list) {
 				table.addRow(
 					zuordnung.Kursart,
 					zuordnung.Klartext,
@@ -109,9 +109,9 @@ public class ABPKursarten {
 					zuordnung.Q3 ? "J" : "N",
 					zuordnung.Q4 ? "J" : "N",
 					zuordnung.Sortierung
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -119,11 +119,11 @@ public class ABPKursarten {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPKursarten zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPKursarten
 	 */
 	public static List<ABPKursarten> getDefault() {
-	    ABPKursarten gkm =  new ABPKursarten();
+	    final ABPKursarten gkm =  new ABPKursarten();
 	    gkm.Kursart = "GKM";
 	    gkm.Klartext = "Grundkurs mündlich";
 	    gkm.E1 = true;
@@ -133,7 +133,7 @@ public class ABPKursarten {
         gkm.Q3 = true;
         gkm.Q4 = true;
         gkm.Sortierung = 1;
-        ABPKursarten gks =  new ABPKursarten();
+        final ABPKursarten gks =  new ABPKursarten();
         gks.Kursart = "GKS";
         gks.Klartext = "Grundkurs schriftlich";
         gks.E1 = true;
@@ -143,7 +143,7 @@ public class ABPKursarten {
         gks.Q3 = true;
         gks.Q4 = true;
         gks.Sortierung = 2;
-        ABPKursarten lk =  new ABPKursarten();
+        final ABPKursarten lk =  new ABPKursarten();
         lk.Kursart = "LK";
         lk.Klartext = "Leistungskurs";
         lk.E1 = false;
@@ -153,7 +153,7 @@ public class ABPKursarten {
         lk.Q3 = true;
         lk.Q4 = true;
         lk.Sortierung = 3;
-        Vector<ABPKursarten> result = new Vector<>();
+        final Vector<ABPKursarten> result = new Vector<>();
         result.add(gkm);
         result.add(gks);
         result.add(lk);

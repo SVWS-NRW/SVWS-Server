@@ -16,21 +16,21 @@ import de.svws_nrw.db.DBEntityManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchulabschlussAllgemeinbildendKatalogEintrag}.
  */
-public class DataKatalogSchulabschluesseAllgemeinbildend extends DataManager<Long> {
+public final class DataKatalogSchulabschluesseAllgemeinbildend extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchulabschlussAllgemeinbildendKatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogSchulabschluesseAllgemeinbildend(DBEntityManager conn) {
+	public DataKatalogSchulabschluesseAllgemeinbildend(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<SchulabschlussAllgemeinbildendKatalogEintrag> daten = new Vector<>();
-		for (SchulabschlussAllgemeinbildend abschlussart : SchulabschlussAllgemeinbildend.values())
+		final Vector<SchulabschlussAllgemeinbildendKatalogEintrag> daten = new Vector<>();
+		for (final SchulabschlussAllgemeinbildend abschlussart : SchulabschlussAllgemeinbildend.values())
 			daten.addAll(Arrays.asList(abschlussart.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -41,13 +41,13 @@ public class DataKatalogSchulabschluesseAllgemeinbildend extends DataManager<Lon
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

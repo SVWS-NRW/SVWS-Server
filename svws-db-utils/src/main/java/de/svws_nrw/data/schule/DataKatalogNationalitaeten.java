@@ -16,21 +16,21 @@ import de.svws_nrw.db.DBEntityManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link NationalitaetenKatalogEintrag}.
  */
-public class DataKatalogNationalitaeten extends DataManager<Long> {
+public final class DataKatalogNationalitaeten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link NationalitaetenKatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogNationalitaeten(DBEntityManager conn) {
+	public DataKatalogNationalitaeten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<NationalitaetenKatalogEintrag> daten = new Vector<>();
-		for (Nationalitaeten nat : Nationalitaeten.values())
+		final Vector<NationalitaetenKatalogEintrag> daten = new Vector<>();
+		for (final Nationalitaeten nat : Nationalitaeten.values())
 			daten.addAll(Arrays.asList(nat.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -41,13 +41,13 @@ public class DataKatalogNationalitaeten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

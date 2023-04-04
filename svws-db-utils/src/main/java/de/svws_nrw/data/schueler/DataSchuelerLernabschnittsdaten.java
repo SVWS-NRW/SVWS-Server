@@ -21,17 +21,17 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerLernabschnittsdaten}.
  */
-public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
+public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerLernabschnittsdaten}.
-	 * 
+	 *
 	 * @param conn                   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataSchuelerLernabschnittsdaten(DBEntityManager conn) {
+	public DataSchuelerLernabschnittsdaten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -44,47 +44,47 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 	/**
 	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem
-	 * angegebenen Schuljahresabschnitts 
-	 * 
+	 * angegebenen Schuljahresabschnitts
+	 *
 	 * @param schueler_id            die Schüler-ID
 	 * @param schuljahresabschnitt   der Schuljahresabschnitt
-	 * 
+	 *
 	 * @return die Lernabschnittsdaten
 	 */
-	public Response get(Long schueler_id, long schuljahresabschnitt) {
+	public Response get(final Long schueler_id, final long schuljahresabschnitt) {
 		// Prüfe, ob der Schüler mit der ID existiert
 		if (schueler_id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
     	if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse();
     	// Bestimme den aktuellen Lernabschnitt
-    	String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr IS NULL";
-    	List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
+    	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr IS NULL";
+    	final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
     	if ((lernabschnittsdaten == null) || lernabschnittsdaten.size() <= 0)
 			return OperationError.NOT_FOUND.getResponse();
     	if (lernabschnittsdaten.size() > 1)
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    	DTOSchuelerLernabschnittsdaten aktuell = lernabschnittsdaten.get(0);
+    	final DTOSchuelerLernabschnittsdaten aktuell = lernabschnittsdaten.get(0);
 		return this.get(aktuell.ID);
 	}
-	
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		// Prüfe, ob der Lernabschnitt mit der ID existiert
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();		
-		DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
+			return OperationError.NOT_FOUND.getResponse();
+		final DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
     	if (aktuell == null)
 			return OperationError.NOT_FOUND.getResponse();
     	// Ermittle die Fachbemerkungen
-    	List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class); 
+    	final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
     	if (bemerkungen == null)
     		return OperationError.NOT_FOUND.getResponse();
     	if (bemerkungen.size() > 1)
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-    	SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
+    	final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
     	daten.id = aktuell.ID;
     	daten.schuelerID = aktuell.Schueler_ID;
     	daten.schuljahresabschnitt = aktuell.Schuljahresabschnitts_ID;
@@ -100,7 +100,7 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	daten.tutorID = aktuell.Tutor_ID;
     	daten.klassenID = aktuell.Klassen_ID;
     	daten.folgeklassenID = aktuell.Folgeklasse_ID;
-    	daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel; 
+    	daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel;
     	daten.jahrgangID = aktuell.Jahrgang_ID;
     	daten.fachklasseID = aktuell.Fachklasse_ID;
     	daten.schwerpunktID = aktuell.Schwerpunkt_ID;
@@ -129,13 +129,13 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	daten.textErgebnisPruefungsalgorithmus = aktuell.PruefAlgoErgebnis;
     	daten.zeugnisart = aktuell.Zeugnisart;
     	if (aktuell.MoeglNPFaecher != null) {
-    		String[] moeglicheNPFaecher = aktuell.MoeglNPFaecher.split(",");
+    		final String[] moeglicheNPFaecher = aktuell.MoeglNPFaecher.split(",");
     		if ((moeglicheNPFaecher.length > 0) && (!"".equals(moeglicheNPFaecher[0].trim()))) {
     			daten.nachpruefungen = new SchuelerLernabschnittNachpruefungsdaten();
-    			for (String fach : moeglicheNPFaecher)
+    			for (final String fach : moeglicheNPFaecher)
     				daten.nachpruefungen.moegliche.add(fach);
     			if (aktuell.NPV_Fach_ID != null) {
-    				SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
     				np.grund = "V";
     				np.fachID = aktuell.NPV_Fach_ID;
     				np.datum = aktuell.NPV_Datum;
@@ -143,7 +143,7 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     				daten.nachpruefungen.pruefungen.add(np);
     			}
     			if (aktuell.NPAA_Fach_ID != null) {
-    				SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
     				np.grund = "A";
     				np.fachID = aktuell.NPAA_Fach_ID;
     				np.datum = aktuell.NPAA_Datum;
@@ -151,7 +151,7 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     				daten.nachpruefungen.pruefungen.add(np);
     			}
     			if (aktuell.NPBQ_Fach_ID != null) {
-    				SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
     				np.grund = "B";
     				np.fachID = aktuell.NPBQ_Fach_ID;
     				np.datum = aktuell.NPBQ_Datum;
@@ -160,9 +160,9 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     			}
     		}
     	}
-    	daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem; 
+    	daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem;
     	if (bemerkungen.size() > 0) {
-    		DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
+    		final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
 	    	daten.bemerkungen.zeugnisASV = b.ASV;
 	    	daten.bemerkungen.zeugnisLELS = b.LELS;
 	    	daten.bemerkungen.zeugnisAUE = b.AUE;
@@ -173,12 +173,12 @@ public class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
     	if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(aktuell.ID, daten.leistungsdaten)))
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    	
+
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

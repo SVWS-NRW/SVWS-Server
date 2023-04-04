@@ -29,98 +29,98 @@ import de.svws_nrw.db.utils.data.Schule;
 
 
 /**
- * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen 
+ * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu Schülern der gymnasialen Oberstufe zur Verfügung.
  */
 public class GostSchueler {
 
 	/**
-	 * Bestimmt für den übergegebenen Schüler das zugehörige Abiturjahr, sofern sich der Schüler 
+	 * Bestimmt für den übergegebenen Schüler das zugehörige Abiturjahr, sofern sich der Schüler
 	 * bereits in der gymnasialen Oberstufe befindet.
-	 *  
+	 *
 	 * @param schule          die Schule des Schülers
 	 * @param lernabschnitt   der aktuelle Lernabschnitt des Schülers
 	 * @param schuljahr       das aktuelle Schuljahr, in welchem sich der Schüler befindet
-	 * 
-	 * @return das voraussichtliche Jahr des Abiturs 
+	 *
+	 * @return das voraussichtliche Jahr des Abiturs
 	 */
-	public static Integer getAbiturjahr(Schule schule, DTOSchuelerLernabschnittsdaten lernabschnitt, int schuljahr) {
+	public static Integer getAbiturjahr(final Schule schule, final DTOSchuelerLernabschnittsdaten lernabschnitt, final int schuljahr) {
 		if ((lernabschnitt == null) || (lernabschnitt.Schuljahresabschnitts_ID == null))
 			return null;
 		return GostAbiturjahrUtils.getGostAbiturjahr(schule.getSchulform(), lernabschnitt.Schulgliederung, schuljahr, lernabschnitt.ASDJahrgang);
 	}
-	
-	
+
+
 	/**
 	 * Ermittelt die Leistungsdaten der gymnasialen Oberstufe für den Schüler mit der
 	 * angegebenen ID aus der Datenbank.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung
 	 * @param id     die ID des Schülers
-	 * 
+	 *
 	 * @return die Leistungsdaten der gymnasialen Oberstufe für den Schüler mit der
 	 *         angegebenen ID
 	 */
-	public static GostLeistungen getLeistungsdaten(DBEntityManager conn, long id) {
-		Schule schule = Schule.queryCached(conn);
-    	
-		DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+	public static GostLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) {
+		final Schule schule = Schule.queryCached(conn);
+
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
 			throw OperationError.NOT_FOUND.exception();
-		
+
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
+		final DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
 		if (abschnittSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
 
-		Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
+		final Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
 
 		// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
-		List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
 				.stream()
 				.sorted((l1, l2) -> {
-					DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
-					DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
+					final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
+					final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
 					return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 				})
 				.collect(Collectors.toList());
 
 		// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
-		DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
-		    	
-		Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktLernabschnitt, abschnittSchueler.Jahr);
-    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
-		
+		final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
+
+		final Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktLernabschnitt, abschnittSchueler.Jahr);
+    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
+
 		// Ermittle nun die Leistungsdaten aus den Lernabschnitten
-		GostLeistungen daten = new GostLeistungen();
+		final GostLeistungen daten = new GostLeistungen();
 		daten.id = schueler.ID;
 		daten.aktuellesSchuljahr = abschnittSchueler.Jahr;
 		daten.aktuellerJahrgang = aktLernabschnitt.ASDJahrgang;
 		daten.sprachendaten = sprachendaten;
-		String biliZweig = aktLernabschnitt.BilingualerZweig;
+		final String biliZweig = aktLernabschnitt.BilingualerZweig;
 		if ((biliZweig != null) && (!"".equals(biliZweig)))
 			daten.bilingualeSprache = biliZweig.toUpperCase().substring(0, 1);
 		// eine HashMap zur temporären Speicherung der Fächer -> muss später noch sortiert werden
-		HashMap<String, GostLeistungenFachwahl> faecher = new HashMap<>(); 
-		for (DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
-			DTOSchuljahresabschnitte abschnittLeistungsdaten = schuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
+		final HashMap<String, GostLeistungenFachwahl> faecher = new HashMap<>();
+		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
+			final DTOSchuljahresabschnitte abschnittLeistungsdaten = schuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
 			if (abschnittLeistungsdaten == null)
 				continue;
-			
-			GostHalbjahr halbjahr = schule.istImQuartalsmodus()  
+
+			final GostHalbjahr halbjahr = schule.istImQuartalsmodus()
 					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnittLeistungsdaten.Abschnitt + 1) / 2)
 					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
 			if ((halbjahr != null) && (lernabschnitt.SemesterWertung))
 				daten.bewertetesHalbjahr[halbjahr.id] = true;
-			
-			List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
-			for (DTOSchuelerLeistungsdaten leistung : leistungen) {				
+
+			final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+			for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 				// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
-				GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg); 
+				final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
 				if (kursart == null)
 					continue;
 				// Prüfe, ob das Fach ein Fach der Oberstufe ist
-				GostFach gostFach = gostFaecher.get(leistung.Fach_ID);
+				final GostFach gostFach = gostFaecher.get(leistung.Fach_ID);
 				if (gostFach == null)
 					continue;
 				// Füge die Fächer aus den Leistungsdaten zunächst in die HashMap ein...
@@ -131,15 +131,15 @@ public class GostSchueler {
 					faecher.put(gostFach.kuerzelAnzeige, fach);
 				}
 				// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
-				String fremdsprache = GostFachManager.getFremdsprache(gostFach); 
+				final String fremdsprache = GostFachManager.getFremdsprache(gostFach);
 				if (fremdsprache != null)
 					fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
-				
-				GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
+
+				final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 				fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
-				
+
 				// Füge eine Belegung der Kurse für die einzelnen Fächer in dem Halbjahr ein
-				GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
+				final GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
 				belegung.id = leistung.ID;
 				belegung.schuljahr = abschnittLeistungsdaten.Jahr;
 				belegung.halbjahrKuerzel = (halbjahr == null) ? null : halbjahr.kuerzel;
@@ -149,8 +149,8 @@ public class GostSchueler {
 				belegung.lehrer = leistung.Fachlehrer_ID;
 				belegung.notenKuerzel = leistung.NotenKrz.kuerzel;
 				belegung.kursartKuerzel = kursart.kuerzel;
-				belegung.istSchriftlich = (kursart == GostKursart.LK) 
-						|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart)) 
+				belegung.istSchriftlich = (kursart == GostKursart.LK)
+						|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
 								|| ("AB3".equals(leistung.Kursart))
 								|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 				belegung.bilingualeSprache = gostFach.biliSprache;
@@ -158,8 +158,8 @@ public class GostSchueler {
 				belegung.fehlstundenGesamt = leistung.FehlStd == null ? 0 : leistung.FehlStd;
 				belegung.fehlstundenUnentschuldigt = leistung.uFehlStd == null ? 0 : leistung.uFehlStd;
 				fach.belegungen.add(belegung);
-				
-				// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer 
+
+				// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer
 				if (kursart == GostKursart.PJK) {
 					daten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
 					daten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
@@ -170,89 +170,89 @@ public class GostSchueler {
 		}
 		// Sortiere Fächer anhand der SII-Sortierung der Fächer
 		faecher.values().stream()
-			.sorted((a,b) -> {return Integer.compare(a.fach.sortierung, b.fach.sortierung);})
+			.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
 			.forEach(f -> daten.faecher.add(f));
 		return daten;
 	}
 
-	
+
 
 	/**
 	 * Ermittelt die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
 	 * angegebenen IDs aus der Datenbank.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung
 	 * @param ids    die IDs der Schüler
-	 * 
+	 *
 	 * @return die Leistungsdaten der gymnasialen Oberstufe für die Schüler mit den
 	 *         angegebenen IDs
 	 */
-	public static Map<Long, GostLeistungen> getLeistungsdaten(DBEntityManager conn, List<Long> ids) {
-		Schule schule = Schule.queryCached(conn);
-		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste ! 
-    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, null);
+	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) {
+		final Schule schule = Schule.queryCached(conn);
+		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
+    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, null);
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		
+
     	// TODO optimize DB-Access by using db queries with IN (...)
-    	HashMap<Long, GostLeistungen> result = new HashMap<>();
-    	for (Long id : ids) {
+    	final HashMap<Long, GostLeistungen> result = new HashMap<>();
+    	for (final Long id : ids) {
     		if (id == null)
     			throw OperationError.BAD_REQUEST.exception();
-    		
-			DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+
+			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 			if (schueler == null)
 				throw OperationError.NOT_FOUND.exception();
 
-			DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
+			final DTOSchuljahresabschnitte abschnittSchueler = schuljahresabschnitte.get(schueler.Schuljahresabschnitts_ID);
 			if (abschnittSchueler == null)
 				throw OperationError.NOT_FOUND.exception();
-			
-			Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
+
+			final Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
 
 			// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
-			List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
 					.stream()
 					.sorted((l1, l2) -> {
-						DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
-						DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
+						final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
+						final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
 						return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 					})
 					.collect(Collectors.toList());
-	    	
+
 			// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
-			DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
-			
+			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
+
 			// Ermittle nun die Leistungsdaten aus den Lernabschnitten
-			GostLeistungen daten = new GostLeistungen();
+			final GostLeistungen daten = new GostLeistungen();
 			daten.id = schueler.ID;
 			daten.aktuellesSchuljahr = abschnittSchueler.Jahr;
 			daten.aktuellerJahrgang = aktLernabschnitt.ASDJahrgang;
 			daten.sprachendaten = sprachendaten;
-			String biliZweig = aktLernabschnitt.BilingualerZweig;
+			final String biliZweig = aktLernabschnitt.BilingualerZweig;
 			if ((biliZweig != null) && (!"".equals(biliZweig)))
 				daten.bilingualeSprache = biliZweig.toUpperCase().substring(0, 1);
 			// eine HashMap zur temporären Speicherung der Fächer -> muss später noch sortiert werden
-			HashMap<String, GostLeistungenFachwahl> faecher = new HashMap<>(); 
-			for (DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
-				DTOSchuljahresabschnitte abschnittLeistungsdaten = schuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
+			final HashMap<String, GostLeistungenFachwahl> faecher = new HashMap<>();
+			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
+				final DTOSchuljahresabschnitte abschnittLeistungsdaten = schuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
 				if (abschnittLeistungsdaten == null)
 					continue;
 				if (!("EF".equals(lernabschnitt.ASDJahrgang) || "Q1".equals(lernabschnitt.ASDJahrgang) || "Q2".equals(lernabschnitt.ASDJahrgang)))
 					continue;
-				GostHalbjahr halbjahr = schule.istImQuartalsmodus()  
+				final GostHalbjahr halbjahr = schule.istImQuartalsmodus()
 						? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnittLeistungsdaten.Abschnitt + 1) / 2)
 						: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
 				if (lernabschnitt.SemesterWertung)
-					daten.bewertetesHalbjahr[halbjahr.id] = true;  
-				
-				List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
-				for (DTOSchuelerLeistungsdaten leistung : leistungen) {				
+					daten.bewertetesHalbjahr[halbjahr.id] = true;
+
+				final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+				for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 					// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
-					GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg); 
+					final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
 					if (kursart == null)
-						continue; 
-					GostFach gostFach = gostFaecher.get(leistung.Fach_ID);
+						continue;
+					final GostFach gostFach = gostFaecher.get(leistung.Fach_ID);
 					// Füge die Fächer aus den Leistungsdaten zunächst in die HashMap ein...
 					GostLeistungenFachwahl fach = faecher.get(gostFach.kuerzelAnzeige);
 					if (fach == null) {
@@ -261,15 +261,15 @@ public class GostSchueler {
 						faecher.put(gostFach.kuerzelAnzeige, fach);
 					}
 					// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
-					String fremdsprache = GostFachManager.getFremdsprache(gostFach); 
+					final String fremdsprache = GostFachManager.getFremdsprache(gostFach);
 					if (fremdsprache != null)
 						fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
-					
-					GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
+
+					final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 					fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
-					
+
 					// Füge eine Belegung der Kurse für die einzelnen Fächer in dem Halbjahr ein
-					GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
+					final GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
 					belegung.id = leistung.ID;
 					belegung.schuljahr = abschnittLeistungsdaten.Jahr;
 					belegung.halbjahrKuerzel = (halbjahr == null) ? null : halbjahr.kuerzel;
@@ -279,8 +279,8 @@ public class GostSchueler {
 					belegung.lehrer = leistung.Fachlehrer_ID;
 					belegung.notenKuerzel = leistung.NotenKrz.kuerzel;
 					belegung.kursartKuerzel = kursart.kuerzel;
-					belegung.istSchriftlich = (kursart == GostKursart.LK) 
-							|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart)) 
+					belegung.istSchriftlich = (kursart == GostKursart.LK)
+							|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
 									|| ("AB3".equals(leistung.Kursart))
 									|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 					belegung.bilingualeSprache = gostFach.biliSprache;
@@ -288,8 +288,8 @@ public class GostSchueler {
 					belegung.fehlstundenGesamt = leistung.FehlStd;
 					belegung.fehlstundenUnentschuldigt = leistung.uFehlStd;
 					fach.belegungen.add(belegung);
-					
-					// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer 
+
+					// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer
 					if (kursart == GostKursart.PJK) {
 						daten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
 						daten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
@@ -300,12 +300,11 @@ public class GostSchueler {
 			}
 			// Sortiere Fächer anhand der SII-Sortierung der Fächer
 			faecher.values().stream()
-				.sorted((a,b) -> {return Integer.compare(a.fach.sortierung, b.fach.sortierung);})
+				.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
 				.forEach(f -> daten.faecher.add(f));
 			result.put(id, daten);
     	}
     	return result;
 	}
-	
 
 }

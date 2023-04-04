@@ -19,22 +19,22 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link Schuljahresabschnitt}.
  */
-public class DataSchuljahresabschnitte extends DataManager<Long> {
+public final class DataSchuljahresabschnitte extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Schuljahresabschnitt}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataSchuljahresabschnitte(DBEntityManager conn) {
+	public DataSchuljahresabschnitte(final DBEntityManager conn) {
 		super(conn);
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuljahresabschnitte} in einen Core-DTO {@link Schuljahresabschnitt}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuljahresabschnitte} in einen Core-DTO {@link Schuljahresabschnitt}.
 	 */
-	private Function<DTOSchuljahresabschnitte, Schuljahresabschnitt> dtoMapper = (DTOSchuljahresabschnitte abschnitt) -> {
-		Schuljahresabschnitt daten = new Schuljahresabschnitt();
+	private final Function<DTOSchuljahresabschnitte, Schuljahresabschnitt> dtoMapper = (final DTOSchuljahresabschnitte abschnitt) -> {
+		final Schuljahresabschnitt daten = new Schuljahresabschnitt();
 		daten.id = abschnitt.ID;
 		daten.schuljahr = abschnitt.Jahr;
 		daten.abschnitt = abschnitt.Abschnitt;
@@ -42,13 +42,13 @@ public class DataSchuljahresabschnitte extends DataManager<Long> {
 	};
 
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link Schuljahresabschnitt}.  
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link Schuljahresabschnitt}.
 	 */
-	private Comparator<Schuljahresabschnitt> dataComparator = (a,b) -> {
-		int tmp = Integer.compare(a.schuljahr, b.schuljahr);
-		return tmp == 0 ? Integer.compare(a.abschnitt, b.abschnitt) : tmp; 
+	private final Comparator<Schuljahresabschnitt> dataComparator = (a, b) -> {
+		final int tmp = Integer.compare(a.schuljahr, b.schuljahr);
+		return tmp == 0 ? Integer.compare(a.abschnitt, b.abschnitt) : tmp;
 	};
-	
+
 
 	@Override
 	public Response getAll() {
@@ -58,32 +58,32 @@ public class DataSchuljahresabschnitte extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-    	List<Schuljahresabschnitt> daten = this.getAbschnitte();
+    	final List<Schuljahresabschnitt> daten = this.getAbschnitte();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	/**
 	 * Gibt alle Schuljahresabschnitte der Schule in einer sortierten Liste zurück.
-	 * 
+	 *
 	 * @return die Liste der Schuljahresabschnitt
 	 */
 	public List<Schuljahresabschnitt> getAbschnitte() {
 		// Schuljahresabschnitte aus den Leistungsdaten bestimmen
-		List<DTOSchuljahresabschnitte> abschnitte = conn.queryAll(DTOSchuljahresabschnitte.class);
+		final List<DTOSchuljahresabschnitte> abschnitte = conn.queryAll(DTOSchuljahresabschnitte.class);
     	if (abschnitte == null)
     		return null;
     	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
 	}
-	
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

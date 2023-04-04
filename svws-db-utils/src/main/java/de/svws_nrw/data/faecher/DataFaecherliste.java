@@ -18,22 +18,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link FaecherListeEintrag}.
  */
-public class DataFaecherliste extends DataManager<Long> {
+public final class DataFaecherliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FaecherListeEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataFaecherliste(DBEntityManager conn) {
+	public DataFaecherliste(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FaecherListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FaecherListeEintrag}.
 	 */
-	private Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (DTOFach f) -> {
-		FaecherListeEintrag eintrag = new FaecherListeEintrag();
+	private final Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (final DTOFach f) -> {
+		final FaecherListeEintrag eintrag = new FaecherListeEintrag();
 		eintrag.id = f.ID;
 		eintrag.kuerzel = f.Kuerzel;
 		eintrag.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
@@ -47,10 +47,10 @@ public class DataFaecherliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-    	List<DTOFach> faecher = conn.queryAll(DTOFach.class);
+    	final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
     	if (faecher == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<FaecherListeEintrag> daten = faecher.stream().map(f -> dtoMapperFach.apply(f)).sorted((a,b) -> Long.compare(a.sortierung, b.sortierung)).collect(Collectors.toList());
+    	final List<FaecherListeEintrag> daten = faecher.stream().map(f -> dtoMapperFach.apply(f)).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -60,13 +60,13 @@ public class DataFaecherliste extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

@@ -21,22 +21,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link BetriebListeEintrag}.
  */
-public class DataBetriebsliste extends DataManager<Long> {
+public final class DataBetriebsliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BetriebListeEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataBetriebsliste(DBEntityManager conn) {
+	public DataBetriebsliste(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAllgemeineAdresse} in einen Core-DTO {@link BetriebListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAllgemeineAdresse} in einen Core-DTO {@link BetriebListeEintrag}.
 	 */
-	private Function<DTOKatalogAllgemeineAdresse, BetriebListeEintrag> dtoMapper = (DTOKatalogAllgemeineAdresse b) -> {
-		BetriebListeEintrag eintrag = new BetriebListeEintrag();
+	private final Function<DTOKatalogAllgemeineAdresse, BetriebListeEintrag> dtoMapper = (final DTOKatalogAllgemeineAdresse b) -> {
+		final BetriebListeEintrag eintrag = new BetriebListeEintrag();
 		eintrag.id = b.ID;
 		eintrag.adressArt = b.adressArt;
 		eintrag.name1 = b.name1;
@@ -46,12 +46,12 @@ public class DataBetriebsliste extends DataManager<Long> {
 		eintrag.ort_id = b.ort_id;
 		return eintrag;
 	};
-	
+
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link BetriebListeEintrag}.  
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link BetriebListeEintrag}.
 	 */
-	private Comparator<BetriebListeEintrag> dataComparator = (a, b) -> {
-		Collator collator = Collator.getInstance(Locale.GERMAN);
+	private final Comparator<BetriebListeEintrag> dataComparator = (a, b) -> {
+		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		return collator.compare(a.name1, b.name1);
 	};
 
@@ -62,20 +62,20 @@ public class DataBetriebsliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryAll(DTOKatalogAllgemeineAdresse.class);
+		final List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryAll(DTOKatalogAllgemeineAdresse.class);
 		if (betriebe == null)
 			return OperationError.NOT_FOUND.getResponse("Keine Betriebe vorhanden.");
-		List<BetriebListeEintrag> daten = betriebe.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList()); 
+		final List<BetriebListeEintrag> daten = betriebe.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

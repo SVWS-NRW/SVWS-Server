@@ -29,19 +29,19 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link StundenplanZeitraster}.
  */
-public class DataSchuelerStundenplan extends DataManager<Long> {
+public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 	private final Long idStundenplan;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link StundenplanZeitraster}.
-	 * 
+	 *
 	 * @param conn          die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idStundenplan die ID des Stundenplans, dessen Zeitraster abgefragt
 	 *                      wird
 	 */
-	public DataSchuelerStundenplan(DBEntityManager conn, Long idStundenplan) {
+	public DataSchuelerStundenplan(final DBEntityManager conn, final Long idStundenplan) {
 		super(conn);
 		this.idStundenplan = idStundenplan;
 	}
@@ -57,47 +57,47 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long idSchueler) {
-		DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+	public Response get(final Long idSchueler) {
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 
-		List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr IS NULL",
 				DTOSchuelerLernabschnittsdaten.class).setParameter("sja", stundenplan.Schuljahresabschnitts_ID)
 				.setParameter("sid", idSchueler).getResultList();
 		if ((lernabschnittsdaten == null) || (lernabschnittsdaten.size() != 1))
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan())
 					.build();
-		DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
-		Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
+		final Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
 
-		Vector<SchuelerStundenplanUnterricht> spUnterricht = new Vector<>();
+		final Vector<SchuelerStundenplanUnterricht> spUnterricht = new Vector<>();
 
-		List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
+		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
 				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
 		if ((leistungsdaten == null) || (leistungsdaten.isEmpty()))
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan())
 					.build();
 
-		List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
-		Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream()
+		final List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
+		final Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream()
 				.collect(Collectors.toMap(l -> l.ID, l -> l));
 
-		List<Long> faecher = leistungsdaten.stream().map(ld -> ld.Fach_ID).filter(f -> f != null).toList();
-		Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream()
+		final List<Long> faecher = leistungsdaten.stream().map(ld -> ld.Fach_ID).filter(f -> f != null).toList();
+		final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream()
 				.collect(Collectors.toMap(f -> f.ID, f -> f));
 
-		List<Long> kursIDs = leistungsdaten.stream().map(ld -> ld.Kurs_ID).filter(k -> k != null).toList();
+		final List<Long> kursIDs = leistungsdaten.stream().map(ld -> ld.Kurs_ID).filter(k -> k != null).toList();
 
-		String sqlKursIDs = !kursIDs.isEmpty() ? "e.Kurs_ID IN :kids OR " : "";
+		final String sqlKursIDs = !kursIDs.isEmpty() ? "e.Kurs_ID IN :kids OR " : "";
 
-		List<DTOStundenplanUnterrichtKlasse> listSuk = conn.queryNamed("DTOStundenplanUnterrichtKlasse.klasse_id",
+		final List<DTOStundenplanUnterrichtKlasse> listSuk = conn.queryNamed("DTOStundenplanUnterrichtKlasse.klasse_id",
 				lernabschnitt.Klassen_ID, DTOStundenplanUnterrichtKlasse.class);
 
-		String klIDs = !listSuk.isEmpty() ? "e.ID IN :klid" : "1=2";
+		final String klIDs = !listSuk.isEmpty() ? "e.ID IN :klid" : "1=2";
 
-		TypedQuery<DTOStundenplanUnterricht> tq = conn.query(
+		final TypedQuery<DTOStundenplanUnterricht> tq = conn.query(
 				"SELECT e FROM DTOStundenplanUnterricht e JOIN DTOStundenplanZeitraster z ON e.Zeitraster_ID = z.ID AND z.Stundenplan_ID = :spid AND ("
 						+ sqlKursIDs + klIDs + ")",
 				DTOStundenplanUnterricht.class).setParameter("spid", stundenplan.ID);
@@ -106,18 +106,18 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 			tq.setParameter("klid", listSuk.stream().map(suk -> suk.Unterricht_ID).toList());
 		if (!kursIDs.isEmpty())
 			tq.setParameter("kids", kursIDs);
-		Map<Long, List<DTOStundenplanUnterricht>> mapUnterricht = tq.getResultList().stream()
+		final Map<Long, List<DTOStundenplanUnterricht>> mapUnterricht = tq.getResultList().stream()
 				.collect(Collectors.groupingBy(su -> (su.Kurs_ID != null ? su.Kurs_ID : su.Fach_ID)));
 
 		leistungsdaten.stream().forEach(ld -> {
-			List<DTOStundenplanUnterricht> unterricht = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
+			final List<DTOStundenplanUnterricht> unterricht = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
 			if ((unterricht == null) || (leistungsdaten.isEmpty()))
 				// TODO Wirklich eine Exception?
 				throw OperationError.NOT_FOUND.exception();
-			DTOLehrer l = mapLehrer.get(ld.Fachlehrer_ID);
-			DTOFach f = mapFaecher.get(ld.Fach_ID);
+			final DTOLehrer l = mapLehrer.get(ld.Fachlehrer_ID);
+			final DTOFach f = mapFaecher.get(ld.Fach_ID);
 			unterricht.stream().forEach(u -> {
-				SchuelerStundenplanUnterricht ssu = new SchuelerStundenplanUnterricht();
+				final SchuelerStundenplanUnterricht ssu = new SchuelerStundenplanUnterricht();
 				ssu.fachBezeichnung = (f == null) ? "" : f.Bezeichnung;
 				ssu.fachKuerzel = (f == null) ? "" : f.Kuerzel;
 				ssu.fachKuerzelStatistik = (f == null) ? "" : f.StatistikFach.daten.kuerzelASD;
@@ -136,7 +136,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 		});
 
 		// Erstelle das Core-DTO-Objekt für die Response
-		SchuelerStundenplan daten = new SchuelerStundenplan();
+		final SchuelerStundenplan daten = new SchuelerStundenplan();
 		daten.idStundenplan = idStundenplan;
 		daten.bezeichnungStundenplan = stundenplan.Beschreibung;
 		daten.gueltigAb = stundenplan.Beginn;
@@ -153,7 +153,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 	}
 
 	@Override
-	public Response patch(Long idSchueler, InputStream is) {
+	public Response patch(final Long idSchueler, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

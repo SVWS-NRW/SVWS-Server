@@ -16,21 +16,21 @@ import de.svws_nrw.db.DBEntityManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link BerufskollegAnlageKatalogEintrag}.
  */
-public class DataKatalogBerufskollegAnlagen extends DataManager<Long> {
+public final class DataKatalogBerufskollegAnlagen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BerufskollegAnlageKatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogBerufskollegAnlagen(DBEntityManager conn) {
+	public DataKatalogBerufskollegAnlagen(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<BerufskollegAnlageKatalogEintrag> daten = new Vector<>();
-		for (BerufskollegAnlage anlagen : BerufskollegAnlage.values())
+		final Vector<BerufskollegAnlageKatalogEintrag> daten = new Vector<>();
+		for (final BerufskollegAnlage anlagen : BerufskollegAnlage.values())
 			daten.addAll(Arrays.asList(anlagen.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -41,13 +41,13 @@ public class DataKatalogBerufskollegAnlagen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link JahrgangsKatalogEintrag}.
  */
-public class DataKatalogJahrgaenge extends DataManager<Long> {
+public final class DataKatalogJahrgaenge extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link JahrgangsKatalogEintrag}.
@@ -23,11 +23,11 @@ public class DataKatalogJahrgaenge extends DataManager<Long> {
 	public DataKatalogJahrgaenge() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<JahrgangsKatalogEintrag> daten = new Vector<>();
-		for (Jahrgaenge jg : Jahrgaenge.values())
+		final Vector<JahrgangsKatalogEintrag> daten = new Vector<>();
+		for (final Jahrgaenge jg : Jahrgaenge.values())
 			daten.addAll(Arrays.asList(jg.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -38,13 +38,13 @@ public class DataKatalogJahrgaenge extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

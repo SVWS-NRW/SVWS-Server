@@ -13,26 +13,26 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecherSicherung aus einer 
- * LuPO-Datenbank im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecherSicherung aus einer
+ * LuPO-Datenbank im Access-Format genutzt.
  */
-public class ABPSchuelerFaecherSicherung {
+public final class ABPSchuelerFaecherSicherung {
 
 	/** Eine laufende ID der Zuordnung von Fächern zum Schüler */
 	public int ID = -1;
-	
+
 	/** Die LuPO-Schüler-ID */
 	public int Schueler_ID = -1;
-	
+
 	/** Die ID ds zugeordneten Faches */
 	public int Fach_ID = -1;
-	
+
 	/** Das Kürzel des zugeordneten Faches */
 	public String FachKrz;
-	
+
 	/** Gibt an, ab welchem Jahrgang die Fremdsprache belegt wurde. */
-	public String FS_BeginnJg = null; 
-	
+	public String FS_BeginnJg = null;
+
 	/** Gibt an, als wievielte Fremdsprache eine Fremdsprache gewählt wurde. */
 	public String Sprachenfolge = null;
 
@@ -102,25 +102,25 @@ public class ABPSchuelerFaecherSicherung {
 	/** Gibt an, ob das Fach im 4. Halbjahr der Q-Phase vom Benutzer geändert werden darf */
 	public String Aendern_Q4 = null;
 
-	
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecherSicherung" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Fächerzuordnungen der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchuelerFaecherSicherung> read(Database db) {
+	public static List<ABPSchuelerFaecherSicherung> read(final Database db) {
 		try {
-			List<ABPSchuelerFaecherSicherung> liste = new Vector<>();
-			Table table = db.getTable("ABP_SchuelerFaecherSicherung");
-			for (Row r : table) {
-				ABPSchuelerFaecherSicherung zuordnung = new ABPSchuelerFaecherSicherung();
+			final List<ABPSchuelerFaecherSicherung> liste = new Vector<>();
+			final Table table = db.getTable("ABP_SchuelerFaecherSicherung");
+			for (final Row r : table) {
+				final ABPSchuelerFaecherSicherung zuordnung = new ABPSchuelerFaecherSicherung();
 				zuordnung.ID = r.getInt("ID");
 				zuordnung.Schueler_ID = r.getInt("Schueler_ID");
 				zuordnung.Fach_ID = r.getInt("Fach_ID");
 				zuordnung.FachKrz = r.getString("FachKrz");
-				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg"); 
+				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg");
 				zuordnung.Sprachenfolge = r.getString("Sprachenfolge");
 				zuordnung.Kursart_E1 = r.getString("Kursart_E1");
 				zuordnung.Punkte_E1 = r.getString("Punkte_E1");
@@ -147,7 +147,7 @@ public class ABPSchuelerFaecherSicherung {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -155,13 +155,13 @@ public class ABPSchuelerFaecherSicherung {
 
 	/**
 	 * Schreibt die angegebenen Schüler-Fächer-Zuordnungen in die übergebene Datenbank.
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler-Fächer-Zuordnung
 	 */
-	public static void write(Database db, List<ABPSchuelerFaecherSicherung> list) {
+	public static void write(final Database db, final List<ABPSchuelerFaecherSicherung> list) {
 		try {
-			Table table = new TableBuilder("ABP_SchuelerFaecherSicherung")
+			final Table table = new TableBuilder("ABP_SchuelerFaecherSicherung")
 				.addColumn(new ColumnBuilder("ID", DataType.LONG))
 				.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
 				.addColumn(new ColumnBuilder("Fach_ID", DataType.LONG))
@@ -193,13 +193,13 @@ public class ABPSchuelerFaecherSicherung {
 			    .toTable(db);
 			if (list == null)
 				return;
-			for (ABPSchuelerFaecherSicherung zuordnung: list) {
+			for (final ABPSchuelerFaecherSicherung zuordnung: list) {
 				table.addRow(
 					zuordnung.ID,
 					zuordnung.Schueler_ID,
 					zuordnung.Fach_ID,
 					zuordnung.FachKrz,
-					zuordnung.FS_BeginnJg, 
+					zuordnung.FS_BeginnJg,
 					zuordnung.Sprachenfolge,
 					zuordnung.Kursart_E1,
 					zuordnung.Punkte_E1,
@@ -223,9 +223,9 @@ public class ABPSchuelerFaecherSicherung {
 					zuordnung.Aendern_Q2,
 					zuordnung.Aendern_Q3,
 					zuordnung.Aendern_Q4
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -233,11 +233,11 @@ public class ABPSchuelerFaecherSicherung {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuelerFaecherSicherung zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFaecherSicherung
 	 */
 	public static List<ABPSchuelerFaecherSicherung> getDefault() {
-		List<ABPSchuelerFaecherSicherung> faecherSicherung = new Vector<>();
+		final List<ABPSchuelerFaecherSicherung> faecherSicherung = new Vector<>();
 		return faecherSicherung;
 	}
 

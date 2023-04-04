@@ -18,22 +18,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link KatalogEintrag}.
  */
-public class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long> {
+public final class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogSchuelerFahrschuelerarten(DBEntityManager conn) {
+	public DataKatalogSchuelerFahrschuelerarten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFahrschuelerart} in einen Core-DTO {@link KatalogEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFahrschuelerart} in einen Core-DTO {@link KatalogEintrag}.
 	 */
-	private Function<DTOFahrschuelerart, KatalogEintrag> dtoMapper = (DTOFahrschuelerart k) -> {
-		KatalogEintrag eintrag = new KatalogEintrag();
+	private final Function<DTOFahrschuelerart, KatalogEintrag> dtoMapper = (final DTOFahrschuelerart k) -> {
+		final KatalogEintrag eintrag = new KatalogEintrag();
 		eintrag.id = k.ID;
 		eintrag.kuerzel = k.ID.toString();
 		eintrag.text = k.Bezeichnung;
@@ -44,10 +44,10 @@ public class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		List<DTOFahrschuelerart> katalog = conn.queryAll(DTOFahrschuelerart.class);
+		final List<DTOFahrschuelerart> katalog = conn.queryAll(DTOFahrschuelerart.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
+    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -57,13 +57,13 @@ public class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

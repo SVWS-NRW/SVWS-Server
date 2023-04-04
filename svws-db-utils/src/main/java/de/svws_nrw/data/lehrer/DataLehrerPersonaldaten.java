@@ -21,23 +21,23 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link LehrerPersonaldaten}.
  */
-public class DataLehrerPersonaldaten extends DataManager<Long> {
+public final class DataLehrerPersonaldaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerPersonaldaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataLehrerPersonaldaten(DBEntityManager conn) {
+	public DataLehrerPersonaldaten(final DBEntityManager conn) {
 		super(conn);
 	}
 
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerPersonaldaten}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerPersonaldaten}.
 	 */
-	private Function<DTOLehrer, LehrerPersonaldaten> dtoMapper = (DTOLehrer lehrer) -> {
-		LehrerPersonaldaten daten = new LehrerPersonaldaten();
+	private final Function<DTOLehrer, LehrerPersonaldaten> dtoMapper = (final DTOLehrer lehrer) -> {
+		final LehrerPersonaldaten daten = new LehrerPersonaldaten();
 		daten.id = lehrer.ID;
 		daten.identNrTeil1 = lehrer.identNrTeil1;
 		daten.identNrTeil2SerNr = lehrer.identNrTeil2SerNr;
@@ -52,7 +52,7 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
 		daten.rechtsverhaeltnis = lehrer.Rechtsverhaeltnis;
 		daten.beschaeftigungsart = lehrer.Beschaeftigungsart;
 		daten.einsatzstatus = lehrer.Einsatzstatus;
-		daten.stammschulnummer = lehrer.StammschulNr;		
+		daten.stammschulnummer = lehrer.StammschulNr;
 		return daten;
 	};
 
@@ -65,34 +65,34 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+    	final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
     	if (lehrer == null)
     		return OperationError.NOT_FOUND.getResponse();
-		LehrerPersonaldaten daten = dtoMapper.apply(lehrer);
+		final LehrerPersonaldaten daten = dtoMapper.apply(lehrer);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-        
+
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
-    	Map<String, Object> map = JSONMapper.toMap(is);
+	public Response patch(final Long id, final InputStream is) {
+    	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-	    		DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+	    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
 		    	if (lehrer == null)
 		    		throw OperationError.NOT_FOUND.exception();
-		    	for (Entry<String, Object> entry : map.entrySet()) {
-		    		String key = entry.getKey();
-		    		Object value = entry.getValue();
+		    	for (final Entry<String, Object> entry : map.entrySet()) {
+		    		final String key = entry.getKey();
+		    		final Object value = entry.getValue();
 		    		switch (key) {
 						case "id" -> {
-							Long patch_id = JSONMapper.convertToLong(value, true);
+							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
@@ -120,8 +120,8 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
 		    	}
 		    	conn.transactionPersist(lehrer);
 		    	conn.transactionCommit();
-    		} catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+    		} catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {
@@ -131,5 +131,5 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
     	}
     	return Response.status(Status.OK).build();
 	}
-	
+
 }

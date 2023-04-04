@@ -16,21 +16,21 @@ import de.svws_nrw.db.DBEntityManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link PruefungsordnungKatalogEintrag}.
  */
-public class DataKatalogPruefungsordnungen extends DataManager<Long> {
+public final class DataKatalogPruefungsordnungen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link PruefungsordnungKatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogPruefungsordnungen(DBEntityManager conn) {
+	public DataKatalogPruefungsordnungen(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<PruefungsordnungKatalogEintrag> daten = new Vector<>();
-		for (Pruefungsordnung verordnung : Pruefungsordnung.values())
+		final Vector<PruefungsordnungKatalogEintrag> daten = new Vector<>();
+		for (final Pruefungsordnung verordnung : Pruefungsordnung.values())
 			daten.addAll(Arrays.asList(verordnung.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -41,13 +41,13 @@ public class DataKatalogPruefungsordnungen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

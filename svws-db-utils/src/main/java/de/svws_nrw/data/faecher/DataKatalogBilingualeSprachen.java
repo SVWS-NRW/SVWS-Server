@@ -18,52 +18,52 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-Type {@link BilingualeSprache}.
  */
-public class DataKatalogBilingualeSprachen extends DataManager<Long> {
+public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-Type {@link BilingualeSprache}.
-	 * 
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff 
+	 *
+	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 *               (hier: Abfrage der Schuldaten, zur Ermittlung der Schulform)
 	 */
-	public DataKatalogBilingualeSprachen(DBEntityManager conn) {
+	public DataKatalogBilingualeSprachen(final DBEntityManager conn) {
 		super(conn);
 	}
 
 	@Override
 	public Response getAll() {
-        Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
-        for (BilingualeSprache gruppe : BilingualeSprache.values())
+        final Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
+        for (final BilingualeSprache gruppe : BilingualeSprache.values())
             daten.addAll(Arrays.asList(gruppe.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() {
-        DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+        final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
         if (schule == null)
             return OperationError.NOT_FOUND.getResponse();
-    	var sprachen = BilingualeSprache.get(schule.Schulform);
+    	final var sprachen = BilingualeSprache.get(schule.Schulform);
     	if (sprachen == null)
     		return OperationError.NOT_FOUND.getResponse();
-        Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
-        for (BilingualeSprache sprache : sprachen)
+        final Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
+        for (final BilingualeSprache sprache : sprachen)
             daten.addAll(Arrays.asList(sprache.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 	    if (id == null)
             return OperationError.NOT_FOUND.getResponse();
-	    BilingualeSpracheKatalogEintrag daten = BilingualeSprache.getKatalogEintragByID(id);
+	    final BilingualeSpracheKatalogEintrag daten = BilingualeSprache.getKatalogEintragByID(id);
 	    if (daten == null)
             return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

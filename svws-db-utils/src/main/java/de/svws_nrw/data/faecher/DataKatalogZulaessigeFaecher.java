@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link FachKatalogEintrag}.
  */
-public class DataKatalogZulaessigeFaecher extends DataManager<Long> {
+public final class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link FachKatalogEintrag}.
@@ -23,11 +23,11 @@ public class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 	public DataKatalogZulaessigeFaecher() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<FachKatalogEintrag> daten = new Vector<>();
-		for (ZulaessigesFach f : ZulaessigesFach.values())
+		final Vector<FachKatalogEintrag> daten = new Vector<>();
+		for (final ZulaessigesFach f : ZulaessigesFach.values())
 			daten.addAll(Arrays.asList(f.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -38,13 +38,13 @@ public class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link UebergangsempfehlungKatalogEintrag}.
  */
-public class DataKatalogUebergangsempfehlung extends DataManager<Long> {
+public final class DataKatalogUebergangsempfehlung extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link UebergangsempfehlungKatalogEintrag}.
@@ -23,11 +23,11 @@ public class DataKatalogUebergangsempfehlung extends DataManager<Long> {
 	public DataKatalogUebergangsempfehlung() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<UebergangsempfehlungKatalogEintrag> daten = new Vector<>();
-		for (Uebergangsempfehlung eintrag : Uebergangsempfehlung.values())
+		final Vector<UebergangsempfehlungKatalogEintrag> daten = new Vector<>();
+		for (final Uebergangsempfehlung eintrag : Uebergangsempfehlung.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -38,13 +38,13 @@ public class DataKatalogUebergangsempfehlung extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

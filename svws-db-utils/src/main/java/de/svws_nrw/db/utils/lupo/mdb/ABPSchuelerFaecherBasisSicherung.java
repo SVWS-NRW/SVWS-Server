@@ -13,26 +13,26 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecherBasisSicherung aus einer 
- * LuPO-Datenbank im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecherBasisSicherung aus einer
+ * LuPO-Datenbank im Access-Format genutzt.
  */
-public class ABPSchuelerFaecherBasisSicherung {
+public final class ABPSchuelerFaecherBasisSicherung {
 
 	/** Eine laufende ID der Zuordnung von Fächern zum Schüler */
 	public int ID = -1;
-	
+
 	/** Die LuPO-Schüler-ID */
 	public int Schueler_ID = -1;
-	
+
 	/** Die ID ds zugeordneten Faches */
 	public int Fach_ID = -1;
-	
+
 	/** Das Kürzel des zugeordneten Faches */
 	public String FachKrz;
-	
+
 	/** Gibt an, ab welchem Jahrgang die Fremdsprache belegt wurde. */
-	public String FS_BeginnJg = null; 
-	
+	public String FS_BeginnJg = null;
+
 	/** Gibt an, als wievielte Fremdsprache eine Fremdsprache gewählt wurde. */
 	public String Sprachenfolge = null;
 
@@ -71,10 +71,10 @@ public class ABPSchuelerFaecherBasisSicherung {
 
 	/** Gibt die Notenpunkte des gewählten Faches in der Q-Phase im 4. Halbjahr an, falls bereits Noten vorliegenen */
 	public String Punkte_Q4 = null;
-	
+
 	/** Gibt an, ob das Fach als 1., 2., 3., 4. Abiturfach oder nicht als Abiturfach gewählt wurde. */
 	public Integer AbiturFach = null;
-	
+
 	/** Die Sortierung des Faches in der Wahl */
 	public int Sortierung = 32000;
 
@@ -84,26 +84,26 @@ public class ABPSchuelerFaecherBasisSicherung {
 	/** Das Aufgabenfeld des Faches */
 	public int Aufgabenfeld = -1;
 
-	
+
 	/**
-	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecherBasisSicherung" aus der 
+	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecherBasisSicherung" aus der
 	 * LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Fächerzuordnungen der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchuelerFaecherBasisSicherung> read(Database db) {
+	public static List<ABPSchuelerFaecherBasisSicherung> read(final Database db) {
 		try {
-			List<ABPSchuelerFaecherBasisSicherung> liste = new Vector<>();
-			Table table = db.getTable("ABP_SchuelerFaecherBasisSicherung");
-			for (Row r : table) {
-				ABPSchuelerFaecherBasisSicherung zuordnung = new ABPSchuelerFaecherBasisSicherung();
+			final List<ABPSchuelerFaecherBasisSicherung> liste = new Vector<>();
+			final Table table = db.getTable("ABP_SchuelerFaecherBasisSicherung");
+			for (final Row r : table) {
+				final ABPSchuelerFaecherBasisSicherung zuordnung = new ABPSchuelerFaecherBasisSicherung();
 				zuordnung.ID = r.getInt("ID");
 				zuordnung.Schueler_ID = r.getInt("Schueler_ID");
 				zuordnung.Fach_ID = r.getInt("Fach_ID");
 				zuordnung.FachKrz = r.getString("FachKrz");
-				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg"); 
+				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg");
 				zuordnung.Sprachenfolge = r.getString("Sprachenfolge");
 				zuordnung.Kursart_E1 = r.getString("Kursart_E1");
 				zuordnung.Punkte_E1 = r.getString("Punkte_E1");
@@ -124,7 +124,7 @@ public class ABPSchuelerFaecherBasisSicherung {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -132,13 +132,13 @@ public class ABPSchuelerFaecherBasisSicherung {
 
 	/**
 	 * Schreibt die angegebenen Schüler-Fächer-Zuordnungen in die übergebene Datenbank.
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler-Fächer-Zuordnung
 	 */
-	public static void write(Database db, List<ABPSchuelerFaecherBasisSicherung> list) {
+	public static void write(final Database db, final List<ABPSchuelerFaecherBasisSicherung> list) {
 		try {
-			Table table = new TableBuilder("ABP_SchuelerFaecherBasisSicherung")
+			final Table table = new TableBuilder("ABP_SchuelerFaecherBasisSicherung")
 				.addColumn(new ColumnBuilder("ID", DataType.LONG))
 				.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
 				.addColumn(new ColumnBuilder("Fach_ID", DataType.LONG))
@@ -164,13 +164,13 @@ public class ABPSchuelerFaecherBasisSicherung {
 			    .toTable(db);
 			if (list == null)
 				return;
-			for (ABPSchuelerFaecherBasisSicherung zuordnung: list) {
+			for (final ABPSchuelerFaecherBasisSicherung zuordnung: list) {
 				table.addRow(
 					zuordnung.ID,
 					zuordnung.Schueler_ID,
 					zuordnung.Fach_ID,
 					zuordnung.FachKrz,
-					zuordnung.FS_BeginnJg, 
+					zuordnung.FS_BeginnJg,
 					zuordnung.Sprachenfolge,
 					zuordnung.Kursart_E1,
 					zuordnung.Punkte_E1,
@@ -188,9 +188,9 @@ public class ABPSchuelerFaecherBasisSicherung {
 					zuordnung.Sortierung,
 					zuordnung.Fachgruppe,
 					zuordnung.Aufgabenfeld
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -198,11 +198,11 @@ public class ABPSchuelerFaecherBasisSicherung {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuelerFaecherBasisSicherung zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFaecherBasisSicherung
 	 */
 	public static List<ABPSchuelerFaecherBasisSicherung> getDefault() {
-		List<ABPSchuelerFaecherBasisSicherung> faecherBasisSicherung = new Vector<>();
+		final List<ABPSchuelerFaecherBasisSicherung> faecherBasisSicherung = new Vector<>();
 		return faecherBasisSicherung;
 	}
 

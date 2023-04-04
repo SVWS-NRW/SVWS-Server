@@ -24,17 +24,17 @@ public class Schueler {
 	 *
 	 * @return die Sprachenfolge
 	 */
-	public static Sprachendaten getSchuelerSprachendaten(DBEntityManager conn, long id) {
+	public static Sprachendaten getSchuelerSprachendaten(final DBEntityManager conn, final long id) {
 
-        Sprachendaten sprachendaten = new Sprachendaten();
+        final Sprachendaten sprachendaten = new Sprachendaten();
         sprachendaten.schuelerID = id;
 
         // Lese die Sprachbelegungen (Sprachenfolge) aus der Datenbank ein
-        List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
-		for (DTOSchuelerSprachenfolge dtoSprachbelegung : dtoSprachenfolge) {
+        final List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
+		for (final DTOSchuelerSprachenfolge dtoSprachbelegung : dtoSprachenfolge) {
 			if ((dtoSprachbelegung.Schueler_ID == null) || (dtoSprachbelegung.ASDJahrgangVon == null))
 				continue;
-			Sprachbelegung belegung = new Sprachbelegung();
+			final Sprachbelegung belegung = new Sprachbelegung();
 			belegung.sprache = dtoSprachbelegung.Sprache;
 			belegung.reihenfolge = dtoSprachbelegung.ReihenfolgeNr;
 			belegung.belegungVonJahrgang = dtoSprachbelegung.ASDJahrgangVon;
@@ -50,15 +50,15 @@ public class Schueler {
 		}
 
         // Lese die Sprachprüfungen aus der Datenbank ein
-        List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", id, DTOSchuelerSprachpruefungen.class);
-        for (DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
+        final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", id, DTOSchuelerSprachpruefungen.class);
+        for (final DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
             if ((dtoSprachpruefung.Schueler_ID == null) || (dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null) || (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
                 continue;
-            Sprachpruefung pruefung = new Sprachpruefung();
+            final Sprachpruefung pruefung = new Sprachpruefung();
             pruefung.sprache = dtoSprachpruefung.Sprache;
             pruefung.anspruchsniveauId = dtoSprachpruefung.Anspruchsniveau.daten.id;
-            pruefung.ersetzteSprache =dtoSprachpruefung.ErsetzteSprache;
-            pruefung.jahrgang =dtoSprachpruefung.ASDJahrgang;
+            pruefung.ersetzteSprache = dtoSprachpruefung.ErsetzteSprache;
+            pruefung.jahrgang = dtoSprachpruefung.ASDJahrgang;
             pruefung.istHSUPruefung = dtoSprachpruefung.IstHSUPruefung;
             pruefung.istFeststellungspruefung = dtoSprachpruefung.IstFeststellungspruefung;
             pruefung.kannErstePflichtfremdspracheErsetzen = dtoSprachpruefung.KannErstePflichtfremdspracheErsetzen;

@@ -32,30 +32,30 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen 
+ * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu dem Abiturbereich von Schülern der gymnasialen Oberstufe zur Verfügung.
  */
 public class GostSchuelerAbitur {
 
 	/**
-	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen 
-	 * ID aus den Leistungsdaten in der Datenbank.  
-	 * 
+	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen
+	 * ID aus den Leistungsdaten in der Datenbank.
+	 *
 	 * @param conn   die Datenbankverbindung
 	 * @param id     die ID des Schülers
-	 * 
+	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 */
-    public static Abiturdaten getAbiturdatenAusLeistungsdaten(DBEntityManager conn, long id) {
-    	GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
+    public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) {
+    	final GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
     	if (leistungen == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	
+
     	// TODO bestimme ggf. einen Teil der Daten aus den LuPO-Wahlen des Schülers
-    	
+
 		if (!"Q2".equals(leistungen.aktuellerJahrgang))
 			return null;
-		Abiturdaten abidaten = new Abiturdaten();
+		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = leistungen.id;
 		abidaten.schuljahrAbitur = leistungen.aktuellesSchuljahr;
 		abidaten.abiturjahr = abidaten.schuljahrAbitur + 1;
@@ -64,27 +64,27 @@ public class GostSchuelerAbitur {
 		abidaten.projektKursThema = leistungen.projektkursThema;
 		abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
 		abidaten.projektkursLeitfach2Kuerzel = leistungen.projektkursLeitfach2Kuerzel;
-		for (GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
-		for (GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
-			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung 
-			AbiturFachbelegung fach = new AbiturFachbelegung();
+		for (final GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
+			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
+			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			fach.fachID = leistungenFach.fach.id;
 			fach.istFSNeu = leistungenFach.istFSNeu;
 			fach.abiturFach = GostAbiturFach.fromID(leistungenFach.abiturfach) == null ? null : leistungenFach.abiturfach;
-			for (GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
+			for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 				if (!leistungenBelegung.abschnittGewertet)
 					continue;
 
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
-				if ((letzteBelegungHalbjahr == null || GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0) 
+				if ((letzteBelegungHalbjahr == null || GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0)
 						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null) && leistungenBelegung.abschnittGewertet) {
 					letzteBelegungHalbjahr = GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel);
 					fach.letzteKursart = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				}
 
 				// Erzeuge die zugehörige Belegung
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null : GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
 				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				belegung.schriftlich = leistungenBelegung.istSchriftlich;
@@ -93,7 +93,7 @@ public class GostSchuelerAbitur {
 				belegung.wochenstunden = leistungenBelegung.wochenstunden;
 				belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
 				belegung.fehlstundenUnentschuldigt = leistungenBelegung.fehlstundenUnentschuldigt;
-				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).kuerzel;				
+				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).kuerzel;
 				fach.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id] = belegung;
 			}
 			abidaten.fachbelegungen.add(fach);
@@ -102,8 +102,8 @@ public class GostSchuelerAbitur {
 		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
 		int block1FehlstundenGesamt = 0;
 		int block1FehlstundenUnentschuldigt = 0;
-		for (AbiturFachbelegung fach : abidaten.fachbelegungen) {
-			for (AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
+		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
+			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
 				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
 					continue;
 				block1FehlstundenGesamt += belegung.fehlstundenGesamt;
@@ -111,67 +111,67 @@ public class GostSchuelerAbitur {
 			}
 		}
 		abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
-		abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;		
-		
+		abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
+
 		// und gib die Abiturdaten zurück...
-		return abidaten;    	
+		return abidaten;
     }
 
-    
-    
+
+
 	/**
-	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen 
+	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen
 	 * ID aus den in der Datenbank gespeicherten Abiturtabellen.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung
 	 * @param id     die ID des Schülers
-	 * 
+	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 */
-    public static Abiturdaten getAbiturdaten(DBEntityManager conn, long id) {
+    public static Abiturdaten getAbiturdaten(final DBEntityManager conn, final long id) {
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
-    	Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
+    	final Abiturdaten abidatenVergleich = getAbiturdatenAusLeistungsdaten(conn, id);
 
     	// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
+    	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
+		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
 		if (dtoAbschnitt == null)
 			throw OperationError.NOT_FOUND.exception();
-		    	
-		// Lese die Abiturdaten anhand der ID aus der Datenbank 
-		List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryNamed("DTOSchuelerAbitur.schueler_id", id, DTOSchuelerAbitur.class);
+
+		// Lese die Abiturdaten anhand der ID aus der Datenbank
+		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryNamed("DTOSchuelerAbitur.schueler_id", id, DTOSchuelerAbitur.class);
 		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.size() == 0))
 			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
-		DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
-		List<DTOSchuelerAbiturFach> faecher = conn.queryNamed("DTOSchuelerAbiturFach.schueler_id", id, DTOSchuelerAbiturFach.class);
-		if (faecher == null) 
+		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
+		final List<DTOSchuelerAbiturFach> faecher = conn.queryNamed("DTOSchuelerAbiturFach.schueler_id", id, DTOSchuelerAbiturFach.class);
+		if (faecher == null)
 			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 
         // Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
-		List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
-		
-		DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
-		
+		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
+
+		final DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;
 		if (dtoSchuelerAbitur.Schuljahresabschnitts_ID != null) {
-			DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchuelerAbitur.Schuljahresabschnitts_ID); 
+			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 			if (abschnitt != null)
-				abiturjahr = abschnitt.Jahr + 1; 
+				abiturjahr = abschnitt.Jahr + 1;
 		}
 		if (abiturjahr == null)
 			abiturjahr = abidatenVergleich.abiturjahr;
-		
+
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
-    			
-		// Kopiere die DTOs in die Abiturdaten-Klasse 
-		Abiturdaten abidaten = new Abiturdaten();
+    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
+
+		// Kopiere die DTOs in die Abiturdaten-Klasse
+		final Abiturdaten abidaten = new Abiturdaten();
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
 		abidaten.schuljahrAbitur = dtoAbschnittPruefung == null ? null : dtoAbschnittPruefung.Jahr;
 		abidaten.abiturjahr = abiturjahr;
@@ -179,25 +179,25 @@ public class GostSchuelerAbitur {
 		abidaten.block1FehlstundenGesamt = dtoSchuelerAbitur.FehlstundenSumme == null ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
 		abidaten.block1FehlstundenUnentschuldigt = dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt == null ? -1 : dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
-		for (DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht == true))
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht))
 				abidaten.latinum = true;
 		abidaten.kleinesLatinum = false;
-		for (DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht == true))
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht))
 				abidaten.kleinesLatinum = true;
 		abidaten.graecum = false;
-		for (DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.G.daten.kuerzel.equals(folge.Sprache) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht == true))
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+			if (ZulaessigesFach.G.daten.kuerzel.equals(folge.Sprache) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht))
 				abidaten.graecum = true;
 		abidaten.hebraicum = false;
-		for (DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.H.daten.kuerzel.equals(folge.Sprache) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht == true))
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+			if (ZulaessigesFach.H.daten.kuerzel.equals(folge.Sprache) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht))
 				abidaten.hebraicum = true;
 		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
 		abidaten.besondereLernleistungNotenKuerzel = dtoSchuelerAbitur.BesondereLernleistungNotenpunkte.kuerzel;
 		abidaten.besondereLernleistungThema = dtoSchuelerAbitur.BesondereLernleistungThema;
-		
+
 		abidaten.block1AnzahlKurse = dtoSchuelerAbitur.BlockI_AnzahlKurseEingebracht;
 		abidaten.block1DefiziteGesamt = dtoSchuelerAbitur.BlockI_AnzahlDefiziteEingebracht;
 		abidaten.block1DefiziteLK = dtoSchuelerAbitur.BlockI_AnzahlDefiziteLK;
@@ -207,28 +207,28 @@ public class GostSchuelerAbitur {
 		abidaten.block1NotenpunkteDurchschnitt = dtoSchuelerAbitur.BlockI_NotenpunktdurchschnittEingebrachterKurse;
 		abidaten.block1Zulassung = !"-".equals(dtoSchuelerAbitur.BlockI_HatZulassung);
 		abidaten.freiwilligerRuecktritt = "R".equals(dtoSchuelerAbitur.BlockI_HatZulassung);
-		
+
 		abidaten.block2DefiziteGesamt = dtoSchuelerAbitur.Pruefung_AnzahlDefizite;
 		abidaten.block2DefiziteLK = dtoSchuelerAbitur.Pruefung_AnzahlDefiziteLK;
 		abidaten.block2PunktSumme = dtoSchuelerAbitur.Pruefung_Punktsumme;
-		
+
 		abidaten.gesamtPunkte = dtoSchuelerAbitur.AbiturGesamtPunktzahl;
 		abidaten.gesamtPunkteVerbesserung = dtoSchuelerAbitur.VerbesserungAbPunktzahl;
 		abidaten.pruefungBestanden = dtoSchuelerAbitur.Pruefung_hatBestanden;
 		abidaten.note = dtoSchuelerAbitur.AbiturNote;
-		
+
 		// Füge die Fächerdaten hinzu...
-		for (DTOSchuelerAbiturFach dto : faecher) {
-			AbiturFachbelegung fach = new AbiturFachbelegung();
-			GostFach gostFach = gostFaecher.get(dto.Fach_ID);
+		for (final DTOSchuelerAbiturFach dto : faecher) {
+			final AbiturFachbelegung fach = new AbiturFachbelegung();
+			final GostFach gostFach = gostFaecher.get(dto.Fach_ID);
 			fach.fachID = dto.Fach_ID;
 			fach.letzteKursart = dto.KursartAllgemein == null ? null : dto.KursartAllgemein.kuerzel;
 			fach.abiturFach = dto.AbiturFach == null ? null : dto.AbiturFach.id;
 			if (dto.KursartAllgemein == GostKursart.PJK) {
 			    if (gostFach == null) {
-			        DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
-			        DTOFach dtoLeitfach1 = dtoFach.ProjektKursLeitfach1_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
-                    DTOFach dtoLeitfach2 = dtoFach.ProjektKursLeitfach2_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
+			        final DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
+			        final DTOFach dtoLeitfach1 = dtoFach.ProjektKursLeitfach1_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
+                    final DTOFach dtoLeitfach2 = dtoFach.ProjektKursLeitfach2_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
                     abidaten.projektkursLeitfach1Kuerzel = dtoLeitfach1 == null ? null : dtoLeitfach1.Kuerzel;
                     abidaten.projektkursLeitfach2Kuerzel = dtoLeitfach2 == null ? null : dtoLeitfach2.Kuerzel;
 			    } else {
@@ -249,21 +249,21 @@ public class GostSchuelerAbitur {
 			fach.block2Punkte = dto.PruefungPunktsummeGesamt;
 			fach.block2Pruefer = dto.Fachlehrer_ID;
 			if (dto.EF_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr ef1 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr ef1 = new AbiturFachbelegungHalbjahr();
 				ef1.halbjahrKuerzel = GostHalbjahr.EF1.kuerzel;
 				ef1.notenkuerzel = dto.EF_HJ1_Notenpunkte.kuerzel;
 				ef1.schriftlich = (dto.EF_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				fach.belegungen[GostHalbjahr.EF1.id] = ef1;
 			}
 			if (dto.EF_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr ef2 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr ef2 = new AbiturFachbelegungHalbjahr();
 				ef2.halbjahrKuerzel = GostHalbjahr.EF2.kuerzel;
 				ef2.notenkuerzel = dto.EF_HJ2_Notenpunkte.kuerzel;
 				ef2.schriftlich = (dto.EF_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				fach.belegungen[GostHalbjahr.EF2.id] = ef2;
 			}
 			if (dto.Q1_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr q11 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr q11 = new AbiturFachbelegungHalbjahr();
 				q11.halbjahrKuerzel = GostHalbjahr.Q11.kuerzel;
 				q11.notenkuerzel = dto.Q1_HJ1_Notenpunkte.kuerzel;
 				q11.schriftlich = (dto.Q1_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
@@ -273,7 +273,7 @@ public class GostSchuelerAbitur {
 				fach.belegungen[GostHalbjahr.Q11.id] = q11;
 			}
 			if (dto.Q1_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr q12 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr q12 = new AbiturFachbelegungHalbjahr();
 				q12.halbjahrKuerzel = GostHalbjahr.Q12.kuerzel;
 				q12.notenkuerzel = dto.Q1_HJ2_Notenpunkte.kuerzel;
 				q12.schriftlich = (dto.Q1_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
@@ -283,7 +283,7 @@ public class GostSchuelerAbitur {
 				fach.belegungen[GostHalbjahr.Q12.id] = q12;
 			}
 			if (dto.Q2_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr q21 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr q21 = new AbiturFachbelegungHalbjahr();
 				q21.halbjahrKuerzel = GostHalbjahr.Q21.kuerzel;
 				q21.notenkuerzel = dto.Q2_HJ1_Notenpunkte.kuerzel;
 				q21.schriftlich = (dto.Q2_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
@@ -293,7 +293,7 @@ public class GostSchuelerAbitur {
 				fach.belegungen[GostHalbjahr.Q21.id] = q21;
 			}
 			if (dto.Q2_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
-				AbiturFachbelegungHalbjahr q22 = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr q22 = new AbiturFachbelegungHalbjahr();
 				q22.halbjahrKuerzel = GostHalbjahr.Q22.kuerzel;
 				q22.notenkuerzel = dto.Q2_HJ2_Notenpunkte.kuerzel;
 				q22.schriftlich = (dto.Q2_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
@@ -301,20 +301,20 @@ public class GostSchuelerAbitur {
 				q22.block1gewertet = dto.Q2_HJ2_MarkiertFuerAbiturBerechnung.fuerBerechnung;
 				q22.block1kursAufZeugnis = dto.Q2_HJ2_MarkiertFuerAbiturBerechnung.aufAbiturZeugnis;
 				fach.belegungen[GostHalbjahr.Q22.id] = q22;
-			}		
+			}
 			abidaten.fachbelegungen.add(fach);
 		}
-		
+
 		// Markiere alles Gost-Halbjahre als gewertet
-		for (GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = true;
-		
+
 		// Kopiere Abiturdaten, welche nicht in den Abitur-DB-Tabellen direkt vorhanden sind
 		abidaten.sprachendaten = abidatenVergleich.sprachendaten;
 		abidaten.bilingualeSprache = abidatenVergleich.bilingualeSprache;
-		for (AbiturFachbelegung fach : abidaten.fachbelegungen) {
+		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
 			AbiturFachbelegung fachVergleich = null;
-			for (AbiturFachbelegung f : abidatenVergleich.fachbelegungen) {
+			for (final AbiturFachbelegung f : abidatenVergleich.fachbelegungen) {
 				if (f.fachID == fach.fachID) {
 					fachVergleich = f;
 					break;
@@ -323,16 +323,16 @@ public class GostSchuelerAbitur {
 			if (fachVergleich == null)
 				continue;
 			fach.istFSNeu = fachVergleich.istFSNeu;
-			for (AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
+			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
 				if (belegung == null)
 					continue;
-				AbiturFachbelegungHalbjahr belegungVergleich = fachVergleich.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id];
+				final AbiturFachbelegungHalbjahr belegungVergleich = fachVergleich.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id];
 				if (belegungVergleich == null)
 					continue;
 				if (GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istEinfuehrungsphase()) {
 					belegung.wochenstunden = belegungVergleich.wochenstunden;
 				}
-				GostKursart tmpKursart = GostKursart.fromKuerzel(belegungVergleich.kursartKuerzel); 
+				final GostKursart tmpKursart = GostKursart.fromKuerzel(belegungVergleich.kursartKuerzel);
 				belegung.kursartKuerzel = (tmpKursart == null) ? null : tmpKursart.kuerzel;
 				fach.letzteKursart = belegung.kursartKuerzel;
 				belegung.biliSprache = belegungVergleich.biliSprache;
@@ -341,9 +341,9 @@ public class GostSchuelerAbitur {
 				belegung.fehlstundenUnentschuldigt = belegungVergleich.fehlstundenUnentschuldigt;
 			}
 		}
-		
+
 		// gib die Abiturdaten zurück.
-		return abidaten;    	
+		return abidaten;
     }
-	
+
 }

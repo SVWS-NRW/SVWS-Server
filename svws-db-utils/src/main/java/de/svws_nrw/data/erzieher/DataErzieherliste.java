@@ -18,22 +18,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link ErzieherListeEintrag}.
  */
-public class DataErzieherliste extends DataManager<Long> {
+public final class DataErzieherliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ErzieherListeEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataErzieherliste(DBEntityManager conn) {
+	public DataErzieherliste(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherListeEintrag}.
 	 */
-	private Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher1 = (DTOSchuelerErzieherAdresse e) -> {
-		ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
+	private final Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher1 = (final DTOSchuelerErzieherAdresse e) -> {
+		final ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
 		eintrag.id = e.ID * 10 + 1;
         eintrag.idSchueler = e.Schueler_ID;
         eintrag.idErzieherArt = e.ErzieherArt_ID;
@@ -45,10 +45,10 @@ public class DataErzieherliste extends DataManager<Long> {
 	};
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln des zweiten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln des zweiten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherListeEintrag}.
 	 */
-	private Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher2 = (DTOSchuelerErzieherAdresse e) -> {
-		ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
+	private final Function<DTOSchuelerErzieherAdresse, ErzieherListeEintrag> dtoMapperErzieher2 = (final DTOSchuelerErzieherAdresse e) -> {
+		final ErzieherListeEintrag eintrag = new ErzieherListeEintrag();
 		eintrag.id = e.ID * 10 + 2;
         eintrag.idSchueler = e.Schueler_ID;
         eintrag.idErzieherArt = e.ErzieherArt_ID;
@@ -61,10 +61,10 @@ public class DataErzieherliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-    	List<DTOSchuelerErzieherAdresse> erzieher = conn.queryAll(DTOSchuelerErzieherAdresse.class);
+    	final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryAll(DTOSchuelerErzieherAdresse.class);
     	if (erzieher == null)
     		return OperationError.NOT_FOUND.getResponse();
-        List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).collect(Collectors.toList());
+        final List<ErzieherListeEintrag> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).collect(Collectors.toList());
         daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).collect(Collectors.toList()));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -75,12 +75,12 @@ public class DataErzieherliste extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

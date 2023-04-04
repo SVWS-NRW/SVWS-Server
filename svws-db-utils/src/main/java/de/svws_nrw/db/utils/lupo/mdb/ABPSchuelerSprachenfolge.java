@@ -15,10 +15,10 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_SchuelerSprachenfolge aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_SchuelerSprachenfolge aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPSchuelerSprachenfolge {
+public final class ABPSchuelerSprachenfolge {
 
 	/** Die ID des Schülers in der SVWS-Datenbank */
 	public int Schueler_ID = -1;
@@ -47,17 +47,17 @@ public class ABPSchuelerSprachenfolge {
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerSprachenfolge" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Fächerzuordnungen der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchuelerSprachenfolge> read(Database db) {
+	public static List<ABPSchuelerSprachenfolge> read(final Database db) {
 		try {
-			List<ABPSchuelerSprachenfolge> liste = new Vector<>();
-			Table table = db.getTable("ABP_SchuelerSprachenfolge");
-			for (Row r : table) {
-				ABPSchuelerSprachenfolge zuordnung = new ABPSchuelerSprachenfolge();
+			final List<ABPSchuelerSprachenfolge> liste = new Vector<>();
+			final Table table = db.getTable("ABP_SchuelerSprachenfolge");
+			for (final Row r : table) {
+				final ABPSchuelerSprachenfolge zuordnung = new ABPSchuelerSprachenfolge();
 				zuordnung.Schueler_ID = r.getInt("Schueler_ID");
 				zuordnung.FachKrz = r.getString("FachKrz");
 				zuordnung.JahrgangVon = r.getShort("JahrgangVon");
@@ -69,7 +69,7 @@ public class ABPSchuelerSprachenfolge {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -77,13 +77,13 @@ public class ABPSchuelerSprachenfolge {
 
 	/**
 	 * Schreibt die angegebenen Schüler-Sprachenfolge in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler-Sprachenfolge
 	 */
-	public static void write(Database db, List<ABPSchuelerSprachenfolge> list) {
+	public static void write(final Database db, final List<ABPSchuelerSprachenfolge> list) {
 		try {
-			Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
+			final Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
 				.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
 				.addColumn(new ColumnBuilder("FachKrz", DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
 				.addColumn(new ColumnBuilder("JahrgangVon", DataType.INT))
@@ -96,7 +96,7 @@ public class ABPSchuelerSprachenfolge {
 			    .toTable(db);
 			if (list == null)
 				return;
-			for (ABPSchuelerSprachenfolge zuordnung: list) {
+			for (final ABPSchuelerSprachenfolge zuordnung: list) {
 				table.addRow(
 					zuordnung.Schueler_ID,
 					zuordnung.FachKrz,
@@ -106,9 +106,9 @@ public class ABPSchuelerSprachenfolge {
 					zuordnung.AbschnittVon,
 					zuordnung.AbschnittBis,
 					zuordnung.StatistikKrz
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -116,11 +116,11 @@ public class ABPSchuelerSprachenfolge {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuelerSprachenfolge zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerSprachenfolge
 	 */
 	public static List<ABPSchuelerSprachenfolge> getDefault() {
-		List<ABPSchuelerSprachenfolge> sprachenfolgen = new Vector<>();
+		final List<ABPSchuelerSprachenfolge> sprachenfolgen = new Vector<>();
 		return sprachenfolgen;
 	}
 
@@ -131,5 +131,5 @@ public class ABPSchuelerSprachenfolge {
 				+ JahrgangVon + ", JahrgangBis=" + JahrgangBis + ", Reihenfolge=" + Reihenfolge + ", AbschnittVon="
 				+ AbschnittVon + ", AbschnittBis=" + AbschnittBis + ", StatistikKrz=" + StatistikKrz + "]";
 	}
-	
+
 }

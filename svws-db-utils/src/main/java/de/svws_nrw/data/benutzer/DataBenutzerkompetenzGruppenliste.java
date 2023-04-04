@@ -15,7 +15,7 @@ import de.svws_nrw.data.DataManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link BenutzerKompetenzGruppenKatalogEintrag}.
  */
-public class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
+public final class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BenutzerKompetenzGruppenKatalogEintrag}.
@@ -23,8 +23,8 @@ public class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 	public DataBenutzerkompetenzGruppenliste() {
 		super(null);
 	}
-	
-	
+
+
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -32,20 +32,20 @@ public class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		List<BenutzerKompetenzGruppenKatalogEintrag> daten = new Vector<>();
-		for (BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values())
+		final List<BenutzerKompetenzGruppenKatalogEintrag> daten = new Vector<>();
+		for (final BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values())
 			daten.add(k.daten);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
-	}	
+	}
 
 }

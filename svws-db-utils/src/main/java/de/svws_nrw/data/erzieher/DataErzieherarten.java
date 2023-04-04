@@ -18,22 +18,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link Erzieherart}.
  */
-public class DataErzieherarten extends DataManager<Long> {
+public final class DataErzieherarten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Erzieherart}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataErzieherarten(DBEntityManager conn) {
+	public DataErzieherarten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOErzieherart} in einen Core-DTO {@link Erzieherart}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOErzieherart} in einen Core-DTO {@link Erzieherart}.
 	 */
-	private Function<DTOErzieherart, Erzieherart> dtoMapper = (DTOErzieherart e) -> {
-		Erzieherart eintrag = new Erzieherart();
+	private final Function<DTOErzieherart, Erzieherart> dtoMapper = (final DTOErzieherart e) -> {
+		final Erzieherart eintrag = new Erzieherart();
 		eintrag.id = e.ID;
         eintrag.bezeichnung = e.Bezeichnung;
     	return eintrag;
@@ -41,29 +41,29 @@ public class DataErzieherarten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-    	List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
+    	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
     	if (erzieherarten == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).collect(Collectors.toList());
+    	final List<Erzieherart> daten = erzieherarten.stream().map(dtoMapper).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() {
-    	List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
+    	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
     	if (erzieherarten == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<Erzieherart> daten = erzieherarten.stream().filter(e -> e.Sichtbar != null ? e.Sichtbar : true).map(dtoMapper).collect(Collectors.toList());
+    	final List<Erzieherart> daten = erzieherarten.stream().filter(e -> e.Sichtbar != null ? e.Sichtbar : true).map(dtoMapper).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

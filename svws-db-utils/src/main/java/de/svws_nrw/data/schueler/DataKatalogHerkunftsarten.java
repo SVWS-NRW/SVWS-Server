@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link HerkunftsartKatalogEintrag}.
  */
-public class DataKatalogHerkunftsarten extends DataManager<Long> {
+public final class DataKatalogHerkunftsarten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link HerkunftsartKatalogEintrag}.
@@ -23,11 +23,11 @@ public class DataKatalogHerkunftsarten extends DataManager<Long> {
 	public DataKatalogHerkunftsarten() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<HerkunftsartKatalogEintrag> daten = new Vector<>();
-		for (Herkunftsarten eintrag : Herkunftsarten.values())
+		final Vector<HerkunftsartKatalogEintrag> daten = new Vector<>();
+		for (final Herkunftsarten eintrag : Herkunftsarten.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -38,13 +38,13 @@ public class DataKatalogHerkunftsarten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

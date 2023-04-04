@@ -16,24 +16,24 @@ import jakarta.ws.rs.WebApplicationException;
 
 /**
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
- * zu Schüler-Lernabschnittsdaten in Bezug auf den Datenbank-Zugriff. 
+ * zu Schüler-Lernabschnittsdaten in Bezug auf den Datenbank-Zugriff.
  */
 public class DBUtilsSchuelerLernabschnittsdaten {
 
 	/**
 	 * Erstellt ein neues {@link DTOSchuelerLernabschnittsdaten}-Objekt mit Default-Werten.
-	 * 
+	 *
 	 * @param idNew                    die ID des neuen Schüler-Lernabschnitts
 	 * @param idSchueler               die ID des Schülers
 	 * @param schuljahresabschnitt     der Schuljahresabschnitt
 	 * @param klasse                   das DTO der Klassen, dem der Lernabschnitt zugeordnet wird
 	 * @param jahrgang                 das DTO des Jahrgangs, dem der Lernabschnitt zugeordnet wird
-	 * 
+	 *
 	 * @return das DB-DTO-Objekt
 	 */
 	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final DTOSchuljahresabschnitte schuljahresabschnitt,
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
-		DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false);
 		lernabschnitt.WechselNr = null;
 		lernabschnitt.Schulbesuchsjahre = null;
 		lernabschnitt.Hochrechnung = null;
@@ -68,7 +68,7 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 		lernabschnitt.Klassenart = klasse.Klassenart;
 		lernabschnitt.SumFehlStd = 0;
 		lernabschnitt.SumFehlStdU = 0;
-		lernabschnitt.Wiederholung = false; 
+		lernabschnitt.Wiederholung = false;
 		lernabschnitt.Gesamtnote_GS = null;
 		lernabschnitt.Gesamtnote_NW = null;
 		lernabschnitt.Folgeklasse_ID = null;
@@ -103,11 +103,11 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 	/**
 	 * Bestimmt den Schüler-Lernabschnitt mit dem angegebenen Schuljahresabschnitt und gibt diesen
 	 * zurück. Ist keiner vorhanden, so wird null zurückgegeben.
-	 * 
+	 *
 	 * @param conn                     die Datenbank-Verbindung
 	 * @param idSchueler               die ID des Schülers
-	 * @param idSchuljahresabschnitt   der ID des Schuljahresabschnitts 
-	 * 
+	 * @param idSchuljahresabschnitt   der ID des Schuljahresabschnitts
+	 *
 	 * @return der Schüler-Lernabschnitt oder null
 	 */
 	public static DTOSchuelerLernabschnittsdaten get(final DBEntityManager conn, final Long idSchueler, final Long idSchuljahresabschnitt) {
@@ -119,20 +119,20 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 
 
 	/**
-	 * Prüft, ob bei dem übergebenen Schüler ein Lernabschnitt mit dem übergebene Jahrgang in einem 
-	 * anderen Schuljahr und gleichen Abschnitt in diesem Jahr existiert. (Wiederholter Abschnitt)   
-	 * 
+	 * Prüft, ob bei dem übergebenen Schüler ein Lernabschnitt mit dem übergebene Jahrgang in einem
+	 * anderen Schuljahr und gleichen Abschnitt in diesem Jahr existiert. (Wiederholter Abschnitt)
+	 *
 	 * @param conn                   die Datenbank-Verbindung
-	 * @param schuljahresabschnitt   der Schuljahresabschnitt 
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt
 	 * @param idSchueler             die ID des Schülers
 	 * @param idJahrgang             die ID des Jahrgangs
-	 * 
+	 *
 	 * @return true, falls ein solcher Lernabschnitt existiert und ansonsten false
 	 */
 	public static boolean pruefeWiederholung(final DBEntityManager conn, final DTOSchuljahresabschnitte schuljahresabschnitt, final Long idSchueler, final Long idJahrgang) {
 		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null))
 			return false;
-		List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr IS NULL AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
+		final List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr IS NULL AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
 		if (schuljahresabschnitte.size() == 0)
 			return false;
@@ -144,22 +144,22 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 	/**
 	 * Bestimmt den Schüler-Lernabschnitt mit dem angegebenen Schuljahresabschnitt. Ist dieser
 	 * vorhanden, so wird er zurückgegeben.
-	 * Ist er nicht vorhanden, so wird versucht einen neuen Schüler-Lernabschnitt mit dem 
-	 * angegebenen Schuljahresabschnitt basierend auf dem Schüler-Lernabschnitt des vorigen 
-	 * Schuljahresabschnittes zu erstellen. 
+	 * Ist er nicht vorhanden, so wird versucht einen neuen Schüler-Lernabschnitt mit dem
+	 * angegebenen Schuljahresabschnitt basierend auf dem Schüler-Lernabschnitt des vorigen
+	 * Schuljahresabschnittes zu erstellen.
 	 * Ist kein voriger Schuljahresabschnitt definiert oder kein entsprechender Schüler-Lernabschnitt
-	 * vorhanden (z.B. bei Neuaufnahmen), so wird basierend auf den Daten des Schülers 
-	 * - sofern möglich - ein Lernabschnitt angelegt. 
-	 * 
+	 * vorhanden (z.B. bei Neuaufnahmen), so wird basierend auf den Daten des Schülers
+	 * - sofern möglich - ein Lernabschnitt angelegt.
+	 *
 	 * @param conn                   die Datenbank-Verbindung
 	 * @param idSchueler             die ID des Schülers
-	 * @param schuljahresabschnitt   der Schuljahresabschnitt 
-	 * 
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt
+	 *
 	 * @return der Schüler-Lernabschnitt
-	 * 
+	 *
 	 * @throws WebApplicationException   falls ein Fehler beim Erstellen des Lernabschnitts auftritt
 	 */
-	public static DTOSchuelerLernabschnittsdaten transactionGetOrCreateByPrevious(final DBEntityManager conn, final long idSchueler, 
+	public static DTOSchuelerLernabschnittsdaten transactionGetOrCreateByPrevious(final DBEntityManager conn, final long idSchueler,
 			final DTOSchuljahresabschnitte schuljahresabschnitt) throws WebApplicationException {
 		try {
 			conn.transactionBegin();
@@ -168,23 +168,23 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 			if (sla != null)
 				return sla;
 			// Bestimme die ID, mit welche der Schüler-Lernabschnitt eingefügt wird
-			DTODBAutoInkremente dbID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_SchuelerLernabschnittsdaten.name());
-			long idSLA = (dbID == null) ? 1 : dbID.MaxID + 1;
+			final DTODBAutoInkremente dbID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_SchuelerLernabschnittsdaten.name());
+			final long idSLA = (dbID == null) ? 1 : dbID.MaxID + 1;
 			// Prüfe, ob der vorige Lernabschnitt existiert
-			DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
+			final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
 			if (slaPrev != null) {
 				// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
-				boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
+				final boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
 				DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
-				if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden... 
+				if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
 					klassePrev = DBUtilsKlassen.get(conn, slaPrev.Klassen_ID);
 					if (schuljahrNeu)
 						klassePrev = DBUtilsKlassen.getFolgeKlasse(conn, klassePrev);
 				} else {
-					klassePrev = DBUtilsKlassen.get(conn, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID); 
+					klassePrev = DBUtilsKlassen.get(conn, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 				}
-				DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
-				DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID); 
+				final DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
+				final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
 				sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
 				sla.Schulbesuchsjahre = (slaPrev.Schulbesuchsjahre == null) ? null : (schuljahrNeu ? slaPrev.Schulbesuchsjahre + 1 : slaPrev.Schulbesuchsjahre);
 				sla.BilingualerZweig = slaPrev.BilingualerZweig;
@@ -204,7 +204,7 @@ public class DBUtilsSchuelerLernabschnittsdaten {
 		        return sla;
 			}
         	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts " + schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt + " des Schülers " + idSchueler + ". Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if (!conn.transactionRollback())
 	        	throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 			throw e;

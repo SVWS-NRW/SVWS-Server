@@ -15,7 +15,7 @@ import de.svws_nrw.data.DataManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link ReligionKatalogEintrag}.
  */
-public class DataKatalogReligionen extends DataManager<Long> {
+public final class DataKatalogReligionen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ReligionKatalogEintrag}.
@@ -23,11 +23,11 @@ public class DataKatalogReligionen extends DataManager<Long> {
 	public DataKatalogReligionen() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<ReligionKatalogEintrag> daten = new Vector<>();
-		for (Religion eintrag : Religion.values())
+		final Vector<ReligionKatalogEintrag> daten = new Vector<>();
+		for (final Religion eintrag : Religion.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -38,13 +38,13 @@ public class DataKatalogReligionen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

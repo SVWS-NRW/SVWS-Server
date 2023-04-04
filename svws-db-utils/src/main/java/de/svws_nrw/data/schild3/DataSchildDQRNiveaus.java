@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link Schild3KatalogEintragDQRNiveaus}.
  */
-public class DataSchildDQRNiveaus extends DataManager<Long> {
+public final class DataSchildDQRNiveaus extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Schild3KatalogEintragDQRNiveaus}.
@@ -23,10 +23,10 @@ public class DataSchildDQRNiveaus extends DataManager<Long> {
 	public DataSchildDQRNiveaus() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		List<Schild3KatalogEintragDQRNiveaus> katalog = CsvReader.fromResource("daten/csv/schild3/DQRNiveaus.csv", Schild3KatalogEintragDQRNiveaus.class);
+		final List<Schild3KatalogEintragDQRNiveaus> katalog = CsvReader.fromResource("daten/csv/schild3/DQRNiveaus.csv", Schild3KatalogEintragDQRNiveaus.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
@@ -38,13 +38,13 @@ public class DataSchildDQRNiveaus extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

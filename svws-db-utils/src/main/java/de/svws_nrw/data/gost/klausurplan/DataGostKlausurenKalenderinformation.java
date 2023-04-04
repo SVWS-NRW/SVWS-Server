@@ -23,15 +23,15 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
  * {@link GostKlausurenKalenderinformation}.
  */
-public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
+public final class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link GostKlausurenKalenderinformation}.
-	 * 
+	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataGostKlausurenKalenderinformation(DBEntityManager conn) {
+	public DataGostKlausurenKalenderinformation(final DBEntityManager conn) {
 		super(conn);
 	}
 
@@ -45,9 +45,9 @@ public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 	 * {@link DTOGostKlausurenKalenderinformationen} in einen Core-DTO
 	 * {@link GostKlausurenKalenderinformation}.
 	 */
-	private Function<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper = (
-			DTOGostKlausurenKalenderinformationen z) -> {
-		GostKlausurenKalenderinformation daten = new GostKlausurenKalenderinformation();
+	private final Function<DTOGostKlausurenKalenderinformationen, GostKlausurenKalenderinformation> dtoMapper = (
+			final DTOGostKlausurenKalenderinformationen z) -> {
+		final GostKlausurenKalenderinformation daten = new GostKlausurenKalenderinformation();
 		daten.id = z.ID;
 		daten.bemerkung = z.Bemerkungen;
 		daten.bezeichnung = z.Bezeichnung;
@@ -62,41 +62,39 @@ public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 	/**
 	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
-	 * 
-	 * @param halbjahr das Gost-Halbjahr
-	 * 
+	 *
 	 * @return die Liste der Kursklausuren
 	 */
 	private List<GostKlausurenKalenderinformation> getKalenderinformationen() {
-		List<DTOGostKlausurenKalenderinformationen> kalInfos = conn
+		final List<DTOGostKlausurenKalenderinformationen> kalInfos = conn
 				.queryAll(DTOGostKlausurenKalenderinformationen.class);
-		List<GostKlausurenKalenderinformation> daten = new Vector<>();
-		for (DTOGostKlausurenKalenderinformationen ki : kalInfos)
+		final List<GostKlausurenKalenderinformation> daten = new Vector<>();
+		for (final DTOGostKlausurenKalenderinformationen ki : kalInfos)
 			daten.add(dtoMapper.apply(ki));
 		return daten;
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
-		Map<String, Object> map = JSONMapper.toMap(is);
+	public Response patch(final Long id, final InputStream is) {
+		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
 				conn.transactionBegin();
-				DTOGostKlausurenKalenderinformationen kalInfo = conn
+				final DTOGostKlausurenKalenderinformationen kalInfo = conn
 						.queryByKey(DTOGostKlausurenKalenderinformationen.class, id);
 				if (kalInfo == null)
 					throw OperationError.NOT_FOUND.exception();
-				for (Entry<String, Object> entry : map.entrySet()) {
-					String key = entry.getKey();
-					Object value = entry.getValue();
+				for (final Entry<String, Object> entry : map.entrySet()) {
+					final String key = entry.getKey();
+					final Object value = entry.getValue();
 					switch (key) {
 					case "id" -> {
-						Long patch_id = JSONMapper.convertToLong(value, true);
+						final Long patch_id = JSONMapper.convertToLong(value, true);
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
@@ -112,8 +110,8 @@ public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 				}
 				conn.transactionPersist(kalInfo);
 				conn.transactionCommit();
-			} catch (Exception e) {
-				if (e instanceof WebApplicationException webAppException)
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webAppException)
 					return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 			} finally {
@@ -132,26 +130,26 @@ public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 
 	/**
 	 * Erstellt eine neue Gost-KlausurenKalenderinformation
-	 * 
+	 *
 	 * @param  is das Objekt
-	 * 
+	 *
 	 * @return Eine Response mit der neuen Gost-KlausurenKalenderinformation
 	 */
-	public Response create(InputStream is) {
+	public Response create(final InputStream is) {
 		DTOGostKlausurenKalenderinformationen kalInfo = null;
 		try {
 			conn.transactionBegin();
 			// Bestimme die ID der neuen KlausurenKalenderinformation
-			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class,
+			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class,
 					"Gost_Klausuren_Kalenderinformationen");
-			Long ID = lastID == null ? 1 : lastID.MaxID + 1;
-			kalInfo = new DTOGostKlausurenKalenderinformationen(ID, false);
+			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			kalInfo = new DTOGostKlausurenKalenderinformationen(id, false);
 
-			Map<String, Object> map = JSONMapper.toMap(is);
+			final Map<String, Object> map = JSONMapper.toMap(is);
 			if (map.size() > 0) {
-				for (Entry<String, Object> entry : map.entrySet()) {
-					String key = entry.getKey();
-					Object value = entry.getValue();
+				for (final Entry<String, Object> entry : map.entrySet()) {
+					final String key = entry.getKey();
+					final Object value = entry.getValue();
 					switch (key) {
 					case "id" -> {
 						throw OperationError.BAD_REQUEST.exception();
@@ -171,29 +169,29 @@ public class DataGostKlausurenKalenderinformation extends DataManager<Long> {
 			conn.transactionPersist(kalInfo);
 			if (!conn.transactionCommit())
 				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Gost-KlausurenKalenderinformationen");
-		} catch (Exception e) {
-			if (e instanceof WebApplicationException webApplicationException)
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webApplicationException)
 				return webApplicationException.getResponse();
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		} finally {
 			conn.transactionRollback();
 		}
 
-		GostKlausurenKalenderinformation daten = dtoMapper.apply(kalInfo);
+		final GostKlausurenKalenderinformation daten = dtoMapper.apply(kalInfo);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
 	 * Löscht eine Gost-KlausurenKalenderinformation *
-	 * 
+	 *
 	 * @param id die ID der zu löschenden KlausurenKalenderinformation
-	 * 
+	 *
 	 * @return die Response
 	 */
-	public Response delete(Long id) {
+	public Response delete(final Long id) {
 		// TODO use transaction
 		// Bestimme die KlausurenKalenderinformation
-		DTOGostKlausurenKalenderinformationen kalInfo = conn.queryByKey(DTOGostKlausurenKalenderinformationen.class, id);
+		final DTOGostKlausurenKalenderinformationen kalInfo = conn.queryByKey(DTOGostKlausurenKalenderinformationen.class, id);
 		if (kalInfo == null)
 			return OperationError.NOT_FOUND.getResponse();
 		// Entferne die KlausurenKalenderinformation

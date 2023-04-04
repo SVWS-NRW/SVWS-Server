@@ -43,40 +43,40 @@ public class GostSchuelerLaufbahn {
 	 *
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 */
-    public static Abiturdaten get(DBEntityManager conn, long id) {
-    	Schule schule = Schule.queryCached(conn);
-    	DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
+    public static Abiturdaten get(final DBEntityManager conn, final long id) {
+    	final Schule schule = Schule.queryCached(conn);
+    	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	DTOSchuljahresabschnitte dtoAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchueler.Schuljahresabschnitts_ID);
+    	final DTOSchuljahresabschnitte dtoAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchueler.Schuljahresabschnitts_ID);
     	if (dtoAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 
-    	TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
-    	DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
+    	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+    	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
     			.setParameter("schueler_id", id)
     			.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)
     			.getResultList().stream().findFirst().orElse(null);
     	if (aktAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktAbschnitt, dtoAbschnitt.Jahr);
-    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktAbschnitt, dtoAbschnitt.Jahr);
+    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
     	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
     	if (dtoGostSchueler == null) {
     		dtoGostSchueler = new DTOGostSchueler(id, false);
     		if (!conn.persist(dtoGostSchueler))
     			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
     	}
-    	Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen =
+    	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen =
     			conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", id, DTOGostSchuelerFachbelegungen.class)
     			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
     	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
-    	GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
+    	final GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
     	if (leistungen == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 
-    	Abiturdaten abidaten = new Abiturdaten();
+    	final Abiturdaten abidaten = new Abiturdaten();
     	abidaten.schuelerID = id;
     	abidaten.abiturjahr = abiturjahr;
     	abidaten.schuljahrAbitur = abidaten.abiturjahr - 1;
@@ -86,16 +86,16 @@ public class GostSchuelerLaufbahn {
 		abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
 		abidaten.projektkursLeitfach2Kuerzel = leistungen.projektkursLeitfach2Kuerzel;
 
-		for (GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
 
-		for (GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
+		for (final GostLeistungenFachwahl leistungenFach : leistungen.faecher) {
 			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
-			AbiturFachbelegung fach = new AbiturFachbelegung();
+			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			fach.fachID = leistungenFach.fach.id;
 			fach.istFSNeu = leistungenFach.istFSNeu;
 			fach.abiturFach = GostAbiturFach.fromID(leistungenFach.abiturfach) == null ? null : leistungenFach.abiturfach;
-			for (GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
+			for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 				if (!leistungenBelegung.abschnittGewertet)
 					continue;
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
@@ -105,11 +105,11 @@ public class GostSchuelerLaufbahn {
 				}
 
 				// Erzeuge die zugehörige Belegung
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				belegung.halbjahrKuerzel = (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) == null) ? null : GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).kuerzel;
 				belegung.kursartKuerzel = (GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel) == null) ? null : GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				if ("AT".equals(leistungenBelegung.notenKuerzel)) {
-					GostFach gostFach = gostFaecher.get(fach.fachID);
+					final GostFach gostFach = gostFaecher.get(fach.fachID);
 					if (ZulaessigesFach.SP == ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel))
 						belegung.kursartKuerzel = "AT";
 				}
@@ -128,8 +128,8 @@ public class GostSchuelerLaufbahn {
 		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
 		int block1FehlstundenGesamt = 0;
 		int block1FehlstundenUnentschuldigt = 0;
-		for (AbiturFachbelegung fach : abidaten.fachbelegungen) {
-			for (AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
+		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
+			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
 				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
 					continue;
 				block1FehlstundenGesamt += belegung.fehlstundenGesamt;
@@ -140,27 +140,27 @@ public class GostSchuelerLaufbahn {
 		abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
 
     	// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
-		for (AbiturFachbelegung fach : abidaten.fachbelegungen) {
-			DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
+		for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
+			final DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
 			if (belegungPlanung == null) {
 			    fach.abiturFach = null;
 		    } else {
-			    GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+			    final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			    fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
 			}
 		}
 
 		// Füge gewählte Fächer ohne Leistungsdaten hinzu
-		for (DTOGostSchuelerFachbelegungen belegungPlanung : dtoFachwahlen.values()) {
+		for (final DTOGostSchuelerFachbelegungen belegungPlanung : dtoFachwahlen.values()) {
 			// filtere leere Belegungen aus der Planung
-			if ((belegungPlanung.EF1_Kursart == null) && (belegungPlanung.EF2_Kursart == null) &&
-				(belegungPlanung.Q11_Kursart == null) && (belegungPlanung.Q12_Kursart == null) &&
-				(belegungPlanung.Q21_Kursart == null) && (belegungPlanung.Q22_Kursart == null))
+			if ((belegungPlanung.EF1_Kursart == null) && (belegungPlanung.EF2_Kursart == null)
+					&& (belegungPlanung.Q11_Kursart == null) && (belegungPlanung.Q12_Kursart == null)
+					&& (belegungPlanung.Q21_Kursart == null) && (belegungPlanung.Q22_Kursart == null))
 				continue;
 
 			// Prüfe, ob die Fachbelegung aufgrund von Leistungsdaten schon vorhanden ist
 			AbiturFachbelegung fach = null;
-			for (AbiturFachbelegung fb : abidaten.fachbelegungen) {
+			for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
 				if (fb.fachID == belegungPlanung.Fach_ID) {
 					fach = fb;
 					break;
@@ -173,48 +173,47 @@ public class GostSchuelerLaufbahn {
 				abidaten.fachbelegungen.add(fach);
 			}
 
-			GostFach gostFach = gostFaecher.get(fach.fachID);
-			ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
+			final GostFach gostFach = gostFaecher.get(fach.fachID);
+			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
 			if (zulFach != null)
 				fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
-			GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
-			GostKursart fachKursart =
-					"PX".equals(gostFach.kuerzel) ? GostKursart.PJK :
-					"VX".equals(gostFach.kuerzel) ? GostKursart.VTF : GostKursart.GK;
+			final GostKursart fachKursart = "PX".equals(gostFach.kuerzel) ? GostKursart.PJK
+					: "VX".equals(gostFach.kuerzel) ? GostKursart.VTF : GostKursart.GK;
 			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
 			if ((fach.belegungen[GostHalbjahr.EF1.id] == null) && (belegungPlanung.EF1_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.EF1, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.EF1.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.EF1;
 			}
 			if ((fach.belegungen[GostHalbjahr.EF2.id] == null) && (belegungPlanung.EF2_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.EF2, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.EF2.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.EF2;
 			}
 			if ((fach.belegungen[GostHalbjahr.Q11.id] == null) && (belegungPlanung.Q11_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.Q11, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.Q11.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.Q11;
 			}
 			if ((fach.belegungen[GostHalbjahr.Q12.id] == null) && (belegungPlanung.Q12_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.Q12, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.Q12.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.Q12;
 			}
 			if ((fach.belegungen[GostHalbjahr.Q21.id] == null) && (belegungPlanung.Q21_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.Q21, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.Q21.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.Q21;
 			}
 			if ((fach.belegungen[GostHalbjahr.Q22.id] == null) && (belegungPlanung.Q22_Kursart != null)) {
-				AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
+				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
 				setFachbelegung(GostHalbjahr.Q22, belegung, belegungPlanung, fachKursart, gostFach.wochenstundenQualifikationsphase);
 				fach.belegungen[GostHalbjahr.Q22.id] = belegung;
 				letzteBelegungHalbjahr = GostHalbjahr.Q22;
@@ -231,8 +230,8 @@ public class GostSchuelerLaufbahn {
 
 
     // TODO
-    private static void setFachbelegung(GostHalbjahr halbjahr, AbiturFachbelegungHalbjahr belegung, DTOGostSchuelerFachbelegungen belegungPlanung,
-    		GostKursart fachKursart, int wochenstunden) {
+    private static void setFachbelegung(final GostHalbjahr halbjahr, final AbiturFachbelegungHalbjahr belegung, final DTOGostSchuelerFachbelegungen belegungPlanung,
+    		final GostKursart fachKursart, final int wochenstunden) {
     	belegung.halbjahrKuerzel = halbjahr.kuerzel;
 		if (halbjahr == GostHalbjahr.EF1) {
 			setFachbelegung(belegung, belegungPlanung.EF1_Kursart, fachKursart, wochenstunden, false);
@@ -251,17 +250,15 @@ public class GostSchuelerLaufbahn {
 
 
     // TODO
-    private static void setFachbelegung(AbiturFachbelegungHalbjahr belegung, String belegungPlanungKursart,
-    		GostKursart fachKursart, int wochenstunden, boolean istInAbiwertung) {
-		belegung.kursartKuerzel =
-				"AT".equals(belegungPlanungKursart) ? "AT" :
-				"LK".equals(belegungPlanungKursart) ? "LK" :
-				"ZK".equals(belegungPlanungKursart) ? "ZK" :
-				fachKursart.toString();
-		belegung.schriftlich = belegungPlanungKursart == null ? null :
-			"LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
-		belegung.wochenstunden =
-				"LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
+    private static void setFachbelegung(final AbiturFachbelegungHalbjahr belegung, final String belegungPlanungKursart,
+    		final GostKursart fachKursart, final int wochenstunden, final boolean istInAbiwertung) {
+		belegung.kursartKuerzel = "AT".equals(belegungPlanungKursart) ? "AT"
+				: "LK".equals(belegungPlanungKursart) ? "LK"
+				: "ZK".equals(belegungPlanungKursart) ? "ZK"
+				: fachKursart.toString();
+		belegung.schriftlich = belegungPlanungKursart == null ? null
+				: "LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
+		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
     }
 

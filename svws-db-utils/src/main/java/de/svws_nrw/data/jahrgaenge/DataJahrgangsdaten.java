@@ -16,22 +16,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link JahrgangsDaten}.
  */
-public class DataJahrgangsdaten extends DataManager<Long> {
+public final class DataJahrgangsdaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link JahrgangsDaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataJahrgangsdaten(DBEntityManager conn) {
+	public DataJahrgangsdaten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link JahrgangsDaten}.
 	 */
-	private Function<DTOJahrgang, JahrgangsDaten> dtoMapperJahrgang = (DTOJahrgang jahrgang) -> {
-		JahrgangsDaten daten = new JahrgangsDaten();
+	private final Function<DTOJahrgang, JahrgangsDaten> dtoMapperJahrgang = (final DTOJahrgang jahrgang) -> {
+		final JahrgangsDaten daten = new JahrgangsDaten();
 		daten.id = jahrgang.ID;
 		daten.kuerzel = jahrgang.InternKrz;
 		daten.kuerzelStatistik = jahrgang.ASDJahrgang; // TODO Anpassung beim DTO, so dass ein Konverter zu dem Statistik-Jahrgangs-Objekt genutzt wird - hierbei auch die Bezeichnung miteinbeziehen
@@ -54,19 +54,19 @@ public class DataJahrgangsdaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
+    	final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
     	if (jahrgang == null)
     		return OperationError.NOT_FOUND.getResponse();
-		JahrgangsDaten daten = dtoMapperJahrgang.apply(jahrgang);
+		final JahrgangsDaten daten = dtoMapperJahrgang.apply(jahrgang);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

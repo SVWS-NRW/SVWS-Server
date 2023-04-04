@@ -20,14 +20,14 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link GostLaufbahnplanungBeratungsdaten}.
  */
-public class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataManager<Long> {
-	
+public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataManager<Long> {
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link GostLaufbahnplanungBeratungsdaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataGostSchuelerLaufbahnplanungBeratungsdaten(DBEntityManager conn) {
+	public DataGostSchuelerLaufbahnplanungBeratungsdaten(final DBEntityManager conn) {
 		super(conn);
 	}
 
@@ -42,14 +42,14 @@ public class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataManager<L
 	}
 
 	@Override
-	public Response get(Long schueler_id) {
+	public Response get(final Long schueler_id) {
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
 		GostUtils.pruefeSchuleMitGOSt(conn);
-		DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
     	if (gostSchueler == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	GostLaufbahnplanungBeratungsdaten daten = new GostLaufbahnplanungBeratungsdaten();
+    	final GostLaufbahnplanungBeratungsdaten daten = new GostLaufbahnplanungBeratungsdaten();
     	daten.beratungslehrerID = gostSchueler.Beratungslehrer_ID;
     	daten.beratungsdatum = gostSchueler.DatumBeratung;
     	daten.kommentar = gostSchueler.Kommentar;
@@ -58,22 +58,22 @@ public class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataManager<L
 	}
 
 	@Override
-	public Response patch(Long schueler_id, InputStream is) {
-    	Map<String, Object> map = JSONMapper.toMap(is);
+	public Response patch(final Long schueler_id, final InputStream is) {
+    	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-	    		DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+	    		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
 		    	if (gostSchueler == null)
 		    		throw OperationError.NOT_FOUND.exception();
-		    	for (Entry<String, Object> entry : map.entrySet()) {
-		    		String key = entry.getKey();
-		    		Object value = entry.getValue();
+		    	for (final Entry<String, Object> entry : map.entrySet()) {
+		    		final String key = entry.getKey();
+		    		final Object value = entry.getValue();
 		    		switch (key) {
 		    			case "beratungslehrerID" -> {
-		    				Long beratungslehrerID = JSONMapper.convertToLong(value, true);
+		    				final Long beratungslehrerID = JSONMapper.convertToLong(value, true);
 		    				if (beratungslehrerID != null) {
-		    					DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, beratungslehrerID);
+		    					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, beratungslehrerID);
 		    					if (lehrer == null)
 		    						throw OperationError.CONFLICT.exception();
 		    				}
@@ -87,8 +87,8 @@ public class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataManager<L
 		    	}
 		    	conn.transactionPersist(gostSchueler);
 		    	conn.transactionCommit();
-    		} catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+    		} catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {

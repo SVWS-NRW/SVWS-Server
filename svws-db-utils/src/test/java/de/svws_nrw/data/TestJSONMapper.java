@@ -11,7 +11,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
 
 
 /**
- * Diese Klasse prüft die Methoden der {@link JSONMapper}-Klasse.  
+ * Diese Klasse prüft die Methoden der {@link JSONMapper}-Klasse.
  */
 public class TestJSONMapper {
 	/**
@@ -20,7 +20,7 @@ public class TestJSONMapper {
 	@Test
 	void testStringCompression() {
 		try {
-			SchuelerListeEintrag original = new SchuelerListeEintrag();
+			final SchuelerListeEintrag original = new SchuelerListeEintrag();
 			original.id = 42;
 			original.vorname = "Max";
 			original.nachname = "Mustermann";
@@ -31,8 +31,8 @@ public class TestJSONMapper {
 			original.schulgliederung = Schulgliederung.GY8.daten.kuerzel;
 			original.kurse.add(142L);
 			original.kurse.add(1433L);
-			byte[] encoded = JSONMapper.gzipByteArrayFromObject(original);
-			SchuelerListeEintrag decoded = JSONMapper.toObjectGZip(encoded, SchuelerListeEintrag.class);
+			final byte[] encoded = JSONMapper.gzipByteArrayFromObject(original);
+			final SchuelerListeEintrag decoded = JSONMapper.toObjectGZip(encoded, SchuelerListeEintrag.class);
 			assertEquals(original.id, decoded.id);
 			assertEquals(original.vorname, decoded.vorname);
 			assertEquals(original.nachname, decoded.nachname);
@@ -44,7 +44,7 @@ public class TestJSONMapper {
 			assertEquals(original.kurse.size(), decoded.kurse.size());
 			for (int i = 0; i < original.kurse.size(); i++)
 				assertEquals(original.kurse.get(i), decoded.kurse.get(i));
-		} catch (CompressionException e) {
+		} catch (final CompressionException e) {
 			fail(e);
 		}
 	}

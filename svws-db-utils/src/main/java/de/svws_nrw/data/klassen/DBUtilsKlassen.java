@@ -9,40 +9,40 @@ import jakarta.ws.rs.WebApplicationException;
 
 /**
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
- * zu Klassen in Bezug auf den Datenbank-Zugriff. 
+ * zu Klassen in Bezug auf den Datenbank-Zugriff.
  */
 public class DBUtilsKlassen {
 
 	/**
 	 * Bestimmt die Klasse mit der angegebenen ID
-	 * 
+	 *
 	 * @param conn       die Datenbankverbindung
 	 * @param idKlasse   die ID der Klasse
-	 * 
-	 * @return das DTO zur Klasse 
-	 * 
-	 * @throws WebApplicationException   HTTP-Response NOT_FOUND, falls die Klasse nicht gefunden werden kann 
+	 *
+	 * @return das DTO zur Klasse
+	 *
+	 * @throws WebApplicationException   HTTP-Response NOT_FOUND, falls die Klasse nicht gefunden werden kann
 	 */
 	public static DTOKlassen get(final DBEntityManager conn, final Long idKlasse) throws WebApplicationException {
 		if (idKlasse == null)
 	    	throw OperationError.NOT_FOUND.exception("Die ID einer Klasse darf nicht null sein.");
-		DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
+		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
 	    	throw OperationError.NOT_FOUND.exception("Konnte die Klasse mit der ID " + idKlasse + " nicht finden.");
 		return klasse;
 	}
 
-	
+
 	/**
 	 * Bestimmt zu der übergebenen Klasse, die zugehörige Klasse in dem angebenen Schuljahresabschnitt
-	 * 
+	 *
 	 * @param conn                     die Datenbankverbindung
 	 * @param klasse                   die Klasse, für welche die zugehörige Klasse bestimmt werden soll
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * 
+	 *
 	 * @return die zugehörige Klasse
-	 * 
-	 * @throws WebApplicationException HTTP-Response BAD_REQUEST, falls die Klasse oder die ID null sind, 
+	 *
+	 * @throws WebApplicationException HTTP-Response BAD_REQUEST, falls die Klasse oder die ID null sind,
 	 *                                          oder NOT_FOUND, falls die zugehörige Klasse nicht ermittelt werden kann
 	 */
 	public static DTOKlassen getKlasseInAbschnitt(final DBEntityManager conn, final DTOKlassen klasse, final Long idSchuljahresabschnitt) throws WebApplicationException {
@@ -64,13 +64,13 @@ public class DBUtilsKlassen {
 
 	/**
 	 * Bestimmt die Folgeklasse zu der übergebenen Klasse in dem selben Schuljahresabschnitt.
-	 * 
+	 *
 	 * @param conn                     die Datenbankverbindung
 	 * @param klasse                   die Klasse, für welche die Folge-Klasse bestimmt werden soll
-	 * 
+	 *
 	 * @return die Folge-Klasse
-	 * 
-	 * @throws WebApplicationException HTTP-Response BAD_REQUEST, falls die Klasse ist oder keine Folgeklasse zugewiesen wurde, 
+	 *
+	 * @throws WebApplicationException HTTP-Response BAD_REQUEST, falls die Klasse ist oder keine Folgeklasse zugewiesen wurde,
 	 *                                          oder NOT_FOUND, falls die zugehörige Folge-Klasse nicht ermittelt werden kann
 	 */
 	public static DTOKlassen getFolgeKlasse(final DBEntityManager conn, final DTOKlassen klasse) {
@@ -78,7 +78,7 @@ public class DBUtilsKlassen {
 			throw OperationError.BAD_REQUEST.exception("Die Klasse darf nicht null sein.");
 		if (klasse.FKlasse == null)
 			throw OperationError.BAD_REQUEST.exception("Die Klasse " + klasse.Klasse + " hat keine Folge-Klasse zugewiesen.");
-		List<DTOKlassen> klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Klasse = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOKlassen.class, klasse.FKlasse, klasse.Schuljahresabschnitts_ID);
+		final List<DTOKlassen> klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Klasse = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOKlassen.class, klasse.FKlasse, klasse.Schuljahresabschnitts_ID);
 		if (klassen.size() == 0)
         	throw OperationError.NOT_FOUND.exception("Konnte die Folge-Klasse " + klasse.FKlasse + " in dem Schuljahresabschnitts mit der ID " + klasse.Schuljahresabschnitts_ID + " nicht finden.");
 		return klassen.get(0);

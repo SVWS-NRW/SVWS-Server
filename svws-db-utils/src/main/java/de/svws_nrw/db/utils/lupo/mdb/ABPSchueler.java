@@ -27,71 +27,71 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_Schueler aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_Schueler aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPSchueler {
+public final class ABPSchueler {
 
 	/** Die ID des Schülers in der LuPO-DB */
 	public int ID = -1;
-	
+
 	/** Die ID des Schülers in der SVWS-Datenbank */
 	public Integer Schild_ID = null;
-	
+
 	/** Die GU_ID des Schülers in der SVWS-Datenbank */
 	public String GU_ID = null;
-	
+
 	/** Der Nachname des Schülers */
 	public String Name = null;
-	
+
 	/** Der Vorname des Schülers */
 	public String Vorname = null;
-	
+
 	/** Das Geburtsdatum des Schülers */
 	public LocalDateTime Geburtsdatum = null;
-	
+
 	/** Das Geschlecht des Schülers */
 	public int geschlecht = Geschlecht.X.id;
-	
+
 	/** Das letzte Beratungsdatum */
 	public LocalDateTime DatumBeratung = null;
-	
+
 	/** Das Datum des Rücklaufs der Beratungsdaten durch den Schüler */
 	public LocalDateTime DatumRuecklauf = null;
-	
+
 	/** Die Klasse des Schülers */
 	public String Klasse = null;
-	
+
 	/** Gibt an, ob eine Muttersprachliche Prüfung am Ende der EF beabsichtigt ist bzw. bestanden ist */
 	public boolean SPP = false;
-	
+
 	/** Das Fachkürzel des bilingualen Sprachfaches */
 	public String Bilingual = null;
-	
+
 	/** Gibt an, ob Latein belegt wurde */
 	public boolean Latein = false;
-	
+
 	/** Gibt an, ob ein Sprtattest vorliegt oder nicht */
 	public String Sportattest = null;
-	
+
 	/** Ein Kommentar in LuPO zu dem Schüler */
 	public String Kommentar = null;
-	
+
 	/** Die Prüfungsordnund, die dem Schüler zugeordnet ist */
 	public String PruefOrdnung = null;
-	
+
 	/** Die Email-Adresse des Schülers */
 	public String Email = null;
-	
+
 	/** Der Beratungslehrer, der die letzte Beratung durchgeführt hat. */
 	public String Beratungslehrer = null;
-	
+
 	/** Die Anzahl der Kurse in der EF 1. Halbjahr */
 	public Integer AnzK_E1 = null;
-	
+
 	/** Die Anzahl der Kurse in der EF 2. Halbjahr */
 	public Integer AnzK_E2 = null;
-	
+
 	/** Die Anzahl der Kurse in der Q-Phase 1. Halbjahr */
 	public Integer AnzK_Q1 = null;
 
@@ -159,24 +159,24 @@ public class ABPSchueler {
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schueler" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchueler> read(Database db) {
+	public static List<ABPSchueler> read(final Database db) {
 		try {
-			List<ABPSchueler> liste = new Vector<>();
-			Table table = db.getTable("ABP_Schueler");
-			for (Row r : table) {
-				ABPSchueler schueler = new ABPSchueler(); 
+			final List<ABPSchueler> liste = new Vector<>();
+			final Table table = db.getTable("ABP_Schueler");
+			for (final Row r : table) {
+				final ABPSchueler schueler = new ABPSchueler();
 				schueler.ID = r.getInt("ID");
 				schueler.Schild_ID = r.getInt("Schild_ID");
 				schueler.GU_ID = r.getString("GU_ID");
 				schueler.Name = r.getString("Name");
 				schueler.Vorname = r.getString("Vorname");
 				schueler.Geburtsdatum = r.getLocalDateTime("Geburtsdatum");
-				schueler.geschlecht = (r.getByte("Geschlecht") == null) ? Geschlecht.X.id : Geschlecht.fromValue(r.getByte("Geschlecht") == null ? null : (int)r.getByte("Geschlecht")).id;
+				schueler.geschlecht = (r.getByte("Geschlecht") == null) ? Geschlecht.X.id : Geschlecht.fromValue(r.getByte("Geschlecht") == null ? null : (int) r.getByte("Geschlecht")).id;
 				schueler.DatumBeratung = r.getLocalDateTime("DatumBeratung");
 				schueler.DatumRuecklauf = r.getLocalDateTime("DatumRuecklauf");
 				schueler.Klasse = r.getString("Klasse");
@@ -214,7 +214,7 @@ public class ABPSchueler {
 				liste.add(schueler);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -222,13 +222,13 @@ public class ABPSchueler {
 
 	/**
 	 * Schreibt die angegebenen Schüler in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler
 	 */
-	public static void write(Database db, List<ABPSchueler> list) {
+	public static void write(final Database db, final List<ABPSchueler> list) {
 		try {
-			Table table = new TableBuilder("ABP_Schueler")
+			final Table table = new TableBuilder("ABP_Schueler")
 			     .addColumn(new ColumnBuilder("ID", DataType.LONG))
 			     .addColumn(new ColumnBuilder("Schild_ID", DataType.LONG))
 			     .addColumn(new ColumnBuilder("GU_ID", DataType.TEXT).setLengthInUnits(40))
@@ -272,7 +272,7 @@ public class ABPSchueler {
 				 .addColumn(new ColumnBuilder("FS2_SekI_manuell", DataType.TEXT).setLengthInUnits(1))
 			     .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns("ID").setPrimaryKey())
 			     .toTable(db);
-			for (ABPSchueler schueler: list) {
+			for (final ABPSchueler schueler: list) {
 				table.addRow(
 					schueler.ID,
 					schueler.Schild_ID,
@@ -315,9 +315,9 @@ public class ABPSchueler {
 					schueler.Zulassung == null ? null : (schueler.Zulassung ? "J" : "N"),
 					schueler.BLL_Punkte,
 					schueler.FS2_SekI_manuell == null ? null : (schueler.FS2_SekI_manuell ? "J" : "N")
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -325,11 +325,11 @@ public class ABPSchueler {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchueler zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchueler
 	 */
 	public static List<ABPSchueler> getDefault() {
-		List<ABPSchueler> schuelerliste = new Vector<>();
+		final List<ABPSchueler> schuelerliste = new Vector<>();
 		return schuelerliste;
 	}
 
@@ -337,35 +337,35 @@ public class ABPSchueler {
 	/**
 	 * Erstellt die Einträge für die Tabelle ABP_Schueler aus den DTOs
 	 * der SVWS-Server-Datenbank.
-	 * 
+	 *
 	 * @param schuelerListe      die SVWS-Server-DTOs für die Schüler
 	 * @param mapAktAbschnitte   die SVWS-Server-DTOs für die aktuellen Lernabschnitte des Schülers
 	 * @param mapKlassen         die SVWS-Server-DTOs für die Klassen
 	 * @param mapLehrer          die SVWS-Server-DTOs für die Lehrer
-	 * @param schuelerLupoInfo   die LuPO-Information zu dem Schüler, die in der 
-	 *                           SVWS-Datenbank hinterlegt sind. 
+	 * @param schuelerLupoInfo   die LuPO-Information zu dem Schüler, die in der
+	 *                           SVWS-Datenbank hinterlegt sind.
 	 * @param gostInfo           die Leistungen des Schülers in der gymnasialen Oberstufe
-	 * 
+	 *
 	 * @return die Liste der Einträge für die Tabelle ABP_Schueler
 	 */
-	public static List<ABPSchueler> get(List<DTOSchueler> schuelerListe, Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte, Map<Long, DTOKlassen> mapKlassen, Map<Long, DTOLehrer> mapLehrer, Map<Long, DTOGostSchueler> schuelerLupoInfo, Map<Long, GostLeistungen> gostInfo) {
-		List<ABPSchueler> liste = new Vector<>();
+	public static List<ABPSchueler> get(final List<DTOSchueler> schuelerListe, final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte, final Map<Long, DTOKlassen> mapKlassen, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOGostSchueler> schuelerLupoInfo, final Map<Long, GostLeistungen> gostInfo) {
+		final List<ABPSchueler> liste = new Vector<>();
 		if (schuelerListe == null)
 			return liste;
 		for (int i = 0; i < schuelerListe.size(); i++) {
-			DTOSchueler schueler = schuelerListe.get(i);
-			DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitte.get(schueler.ID);
-			DTOGostSchueler lupoSchueler = schuelerLupoInfo.get(schueler.ID);
-			GostLeistungen gostLeistungen = gostInfo.get(schueler.ID);
-			ABPSchueler eintrag = new ABPSchueler();
-			eintrag.ID = i+1;
+			final DTOSchueler schueler = schuelerListe.get(i);
+			final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitte.get(schueler.ID);
+			final DTOGostSchueler lupoSchueler = schuelerLupoInfo.get(schueler.ID);
+			final GostLeistungen gostLeistungen = gostInfo.get(schueler.ID);
+			final ABPSchueler eintrag = new ABPSchueler();
+			eintrag.ID = i + 1;
 			eintrag.Schild_ID = schueler.ID.intValue();
 			eintrag.GU_ID = schueler.GU_ID;
 			eintrag.Name = schueler.Nachname;
 			eintrag.Vorname = schueler.Vorname;
 			eintrag.Geburtsdatum = LocalDate.parse(schueler.Geburtsdatum).atStartOfDay();
 			eintrag.geschlecht = schueler.Geschlecht.id;
-			DTOKlassen klasse = mapKlassen.get(aktAbschnitt.Klassen_ID);
+			final DTOKlassen klasse = mapKlassen.get(aktAbschnitt.Klassen_ID);
 			eintrag.Klasse = (klasse == null) ? null : klasse.Klasse;
 			eintrag.PruefOrdnung = aktAbschnitt.PruefOrdnung;
 			eintrag.Email = schueler.Email;
@@ -375,7 +375,7 @@ public class ABPSchueler {
 				eintrag.SPP = false; // TODO Bestimme über: SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()), Problem SprachDatenManager nuss zuvor geladen werden...
 				eintrag.Sportattest = lupoSchueler.HatSportattest == null ? null : lupoSchueler.HatSportattest ? "J" : "N";
 				eintrag.Kommentar = lupoSchueler.Kommentar;
-				DTOLehrer beratungslehrer = mapLehrer.get(lupoSchueler.Beratungslehrer_ID);
+				final DTOLehrer beratungslehrer = mapLehrer.get(lupoSchueler.Beratungslehrer_ID);
 				eintrag.Beratungslehrer = beratungslehrer == null ? null : (beratungslehrer.Nachname + ", " + beratungslehrer.Vorname);
 				eintrag.PruefPhase = lupoSchueler.PruefPhase;
 				eintrag.BLL_Art = lupoSchueler.BesondereLernleistung_Art;

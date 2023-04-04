@@ -28,26 +28,26 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecher aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecher aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPSchuelerFaecher {
+public final class ABPSchuelerFaecher {
 
 	/** Eine laufende ID der Zuordnung von Fächern zum Schüler */
 	public int ID = -1;
-	
+
 	/** Die LuPO-Schüler-ID */
 	public int Schueler_ID = -1;
-	
+
 	/** Die ID ds zugeordneten Faches */
 	public int Fach_ID = -1;
-	
+
 	/** Das Kürzel des zugeordneten Faches */
 	public String FachKrz;
-	
+
 	/** Gibt an, ab welchem Jahrgang die Fremdsprache belegt wurde. */
-	public String FS_BeginnJg = null; 
-	
+	public String FS_BeginnJg = null;
+
 	/** Gibt an, als wievielte Fremdsprache eine Fremdsprache gewählt wurde. */
 	public String Sprachenfolge = null;
 
@@ -104,10 +104,10 @@ public class ABPSchuelerFaecher {
 
 	/** Gibt an, ob die Wahl des Faches in der Q-Phase im 4. Halbjahr in Konflikt zu einer anderen Wahl steht. */
 	public boolean Konflikt_Q4 = false;
-	
+
 	/** Gibt an, ob das Fach als 1., 2., 3., 4. Abiturfach oder nicht als Abiturfach gewählt wurde. */
 	public Integer AbiturFach = null;
-	
+
 	/** Gibt an, ob es Konflikte bei der Wahl des Abuturfaches gibt. */
 	public boolean Konflikt_AF = false;
 
@@ -161,26 +161,26 @@ public class ABPSchuelerFaecher {
 
 	/** Gibt das Ergebnis einer mündlichen Prüfung an. */
 	public Integer MdlPruefErgebnis = null;
-	
-	
+
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecher" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Fächerzuordnungen der Schüler aus der LuPO-Datei
 	 */
-	public static List<ABPSchuelerFaecher> read(Database db) {
+	public static List<ABPSchuelerFaecher> read(final Database db) {
 		try {
-			List<ABPSchuelerFaecher> liste = new Vector<>();
-			Table table = db.getTable("ABP_SchuelerFaecher");
-			for (Row r : table) {
-				ABPSchuelerFaecher zuordnung = new ABPSchuelerFaecher();
+			final List<ABPSchuelerFaecher> liste = new Vector<>();
+			final Table table = db.getTable("ABP_SchuelerFaecher");
+			for (final Row r : table) {
+				final ABPSchuelerFaecher zuordnung = new ABPSchuelerFaecher();
 				zuordnung.ID = r.getInt("ID");
 				zuordnung.Schueler_ID = r.getInt("Schueler_ID");
 				zuordnung.Fach_ID = r.getInt("Fach_ID");
 				zuordnung.FachKrz = r.getString("FachKrz");
-				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg"); 
+				zuordnung.FS_BeginnJg = r.getString("FS_BeginnJg");
 				zuordnung.Sprachenfolge = r.getString("Sprachenfolge");
 				zuordnung.Kursart_E1 = r.getString("Kursart_E1");
 				zuordnung.Punkte_E1 = r.getString("Punkte_E1");
@@ -222,7 +222,7 @@ public class ABPSchuelerFaecher {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -230,13 +230,13 @@ public class ABPSchuelerFaecher {
 
 	/**
 	 * Schreibt die angegebenen Schüler-Fächer-Zuordnung in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Schüler-Fächer-Zuordnung
 	 */
-	public static void write(Database db, List<ABPSchuelerFaecher> list) {
+	public static void write(final Database db, final List<ABPSchuelerFaecher> list) {
 		try {
-			Table table = new TableBuilder("ABP_SchuelerFaecher")
+			final Table table = new TableBuilder("ABP_SchuelerFaecher")
 				.addColumn(new ColumnBuilder("ID", DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
 				.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG))
 				.addColumn(new ColumnBuilder("Fach_ID", DataType.LONG))
@@ -284,13 +284,13 @@ public class ABPSchuelerFaecher {
 			    .toTable(db);
 			if (list == null)
 				return;
-			for (ABPSchuelerFaecher zuordnung: list) {
+			for (final ABPSchuelerFaecher zuordnung: list) {
 				table.addRow(
 					zuordnung.ID,
 					zuordnung.Schueler_ID,
 					zuordnung.Fach_ID,
 					zuordnung.FachKrz,
-					zuordnung.FS_BeginnJg, 
+					zuordnung.FS_BeginnJg,
 					zuordnung.Sprachenfolge,
 					zuordnung.Kursart_E1,
 					zuordnung.Punkte_E1,
@@ -329,9 +329,9 @@ public class ABPSchuelerFaecher {
 					zuordnung.AbiPruefErgebnis,
 					zuordnung.MdlPflichtPruefung,
 					zuordnung.MdlPruefErgebnis
-				);				
+				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -339,23 +339,23 @@ public class ABPSchuelerFaecher {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuelerFaecher zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFaecher
 	 */
 	public static List<ABPSchuelerFaecher> getDefault() {
-		List<ABPSchuelerFaecher> faecher = new Vector<>();
+		final List<ABPSchuelerFaecher> faecher = new Vector<>();
 		return faecher;
 	}
 
 
 	/**
 	 * Gibt den zu der angegebenen Belegung gehörigen String für die Kursart zurück
-	 *  
+	 *
 	 * @param belegung   die Belegung
-	 * 
-	 * @return der in der LuPO-MDB verwendete String für die Kursart 
+	 *
+	 * @return der in der LuPO-MDB verwendete String für die Kursart
 	 */
-	private static String getKursart(GostLeistungenFachbelegung belegung) {
+	private static String getKursart(final GostLeistungenFachbelegung belegung) {
 		switch (GostKursart.fromKuerzel(belegung.kursartKuerzel).kuerzel) {
 			case "GK":
 				return belegung.istSchriftlich ? "S" : "M";
@@ -370,56 +370,56 @@ public class ABPSchuelerFaecher {
 		}
 		return "M";
 	}
-	
-	
+
+
 	/**
 	 * Erstellt die Einträge für die Tabelle ABPSchuelerFaecher aus den DTOs
 	 * der SVWS-Server-Datenbank.
-	 * 
+	 *
 	 * @param faecher            die für die LuPO-Datei definierten Faecher
 	 * @param fachgruppen        die Zuordnung der Fächer zu den einzelnen Fachgruppen
 	 * @param schuelerListe      die SVWS-Server-DTOs für die Schüler
-	 * @param schuelerLupoInfo   die LuPO-Information zu dem Schüler, die in der 
-	 *                           SVWS-Datenbank hinterlegt sind. 
+	 * @param schuelerLupoInfo   die LuPO-Information zu dem Schüler, die in der
+	 *                           SVWS-Datenbank hinterlegt sind.
 	 * @param gostInfo           die Leistungen des Schülers in der gymnasialen Oberstufe
-	 * 
+	 *
 	 * @return die Liste der Einträge für die Tabelle ABPSchuelerFaecher
 	 */
-	public static List<ABPSchuelerFaecher> get(Map<String, ABPFaecher> faecher, Map<String, ABPFachgruppen> fachgruppen,
-			                                   List<DTOSchueler> schuelerListe, Map<Long, DTOGostSchueler> schuelerLupoInfo, 
-			                                   Map<Long, GostLeistungen> gostInfo) {
-		List<ABPSchuelerFaecher> liste = new Vector<>();
+	public static List<ABPSchuelerFaecher> get(final Map<String, ABPFaecher> faecher, final Map<String, ABPFachgruppen> fachgruppen,
+			                                   final List<DTOSchueler> schuelerListe, final Map<Long, DTOGostSchueler> schuelerLupoInfo,
+			                                   final Map<Long, GostLeistungen> gostInfo) {
+		final List<ABPSchuelerFaecher> liste = new Vector<>();
 		if (schuelerListe == null)
 			return liste;
 		int j = 1;   // TODO mit Maximum+1 aus DTOGostSchuelerFachbelegungen anfangen...
 		for (int sid = 0; sid < schuelerListe.size(); sid++) {
-			DTOSchueler schueler = schuelerListe.get(sid);
+			final DTOSchueler schueler = schuelerListe.get(sid);
 			// TODO DTOGostSchuelerFachbelegungen lupoSchuelerFacher.get(schueler.getID());
-			GostLeistungen gostLeistungen = gostInfo.get(schueler.ID);
-			for (GostLeistungenFachwahl fachwahl : gostLeistungen.faecher) {
-				ABPSchuelerFaecher eintrag = new ABPSchuelerFaecher();
+			final GostLeistungen gostLeistungen = gostInfo.get(schueler.ID);
+			for (final GostLeistungenFachwahl fachwahl : gostLeistungen.faecher) {
+				final ABPSchuelerFaecher eintrag = new ABPSchuelerFaecher();
 				eintrag.ID = j;
-				eintrag.Schueler_ID = sid+1;
+				eintrag.Schueler_ID = sid + 1;
 				eintrag.FachKrz = fachwahl.fach.kuerzelAnzeige;
-				ABPFaecher fach = faecher.get(eintrag.FachKrz);
+				final ABPFaecher fach = faecher.get(eintrag.FachKrz);
 				eintrag.Fach_ID = fach.ID;
 				if (fach.IstSprache) {
-					Sprachbelegung belegung = SprachendatenUtils.getSprachbelegung(gostLeistungen.sprachendaten, fach.StatistikKrz.toUpperCase().substring(0, 1));
+					final Sprachbelegung belegung = SprachendatenUtils.getSprachbelegung(gostLeistungen.sprachendaten, fach.StatistikKrz.toUpperCase().substring(0, 1));
 					if (belegung != null) {
 						eintrag.FS_BeginnJg = "" + belegung.belegungVonJahrgang;
 						eintrag.Sprachenfolge = "" + belegung.reihenfolge;
 					}
 				}
 				eintrag.Sortierung = fach.Sortierung;
-				ABPFachgruppen fachgruppe = fachgruppen.get(fach.StatistikKrz);
+				final ABPFachgruppen fachgruppe = fachgruppen.get(fach.StatistikKrz);
 				if (fachgruppe == null)   // Eine Fachgruppe muss definiert sein, damit das Fach übernommen wird
 					continue;
 				eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
 				eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
 				eintrag.AbiturFach = GostAbiturFach.fromID(fachwahl.abiturfach) == null ? null : fachwahl.abiturfach;
-				for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
+				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					GostLeistungenFachbelegung belegung = null;
-					for (GostLeistungenFachbelegung tmpBelegung : fachwahl.belegungen) {
+					for (final GostLeistungenFachbelegung tmpBelegung : fachwahl.belegungen) {
 						if (!tmpBelegung.abschnittGewertet)
 							continue;
 						if (halbjahr == GostHalbjahr.fromKuerzel(tmpBelegung.halbjahrKuerzel)) {
@@ -428,7 +428,7 @@ public class ABPSchuelerFaecher {
 						}
 					}
 					if (belegung != null) {
-						String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? "" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte : Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
+						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? "" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte : Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
 						if (halbjahr == GostHalbjahr.EF1) {
 							eintrag.Kursart_E1 = getKursart(belegung);
 							eintrag.Punkte_E1 = note;
@@ -484,7 +484,7 @@ public class ABPSchuelerFaecher {
 				eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
 				eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
 				liste.add(eintrag);
-				j++;				
+				j++;
 			}*/
 		}
 		return liste;

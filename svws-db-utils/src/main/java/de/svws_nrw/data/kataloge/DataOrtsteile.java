@@ -17,24 +17,24 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link OrtsteilKatalogEintrag}.
  */
-public class DataOrtsteile extends DataManager<Long> {
+public final class DataOrtsteile extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OrtsteilKatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataOrtsteile(DBEntityManager conn) {
+	public DataOrtsteile(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
-    	var katalog = conn.queryAll(DTOOrtsteil.class);
+    	final var katalog = conn.queryAll(DTOOrtsteil.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<OrtsteilKatalogEintrag> daten = katalog.stream().map(k -> {
-    		var eintrag = new OrtsteilKatalogEintrag();
+    	final List<OrtsteilKatalogEintrag> daten = katalog.stream().map(k -> {
+    		final var eintrag = new OrtsteilKatalogEintrag();
     		eintrag.id = k.ID;
     		eintrag.ort_id = k.Ort_ID;
     		eintrag.ortsteil = k.Bezeichnung;
@@ -52,13 +52,13 @@ public class DataOrtsteile extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

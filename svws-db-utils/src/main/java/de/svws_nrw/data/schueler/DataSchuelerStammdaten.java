@@ -30,23 +30,23 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerStammdaten}.
  */
-public class DataSchuelerStammdaten extends DataManager<Long> {
+public final class DataSchuelerStammdaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerStammdaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataSchuelerStammdaten(DBEntityManager conn) {
+	public DataSchuelerStammdaten(final DBEntityManager conn) {
 		super(conn);
 	}
 
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link SchuelerStammdaten}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link SchuelerStammdaten}.
 	 */
-	private Function<DTOSchueler, SchuelerStammdaten> dtoMapper = (DTOSchueler schueler) -> {
-    	SchuelerStammdaten daten = new SchuelerStammdaten();
+	private final Function<DTOSchueler, SchuelerStammdaten> dtoMapper = (final DTOSchueler schueler) -> {
+    	final SchuelerStammdaten daten = new SchuelerStammdaten();
     	// Basisdaten
 		daten.id = schueler.ID;
 		daten.foto = "";
@@ -84,7 +84,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.geburtslandVater = schueler.GeburtslandVater == null ? null : schueler.GeburtslandVater.daten.iso3;
 		daten.geburtslandMutter = schueler.GeburtslandMutter == null ? null : schueler.GeburtslandMutter.daten.iso3;
 		// Daten zur Sonderpädagogischen Förderung
-//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird 			    			
+//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird
 //		daten.foerderschwerpunktID = schueler.Foerderschwerpunkt_ID;
 //		daten.foerderschwerpunkt2ID = schueler.Foerderschwerpunkt2_ID;
 //		daten.istAOSF = schueler.AOSF; // „Ausbildungsordnung Sonderpädagogische Förderung" bzw. „Verordnung über die sonderpädagogische Förderung, den Hausunterricht und die Schule für Kranke“
@@ -117,46 +117,46 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
     	if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	SchuelerStammdaten daten = dtoMapper.apply(schueler);
-		DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
+    	final SchuelerStammdaten daten = dtoMapper.apply(schueler);
+		final DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
 		if (schuelerFoto != null)
 			daten.foto = schuelerFoto.FotoBase64;
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
-    	Map<String, Object> map = JSONMapper.toMap(is);
+	public Response patch(final Long id, final InputStream is) {
+    	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-	    		DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
+	    		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		    	if (schueler == null)
 		    		throw OperationError.NOT_FOUND.exception();
-		    	for (Entry<String, Object> entry : map.entrySet()) {
-		    		String key = entry.getKey();
-		    		Object value = entry.getValue();
+		    	for (final Entry<String, Object> entry : map.entrySet()) {
+		    		final String key = entry.getKey();
+		    		final Object value = entry.getValue();
 		    		switch (key) {
 		    			// Basisdaten
 						case "id" -> {
-							Long patch_id = JSONMapper.convertToLong(value, true);
+							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
 		    			case "foto" -> {
-		    		    	String strData = JSONMapper.convertToString(value, true, true);
+		    		    	final String strData = JSONMapper.convertToString(value, true, true);
     	        			DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
     	        			if (schuelerFoto == null)
 	    	        			schuelerFoto = new DTOSchuelerFoto(id);
-    	        			String oldFoto = schuelerFoto.FotoBase64;
+    	        			final String oldFoto = schuelerFoto.FotoBase64;
     	        	    	if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
     	        	    		return Response.status(Status.OK).build();
     	        	    	schuelerFoto.FotoBase64 = strData;
@@ -167,7 +167,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			case "vorname" -> schueler.Vorname = JSONMapper.convertToString(value, false, false);
 		    			case "alleVornamen" -> schueler.AlleVornamen = JSONMapper.convertToString(value, false, true);
 		    			case "geschlecht" -> {
-		    				Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
+		    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 		    				if (geschlecht == null)
 		    					throw OperationError.CONFLICT.exception();
 		    				schueler.Geschlecht = geschlecht;
@@ -175,109 +175,109 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			case "geburtsdatum" -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false);
 		    			case "geburtsort" -> schueler.Geburtsort = JSONMapper.convertToString(value, false, true);
 		    			case "geburtsname" -> schueler.Geburtsname = JSONMapper.convertToString(value, false, true);
-		    			
+
 		    			// Wohnort und Kontaktdaten
 		    			case "strassenname" -> schueler.Strassenname = JSONMapper.convertToString(value, true, true);
 		    			case "hausnummer" -> schueler.HausNr = JSONMapper.convertToString(value, true, true);
 		    			case "hausnummerZusatz" -> schueler.HausNrZusatz = JSONMapper.convertToString(value, true, true);
 		    			case "wohnortID" -> {
-		    				setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long)map.get("ortsteilID")));
+		    				setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")));
 		    			}
 		    			case "ortsteilID" -> {
-		    				setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long)map.get("wohnortID")), JSONMapper.convertToLong(value, true));
+		    				setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			}
 		    			case "telefon" -> schueler.Telefon = JSONMapper.convertToString(value, true, true);
 		    			case "telefonMobil" -> schueler.Fax = JSONMapper.convertToString(value, true, true);
 		    			case "emailPrivat" -> schueler.Email = JSONMapper.convertToString(value, true, true);
 		    			case "emailSchule" -> schueler.SchulEmail = JSONMapper.convertToString(value, true, true);
-		    			
+
 		    			// Daten zur Staatsangehörigkeit und zur Religion
 		    			case "staatsangehoerigkeitID" -> {
-		    		    	String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
 	    						schueler.StaatKrz = null;
 	    					} else {
-	    						Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
+	    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
 		    			    	if (nat == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
 		    					schueler.StaatKrz = nat;
 	    					}
 		    			}
 		    			case "staatsangehoerigkeit2ID" -> {
-		    		    	String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true);
 		    		    	if ((staatsangehoerigkeit2ID == null) || ("".equals(staatsangehoerigkeit2ID))) {
 	    						schueler.StaatKrz2 = null;
 	    					} else {
-	    						Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeit2ID);
+	    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeit2ID);
 		    			    	if (nat == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
 		    					schueler.StaatKrz2 = nat;
 	    					}
 		    			}
 		    			case "religionID" -> {
-		    				Long religionID = JSONMapper.convertToLong(value, false);
+		    				final Long religionID = JSONMapper.convertToLong(value, false);
 		    		    	if ((religionID != null) && (religionID < 0))
-		    		    		throw OperationError.CONFLICT.exception();    	
-	    			    	DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
+		    		    		throw OperationError.CONFLICT.exception();
+	    			    	final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
 	    			    	if (rel == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
-	    					schueler.Religion_ID = religionID; 
+	    					schueler.Religion_ID = religionID;
 		    			}
 		    			case "druckeKonfessionAufZeugnisse" -> schueler.KonfDruck = JSONMapper.convertToBoolean(value, false);
 		    			case "religionabmeldung" -> schueler.Religionsabmeldung = JSONMapper.convertToString(value, true, true);
 		    			case "religionanmeldung" -> schueler.Religionsanmeldung = JSONMapper.convertToString(value, true, true);
-		    			
+
 		    			// Daten zum Migrationshintergrund
-		    			case "hatMigrationshintergrund" -> schueler.Migrationshintergrund = JSONMapper.convertToBoolean(value, false); 
+		    			case "hatMigrationshintergrund" -> schueler.Migrationshintergrund = JSONMapper.convertToBoolean(value, false);
 		    			case "zuzugsjahr" -> {
-		    		    	String text = JSONMapper.convertToString(value, true, true);
+		    		    	final String text = JSONMapper.convertToString(value, true, true);
 		    		    	Integer jahr = null;
 		    		    	if ((text != null) && (!"".equals(text))) {
 		    		        	try {
 		    		        		jahr = Integer.parseUnsignedInt(text);
 		    		        		if ((jahr <= 1900) || (jahr > 3000))   // TODO Bestimme das aktuelle Jahr für die obere Grenze des Bereichs
 		    				    		throw OperationError.BAD_REQUEST.exception();
-		    		        	} catch (@SuppressWarnings("unused") NumberFormatException e) {
+		    		        	} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 		    			    		throw OperationError.BAD_REQUEST.exception();
-		    		        	}    		
+		    		        	}
 		    		    	}
-		    				schueler.JahrZuzug = jahr; 
+		    				schueler.JahrZuzug = jahr;
 		    			}
 		    			case "geburtsland" -> {
-		    				String strData = JSONMapper.convertToString(value, true, true);
-    						Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
+		    				final String strData = JSONMapper.convertToString(value, true, true);
+    						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.GeburtslandSchueler = nat;
 		    			}
 		    			case "verkehrspracheFamilie" -> {
-		    				String strData = JSONMapper.convertToString(value, true, true);
-		    				Verkehrssprache vs = Verkehrssprache.getByKuerzelAuto(strData);
+		    				final String strData = JSONMapper.convertToString(value, true, true);
+		    				final Verkehrssprache vs = Verkehrssprache.getByKuerzelAuto(strData);
 		    				if (vs == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.VerkehrsspracheFamilie = vs;
 		    			}
 		    			case "geburtslandVater" -> {
-		    				String strData = JSONMapper.convertToString(value, true, true);
-    						Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
+		    				final String strData = JSONMapper.convertToString(value, true, true);
+    						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.GeburtslandVater = nat;
 		    			}
 		    			case "geburtslandMutter" -> {
-		    				String strData = JSONMapper.convertToString(value, true, true);
-    						Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
+		    				final String strData = JSONMapper.convertToString(value, true, true);
+    						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.GeburtslandMutter = nat;
 		    			}
-		    			
+
 		    			// Daten zur Sonderpädagogischen Förderung
-//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird 			    			
+//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird
 //		    			case "foerderschwerpunktID" -> {
 //		    		    	Long fid = JSONMapper.convertToLong(value, true);
 //		    		    	if ((fid != null) && (fid < 0))
-//		    		    		OperationError.CONFLICT.throwException();    	
+//		    		    		OperationError.CONFLICT.throwException();
 //	    					if (fid == null) {
 //	    						schueler.Foerderschwerpunkt_ID = null;
 //	    					} else {
@@ -290,7 +290,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 //		    			case "foerderschwerpunkt2ID" -> {
 //		    		    	Long fid = JSONMapper.convertToLong(value, true);
 //		    		    	if ((fid != null) && (fid < 0))
-//		    		    		OperationError.CONFLICT.throwException();    	
+//		    		    		OperationError.CONFLICT.throwException();
 //	    					if (fid == null) {
 //	    						schueler.Foerderschwerpunkt2_ID = null;
 //	    					} else {
@@ -302,35 +302,35 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 //		    			}
 //		    			case "istAOSF" -> schueler.AOSF = JSONMapper.convertToBoolean(value, false);
 //		    			case "istLernenZieldifferent" -> schueler.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false);
-		    			
+
 		    			// Statusdaten
 		    			case "status" -> {
-		    				SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
+		    				final SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
 		    				if (s == null)
 		    					throw OperationError.BAD_REQUEST.exception();
 		    				schueler.Status = s;
 		    			}
 		    			case "fahrschuelerArtID" -> {
-		    		    	Long fid = JSONMapper.convertToLong(value, true);
+		    		    	final Long fid = JSONMapper.convertToLong(value, true);
 		    		    	if ((fid != null) && (fid < 0))
 		    		    		throw OperationError.CONFLICT.exception();
 	    					if (fid == null) {
 	    						schueler.Fahrschueler_ID = null;
 	    					} else {
-		    					DTOFahrschuelerart f = conn.queryByKey(DTOFahrschuelerart.class, fid);
+		    					final DTOFahrschuelerart f = conn.queryByKey(DTOFahrschuelerart.class, fid);
 		    			    	if (f == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
 		    			    	schueler.Fahrschueler_ID = fid;
 	    					}
 		    			}
 		    			case "haltestelleID" -> {
-		    		    	Long hid = JSONMapper.convertToLong(value, true);
+		    		    	final Long hid = JSONMapper.convertToLong(value, true);
 		    		    	if ((hid != null) && (hid < 0))
-		    		    		throw OperationError.CONFLICT.exception();    	
+		    		    		throw OperationError.CONFLICT.exception();
 	    					if (hid == null) {
 	    						schueler.Haltestelle_ID = null;
 	    					} else {
-		    					DTOHaltestellen h = conn.queryByKey(DTOHaltestellen.class, hid);
+		    					final DTOHaltestellen h = conn.queryByKey(DTOHaltestellen.class, hid);
 		    			    	if (h == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
 		    			    	schueler.Haltestelle_ID = hid;
@@ -340,7 +340,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    				schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false);
 		    			}
 		    			case "aufnahmedatum" -> {
-		    				String aufnahmedatum = JSONMapper.convertToString(value, true, true);
+		    				final String aufnahmedatum = JSONMapper.convertToString(value, true, true);
 		    				schueler.Aufnahmedatum = "".equals(aufnahmedatum) ? null : aufnahmedatum;
 		    			}
 		    			case "istVolljaehrig" -> schueler.Volljaehrig = JSONMapper.convertToBoolean(value, false);
@@ -351,17 +351,17 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			case "erhaeltSchuelerBAFOEG" -> schueler.Bafoeg = JSONMapper.convertToBoolean(value, false);
 		    			case "erhaeltMeisterBAFOEG" -> schueler.MeisterBafoeg = JSONMapper.convertToBoolean(value, false);
 		    			case "istDuplikat" -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false);
-		    			
+
 		    			// Bemerkungen
 		    			case "bemerkungen" -> schueler.Bemerkungen = JSONMapper.convertToString(value, true, true);
-		    			
+
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}
 		    	}
 		    	conn.transactionPersist(schueler);
 		    	conn.transactionCommit();
-    		} catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+    		} catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {
@@ -376,14 +376,14 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
     /**
      * Setzt den Wohnort bei den Schülerdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile
      * in der Datenbank. Ggf. wird der Ortsteil auf null gesetzt.
-     * 
-     * @param schueler     das Schüler-DTO der Datenbank 
+     *
+     * @param schueler     das Schüler-DTO der Datenbank
      * @param wohnortID    die zu setzende Wohnort-ID
      * @param ortsteilID   die zu setzende Ortsteil-ID
-     * 
+     *
      * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
      */
-    private void setWohnort(DTOSchueler schueler, Long wohnortID, Long ortsteilID) throws WebApplicationException {
+    private void setWohnort(final DTOSchueler schueler, final Long wohnortID, final Long ortsteilID) throws WebApplicationException {
     	if ((wohnortID != null) && (wohnortID < 0))
     		throw OperationError.CONFLICT.exception();
     	if ((ortsteilID != null) && (ortsteilID < 0))
@@ -392,13 +392,13 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;
 		if (ortsteilIDNeu != null) {
-			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
+			final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
 	    	if ((ortsteil == null) || ((ortsteil.Ort_ID != null) && (!ortsteil.Ort_ID.equals(wohnortID)))) {
 	    		ortsteilIDNeu = null;
 	    	}
 		}
-		schueler.Ortsteil_ID = ortsteilIDNeu;    	
+		schueler.Ortsteil_ID = ortsteilIDNeu;
     }
 
-	
+
 }

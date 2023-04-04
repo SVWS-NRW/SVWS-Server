@@ -17,7 +17,7 @@ import de.svws_nrw.data.DataManager;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link OrganisationsformKatalogEintrag}.
  */
-public class DataKatalogOrganisationsformen extends DataManager<Long> {
+public final class DataKatalogOrganisationsformen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link OrganisationsformKatalogEintrag}.
@@ -25,15 +25,15 @@ public class DataKatalogOrganisationsformen extends DataManager<Long> {
 	public DataKatalogOrganisationsformen() {
 		super(null);
 	}
-	
+
 	@Override
 	public Response getAll() {
-		Vector<OrganisationsformKatalogEintrag> daten = new Vector<>();
-		for (BerufskollegOrganisationsformen eintrag : BerufskollegOrganisationsformen.values())
+		final Vector<OrganisationsformKatalogEintrag> daten = new Vector<>();
+		for (final BerufskollegOrganisationsformen eintrag : BerufskollegOrganisationsformen.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
-		for (WeiterbildungskollegOrganisationsformen eintrag : WeiterbildungskollegOrganisationsformen.values())
+		for (final WeiterbildungskollegOrganisationsformen eintrag : WeiterbildungskollegOrganisationsformen.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
-		for (AllgemeinbildendOrganisationsformen eintrag : AllgemeinbildendOrganisationsformen.values())
+		for (final AllgemeinbildendOrganisationsformen eintrag : AllgemeinbildendOrganisationsformen.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -44,13 +44,13 @@ public class DataKatalogOrganisationsformen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

@@ -25,22 +25,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link KatalogEintrag}.
  */
-public class DataKatalogBetriebsarten extends DataManager<Long> {
+public final class DataKatalogBetriebsarten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KatalogEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogBetriebsarten(DBEntityManager conn) {
+	public DataKatalogBetriebsarten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAdressart} in einen Core-DTO {@link KatalogEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKatalogAdressart} in einen Core-DTO {@link KatalogEintrag}.
 	 */
-	private Function<DTOKatalogAdressart, KatalogEintrag> dtoMapper = (DTOKatalogAdressart k) -> {
-		KatalogEintrag eintrag = new KatalogEintrag();
+	private final Function<DTOKatalogAdressart, KatalogEintrag> dtoMapper = (final DTOKatalogAdressart k) -> {
+		final KatalogEintrag eintrag = new KatalogEintrag();
 		eintrag.id = k.ID;
 		eintrag.kuerzel = k.ID.toString();
 		eintrag.text = k.Bezeichnung;
@@ -51,20 +51,20 @@ public class DataKatalogBetriebsarten extends DataManager<Long> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link KatalogEintrag}.  
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link KatalogEintrag}.
 	 */
-	private Comparator<KatalogEintrag> dataComparator = (a, b) -> {
-		Collator collator = Collator.getInstance(Locale.GERMAN);
+	private final Comparator<KatalogEintrag> dataComparator = (a, b) -> {
+		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		return collator.compare(a.text, b.text);
 	};
 
 
 	@Override
 	public Response getAll() {
-		List<DTOKatalogAdressart> katalog = conn.queryAll(DTOKatalogAdressart.class);
+		final List<DTOKatalogAdressart> katalog = conn.queryAll(DTOKatalogAdressart.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -74,33 +74,33 @@ public class DataKatalogBetriebsarten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse("Die ID der gesuchten Beshäftigungart darf nicht null sein.");
-		DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
+		final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
 		if (art == null)
 			return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID " + id + " existiert nicht.");
-		KatalogEintrag eintrag = dtoMapper.apply(art);
+		final KatalogEintrag eintrag = dtoMapper.apply(art);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(eintrag).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		if (id == null)
             return OperationError.NOT_FOUND.getResponse("Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
-        Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0){
-            try{
+        final Map<String, Object> map = JSONMapper.toMap(is);
+        if (map.size() > 0) {
+            try {
                 conn.transactionBegin();
-                DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
+                final DTOKatalogAdressart art = conn.queryByKey(DTOKatalogAdressart.class, id);
                 if (art == null)
-                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID"+id+" existiert nicht.");
-                for (Entry<String, Object> entry : map.entrySet()){
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    switch (key){
+                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+                for (final Entry<String, Object> entry : map.entrySet()) {
+                    final String key = entry.getKey();
+                    final Object value = entry.getValue();
+                    switch (key) {
 						case "id" -> {
-							Long patch_id = JSONMapper.convertToLong(value, true);
+							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
@@ -112,8 +112,8 @@ public class DataKatalogBetriebsarten extends DataManager<Long> {
                 }
                 conn.transactionPersist(art);
                 conn.transactionCommit();
-            } catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+            } catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {
@@ -123,5 +123,5 @@ public class DataKatalogBetriebsarten extends DataManager<Long> {
         }
         return Response.status(Status.OK).build();
 	}
-	
+
 }

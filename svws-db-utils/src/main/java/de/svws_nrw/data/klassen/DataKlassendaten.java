@@ -21,17 +21,17 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link KlassenDaten}.
  */
-public class DataKlassendaten extends DataManager<Long> {
+public final class DataKlassendaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KlassenDaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKlassendaten(DBEntityManager conn) {
+	public DataKlassendaten(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -43,20 +43,20 @@ public class DataKlassendaten extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		if (id == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
+    	final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
     	if (klasse == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
+    	final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
     	// Bestimme die Schüler der Klasse
-    	List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", klasse.ID, DTOSchuelerLernabschnittsdaten.class)
+    	final List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", klasse.ID, DTOSchuelerLernabschnittsdaten.class)
     			.stream().filter(sla -> sla.WechselNr == null).map(sla -> sla.Schueler_ID).toList();
-    	List<DTOSchueler> dtoSchueler = schuelerIDs == null || schuelerIDs.size() == 0 ? new Vector<>() : 
-    			conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+    	final List<DTOSchueler> dtoSchueler = schuelerIDs == null || schuelerIDs.size() == 0 ? new Vector<>()
+    			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
     	// Erstelle das Core-DTO-Objekt für die Klasse
-		KlassenDaten daten = new KlassenDaten();
+		final KlassenDaten daten = new KlassenDaten();
 		daten.id = klasse.ID;
 		daten.kuerzel = klasse.Klasse;
 		daten.idJahrgang = klasse.Jahrgang_ID;
@@ -64,16 +64,16 @@ public class DataKlassendaten extends DataManager<Long> {
 		daten.sortierung = klasse.Sortierung;
 		daten.istSichtbar = klasse.Sichtbar;
 		if (klassenLeitungen != null)
-			for (DTOKlassenLeitung kl : klassenLeitungen)
+			for (final DTOKlassenLeitung kl : klassenLeitungen)
 				daten.klassenLeitungen.add(kl.Lehrer_ID);
-		for (DTOSchueler dto : dtoSchueler)
+		for (final DTOSchueler dto : dtoSchueler)
 			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

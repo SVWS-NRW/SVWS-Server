@@ -26,23 +26,23 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link ErzieherStammdaten}.
  */
-public class DataErzieherStammdaten extends DataManager<Long> {
+public final class DataErzieherStammdaten extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ErzieherStammdaten}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataErzieherStammdaten(DBEntityManager conn) {
+	public DataErzieherStammdaten(final DBEntityManager conn) {
 		super(conn);
 	}
 
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.  
+	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.
 	 */
-	private Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher1 = (DTOSchuelerErzieherAdresse e) -> {
-		ErzieherStammdaten eintrag = new ErzieherStammdaten();
+	private final Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher1 = (final DTOSchuelerErzieherAdresse e) -> {
+		final ErzieherStammdaten eintrag = new ErzieherStammdaten();
 		eintrag.id = e.ID * 10 + 1;
         eintrag.idSchueler = e.Schueler_ID;
         eintrag.idErzieherArt = e.ErzieherArt_ID;
@@ -64,10 +64,10 @@ public class DataErzieherStammdaten extends DataManager<Long> {
 	};
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln des zweiten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.  
+	 * Lambda-Ausdruck zum Umwandeln des zweiten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.
 	 */
-	private Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher2 = (DTOSchuelerErzieherAdresse e) -> {
-		ErzieherStammdaten eintrag = new ErzieherStammdaten();
+	private final Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher2 = (final DTOSchuelerErzieherAdresse e) -> {
+		final ErzieherStammdaten eintrag = new ErzieherStammdaten();
 		eintrag.id = e.ID * 10 + 2;
         eintrag.idSchueler = e.Schueler_ID;
         eintrag.idErzieherArt = e.ErzieherArt_ID;
@@ -87,7 +87,7 @@ public class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
 	};
-	
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -97,112 +97,112 @@ public class DataErzieherStammdaten extends DataManager<Long> {
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * Ermittelt eine Liste der {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID.
-	 * 
-	 * @param schuelerID   die ID des Schülers, dessen {@link ErzieherStammdaten} ermittelt werden sollen 
-	 * 
-	 * @return eine Liste mit den {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID 
+	 *
+	 * @param schuelerID   die ID des Schülers, dessen {@link ErzieherStammdaten} ermittelt werden sollen
+	 *
+	 * @return eine Liste mit den {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID
 	 */
-	public Response getListFromSchueler(long schuelerID) {
-    	List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
+	public Response getListFromSchueler(final long schuelerID) {
+    	final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
     	if (erzieher == null)
     		return OperationError.NOT_FOUND.getResponse();
-        List<ErzieherStammdaten> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).collect(Collectors.toList());
+        final List<ErzieherStammdaten> daten = erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).collect(Collectors.toList());
         daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).collect(Collectors.toList()));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long tmpid) {
+	public Response get(final Long tmpid) {
 		if (tmpid == null)
 			return OperationError.NOT_FOUND.getResponse();
-        long id = tmpid / 10;
-        long nr = tmpid % 10;
+        final long id = tmpid / 10;
+        final long nr = tmpid % 10;
         if ((nr != 1) && (nr != 2))
         	return OperationError.NOT_FOUND.getResponse();
-    	DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
+    	final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
     	if (erzieher == null) {
         	return OperationError.NOT_FOUND.getResponse();
     	}
-		ErzieherStammdaten daten = (nr == 1) ? dtoMapperErzieher1.apply(erzieher) : dtoMapperErzieher2.apply(erzieher); 
+		final ErzieherStammdaten daten = (nr == 1) ? dtoMapperErzieher1.apply(erzieher) : dtoMapperErzieher2.apply(erzieher);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long tmpid, InputStream is) {
+	public Response patch(final Long tmpid, final InputStream is) {
         if (tmpid == null)
             return OperationError.NOT_FOUND.getResponse();
-        long id = tmpid / 10;
-        long nr = tmpid % 10;
+        final long id = tmpid / 10;
+        final long nr = tmpid % 10;
         if ((nr != 1) && (nr != 2))
             return OperationError.NOT_FOUND.getResponse();
-        Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0){
-            try{
+        final Map<String, Object> map = JSONMapper.toMap(is);
+        if (map.size() > 0) {
+            try {
                 conn.transactionBegin();
-                DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
+                final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
                 if (erzieher == null)
                     return OperationError.NOT_FOUND.getResponse();
-                for (Entry<String, Object> entry : map.entrySet()){
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    switch (key){
+                for (final Entry<String, Object> entry : map.entrySet()) {
+                    final String key = entry.getKey();
+                    final Object value = entry.getValue();
+                    switch (key) {
 						case "id" -> {
-							Long patch_id = JSONMapper.convertToLong(value, true);
+							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != tmpid.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
                         case "idSchueler" -> throw OperationError.BAD_REQUEST.exception();
                         case "idErzieherArt" -> {
-		    		    	Long artID = JSONMapper.convertToLong(value, true);
+		    		    	final Long artID = JSONMapper.convertToLong(value, true);
 		    		    	if (artID == null) {
     						    erzieher.ErzieherArt_ID = null;
 	    					} else {
-                                DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
+                                final DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
 		    			    	if (art == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
 	    					    erzieher.ErzieherArt_ID = artID;
 	    					}
                         }
                         case "titel" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.Titel1 = tmp;
                             else
                                 erzieher.Titel2 = tmp;
                         }
                         case "anrede" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.Anrede1 = tmp;
                             else
                                 erzieher.Anrede2 = tmp;
                         }
                         case "nachname" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.Name1 = tmp;
                             else
                                 erzieher.Name2 = tmp;
                         }
                         case "zusatzNachname" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.Erz1ZusatzNachname = tmp;
                             else
                                 erzieher.Erz2ZusatzNachname = tmp;
                         }
                         case "vorname" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.Vorname1 = tmp;
                             else
                                 erzieher.Vorname2 = tmp;
                         }
                         case "eMail" -> {
-                            String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true);
                             if (nr == 1)
                                 erzieher.ErzEmail = tmp;
                             else
@@ -212,21 +212,21 @@ public class DataErzieherStammdaten extends DataManager<Long> {
 		    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true);
 		    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true);
 		    			case "wohnortID" -> {
-		    				setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long)map.get("ortsteilID")));
+		    				setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
 		    			}
 		    			case "ortsteilID" -> {
-		    				setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long)map.get("wohnortID")), JSONMapper.convertToLong(value, true));
+		    				setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			}
 
 		    			case "staatsangehoerigkeitID" -> {
-		    		    	String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
                                 if (nr == 1)
 	    						    erzieher.Erz1StaatKrz = null;
                                 else
                                     erzieher.Erz2StaatKrz = null;
 	    					} else {
-	    						Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
+	    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
 		    			    	if (nat == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
                                 if (nr == 1)
@@ -242,8 +242,8 @@ public class DataErzieherStammdaten extends DataManager<Long> {
                 }
                 conn.transactionPersist(erzieher);
                 conn.transactionCommit();
-            } catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+            } catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {
@@ -258,15 +258,15 @@ public class DataErzieherStammdaten extends DataManager<Long> {
     /**
      * Setzt den Wohnort bei den Erzieherdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile
      * in der Datenbank. Ggf. wird der Ortsteil auf null gesetzt.
-     * 
+     *
      * @param conn         die aktuelle Datenbankverbindung
-     * @param erzieher     das Erzieher-DTO der Datenbank 
+     * @param erzieher     das Erzieher-DTO der Datenbank
      * @param wohnortID    die zu setzende Wohnort-ID
      * @param ortsteilID   die zu setzende Ortsteil-ID
-     * 
+     *
      * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
      */
-    private static void setWohnort(DBEntityManager conn, DTOSchuelerErzieherAdresse erzieher, Long wohnortID, Long ortsteilID) throws WebApplicationException {
+    private static void setWohnort(final DBEntityManager conn, final DTOSchuelerErzieherAdresse erzieher, final Long wohnortID, final Long ortsteilID) throws WebApplicationException {
     	if ((wohnortID != null) && (wohnortID < 0))
     		throw OperationError.CONFLICT.exception();
     	if ((ortsteilID != null) && (ortsteilID < 0))
@@ -275,7 +275,7 @@ public class DataErzieherStammdaten extends DataManager<Long> {
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		Long ortsteilIDNeu = ortsteilID;
 		if (ortsteilIDNeu != null) {
-			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
+			final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
 	    	if ((ortsteil == null) || ((ortsteil.Ort_ID != null) && (!ortsteil.Ort_ID.equals(wohnortID)))) {
 	    		ortsteilIDNeu = null;
 	    	}

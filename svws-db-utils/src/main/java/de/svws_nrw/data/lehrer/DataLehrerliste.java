@@ -21,22 +21,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link LehrerListeEintrag}.
  */
-public class DataLehrerliste extends DataManager<Long> {
+public final class DataLehrerliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerListeEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataLehrerliste(DBEntityManager conn) {
+	public DataLehrerliste(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerListeEintrag}.
 	 */
-	private Function<DTOLehrer, LehrerListeEintrag> dtoMapper = (DTOLehrer l) -> {
-		LehrerListeEintrag eintrag = new LehrerListeEintrag();
+	private final Function<DTOLehrer, LehrerListeEintrag> dtoMapper = (final DTOLehrer l) -> {
+		final LehrerListeEintrag eintrag = new LehrerListeEintrag();
 		eintrag.id = l.ID;
 		eintrag.kuerzel = l.Kuerzel;
 		eintrag.titel = l.Titel == null ? "" : l.Titel;
@@ -49,12 +49,12 @@ public class DataLehrerliste extends DataManager<Long> {
 		eintrag.istRelevantFuerStatistik = l.statistikRelevant;
 		return eintrag;
 	};
-	
+
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link LehrerListeEintrag}.  
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link LehrerListeEintrag}.
 	 */
-	private Comparator<LehrerListeEintrag> dataComparator = (a,b) -> {
-		Collator collator = Collator.getInstance(Locale.GERMAN);
+	private final Comparator<LehrerListeEintrag> dataComparator = (a, b) -> {
+		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		if ((a.kuerzel == null) && (b.kuerzel != null))
 			return -1;
 		else if ((a.kuerzel != null) && (b.kuerzel == null))
@@ -80,34 +80,34 @@ public class DataLehrerliste extends DataManager<Long> {
     			return 0;
     		result = collator.compare(a.vorname, b.vorname);
 		}
-		return result;    		
+		return result;
 	};
 
 	@Override
 	public Response getAll() {
-    	List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
+    	final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
     	if (lehrer == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() {
-		List<DTOLehrer> lehrer = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> lehrer = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
     	if (lehrer == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response get(Long id) {
+	public Response get(final Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 

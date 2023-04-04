@@ -17,38 +17,38 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.db.utils.data.Schule;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_Schuldaten aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_Schuldaten aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPSchuldaten {
+public final class ABPSchuldaten {
 
 	/** Die sechsstellige Nummer der Schule. */
 	public String Schulnr = null;
 
 	/** Das Kürzel der Schulform der Schule. */
 	public String SchulformKrz = null;
-	
+
 	/** Die Bezeichnung der Schulform der Schule. */
 	public String SchulformBez = null;
-	
+
 	/** Der erste Teil der Bezeichnung der Schule. */
 	public String Bezeichnung1 = null;
-	
+
 	/** Der zweite Teil der Bezeichnung der Schule. */
 	public String Bezeichnung2 = null;
-	
+
 	/** Der dritte Teil der Bezeichnung der Schule. */
 	public String Bezeichnung3 = null;
-	
+
 	/** TODO ??? */
 	public String Kennwort = null;
 
 	/** Die Prüfungsordung für die Oberstufe der Schule. */
 	public String PruefOrdnung = null;
-	
+
 	/** TODO ??? */
 	public String PruefPhase = null;
-	
+
 	/** Die bilinguale Sprache, falls es an der Schule bilingualen Sachunterricht gibt. */
 	public String BilingualSprachen = null;
 
@@ -69,72 +69,72 @@ public class ABPSchuldaten {
 
 	/** Der Jahrgang in dem die Zusatzkurse in Sozialwissenschaften beginnen (normalerweise Q2.1) */
 	public GostHalbjahr ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
-	
+
 	/** TODO ??? */
 	boolean AusdruckAlleFaecher = true;
-	
+
 	/** Das Halbjahr für das die Schüler aktuell beraten werden. */
 	public String Beratungshalbjahr = null;
-	
+
 	/** Dieser Text erscheint auf dem Beratungsbogen eines Schülers. */
 	public String BeratungsText = null;
-	
+
 	/** Der Text der mitgeschickt wird, wenn eine Email von Lupo generiert wird. */
 	public String MailText = null;
-	
+
 	/** Der Text der auf den LuPO-Bögen gesetzt wird, wenn eine Email von Lupo generiert wird. */
 	public String MailTextBoegen = null;
-	
+
 	/** TODO ??? */
 	public String FS_NurMitSF = null;
-	
+
 	/** TODO ??? */
 	public Boolean Komprimieren = false;
-	
+
 	/** Gibt an, ob Änderungen an den Datensätzen erlaubt sind. */
 	public String AenderungenErlauben = null;
-	
+
 	/** Gibt an, ob die Laufbahn bei der Eingabe automatisch geprüft werden soll.  */
 	public boolean AutoPruefModus = true;
-	
+
 	/** Gibt an, welche Dauer eine Unterrichtseinheit in Minuten hat */
 	public int DauerUnterrichtseinheit = 45;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Der SMTP-Benutzername. */
 	public String SMTP_User = null;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Das SMTP-Passwort des Benutzers. */
 	public String SMTP_Password = null;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Der SMTP-Serverhostname. */
 	public String SMTP_Server = null;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Der Port des SMTP Servers. */
 	public String SMTP_Port = null;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Der SMTP-Benutzername. */
 	public String SMTP_SSL = null;
-	
+
 	/** Für den automatischen Emailversand über Lupo: Der SMTP-Benutzername. */
 	public String SMTP_StartTLS = null;
-	
+
 
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schuldaten" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Liste der Kursarten aus der LuPO-Datei
 	 */
-	public static List<ABPSchuldaten> read(Database db) {
+	public static List<ABPSchuldaten> read(final Database db) {
 		try {
 			String zkGeBeginn;
 			String zkSoWiBeginn;
-			List<ABPSchuldaten> liste = new Vector<>();
-			Table table = db.getTable("ABP_Schuldaten");
-			for (Row r : table) {
-				ABPSchuldaten zuordnung = new ABPSchuldaten();
+			final List<ABPSchuldaten> liste = new Vector<>();
+			final Table table = db.getTable("ABP_Schuldaten");
+			for (final Row r : table) {
+				final ABPSchuldaten zuordnung = new ABPSchuldaten();
 				zuordnung.Schulnr = r.getString("Schulnr");
 				zuordnung.SchulformKrz = r.getString("SchulformKrz");
 				zuordnung.SchulformBez = r.getString("SchulformBez");
@@ -148,20 +148,18 @@ public class ABPSchuldaten {
 				zuordnung.Beratungslehrer = r.getString("Beratungslehrer");
 				zuordnung.BeratungslehrerEMail = r.getString("BeratungslehrerEMail");
 				zkGeBeginn = r.getString("ZK_Beginn_GE");
-				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkGeBeginn) ) {
+				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkGeBeginn)) {
 					zuordnung.ZusatzkursGeschichteVorhanden = true;
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.fromKuerzelAlt(zkGeBeginn);
-				}
-				else {
+				} else {
 					zuordnung.ZusatzkursGeschichteVorhanden = false;
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.Q21;
 				}
 				zkSoWiBeginn = r.getString("ZK_Beginn_SW");
-				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkSoWiBeginn) ) {
+				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkSoWiBeginn)) {
 					zuordnung.ZusatzkursSoWiVorhanden = true;
 					zuordnung.ZusatzkursSoWiBeginn = GostHalbjahr.fromKuerzelAlt(zkSoWiBeginn);
-				}
-				else {
+				} else {
 					zuordnung.ZusatzkursSoWiVorhanden = false;
 					zuordnung.ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
 				}
@@ -184,7 +182,7 @@ public class ABPSchuldaten {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
 	}
@@ -192,13 +190,13 @@ public class ABPSchuldaten {
 
 	/**
 	 * Schreibt die angegebenen Kursarten in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param list   die Liste der zu schreibenden Kursarten
 	 */
-	public static void write(Database db, List<ABPSchuldaten> list) {
+	public static void write(final Database db, final List<ABPSchuldaten> list) {
 		try {
-			Table table = new TableBuilder("ABP_Schuldaten")
+			final Table table = new TableBuilder("ABP_Schuldaten")
 				.addColumn(new ColumnBuilder("Schulnr", DataType.TEXT).setLengthInUnits(6))
 				.addColumn(new ColumnBuilder("SchulformKrz", DataType.TEXT).setLengthInUnits(3))
 				.addColumn(new ColumnBuilder("SchulformBez", DataType.TEXT).setLengthInUnits(50))
@@ -231,7 +229,7 @@ public class ABPSchuldaten {
 				.addColumn(new ColumnBuilder("SMTP_StartTLS", DataType.TEXT).setLengthInUnits(1))
 			    .toTable(db);
 
-			for (ABPSchuldaten zuordnung: list) {
+			for (final ABPSchuldaten zuordnung: list) {
 				table.addRow(
 					zuordnung.Schulnr,
 					zuordnung.SchulformKrz,
@@ -265,7 +263,7 @@ public class ABPSchuldaten {
 					zuordnung.SMTP_StartTLS
 				);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -273,11 +271,11 @@ public class ABPSchuldaten {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPSchuldaten zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuldaten
 	 */
 	public static List<ABPSchuldaten> getDefault() {
-		List<ABPSchuldaten> schuldaten = new Vector<>();
+		final List<ABPSchuldaten> schuldaten = new Vector<>();
 		return schuldaten;
 	}
 
@@ -285,18 +283,18 @@ public class ABPSchuldaten {
 	/**
 	 * Erstellt den Eintrag für die Tabelle ABPSchuldaten aus dem DTO
 	 * der SVWS-Server-Datenbank.
-	 * 
+	 *
 	 * @param schule     das SVWS-Server-DTO für die Schuldaten
 	 * @param jahrgang   der Jahrgang, für den die Lupo-MDB erstellt wird
-	 * 
+	 *
 	 * @return der Eintrag für die Tabelle ABPSchuldaten
 	 */
-	public static List<ABPSchuldaten> get(Schule schule, String jahrgang) {
-		List<ABPSchuldaten> lupoSchuldaten = new Vector<>();
+	public static List<ABPSchuldaten> get(final Schule schule, final String jahrgang) {
+		final List<ABPSchuldaten> lupoSchuldaten = new Vector<>();
 		if (schule == null)
 			return lupoSchuldaten;
-		var sf = schule.getSchulform(); 
-		ABPSchuldaten schuldaten = new ABPSchuldaten();
+		final var sf = schule.getSchulform();
+		final ABPSchuldaten schuldaten = new ABPSchuldaten();
 		schuldaten.Schulnr = "" + schule.dto.SchulNr;
 		schuldaten.SchulformKrz = ((sf == null) || (sf.daten == null)) ? null : sf.daten.kuerzel;
 		schuldaten.SchulformBez = ((sf == null) || (sf.daten == null)) ? null : sf.daten.bezeichnung;
@@ -314,7 +312,7 @@ public class ABPSchuldaten {
 		schuldaten.ZusatzkursSoWiVorhanden = true;
 		schuldaten.ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
 		schuldaten.AusdruckAlleFaecher = true;
-		schuldaten.Beratungshalbjahr = jahrgang + "." + schule.getHalbjahr();  
+		schuldaten.Beratungshalbjahr = jahrgang + "." + schule.getHalbjahr();
 		schuldaten.BeratungsText = null;
 		schuldaten.MailText = null;
 		schuldaten.MailTextBoegen = null;
@@ -322,13 +320,13 @@ public class ABPSchuldaten {
 		schuldaten.Komprimieren = null;
 		schuldaten.AenderungenErlauben = null;
 		schuldaten.AutoPruefModus = true;
-		schuldaten.DauerUnterrichtseinheit = schule.dto.DauerUnterrichtseinheit; 
+		schuldaten.DauerUnterrichtseinheit = schule.dto.DauerUnterrichtseinheit;
 		schuldaten.SMTP_User = null;
 		schuldaten.SMTP_Password = null;
 		schuldaten.SMTP_Server = null;
 		schuldaten.SMTP_Port = null;
 		schuldaten.SMTP_SSL = null;
-		schuldaten.SMTP_StartTLS = null;		
+		schuldaten.SMTP_StartTLS = null;
 		lupoSchuldaten.add(schuldaten);
 		return lupoSchuldaten;
 	}

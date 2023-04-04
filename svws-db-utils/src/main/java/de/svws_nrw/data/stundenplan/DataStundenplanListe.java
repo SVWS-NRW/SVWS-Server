@@ -20,23 +20,23 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link StundenplanListeEintrag}.
  */
-public class DataStundenplanListe extends DataManager<Long> {
+public final class DataStundenplanListe extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanListeEintrag}.
-	 * 
+	 *
 	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataStundenplanListe(DBEntityManager conn) {
+	public DataStundenplanListe(final DBEntityManager conn) {
 		super(conn);
 	}
-	
-	
+
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplan} in einen Core-DTO {@link StundenplanListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplan} in einen Core-DTO {@link StundenplanListeEintrag}.
 	 */
-	private Function<DTOStundenplan, StundenplanListeEintrag> dtoMapper = (DTOStundenplan s) -> {
-		StundenplanListeEintrag daten = new StundenplanListeEintrag();
+	private final Function<DTOStundenplan, StundenplanListeEintrag> dtoMapper = (final DTOStundenplan s) -> {
+		final StundenplanListeEintrag daten = new StundenplanListeEintrag();
 		daten.id = s.ID;
 		daten.bezeichnung = s.Beschreibung;
 		daten.idSchuljahresabschnitt = s.Schuljahresabschnitts_ID;
@@ -45,7 +45,7 @@ public class DataStundenplanListe extends DataManager<Long> {
 		return daten;
 	};
 
-	
+
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -54,28 +54,28 @@ public class DataStundenplanListe extends DataManager<Long> {
 
 	/**
 	 * Gibt die Liste der Stundenplänen für einen oder alle Schuljahresabschnitte zurück.
-	 * 
+	 *
 	 * @param idSchuljahresabschnitt    die ID des schuljahresabschnitts oder null für alle
-	 * 
+	 *
 	 * @return die Liste der Stundenpläne
 	 */
-	public List<StundenplanListeEintrag> getStundenplaene(Long idSchuljahresabschnitt) {
-		Vector<StundenplanListeEintrag> daten = new Vector<>();
-		List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null) 
+	public List<StundenplanListeEintrag> getStundenplaene(final Long idSchuljahresabschnitt) {
+		final Vector<StundenplanListeEintrag> daten = new Vector<>();
+		final List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null)
 			? conn.queryAll(DTOStundenplan.class)
 			: conn.queryNamed("DTOStundenplan.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOStundenplan.class);
 		if (plaene.size() == 0)
 			//throw OperationError.NOT_FOUND.exception("Keine Stundenpläne gefunden.");
 			return daten;
-		List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
-		Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn
+		final List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
+		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn
 			.queryNamed("DTOSchuljahresabschnitte.id.multiple", idsSchuljahresabschnitte, DTOSchuljahresabschnitte.class)
 			.stream()
 			.collect(Collectors.toMap(a -> a.ID, a -> a));
-		
-		for (DTOStundenplan s : plaene) {
-			DTOSchuljahresabschnitte a = mapAbschnitte.get(s.Schuljahresabschnitts_ID);
-			StundenplanListeEintrag e = dtoMapper.apply(s);
+
+		for (final DTOStundenplan s : plaene) {
+			final DTOSchuljahresabschnitte a = mapAbschnitte.get(s.Schuljahresabschnitts_ID);
+			final StundenplanListeEintrag e = dtoMapper.apply(s);
 			e.schuljahr = a.Jahr;
 			e.abschnitt = a.Abschnitt;
 			daten.add(e);
@@ -103,16 +103,16 @@ public class DataStundenplanListe extends DataManager<Long> {
 
 
 	@Override
-	public Response get(Long idSchuljahresabschnitt) {
+	public Response get(final Long idSchuljahresabschnitt) {
 		// Stundenpläne für einen speziellen Schuljahresabschnitt
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getStundenplaene(idSchuljahresabschnitt)).build();
 	}
 
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 
-		
+
 }

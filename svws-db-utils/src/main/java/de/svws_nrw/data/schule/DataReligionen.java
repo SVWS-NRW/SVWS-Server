@@ -25,22 +25,22 @@ import de.svws_nrw.db.utils.OperationError;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link ReligionEintrag}.
  */
-public class DataReligionen extends DataManager<Long> {
+public final class DataReligionen extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ReligionEintrag}.
-	 * 
+	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataReligionen(DBEntityManager conn) {
+	public DataReligionen(final DBEntityManager conn) {
 		super(conn);
 	}
-	
+
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStatkueNationalitaeten} in einen Core-DTO {@link ReligionEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStatkueNationalitaeten} in einen Core-DTO {@link ReligionEintrag}.
 	 */
-	private Function<DTOKonfession, ReligionEintrag> dtoMapper = (DTOKonfession k) -> {
-		ReligionEintrag daten = new ReligionEintrag();
+	private final Function<DTOKonfession, ReligionEintrag> dtoMapper = (final DTOKonfession k) -> {
+		final ReligionEintrag daten = new ReligionEintrag();
 		daten.id = k.ID;
 		daten.text = k.Bezeichnung;
 		daten.textZeugnis = k.ZeugnisBezeichnung;
@@ -53,10 +53,10 @@ public class DataReligionen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-    	List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
+    	final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	List<ReligionEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());        
+    	final List<ReligionEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -66,31 +66,31 @@ public class DataReligionen extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(Long id) {
-		DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
+	public Response get(final Long id) {
+		final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
 		if (reli == null)
 			throw OperationError.NOT_FOUND.exception();
-		ReligionEintrag daten = dtoMapper.apply(reli);
+		final ReligionEintrag daten = dtoMapper.apply(reli);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
-	public Response patch(Long id, InputStream is) {
+	public Response patch(final Long id, final InputStream is) {
 		if (id == null)
             return OperationError.NOT_FOUND.getResponse("Die Id der zu ändernden Religion darf nicht null sein.");
-        Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0){
-            try{
+        final Map<String, Object> map = JSONMapper.toMap(is);
+        if (map.size() > 0) {
+            try {
                 conn.transactionBegin();
-                DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
+                final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
                 if (reli == null)
-                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID"+id+" existiert nicht.");
-                for (Entry<String, Object> entry : map.entrySet()){
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    switch (key){
+                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+                for (final Entry<String, Object> entry : map.entrySet()) {
+                    final String key = entry.getKey();
+                    final Object value = entry.getValue();
+                    switch (key) {
 						case "id" -> {
-							Long patch_id = JSONMapper.convertToLong(value, true);
+							final Long patch_id = JSONMapper.convertToLong(value, true);
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
@@ -105,8 +105,8 @@ public class DataReligionen extends DataManager<Long> {
                 }
                 conn.transactionPersist(reli);
                 conn.transactionCommit();
-            } catch (Exception e) {
-    			if (e instanceof WebApplicationException webAppException)
+            } catch (final Exception e) {
+    			if (e instanceof final WebApplicationException webAppException)
     				return webAppException.getResponse();
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		} finally {
@@ -116,62 +116,62 @@ public class DataReligionen extends DataManager<Long> {
         }
         return Response.status(Status.OK).build();
 	}
-	
-	/** 
+
+	/**
 	 * Erstellt eine neue Religion
-	 * 
+	 *
 	 * @param  is					JSON-Objekt mit den Daten
-	 * @return Eine Response mit der neuen Religion 
+	 * @return Eine Response mit der neuen Religion
 	 */
-	public Response create(InputStream is) {
+	public Response create(final InputStream is) {
 		DTOKonfession reli = null;
-		Map<String, Object> map = JSONMapper.toMap(is);
-			if(map.size() > 0) {
-				try {
-					conn.transactionBegin();
-					// Bestimme die ID der neuen Religion
-					DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_Religion");
-					Long ID = lastID == null ? 1 : lastID.MaxID + 1;
-					// Religion anlegen
-					reli = new DTOKonfession(ID, "");
-					for(Entry<String, Object> entry : map.entrySet()) {
-						String key = entry.getKey();
-						Object value = entry.getValue();
-						switch(key) {
-							case "id" -> {
-								Long create_id = JSONMapper.convertToLong(value, true) ;
-								if ((create_id != null) && (create_id >= 0))
-									throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
-							}
-							case "kuerzel" -> {
-								reli.StatistikKrz = JSONMapper.convertToString(value, true, true);
-								if(reli.StatistikKrz != null) {
-									ReligionKatalogEintrag rke = Religion.getByKuerzel(reli.StatistikKrz).daten;
-									if( rke == null)
-										throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Küruel "+reli.StatistikKrz+" existiert in der amtlichen Statistik nicht.");
-								}
-							}
-	                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true);
-	                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true);
-							case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
-							case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
-							case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
-	                       	default -> throw OperationError.BAD_REQUEST.exception();
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			try {
+				conn.transactionBegin();
+				// Bestimme die ID der neuen Religion
+				final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_Religion");
+				final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+				// Religion anlegen
+				reli = new DTOKonfession(id, "");
+				for (final Entry<String, Object> entry : map.entrySet()) {
+					final String key = entry.getKey();
+					final Object value = entry.getValue();
+					switch (key) {
+						case "id" -> {
+							final Long create_id = JSONMapper.convertToLong(value, true);
+							if ((create_id != null) && (create_id >= 0))
+								throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
 						}
+						case "kuerzel" -> {
+							reli.StatistikKrz = JSONMapper.convertToString(value, true, true);
+							if (reli.StatistikKrz != null) {
+								final ReligionKatalogEintrag rke = Religion.getByKuerzel(reli.StatistikKrz).daten;
+								if (rke == null)
+									throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Küruel " + reli.StatistikKrz + " existiert in der amtlichen Statistik nicht.");
+							}
+						}
+                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true);
+                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true);
+						case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
+						case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
+						case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
+                       	default -> throw OperationError.BAD_REQUEST.exception();
 					}
-					conn.transactionPersist(reli);
-					if( !conn.transactionCommit())
-						return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Religion");
-				}catch (Exception e) {
-					if(e instanceof WebApplicationException webApplicationException)
-						return webApplicationException.getResponse();
-					return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-				}finally {
-					conn.transactionRollback();
 				}
+				conn.transactionPersist(reli);
+				if (!conn.transactionCommit())
+					return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Religion");
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webApplicationException)
+					return webApplicationException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			} finally {
+				conn.transactionRollback();
 			}
-			ReligionEintrag daten = dtoMapper.apply(reli);
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		}
+		final ReligionEintrag daten = dtoMapper.apply(reli);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
-	
+
 }

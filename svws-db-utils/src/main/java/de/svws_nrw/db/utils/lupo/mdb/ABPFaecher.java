@@ -19,10 +19,10 @@ import com.healthmarketscience.jackcess.TableBuilder;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 
 /**
- * Diese Klasse wird für den Import der Tabelle ABP_Faecher aus einer LuPO-Datenbank 
- * im Access-Format genutzt. 
+ * Diese Klasse wird für den Import der Tabelle ABP_Faecher aus einer LuPO-Datenbank
+ * im Access-Format genutzt.
  */
-public class ABPFaecher {
+public final class ABPFaecher {
 
 	/** Die ID des Faches */
 	public int ID;
@@ -65,18 +65,18 @@ public class ABPFaecher {
 
 	/** Gibt an, ob das Fach als 3./4. Fach im Abitur gewählt werden kann */
 	public boolean Abi_Moegl = false;
-	
+
 	/** Gibt an, ob das Fach als 1./2. Fach im Abitur gewählt werden kann */
 	public boolean LK_Moegl = false;
-	
+
 	/** Gibt an, ob das Fach als neu einsetzen Fremdsprache in der Oberstufe gewählt werden kann */
 	public boolean AlsNeueFSInSII = false;
-	
+
 	/** Gibt das 1. Leitfach eines Projektkurses oder das Fach eines Vertiefungskurses an. */
 	public String Leitfach = null;
-	
+
 	/** Gibt das 2. Leitfach eines Projektkurses an. */
-	public String Leitfach2 = null;	
+	public String Leitfach2 = null;
 
 	/** Gibt die Anzahl der Wochenstunden für das 1. Halbjahr in der Einführungsphase an. */
 	public Integer E1_WStd = null;
@@ -98,20 +98,20 @@ public class ABPFaecher {
 
 	/** TODO ???  */
 	public boolean NurMuendlich = false;
-	
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Faecher" aus der LuPO-Datei ein.
-	 * 
+	 *
 	 * @param db   die Datenbank, aus der die Tabelle gelesen werden soll
-	 * 
+	 *
 	 * @return die Map der Fächer aus der LuPO-Datei
 	 */
-	public static Map<String, ABPFaecher> read(Database db) {
+	public static Map<String, ABPFaecher> read(final Database db) {
 		try {
-			HashMap<String, ABPFaecher> map = new HashMap<>();
-			Table table = db.getTable("ABP_Faecher");
-			for (Row r : table) {
-				ABPFaecher fach = new ABPFaecher(); 
+			final HashMap<String, ABPFaecher> map = new HashMap<>();
+			final Table table = db.getTable("ABP_Faecher");
+			for (final Row r : table) {
+				final ABPFaecher fach = new ABPFaecher();
 				fach.ID = r.getInt("ID");
 				fach.FachKrz = r.getString("FachKrz");
 				fach.Bezeichnung = r.getString("Bezeichnung");
@@ -140,7 +140,7 @@ public class ABPFaecher {
 				map.put(fach.FachKrz, fach);
 			}
 			return map;
-		} catch (@SuppressWarnings("unused") IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyMap();
 		}
 	}
@@ -148,13 +148,13 @@ public class ABPFaecher {
 
 	/**
 	 * Schreibt die angegebenen Fächer in die übergebene Datenbank
-	 * 
+	 *
 	 * @param db     die zu beschreibende Datenbank
 	 * @param map    die zu schreibenden Fächer
 	 */
-	public static void write(Database db, Map<String, ABPFaecher> map) {
+	public static void write(final Database db, final Map<String, ABPFaecher> map) {
 		try {
-			Table table = new TableBuilder("ABP_Faecher")
+			final Table table = new TableBuilder("ABP_Faecher")
 			     .addColumn(new ColumnBuilder("ID", DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 			     .addColumn(new ColumnBuilder("FachKrz", DataType.TEXT).setLengthInUnits(20))
 			     .addColumn(new ColumnBuilder("Bezeichnung", DataType.TEXT).setLengthInUnits(80))
@@ -211,11 +211,11 @@ public class ABPFaecher {
 						fach.E_ExportKursart,
 						fach.NurMuendlich ? "J" : "N"
 					);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					e.printStackTrace();
-				}				
+				}
 			});
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -223,11 +223,11 @@ public class ABPFaecher {
 
 	/**
 	 * Gibt den Standard-Eintrag für die Tabelle ABPFaecher zurück.
-	 * 
+	 *
 	 * @return der Standard-Eintrag für die Tabelle ABPFaecher
 	 */
 	public static Map<String, ABPFaecher> getDefault() {
-		HashMap<String, ABPFaecher> faecher = new HashMap<>();
+		final HashMap<String, ABPFaecher> faecher = new HashMap<>();
 		return faecher;
 	}
 
@@ -235,31 +235,31 @@ public class ABPFaecher {
 	/**
 	 * Erstellt die Einträge für die Tabelle ABP_Faecher aus dem DTO
 	 * der SVWS-Server-Datenbank.
-	 * 
-	 * @param fachgruppen   die Facherguppen für LuPO, wird ggf. zum Filtern von Fächern aus dem SVWS-Server verwendet 
+	 *
+	 * @param fachgruppen   die Facherguppen für LuPO, wird ggf. zum Filtern von Fächern aus dem SVWS-Server verwendet
 	 * @param faecher       die SVWS-Server-DTOs für die Fächer
 	 * @param faecherMap    die SVWS-Server-DTOs für die Fächer, jeweils ihrer ID zugeordnet
-	 * 
+	 *
 	 * @return die Map der Einträge für die Tabelle ABP_Faecher, als Schlüssel wird das Fachkürzel vwerdnet
 	 */
-	public static Map<String, ABPFaecher> get(Map<String, ABPFachgruppen> fachgruppen, List<DTOFach> faecher, Map<Long, DTOFach> faecherMap) {
-		HashMap<String, ABPFaecher> lupoFaecher = new HashMap<>();
+	public static Map<String, ABPFaecher> get(final Map<String, ABPFachgruppen> fachgruppen, final List<DTOFach> faecher, final Map<Long, DTOFach> faecherMap) {
+		final HashMap<String, ABPFaecher> lupoFaecher = new HashMap<>();
 		if (faecher == null)
 			return lupoFaecher;
-		
+
 		// Filtere alle Fächer, für die keine Fachgruppe definiert ist
-		List<DTOFach> faecherGefiltert = faecher.stream()
+		final List<DTOFach> faecherGefiltert = faecher.stream()
 			.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikFach.daten.kuerzelASD) != null))
 			.collect(Collectors.toList());
 		for (int i = 0; i < faecherGefiltert.size(); i++) {
-			DTOFach fach = faecherGefiltert.get(i);
-			ABPFaecher lupofach = new ABPFaecher();
-			lupofach.ID = i+1;
+			final DTOFach fach = faecherGefiltert.get(i);
+			final ABPFaecher lupofach = new ABPFaecher();
+			lupofach.ID = i + 1;
 			lupofach.FachKrz = fach.Kuerzel;
 			lupofach.Bezeichnung = fach.Bezeichnung;
 			lupofach.StatistikKrz = fach.StatistikFach.daten.kuerzelASD;
 			lupofach.Sortierung = fach.SortierungSekII;
-			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD)) && (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD)); 
+			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD)) && (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
 			lupofach.Unterichtssprache = fach.Unterichtssprache == null ? "D" : fach.Unterichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;
 			lupofach.E2 = fach.IstMoeglichEF2;
@@ -270,9 +270,9 @@ public class ABPFaecher {
 			lupofach.Abi_Moegl = fach.IstMoeglichAbiGK;
 			lupofach.LK_Moegl = fach.IstMoeglichAbiLK;
 			lupofach.AlsNeueFSInSII = fach.IstMoeglichAlsNeueFremdspracheInSekII;
-			DTOFach lf = faecherMap.get(fach.ProjektKursLeitfach1_ID);
+			final DTOFach lf = faecherMap.get(fach.ProjektKursLeitfach1_ID);
 			lupofach.Leitfach = lf == null ? null : lf.StatistikFach.daten.kuerzelASD;
-			DTOFach lf2 = faecherMap.get(fach.ProjektKursLeitfach2_ID);
+			final DTOFach lf2 = faecherMap.get(fach.ProjektKursLeitfach2_ID);
 			lupofach.Leitfach2 = lf2 == null ? null : lf2.StatistikFach.daten.kuerzelASD;
 			lupofach.E1_WStd = fach.WochenstundenEF1;
 			lupofach.E2_WStd = fach.WochenstundenEF2;
@@ -285,7 +285,7 @@ public class ABPFaecher {
 		}
 		return lupoFaecher;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ABPFaecher [ID=" + ID + ", FachKrz=" + FachKrz + ", Bezeichnung=" + Bezeichnung + ", StatistikKrz="

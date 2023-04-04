@@ -13,34 +13,34 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 
 /**
- * Diese Klasse stellt eine Kommandozeilen-Anwendung zum Erstellen einer neuen 
+ * Diese Klasse stellt eine Kommandozeilen-Anwendung zum Erstellen einer neuen
  * leeren LuPO-MDB-Datenbank aus einem SVWS-Schema zur Verfügung.
  */
 public class CreateLuPOMDB {
-	
+
 
 	/// Der Parser für die Kommandozeile
 	private static CommandLineParser cmdLine;
 
 	/// Der Logger
 	private static Logger logger = new Logger();
-	
+
 
 	/**
 	 * Stellt eine einfache Frage auf der Kommandozeile, welche mit Ja oder Nein
 	 * auf dem Scanner beantwortet werden kann.
-	 * 
+	 *
 	 * @param text   die Frage
 	 * @param scan   der Scanner
-	 * 
+	 *
 	 * @return die Antwort - true oder false
 	 */
-	private static boolean konsoleFrageJaNein(String text, Scanner scan) {
+	private static boolean konsoleFrageJaNein(final String text, final Scanner scan) {
 		boolean antwort = false;
 		System.out.print(text);
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
-			String input = scan.nextLine();
+			final String input = scan.nextLine();
 			if (input == null)
 				continue;
 			habeAntwort = true;
@@ -62,26 +62,26 @@ public class CreateLuPOMDB {
 		}
 		return antwort;
 	}
-	
 
-	
+
+
 	/**
-	 * 
-	 *   
+	 *
+	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
-		
+
 		// Lese die Kommandozeilenparameter ein
 		cmdLine = new CommandLineParser(args);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
-			
+
 		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei
-			String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
+			final String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
 			if (Files.exists(Paths.get(lupofilename))) {
 				try (Scanner scan = new Scanner(System.in)) {
 					// Frage ggf. nach, ob die bestehende LuPO-Datei gelöscht und überschrieben werden soll
@@ -97,16 +97,16 @@ public class CreateLuPOMDB {
 					scan.close();
 				}
 			}
-			
+
 			// Schreibe die Daten für die neue LuPO-Datei
-			LupoMDB lupoMDB = new LupoMDB(lupofilename);
+			final LupoMDB lupoMDB = new LupoMDB(lupofilename);
 			lupoMDB.getEmpty();
 			lupoMDB.exportTo();
-		} catch (CommandLineException e) {
+		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			cmdLine.printOptionsAndExit(2, e.getMessage());
 		}
 	}
-	
+
 }
